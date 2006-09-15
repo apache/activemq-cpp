@@ -105,7 +105,7 @@ namespace logger{
          * has been assigned to use.
          * @returns a list of handlers that are used by this logger
          */        
-        virtual const std::list<Handler*>& getHandlers(void) const;
+        // virtual const std::list<Handler*>& getHandlers(void) const;
         
         /**
          * Set a filter to control output on this Logger.
@@ -290,11 +290,11 @@ namespace logger{
          * @param line the line number where the log was generated
          * @param fnctionName name of the function that logged this
          * @param message the message to log
-         */
         virtual void throwing( const std::string& file,
                                const int line,
                                const std::string fnctionName,
                                const std::string& message );
+         */
         
         /**
          * Check if a message of the given level would actually be logged 
