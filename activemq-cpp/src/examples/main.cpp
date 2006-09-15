@@ -27,6 +27,7 @@
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 using namespace activemq::core;
 using namespace activemq::concurrent;
@@ -77,7 +78,7 @@ public:
 
             // Stringify the thread id
             char threadIdStr[100];
-            itoa( Thread::getId(), threadIdStr, 10 );
+            snprintf(threadIdStr, sizeof(threadIdStr), "%d", Thread::getId() );
             
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
@@ -239,7 +240,7 @@ private:
     }
 };
     
-void main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     
     HelloWorldProducer producer( 1000 );
 	HelloWorldConsumer consumer( 5000 );
@@ -255,6 +256,7 @@ void main(int argc, char* argv[]) {
 	// Wait for the threads to complete.
 	producerThread.join();
 	consumerThread.join();
+	return 0;
 }
     
 // END SNIPPET: demo
