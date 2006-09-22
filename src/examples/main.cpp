@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-
 // START SNIPPET: demo
- 
+
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/util/Interger.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 using namespace activemq::core;
+using namespace activemq::util;
 using namespace activemq::concurrent;
 using namespace cms;
 using namespace std;
@@ -75,10 +75,9 @@ public:
             // Create a MessageProducer from the Session to the Topic or Queue
             producer = session->createProducer( destination );
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTANT );
-
-            // Stringify the thread id
-            char threadIdStr[100];
-            snprintf(threadIdStr, sizeof(threadIdStr), "%d", Thread::getId() );
+            
+            // Create the Thread Id String
+            string threadIdStr = Interger::toString( Thread::getId() );
             
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
@@ -87,7 +86,7 @@ public:
 	            TextMessage* message = session->createTextMessage( text );
 
     	        // Tell the producer to send the message
-        	    printf( "Sent message from thread %s\n", threadIdStr );
+        	    printf( "Sent message from thread %s\n", threadIdStr.c_str() );
             	producer->send( message );
             	
             	delete message;
@@ -256,7 +255,6 @@ int main(int argc, char* argv[]) {
 	// Wait for the threads to complete.
 	producerThread.join();
 	consumerThread.join();
-	return 0;
 }
     
 // END SNIPPET: demo
