@@ -17,7 +17,7 @@
 
 
 // START SNIPPET: demo
-
+ 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
