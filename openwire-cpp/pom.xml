@@ -37,7 +37,7 @@
         <configuration>
           <tasks>
             <taskdef name="generate" classname="org.apache.activemq.openwire.tool.CppGeneratorTask"/>
-            <generate version="2" source="../../activemq-trunk/activemq-core" target="${basedir}"/>
+            <generate version="2" source="${activemq-core-dir}" target="${basedir}"/>
           </tasks>
         </configuration>
         <dependencies>
@@ -51,5 +51,9 @@
 
     </plugins>
   </build>
+
+  <properties>
+    <activemq-core-dir>../../activemq-trunk/activemq-core</activemq-core-dir>
+  </properties>
 
 </project>
