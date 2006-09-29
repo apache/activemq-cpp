@@ -139,7 +139,7 @@ namespace io{
          * input stream.
          */
         virtual int available() const{   
-            return distance( pos, buffer.end() );
+            return std::distance( pos, buffer.end() );
         }
             
         /**

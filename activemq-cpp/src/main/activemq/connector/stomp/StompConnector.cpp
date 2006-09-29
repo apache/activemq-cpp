@@ -401,6 +401,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -416,6 +417,7 @@ cms::TemporaryQueue* StompConnector::createTemporaryQueue(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -549,6 +551,7 @@ TransactionInfo* StompConnector::startTransaction(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -677,6 +680,7 @@ cms::MapMessage* StompConnector::createMapMessage(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

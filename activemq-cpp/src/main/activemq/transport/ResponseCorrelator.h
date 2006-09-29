@@ -25,6 +25,7 @@
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <map>
+#include <stdio.h>
 
 namespace activemq{
 namespace transport{
