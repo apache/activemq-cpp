@@ -23,6 +23,7 @@
     #include <sys/socket.h>
     #include <netinet/in.h>
     #include <arpa/inet.h>
+    #include <string.h>
     extern int errno;
 #else
     #include <Winsock2.h>

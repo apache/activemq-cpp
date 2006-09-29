@@ -21,6 +21,7 @@
 #include <cms/TextMessage.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
+#include <string.h>
 
 namespace activemq{
 namespace connector{

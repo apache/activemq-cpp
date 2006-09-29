@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_
  
 #include <string>
+#include <string.h>
 #include <map>
 #include <activemq/util/SimpleProperties.h>
 
