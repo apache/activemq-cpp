@@ -39,7 +39,7 @@
 	        <!-- configure the Mojo native plugin -->
 	        <groupId>org.codehaus.mojo</groupId>
 	        <artifactId>native-maven-plugin</artifactId>
-	        <version>1.0-alpha-1-SNAPSHOT</version>
+	        <version>1.0-alpha-2-SNAPSHOT</version>
 	        <extensions>true</extensions>
 	             
 	        <configuration>

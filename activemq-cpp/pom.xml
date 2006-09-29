@@ -51,7 +51,7 @@
 		        <!-- configure the Mojo native plugin -->
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>native-maven-plugin</artifactId>
-		        <version>1.0-alpha-1-SNAPSHOT</version>
+		        <version>1.0-alpha-2-SNAPSHOT</version>
 		        <extensions>true</extensions>
 		        
 		        <!-- Make child POMs inherit this configuration -->
@@ -248,8 +248,8 @@
   </repositories>
   <pluginRepositories>
     <pluginRepository>
-      <id>Maven Snapshots</id>
-      <url>http://snapshots.maven.codehaus.org/maven2/</url>
+      <id>Codehaus Snapshots</id>
+      <url>http://snapshots.maven.codehaus.org/maven2</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
