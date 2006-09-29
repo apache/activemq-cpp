@@ -1,0 +1,1380 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		53438C1F0ACD7956007E34F2 /* Concurrent.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B370ACD7956007E34F2 /* Concurrent.h */; };
+		53438C200ACD7956007E34F2 /* Lock.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B380ACD7956007E34F2 /* Lock.h */; };
+		53438C210ACD7956007E34F2 /* Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B390ACD7956007E34F2 /* Mutex.cpp */; };
+		53438C220ACD7956007E34F2 /* Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B3A0ACD7956007E34F2 /* Mutex.h */; };
+		53438C230ACD7956007E34F2 /* PooledThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B3B0ACD7956007E34F2 /* PooledThread.cpp */; };
+		53438C240ACD7956007E34F2 /* PooledThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B3C0ACD7956007E34F2 /* PooledThread.h */; };
+		53438C250ACD7956007E34F2 /* PooledThreadListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B3D0ACD7956007E34F2 /* PooledThreadListener.h */; };
+		53438C260ACD7956007E34F2 /* Runnable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B3E0ACD7956007E34F2 /* Runnable.h */; };
+		53438C270ACD7956007E34F2 /* Synchronizable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B3F0ACD7956007E34F2 /* Synchronizable.h */; };
+		53438C280ACD7956007E34F2 /* TaskListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B400ACD7956007E34F2 /* TaskListener.h */; };
+		53438C290ACD7956007E34F2 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B410ACD7956007E34F2 /* Thread.cpp */; };
+		53438C2A0ACD7956007E34F2 /* Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B420ACD7956007E34F2 /* Thread.h */; };
+		53438C2B0ACD7956007E34F2 /* ThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B430ACD7956007E34F2 /* ThreadPool.cpp */; };
+		53438C2C0ACD7956007E34F2 /* ThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B440ACD7956007E34F2 /* ThreadPool.h */; };
+		53438C2D0ACD7956007E34F2 /* Connector.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B460ACD7956007E34F2 /* Connector.h */; };
+		53438C2E0ACD7956007E34F2 /* ConnectorException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B470ACD7956007E34F2 /* ConnectorException.h */; };
+		53438C2F0ACD7956007E34F2 /* ConnectorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B480ACD7956007E34F2 /* ConnectorFactory.h */; };
+		53438C300ACD7956007E34F2 /* ConnectorFactoryMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B490ACD7956007E34F2 /* ConnectorFactoryMap.cpp */; };
+		53438C310ACD7956007E34F2 /* ConnectorFactoryMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B4A0ACD7956007E34F2 /* ConnectorFactoryMap.h */; };
+		53438C320ACD7956007E34F2 /* ConnectorFactoryMapRegistrar.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B4B0ACD7956007E34F2 /* ConnectorFactoryMapRegistrar.h */; };
+		53438C330ACD7956007E34F2 /* ConnectorResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B4C0ACD7956007E34F2 /* ConnectorResource.h */; };
+		53438C340ACD7956007E34F2 /* ConsumerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B4D0ACD7956007E34F2 /* ConsumerInfo.h */; };
+		53438C350ACD7956007E34F2 /* ConsumerMessageListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B4E0ACD7956007E34F2 /* ConsumerMessageListener.h */; };
+		53438C360ACD7956007E34F2 /* ProducerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B500ACD7956007E34F2 /* ProducerInfo.h */; };
+		53438C370ACD7956007E34F2 /* SessionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B510ACD7956007E34F2 /* SessionInfo.h */; };
+		53438C380ACD7956007E34F2 /* AbortCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B540ACD7956007E34F2 /* AbortCommand.h */; };
+		53438C390ACD7956007E34F2 /* AbstractCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B550ACD7956007E34F2 /* AbstractCommand.h */; };
+		53438C3A0ACD7956007E34F2 /* AckCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B560ACD7956007E34F2 /* AckCommand.h */; };
+		53438C3B0ACD7956007E34F2 /* BeginCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B570ACD7956007E34F2 /* BeginCommand.h */; };
+		53438C3C0ACD7956007E34F2 /* BytesMessageCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B580ACD7956007E34F2 /* BytesMessageCommand.h */; };
+		53438C3D0ACD7956007E34F2 /* CommandConstants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B590ACD7956007E34F2 /* CommandConstants.cpp */; };
+		53438C3E0ACD7956007E34F2 /* CommandConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5A0ACD7956007E34F2 /* CommandConstants.h */; };
+		53438C3F0ACD7956007E34F2 /* CommitCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5B0ACD7956007E34F2 /* CommitCommand.h */; };
+		53438C400ACD7956007E34F2 /* ConnectCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5C0ACD7956007E34F2 /* ConnectCommand.h */; };
+		53438C410ACD7956007E34F2 /* ConnectedCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5D0ACD7956007E34F2 /* ConnectedCommand.h */; };
+		53438C420ACD7956007E34F2 /* DisconnectCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5E0ACD7956007E34F2 /* DisconnectCommand.h */; };
+		53438C430ACD7956007E34F2 /* ErrorCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B5F0ACD7956007E34F2 /* ErrorCommand.h */; };
+		53438C440ACD7956007E34F2 /* MessageCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B600ACD7956007E34F2 /* MessageCommand.h */; };
+		53438C450ACD7956007E34F2 /* ReceiptCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B610ACD7956007E34F2 /* ReceiptCommand.h */; };
+		53438C460ACD7956007E34F2 /* StompCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B620ACD7956007E34F2 /* StompCommand.h */; };
+		53438C470ACD7956007E34F2 /* StompMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B630ACD7956007E34F2 /* StompMessage.h */; };
+		53438C480ACD7956007E34F2 /* SubscribeCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B640ACD7956007E34F2 /* SubscribeCommand.h */; };
+		53438C490ACD7956007E34F2 /* TextMessageCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B650ACD7956007E34F2 /* TextMessageCommand.h */; };
+		53438C4A0ACD7956007E34F2 /* UnsubscribeCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B660ACD7956007E34F2 /* UnsubscribeCommand.h */; };
+		53438C4B0ACD7956007E34F2 /* Marshalable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B680ACD7956007E34F2 /* Marshalable.h */; };
+		53438C4C0ACD7956007E34F2 /* Marshaler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B690ACD7956007E34F2 /* Marshaler.cpp */; };
+		53438C4D0ACD7956007E34F2 /* Marshaler.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B6A0ACD7956007E34F2 /* Marshaler.h */; };
+		53438C4E0ACD7956007E34F2 /* MarshalException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B6B0ACD7956007E34F2 /* MarshalException.h */; };
+		53438C4F0ACD7956007E34F2 /* StompCommandListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B6C0ACD7956007E34F2 /* StompCommandListener.h */; };
+		53438C500ACD7956007E34F2 /* StompCommandReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B6D0ACD7956007E34F2 /* StompCommandReader.cpp */; };
+		53438C510ACD7956007E34F2 /* StompCommandReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B6E0ACD7956007E34F2 /* StompCommandReader.h */; };
+		53438C520ACD7956007E34F2 /* StompCommandWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B6F0ACD7956007E34F2 /* StompCommandWriter.cpp */; };
+		53438C530ACD7956007E34F2 /* StompCommandWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B700ACD7956007E34F2 /* StompCommandWriter.h */; };
+		53438C540ACD7956007E34F2 /* StompConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B710ACD7956007E34F2 /* StompConnector.cpp */; };
+		53438C550ACD7956007E34F2 /* StompConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B720ACD7956007E34F2 /* StompConnector.h */; };
+		53438C560ACD7956007E34F2 /* StompConnectorException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B730ACD7956007E34F2 /* StompConnectorException.h */; };
+		53438C570ACD7956007E34F2 /* StompConnectorFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B740ACD7956007E34F2 /* StompConnectorFactory.cpp */; };
+		53438C580ACD7956007E34F2 /* StompConnectorFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B750ACD7956007E34F2 /* StompConnectorFactory.h */; };
+		53438C590ACD7956007E34F2 /* StompConsumerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B760ACD7956007E34F2 /* StompConsumerInfo.h */; };
+		53438C5A0ACD7956007E34F2 /* StompDestination.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B770ACD7956007E34F2 /* StompDestination.h */; };
+		53438C5B0ACD7956007E34F2 /* StompFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B780ACD7956007E34F2 /* StompFrame.h */; };
+		53438C5C0ACD7956007E34F2 /* StompProducerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B790ACD7956007E34F2 /* StompProducerInfo.h */; };
+		53438C5D0ACD7956007E34F2 /* StompQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B7A0ACD7956007E34F2 /* StompQueue.h */; };
+		53438C5E0ACD7956007E34F2 /* StompSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B7B0ACD7956007E34F2 /* StompSelector.h */; };
+		53438C5F0ACD7956007E34F2 /* StompSessionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B7C0ACD7956007E34F2 /* StompSessionInfo.h */; };
+		53438C600ACD7956007E34F2 /* StompSessionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B7D0ACD7956007E34F2 /* StompSessionManager.cpp */; };
+		53438C610ACD7956007E34F2 /* StompSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B7E0ACD7956007E34F2 /* StompSessionManager.h */; };
+		53438C620ACD7956007E34F2 /* StompTopic.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B7F0ACD7956007E34F2 /* StompTopic.h */; };
+		53438C630ACD7956007E34F2 /* StompTransactionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B800ACD7956007E34F2 /* StompTransactionInfo.h */; };
+		53438C640ACD7956007E34F2 /* TransactionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B810ACD7956007E34F2 /* TransactionInfo.h */; };
+		53438C650ACD7956007E34F2 /* ActiveMQAckHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B830ACD7956007E34F2 /* ActiveMQAckHandler.h */; };
+		53438C660ACD7956007E34F2 /* ActiveMQConnection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B840ACD7956007E34F2 /* ActiveMQConnection.cpp */; };
+		53438C670ACD7956007E34F2 /* ActiveMQConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B850ACD7956007E34F2 /* ActiveMQConnection.h */; };
+		53438C680ACD7956007E34F2 /* ActiveMQConnectionData.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B860ACD7956007E34F2 /* ActiveMQConnectionData.h */; };
+		53438C690ACD7956007E34F2 /* ActiveMQConnectionFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B870ACD7956007E34F2 /* ActiveMQConnectionFactory.cpp */; };
+		53438C6A0ACD7956007E34F2 /* ActiveMQConnectionFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B880ACD7956007E34F2 /* ActiveMQConnectionFactory.h */; };
+		53438C6B0ACD7956007E34F2 /* ActiveMQConstants.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B890ACD7956007E34F2 /* ActiveMQConstants.cpp */; };
+		53438C6C0ACD7956007E34F2 /* ActiveMQConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B8A0ACD7956007E34F2 /* ActiveMQConstants.h */; };
+		53438C6D0ACD7956007E34F2 /* ActiveMQConsumer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B8B0ACD7956007E34F2 /* ActiveMQConsumer.cpp */; };
+		53438C6E0ACD7956007E34F2 /* ActiveMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B8C0ACD7956007E34F2 /* ActiveMQConsumer.h */; };
+		53438C6F0ACD7956007E34F2 /* ActiveMQDestination.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B8D0ACD7956007E34F2 /* ActiveMQDestination.h */; };
+		53438C700ACD7956007E34F2 /* ActiveMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B8E0ACD7956007E34F2 /* ActiveMQMessage.h */; };
+		53438C710ACD7956007E34F2 /* ActiveMQMessageListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B8F0ACD7956007E34F2 /* ActiveMQMessageListener.h */; };
+		53438C720ACD7956007E34F2 /* ActiveMQProducer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B900ACD7956007E34F2 /* ActiveMQProducer.cpp */; };
+		53438C730ACD7956007E34F2 /* ActiveMQProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B910ACD7956007E34F2 /* ActiveMQProducer.h */; };
+		53438C740ACD7956007E34F2 /* ActiveMQSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B920ACD7956007E34F2 /* ActiveMQSession.cpp */; };
+		53438C750ACD7956007E34F2 /* ActiveMQSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B930ACD7956007E34F2 /* ActiveMQSession.h */; };
+		53438C760ACD7956007E34F2 /* ActiveMQSessionResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B940ACD7956007E34F2 /* ActiveMQSessionResource.h */; };
+		53438C770ACD7956007E34F2 /* ActiveMQTransaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B950ACD7956007E34F2 /* ActiveMQTransaction.cpp */; };
+		53438C780ACD7956007E34F2 /* ActiveMQTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B960ACD7956007E34F2 /* ActiveMQTransaction.h */; };
+		53438C790ACD7956007E34F2 /* ActiveMQException.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438B980ACD7956007E34F2 /* ActiveMQException.cpp */; };
+		53438C7A0ACD7956007E34F2 /* ActiveMQException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B990ACD7956007E34F2 /* ActiveMQException.h */; };
+		53438C7B0ACD7956007E34F2 /* ExceptionDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9A0ACD7956007E34F2 /* ExceptionDefines.h */; };
+		53438C7C0ACD7956007E34F2 /* IllegalArgumentException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9B0ACD7956007E34F2 /* IllegalArgumentException.h */; };
+		53438C7D0ACD7956007E34F2 /* IllegalMonitorStateException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9C0ACD7956007E34F2 /* IllegalMonitorStateException.h */; };
+		53438C7E0ACD7956007E34F2 /* InterruptedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9D0ACD7956007E34F2 /* InterruptedException.h */; };
+		53438C7F0ACD7956007E34F2 /* InvalidStateException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9E0ACD7956007E34F2 /* InvalidStateException.h */; };
+		53438C800ACD7956007E34F2 /* NoSuchElementException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438B9F0ACD7956007E34F2 /* NoSuchElementException.h */; };
+		53438C810ACD7956007E34F2 /* NullPointerException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA00ACD7956007E34F2 /* NullPointerException.h */; };
+		53438C820ACD7956007E34F2 /* RuntimeException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA10ACD7956007E34F2 /* RuntimeException.h */; };
+		53438C830ACD7956007E34F2 /* UnsupportedOperationException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA20ACD7956007E34F2 /* UnsupportedOperationException.h */; };
+		53438C840ACD7956007E34F2 /* BufferedInputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BA40ACD7956007E34F2 /* BufferedInputStream.cpp */; };
+		53438C850ACD7956007E34F2 /* BufferedInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA50ACD7956007E34F2 /* BufferedInputStream.h */; };
+		53438C860ACD7956007E34F2 /* BufferedOutputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BA60ACD7956007E34F2 /* BufferedOutputStream.cpp */; };
+		53438C870ACD7956007E34F2 /* BufferedOutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA70ACD7956007E34F2 /* BufferedOutputStream.h */; };
+		53438C880ACD7956007E34F2 /* ByteArrayInputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BA80ACD7956007E34F2 /* ByteArrayInputStream.cpp */; };
+		53438C890ACD7956007E34F2 /* ByteArrayInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BA90ACD7956007E34F2 /* ByteArrayInputStream.h */; };
+		53438C8A0ACD7956007E34F2 /* ByteArrayOutputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BAA0ACD7956007E34F2 /* ByteArrayOutputStream.cpp */; };
+		53438C8B0ACD7956007E34F2 /* ByteArrayOutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BAB0ACD7956007E34F2 /* ByteArrayOutputStream.h */; };
+		53438C8C0ACD7956007E34F2 /* EndianReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BAC0ACD7956007E34F2 /* EndianReader.cpp */; };
+		53438C8D0ACD7956007E34F2 /* EndianReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BAD0ACD7956007E34F2 /* EndianReader.h */; };
+		53438C8E0ACD7956007E34F2 /* EndianWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BAE0ACD7956007E34F2 /* EndianWriter.cpp */; };
+		53438C8F0ACD7956007E34F2 /* EndianWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BAF0ACD7956007E34F2 /* EndianWriter.h */; };
+		53438C900ACD7956007E34F2 /* InputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB00ACD7956007E34F2 /* InputStream.h */; };
+		53438C910ACD7956007E34F2 /* IOException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB10ACD7956007E34F2 /* IOException.h */; };
+		53438C920ACD7956007E34F2 /* OutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB20ACD7956007E34F2 /* OutputStream.h */; };
+		53438C930ACD7956007E34F2 /* Reader.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB30ACD7956007E34F2 /* Reader.h */; };
+		53438C940ACD7956007E34F2 /* StandardErrorOutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB40ACD7956007E34F2 /* StandardErrorOutputStream.h */; };
+		53438C950ACD7956007E34F2 /* Writer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB50ACD7956007E34F2 /* Writer.h */; };
+		53438C960ACD7956007E34F2 /* ConsoleHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB70ACD7956007E34F2 /* ConsoleHandler.h */; };
+		53438C970ACD7956007E34F2 /* Filter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB80ACD7956007E34F2 /* Filter.h */; };
+		53438C980ACD7956007E34F2 /* Formatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BB90ACD7956007E34F2 /* Formatter.h */; };
+		53438C990ACD7956007E34F2 /* Handler.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BBA0ACD7956007E34F2 /* Handler.h */; };
+		53438C9A0ACD7956007E34F2 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BBB0ACD7956007E34F2 /* Logger.cpp */; };
+		53438C9B0ACD7956007E34F2 /* Logger.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BBC0ACD7956007E34F2 /* Logger.h */; };
+		53438C9C0ACD7956007E34F2 /* LoggerCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BBD0ACD7956007E34F2 /* LoggerCommon.h */; };
+		53438C9D0ACD7956007E34F2 /* LoggerDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BBE0ACD7956007E34F2 /* LoggerDefines.h */; };
+		53438C9E0ACD7956007E34F2 /* LoggerHierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BBF0ACD7956007E34F2 /* LoggerHierarchy.cpp */; };
+		53438C9F0ACD7956007E34F2 /* LoggerHierarchy.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC00ACD7956007E34F2 /* LoggerHierarchy.h */; };
+		53438CA00ACD7956007E34F2 /* LogManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BC10ACD7956007E34F2 /* LogManager.cpp */; };
+		53438CA10ACD7956007E34F2 /* LogManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC20ACD7956007E34F2 /* LogManager.h */; };
+		53438CA20ACD7956007E34F2 /* LogRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC30ACD7956007E34F2 /* LogRecord.h */; };
+		53438CA30ACD7956007E34F2 /* LogWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BC40ACD7956007E34F2 /* LogWriter.cpp */; };
+		53438CA40ACD7956007E34F2 /* LogWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC50ACD7956007E34F2 /* LogWriter.h */; };
+		53438CA50ACD7956007E34F2 /* MarkBlockLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC60ACD7956007E34F2 /* MarkBlockLogger.h */; };
+		53438CA60ACD7956007E34F2 /* PropertiesChangeListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC70ACD7956007E34F2 /* PropertiesChangeListener.h */; };
+		53438CA70ACD7956007E34F2 /* SimpleFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BC80ACD7956007E34F2 /* SimpleFormatter.h */; };
+		53438CA80ACD7956007E34F2 /* SimpleLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BC90ACD7956007E34F2 /* SimpleLogger.cpp */; };
+		53438CA90ACD7956007E34F2 /* SimpleLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BCA0ACD7956007E34F2 /* SimpleLogger.h */; };
+		53438CAA0ACD7956007E34F2 /* StreamHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BCB0ACD7956007E34F2 /* StreamHandler.h */; };
+		53438CAB0ACD7956007E34F2 /* BufferedSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BCD0ACD7956007E34F2 /* BufferedSocket.cpp */; };
+		53438CAC0ACD7956007E34F2 /* BufferedSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BCE0ACD7956007E34F2 /* BufferedSocket.h */; };
+		53438CAD0ACD7956007E34F2 /* ServerSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BCF0ACD7956007E34F2 /* ServerSocket.cpp */; };
+		53438CAE0ACD7956007E34F2 /* ServerSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD00ACD7956007E34F2 /* ServerSocket.h */; };
+		53438CAF0ACD7956007E34F2 /* Socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD10ACD7956007E34F2 /* Socket.h */; };
+		53438CB00ACD7956007E34F2 /* SocketException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD20ACD7956007E34F2 /* SocketException.h */; };
+		53438CB10ACD7956007E34F2 /* SocketFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BD30ACD7956007E34F2 /* SocketFactory.cpp */; };
+		53438CB20ACD7956007E34F2 /* SocketFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD40ACD7956007E34F2 /* SocketFactory.h */; };
+		53438CB30ACD7956007E34F2 /* SocketInputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BD50ACD7956007E34F2 /* SocketInputStream.cpp */; };
+		53438CB40ACD7956007E34F2 /* SocketInputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD60ACD7956007E34F2 /* SocketInputStream.h */; };
+		53438CB50ACD7956007E34F2 /* SocketOutputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BD70ACD7956007E34F2 /* SocketOutputStream.cpp */; };
+		53438CB60ACD7956007E34F2 /* SocketOutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BD80ACD7956007E34F2 /* SocketOutputStream.h */; };
+		53438CB70ACD7956007E34F2 /* TcpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BD90ACD7956007E34F2 /* TcpSocket.cpp */; };
+		53438CB80ACD7956007E34F2 /* TcpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BDA0ACD7956007E34F2 /* TcpSocket.h */; };
+		53438CB90ACD7956007E34F2 /* InitDirector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BDC0ACD7956007E34F2 /* InitDirector.cpp */; };
+		53438CBA0ACD7956007E34F2 /* InitDirector.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BDD0ACD7956007E34F2 /* InitDirector.h */; };
+		53438CBB0ACD7956007E34F2 /* LibraryInit.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BDE0ACD7956007E34F2 /* LibraryInit.h */; };
+		53438CBC0ACD7956007E34F2 /* BrokerError.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE00ACD7956007E34F2 /* BrokerError.h */; };
+		53438CBD0ACD7956007E34F2 /* Command.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE10ACD7956007E34F2 /* Command.h */; };
+		53438CBE0ACD7956007E34F2 /* CommandIOException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE20ACD7956007E34F2 /* CommandIOException.h */; };
+		53438CBF0ACD7956007E34F2 /* CommandListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE30ACD7956007E34F2 /* CommandListener.h */; };
+		53438CC00ACD7956007E34F2 /* CommandReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE40ACD7956007E34F2 /* CommandReader.h */; };
+		53438CC10ACD7956007E34F2 /* CommandWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE50ACD7956007E34F2 /* CommandWriter.h */; };
+		53438CC20ACD7956007E34F2 /* ExceptionResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE60ACD7956007E34F2 /* ExceptionResponse.h */; };
+		53438CC30ACD7956007E34F2 /* FutureResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE70ACD7956007E34F2 /* FutureResponse.h */; };
+		53438CC40ACD7956007E34F2 /* IOTransport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BE80ACD7956007E34F2 /* IOTransport.cpp */; };
+		53438CC50ACD7956007E34F2 /* IOTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BE90ACD7956007E34F2 /* IOTransport.h */; };
+		53438CC60ACD7956007E34F2 /* IOTransportFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BEA0ACD7956007E34F2 /* IOTransportFactory.cpp */; };
+		53438CC70ACD7956007E34F2 /* IOTransportFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BEB0ACD7956007E34F2 /* IOTransportFactory.h */; };
+		53438CC80ACD7957007E34F2 /* Response.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BEC0ACD7956007E34F2 /* Response.h */; };
+		53438CC90ACD7957007E34F2 /* ResponseCorrelator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BED0ACD7956007E34F2 /* ResponseCorrelator.cpp */; };
+		53438CCA0ACD7957007E34F2 /* ResponseCorrelator.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BEE0ACD7956007E34F2 /* ResponseCorrelator.h */; };
+		53438CCB0ACD7957007E34F2 /* TcpTransport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BEF0ACD7956007E34F2 /* TcpTransport.cpp */; };
+		53438CCC0ACD7957007E34F2 /* TcpTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF00ACD7956007E34F2 /* TcpTransport.h */; };
+		53438CCD0ACD7957007E34F2 /* TcpTransportFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BF10ACD7956007E34F2 /* TcpTransportFactory.cpp */; };
+		53438CCE0ACD7957007E34F2 /* TcpTransportFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF20ACD7956007E34F2 /* TcpTransportFactory.h */; };
+		53438CCF0ACD7957007E34F2 /* Transport.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF30ACD7956007E34F2 /* Transport.h */; };
+		53438CD00ACD7957007E34F2 /* TransportExceptionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF40ACD7956007E34F2 /* TransportExceptionListener.h */; };
+		53438CD10ACD7957007E34F2 /* TransportFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF50ACD7956007E34F2 /* TransportFactory.h */; };
+		53438CD20ACD7957007E34F2 /* TransportFactoryMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BF60ACD7956007E34F2 /* TransportFactoryMap.cpp */; };
+		53438CD30ACD7957007E34F2 /* TransportFactoryMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF70ACD7956007E34F2 /* TransportFactoryMap.h */; };
+		53438CD40ACD7957007E34F2 /* TransportFactoryMapRegistrar.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF80ACD7956007E34F2 /* TransportFactoryMapRegistrar.h */; };
+		53438CD50ACD7957007E34F2 /* TransportFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BF90ACD7956007E34F2 /* TransportFilter.h */; };
+		53438CD60ACD7957007E34F2 /* Boolean.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BFB0ACD7956007E34F2 /* Boolean.h */; };
+		53438CD70ACD7957007E34F2 /* Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BFC0ACD7956007E34F2 /* Endian.h */; };
+		53438CD80ACD7957007E34F2 /* Guid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438BFD0ACD7956007E34F2 /* Guid.cpp */; };
+		53438CD90ACD7957007E34F2 /* Guid.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BFE0ACD7956007E34F2 /* Guid.h */; };
+		53438CDA0ACD7957007E34F2 /* Integer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438BFF0ACD7956007E34F2 /* Integer.h */; };
+		53438CDB0ACD7957007E34F2 /* Long.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C000ACD7956007E34F2 /* Long.h */; };
+		53438CDC0ACD7957007E34F2 /* Number.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C010ACD7956007E34F2 /* Number.h */; };
+		53438CDD0ACD7957007E34F2 /* Properties.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C020ACD7956007E34F2 /* Properties.h */; };
+		53438CDE0ACD7957007E34F2 /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C030ACD7956007E34F2 /* Queue.h */; };
+		53438CDF0ACD7957007E34F2 /* SimpleProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C040ACD7956007E34F2 /* SimpleProperties.h */; };
+		53438CE00ACD7957007E34F2 /* StringTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438C050ACD7956007E34F2 /* StringTokenizer.cpp */; };
+		53438CE10ACD7957007E34F2 /* StringTokenizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C060ACD7956007E34F2 /* StringTokenizer.h */; };
+		53438CE20ACD7957007E34F2 /* BytesMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C080ACD7956007E34F2 /* BytesMessage.h */; };
+		53438CE30ACD7957007E34F2 /* Closeable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C090ACD7956007E34F2 /* Closeable.h */; };
+		53438CE40ACD7957007E34F2 /* CMSException.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0A0ACD7956007E34F2 /* CMSException.h */; };
+		53438CE50ACD7957007E34F2 /* Connection.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0B0ACD7956007E34F2 /* Connection.h */; };
+		53438CE60ACD7957007E34F2 /* ConnectionFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0C0ACD7956007E34F2 /* ConnectionFactory.h */; };
+		53438CE70ACD7957007E34F2 /* DeliveryMode.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0D0ACD7956007E34F2 /* DeliveryMode.h */; };
+		53438CE80ACD7957007E34F2 /* Destination.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0E0ACD7956007E34F2 /* Destination.h */; };
+		53438CE90ACD7957007E34F2 /* ExceptionListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C0F0ACD7956007E34F2 /* ExceptionListener.h */; };
+		53438CEA0ACD7957007E34F2 /* MapMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C100ACD7956007E34F2 /* MapMessage.h */; };
+		53438CEB0ACD7957007E34F2 /* Message.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C110ACD7956007E34F2 /* Message.h */; };
+		53438CEC0ACD7957007E34F2 /* MessageConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C120ACD7956007E34F2 /* MessageConsumer.h */; };
+		53438CED0ACD7957007E34F2 /* MessageListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C130ACD7956007E34F2 /* MessageListener.h */; };
+		53438CEE0ACD7957007E34F2 /* MessageProducer.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C140ACD7956007E34F2 /* MessageProducer.h */; };
+		53438CEF0ACD7957007E34F2 /* Queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C150ACD7956007E34F2 /* Queue.h */; };
+		53438CF00ACD7957007E34F2 /* Session.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C160ACD7956007E34F2 /* Session.h */; };
+		53438CF10ACD7957007E34F2 /* Startable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C170ACD7956007E34F2 /* Startable.h */; };
+		53438CF20ACD7957007E34F2 /* Stoppable.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C180ACD7956007E34F2 /* Stoppable.h */; };
+		53438CF30ACD7957007E34F2 /* TemporaryQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C190ACD7956007E34F2 /* TemporaryQueue.h */; };
+		53438CF40ACD7957007E34F2 /* TemporaryTopic.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C1A0ACD7956007E34F2 /* TemporaryTopic.h */; };
+		53438CF50ACD7957007E34F2 /* TextMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C1B0ACD7956007E34F2 /* TextMessage.h */; };
+		53438CF60ACD7957007E34F2 /* Topic.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438C1C0ACD7956007E34F2 /* Topic.h */; };
+		53438D160ACD7D11007E34F2 /* Config.h in Headers */ = {isa = PBXBuildFile; fileRef = 53438D150ACD7D11007E34F2 /* Config.h */; };
+		53438D430ACD8075007E34F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53438D400ACD8075007E34F2 /* main.cpp */; };
+		53438D6F0ACD81D7007E34F2 /* libactivemq.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 534387930ACD78B3007E34F2 /* libactivemq.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA520018CE5811CA2923 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		014CEA530018CE5811CA2923 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		53438D740ACD8226007E34F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 534387920ACD78B3007E34F2 /* activemq */;
+			remoteInfo = activemq;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		534387930ACD78B3007E34F2 /* libactivemq.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libactivemq.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		53438B370ACD7956007E34F2 /* Concurrent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Concurrent.h; sourceTree = "<group>"; };
+		53438B380ACD7956007E34F2 /* Lock.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Lock.h; sourceTree = "<group>"; };
+		53438B390ACD7956007E34F2 /* Mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Mutex.cpp; sourceTree = "<group>"; };
+		53438B3A0ACD7956007E34F2 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
+		53438B3B0ACD7956007E34F2 /* PooledThread.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = PooledThread.cpp; sourceTree = "<group>"; };
+		53438B3C0ACD7956007E34F2 /* PooledThread.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PooledThread.h; sourceTree = "<group>"; };
+		53438B3D0ACD7956007E34F2 /* PooledThreadListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PooledThreadListener.h; sourceTree = "<group>"; };
+		53438B3E0ACD7956007E34F2 /* Runnable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Runnable.h; sourceTree = "<group>"; };
+		53438B3F0ACD7956007E34F2 /* Synchronizable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Synchronizable.h; sourceTree = "<group>"; };
+		53438B400ACD7956007E34F2 /* TaskListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TaskListener.h; sourceTree = "<group>"; };
+		53438B410ACD7956007E34F2 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
+		53438B420ACD7956007E34F2 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		53438B430ACD7956007E34F2 /* ThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadPool.cpp; sourceTree = "<group>"; };
+		53438B440ACD7956007E34F2 /* ThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
+		53438B460ACD7956007E34F2 /* Connector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Connector.h; sourceTree = "<group>"; };
+		53438B470ACD7956007E34F2 /* ConnectorException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectorException.h; sourceTree = "<group>"; };
+		53438B480ACD7956007E34F2 /* ConnectorFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectorFactory.h; sourceTree = "<group>"; };
+		53438B490ACD7956007E34F2 /* ConnectorFactoryMap.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectorFactoryMap.cpp; sourceTree = "<group>"; };
+		53438B4A0ACD7956007E34F2 /* ConnectorFactoryMap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectorFactoryMap.h; sourceTree = "<group>"; };
+		53438B4B0ACD7956007E34F2 /* ConnectorFactoryMapRegistrar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectorFactoryMapRegistrar.h; sourceTree = "<group>"; };
+		53438B4C0ACD7956007E34F2 /* ConnectorResource.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectorResource.h; sourceTree = "<group>"; };
+		53438B4D0ACD7956007E34F2 /* ConsumerInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConsumerInfo.h; sourceTree = "<group>"; };
+		53438B4E0ACD7956007E34F2 /* ConsumerMessageListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConsumerMessageListener.h; sourceTree = "<group>"; };
+		53438B500ACD7956007E34F2 /* ProducerInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ProducerInfo.h; sourceTree = "<group>"; };
+		53438B510ACD7956007E34F2 /* SessionInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SessionInfo.h; sourceTree = "<group>"; };
+		53438B540ACD7956007E34F2 /* AbortCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AbortCommand.h; sourceTree = "<group>"; };
+		53438B550ACD7956007E34F2 /* AbstractCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AbstractCommand.h; sourceTree = "<group>"; };
+		53438B560ACD7956007E34F2 /* AckCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AckCommand.h; sourceTree = "<group>"; };
+		53438B570ACD7956007E34F2 /* BeginCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BeginCommand.h; sourceTree = "<group>"; };
+		53438B580ACD7956007E34F2 /* BytesMessageCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BytesMessageCommand.h; sourceTree = "<group>"; };
+		53438B590ACD7956007E34F2 /* CommandConstants.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = CommandConstants.cpp; sourceTree = "<group>"; };
+		53438B5A0ACD7956007E34F2 /* CommandConstants.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommandConstants.h; sourceTree = "<group>"; };
+		53438B5B0ACD7956007E34F2 /* CommitCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommitCommand.h; sourceTree = "<group>"; };
+		53438B5C0ACD7956007E34F2 /* ConnectCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectCommand.h; sourceTree = "<group>"; };
+		53438B5D0ACD7956007E34F2 /* ConnectedCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectedCommand.h; sourceTree = "<group>"; };
+		53438B5E0ACD7956007E34F2 /* DisconnectCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DisconnectCommand.h; sourceTree = "<group>"; };
+		53438B5F0ACD7956007E34F2 /* ErrorCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ErrorCommand.h; sourceTree = "<group>"; };
+		53438B600ACD7956007E34F2 /* MessageCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MessageCommand.h; sourceTree = "<group>"; };
+		53438B610ACD7956007E34F2 /* ReceiptCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ReceiptCommand.h; sourceTree = "<group>"; };
+		53438B620ACD7956007E34F2 /* StompCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompCommand.h; sourceTree = "<group>"; };
+		53438B630ACD7956007E34F2 /* StompMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompMessage.h; sourceTree = "<group>"; };
+		53438B640ACD7956007E34F2 /* SubscribeCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SubscribeCommand.h; sourceTree = "<group>"; };
+		53438B650ACD7956007E34F2 /* TextMessageCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TextMessageCommand.h; sourceTree = "<group>"; };
+		53438B660ACD7956007E34F2 /* UnsubscribeCommand.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UnsubscribeCommand.h; sourceTree = "<group>"; };
+		53438B680ACD7956007E34F2 /* Marshalable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Marshalable.h; sourceTree = "<group>"; };
+		53438B690ACD7956007E34F2 /* Marshaler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Marshaler.cpp; sourceTree = "<group>"; };
+		53438B6A0ACD7956007E34F2 /* Marshaler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Marshaler.h; sourceTree = "<group>"; };
+		53438B6B0ACD7956007E34F2 /* MarshalException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MarshalException.h; sourceTree = "<group>"; };
+		53438B6C0ACD7956007E34F2 /* StompCommandListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompCommandListener.h; sourceTree = "<group>"; };
+		53438B6D0ACD7956007E34F2 /* StompCommandReader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StompCommandReader.cpp; sourceTree = "<group>"; };
+		53438B6E0ACD7956007E34F2 /* StompCommandReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompCommandReader.h; sourceTree = "<group>"; };
+		53438B6F0ACD7956007E34F2 /* StompCommandWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StompCommandWriter.cpp; sourceTree = "<group>"; };
+		53438B700ACD7956007E34F2 /* StompCommandWriter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompCommandWriter.h; sourceTree = "<group>"; };
+		53438B710ACD7956007E34F2 /* StompConnector.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StompConnector.cpp; sourceTree = "<group>"; };
+		53438B720ACD7956007E34F2 /* StompConnector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompConnector.h; sourceTree = "<group>"; };
+		53438B730ACD7956007E34F2 /* StompConnectorException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompConnectorException.h; sourceTree = "<group>"; };
+		53438B740ACD7956007E34F2 /* StompConnectorFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StompConnectorFactory.cpp; sourceTree = "<group>"; };
+		53438B750ACD7956007E34F2 /* StompConnectorFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompConnectorFactory.h; sourceTree = "<group>"; };
+		53438B760ACD7956007E34F2 /* StompConsumerInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompConsumerInfo.h; sourceTree = "<group>"; };
+		53438B770ACD7956007E34F2 /* StompDestination.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompDestination.h; sourceTree = "<group>"; };
+		53438B780ACD7956007E34F2 /* StompFrame.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompFrame.h; sourceTree = "<group>"; };
+		53438B790ACD7956007E34F2 /* StompProducerInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompProducerInfo.h; sourceTree = "<group>"; };
+		53438B7A0ACD7956007E34F2 /* StompQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompQueue.h; sourceTree = "<group>"; };
+		53438B7B0ACD7956007E34F2 /* StompSelector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompSelector.h; sourceTree = "<group>"; };
+		53438B7C0ACD7956007E34F2 /* StompSessionInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompSessionInfo.h; sourceTree = "<group>"; };
+		53438B7D0ACD7956007E34F2 /* StompSessionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StompSessionManager.cpp; sourceTree = "<group>"; };
+		53438B7E0ACD7956007E34F2 /* StompSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompSessionManager.h; sourceTree = "<group>"; };
+		53438B7F0ACD7956007E34F2 /* StompTopic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompTopic.h; sourceTree = "<group>"; };
+		53438B800ACD7956007E34F2 /* StompTransactionInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StompTransactionInfo.h; sourceTree = "<group>"; };
+		53438B810ACD7956007E34F2 /* TransactionInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransactionInfo.h; sourceTree = "<group>"; };
+		53438B830ACD7956007E34F2 /* ActiveMQAckHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQAckHandler.h; sourceTree = "<group>"; };
+		53438B840ACD7956007E34F2 /* ActiveMQConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQConnection.cpp; sourceTree = "<group>"; };
+		53438B850ACD7956007E34F2 /* ActiveMQConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQConnection.h; sourceTree = "<group>"; };
+		53438B860ACD7956007E34F2 /* ActiveMQConnectionData.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQConnectionData.h; sourceTree = "<group>"; };
+		53438B870ACD7956007E34F2 /* ActiveMQConnectionFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQConnectionFactory.cpp; sourceTree = "<group>"; };
+		53438B880ACD7956007E34F2 /* ActiveMQConnectionFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQConnectionFactory.h; sourceTree = "<group>"; };
+		53438B890ACD7956007E34F2 /* ActiveMQConstants.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQConstants.cpp; sourceTree = "<group>"; };
+		53438B8A0ACD7956007E34F2 /* ActiveMQConstants.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQConstants.h; sourceTree = "<group>"; };
+		53438B8B0ACD7956007E34F2 /* ActiveMQConsumer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQConsumer.cpp; sourceTree = "<group>"; };
+		53438B8C0ACD7956007E34F2 /* ActiveMQConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQConsumer.h; sourceTree = "<group>"; };
+		53438B8D0ACD7956007E34F2 /* ActiveMQDestination.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQDestination.h; sourceTree = "<group>"; };
+		53438B8E0ACD7956007E34F2 /* ActiveMQMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQMessage.h; sourceTree = "<group>"; };
+		53438B8F0ACD7956007E34F2 /* ActiveMQMessageListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQMessageListener.h; sourceTree = "<group>"; };
+		53438B900ACD7956007E34F2 /* ActiveMQProducer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQProducer.cpp; sourceTree = "<group>"; };
+		53438B910ACD7956007E34F2 /* ActiveMQProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQProducer.h; sourceTree = "<group>"; };
+		53438B920ACD7956007E34F2 /* ActiveMQSession.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQSession.cpp; sourceTree = "<group>"; };
+		53438B930ACD7956007E34F2 /* ActiveMQSession.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQSession.h; sourceTree = "<group>"; };
+		53438B940ACD7956007E34F2 /* ActiveMQSessionResource.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQSessionResource.h; sourceTree = "<group>"; };
+		53438B950ACD7956007E34F2 /* ActiveMQTransaction.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQTransaction.cpp; sourceTree = "<group>"; };
+		53438B960ACD7956007E34F2 /* ActiveMQTransaction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQTransaction.h; sourceTree = "<group>"; };
+		53438B980ACD7956007E34F2 /* ActiveMQException.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ActiveMQException.cpp; sourceTree = "<group>"; };
+		53438B990ACD7956007E34F2 /* ActiveMQException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ActiveMQException.h; sourceTree = "<group>"; };
+		53438B9A0ACD7956007E34F2 /* ExceptionDefines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExceptionDefines.h; sourceTree = "<group>"; };
+		53438B9B0ACD7956007E34F2 /* IllegalArgumentException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IllegalArgumentException.h; sourceTree = "<group>"; };
+		53438B9C0ACD7956007E34F2 /* IllegalMonitorStateException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IllegalMonitorStateException.h; sourceTree = "<group>"; };
+		53438B9D0ACD7956007E34F2 /* InterruptedException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InterruptedException.h; sourceTree = "<group>"; };
+		53438B9E0ACD7956007E34F2 /* InvalidStateException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InvalidStateException.h; sourceTree = "<group>"; };
+		53438B9F0ACD7956007E34F2 /* NoSuchElementException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NoSuchElementException.h; sourceTree = "<group>"; };
+		53438BA00ACD7956007E34F2 /* NullPointerException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = NullPointerException.h; sourceTree = "<group>"; };
+		53438BA10ACD7956007E34F2 /* RuntimeException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RuntimeException.h; sourceTree = "<group>"; };
+		53438BA20ACD7956007E34F2 /* UnsupportedOperationException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UnsupportedOperationException.h; sourceTree = "<group>"; };
+		53438BA40ACD7956007E34F2 /* BufferedInputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BufferedInputStream.cpp; sourceTree = "<group>"; };
+		53438BA50ACD7956007E34F2 /* BufferedInputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BufferedInputStream.h; sourceTree = "<group>"; };
+		53438BA60ACD7956007E34F2 /* BufferedOutputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BufferedOutputStream.cpp; sourceTree = "<group>"; };
+		53438BA70ACD7956007E34F2 /* BufferedOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BufferedOutputStream.h; sourceTree = "<group>"; };
+		53438BA80ACD7956007E34F2 /* ByteArrayInputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ByteArrayInputStream.cpp; sourceTree = "<group>"; };
+		53438BA90ACD7956007E34F2 /* ByteArrayInputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteArrayInputStream.h; sourceTree = "<group>"; };
+		53438BAA0ACD7956007E34F2 /* ByteArrayOutputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ByteArrayOutputStream.cpp; sourceTree = "<group>"; };
+		53438BAB0ACD7956007E34F2 /* ByteArrayOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteArrayOutputStream.h; sourceTree = "<group>"; };
+		53438BAC0ACD7956007E34F2 /* EndianReader.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = EndianReader.cpp; sourceTree = "<group>"; };
+		53438BAD0ACD7956007E34F2 /* EndianReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EndianReader.h; sourceTree = "<group>"; };
+		53438BAE0ACD7956007E34F2 /* EndianWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = EndianWriter.cpp; sourceTree = "<group>"; };
+		53438BAF0ACD7956007E34F2 /* EndianWriter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EndianWriter.h; sourceTree = "<group>"; };
+		53438BB00ACD7956007E34F2 /* InputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InputStream.h; sourceTree = "<group>"; };
+		53438BB10ACD7956007E34F2 /* IOException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IOException.h; sourceTree = "<group>"; };
+		53438BB20ACD7956007E34F2 /* OutputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OutputStream.h; sourceTree = "<group>"; };
+		53438BB30ACD7956007E34F2 /* Reader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Reader.h; sourceTree = "<group>"; };
+		53438BB40ACD7956007E34F2 /* StandardErrorOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StandardErrorOutputStream.h; sourceTree = "<group>"; };
+		53438BB50ACD7956007E34F2 /* Writer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Writer.h; sourceTree = "<group>"; };
+		53438BB70ACD7956007E34F2 /* ConsoleHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConsoleHandler.h; sourceTree = "<group>"; };
+		53438BB80ACD7956007E34F2 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Filter.h; sourceTree = "<group>"; };
+		53438BB90ACD7956007E34F2 /* Formatter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Formatter.h; sourceTree = "<group>"; };
+		53438BBA0ACD7956007E34F2 /* Handler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Handler.h; sourceTree = "<group>"; };
+		53438BBB0ACD7956007E34F2 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
+		53438BBC0ACD7956007E34F2 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
+		53438BBD0ACD7956007E34F2 /* LoggerCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LoggerCommon.h; sourceTree = "<group>"; };
+		53438BBE0ACD7956007E34F2 /* LoggerDefines.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LoggerDefines.h; sourceTree = "<group>"; };
+		53438BBF0ACD7956007E34F2 /* LoggerHierarchy.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = LoggerHierarchy.cpp; sourceTree = "<group>"; };
+		53438BC00ACD7956007E34F2 /* LoggerHierarchy.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LoggerHierarchy.h; sourceTree = "<group>"; };
+		53438BC10ACD7956007E34F2 /* LogManager.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = LogManager.cpp; sourceTree = "<group>"; };
+		53438BC20ACD7956007E34F2 /* LogManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
+		53438BC30ACD7956007E34F2 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
+		53438BC40ACD7956007E34F2 /* LogWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = LogWriter.cpp; sourceTree = "<group>"; };
+		53438BC50ACD7956007E34F2 /* LogWriter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LogWriter.h; sourceTree = "<group>"; };
+		53438BC60ACD7956007E34F2 /* MarkBlockLogger.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MarkBlockLogger.h; sourceTree = "<group>"; };
+		53438BC70ACD7956007E34F2 /* PropertiesChangeListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PropertiesChangeListener.h; sourceTree = "<group>"; };
+		53438BC80ACD7956007E34F2 /* SimpleFormatter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SimpleFormatter.h; sourceTree = "<group>"; };
+		53438BC90ACD7956007E34F2 /* SimpleLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleLogger.cpp; sourceTree = "<group>"; };
+		53438BCA0ACD7956007E34F2 /* SimpleLogger.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SimpleLogger.h; sourceTree = "<group>"; };
+		53438BCB0ACD7956007E34F2 /* StreamHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StreamHandler.h; sourceTree = "<group>"; };
+		53438BCD0ACD7956007E34F2 /* BufferedSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = BufferedSocket.cpp; sourceTree = "<group>"; };
+		53438BCE0ACD7956007E34F2 /* BufferedSocket.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BufferedSocket.h; sourceTree = "<group>"; };
+		53438BCF0ACD7956007E34F2 /* ServerSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ServerSocket.cpp; sourceTree = "<group>"; };
+		53438BD00ACD7956007E34F2 /* ServerSocket.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ServerSocket.h; sourceTree = "<group>"; };
+		53438BD10ACD7956007E34F2 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
+		53438BD20ACD7956007E34F2 /* SocketException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SocketException.h; sourceTree = "<group>"; };
+		53438BD30ACD7956007E34F2 /* SocketFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SocketFactory.cpp; sourceTree = "<group>"; };
+		53438BD40ACD7956007E34F2 /* SocketFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SocketFactory.h; sourceTree = "<group>"; };
+		53438BD50ACD7956007E34F2 /* SocketInputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SocketInputStream.cpp; sourceTree = "<group>"; };
+		53438BD60ACD7956007E34F2 /* SocketInputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SocketInputStream.h; sourceTree = "<group>"; };
+		53438BD70ACD7956007E34F2 /* SocketOutputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = SocketOutputStream.cpp; sourceTree = "<group>"; };
+		53438BD80ACD7956007E34F2 /* SocketOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SocketOutputStream.h; sourceTree = "<group>"; };
+		53438BD90ACD7956007E34F2 /* TcpSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TcpSocket.cpp; sourceTree = "<group>"; };
+		53438BDA0ACD7956007E34F2 /* TcpSocket.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TcpSocket.h; sourceTree = "<group>"; };
+		53438BDC0ACD7956007E34F2 /* InitDirector.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = InitDirector.cpp; sourceTree = "<group>"; };
+		53438BDD0ACD7956007E34F2 /* InitDirector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InitDirector.h; sourceTree = "<group>"; };
+		53438BDE0ACD7956007E34F2 /* LibraryInit.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LibraryInit.h; sourceTree = "<group>"; };
+		53438BE00ACD7956007E34F2 /* BrokerError.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BrokerError.h; sourceTree = "<group>"; };
+		53438BE10ACD7956007E34F2 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
+		53438BE20ACD7956007E34F2 /* CommandIOException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommandIOException.h; sourceTree = "<group>"; };
+		53438BE30ACD7956007E34F2 /* CommandListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommandListener.h; sourceTree = "<group>"; };
+		53438BE40ACD7956007E34F2 /* CommandReader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommandReader.h; sourceTree = "<group>"; };
+		53438BE50ACD7956007E34F2 /* CommandWriter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CommandWriter.h; sourceTree = "<group>"; };
+		53438BE60ACD7956007E34F2 /* ExceptionResponse.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExceptionResponse.h; sourceTree = "<group>"; };
+		53438BE70ACD7956007E34F2 /* FutureResponse.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FutureResponse.h; sourceTree = "<group>"; };
+		53438BE80ACD7956007E34F2 /* IOTransport.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = IOTransport.cpp; sourceTree = "<group>"; };
+		53438BE90ACD7956007E34F2 /* IOTransport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IOTransport.h; sourceTree = "<group>"; };
+		53438BEA0ACD7956007E34F2 /* IOTransportFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = IOTransportFactory.cpp; sourceTree = "<group>"; };
+		53438BEB0ACD7956007E34F2 /* IOTransportFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IOTransportFactory.h; sourceTree = "<group>"; };
+		53438BEC0ACD7956007E34F2 /* Response.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
+		53438BED0ACD7956007E34F2 /* ResponseCorrelator.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = ResponseCorrelator.cpp; sourceTree = "<group>"; };
+		53438BEE0ACD7956007E34F2 /* ResponseCorrelator.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ResponseCorrelator.h; sourceTree = "<group>"; };
+		53438BEF0ACD7956007E34F2 /* TcpTransport.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TcpTransport.cpp; sourceTree = "<group>"; };
+		53438BF00ACD7956007E34F2 /* TcpTransport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TcpTransport.h; sourceTree = "<group>"; };
+		53438BF10ACD7956007E34F2 /* TcpTransportFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TcpTransportFactory.cpp; sourceTree = "<group>"; };
+		53438BF20ACD7956007E34F2 /* TcpTransportFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TcpTransportFactory.h; sourceTree = "<group>"; };
+		53438BF30ACD7956007E34F2 /* Transport.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Transport.h; sourceTree = "<group>"; };
+		53438BF40ACD7956007E34F2 /* TransportExceptionListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransportExceptionListener.h; sourceTree = "<group>"; };
+		53438BF50ACD7956007E34F2 /* TransportFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransportFactory.h; sourceTree = "<group>"; };
+		53438BF60ACD7956007E34F2 /* TransportFactoryMap.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = TransportFactoryMap.cpp; sourceTree = "<group>"; };
+		53438BF70ACD7956007E34F2 /* TransportFactoryMap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransportFactoryMap.h; sourceTree = "<group>"; };
+		53438BF80ACD7956007E34F2 /* TransportFactoryMapRegistrar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransportFactoryMapRegistrar.h; sourceTree = "<group>"; };
+		53438BF90ACD7956007E34F2 /* TransportFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TransportFilter.h; sourceTree = "<group>"; };
+		53438BFB0ACD7956007E34F2 /* Boolean.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Boolean.h; sourceTree = "<group>"; };
+		53438BFC0ACD7956007E34F2 /* Endian.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Endian.h; sourceTree = "<group>"; };
+		53438BFD0ACD7956007E34F2 /* Guid.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Guid.cpp; sourceTree = "<group>"; };
+		53438BFE0ACD7956007E34F2 /* Guid.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Guid.h; sourceTree = "<group>"; };
+		53438BFF0ACD7956007E34F2 /* Integer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Integer.h; sourceTree = "<group>"; };
+		53438C000ACD7956007E34F2 /* Long.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Long.h; sourceTree = "<group>"; };
+		53438C010ACD7956007E34F2 /* Number.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Number.h; sourceTree = "<group>"; };
+		53438C020ACD7956007E34F2 /* Properties.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Properties.h; sourceTree = "<group>"; };
+		53438C030ACD7956007E34F2 /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
+		53438C040ACD7956007E34F2 /* SimpleProperties.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SimpleProperties.h; sourceTree = "<group>"; };
+		53438C050ACD7956007E34F2 /* StringTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = StringTokenizer.cpp; sourceTree = "<group>"; };
+		53438C060ACD7956007E34F2 /* StringTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = StringTokenizer.h; sourceTree = "<group>"; };
+		53438C080ACD7956007E34F2 /* BytesMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BytesMessage.h; sourceTree = "<group>"; };
+		53438C090ACD7956007E34F2 /* Closeable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Closeable.h; sourceTree = "<group>"; };
+		53438C0A0ACD7956007E34F2 /* CMSException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CMSException.h; sourceTree = "<group>"; };
+		53438C0B0ACD7956007E34F2 /* Connection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Connection.h; sourceTree = "<group>"; };
+		53438C0C0ACD7956007E34F2 /* ConnectionFactory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ConnectionFactory.h; sourceTree = "<group>"; };
+		53438C0D0ACD7956007E34F2 /* DeliveryMode.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DeliveryMode.h; sourceTree = "<group>"; };
+		53438C0E0ACD7956007E34F2 /* Destination.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Destination.h; sourceTree = "<group>"; };
+		53438C0F0ACD7956007E34F2 /* ExceptionListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ExceptionListener.h; sourceTree = "<group>"; };
+		53438C100ACD7956007E34F2 /* MapMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MapMessage.h; sourceTree = "<group>"; };
+		53438C110ACD7956007E34F2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
+		53438C120ACD7956007E34F2 /* MessageConsumer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MessageConsumer.h; sourceTree = "<group>"; };
+		53438C130ACD7956007E34F2 /* MessageListener.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MessageListener.h; sourceTree = "<group>"; };
+		53438C140ACD7956007E34F2 /* MessageProducer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MessageProducer.h; sourceTree = "<group>"; };
+		53438C150ACD7956007E34F2 /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
+		53438C160ACD7956007E34F2 /* Session.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Session.h; sourceTree = "<group>"; };
+		53438C170ACD7956007E34F2 /* Startable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Startable.h; sourceTree = "<group>"; };
+		53438C180ACD7956007E34F2 /* Stoppable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Stoppable.h; sourceTree = "<group>"; };
+		53438C190ACD7956007E34F2 /* TemporaryQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TemporaryQueue.h; sourceTree = "<group>"; };
+		53438C1A0ACD7956007E34F2 /* TemporaryTopic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TemporaryTopic.h; sourceTree = "<group>"; };
+		53438C1B0ACD7956007E34F2 /* TextMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TextMessage.h; sourceTree = "<group>"; };
+		53438C1C0ACD7956007E34F2 /* Topic.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Topic.h; sourceTree = "<group>"; };
+		53438C1D0ACD7956007E34F2 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		53438C1E0ACD7956007E34F2 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		53438CFA0ACD79A9007E34F2 /* activemq-example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "activemq-example"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53438D150ACD7D11007E34F2 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		53438D3F0ACD8075007E34F2 /* examples.vcproj */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = examples.vcproj; sourceTree = "<group>"; };
+		53438D400ACD8075007E34F2 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		53438D410ACD8075007E34F2 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		53438D420ACD8075007E34F2 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		534387910ACD78B3007E34F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53438CF80ACD79A9007E34F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53438D6F0ACD81D7007E34F2 /* libactivemq.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* amqc */ = {
+			isa = PBXGroup;
+			children = (
+				53438D3E0ACD8075007E34F2 /* examples */,
+				53438B340ACD7956007E34F2 /* main */,
+				534387930ACD78B3007E34F2 /* libactivemq.dylib */,
+				53438CFA0ACD79A9007E34F2 /* activemq-example */,
+			);
+			name = amqc;
+			sourceTree = "<group>";
+		};
+		53438B340ACD7956007E34F2 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				53438B350ACD7956007E34F2 /* activemq */,
+				53438C070ACD7956007E34F2 /* cms */,
+				53438C1D0ACD7956007E34F2 /* Makefile.am */,
+				53438C1E0ACD7956007E34F2 /* Makefile.in */,
+			);
+			name = main;
+			path = src/main;
+			sourceTree = "<group>";
+		};
+		53438B350ACD7956007E34F2 /* activemq */ = {
+			isa = PBXGroup;
+			children = (
+				53438B360ACD7956007E34F2 /* concurrent */,
+				53438B450ACD7956007E34F2 /* connector */,
+				53438B820ACD7956007E34F2 /* core */,
+				53438B970ACD7956007E34F2 /* exceptions */,
+				53438BA30ACD7956007E34F2 /* io */,
+				53438BB60ACD7956007E34F2 /* logger */,
+				53438BCC0ACD7956007E34F2 /* network */,
+				53438BDB0ACD7956007E34F2 /* support */,
+				53438BDF0ACD7956007E34F2 /* transport */,
+				53438BFA0ACD7956007E34F2 /* util */,
+			);
+			path = activemq;
+			sourceTree = "<group>";
+		};
+		53438B360ACD7956007E34F2 /* concurrent */ = {
+			isa = PBXGroup;
+			children = (
+				53438B370ACD7956007E34F2 /* Concurrent.h */,
+				53438B380ACD7956007E34F2 /* Lock.h */,
+				53438B390ACD7956007E34F2 /* Mutex.cpp */,
+				53438B3A0ACD7956007E34F2 /* Mutex.h */,
+				53438B3B0ACD7956007E34F2 /* PooledThread.cpp */,
+				53438B3C0ACD7956007E34F2 /* PooledThread.h */,
+				53438B3D0ACD7956007E34F2 /* PooledThreadListener.h */,
+				53438B3E0ACD7956007E34F2 /* Runnable.h */,
+				53438B3F0ACD7956007E34F2 /* Synchronizable.h */,
+				53438B400ACD7956007E34F2 /* TaskListener.h */,
+				53438B410ACD7956007E34F2 /* Thread.cpp */,
+				53438B420ACD7956007E34F2 /* Thread.h */,
+				53438B430ACD7956007E34F2 /* ThreadPool.cpp */,
+				53438B440ACD7956007E34F2 /* ThreadPool.h */,
+			);
+			path = concurrent;
+			sourceTree = "<group>";
+		};
+		53438B450ACD7956007E34F2 /* connector */ = {
+			isa = PBXGroup;
+			children = (
+				53438B460ACD7956007E34F2 /* Connector.h */,
+				53438B470ACD7956007E34F2 /* ConnectorException.h */,
+				53438B480ACD7956007E34F2 /* ConnectorFactory.h */,
+				53438B490ACD7956007E34F2 /* ConnectorFactoryMap.cpp */,
+				53438B4A0ACD7956007E34F2 /* ConnectorFactoryMap.h */,
+				53438B4B0ACD7956007E34F2 /* ConnectorFactoryMapRegistrar.h */,
+				53438B4C0ACD7956007E34F2 /* ConnectorResource.h */,
+				53438B4D0ACD7956007E34F2 /* ConsumerInfo.h */,
+				53438B4E0ACD7956007E34F2 /* ConsumerMessageListener.h */,
+				53438B4F0ACD7956007E34F2 /* openwire */,
+				53438B500ACD7956007E34F2 /* ProducerInfo.h */,
+				53438B510ACD7956007E34F2 /* SessionInfo.h */,
+				53438B520ACD7956007E34F2 /* stomp */,
+				53438B810ACD7956007E34F2 /* TransactionInfo.h */,
+			);
+			path = connector;
+			sourceTree = "<group>";
+		};
+		53438B4F0ACD7956007E34F2 /* openwire */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = openwire;
+			sourceTree = "<group>";
+		};
+		53438B520ACD7956007E34F2 /* stomp */ = {
+			isa = PBXGroup;
+			children = (
+				53438B530ACD7956007E34F2 /* commands */,
+				53438B670ACD7956007E34F2 /* marshal */,
+				53438B6C0ACD7956007E34F2 /* StompCommandListener.h */,
+				53438B6D0ACD7956007E34F2 /* StompCommandReader.cpp */,
+				53438B6E0ACD7956007E34F2 /* StompCommandReader.h */,
+				53438B6F0ACD7956007E34F2 /* StompCommandWriter.cpp */,
+				53438B700ACD7956007E34F2 /* StompCommandWriter.h */,
+				53438B710ACD7956007E34F2 /* StompConnector.cpp */,
+				53438B720ACD7956007E34F2 /* StompConnector.h */,
+				53438B730ACD7956007E34F2 /* StompConnectorException.h */,
+				53438B740ACD7956007E34F2 /* StompConnectorFactory.cpp */,
+				53438B750ACD7956007E34F2 /* StompConnectorFactory.h */,
+				53438B760ACD7956007E34F2 /* StompConsumerInfo.h */,
+				53438B770ACD7956007E34F2 /* StompDestination.h */,
+				53438B780ACD7956007E34F2 /* StompFrame.h */,
+				53438B790ACD7956007E34F2 /* StompProducerInfo.h */,
+				53438B7A0ACD7956007E34F2 /* StompQueue.h */,
+				53438B7B0ACD7956007E34F2 /* StompSelector.h */,
+				53438B7C0ACD7956007E34F2 /* StompSessionInfo.h */,
+				53438B7D0ACD7956007E34F2 /* StompSessionManager.cpp */,
+				53438B7E0ACD7956007E34F2 /* StompSessionManager.h */,
+				53438B7F0ACD7956007E34F2 /* StompTopic.h */,
+				53438B800ACD7956007E34F2 /* StompTransactionInfo.h */,
+			);
+			path = stomp;
+			sourceTree = "<group>";
+		};
+		53438B530ACD7956007E34F2 /* commands */ = {
+			isa = PBXGroup;
+			children = (
+				53438B540ACD7956007E34F2 /* AbortCommand.h */,
+				53438B550ACD7956007E34F2 /* AbstractCommand.h */,
+				53438B560ACD7956007E34F2 /* AckCommand.h */,
+				53438B570ACD7956007E34F2 /* BeginCommand.h */,
+				53438B580ACD7956007E34F2 /* BytesMessageCommand.h */,
+				53438B590ACD7956007E34F2 /* CommandConstants.cpp */,
+				53438B5A0ACD7956007E34F2 /* CommandConstants.h */,
+				53438B5B0ACD7956007E34F2 /* CommitCommand.h */,
+				53438B5C0ACD7956007E34F2 /* ConnectCommand.h */,
+				53438B5D0ACD7956007E34F2 /* ConnectedCommand.h */,
+				53438B5E0ACD7956007E34F2 /* DisconnectCommand.h */,
+				53438B5F0ACD7956007E34F2 /* ErrorCommand.h */,
+				53438B600ACD7956007E34F2 /* MessageCommand.h */,
+				53438B610ACD7956007E34F2 /* ReceiptCommand.h */,
+				53438B620ACD7956007E34F2 /* StompCommand.h */,
+				53438B630ACD7956007E34F2 /* StompMessage.h */,
+				53438B640ACD7956007E34F2 /* SubscribeCommand.h */,
+				53438B650ACD7956007E34F2 /* TextMessageCommand.h */,
+				53438B660ACD7956007E34F2 /* UnsubscribeCommand.h */,
+			);
+			path = commands;
+			sourceTree = "<group>";
+		};
+		53438B670ACD7956007E34F2 /* marshal */ = {
+			isa = PBXGroup;
+			children = (
+				53438B680ACD7956007E34F2 /* Marshalable.h */,
+				53438B690ACD7956007E34F2 /* Marshaler.cpp */,
+				53438B6A0ACD7956007E34F2 /* Marshaler.h */,
+				53438B6B0ACD7956007E34F2 /* MarshalException.h */,
+			);
+			path = marshal;
+			sourceTree = "<group>";
+		};
+		53438B820ACD7956007E34F2 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				53438B830ACD7956007E34F2 /* ActiveMQAckHandler.h */,
+				53438B840ACD7956007E34F2 /* ActiveMQConnection.cpp */,
+				53438B850ACD7956007E34F2 /* ActiveMQConnection.h */,
+				53438B860ACD7956007E34F2 /* ActiveMQConnectionData.h */,
+				53438B870ACD7956007E34F2 /* ActiveMQConnectionFactory.cpp */,
+				53438B880ACD7956007E34F2 /* ActiveMQConnectionFactory.h */,
+				53438B890ACD7956007E34F2 /* ActiveMQConstants.cpp */,
+				53438B8A0ACD7956007E34F2 /* ActiveMQConstants.h */,
+				53438B8B0ACD7956007E34F2 /* ActiveMQConsumer.cpp */,
+				53438B8C0ACD7956007E34F2 /* ActiveMQConsumer.h */,
+				53438B8D0ACD7956007E34F2 /* ActiveMQDestination.h */,
+				53438B8E0ACD7956007E34F2 /* ActiveMQMessage.h */,
+				53438B8F0ACD7956007E34F2 /* ActiveMQMessageListener.h */,
+				53438B900ACD7956007E34F2 /* ActiveMQProducer.cpp */,
+				53438B910ACD7956007E34F2 /* ActiveMQProducer.h */,
+				53438B920ACD7956007E34F2 /* ActiveMQSession.cpp */,
+				53438B930ACD7956007E34F2 /* ActiveMQSession.h */,
+				53438B940ACD7956007E34F2 /* ActiveMQSessionResource.h */,
+				53438B950ACD7956007E34F2 /* ActiveMQTransaction.cpp */,
+				53438B960ACD7956007E34F2 /* ActiveMQTransaction.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		53438B970ACD7956007E34F2 /* exceptions */ = {
+			isa = PBXGroup;
+			children = (
+				53438B980ACD7956007E34F2 /* ActiveMQException.cpp */,
+				53438B990ACD7956007E34F2 /* ActiveMQException.h */,
+				53438B9A0ACD7956007E34F2 /* ExceptionDefines.h */,
+				53438B9B0ACD7956007E34F2 /* IllegalArgumentException.h */,
+				53438B9C0ACD7956007E34F2 /* IllegalMonitorStateException.h */,
+				53438B9D0ACD7956007E34F2 /* InterruptedException.h */,
+				53438B9E0ACD7956007E34F2 /* InvalidStateException.h */,
+				53438B9F0ACD7956007E34F2 /* NoSuchElementException.h */,
+				53438BA00ACD7956007E34F2 /* NullPointerException.h */,
+				53438BA10ACD7956007E34F2 /* RuntimeException.h */,
+				53438BA20ACD7956007E34F2 /* UnsupportedOperationException.h */,
+			);
+			path = exceptions;
+			sourceTree = "<group>";
+		};
+		53438BA30ACD7956007E34F2 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				53438BA40ACD7956007E34F2 /* BufferedInputStream.cpp */,
+				53438BA50ACD7956007E34F2 /* BufferedInputStream.h */,
+				53438BA60ACD7956007E34F2 /* BufferedOutputStream.cpp */,
+				53438BA70ACD7956007E34F2 /* BufferedOutputStream.h */,
+				53438BA80ACD7956007E34F2 /* ByteArrayInputStream.cpp */,
+				53438BA90ACD7956007E34F2 /* ByteArrayInputStream.h */,
+				53438BAA0ACD7956007E34F2 /* ByteArrayOutputStream.cpp */,
+				53438BAB0ACD7956007E34F2 /* ByteArrayOutputStream.h */,
+				53438BAC0ACD7956007E34F2 /* EndianReader.cpp */,
+				53438BAD0ACD7956007E34F2 /* EndianReader.h */,
+				53438BAE0ACD7956007E34F2 /* EndianWriter.cpp */,
+				53438BAF0ACD7956007E34F2 /* EndianWriter.h */,
+				53438BB00ACD7956007E34F2 /* InputStream.h */,
+				53438BB10ACD7956007E34F2 /* IOException.h */,
+				53438BB20ACD7956007E34F2 /* OutputStream.h */,
+				53438BB30ACD7956007E34F2 /* Reader.h */,
+				53438BB40ACD7956007E34F2 /* StandardErrorOutputStream.h */,
+				53438BB50ACD7956007E34F2 /* Writer.h */,
+			);
+			path = io;
+			sourceTree = "<group>";
+		};
+		53438BB60ACD7956007E34F2 /* logger */ = {
+			isa = PBXGroup;
+			children = (
+				53438BB70ACD7956007E34F2 /* ConsoleHandler.h */,
+				53438BB80ACD7956007E34F2 /* Filter.h */,
+				53438BB90ACD7956007E34F2 /* Formatter.h */,
+				53438BBA0ACD7956007E34F2 /* Handler.h */,
+				53438BBB0ACD7956007E34F2 /* Logger.cpp */,
+				53438BBC0ACD7956007E34F2 /* Logger.h */,
+				53438BBD0ACD7956007E34F2 /* LoggerCommon.h */,
+				53438BBE0ACD7956007E34F2 /* LoggerDefines.h */,
+				53438BBF0ACD7956007E34F2 /* LoggerHierarchy.cpp */,
+				53438BC00ACD7956007E34F2 /* LoggerHierarchy.h */,
+				53438BC10ACD7956007E34F2 /* LogManager.cpp */,
+				53438BC20ACD7956007E34F2 /* LogManager.h */,
+				53438BC30ACD7956007E34F2 /* LogRecord.h */,
+				53438BC40ACD7956007E34F2 /* LogWriter.cpp */,
+				53438BC50ACD7956007E34F2 /* LogWriter.h */,
+				53438BC60ACD7956007E34F2 /* MarkBlockLogger.h */,
+				53438BC70ACD7956007E34F2 /* PropertiesChangeListener.h */,
+				53438BC80ACD7956007E34F2 /* SimpleFormatter.h */,
+				53438BC90ACD7956007E34F2 /* SimpleLogger.cpp */,
+				53438BCA0ACD7956007E34F2 /* SimpleLogger.h */,
+				53438BCB0ACD7956007E34F2 /* StreamHandler.h */,
+			);
+			path = logger;
+			sourceTree = "<group>";
+		};
+		53438BCC0ACD7956007E34F2 /* network */ = {
+			isa = PBXGroup;
+			children = (
+				53438BCD0ACD7956007E34F2 /* BufferedSocket.cpp */,
+				53438BCE0ACD7956007E34F2 /* BufferedSocket.h */,
+				53438BCF0ACD7956007E34F2 /* ServerSocket.cpp */,
+				53438BD00ACD7956007E34F2 /* ServerSocket.h */,
+				53438BD10ACD7956007E34F2 /* Socket.h */,
+				53438BD20ACD7956007E34F2 /* SocketException.h */,
+				53438BD30ACD7956007E34F2 /* SocketFactory.cpp */,
+				53438BD40ACD7956007E34F2 /* SocketFactory.h */,
+				53438BD50ACD7956007E34F2 /* SocketInputStream.cpp */,
+				53438BD60ACD7956007E34F2 /* SocketInputStream.h */,
+				53438BD70ACD7956007E34F2 /* SocketOutputStream.cpp */,
+				53438BD80ACD7956007E34F2 /* SocketOutputStream.h */,
+				53438BD90ACD7956007E34F2 /* TcpSocket.cpp */,
+				53438BDA0ACD7956007E34F2 /* TcpSocket.h */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
+		53438BDB0ACD7956007E34F2 /* support */ = {
+			isa = PBXGroup;
+			children = (
+				53438BDC0ACD7956007E34F2 /* InitDirector.cpp */,
+				53438BDD0ACD7956007E34F2 /* InitDirector.h */,
+				53438BDE0ACD7956007E34F2 /* LibraryInit.h */,
+			);
+			path = support;
+			sourceTree = "<group>";
+		};
+		53438BDF0ACD7956007E34F2 /* transport */ = {
+			isa = PBXGroup;
+			children = (
+				53438BE00ACD7956007E34F2 /* BrokerError.h */,
+				53438BE10ACD7956007E34F2 /* Command.h */,
+				53438BE20ACD7956007E34F2 /* CommandIOException.h */,
+				53438BE30ACD7956007E34F2 /* CommandListener.h */,
+				53438BE40ACD7956007E34F2 /* CommandReader.h */,
+				53438BE50ACD7956007E34F2 /* CommandWriter.h */,
+				53438BE60ACD7956007E34F2 /* ExceptionResponse.h */,
+				53438BE70ACD7956007E34F2 /* FutureResponse.h */,
+				53438BE80ACD7956007E34F2 /* IOTransport.cpp */,
+				53438BE90ACD7956007E34F2 /* IOTransport.h */,
+				53438BEA0ACD7956007E34F2 /* IOTransportFactory.cpp */,
+				53438BEB0ACD7956007E34F2 /* IOTransportFactory.h */,
+				53438BEC0ACD7956007E34F2 /* Response.h */,
+				53438BED0ACD7956007E34F2 /* ResponseCorrelator.cpp */,
+				53438BEE0ACD7956007E34F2 /* ResponseCorrelator.h */,
+				53438BEF0ACD7956007E34F2 /* TcpTransport.cpp */,
+				53438BF00ACD7956007E34F2 /* TcpTransport.h */,
+				53438BF10ACD7956007E34F2 /* TcpTransportFactory.cpp */,
+				53438BF20ACD7956007E34F2 /* TcpTransportFactory.h */,
+				53438BF30ACD7956007E34F2 /* Transport.h */,
+				53438BF40ACD7956007E34F2 /* TransportExceptionListener.h */,
+				53438BF50ACD7956007E34F2 /* TransportFactory.h */,
+				53438BF60ACD7956007E34F2 /* TransportFactoryMap.cpp */,
+				53438BF70ACD7956007E34F2 /* TransportFactoryMap.h */,
+				53438BF80ACD7956007E34F2 /* TransportFactoryMapRegistrar.h */,
+				53438BF90ACD7956007E34F2 /* TransportFilter.h */,
+			);
+			path = transport;
+			sourceTree = "<group>";
+		};
+		53438BFA0ACD7956007E34F2 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				53438BFB0ACD7956007E34F2 /* Boolean.h */,
+				53438BFC0ACD7956007E34F2 /* Endian.h */,
+				53438BFD0ACD7956007E34F2 /* Guid.cpp */,
+				53438BFE0ACD7956007E34F2 /* Guid.h */,
+				53438BFF0ACD7956007E34F2 /* Integer.h */,
+				53438C030ACD7956007E34F2 /* Queue.h */,
+				53438C000ACD7956007E34F2 /* Long.h */,
+				53438C010ACD7956007E34F2 /* Number.h */,
+				53438C020ACD7956007E34F2 /* Properties.h */,
+				53438C040ACD7956007E34F2 /* SimpleProperties.h */,
+				53438C050ACD7956007E34F2 /* StringTokenizer.cpp */,
+				53438C060ACD7956007E34F2 /* StringTokenizer.h */,
+				53438D150ACD7D11007E34F2 /* Config.h */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		53438C070ACD7956007E34F2 /* cms */ = {
+			isa = PBXGroup;
+			children = (
+				53438C080ACD7956007E34F2 /* BytesMessage.h */,
+				53438C090ACD7956007E34F2 /* Closeable.h */,
+				53438C0A0ACD7956007E34F2 /* CMSException.h */,
+				53438C0B0ACD7956007E34F2 /* Connection.h */,
+				53438C0C0ACD7956007E34F2 /* ConnectionFactory.h */,
+				53438C0D0ACD7956007E34F2 /* DeliveryMode.h */,
+				53438C0E0ACD7956007E34F2 /* Destination.h */,
+				53438C0F0ACD7956007E34F2 /* ExceptionListener.h */,
+				53438C100ACD7956007E34F2 /* MapMessage.h */,
+				53438C110ACD7956007E34F2 /* Message.h */,
+				53438C120ACD7956007E34F2 /* MessageConsumer.h */,
+				53438C130ACD7956007E34F2 /* MessageListener.h */,
+				53438C140ACD7956007E34F2 /* MessageProducer.h */,
+				53438C150ACD7956007E34F2 /* Queue.h */,
+				53438C160ACD7956007E34F2 /* Session.h */,
+				53438C170ACD7956007E34F2 /* Startable.h */,
+				53438C180ACD7956007E34F2 /* Stoppable.h */,
+				53438C190ACD7956007E34F2 /* TemporaryQueue.h */,
+				53438C1A0ACD7956007E34F2 /* TemporaryTopic.h */,
+				53438C1B0ACD7956007E34F2 /* TextMessage.h */,
+				53438C1C0ACD7956007E34F2 /* Topic.h */,
+			);
+			path = cms;
+			sourceTree = "<group>";
+		};
+		53438D3E0ACD8075007E34F2 /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				53438D3F0ACD8075007E34F2 /* examples.vcproj */,
+				53438D400ACD8075007E34F2 /* main.cpp */,
+				53438D410ACD8075007E34F2 /* Makefile.am */,
+				53438D420ACD8075007E34F2 /* Makefile.in */,
+			);
+			name = examples;
+			path = src/examples;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5343878F0ACD78B3007E34F2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53438C1F0ACD7956007E34F2 /* Concurrent.h in Headers */,
+				53438C200ACD7956007E34F2 /* Lock.h in Headers */,
+				53438C220ACD7956007E34F2 /* Mutex.h in Headers */,
+				53438C240ACD7956007E34F2 /* PooledThread.h in Headers */,
+				53438C250ACD7956007E34F2 /* PooledThreadListener.h in Headers */,
+				53438C260ACD7956007E34F2 /* Runnable.h in Headers */,
+				53438C270ACD7956007E34F2 /* Synchronizable.h in Headers */,
+				53438C280ACD7956007E34F2 /* TaskListener.h in Headers */,
+				53438C2A0ACD7956007E34F2 /* Thread.h in Headers */,
+				53438C2C0ACD7956007E34F2 /* ThreadPool.h in Headers */,
+				53438C2D0ACD7956007E34F2 /* Connector.h in Headers */,
+				53438C2E0ACD7956007E34F2 /* ConnectorException.h in Headers */,
+				53438C2F0ACD7956007E34F2 /* ConnectorFactory.h in Headers */,
+				53438C310ACD7956007E34F2 /* ConnectorFactoryMap.h in Headers */,
+				53438C320ACD7956007E34F2 /* ConnectorFactoryMapRegistrar.h in Headers */,
+				53438C330ACD7956007E34F2 /* ConnectorResource.h in Headers */,
+				53438C340ACD7956007E34F2 /* ConsumerInfo.h in Headers */,
+				53438C350ACD7956007E34F2 /* ConsumerMessageListener.h in Headers */,
+				53438C360ACD7956007E34F2 /* ProducerInfo.h in Headers */,
+				53438C370ACD7956007E34F2 /* SessionInfo.h in Headers */,
+				53438C380ACD7956007E34F2 /* AbortCommand.h in Headers */,
+				53438C390ACD7956007E34F2 /* AbstractCommand.h in Headers */,
+				53438C3A0ACD7956007E34F2 /* AckCommand.h in Headers */,
+				53438C3B0ACD7956007E34F2 /* BeginCommand.h in Headers */,
+				53438C3C0ACD7956007E34F2 /* BytesMessageCommand.h in Headers */,
+				53438C3E0ACD7956007E34F2 /* CommandConstants.h in Headers */,
+				53438C3F0ACD7956007E34F2 /* CommitCommand.h in Headers */,
+				53438C400ACD7956007E34F2 /* ConnectCommand.h in Headers */,
+				53438C410ACD7956007E34F2 /* ConnectedCommand.h in Headers */,
+				53438C420ACD7956007E34F2 /* DisconnectCommand.h in Headers */,
+				53438C430ACD7956007E34F2 /* ErrorCommand.h in Headers */,
+				53438C440ACD7956007E34F2 /* MessageCommand.h in Headers */,
+				53438C450ACD7956007E34F2 /* ReceiptCommand.h in Headers */,
+				53438C460ACD7956007E34F2 /* StompCommand.h in Headers */,
+				53438C470ACD7956007E34F2 /* StompMessage.h in Headers */,
+				53438C480ACD7956007E34F2 /* SubscribeCommand.h in Headers */,
+				53438C490ACD7956007E34F2 /* TextMessageCommand.h in Headers */,
+				53438C4A0ACD7956007E34F2 /* UnsubscribeCommand.h in Headers */,
+				53438C4B0ACD7956007E34F2 /* Marshalable.h in Headers */,
+				53438C4D0ACD7956007E34F2 /* Marshaler.h in Headers */,
+				53438C4E0ACD7956007E34F2 /* MarshalException.h in Headers */,
+				53438C4F0ACD7956007E34F2 /* StompCommandListener.h in Headers */,
+				53438C510ACD7956007E34F2 /* StompCommandReader.h in Headers */,
+				53438C530ACD7956007E34F2 /* StompCommandWriter.h in Headers */,
+				53438C550ACD7956007E34F2 /* StompConnector.h in Headers */,
+				53438C560ACD7956007E34F2 /* StompConnectorException.h in Headers */,
+				53438C580ACD7956007E34F2 /* StompConnectorFactory.h in Headers */,
+				53438C590ACD7956007E34F2 /* StompConsumerInfo.h in Headers */,
+				53438C5A0ACD7956007E34F2 /* StompDestination.h in Headers */,
+				53438C5B0ACD7956007E34F2 /* StompFrame.h in Headers */,
+				53438C5C0ACD7956007E34F2 /* StompProducerInfo.h in Headers */,
+				53438C5D0ACD7956007E34F2 /* StompQueue.h in Headers */,
+				53438C5E0ACD7956007E34F2 /* StompSelector.h in Headers */,
+				53438C5F0ACD7956007E34F2 /* StompSessionInfo.h in Headers */,
+				53438C610ACD7956007E34F2 /* StompSessionManager.h in Headers */,
+				53438C620ACD7956007E34F2 /* StompTopic.h in Headers */,
+				53438C630ACD7956007E34F2 /* StompTransactionInfo.h in Headers */,
+				53438C640ACD7956007E34F2 /* TransactionInfo.h in Headers */,
+				53438C650ACD7956007E34F2 /* ActiveMQAckHandler.h in Headers */,
+				53438C670ACD7956007E34F2 /* ActiveMQConnection.h in Headers */,
+				53438C680ACD7956007E34F2 /* ActiveMQConnectionData.h in Headers */,
+				53438C6A0ACD7956007E34F2 /* ActiveMQConnectionFactory.h in Headers */,
+				53438C6C0ACD7956007E34F2 /* ActiveMQConstants.h in Headers */,
+				53438C6E0ACD7956007E34F2 /* ActiveMQConsumer.h in Headers */,
+				53438C6F0ACD7956007E34F2 /* ActiveMQDestination.h in Headers */,
+				53438C700ACD7956007E34F2 /* ActiveMQMessage.h in Headers */,
+				53438C710ACD7956007E34F2 /* ActiveMQMessageListener.h in Headers */,
+				53438C730ACD7956007E34F2 /* ActiveMQProducer.h in Headers */,
+				53438C750ACD7956007E34F2 /* ActiveMQSession.h in Headers */,
+				53438C760ACD7956007E34F2 /* ActiveMQSessionResource.h in Headers */,
+				53438C780ACD7956007E34F2 /* ActiveMQTransaction.h in Headers */,
+				53438C7A0ACD7956007E34F2 /* ActiveMQException.h in Headers */,
+				53438C7B0ACD7956007E34F2 /* ExceptionDefines.h in Headers */,
+				53438C7C0ACD7956007E34F2 /* IllegalArgumentException.h in Headers */,
+				53438C7D0ACD7956007E34F2 /* IllegalMonitorStateException.h in Headers */,
+				53438C7E0ACD7956007E34F2 /* InterruptedException.h in Headers */,
+				53438C7F0ACD7956007E34F2 /* InvalidStateException.h in Headers */,
+				53438C800ACD7956007E34F2 /* NoSuchElementException.h in Headers */,
+				53438C810ACD7956007E34F2 /* NullPointerException.h in Headers */,
+				53438C820ACD7956007E34F2 /* RuntimeException.h in Headers */,
+				53438C830ACD7956007E34F2 /* UnsupportedOperationException.h in Headers */,
+				53438C850ACD7956007E34F2 /* BufferedInputStream.h in Headers */,
+				53438C870ACD7956007E34F2 /* BufferedOutputStream.h in Headers */,
+				53438C890ACD7956007E34F2 /* ByteArrayInputStream.h in Headers */,
+				53438C8B0ACD7956007E34F2 /* ByteArrayOutputStream.h in Headers */,
+				53438C8D0ACD7956007E34F2 /* EndianReader.h in Headers */,
+				53438C8F0ACD7956007E34F2 /* EndianWriter.h in Headers */,
+				53438C900ACD7956007E34F2 /* InputStream.h in Headers */,
+				53438C910ACD7956007E34F2 /* IOException.h in Headers */,
+				53438C920ACD7956007E34F2 /* OutputStream.h in Headers */,
+				53438C930ACD7956007E34F2 /* Reader.h in Headers */,
+				53438C940ACD7956007E34F2 /* StandardErrorOutputStream.h in Headers */,
+				53438C950ACD7956007E34F2 /* Writer.h in Headers */,
+				53438C960ACD7956007E34F2 /* ConsoleHandler.h in Headers */,
+				53438C970ACD7956007E34F2 /* Filter.h in Headers */,
+				53438C980ACD7956007E34F2 /* Formatter.h in Headers */,
+				53438C990ACD7956007E34F2 /* Handler.h in Headers */,
+				53438C9B0ACD7956007E34F2 /* Logger.h in Headers */,
+				53438C9C0ACD7956007E34F2 /* LoggerCommon.h in Headers */,
+				53438C9D0ACD7956007E34F2 /* LoggerDefines.h in Headers */,
+				53438C9F0ACD7956007E34F2 /* LoggerHierarchy.h in Headers */,
+				53438CA10ACD7956007E34F2 /* LogManager.h in Headers */,
+				53438CA20ACD7956007E34F2 /* LogRecord.h in Headers */,
+				53438CA40ACD7956007E34F2 /* LogWriter.h in Headers */,
+				53438CA50ACD7956007E34F2 /* MarkBlockLogger.h in Headers */,
+				53438CA60ACD7956007E34F2 /* PropertiesChangeListener.h in Headers */,
+				53438CA70ACD7956007E34F2 /* SimpleFormatter.h in Headers */,
+				53438CA90ACD7956007E34F2 /* SimpleLogger.h in Headers */,
+				53438CAA0ACD7956007E34F2 /* StreamHandler.h in Headers */,
+				53438CAC0ACD7956007E34F2 /* BufferedSocket.h in Headers */,
+				53438CAE0ACD7956007E34F2 /* ServerSocket.h in Headers */,
+				53438CAF0ACD7956007E34F2 /* Socket.h in Headers */,
+				53438CB00ACD7956007E34F2 /* SocketException.h in Headers */,
+				53438CB20ACD7956007E34F2 /* SocketFactory.h in Headers */,
+				53438CB40ACD7956007E34F2 /* SocketInputStream.h in Headers */,
+				53438CB60ACD7956007E34F2 /* SocketOutputStream.h in Headers */,
+				53438CB80ACD7956007E34F2 /* TcpSocket.h in Headers */,
+				53438CBA0ACD7956007E34F2 /* InitDirector.h in Headers */,
+				53438CBB0ACD7956007E34F2 /* LibraryInit.h in Headers */,
+				53438CBC0ACD7956007E34F2 /* BrokerError.h in Headers */,
+				53438CBD0ACD7956007E34F2 /* Command.h in Headers */,
+				53438CBE0ACD7956007E34F2 /* CommandIOException.h in Headers */,
+				53438CBF0ACD7956007E34F2 /* CommandListener.h in Headers */,
+				53438CC00ACD7956007E34F2 /* CommandReader.h in Headers */,
+				53438CC10ACD7956007E34F2 /* CommandWriter.h in Headers */,
+				53438CC20ACD7956007E34F2 /* ExceptionResponse.h in Headers */,
+				53438CC30ACD7956007E34F2 /* FutureResponse.h in Headers */,
+				53438CC50ACD7956007E34F2 /* IOTransport.h in Headers */,
+				53438CC70ACD7956007E34F2 /* IOTransportFactory.h in Headers */,
+				53438CC80ACD7957007E34F2 /* Response.h in Headers */,
+				53438CCA0ACD7957007E34F2 /* ResponseCorrelator.h in Headers */,
+				53438CCC0ACD7957007E34F2 /* TcpTransport.h in Headers */,
+				53438CCE0ACD7957007E34F2 /* TcpTransportFactory.h in Headers */,
+				53438CCF0ACD7957007E34F2 /* Transport.h in Headers */,
+				53438CD00ACD7957007E34F2 /* TransportExceptionListener.h in Headers */,
+				53438CD10ACD7957007E34F2 /* TransportFactory.h in Headers */,
+				53438CD30ACD7957007E34F2 /* TransportFactoryMap.h in Headers */,
+				53438CD40ACD7957007E34F2 /* TransportFactoryMapRegistrar.h in Headers */,
+				53438CD50ACD7957007E34F2 /* TransportFilter.h in Headers */,
+				53438CD60ACD7957007E34F2 /* Boolean.h in Headers */,
+				53438CD70ACD7957007E34F2 /* Endian.h in Headers */,
+				53438CD90ACD7957007E34F2 /* Guid.h in Headers */,
+				53438CDA0ACD7957007E34F2 /* Integer.h in Headers */,
+				53438CDB0ACD7957007E34F2 /* Long.h in Headers */,
+				53438CDC0ACD7957007E34F2 /* Number.h in Headers */,
+				53438CDD0ACD7957007E34F2 /* Properties.h in Headers */,
+				53438CDE0ACD7957007E34F2 /* Queue.h in Headers */,
+				53438CDF0ACD7957007E34F2 /* SimpleProperties.h in Headers */,
+				53438CE10ACD7957007E34F2 /* StringTokenizer.h in Headers */,
+				53438CE20ACD7957007E34F2 /* BytesMessage.h in Headers */,
+				53438CE30ACD7957007E34F2 /* Closeable.h in Headers */,
+				53438CE40ACD7957007E34F2 /* CMSException.h in Headers */,
+				53438CE50ACD7957007E34F2 /* Connection.h in Headers */,
+				53438CE60ACD7957007E34F2 /* ConnectionFactory.h in Headers */,
+				53438CE70ACD7957007E34F2 /* DeliveryMode.h in Headers */,
+				53438CE80ACD7957007E34F2 /* Destination.h in Headers */,
+				53438CE90ACD7957007E34F2 /* ExceptionListener.h in Headers */,
+				53438CEA0ACD7957007E34F2 /* MapMessage.h in Headers */,
+				53438CEB0ACD7957007E34F2 /* Message.h in Headers */,
+				53438CEC0ACD7957007E34F2 /* MessageConsumer.h in Headers */,
+				53438CED0ACD7957007E34F2 /* MessageListener.h in Headers */,
+				53438CEE0ACD7957007E34F2 /* MessageProducer.h in Headers */,
+				53438CEF0ACD7957007E34F2 /* Queue.h in Headers */,
+				53438CF00ACD7957007E34F2 /* Session.h in Headers */,
+				53438CF10ACD7957007E34F2 /* Startable.h in Headers */,
+				53438CF20ACD7957007E34F2 /* Stoppable.h in Headers */,
+				53438CF30ACD7957007E34F2 /* TemporaryQueue.h in Headers */,
+				53438CF40ACD7957007E34F2 /* TemporaryTopic.h in Headers */,
+				53438CF50ACD7957007E34F2 /* TextMessage.h in Headers */,
+				53438CF60ACD7957007E34F2 /* Topic.h in Headers */,
+				53438D160ACD7D11007E34F2 /* Config.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		534387920ACD78B3007E34F2 /* activemq */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 534387940ACD78F0007E34F2 /* Build configuration list for PBXNativeTarget "activemq" */;
+			buildPhases = (
+				5343878F0ACD78B3007E34F2 /* Headers */,
+				534387900ACD78B3007E34F2 /* Sources */,
+				534387910ACD78B3007E34F2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = activemq;
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+			);
+			name = activemq;
+			productName = activemq;
+			productReference = 534387930ACD78B3007E34F2 /* libactivemq.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		53438CF90ACD79A9007E34F2 /* activemq-example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53438CFE0ACD79F2007E34F2 /* Build configuration list for PBXNativeTarget "activemq-example" */;
+			buildPhases = (
+				53438CF70ACD79A9007E34F2 /* Sources */,
+				53438CF80ACD79A9007E34F2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = "$(HOME)/bin";
+				PREBINDING = NO;
+				PRODUCT_NAME = "activemq-example";
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+				53438D750ACD8226007E34F2 /* PBXTargetDependency */,
+			);
+			name = "activemq-example";
+			productName = "activemq-example";
+			productReference = 53438CFA0ACD79A9007E34F2 /* activemq-example */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 53D4A41D08A8931000CAE09B /* Build configuration list for PBXProject "activemq-cpp" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA520018CE5811CA2923 /* Development */,
+				014CEA530018CE5811CA2923 /* Deployment */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* amqc */;
+			productRefGroup = 08FB7794FE84155DC02AAC07 /* amqc */;
+			projectDirPath = "";
+			targets = (
+				534387920ACD78B3007E34F2 /* activemq */,
+				53438CF90ACD79A9007E34F2 /* activemq-example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		534387900ACD78B3007E34F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53438C210ACD7956007E34F2 /* Mutex.cpp in Sources */,
+				53438C230ACD7956007E34F2 /* PooledThread.cpp in Sources */,
+				53438C290ACD7956007E34F2 /* Thread.cpp in Sources */,
+				53438C2B0ACD7956007E34F2 /* ThreadPool.cpp in Sources */,
+				53438C300ACD7956007E34F2 /* ConnectorFactoryMap.cpp in Sources */,
+				53438C3D0ACD7956007E34F2 /* CommandConstants.cpp in Sources */,
+				53438C4C0ACD7956007E34F2 /* Marshaler.cpp in Sources */,
+				53438C500ACD7956007E34F2 /* StompCommandReader.cpp in Sources */,
+				53438C520ACD7956007E34F2 /* StompCommandWriter.cpp in Sources */,
+				53438C540ACD7956007E34F2 /* StompConnector.cpp in Sources */,
+				53438C570ACD7956007E34F2 /* StompConnectorFactory.cpp in Sources */,
+				53438C600ACD7956007E34F2 /* StompSessionManager.cpp in Sources */,
+				53438C660ACD7956007E34F2 /* ActiveMQConnection.cpp in Sources */,
+				53438C690ACD7956007E34F2 /* ActiveMQConnectionFactory.cpp in Sources */,
+				53438C6B0ACD7956007E34F2 /* ActiveMQConstants.cpp in Sources */,
+				53438C6D0ACD7956007E34F2 /* ActiveMQConsumer.cpp in Sources */,
+				53438C720ACD7956007E34F2 /* ActiveMQProducer.cpp in Sources */,
+				53438C740ACD7956007E34F2 /* ActiveMQSession.cpp in Sources */,
+				53438C770ACD7956007E34F2 /* ActiveMQTransaction.cpp in Sources */,
+				53438C790ACD7956007E34F2 /* ActiveMQException.cpp in Sources */,
+				53438C840ACD7956007E34F2 /* BufferedInputStream.cpp in Sources */,
+				53438C860ACD7956007E34F2 /* BufferedOutputStream.cpp in Sources */,
+				53438C880ACD7956007E34F2 /* ByteArrayInputStream.cpp in Sources */,
+				53438C8A0ACD7956007E34F2 /* ByteArrayOutputStream.cpp in Sources */,
+				53438C8C0ACD7956007E34F2 /* EndianReader.cpp in Sources */,
+				53438C8E0ACD7956007E34F2 /* EndianWriter.cpp in Sources */,
+				53438C9A0ACD7956007E34F2 /* Logger.cpp in Sources */,
+				53438C9E0ACD7956007E34F2 /* LoggerHierarchy.cpp in Sources */,
+				53438CA00ACD7956007E34F2 /* LogManager.cpp in Sources */,
+				53438CA30ACD7956007E34F2 /* LogWriter.cpp in Sources */,
+				53438CA80ACD7956007E34F2 /* SimpleLogger.cpp in Sources */,
+				53438CAB0ACD7956007E34F2 /* BufferedSocket.cpp in Sources */,
+				53438CAD0ACD7956007E34F2 /* ServerSocket.cpp in Sources */,
+				53438CB10ACD7956007E34F2 /* SocketFactory.cpp in Sources */,
+				53438CB30ACD7956007E34F2 /* SocketInputStream.cpp in Sources */,
+				53438CB50ACD7956007E34F2 /* SocketOutputStream.cpp in Sources */,
+				53438CB70ACD7956007E34F2 /* TcpSocket.cpp in Sources */,
+				53438CB90ACD7956007E34F2 /* InitDirector.cpp in Sources */,
+				53438CC40ACD7956007E34F2 /* IOTransport.cpp in Sources */,
+				53438CC60ACD7956007E34F2 /* IOTransportFactory.cpp in Sources */,
+				53438CC90ACD7957007E34F2 /* ResponseCorrelator.cpp in Sources */,
+				53438CCB0ACD7957007E34F2 /* TcpTransport.cpp in Sources */,
+				53438CCD0ACD7957007E34F2 /* TcpTransportFactory.cpp in Sources */,
+				53438CD20ACD7957007E34F2 /* TransportFactoryMap.cpp in Sources */,
+				53438CD80ACD7957007E34F2 /* Guid.cpp in Sources */,
+				53438CE00ACD7957007E34F2 /* StringTokenizer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53438CF70ACD79A9007E34F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				53438D430ACD8075007E34F2 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		53438D750ACD8226007E34F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 534387920ACD78B3007E34F2 /* activemq */;
+			targetProxy = 53438D740ACD8226007E34F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		534387950ACD78F0007E34F2 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = activemq;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		534387960ACD78F0007E34F2 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = activemq;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		534387970ACD78F0007E34F2 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = /usr/local/lib;
+				PREBINDING = NO;
+				PRODUCT_NAME = activemq;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		53438CFF0ACD79F2007E34F2 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = " ";
+				PREBINDING = NO;
+				PRODUCT_NAME = "activemq-example";
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		53438D000ACD79F2007E34F2 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = " ";
+				PREBINDING = NO;
+				PRODUCT_NAME = "activemq-example";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		53438D010ACD79F2007E34F2 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				HEADER_SEARCH_PATHS = src/main;
+				INSTALL_PATH = "$(HOME)/bin";
+				LIBRARY_SEARCH_PATHS = " ";
+				PREBINDING = NO;
+				PRODUCT_NAME = "activemq-example";
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		53D4A41E08A8931000CAE09B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		53D4A41F08A8931000CAE09B /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		53D4A42008A8931000CAE09B /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_SEARCH_PATHS = "";
+				ZERO_LINK = NO;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		534387940ACD78F0007E34F2 /* Build configuration list for PBXNativeTarget "activemq" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				534387950ACD78F0007E34F2 /* Development */,
+				534387960ACD78F0007E34F2 /* Deployment */,
+				534387970ACD78F0007E34F2 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		53438CFE0ACD79F2007E34F2 /* Build configuration list for PBXNativeTarget "activemq-example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53438CFF0ACD79F2007E34F2 /* Development */,
+				53438D000ACD79F2007E34F2 /* Deployment */,
+				53438D010ACD79F2007E34F2 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		53D4A41D08A8931000CAE09B /* Build configuration list for PBXProject "activemq-cpp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53D4A41E08A8931000CAE09B /* Development */,
+				53D4A41F08A8931000CAE09B /* Deployment */,
+				53D4A42008A8931000CAE09B /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

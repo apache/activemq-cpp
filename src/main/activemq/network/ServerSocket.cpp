@@ -15,7 +15,10 @@
  * limitations under the License.
  */
 
-#if (defined(unix) || defined(__APPLE__)) && !defined(__CYGWIN__)
+#include "ServerSocket.h"
+#include <activemq/util/Config.h>
+
+#if !defined(HAVE_WINSOCK2_H)
     #include <unistd.h>
     #include <netdb.h>
     #include <fcntl.h>
@@ -43,13 +46,12 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <assert.h>
-#include "ServerSocket.h"
 #include <errno.h>
 #include <string>
 
 using namespace activemq::network;
 
-#if !defined( unix ) || defined( __CYGWIN__ )
+#if defined(HAVE_WINSOCK2_H)
 
     // Static socket initializer needed for winsock
 
@@ -80,7 +82,7 @@ ServerSocket::ServerSocket()
 {
     socketHandle = Socket::INVALID_SOCKET_HANDLE;
    
-#if !defined( unix ) || defined( __CYGWIN__ )
+#if defined(HAVE_WINSOCK2_H)
     if( ServerSocket::staticSocketInitializer.getSocketInitError() != NULL ) {
         throw *ServerSocket::staticSocketInitializer.getSocketInitError();
     }
@@ -166,7 +168,7 @@ void ServerSocket::close() throw (cms::CMSException){
    
     if( isBound() ) {
         
-        #if defined(unix) && !defined( __CYGWIN__ )
+        #if !defined(HAVE_WINSOCK2_H)
             ::close( socketHandle );
         #else
             ::closesocket( socketHandle );
@@ -186,7 +188,7 @@ Socket* ServerSocket::accept () throw (SocketException)
 {
     struct sockaddr_in temp;
 
-    #if defined( unix ) && !defined( __CYGWIN__ )
+    #if !defined(HAVE_WINSOCK2_H)
         socklen_t temp_len = sizeof( sockaddr_in );
     #else
         int temp_len = sizeof( sockaddr_in );

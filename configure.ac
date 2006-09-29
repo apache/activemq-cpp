@@ -53,9 +53,44 @@ AM_PROG_LIBTOOL
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
-## -----------------------------------------------
+AC_C_BIGENDIAN
+AC_CHECK_SIZEOF(short)
+AC_CHECK_SIZEOF(int)
+AC_CHECK_SIZEOF(long)
+
+#save_LIBS="${LIBS}"
+#AC_CHECK_LIB(rt, clock_gettime, [rt_libs=" -lrt"])
+#LIBS="${LIBS}${rt_libs}"
+#DLL_LIBS="${DLL_LIBS}${rt_libs}"
+#AC_CHECK_FUNCS([clock_gettime nanosleep])
+#LIBS="${save_LIBS}"
+## AC_CHECK_LIB(asound, snd_pcm_open, have_alsa=yes, have_alsa=no)
+
+case "${host_os}" in
+
+  darwin* ) ## Mac OS X configuration
+    LIBS="";
+    ;;
+
+  cygwin* ) ## Cygwin configuration
+    # LIBS="-lwinmm -lm";
+    CFLAGS="$CFLAGS -pthread" 
+    LIBS="$LIBS -lm -lpthread";
+    ;;
+
+  *) ## Unix configuration
+
+    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
+                AC_MSG_ERROR([libpthread not found!]))
+
+    CFLAGS="$CFLAGS -pthread" 
+    LIBS="$LIBS -lm -lpthread";
+esac
+
+## -----------------------------------------------------
+## configuration
 ## Generates Makefile's, configuration files and scripts
-## -----------------------------------------------
+## -----------------------------------------------------
 
 AC_OUTPUT(\
    Makefile \
