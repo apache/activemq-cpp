@@ -20,7 +20,7 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/util/Interger.h>
+#include <activemq/util/Integer.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -77,7 +77,7 @@ public:
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTANT );
             
             // Create the Thread Id String
-            string threadIdStr = Interger::toString( Thread::getId() );
+            string threadIdStr = Integer::toString( Thread::getId() );
             
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
