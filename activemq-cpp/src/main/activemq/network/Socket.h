@@ -21,8 +21,9 @@
 #include <activemq/io/InputStream.h>
 #include <activemq/io/OutputStream.h>
 #include <cms/Closeable.h>
+#include <activemq/util/Config.h>
 
-#if !(defined( unix ) || defined(__APPLE__)) || defined( __CYGWIN__ )
+#if defined(HAVE_WINSOCK2_H)
 #include <Winsock2.h> // SOCKET
 #endif
 
@@ -34,7 +35,7 @@ namespace network{
     public:
    
         // Define the SocketHandle type.
-        #if defined( unix ) && !defined( __CYGWIN__ )
+        #if !defined(HAVE_WINSOCK2_H)
             typedef int SocketHandle;
         #else
             typedef SOCKET SocketHandle;
@@ -165,4 +166,4 @@ namespace network{
 
 }}
 
-#endif /*_ACTIVEMQ_NETWORK_BASESOCKET_H_*/
+#endif /*_ACTIVEMQ_NETWORK_SOCKET_H_*/
