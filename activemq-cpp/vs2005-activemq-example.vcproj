@@ -41,15 +41,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\sandbox\activemq-cpp-trunk\activemq-cpp\src\main&quot;"
-				PreprocessorDefinitions="WIN32 NDEBUG _LIB WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
-				DisableSpecificWarnings="4290"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -62,9 +60,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
+				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -118,13 +118,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;C:\sandbox\activemq-cpp-trunk\activemq-cpp\src\main&quot;"
-				PreprocessorDefinitions="WIN32 NDEBUG _LIB WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_DEPRECATE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4290"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -137,9 +135,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="$(OutDir)\activemq.lib"
+				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"

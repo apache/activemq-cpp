@@ -14,9 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <activemq/util/Config.h>
 
-#if (defined(unix) || defined(__APPLE__)) && !defined(__CYGWIN__)
-    #include <unistd.h>
+#if defined(HAVE_WINSOCK2_H) 
+    #include <Winsock2.h>
+    #include <Ws2tcpip.h> 
+    #include <sys/stat.h>
+    #define stat _stat
+#else
+	#include <unistd.h>
     #include <netdb.h>
     #include <fcntl.h>
     #include <sys/file.h>
@@ -25,11 +31,6 @@
     #include <arpa/inet.h>
     #include <string.h>
     extern int errno;
-#else
-    #include <Winsock2.h>
-    #include <Ws2tcpip.h> 
-    #include <sys/stat.h>
-    #define stat _stat
 #endif
 
 #include <stdio.h>
@@ -38,6 +39,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <sys/types.h>
+
 #include "TcpSocket.h"
 #include "SocketInputStream.h"
 #include "SocketOutputStream.h"

@@ -17,17 +17,22 @@
 #ifndef ACTIVEMQ_UTIL_GUID_H
 #define ACTIVEMQ_UTIL_GUID_H
 
-#if defined( unix ) || defined(__APPLE__) && !defined( __CYGWIN__ ) 
-    #include <uuid/uuid.h>
-#elif defined(_WIN32) || defined( __CYGWIN__ )
-    #include <objbase.h>
-    #include <rpcdce.h>
-#else // defined MACOSX
-    #include "uuid.h"
-#endif
-
 #include <activemq/exceptions/RuntimeException.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
+#include <activemq/util/Config.h>
+
+#if defined(HAVE_UUID_UUID_H)
+    #include <uuid/uuid.h>
+#endif
+#if defined(HAVE_UUID_H)
+    #include "uuid.h"
+#endif
+#if defined(HAVE_OBJBASE_H)
+    #include <objbase.h>
+#endif
+#if defined(HAVE_RPCDCE_H)
+    #include <rpcdce.h>
+#endif
 
 #include <string>
 
