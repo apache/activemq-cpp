@@ -58,6 +58,12 @@ AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(long)
 
+AC_CHECK_HEADERS([uuid.h])
+AC_CHECK_HEADERS([uuid/uuid.h])
+AC_CHECK_HEADERS([objbase.h])
+AC_CHECK_HEADERS([repcdce.h])
+##AC_CHECK_HEADERS([Winsock2.h])
+
 #save_LIBS="${LIBS}"
 #AC_CHECK_LIB(rt, clock_gettime, [rt_libs=" -lrt"])
 #LIBS="${LIBS}${rt_libs}"
