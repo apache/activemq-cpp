@@ -14,4 +14,6 @@ pkgconfig_DATA = activemq-cpp.pc
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST=autogen.sh
+include doxygen-include.am
+
+EXTRA_DIST=autogen.sh $(DX_CONFIG) doc/html
