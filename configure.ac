@@ -64,6 +64,7 @@ AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
 
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no) ## AC_MSG_ERROR([cppunit required for build.])) 
+AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 case "${host_os}" in
 
@@ -100,8 +101,6 @@ if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/Makefile)
   AC_CONFIG_FILES(src/test-integration/Makefile)
-else
-  AC_MSG_WARN(cppunit not found, unit and itegration tests will not be built)
 fi
 
 AC_OUTPUT
