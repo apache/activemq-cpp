@@ -87,6 +87,17 @@ case "${host_os}" in
     LIBS="$LIBS -lm -lpthread";
 esac
 
+DX_HTML_FEATURE(ON)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(OFF)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(OFF)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
+
+
 ## -----------------------------------------------------
 ## configuration
 ## Generates Makefile's, configuration files and scripts
