@@ -62,15 +62,8 @@ AC_CHECK_HEADERS([uuid.h])
 AC_CHECK_HEADERS([uuid/uuid.h])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
-##AC_CHECK_HEADERS([Winsock2.h])
 
-#save_LIBS="${LIBS}"
-#AC_CHECK_LIB(rt, clock_gettime, [rt_libs=" -lrt"])
-#LIBS="${LIBS}${rt_libs}"
-#DLL_LIBS="${DLL_LIBS}${rt_libs}"
-#AC_CHECK_FUNCS([clock_gettime nanosleep])
-#LIBS="${save_LIBS}"
-## AC_CHECK_LIB(asound, snd_pcm_open, have_alsa=yes, have_alsa=no)
+AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no) ## AC_MSG_ERROR([cppunit required for build.])) 
 
 case "${host_os}" in
 
@@ -98,10 +91,17 @@ esac
 ## Generates Makefile's, configuration files and scripts
 ## -----------------------------------------------------
 
-AC_OUTPUT(\
-   Makefile \
-   activemq-cpp.pc \
-   src/main/Makefile \
-   src/examples/Makefile \
-)
+AC_CONFIG_FILES(Makefile)
+AC_CONFIG_FILES(activemq-cpp.pc)
+AC_CONFIG_FILES(src/main/Makefile)
+AC_CONFIG_FILES(src/examples/Makefile)
 
+if test x$cppunit = xyes
+then
+  AC_CONFIG_FILES(src/test/Makefile)
+  AC_CONFIG_FILES(src/test-integration/Makefile)
+else
+  AC_MSG_WARN(cppunit not found, unit and itegration tests will not be built)
+fi
+
+AC_OUTPUT
