@@ -63,19 +63,19 @@ AC_CHECK_HEADERS([uuid/uuid.h])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
 
-AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no) ## AC_MSG_ERROR([cppunit required for build.])) 
+AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled])) 
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 case "${host_os}" in
 
   darwin* ) ## Mac OS X configuration
-    LIBS="";
+    LIBS=""
     ;;
 
   cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
     CFLAGS="$CFLAGS -pthread" 
-    LIBS="$LIBS -lm -lpthread";
+    LIBS="$LIBS -lm -lpthread"
     ;;
 
   *) ## Unix configuration
@@ -84,7 +84,7 @@ case "${host_os}" in
                 AC_MSG_ERROR([libpthread not found!]))
 
     CFLAGS="$CFLAGS -pthread" 
-    LIBS="$LIBS -lm -lpthread";
+    LIBS="$LIBS -lm -lpthread"
 esac
 
 DX_HTML_FEATURE(ON)
