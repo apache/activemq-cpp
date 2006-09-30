@@ -278,4 +278,9 @@
       </releases>
     </pluginRepository>
   </pluginRepositories>
+
+  <properties>
+    <activemq-core-dir>../activemq-trunk/activemq-core</activemq-core-dir>
+  </properties>
+
 </project>
