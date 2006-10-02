@@ -141,8 +141,8 @@
 		                <fileName>BufferedOutputStream.cpp</fileName>
 		                <fileName>ByteArrayInputStream.cpp</fileName>
 		                <fileName>ByteArrayOutputStream.cpp</fileName>
-		                <fileName>EndianReader.cpp</fileName>
-		                <fileName>EndianWriter.cpp</fileName>
+		                <fileName>DataInputStream.cpp</fileName>
+		                <fileName>DataOutputStream.cpp</fileName>
 		              </fileNames>
 		            </source>    
 		            <source>
@@ -188,6 +188,7 @@
 		              <fileNames>
 		                <fileName>Guid.cpp</fileName>
 		                <fileName>StringTokenizer.cpp</fileName>
+		                <fileName>Math.cpp</fileName>
 		              </fileNames>
 		            </source>
 		          </sources>

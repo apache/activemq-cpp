@@ -59,6 +59,7 @@ OFILES = \
     $(OUTDIR)/main/activemq/network/SocketInputStream.o \
     $(OUTDIR)/main/activemq/network/SocketOutputStream.o\
     \
+    $(OUTDIR)/main/activemq/util/Math.o \
     $(OUTDIR)/main/activemq/util/Guid.o \
     $(OUTDIR)/main/activemq/util/StringTokenizer.o \
     \
