@@ -26,6 +26,12 @@ OFILES = \
     \
 	$(OUTDIR)/main/activemq/connector/stomp/marshal/Marshaler.o \
     \
+	$(OUTDIR)/main/activemq/connector/openwire/utils/BooleanStream.o \
+	$(OUTDIR)/main/activemq/connector/openwire/OpenWireFormatFactory.o \
+	$(OUTDIR)/main/activemq/connector/openwire/OpenWireFormat.o \
+    \
+	$(OUTDIR)/main/activemq/connector/openwire/commands/WireFormatInfo.o \
+    \
 	$(OUTDIR)/main/activemq/core/ActiveMQConnectionFactory.o \
 	$(OUTDIR)/main/activemq/core/ActiveMQConnection.o \
 	$(OUTDIR)/main/activemq/core/ActiveMQSession.o \
@@ -34,8 +40,8 @@ OFILES = \
 	$(OUTDIR)/main/activemq/core/ActiveMQTransaction.o \
 	$(OUTDIR)/main/activemq/core/ActiveMQConstants.o \
 	\
-	$(OUTDIR)/main/activemq/io/EndianReader.o \
-	$(OUTDIR)/main/activemq/io/EndianWriter.o \
+	$(OUTDIR)/main/activemq/io/DataInputStream.o \
+	$(OUTDIR)/main/activemq/io/DataOutputStream.o \
 	$(OUTDIR)/main/activemq/io/BufferedInputStream.o \
 	$(OUTDIR)/main/activemq/io/BufferedOutputStream.o \
 	$(OUTDIR)/main/activemq/io/ByteArrayInputStream.o \
@@ -59,7 +65,53 @@ OFILES = \
     $(OUTDIR)/main/activemq/concurrent/Thread.o \
     $(OUTDIR)/main/activemq/concurrent/Mutex.o \
     $(OUTDIR)/main/activemq/concurrent/ThreadPool.o \
-    $(OUTDIR)/main/activemq/concurrent/PooledThread.o 
+    $(OUTDIR)/main/activemq/concurrent/PooledThread.o \
+    \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/BrokerInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionControl.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionError.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConsumerControl.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConsumerId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ConsumerInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ControlCommand.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/DataArrayResponse.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/DataResponse.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/DestinationInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/DiscoveryEvent.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ExceptionResponse.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/FlushCommand.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/IntegerResponse.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/JournalQueueAck.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/JournalTopicAck.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/JournalTrace.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/JournalTransaction.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/KeepAliveInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/LastPartialCommand.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/LocalTransactionId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/Message.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/MessageAck.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/MessageDispatch.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/MessageDispatchNotification.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/MessageId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/MessagePull.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/NetworkBridgeFilter.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/PartialCommand.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ProducerId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ProducerInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/RemoveInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/RemoveSubscriptionInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ReplayCommand.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/Response.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/SessionId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/SessionInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ShutdownInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/SubscriptionInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/TransactionId.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/TransactionInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/WireFormatInfo.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/XATransactionId.o 
 
 OTESTFILES = \
     $(OUTDIR)/test/main.o \
@@ -100,14 +152,16 @@ OTESTFILES = \
     $(OUTDIR)/test/activemq/connector/ConnectorFactoryMapRegistrarTest.o \
     $(OUTDIR)/test/activemq/connector/ConnectorFactoryMapTest.o \
     \
+    $(OUTDIR)/test/activemq/connector/openwire/utils/BooleanStreamTest.o \
+    \
     $(OUTDIR)/test/activemq/exceptions/ActiveMQExceptionTest.o \
     \
     $(OUTDIR)/test/activemq/io/BufferedInputStreamTest.o \
 	$(OUTDIR)/test/activemq/io/BufferedOutputStreamTest.o \
 	$(OUTDIR)/test/activemq/io/ByteArrayInputStreamTest.o \
 	$(OUTDIR)/test/activemq/io/ByteArrayOutputStreamTest.o \
-	$(OUTDIR)/test/activemq/io/EndianReaderTest.o \
-	$(OUTDIR)/test/activemq/io/EndianWriterTest.o \
+	$(OUTDIR)/test/activemq/io/DataInputStreamTest.o \
+	$(OUTDIR)/test/activemq/io/DataOutputStreamTest.o \
 	\
 	$(OUTDIR)/test/activemq/logger/LoggerTest.o \
 	\
