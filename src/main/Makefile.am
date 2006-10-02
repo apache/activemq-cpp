@@ -14,8 +14,8 @@ cc_sources = \
     activemq/support/InitDirector.cpp \
     activemq/io/ByteArrayInputStream.cpp \
     activemq/io/BufferedInputStream.cpp \
-    activemq/io/EndianWriter.cpp \
-    activemq/io/EndianReader.cpp \
+    activemq/io/DataInputStream.cpp \
+    activemq/io/DataOutputStream.cpp \
     activemq/io/BufferedOutputStream.cpp \
     activemq/io/ByteArrayOutputStream.cpp \
     activemq/concurrent/PooledThread.cpp \
@@ -44,7 +44,8 @@ cc_sources = \
     activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TcpTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \
-    activemq/util/Guid.cpp
+    activemq/util/Guid.cpp \
+    activemq/util/Math.cpp
 
 h_sources = \
     activemq/core/ActiveMQSessionResource.h \
@@ -81,11 +82,11 @@ h_sources = \
     activemq/io/StandardErrorOutputStream.h \
     activemq/io/ByteArrayInputStream.h \
     activemq/io/InputStream.h \
-    activemq/io/EndianWriter.h \
+    activemq/io/DataOutputStream.h \
     activemq/io/BufferedOutputStream.h \
     activemq/io/Reader.h \
     activemq/io/BufferedInputStream.h \
-    activemq/io/EndianReader.h \
+    activemq/io/DataInputStream.h \
     activemq/io/Writer.h \
     activemq/io/ByteArrayOutputStream.h \
     activemq/io/OutputStream.h \
@@ -196,6 +197,7 @@ h_sources = \
     activemq/util/Boolean.h \
     activemq/util/StringTokenizer.h \
     activemq/util/Queue.h \
+    activemq/util/Math.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
