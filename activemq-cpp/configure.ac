@@ -84,7 +84,7 @@ case "${host_os}" in
                 AC_MSG_ERROR([libpthread not found!]))
 
     CFLAGS="$CFLAGS -pthread" 
-    LIBS="$LIBS -lm -lpthread"
+    LIBS="$LIBS -lm -lpthread -luuid"
 esac
 
 DX_HTML_FEATURE(ON)
