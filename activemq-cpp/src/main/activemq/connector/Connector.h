@@ -89,7 +89,7 @@ namespace connector{
         /**
          * Gets a reference to the Transport that this connection
          * is using.
-         * @param reference to a transport
+         * @return reference to a transport
          * @throws InvalidStateException if the Transport is not set
          */
         virtual transport::Transport& getTransport(void) const 
@@ -97,7 +97,7 @@ namespace connector{
 
         /**
          * Creates a Session Info object for this connector
-         * @param Acknowledgement Mode of the Session
+         * @param ackMode Acknowledgement Mode of the Session
          * @returns Session Info Object
          * @throws ConnectorException
          */
@@ -107,8 +107,8 @@ namespace connector{
       
         /** 
          * Create a Consumer for the given Session
-         * @param Destination to Subscribe to.
-         * @param Session Information.
+         * @param destination Destination to Subscribe to.
+         * @param session Session Information.
          * @return Consumer Information
          * @throws ConnectorException
          */
@@ -120,11 +120,11 @@ namespace connector{
          
         /** 
          * Create a Durable Consumer for the given Session
-         * @param Topic to Subscribe to.
-         * @param Session Information.
-         * @param name of the Durable Topic
-         * @param Selector
-         * @param if set, inhibits the delivery of messages 
+         * @param topic Topic to Subscribe to.
+         * @param session Session Information.
+         * @param name name of the Durable Topic
+         * @param selector Selector
+         * @param noLocal if set, inhibits the delivery of messages 
          *        published by its own connection 
          * @return Consumer Information
          * @throws ConnectorException
@@ -139,8 +139,8 @@ namespace connector{
 
         /** 
          * Create a Consumer for the given Session
-         * @param Destination to Subscribe to.
-         * @param Session Information.
+         * @param destination Destination to Subscribe to.
+         * @param session Session Information.
          * @return Producer Information
          * @throws ConnectorException
          */
@@ -151,8 +151,8 @@ namespace connector{
 
         /**
          * Creates a Topic given a name and session info
-         * @param Topic Name
-         * @param Session Information
+         * @param name Topic Name
+         * @param session Session Information
          * @return a newly created Topic Object
          * @throws ConnectorException
          */
@@ -162,8 +162,8 @@ namespace connector{
           
         /**
          * Creates a Queue given a name and session info
-         * @param Queue Name
-         * @param Session Information
+         * @param name Queue Name
+         * @param session Session Information
          * @return a newly created Queue Object
          * @throws ConnectorException
          */
@@ -173,8 +173,7 @@ namespace connector{
 
         /**
          * Creates a Temporary Topic given a name and session info
-         * @param Temporary Topic Name
-         * @param Session Information
+         * @param session Session Information
          * @return a newly created Temporary Topic Object
          * @throws ConnectorException
          */
@@ -184,8 +183,7 @@ namespace connector{
           
         /**
          * Creates a Temporary Queue given a name and session info
-         * @param Temporary Queue Name
-         * @param Session Information
+         * @param session Session Information
          * @return a newly created Temporary Queue Object
          * @throws ConnectorException
          */
@@ -195,8 +193,8 @@ namespace connector{
 
         /**
          * Sends a Message
-         * @param The Message to send.
-         * @param Producer Info for the sender of this message
+         * @param message The Message to send.
+         * @param producerInfo Producer Info for the sender of this message
          * @throws ConnectorException
          */
         virtual void send( cms::Message* message, ProducerInfo* producerInfo ) 
@@ -204,8 +202,8 @@ namespace connector{
       
         /**
          * Sends a set of Messages
-         * @param List of Messages to send.
-         * @param Producer Info for the sender of this message
+         * @param messages List of Messages to send.
+         * @param producerInfo Producer Info for the sender of this message
          * @throws ConnectorException
          */
         virtual void send( std::list<cms::Message*>& messages,
@@ -214,7 +212,9 @@ namespace connector{
          
         /**
          * Acknowledges a Message
-         * @param An ActiveMQMessage to Ack.
+         * @param session the Session that the message is linked to
+         * @param message An ActiveMQMessage to Ack.
+         * @param ackType the type of ack to perform
          * @throws ConnectorException
          */
         virtual void acknowledge( const SessionInfo* session,
@@ -233,8 +233,8 @@ namespace connector{
          
         /**
          * Commits a Transaction.
-         * @param The Transaction information
-         * @param Session Information
+         * @param transaction The Transaction information
+         * @param session Session Information
          * @throws ConnectorException
          */
         virtual void commit( TransactionInfo* transaction, 
@@ -243,8 +243,8 @@ namespace connector{
 
         /**
          * Rolls back a Transaction.
-         * @param The Transaction information
-         * @param Session Information
+         * @param transaction The Transaction information
+         * @param session Session Information
          * @throws ConnectorException
          */
         virtual void rollback( TransactionInfo* transaction, 
@@ -253,8 +253,8 @@ namespace connector{
 
         /**
          * Creates a new Message.
-         * @param Session Information
-         * @param Transaction Info for this Message
+         * @param session Session Information
+         * @param transaction Transaction Info for this Message
          * @throws ConnectorException
          */
         virtual cms::Message* createMessage(
@@ -264,8 +264,8 @@ namespace connector{
 
         /**
          * Creates a new BytesMessage.
-         * @param Session Information
-         * @param Transaction Info for this Message
+         * @param session Session Information
+         * @param transaction Transaction Info for this Message
          * @throws ConnectorException
          */
         virtual cms::BytesMessage* createBytesMessage(
@@ -275,8 +275,8 @@ namespace connector{
 
         /**
          * Creates a new TextMessage.
-         * @param Session Information
-         * @param Transaction Info for this Message
+         * @param session Session Information
+         * @param transaction Transaction Info for this Message
          * @throws ConnectorException
          */
         virtual cms::TextMessage* createTextMessage(
@@ -286,8 +286,8 @@ namespace connector{
 
         /**
          * Creates a new MapMessage.
-         * @param Session Information
-         * @param Transaction Info for this Message
+         * @param session Session Information
+         * @param transaction Transaction Info for this Message
          * @throws ConnectorException
          */
         virtual cms::MapMessage* createMapMessage(
@@ -297,10 +297,10 @@ namespace connector{
 
         /** 
          * Unsubscribe from a givenDurable Subscription
-         * @param name of the Subscription
+         * @param name name of the Subscription
          * @throws ConnectorException
          */
-        virtual void unsubscribe( const std::string& name )
+        virtual void unsubscribe( const std::string&  )
             throw ( ConnectorException ) = 0;
 
         /**
@@ -313,14 +313,14 @@ namespace connector{
             
         /** 
          * Sets the listener of consumer messages.
-         * @param listener the observer.
+         * @param listener the ConsumerMessageListener observer.
          */
         virtual void setConsumerMessageListener(
             ConsumerMessageListener* listener ) = 0;
 
         /** 
          * Sets the Listner of exceptions for this connector
-         * @param ExceptionListener the observer.
+         * @param listener the ExceptionListener observer.
          */
         virtual void setExceptionListener(
             cms::ExceptionListener* listener ) = 0;
