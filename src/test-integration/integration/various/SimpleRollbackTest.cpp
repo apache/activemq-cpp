@@ -180,6 +180,11 @@ void SimpleRollbackTest::test()
 
         CPPUNIT_ASSERT( true );
 
+        textMsg = session->createTextMessage();
+        textMsg->setText( "SimpleTest - Message after Rollback" );
+        producer->send( textMsg );
+        delete textMsg;
+
         printf( "Shutting Down\n" );
 
         delete producer;                      
