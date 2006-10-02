@@ -34,8 +34,8 @@ cc_sources = \
   activemq/io/BufferedOutputStreamTest.cpp \
   activemq/io/ByteArrayInputStreamTest.cpp \
   activemq/io/ByteArrayOutputStreamTest.cpp \
-  activemq/io/EndianReaderTest.cpp \
-  activemq/io/EndianWriterTest.cpp \
+  activemq/io/DataInputStreamTest.cpp \
+  activemq/io/DataOutputStreamTest.cpp \
   activemq/logger/LoggerTest.cpp \
   activemq/network/SocketFactoryTest.cpp \
   activemq/network/SocketTest.cpp \
