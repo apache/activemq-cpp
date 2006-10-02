@@ -61,6 +61,26 @@ namespace io{
         virtual int read( unsigned char* buffer, const int bufferSize ) 
             throw ( IOException ) = 0;
 
+        /**
+         * Skips over and discards n bytes of data from this input stream. The 
+         * skip method may, for a variety of reasons, end up skipping over some
+         * smaller number of bytes, possibly 0. This may result from any of a
+         * number of conditions; reaching end of file before n bytes have been
+         * skipped is only one possibility. The actual number of bytes skipped
+         * is returned. If n is negative, no bytes are skipped.
+         * <p>
+         * The skip method of InputStream creates a byte array and then 
+         * repeatedly reads into it until n bytes have been read or the end 
+         * of the stream has been reached. Subclasses are encouraged to 
+         * provide a more efficient implementation of this method.
+         * @param num - the number of bytes to skip
+         * @returns total butes skipped
+         * @throws IOException if an error occurs
+         */ 
+        virtual int skip( int num ) throw ( io::IOException ) {
+            return 0;
+        };
+
     };
     
 }}
