@@ -18,6 +18,7 @@
 #include <activemq/network/BufferedSocket.h>
 #include <activemq/network/TcpSocket.h>
 #include <activemq/util/Properties.h>
+#include <stdio.h>
 
 using namespace std;
 using namespace activemq;

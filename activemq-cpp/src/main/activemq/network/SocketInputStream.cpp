@@ -28,6 +28,7 @@
 #include <activemq/io/IOException.h>
 #include <stdlib.h>
 #include <string>
+#include <stdio.h>
 
 using namespace activemq;
 using namespace activemq::network;

@@ -26,6 +26,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #if defined( __APPLE__ )
 #define SOCKET_NOSIGNAL SO_NOSIGPIPE
