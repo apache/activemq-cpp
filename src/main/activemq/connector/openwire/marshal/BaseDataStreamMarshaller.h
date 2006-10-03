@@ -42,7 +42,7 @@ namespace marshal{
         virtual int tightMarshal1( OpenWireFormat* format, 
                                    commands::DataStructure* command, 
                                    utils::BooleanStream* bs ) 
-                                       throw ( io::IOException ) {};
+                                       throw ( io::IOException ) { return 0; };
 
         /**
          * Tight Marhsal to the given stream
@@ -56,7 +56,7 @@ namespace marshal{
                                     commands::DataStructure* command, 
                                     io::DataOutputStream* ds, 
                                     utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) = {};
+                                        throw ( io::IOException ) {};
 
         /**
          * Tight Un-marhsal to the given stream

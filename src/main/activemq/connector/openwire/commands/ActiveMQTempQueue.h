@@ -24,6 +24,7 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
+#include <cms/TemporaryQueue.h>
 #include <vector>
 #include <string>
 
@@ -42,7 +43,8 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ActiveMQTempQueue : public ActiveMQTempDestination
+    class ActiveMQTempQueue : public ActiveMQTempDestination,
+                              public cms::TemporaryQueue
     {
     protected:
 
@@ -57,6 +59,59 @@ namespace commands{
         virtual ~ActiveMQTempQueue();
 
         virtual unsigned char getDataStructureType() const;
+
+    public:   // CMS Destination
+
+        /**
+         * Retrieve the Destination Type for this Destination
+         * @return The Destination Type
+         */
+        virtual cms::Destination::DestinationType getDestinationType(void) const;
+        
+        /**
+         * Converts the Destination Name into a String 
+         * @return string name
+         */
+        virtual std::string toString(void) const;
+
+        /**
+         * Converts the Destination to a String value representing the
+         * Provider specific name fot this destination, which is not
+         * necessarily equal to the User Supplied name of the Destination
+         * @return Provider specific Name
+         */
+        virtual std::string toProviderString(void) const;
+        
+        /**
+         * Creates a new instance of this destination type that is a
+         * copy of this one, and returns it.
+         * @returns cloned copy of this object
+         */
+        virtual cms::Destination* clone(void) const;
+      
+        /**
+         * Copies the contents of the given Destinastion object to this one.
+         * @param source The source Destination object.
+         */
+        virtual void copy( const cms::Destination& source );
+
+        /**
+         * Retrieve any properties that might be part of the destination
+         * that was specified.  This is a deviation from the JMS spec
+         * but necessary due to C++ restrictions.  
+         * @return const reference to a properties object.
+         */
+        virtual const activemq::util::Properties& getProperties(void) const;
+
+    public:
+    
+        /**
+         * Gets the name of this queue.
+         * @return The queue name.
+         */
+        virtual const char* getQueueName(void) const 
+            throw( cms::CMSException );
+            
     };
 
 }}}}

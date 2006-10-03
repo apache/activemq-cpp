@@ -27,174 +27,20 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    template< typename T >
     class ActiveMQMessage : 
         public Message, 
-        public core::ActiveMQMessage,
-        public T
+        public core::ActiveMQMessage
     {
     public:
 
-        static const unsigned char ID_ACTIVEMQ_MESSAGE = 23; 
+        static const unsigned char ID_ACTIVEMQMESSAGE = 23; 
 
     public:
 
-        ActiveMQMessage() {}
-        virtual ~ActiveMQMessage() {}
+        ActiveMQMessage();
+        virtual ~ActiveMQMessage();
 
-        virtual unsigned char getDataStructureType() const {
-            return ID_ACTIVEMQ_MESSAGE;
-        }
-
-    public:   // cms::Message
-    
-        /**
-         * Clonse this message exactly, returns a new instance that the
-         * caller is required to delete.
-         * @return new copy of this message
-         */
-        virtual Message* clone(void) const = 0;
-        
-        /**
-         * Acknowledges all consumed messages of the session 
-         * of this consumed message.
-         */
-        virtual void acknowledge(void) const throw( CMSException ) {
-            try {
-                ackHandler->acknowledgeMessage( 
-                    dynamic_cast<core::ActiveMQMessage*>(this) );
-            }
-            AMQ_CATCH_RETHROW( CMSException )
-            AMQ_CATCHALL_THROW( CMSException )           
-        }
-      
-        /**
-         * Retrieves a reference to the properties object owned
-         * by this message
-         * @return A Properties Object reference
-         */
-        virtual activemq::util::Properties& getProperties(void) = 0;
-        virtual const activemq::util::Properties& getProperties(void) const = 0;
-      
-        /**
-         * Get the Correlation Id for this message
-         * @return string representation of the correlation Id
-         */
-        virtual const char* getCMSCorrelationId(void) const = 0;
-
-        /**
-         * Sets the Correlation Id used by this message
-         * @param correlationId - String representing the correlation id.
-         */
-        virtual void setCMSCorrelationId( const std::string& correlationId ) = 0;
-
-        /**
-         * Gets the DeliveryMode for this message
-         * @return DeliveryMode enumerated value.
-         */
-        virtual int getCMSDeliveryMode(void) const = 0;
-
-        /**
-         * Sets the DeliveryMode for this message
-         * @param mode - DeliveryMode enumerated value.
-         */
-        virtual void setCMSDeliveryMode( int mode ) = 0;
-      
-        /**
-         * Gets the Destination for this Message, returns a
-         * @return Destination object
-         */
-        virtual const Destination* getCMSDestination(void) const = 0;
-      
-        /**
-         * Sets the Destination for this message
-         * @param destination - Destination Object
-         */
-        virtual void setCMSDestination( const Destination* destination ) = 0;
-      
-        /**
-         * Gets the Expiration Time for this Message
-         * @return time value
-         */
-        virtual long getCMSExpiration(void) const = 0;
-      
-        /**
-         * Sets the Expiration Time for this message
-         * @param expireTime - time value
-         */
-        virtual void setCMSExpiration( long expireTime ) = 0;
-      
-        /**
-         * Gets the CMS Message Id for this Message
-         * @return time value
-         */
-        virtual const char* getCMSMessageId(void) const = 0;
-      
-        /**
-         * Sets the CMS Message Id for this message
-         * @param id - time value
-         */
-        virtual void setCMSMessageId( const std::string& id ) = 0;
-      
-        /**
-         * Gets the Priority Value for this Message
-         * @return priority value
-         */
-        virtual int getCMSPriority(void) const = 0;
-      
-        /**
-         * Sets the Priority Value for this message
-         * @param priority - priority value for this message
-         */
-        virtual void setCMSPriority( int priority ) = 0;
-
-        /**
-         * Gets the Redelivered Flag for this Message
-         * @return redelivered value
-         */
-        virtual bool getCMSRedelivered(void) const = 0;
-      
-        /**
-         * Sets the Redelivered Flag for this message
-         * @param redelivered - boolean redelivered value
-         */
-        virtual void setCMSRedelivered( bool redelivered ) = 0;
-
-        /**
-         * Gets the CMS Reply To Address for this Message
-         * @return Reply To Value
-         */
-        virtual const char* getCMSReplyTo(void) const = 0;
-      
-        /**
-         * Sets the CMS Reply To Address for this message
-         * @param id - Reply To value
-         */
-        virtual void setCMSReplyTo( const std::string& id ) = 0;
-
-        /**
-         * Gets the Time Stamp for this Message
-         * @return time stamp value
-         */
-        virtual long getCMSTimeStamp(void) const = 0;
-      
-        /**
-         * Sets the Time Stamp for this message
-         * @param timeStamp - integer time stamp value
-         */
-        virtual void setCMSTimeStamp( long timeStamp ) = 0;
-
-        /**
-         * Gets the CMS Message Type for this Message
-         * @return type value
-         */
-        virtual const char* getCMSMessageType(void) const = 0;
-      
-        /**
-         * Sets the CMS Message Type for this message
-         * @param type - message type value string
-         */
-        virtual void setCMSMessageType( const std::string& type ) = 0;
+        virtual unsigned char getDataStructureType() const;
 
     public:   // core::ActiveMQMessage
     
@@ -203,7 +49,7 @@ namespace commands{
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler to call
          */
-        virtual void setAckHandler( ActiveMQAckHandler* handler ) {
+        virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {
             this->ackHandler = handler;
         }
         
@@ -279,20 +125,6 @@ namespace commands{
 //        copy.acknowledgeCallback = acknowledgeCallback;
 //    }
 //
-//
-//    public boolean equals(Object o) {
-//        if (this == o)
-//            return true;
-//        if (o == null || o.getClass() != getClass())
-//            return false;
-//
-//        ActiveMQMessage msg = (ActiveMQMessage) o;
-//        MessageId oMsg = msg.getMessageId();
-//        MessageId thisMsg = this.getMessageId();
-//        return thisMsg != null && oMsg != null && oMsg.equals(thisMsg);
-//    }
-//
-
 //    public void clearBody() throws JMSException {
 //        setContent(null);
 //        readOnlyBody = false;
@@ -775,14 +607,6 @@ namespace commands{
 //        return false;
 //    }
 //
-//    public Callback getAcknowledgeCallback() {
-//        return acknowledgeCallback;
-//    }
-//
-//    public void setAcknowledgeCallback(Callback acknowledgeCallback) {
-//        this.acknowledgeCallback = acknowledgeCallback;
-//    }
-//    
 //    /**
 //     * Send operation event listener.  Used to get the message ready to be sent. 
 //     */
@@ -791,9 +615,5 @@ namespace commands{
 //        setReadOnlyProperties(true);
 //    }
 //
-//
-//    public Response visit(CommandVisitor visitor) throws Exception {
-//        return visitor.processMessage( this );
-//    }
 //}
 //
