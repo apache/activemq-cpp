@@ -68,6 +68,19 @@ OFILES = \
     $(OUTDIR)/main/activemq/concurrent/ThreadPool.o \
     $(OUTDIR)/main/activemq/concurrent/PooledThread.o \
     \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQBytesMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQTextMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQObjectMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQMapMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQStreamMessage.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQDestination.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQTempDestination.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQQueue.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQTopic.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQTempTopic.o \
+    $(OUTDIR)/main/activemq/connector/openwire/commands/ActiveMQTempQueue.o \
+    \
     $(OUTDIR)/main/activemq/connector/openwire/commands/BrokerInfo.o \
     $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionControl.o \
     $(OUTDIR)/main/activemq/connector/openwire/commands/ConnectionError.o \
