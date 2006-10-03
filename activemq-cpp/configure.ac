@@ -75,7 +75,7 @@ case "${host_os}" in
   cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
     CFLAGS="$CFLAGS -pthread" 
-    LIBS="$LIBS -lm -lpthread"
+    LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
 
   *) ## Unix configuration
@@ -86,6 +86,33 @@ case "${host_os}" in
     CFLAGS="$CFLAGS -pthread" 
     LIBS="$LIBS -lm -lpthread -luuid"
 esac
+
+##
+## Not all platforms define addrinfo and related functions
+##
+AC_MSG_CHECKING([whether struct addrinfo is defined])
+AC_TRY_COMPILE(
+  [ #include <stdio.h>
+    #ifdef HAVE_UNISTD_H
+    # include <unistd.h>
+    #endif
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+  ],
+  [
+    do {
+      struct addrinfo a;
+      (void) a.ai_flags;
+    } while(0)
+  ],
+  [ 
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_STRUCT_ADDRINFO,, [define if you have struct addrinfo])
+  ],
+  [
+    AC_MSG_RESULT(no)
+  ])
 
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)

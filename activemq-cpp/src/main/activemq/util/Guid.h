@@ -21,17 +21,14 @@
 #include <activemq/exceptions/IllegalArgumentException.h>
 #include <activemq/util/Config.h>
 
-#if defined(HAVE_UUID_UUID_H)
-    #include <uuid/uuid.h>
-#endif
-#if defined(HAVE_UUID_H)
-    #include "uuid.h"
-#endif
-#if defined(HAVE_OBJBASE_H)
+// #if defined(HAVE_OBJBASE_H) && defined(HAVE_RPCDCE_H) 
+#if defined(HAVE_OBJBASE_H)  
     #include <objbase.h>
-#endif
-#if defined(HAVE_RPCDCE_H)
     #include <rpcdce.h>
+#elif defined(HAVE_UUID_UUID_H)
+    #include <uuid/uuid.h>    
+#elif defined(HAVE_UUID_H)
+    #include <uuid.h>
 #endif
 
 #include <string>

@@ -16,8 +16,9 @@
  */
  
 #include "SocketOutputStream.h"
+#include <activemq/util/Config.h>
 
-#if defined( unix ) && !defined( __CYGWIN__ )
+#if !defined(HAVE_WINSOCK2_H)
     #include <sys/socket.h>
     extern int errno;
 #else
