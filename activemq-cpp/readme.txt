@@ -32,7 +32,7 @@ The tests currently hardcode the broker url to be tcp://127.0.0.1:61613,
 you can change this by changing the declaration in IntegrationCommon.cpp
 in the test-integration src tree.
 
-Developers Building on Unix/Linux/OS X from an SVN Checkout
+Developers Building on Unix/Linux/OS X/Cygwin from an SVN Checkout
 --------------------------------------------------------------------------
 
 To Generate the ./configure script use to create the Makefiles, you need
@@ -51,7 +51,7 @@ You should run this anytime you chance configure.ac or any of the
 Makefile.am files.  Now that the configure script is generated follow 
 the directions in the next section to complete the build
 
-Users Building on Unix/Linux/OS X 
+Users Building on Unix/Linux/OS X/Cygwin 
 --------------------------------------------------------------------------
 
 Use the supplied configure script to configure the software.  The configure
