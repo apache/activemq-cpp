@@ -40,6 +40,7 @@ the following software installed:
 
  * autoconf version 2.59
  * automake version 1.9.6
+ * libtool version 1.5.22
  * cppunit version 1.10.2
 
 Later versions will probably work too with a little tweaking.  Once that's 
