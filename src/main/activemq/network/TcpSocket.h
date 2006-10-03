@@ -22,6 +22,8 @@
 #include <activemq/io/InputStream.h>
 #include <activemq/io/OutputStream.h>
 
+#include <activemq/util/Config.h>
+
 namespace activemq{
 namespace network{
    
@@ -201,7 +203,7 @@ namespace network{
        
     protected:
    
-        #if !defined( unix ) || defined( __CYGWIN__ )
+		#if defined(HAVE_WINSOCK2_H)
       
             // WINDOWS needs initialization of winsock
             class StaticSocketInitializer {

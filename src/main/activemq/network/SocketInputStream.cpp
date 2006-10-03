@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#if (defined(unix) || defined(__APPLE__)) && !defined(__CYGWIN__)
+
+#include <activemq/util/Config.h>
+
+#if !defined(HAVE_WINSOCK2_H) 
     #include <sys/poll.h>
     #include <sys/socket.h>
     #include <errno.h>
@@ -50,8 +52,7 @@ SocketInputStream::~SocketInputStream()
 ////////////////////////////////////////////////////////////////////////////////
 int SocketInputStream::available() const{
    
-   
-#if defined(unix) && !defined(__CYGWIN__)
+#if !defined(HAVE_WINSOCK2_H) 
     
     // Poll the socket for input.
     pollfd fd;
@@ -108,7 +109,7 @@ int SocketInputStream::read( unsigned char* buffer, const int bufferSize ) throw
         // Check for typical error conditions.
         if( len < 0 )
         {
-            #if defined(unix) && !defined(__CYGWIN__)
+			#if !defined(HAVE_WINSOCK2_H) 
          
                 // If the socket was temporarily unavailable - just try again.
                 if( errno == EAGAIN ){

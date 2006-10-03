@@ -48,7 +48,7 @@
 using namespace activemq::network;
 using namespace activemq::io;
 
-#if !defined( unix ) || defined( __CYGWIN__ )
+#if defined(HAVE_WINSOCK2_H)
 
     // Static socket initializer needed for winsock
 
@@ -79,7 +79,7 @@ TcpSocket::TcpSocket() {
     inputStream = NULL;
     outputStream = NULL;
    
-    #if !defined( unix ) || defined( __CYGWIN__ )
+	#if defined(HAVE_WINSOCK2_H)
         if( staticSocketInitializer.getSocketInitError() != NULL ) {
             throw *staticSocketInitializer.getSocketInitError();
         }
@@ -139,24 +139,34 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
     target_addr.sin_addr.s_addr = 0; // To be set later down...
     memset( &target_addr.sin_zero, 0, sizeof( target_addr.sin_zero ) );
 
+	int status;
+	
     // Resolve name
+#if defined(HAVE_STRUCT_ADDRINFO)    
     addrinfo hints;
     memset(&hints, 0, sizeof(addrinfo));
     hints.ai_family = PF_INET;
     struct addrinfo *res_ptr = NULL;
     
-    int status = ::getaddrinfo( host, NULL, &hints, &res_ptr );
+    status = ::getaddrinfo( host, NULL, &hints, &res_ptr );
     if( status != 0 || res_ptr == NULL){      
         throw SocketException( __FILE__, __LINE__, 
             "Socket::connect - %s", ::strerror( errno ) );        
     }
-    
+     
     assert(res_ptr->ai_addr->sa_family == AF_INET);
     // Porting: On both 32bit and 64 bit systems that we compile to soo far, sin_addr 
     // is a 32 bit value, not an unsigned long.
     assert( sizeof( ( ( sockaddr_in* )res_ptr->ai_addr )->sin_addr.s_addr ) == 4 );
     target_addr.sin_addr.s_addr = ( ( sockaddr_in* )res_ptr->ai_addr )->sin_addr.s_addr;
     freeaddrinfo( res_ptr );
+#else
+	struct ::hostent *he = ::gethostbyname(host);
+	if( he == NULL ) {
+        throw SocketException( __FILE__, __LINE__, "Failed to resolve hostname" );
+	}
+	target_addr.sin_addr.s_addr = *((in_addr_t *)he->h_addr);
+#endif
    
     // Attempt the connection to the server.
     status = ::connect( socketHandle, 
@@ -193,7 +203,7 @@ void TcpSocket::close() throw( cms::CMSException )
     {
         ::shutdown( socketHandle, 2 );
         
-        #if defined(unix) && !defined(__CYGWIN__)
+		#if !defined(HAVE_WINSOCK2_H)
             ::close( socketHandle );
         #else
            ::closesocket( socketHandle );
@@ -287,7 +297,7 @@ void TcpSocket::setSendBufferSize( const int size ) throw( SocketException ){
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
 {
-    #if defined( unix ) && !defined( __CYGWIN__ )
+	#if !defined(HAVE_WINSOCK2_H)
         timeval timot;
         timot.tv_sec = millisecs / 1000;
         timot.tv_usec = (millisecs % 1000) * 1000;
@@ -302,7 +312,7 @@ void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
 ////////////////////////////////////////////////////////////////////////////////
 int TcpSocket::getSoTimeout() const throw( SocketException )
 {
-    #if defined( unix ) && !defined( __CYGWIN__ )
+	#if !defined(HAVE_WINSOCK2_H)
         timeval timot;
         timot.tv_sec = 0;
         timot.tv_usec = 0;
@@ -314,7 +324,7 @@ int TcpSocket::getSoTimeout() const throw( SocketException )
   
     ::getsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, (char*) &timot, &size);
   
-    #if defined( unix ) && !defined( __CYGWIN__ )
+	#if !defined(HAVE_WINSOCK2_H)
         return (timot.tv_sec * 1000) + (timot.tv_usec / 1000);
     #else
         return timot;

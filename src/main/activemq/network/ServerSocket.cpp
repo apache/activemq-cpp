@@ -128,13 +128,15 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     bind_addr.sin_port = htons((short)port);
     bind_addr.sin_addr.s_addr = 0; // To be set later down...
     memset(&bind_addr.sin_zero, 0, sizeof(bind_addr.sin_zero));
-
+	int status;
+	
     // Resolve name
+#if defined(HAVE_STRUCT_ADDRINFO)    
     ::addrinfo hints;
     memset(&hints, 0, sizeof(addrinfo));
     hints.ai_family = PF_INET;
     struct addrinfo *res_ptr = NULL;
-    int status = ::getaddrinfo(host, NULL, &hints, &res_ptr);
+    status = ::getaddrinfo(host, NULL, &hints, &res_ptr);
     if( status != 0 || res_ptr == NULL) {
         throw SocketException( __FILE__, __LINE__, ::strerror( errno ) );
     }
@@ -143,6 +145,14 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     assert(sizeof(((sockaddr_in*)res_ptr->ai_addr)->sin_addr.s_addr) == 4);
     bind_addr.sin_addr.s_addr = ((sockaddr_in*)res_ptr->ai_addr)->sin_addr.s_addr;
     freeaddrinfo(res_ptr);
+#else
+	struct ::hostent *he = ::gethostbyname(host);
+	if( he == NULL ) {
+        throw SocketException( __FILE__, __LINE__, "Failed to resolve hostname" );
+	}
+	bind_addr.sin_addr.s_addr = *((in_addr_t *)he->h_addr);
+#endif
+
 
     // Set the socket to reuse the address.
     int value = 1;
