@@ -45,6 +45,7 @@ cc_sources = \
     activemq/transport/TcpTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
+    activemq/connector/openwire/marshal/HexTable.cpp \
     activemq/util/Math.cpp
 
 h_sources = \
@@ -218,6 +219,7 @@ h_sources = \
     cms/ConnectionFactory.h \
     cms/MessageProducer.h \
     cms/Message.h \
+    activemq/connector/openwire/marshal/HexTable.h \
     cms/MessageConsumer.h 
 
 ##
