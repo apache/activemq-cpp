@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef _CMS_MAPMESSAGE_H_
 #define _CMS_MAPMESSAGE_H_
 
@@ -171,7 +172,7 @@ namespace cms
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual long getLong( const std::string& name ) = 0;
+        virtual long long getLong( const std::string& name ) = 0;
         
         /** 
          * Sets a Long value with the specified name into the Map.
@@ -179,7 +180,7 @@ namespace cms
          * @param value - the Long value to set in the Map
          * @throws CMSException
          */
-        virtual void setLong( const std::string& name, long value ) = 0;
+        virtual void setLong( const std::string& name, long long value ) = 0;
 
         /**
          * Returns the Short value of the Specified name
