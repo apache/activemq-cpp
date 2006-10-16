@@ -220,7 +220,7 @@ h_sources = \
     cms/MessageProducer.h \
     cms/Message.h \
     activemq/connector/openwire/marshal/HexTable.h \
-    cms/MessageConsumer.h 
+    cms/MessageConsumer.h
 
 ##
 ## Compiler / Linker Info
