@@ -280,7 +280,10 @@ out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println(className+"* "+className+"::clone() const {");
-out.println("    "+className+"* "+decaptialize(className)+" = ");
+
+    String newInstance = decaptialize(className);
+
+out.println("    "+className+"* "+newInstance+" = ");
 out.println("        new "+className+"();");
 out.println("");
 
@@ -293,13 +296,17 @@ out.println("");
     
         if( !property.getType().isPrimitiveType() &&
             !property.getType().getSimpleName().equals("ByteSequence") && 
-            !property.getType().getSimpleName().equals("String") &&
             !type.startsWith("std::vector") ) {
                
-            type = type + "*";
-        } else if( property.getType().getSimpleName().equals("String") ) {
-            type = type + "&";
-            constNess = "const ";
+out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName"();");            
+        } else if( property.getType().getSimpleName().startsWith("std::vector") &&
+                   type.contains( "*" ) ) {
+out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
+out.println("        "+newInstance+"->"+parameterName+".psuh_back( ");
+out.println("            this->"+parameterName+"[i"+parameterName+"]->clone();");            
+out.println("    }");
+        } else {
+out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName"()->clone();");            
         }
     }
 
