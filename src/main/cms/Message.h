@@ -175,6 +175,7 @@ namespace cms{
          * @param type - message type value string
          */
         virtual void setCMSMessageType( const std::string& type ) = 0;
+        
     };
 }
 

@@ -29,10 +29,12 @@ namespace cms{
         virtual ~ExceptionListener(void) {}
    
         /**
-         * Called when an exception occurs.
+         * Called when an exception occurs.  Once notified of an exception
+         * the caller should no longer use the resource that generated the
+         * exception.
          * @param Exception Object that occurred.
          */
-        virtual void onException(const cms::CMSException& ex) = 0;
+        virtual void onException( const cms::CMSException& ex ) = 0;
       
     };
 
