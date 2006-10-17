@@ -23,7 +23,7 @@
 namespace activemq{
 namespace util{
 
-    class Boolean : Number
+    class Boolean : public Number
     {
     public:
 
