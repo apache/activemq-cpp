@@ -286,6 +286,12 @@ out.println(className+"* "+className+"::clone() const {");
 out.println("    "+className+"* "+newInstance+" = new "+className+"();");
 out.println("");
 
+    if( baseClass != null ) {
+out.println("    // Copy the data from the base class or classes");
+out.println("    "+baseClass+"::copy( "+newInstance+" );");
+out.println("");
+    }
+    
     for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
         JProperty property = (JProperty) iter.next();
         String type = toCppType(property.getType());
@@ -317,6 +323,12 @@ out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::copy( "+className+"* dest ) const {");
 out.println("");
+
+        if( baseClass != null ) {
+out.println("    // Copy the data from the base class or classes");
+out.println("    "+baseClass+"::copy( "+newInstance+" );");
+out.println("");
+        }
 
     for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
         JProperty property = (JProperty) iter.next();
