@@ -44,8 +44,32 @@ XATransactionId::~XATransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char XATransactionId::getDataStructureType() const
-{
+XATransactionId* XATransactionId::clone() const {
+    XATransactionId* xATransactionId = new XATransactionId();
+
+    // Copy the data from the base class or classes
+    TransactionId::copy( xATransactionId );
+
+    xATransactionId->formatId = this->getFormatId()->clone();
+    xATransactionId->globalTransactionId = this->getGlobalTransactionId()->clone();
+    xATransactionId->branchQualifier = this->getBranchQualifier()->clone();
+
+    return xATransactionId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void XATransactionId::copy( XATransactionId* dest ) const {
+
+    // Copy the data from the base class or classes
+    TransactionId::copy( xATransactionId );
+
+    dest->setFormatId( this->getFormatId()->clone() );
+    dest->setGlobalTransactionId( this->getGlobalTransactionId()->clone() );
+    dest->setBranchQualifier( this->getBranchQualifier()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char XATransactionId::getDataStructureType() const {
     return XATransactionId::ID_XATRANSACTIONID; 
 }
 

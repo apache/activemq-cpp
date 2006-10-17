@@ -45,8 +45,28 @@ DataResponse::~DataResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataResponse::getDataStructureType() const
-{
+DataResponse* DataResponse::clone() const {
+    DataResponse* dataResponse = new DataResponse();
+
+    // Copy the data from the base class or classes
+    Response::copy( dataResponse );
+
+    dataResponse->data = this->getData();
+
+    return dataResponse
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataResponse::copy( DataResponse* dest ) const {
+
+    // Copy the data from the base class or classes
+    Response::copy( dataResponse );
+
+    dest->setData( this->getData() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char DataResponse::getDataStructureType() const {
     return DataResponse::ID_DATARESPONSE; 
 }
 

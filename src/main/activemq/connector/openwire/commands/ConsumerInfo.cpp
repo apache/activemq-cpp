@@ -65,8 +65,66 @@ ConsumerInfo::~ConsumerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConsumerInfo::getDataStructureType() const
-{
+ConsumerInfo* ConsumerInfo::clone() const {
+    ConsumerInfo* consumerInfo = new ConsumerInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( consumerInfo );
+
+    consumerInfo->consumerId = this->getConsumerId();
+    consumerInfo->browser = this->getBrowser()->clone();
+    consumerInfo->destination = this->getDestination();
+    consumerInfo->prefetchSize = this->getPrefetchSize()->clone();
+    consumerInfo->maximumPendingMessageLimit = this->getMaximumPendingMessageLimit()->clone();
+    consumerInfo->dispatchAsync = this->getDispatchAsync()->clone();
+    consumerInfo->selector = this->getSelector();
+    consumerInfo->subcriptionName = this->getSubcriptionName();
+    consumerInfo->noLocal = this->getNoLocal()->clone();
+    consumerInfo->exclusive = this->getExclusive()->clone();
+    consumerInfo->retroactive = this->getRetroactive()->clone();
+    consumerInfo->priority = this->getPriority()->clone();
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        consumerInfo->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone();
+    }
+    consumerInfo->additionalPredicate = this->getAdditionalPredicate();
+    consumerInfo->networkSubscription = this->getNetworkSubscription()->clone();
+    consumerInfo->optimizedAcknowledge = this->getOptimizedAcknowledge()->clone();
+    consumerInfo->noRangeAcks = this->getNoRangeAcks()->clone();
+
+    return consumerInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerInfo::copy( ConsumerInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( consumerInfo );
+
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setBrowser( this->getBrowser()->clone() );
+    dest->setDestination( this->getDestination() );
+    dest->setPrefetchSize( this->getPrefetchSize()->clone() );
+    dest->setMaximumPendingMessageLimit( this->getMaximumPendingMessageLimit()->clone() );
+    dest->setDispatchAsync( this->getDispatchAsync()->clone() );
+    dest->setSelector( this->getSelector() );
+    dest->setSubcriptionName( this->getSubcriptionName() );
+    dest->setNoLocal( this->getNoLocal()->clone() );
+    dest->setExclusive( this->getExclusive()->clone() );
+    dest->setRetroactive( this->getRetroactive()->clone() );
+    dest->setPriority( this->getPriority()->clone() );
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        dest->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone() );
+    }
+    dest->setAdditionalPredicate( this->getAdditionalPredicate() );
+    dest->setNetworkSubscription( this->getNetworkSubscription()->clone() );
+    dest->setOptimizedAcknowledge( this->getOptimizedAcknowledge()->clone() );
+    dest->setNoRangeAcks( this->getNoRangeAcks()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConsumerInfo::getDataStructureType() const {
     return ConsumerInfo::ID_CONSUMERINFO; 
 }
 

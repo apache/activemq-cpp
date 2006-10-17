@@ -53,8 +53,46 @@ ConnectionInfo::~ConnectionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConnectionInfo::getDataStructureType() const
-{
+ConnectionInfo* ConnectionInfo::clone() const {
+    ConnectionInfo* connectionInfo = new ConnectionInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionInfo );
+
+    connectionInfo->connectionId = this->getConnectionId();
+    connectionInfo->clientId = this->getClientId();
+    connectionInfo->password = this->getPassword();
+    connectionInfo->userName = this->getUserName();
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        connectionInfo->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone();
+    }
+    connectionInfo->brokerMasterConnector = this->getBrokerMasterConnector()->clone();
+    connectionInfo->manageable = this->getManageable()->clone();
+
+    return connectionInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionInfo::copy( ConnectionInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionInfo );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setClientId( this->getClientId() );
+    dest->setPassword( this->getPassword() );
+    dest->setUserName( this->getUserName() );
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        dest->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone() );
+    }
+    dest->setBrokerMasterConnector( this->getBrokerMasterConnector()->clone() );
+    dest->setManageable( this->getManageable()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConnectionInfo::getDataStructureType() const {
     return ConnectionInfo::ID_CONNECTIONINFO; 
 }
 

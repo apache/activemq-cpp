@@ -44,8 +44,28 @@ ConnectionId::~ConnectionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConnectionId::getDataStructureType() const
-{
+ConnectionId* ConnectionId::clone() const {
+    ConnectionId* connectionId = new ConnectionId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( connectionId );
+
+    connectionId->value = this->getValue();
+
+    return connectionId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionId::copy( ConnectionId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( connectionId );
+
+    dest->setValue( this->getValue() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConnectionId::getDataStructureType() const {
     return ConnectionId::ID_CONNECTIONID; 
 }
 

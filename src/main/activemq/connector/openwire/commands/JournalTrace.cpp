@@ -44,8 +44,28 @@ JournalTrace::~JournalTrace()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char JournalTrace::getDataStructureType() const
-{
+JournalTrace* JournalTrace::clone() const {
+    JournalTrace* journalTrace = new JournalTrace();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTrace );
+
+    journalTrace->message = this->getMessage();
+
+    return journalTrace
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void JournalTrace::copy( JournalTrace* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTrace );
+
+    dest->setMessage( this->getMessage() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char JournalTrace::getDataStructureType() const {
     return JournalTrace::ID_JOURNALTRACE; 
 }
 

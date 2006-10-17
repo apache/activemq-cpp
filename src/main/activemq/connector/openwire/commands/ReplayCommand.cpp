@@ -45,8 +45,30 @@ ReplayCommand::~ReplayCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ReplayCommand::getDataStructureType() const
-{
+ReplayCommand* ReplayCommand::clone() const {
+    ReplayCommand* replayCommand = new ReplayCommand();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( replayCommand );
+
+    replayCommand->firstNakNumber = this->getFirstNakNumber()->clone();
+    replayCommand->lastNakNumber = this->getLastNakNumber()->clone();
+
+    return replayCommand
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ReplayCommand::copy( ReplayCommand* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( replayCommand );
+
+    dest->setFirstNakNumber( this->getFirstNakNumber()->clone() );
+    dest->setLastNakNumber( this->getLastNakNumber()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ReplayCommand::getDataStructureType() const {
     return ReplayCommand::ID_REPLAYCOMMAND; 
 }
 

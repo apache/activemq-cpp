@@ -46,8 +46,32 @@ ProducerId::~ProducerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ProducerId::getDataStructureType() const
-{
+ProducerId* ProducerId::clone() const {
+    ProducerId* producerId = new ProducerId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( producerId );
+
+    producerId->connectionId = this->getConnectionId();
+    producerId->value = this->getValue()->clone();
+    producerId->sessionId = this->getSessionId()->clone();
+
+    return producerId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ProducerId::copy( ProducerId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( producerId );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setValue( this->getValue()->clone() );
+    dest->setSessionId( this->getSessionId()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ProducerId::getDataStructureType() const {
     return ProducerId::ID_PRODUCERID; 
 }
 

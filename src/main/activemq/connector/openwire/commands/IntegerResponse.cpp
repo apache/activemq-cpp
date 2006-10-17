@@ -44,8 +44,28 @@ IntegerResponse::~IntegerResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char IntegerResponse::getDataStructureType() const
-{
+IntegerResponse* IntegerResponse::clone() const {
+    IntegerResponse* integerResponse = new IntegerResponse();
+
+    // Copy the data from the base class or classes
+    Response::copy( integerResponse );
+
+    integerResponse->result = this->getResult()->clone();
+
+    return integerResponse
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IntegerResponse::copy( IntegerResponse* dest ) const {
+
+    // Copy the data from the base class or classes
+    Response::copy( integerResponse );
+
+    dest->setResult( this->getResult()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char IntegerResponse::getDataStructureType() const {
     return IntegerResponse::ID_INTEGERRESPONSE; 
 }
 

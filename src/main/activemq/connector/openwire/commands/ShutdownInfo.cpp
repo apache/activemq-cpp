@@ -43,8 +43,26 @@ ShutdownInfo::~ShutdownInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ShutdownInfo::getDataStructureType() const
-{
+ShutdownInfo* ShutdownInfo::clone() const {
+    ShutdownInfo* shutdownInfo = new ShutdownInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( shutdownInfo );
+
+
+    return shutdownInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ShutdownInfo::copy( ShutdownInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( shutdownInfo );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ShutdownInfo::getDataStructureType() const {
     return ShutdownInfo::ID_SHUTDOWNINFO; 
 }
 

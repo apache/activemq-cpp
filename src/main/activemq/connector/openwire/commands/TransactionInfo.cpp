@@ -48,8 +48,32 @@ TransactionInfo::~TransactionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char TransactionInfo::getDataStructureType() const
-{
+TransactionInfo* TransactionInfo::clone() const {
+    TransactionInfo* transactionInfo = new TransactionInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( transactionInfo );
+
+    transactionInfo->connectionId = this->getConnectionId();
+    transactionInfo->transactionId = this->getTransactionId();
+    transactionInfo->type = this->getType()->clone();
+
+    return transactionInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionInfo::copy( TransactionInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( transactionInfo );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setTransactionId( this->getTransactionId() );
+    dest->setType( this->getType()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char TransactionInfo::getDataStructureType() const {
     return TransactionInfo::ID_TRANSACTIONINFO; 
 }
 

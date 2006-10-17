@@ -43,8 +43,26 @@ KeepAliveInfo::~KeepAliveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char KeepAliveInfo::getDataStructureType() const
-{
+KeepAliveInfo* KeepAliveInfo::clone() const {
+    KeepAliveInfo* keepAliveInfo = new KeepAliveInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( keepAliveInfo );
+
+
+    return keepAliveInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void KeepAliveInfo::copy( KeepAliveInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( keepAliveInfo );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char KeepAliveInfo::getDataStructureType() const {
     return KeepAliveInfo::ID_KEEPALIVEINFO; 
 }
 

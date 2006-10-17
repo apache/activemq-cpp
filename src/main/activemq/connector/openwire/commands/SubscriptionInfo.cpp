@@ -48,8 +48,34 @@ SubscriptionInfo::~SubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SubscriptionInfo::getDataStructureType() const
-{
+SubscriptionInfo* SubscriptionInfo::clone() const {
+    SubscriptionInfo* subscriptionInfo = new SubscriptionInfo();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( subscriptionInfo );
+
+    subscriptionInfo->clientId = this->getClientId();
+    subscriptionInfo->destination = this->getDestination();
+    subscriptionInfo->selector = this->getSelector();
+    subscriptionInfo->subcriptionName = this->getSubcriptionName();
+
+    return subscriptionInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SubscriptionInfo::copy( SubscriptionInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( subscriptionInfo );
+
+    dest->setClientId( this->getClientId() );
+    dest->setDestination( this->getDestination() );
+    dest->setSelector( this->getSelector() );
+    dest->setSubcriptionName( this->getSubcriptionName() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char SubscriptionInfo::getDataStructureType() const {
     return SubscriptionInfo::ID_SUBSCRIPTIONINFO; 
 }
 

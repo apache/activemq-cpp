@@ -77,8 +77,82 @@ Message::~Message()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Message::getDataStructureType() const
-{
+Message* Message::clone() const {
+    Message* message = new Message();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( message );
+
+    message->producerId = this->getProducerId();
+    message->destination = this->getDestination();
+    message->transactionId = this->getTransactionId();
+    message->originalDestination = this->getOriginalDestination();
+    message->messageId = this->getMessageId();
+    message->originalTransactionId = this->getOriginalTransactionId();
+    message->groupID = this->getGroupID();
+    message->groupSequence = this->getGroupSequence()->clone();
+    message->correlationId = this->getCorrelationId();
+    message->persistent = this->getPersistent()->clone();
+    message->expiration = this->getExpiration()->clone();
+    message->priority = this->getPriority()->clone();
+    message->replyTo = this->getReplyTo();
+    message->timestamp = this->getTimestamp()->clone();
+    message->type = this->getType();
+    message->content = this->getContent()->clone();
+    message->marshalledProperties = this->getMarshalledProperties()->clone();
+    message->dataStructure = this->getDataStructure();
+    message->targetConsumerId = this->getTargetConsumerId();
+    message->compressed = this->getCompressed()->clone();
+    message->redeliveryCounter = this->getRedeliveryCounter()->clone();
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        message->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone();
+    }
+    message->arrival = this->getArrival()->clone();
+    message->userID = this->getUserID();
+    message->recievedByDFBridge = this->getRecievedByDFBridge()->clone();
+
+    return message
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::copy( Message* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( message );
+
+    dest->setProducerId( this->getProducerId() );
+    dest->setDestination( this->getDestination() );
+    dest->setTransactionId( this->getTransactionId() );
+    dest->setOriginalDestination( this->getOriginalDestination() );
+    dest->setMessageId( this->getMessageId() );
+    dest->setOriginalTransactionId( this->getOriginalTransactionId() );
+    dest->setGroupID( this->getGroupID() );
+    dest->setGroupSequence( this->getGroupSequence()->clone() );
+    dest->setCorrelationId( this->getCorrelationId() );
+    dest->setPersistent( this->getPersistent()->clone() );
+    dest->setExpiration( this->getExpiration()->clone() );
+    dest->setPriority( this->getPriority()->clone() );
+    dest->setReplyTo( this->getReplyTo() );
+    dest->setTimestamp( this->getTimestamp()->clone() );
+    dest->setType( this->getType() );
+    dest->setContent( this->getContent()->clone() );
+    dest->setMarshalledProperties( this->getMarshalledProperties()->clone() );
+    dest->setDataStructure( this->getDataStructure() );
+    dest->setTargetConsumerId( this->getTargetConsumerId() );
+    dest->setCompressed( this->getCompressed()->clone() );
+    dest->setRedeliveryCounter( this->getRedeliveryCounter()->clone() );
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        dest->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone() );
+    }
+    dest->setArrival( this->getArrival()->clone() );
+    dest->setUserID( this->getUserID() );
+    dest->setRecievedByDFBridge( this->getRecievedByDFBridge()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char Message::getDataStructureType() const {
     return Message::ID_MESSAGE; 
 }
 

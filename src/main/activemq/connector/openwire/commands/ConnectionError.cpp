@@ -47,8 +47,30 @@ ConnectionError::~ConnectionError()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConnectionError::getDataStructureType() const
-{
+ConnectionError* ConnectionError::clone() const {
+    ConnectionError* connectionError = new ConnectionError();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionError );
+
+    connectionError->exception = this->getException();
+    connectionError->connectionId = this->getConnectionId();
+
+    return connectionError
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionError::copy( ConnectionError* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionError );
+
+    dest->setException( this->getException() );
+    dest->setConnectionId( this->getConnectionId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConnectionError::getDataStructureType() const {
     return ConnectionError::ID_CONNECTIONERROR; 
 }
 

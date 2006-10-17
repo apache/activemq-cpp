@@ -48,8 +48,32 @@ MessagePull::~MessagePull()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessagePull::getDataStructureType() const
-{
+MessagePull* MessagePull::clone() const {
+    MessagePull* messagePull = new MessagePull();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messagePull );
+
+    messagePull->consumerId = this->getConsumerId();
+    messagePull->destination = this->getDestination();
+    messagePull->timeout = this->getTimeout()->clone();
+
+    return messagePull
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessagePull::copy( MessagePull* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messagePull );
+
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setDestination( this->getDestination() );
+    dest->setTimeout( this->getTimeout()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char MessagePull::getDataStructureType() const {
     return MessagePull::ID_MESSAGEPULL; 
 }
 

@@ -48,8 +48,36 @@ ConnectionControl::~ConnectionControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConnectionControl::getDataStructureType() const
-{
+ConnectionControl* ConnectionControl::clone() const {
+    ConnectionControl* connectionControl = new ConnectionControl();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionControl );
+
+    connectionControl->close = this->getClose()->clone();
+    connectionControl->exit = this->getExit()->clone();
+    connectionControl->faultTolerant = this->getFaultTolerant()->clone();
+    connectionControl->resume = this->getResume()->clone();
+    connectionControl->suspend = this->getSuspend()->clone();
+
+    return connectionControl
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionControl::copy( ConnectionControl* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( connectionControl );
+
+    dest->setClose( this->getClose()->clone() );
+    dest->setExit( this->getExit()->clone() );
+    dest->setFaultTolerant( this->getFaultTolerant()->clone() );
+    dest->setResume( this->getResume()->clone() );
+    dest->setSuspend( this->getSuspend()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConnectionControl::getDataStructureType() const {
     return ConnectionControl::ID_CONNECTIONCONTROL; 
 }
 

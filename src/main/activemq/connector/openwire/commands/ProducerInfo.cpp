@@ -50,8 +50,38 @@ ProducerInfo::~ProducerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ProducerInfo::getDataStructureType() const
-{
+ProducerInfo* ProducerInfo::clone() const {
+    ProducerInfo* producerInfo = new ProducerInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( producerInfo );
+
+    producerInfo->producerId = this->getProducerId();
+    producerInfo->destination = this->getDestination();
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        producerInfo->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone();
+    }
+
+    return producerInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ProducerInfo::copy( ProducerInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( producerInfo );
+
+    dest->setProducerId( this->getProducerId() );
+    dest->setDestination( this->getDestination() );
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        dest->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ProducerInfo::getDataStructureType() const {
     return ProducerInfo::ID_PRODUCERINFO; 
 }
 

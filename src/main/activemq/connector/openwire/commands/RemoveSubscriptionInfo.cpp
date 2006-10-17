@@ -47,8 +47,32 @@ RemoveSubscriptionInfo::~RemoveSubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char RemoveSubscriptionInfo::getDataStructureType() const
-{
+RemoveSubscriptionInfo* RemoveSubscriptionInfo::clone() const {
+    RemoveSubscriptionInfo* removeSubscriptionInfo = new RemoveSubscriptionInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( removeSubscriptionInfo );
+
+    removeSubscriptionInfo->connectionId = this->getConnectionId();
+    removeSubscriptionInfo->subcriptionName = this->getSubcriptionName();
+    removeSubscriptionInfo->clientId = this->getClientId();
+
+    return removeSubscriptionInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void RemoveSubscriptionInfo::copy( RemoveSubscriptionInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( removeSubscriptionInfo );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setSubcriptionName( this->getSubcriptionName() );
+    dest->setClientId( this->getClientId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char RemoveSubscriptionInfo::getDataStructureType() const {
     return RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO; 
 }
 

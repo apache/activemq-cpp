@@ -45,8 +45,28 @@ SessionInfo::~SessionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SessionInfo::getDataStructureType() const
-{
+SessionInfo* SessionInfo::clone() const {
+    SessionInfo* sessionInfo = new SessionInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( sessionInfo );
+
+    sessionInfo->sessionId = this->getSessionId();
+
+    return sessionInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SessionInfo::copy( SessionInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( sessionInfo );
+
+    dest->setSessionId( this->getSessionId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char SessionInfo::getDataStructureType() const {
     return SessionInfo::ID_SESSIONINFO; 
 }
 

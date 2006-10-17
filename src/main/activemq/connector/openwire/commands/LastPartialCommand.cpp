@@ -43,8 +43,26 @@ LastPartialCommand::~LastPartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char LastPartialCommand::getDataStructureType() const
-{
+LastPartialCommand* LastPartialCommand::clone() const {
+    LastPartialCommand* lastPartialCommand = new LastPartialCommand();
+
+    // Copy the data from the base class or classes
+    PartialCommand::copy( lastPartialCommand );
+
+
+    return lastPartialCommand
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LastPartialCommand::copy( LastPartialCommand* dest ) const {
+
+    // Copy the data from the base class or classes
+    PartialCommand::copy( lastPartialCommand );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char LastPartialCommand::getDataStructureType() const {
     return LastPartialCommand::ID_LASTPARTIALCOMMAND; 
 }
 

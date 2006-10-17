@@ -50,8 +50,34 @@ MessageDispatchNotification::~MessageDispatchNotification()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessageDispatchNotification::getDataStructureType() const
-{
+MessageDispatchNotification* MessageDispatchNotification::clone() const {
+    MessageDispatchNotification* messageDispatchNotification = new MessageDispatchNotification();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageDispatchNotification );
+
+    messageDispatchNotification->consumerId = this->getConsumerId();
+    messageDispatchNotification->destination = this->getDestination();
+    messageDispatchNotification->deliverySequenceId = this->getDeliverySequenceId()->clone();
+    messageDispatchNotification->messageId = this->getMessageId();
+
+    return messageDispatchNotification
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageDispatchNotification::copy( MessageDispatchNotification* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageDispatchNotification );
+
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setDestination( this->getDestination() );
+    dest->setDeliverySequenceId( this->getDeliverySequenceId()->clone() );
+    dest->setMessageId( this->getMessageId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char MessageDispatchNotification::getDataStructureType() const {
     return MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION; 
 }
 

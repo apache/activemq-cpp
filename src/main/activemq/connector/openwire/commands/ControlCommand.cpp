@@ -44,8 +44,28 @@ ControlCommand::~ControlCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ControlCommand::getDataStructureType() const
-{
+ControlCommand* ControlCommand::clone() const {
+    ControlCommand* controlCommand = new ControlCommand();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( controlCommand );
+
+    controlCommand->command = this->getCommand();
+
+    return controlCommand
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ControlCommand::copy( ControlCommand* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( controlCommand );
+
+    dest->setCommand( this->getCommand() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ControlCommand::getDataStructureType() const {
     return ControlCommand::ID_CONTROLCOMMAND; 
 }
 

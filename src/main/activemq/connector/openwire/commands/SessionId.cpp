@@ -45,8 +45,30 @@ SessionId::~SessionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SessionId::getDataStructureType() const
-{
+SessionId* SessionId::clone() const {
+    SessionId* sessionId = new SessionId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( sessionId );
+
+    sessionId->connectionId = this->getConnectionId();
+    sessionId->value = this->getValue()->clone();
+
+    return sessionId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SessionId::copy( SessionId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( sessionId );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setValue( this->getValue()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char SessionId::getDataStructureType() const {
     return SessionId::ID_SESSIONID; 
 }
 

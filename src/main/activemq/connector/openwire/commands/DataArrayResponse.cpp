@@ -46,8 +46,34 @@ DataArrayResponse::~DataArrayResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataArrayResponse::getDataStructureType() const
-{
+DataArrayResponse* DataArrayResponse::clone() const {
+    DataArrayResponse* dataArrayResponse = new DataArrayResponse();
+
+    // Copy the data from the base class or classes
+    Response::copy( dataArrayResponse );
+
+    for( size_t idata = 0; idata < data.size(); ++idata ) {
+        dataArrayResponse->getData().push_back( 
+            this->data[idata]->clone();
+    }
+
+    return dataArrayResponse
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataArrayResponse::copy( DataArrayResponse* dest ) const {
+
+    // Copy the data from the base class or classes
+    Response::copy( dataArrayResponse );
+
+    for( size_t idata = 0; idata < data.size(); ++idata ) {
+        dest->getData().push_back( 
+            this->data[idata]->clone() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char DataArrayResponse::getDataStructureType() const {
     return DataArrayResponse::ID_DATAARRAYRESPONSE; 
 }
 

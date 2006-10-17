@@ -55,8 +55,40 @@ MessageAck::~MessageAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessageAck::getDataStructureType() const
-{
+MessageAck* MessageAck::clone() const {
+    MessageAck* messageAck = new MessageAck();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageAck );
+
+    messageAck->destination = this->getDestination();
+    messageAck->transactionId = this->getTransactionId();
+    messageAck->consumerId = this->getConsumerId();
+    messageAck->ackType = this->getAckType()->clone();
+    messageAck->firstMessageId = this->getFirstMessageId();
+    messageAck->lastMessageId = this->getLastMessageId();
+    messageAck->messageCount = this->getMessageCount()->clone();
+
+    return messageAck
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageAck::copy( MessageAck* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageAck );
+
+    dest->setDestination( this->getDestination() );
+    dest->setTransactionId( this->getTransactionId() );
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setAckType( this->getAckType()->clone() );
+    dest->setFirstMessageId( this->getFirstMessageId() );
+    dest->setLastMessageId( this->getLastMessageId() );
+    dest->setMessageCount( this->getMessageCount()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char MessageAck::getDataStructureType() const {
     return MessageAck::ID_MESSAGEACK; 
 }
 

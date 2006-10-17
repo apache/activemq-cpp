@@ -43,8 +43,26 @@ TransactionId::~TransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char TransactionId::getDataStructureType() const
-{
+TransactionId* TransactionId::clone() const {
+    TransactionId* transactionId = new TransactionId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( transactionId );
+
+
+    return transactionId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionId::copy( TransactionId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( transactionId );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char TransactionId::getDataStructureType() const {
     return TransactionId::ID_TRANSACTIONID; 
 }
 
