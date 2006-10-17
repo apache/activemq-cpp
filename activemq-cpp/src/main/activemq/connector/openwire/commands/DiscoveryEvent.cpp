@@ -45,8 +45,30 @@ DiscoveryEvent::~DiscoveryEvent()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DiscoveryEvent::getDataStructureType() const
-{
+DiscoveryEvent* DiscoveryEvent::clone() const {
+    DiscoveryEvent* discoveryEvent = new DiscoveryEvent();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( discoveryEvent );
+
+    discoveryEvent->serviceName = this->getServiceName();
+    discoveryEvent->brokerName = this->getBrokerName();
+
+    return discoveryEvent
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DiscoveryEvent::copy( DiscoveryEvent* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( discoveryEvent );
+
+    dest->setServiceName( this->getServiceName() );
+    dest->setBrokerName( this->getBrokerName() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char DiscoveryEvent::getDataStructureType() const {
     return DiscoveryEvent::ID_DISCOVERYEVENT; 
 }
 

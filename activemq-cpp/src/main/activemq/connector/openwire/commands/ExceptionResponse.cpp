@@ -45,8 +45,28 @@ ExceptionResponse::~ExceptionResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ExceptionResponse::getDataStructureType() const
-{
+ExceptionResponse* ExceptionResponse::clone() const {
+    ExceptionResponse* exceptionResponse = new ExceptionResponse();
+
+    // Copy the data from the base class or classes
+    Response::copy( exceptionResponse );
+
+    exceptionResponse->exception = this->getException();
+
+    return exceptionResponse
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExceptionResponse::copy( ExceptionResponse* dest ) const {
+
+    // Copy the data from the base class or classes
+    Response::copy( exceptionResponse );
+
+    dest->setException( this->getException() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ExceptionResponse::getDataStructureType() const {
     return ExceptionResponse::ID_EXCEPTIONRESPONSE; 
 }
 

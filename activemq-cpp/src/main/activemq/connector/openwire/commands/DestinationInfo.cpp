@@ -52,8 +52,42 @@ DestinationInfo::~DestinationInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DestinationInfo::getDataStructureType() const
-{
+DestinationInfo* DestinationInfo::clone() const {
+    DestinationInfo* destinationInfo = new DestinationInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( destinationInfo );
+
+    destinationInfo->connectionId = this->getConnectionId();
+    destinationInfo->destination = this->getDestination();
+    destinationInfo->operationType = this->getOperationType()->clone();
+    destinationInfo->timeout = this->getTimeout()->clone();
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        destinationInfo->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone();
+    }
+
+    return destinationInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DestinationInfo::copy( DestinationInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( destinationInfo );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setDestination( this->getDestination() );
+    dest->setOperationType( this->getOperationType()->clone() );
+    dest->setTimeout( this->getTimeout()->clone() );
+    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
+        dest->getBrokerPath().push_back( 
+            this->brokerPath[ibrokerPath]->clone() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char DestinationInfo::getDataStructureType() const {
     return DestinationInfo::ID_DESTINATIONINFO; 
 }
 

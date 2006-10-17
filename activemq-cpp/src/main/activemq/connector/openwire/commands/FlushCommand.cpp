@@ -43,8 +43,26 @@ FlushCommand::~FlushCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char FlushCommand::getDataStructureType() const
-{
+FlushCommand* FlushCommand::clone() const {
+    FlushCommand* flushCommand = new FlushCommand();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( flushCommand );
+
+
+    return flushCommand
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FlushCommand::copy( FlushCommand* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( flushCommand );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char FlushCommand::getDataStructureType() const {
     return FlushCommand::ID_FLUSHCOMMAND; 
 }
 

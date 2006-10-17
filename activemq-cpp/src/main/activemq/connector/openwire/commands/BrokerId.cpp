@@ -44,8 +44,28 @@ BrokerId::~BrokerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char BrokerId::getDataStructureType() const
-{
+BrokerId* BrokerId::clone() const {
+    BrokerId* brokerId = new BrokerId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( brokerId );
+
+    brokerId->value = this->getValue();
+
+    return brokerId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerId::copy( BrokerId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( brokerId );
+
+    dest->setValue( this->getValue() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char BrokerId::getDataStructureType() const {
     return BrokerId::ID_BROKERID; 
 }
 

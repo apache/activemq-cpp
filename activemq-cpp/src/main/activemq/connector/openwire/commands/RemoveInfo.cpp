@@ -45,8 +45,28 @@ RemoveInfo::~RemoveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char RemoveInfo::getDataStructureType() const
-{
+RemoveInfo* RemoveInfo::clone() const {
+    RemoveInfo* removeInfo = new RemoveInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( removeInfo );
+
+    removeInfo->objectId = this->getObjectId();
+
+    return removeInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void RemoveInfo::copy( RemoveInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( removeInfo );
+
+    dest->setObjectId( this->getObjectId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char RemoveInfo::getDataStructureType() const {
     return RemoveInfo::ID_REMOVEINFO; 
 }
 

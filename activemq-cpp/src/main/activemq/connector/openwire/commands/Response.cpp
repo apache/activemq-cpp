@@ -44,8 +44,28 @@ Response::~Response()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char Response::getDataStructureType() const
-{
+Response* Response::clone() const {
+    Response* response = new Response();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( response );
+
+    response->correlationId = this->getCorrelationId()->clone();
+
+    return response
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Response::copy( Response* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( response );
+
+    dest->setCorrelationId( this->getCorrelationId()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char Response::getDataStructureType() const {
     return Response::ID_RESPONSE; 
 }
 

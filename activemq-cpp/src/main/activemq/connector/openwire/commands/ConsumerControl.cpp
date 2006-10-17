@@ -47,8 +47,32 @@ ConsumerControl::~ConsumerControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConsumerControl::getDataStructureType() const
-{
+ConsumerControl* ConsumerControl::clone() const {
+    ConsumerControl* consumerControl = new ConsumerControl();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( consumerControl );
+
+    consumerControl->close = this->getClose()->clone();
+    consumerControl->consumerId = this->getConsumerId();
+    consumerControl->prefetch = this->getPrefetch()->clone();
+
+    return consumerControl
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::copy( ConsumerControl* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( consumerControl );
+
+    dest->setClose( this->getClose()->clone() );
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setPrefetch( this->getPrefetch()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConsumerControl::getDataStructureType() const {
     return ConsumerControl::ID_CONSUMERCONTROL; 
 }
 

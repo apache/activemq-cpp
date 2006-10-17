@@ -47,8 +47,32 @@ MessageId::~MessageId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessageId::getDataStructureType() const
-{
+MessageId* MessageId::clone() const {
+    MessageId* messageId = new MessageId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( messageId );
+
+    messageId->producerId = this->getProducerId();
+    messageId->producerSequenceId = this->getProducerSequenceId()->clone();
+    messageId->brokerSequenceId = this->getBrokerSequenceId()->clone();
+
+    return messageId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageId::copy( MessageId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( messageId );
+
+    dest->setProducerId( this->getProducerId() );
+    dest->setProducerSequenceId( this->getProducerSequenceId()->clone() );
+    dest->setBrokerSequenceId( this->getBrokerSequenceId()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char MessageId::getDataStructureType() const {
     return MessageId::ID_MESSAGEID; 
 }
 

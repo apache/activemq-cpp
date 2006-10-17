@@ -46,8 +46,30 @@ LocalTransactionId::~LocalTransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char LocalTransactionId::getDataStructureType() const
-{
+LocalTransactionId* LocalTransactionId::clone() const {
+    LocalTransactionId* localTransactionId = new LocalTransactionId();
+
+    // Copy the data from the base class or classes
+    TransactionId::copy( localTransactionId );
+
+    localTransactionId->value = this->getValue()->clone();
+    localTransactionId->connectionId = this->getConnectionId();
+
+    return localTransactionId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void LocalTransactionId::copy( LocalTransactionId* dest ) const {
+
+    // Copy the data from the base class or classes
+    TransactionId::copy( localTransactionId );
+
+    dest->setValue( this->getValue()->clone() );
+    dest->setConnectionId( this->getConnectionId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char LocalTransactionId::getDataStructureType() const {
     return LocalTransactionId::ID_LOCALTRANSACTIONID; 
 }
 

@@ -52,8 +52,38 @@ JournalTopicAck::~JournalTopicAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char JournalTopicAck::getDataStructureType() const
-{
+JournalTopicAck* JournalTopicAck::clone() const {
+    JournalTopicAck* journalTopicAck = new JournalTopicAck();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTopicAck );
+
+    journalTopicAck->destination = this->getDestination();
+    journalTopicAck->messageId = this->getMessageId();
+    journalTopicAck->messageSequenceId = this->getMessageSequenceId()->clone();
+    journalTopicAck->subscritionName = this->getSubscritionName();
+    journalTopicAck->clientId = this->getClientId();
+    journalTopicAck->transactionId = this->getTransactionId();
+
+    return journalTopicAck
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void JournalTopicAck::copy( JournalTopicAck* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTopicAck );
+
+    dest->setDestination( this->getDestination() );
+    dest->setMessageId( this->getMessageId() );
+    dest->setMessageSequenceId( this->getMessageSequenceId()->clone() );
+    dest->setSubscritionName( this->getSubscritionName() );
+    dest->setClientId( this->getClientId() );
+    dest->setTransactionId( this->getTransactionId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char JournalTopicAck::getDataStructureType() const {
     return JournalTopicAck::ID_JOURNALTOPICACK; 
 }
 

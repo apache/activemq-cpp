@@ -47,8 +47,30 @@ JournalQueueAck::~JournalQueueAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char JournalQueueAck::getDataStructureType() const
-{
+JournalQueueAck* JournalQueueAck::clone() const {
+    JournalQueueAck* journalQueueAck = new JournalQueueAck();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalQueueAck );
+
+    journalQueueAck->destination = this->getDestination();
+    journalQueueAck->messageAck = this->getMessageAck();
+
+    return journalQueueAck
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void JournalQueueAck::copy( JournalQueueAck* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalQueueAck );
+
+    dest->setDestination( this->getDestination() );
+    dest->setMessageAck( this->getMessageAck() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char JournalQueueAck::getDataStructureType() const {
     return JournalQueueAck::ID_JOURNALQUEUEACK; 
 }
 

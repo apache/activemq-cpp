@@ -44,8 +44,30 @@ PartialCommand::~PartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PartialCommand::getDataStructureType() const
-{
+PartialCommand* PartialCommand::clone() const {
+    PartialCommand* partialCommand = new PartialCommand();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( partialCommand );
+
+    partialCommand->commandId = this->getCommandId()->clone();
+    partialCommand->data = this->getData()->clone();
+
+    return partialCommand
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PartialCommand::copy( PartialCommand* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( partialCommand );
+
+    dest->setCommandId( this->getCommandId()->clone() );
+    dest->setData( this->getData()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char PartialCommand::getDataStructureType() const {
     return PartialCommand::ID_PARTIALCOMMAND; 
 }
 

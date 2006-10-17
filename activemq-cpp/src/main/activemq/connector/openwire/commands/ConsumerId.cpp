@@ -46,8 +46,32 @@ ConsumerId::~ConsumerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ConsumerId::getDataStructureType() const
-{
+ConsumerId* ConsumerId::clone() const {
+    ConsumerId* consumerId = new ConsumerId();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( consumerId );
+
+    consumerId->connectionId = this->getConnectionId();
+    consumerId->sessionId = this->getSessionId()->clone();
+    consumerId->value = this->getValue()->clone();
+
+    return consumerId
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerId::copy( ConsumerId* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( consumerId );
+
+    dest->setConnectionId( this->getConnectionId() );
+    dest->setSessionId( this->getSessionId()->clone() );
+    dest->setValue( this->getValue()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ConsumerId::getDataStructureType() const {
     return ConsumerId::ID_CONSUMERID; 
 }
 

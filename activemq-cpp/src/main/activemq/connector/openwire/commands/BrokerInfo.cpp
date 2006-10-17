@@ -53,8 +53,46 @@ BrokerInfo::~BrokerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char BrokerInfo::getDataStructureType() const
-{
+BrokerInfo* BrokerInfo::clone() const {
+    BrokerInfo* brokerInfo = new BrokerInfo();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( brokerInfo );
+
+    brokerInfo->brokerId = this->getBrokerId();
+    brokerInfo->brokerURL = this->getBrokerURL();
+    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < peerBrokerInfos.size(); ++ipeerBrokerInfos ) {
+        brokerInfo->getPeerBrokerInfos().push_back( 
+            this->peerBrokerInfos[ipeerBrokerInfos]->clone();
+    }
+    brokerInfo->brokerName = this->getBrokerName();
+    brokerInfo->slaveBroker = this->getSlaveBroker()->clone();
+    brokerInfo->masterBroker = this->getMasterBroker()->clone();
+    brokerInfo->faultTolerantConfiguration = this->getFaultTolerantConfiguration()->clone();
+
+    return brokerInfo
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::copy( BrokerInfo* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( brokerInfo );
+
+    dest->setBrokerId( this->getBrokerId() );
+    dest->setBrokerURL( this->getBrokerURL() );
+    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < peerBrokerInfos.size(); ++ipeerBrokerInfos ) {
+        dest->getPeerBrokerInfos().push_back( 
+            this->peerBrokerInfos[ipeerBrokerInfos]->clone() );
+    }
+    dest->setBrokerName( this->getBrokerName() );
+    dest->setSlaveBroker( this->getSlaveBroker()->clone() );
+    dest->setMasterBroker( this->getMasterBroker()->clone() );
+    dest->setFaultTolerantConfiguration( this->getFaultTolerantConfiguration()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char BrokerInfo::getDataStructureType() const {
     return BrokerInfo::ID_BROKERINFO; 
 }
 

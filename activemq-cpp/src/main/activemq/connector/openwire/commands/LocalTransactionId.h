@@ -59,7 +59,27 @@ namespace commands{
         LocalTransactionId();
         virtual ~LocalTransactionId();
 
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaller share.
+         * @returns new DataStructure type copy.
+         */
         virtual unsigned char getDataStructureType() const;
+
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual LocalTransactionId* clone() const;
+
+        /**
+         * Copy the contents of this object and place them into the
+         * instance of this object type that was passed in.
+         * @return dest - Destination Object
+         */
+        virtual void clone( LocalTransactionId* dest ) const;
+
         virtual const long long getValue() const;
         virtual long long getValue();
         virtual void setValue( long long value );

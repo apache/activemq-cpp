@@ -47,8 +47,32 @@ JournalTransaction::~JournalTransaction()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char JournalTransaction::getDataStructureType() const
-{
+JournalTransaction* JournalTransaction::clone() const {
+    JournalTransaction* journalTransaction = new JournalTransaction();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTransaction );
+
+    journalTransaction->transactionId = this->getTransactionId();
+    journalTransaction->type = this->getType()->clone();
+    journalTransaction->wasPrepared = this->getWasPrepared()->clone();
+
+    return journalTransaction
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void JournalTransaction::copy( JournalTransaction* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( journalTransaction );
+
+    dest->setTransactionId( this->getTransactionId() );
+    dest->setType( this->getType()->clone() );
+    dest->setWasPrepared( this->getWasPrepared()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char JournalTransaction::getDataStructureType() const {
     return JournalTransaction::ID_JOURNALTRANSACTION; 
 }
 

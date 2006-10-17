@@ -57,7 +57,27 @@ namespace commands{
         IntegerResponse();
         virtual ~IntegerResponse();
 
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaller share.
+         * @returns new DataStructure type copy.
+         */
         virtual unsigned char getDataStructureType() const;
+
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual IntegerResponse* clone() const;
+
+        /**
+         * Copy the contents of this object and place them into the
+         * instance of this object type that was passed in.
+         * @return dest - Destination Object
+         */
+        virtual void clone( IntegerResponse* dest ) const;
+
         virtual const int getResult() const;
         virtual int getResult();
         virtual void setResult( int result );

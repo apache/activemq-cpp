@@ -50,8 +50,34 @@ MessageDispatch::~MessageDispatch()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char MessageDispatch::getDataStructureType() const
-{
+MessageDispatch* MessageDispatch::clone() const {
+    MessageDispatch* messageDispatch = new MessageDispatch();
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageDispatch );
+
+    messageDispatch->consumerId = this->getConsumerId();
+    messageDispatch->destination = this->getDestination();
+    messageDispatch->message = this->getMessage();
+    messageDispatch->redeliveryCounter = this->getRedeliveryCounter()->clone();
+
+    return messageDispatch
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessageDispatch::copy( MessageDispatch* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseCommand::copy( messageDispatch );
+
+    dest->setConsumerId( this->getConsumerId() );
+    dest->setDestination( this->getDestination() );
+    dest->setMessage( this->getMessage() );
+    dest->setRedeliveryCounter( this->getRedeliveryCounter()->clone() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char MessageDispatch::getDataStructureType() const {
     return MessageDispatch::ID_MESSAGEDISPATCH; 
 }
 

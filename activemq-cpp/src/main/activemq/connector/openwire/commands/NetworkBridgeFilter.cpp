@@ -46,8 +46,30 @@ NetworkBridgeFilter::~NetworkBridgeFilter()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char NetworkBridgeFilter::getDataStructureType() const
-{
+NetworkBridgeFilter* NetworkBridgeFilter::clone() const {
+    NetworkBridgeFilter* networkBridgeFilter = new NetworkBridgeFilter();
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( networkBridgeFilter );
+
+    networkBridgeFilter->networkTTL = this->getNetworkTTL()->clone();
+    networkBridgeFilter->networkBrokerId = this->getNetworkBrokerId();
+
+    return networkBridgeFilter
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NetworkBridgeFilter::copy( NetworkBridgeFilter* dest ) const {
+
+    // Copy the data from the base class or classes
+    BaseDataStructure::copy( networkBridgeFilter );
+
+    dest->setNetworkTTL( this->getNetworkTTL()->clone() );
+    dest->setNetworkBrokerId( this->getNetworkBrokerId() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char NetworkBridgeFilter::getDataStructureType() const {
     return NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER; 
 }
 
