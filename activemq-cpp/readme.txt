@@ -52,6 +52,11 @@ You should run this anytime you chance configure.ac or any of the
 Makefile.am files.  Now that the configure script is generated follow 
 the directions in the next section to complete the build
 
+Solaris 10 note:  CPP_UNIT might not build until you correct the file
+libstdc++.la to contain the correct data, see this discussion.
+	http://forum.sun.com/jive/thread.jspa?threadID=73150
+
+
 Users Building on Unix/Linux/OS X/Cygwin 
 --------------------------------------------------------------------------
 
