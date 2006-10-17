@@ -281,10 +281,9 @@ out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println(className+"* "+className+"::clone() const {");
 
-    String newInstance = decapitalize(className);
+    String newInstance = decapitalize( className );
 
-out.println("    "+className+"* "+newInstance+" = ");
-out.println("        new "+className+"();");
+out.println("    "+className+"* "+newInstance+" = new "+className+"();");
 out.println("");
 
     for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
@@ -299,10 +298,10 @@ out.println("");
             !type.startsWith("std::vector") ) {
 
 out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName+"();");
-        } else if( property.getType().getSimpleName().startsWith("std::vector") &&
-                   type.contains( "*" ) ) {
+        } else if( property.getType().isArrayType() &&
+                !property.getType().getArrayComponentType().isPrimitiveType() ) {
 out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
-out.println("        "+newInstance+"->"+parameterName+".psuh_back( ");
+out.println("        "+newInstance+"->get"+propertyName+"().push_back( ");
 out.println("            this->"+parameterName+"[i"+parameterName+"]->clone();");            
 out.println("    }");
         } else {
@@ -310,12 +309,38 @@ out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName+"(
         }
     }
 
+out.println("");
+out.println("    return "+newInstance);
 out.println("}");
 
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::copy( "+className+"* dest ) const {");
 out.println("");
+
+    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
+        JProperty property = (JProperty) iter.next();
+        String type = toCppType(property.getType());
+        String propertyName = property.getSimpleName();
+        String parameterName = decapitalize(propertyName);
+        String constNess = "";
+    
+        if( !property.getType().isPrimitiveType() &&
+            !property.getType().getSimpleName().equals("ByteSequence") && 
+            !type.startsWith("std::vector") ) {
+    
+    out.println("    dest->set"+propertyName+"( this->get"+propertyName+"() );");
+        } else if( property.getType().isArrayType() &&
+                   !property.getType().getArrayComponentType().isPrimitiveType() ) {
+    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
+    out.println("        dest->get"+propertyName+"().push_back( ");
+    out.println("            this->"+parameterName+"[i"+parameterName+"]->clone() );");            
+    out.println("    }");
+        } else {
+    out.println("    dest->set"+propertyName+"( this->get"+propertyName+"()->clone() );");
+        }
+    }
+
 out.println("}");
 
 
