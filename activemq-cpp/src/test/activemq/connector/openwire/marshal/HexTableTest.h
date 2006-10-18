@@ -43,10 +43,21 @@ namespace marshal{
             
             HexTable table;
             
-            CPPUNIT_ASSERT( table[0] == "00" ); 
-            CPPUNIT_ASSERT( table[255] == "FF" );
+            CPPUNIT_ASSERT( table[0] == "00" );
+            CPPUNIT_ASSERT( table[32] == "20" );
+            CPPUNIT_ASSERT( table[55] == "37" );
+            CPPUNIT_ASSERT( table[96] == "60" );
+            CPPUNIT_ASSERT( table[156] == "9c" );
+            CPPUNIT_ASSERT( table[232] == "e8" );
+            CPPUNIT_ASSERT( table[255] == "ff" );
 
-            CPPUNIT_ASSERT( table.size() == 255 );
+            CPPUNIT_ASSERT( table.size() == 256 );
+            
+            try{
+                std::string test = table[277];
+                CPPUNIT_ASSERT( false );
+            }
+            catch(...) {}
         }        
 
     };
