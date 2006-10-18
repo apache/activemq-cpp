@@ -32,18 +32,15 @@ HexTable::HexTable(){
     
     const char values[] = 
         { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 
-          'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 
-          'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
-    const int count = 36;
+          'c', 'd', 'e', 'f' };
+    const int count = 16;
     
     for( int i = 0; i < count; ++i ) {
-        string entry( 1, values[i] );
-        
         for( int j = 0; j < count; ++j ) {
+            string entry( 1, values[i] );
             entry += values[j];
+            table.push_back( entry );
         }
-        
-        table.push_back( entry );
     }
 }
 
