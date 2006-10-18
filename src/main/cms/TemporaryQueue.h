@@ -36,7 +36,7 @@ namespace cms{
          * Gets the name of this queue.
          * @return The queue name.
          */
-        virtual const char* getQueueName(void) const 
+        virtual std::string getQueueName(void) const 
             throw( CMSException ) = 0;
         
    };

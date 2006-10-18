@@ -49,10 +49,10 @@ namespace commands{
          * Get the error message
          * @return the error message string
          */      
-        virtual const char* getErrorMessage(void) const {
+        virtual std::string getErrorMessage(void) const {
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_MESSAGE) );
+                    CommandConstants::HEADER_MESSAGE ), "" );
         }
       
         /**
@@ -78,8 +78,8 @@ namespace commands{
          * Get the Text associated with this Error
          * @return Error Message String
          */
-        virtual const char* getErrorDetails(void) const {
-            return getBytes();
+        virtual std::string getErrorDetails(void) const {
+            return getBytes() != NULL ? getBytes() : "";
         }
 
     protected:

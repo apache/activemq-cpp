@@ -60,7 +60,7 @@ namespace cms{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual const char* getCMSCorrelationId(void) const = 0;
+        virtual std::string getCMSCorrelationId(void) const = 0;
 
         /**
          * Sets the Correlation Id used by this message
@@ -108,7 +108,7 @@ namespace cms{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual const char* getCMSMessageId(void) const = 0;
+        virtual std::string getCMSMessageId(void) const = 0;
       
         /**
          * Sets the CMS Message Id for this message
@@ -144,7 +144,7 @@ namespace cms{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const char* getCMSReplyTo(void) const = 0;
+        virtual std::string getCMSReplyTo(void) const = 0;
       
         /**
          * Sets the CMS Reply To Address for this message
@@ -168,7 +168,7 @@ namespace cms{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual const char* getCMSMessageType(void) const = 0;
+        virtual std::string getCMSMessageType(void) const = 0;
       
         /**
          * Sets the CMS Message Type for this message

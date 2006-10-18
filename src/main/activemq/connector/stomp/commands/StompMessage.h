@@ -90,10 +90,10 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual const char* getCMSCorrelationId(void) const {
+        virtual std::string getCMSCorrelationId(void) const {
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_CORRELATIONID ) );
+                    CommandConstants::HEADER_CORRELATIONID ), "" );
         }
 
         /**
@@ -191,12 +191,12 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual const char* getCMSMessageId(void) const {
+        virtual std::string getCMSMessageId(void) const {
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_MESSAGEID ) );
+                    CommandConstants::HEADER_MESSAGEID ), "" );
         }
-      
+
         /**
          * Sets the CMS Message Id for this message
          * @param id time value
@@ -255,10 +255,10 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const char* getCMSReplyTo(void) const {
+        virtual std::string getCMSReplyTo(void) const {
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_REPLYTO ) );
+                    CommandConstants::HEADER_REPLYTO ), "" );
         }
 
         /**
@@ -297,10 +297,10 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual const char* getCMSMessageType(void) const {
+        virtual std::string getCMSMessageType(void) const {
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_TYPE ) );
+                    CommandConstants::HEADER_TYPE ), "" );
         }
       
         /**

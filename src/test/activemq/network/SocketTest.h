@@ -138,7 +138,7 @@ namespace network{
                     }
 
 				}catch( io::IOException& ex ){
-					printf("%s\n", ex.getMessage() );
+					printf("%s\n", ex.getMessage().c_str() );
 					CPPUNIT_ASSERT( false );
 				}catch( ... ){
 					CPPUNIT_ASSERT( false );
@@ -193,8 +193,7 @@ namespace network{
 		 		serverThread.join();
 	 		
 			}catch( io::IOException& ex ){
-				const char* error = ex.getMessage();
-				printf( "%s\n", error );
+				printf( "%s\n", ex.getMessage().c_str() );
 			}
 		}
 		
@@ -248,8 +247,7 @@ namespace network{
 		 		serverThread.join();
 	 		
 			}catch( io::IOException& ex ){
-				const char* error = ex.getMessage();
-				printf( "%s\n", error );
+				printf( "%s\n", ex.getMessage().c_str() );
 			}
 		}
 		
@@ -301,8 +299,7 @@ namespace network{
 				serverThread.join();
 	 		
 			}catch( io::IOException& ex ){
-				const char* error = ex.getMessage();
-				printf( "%s\n", error );
+				printf( "%s\n", ex.getMessage().c_str() );
 			}
 		}
 

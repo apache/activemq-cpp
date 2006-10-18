@@ -90,7 +90,7 @@ namespace commands{
          * Get the Transaction Id of this Command
          * @return the Id of the Transaction
          */      
-        virtual const char* getTransactionId(void) const = 0;
+        virtual std::string getTransactionId(void) const = 0;
       
         /**
          * Set the Transaction Id of this Command

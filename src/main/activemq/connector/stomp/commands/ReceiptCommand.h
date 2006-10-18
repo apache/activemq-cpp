@@ -49,10 +49,10 @@ namespace commands{
          * Get the receipt id
          * @returns the message id
          */      
-        virtual const char* getReceiptId(void) const{
+        virtual std::string getReceiptId(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_RECEIPTID) );
+                    CommandConstants::HEADER_RECEIPTID ), "" );
         }
 
         /**

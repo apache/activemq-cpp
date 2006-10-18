@@ -39,7 +39,7 @@ namespace cms{
          * Gets the cause of the error.
          * @return string errors message
          */
-        virtual const char* getMessage() const = 0;
+        virtual std::string getMessage() const = 0;
         
         /**
          * Provides the stack trace for every point where

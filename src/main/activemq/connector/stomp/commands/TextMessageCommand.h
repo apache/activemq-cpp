@@ -57,8 +57,8 @@ namespace commands{
          * Gets the message character buffer.
          * @return The message character buffer.
          */
-        virtual const char* getText(void) const throw( cms::CMSException ) {
-            return getBytes();
+        virtual std::string getText(void) const throw( cms::CMSException ) {
+            return getBytes() != NULL ? getBytes() : "";
         }
         
         /**

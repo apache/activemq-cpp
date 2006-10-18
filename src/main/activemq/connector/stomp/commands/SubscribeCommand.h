@@ -50,10 +50,10 @@ namespace commands{
          * Get the destination
          * @returns the destination Name String
          */      
-        virtual const char* getDestination(void) const{
+        virtual std::string getDestination(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_DESTINATION ) );
+                    CommandConstants::HEADER_DESTINATION ), "" );
         }
       
         /**
@@ -106,10 +106,10 @@ namespace commands{
          * subscribe request
          * @returns the selector string
          */      
-        virtual const char* getMessageSelector(void) const{
+        virtual std::string getMessageSelector(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_SELECTOR ) );
+                    CommandConstants::HEADER_SELECTOR ), "" );
         }
 
         /**
@@ -129,10 +129,10 @@ namespace commands{
          * subscribe request
          * @returns the Subscription Name
          */      
-        virtual const char* getSubscriptionName(void) const{
+        virtual std::string getSubscriptionName(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_SUBSCRIPTIONNAME ) );
+                    CommandConstants::HEADER_SUBSCRIPTIONNAME ), "" );
         }
 
         /**

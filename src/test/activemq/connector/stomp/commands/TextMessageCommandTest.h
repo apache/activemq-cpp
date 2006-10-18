@@ -77,7 +77,7 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCommandId() == 123 );
             cmd.setCorrelationId( 99 );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == 99 );
-            CPPUNIT_ASSERT( cmd.getTransactionId() == NULL );
+            CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
             CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
                             "ID:123456" );
@@ -109,7 +109,7 @@ namespace commands{
                 std::string( cmd.getProperties().getProperty( "test" ) ) ==
                 "value" );
                 
-            CPPUNIT_ASSERT( cmd.getCMSCorrelationId() == NULL );
+            CPPUNIT_ASSERT( cmd.getCMSCorrelationId() == "" );
             cmd.setCMSCorrelationId( "ID:1234567" );
             CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationId() ) == 
                             "ID:1234567" );
@@ -123,7 +123,7 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 0 );
             cmd.setCMSExpiration( 123 );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 123 );
-            CPPUNIT_ASSERT( cmd.getCMSMessageId() == NULL );
+            CPPUNIT_ASSERT( cmd.getCMSMessageId() == "" );
             cmd.setCMSMessageId( "ID:1234567" );
             CPPUNIT_ASSERT( std::string( cmd.getCMSMessageId() ) == 
                             "ID:1234567" );
@@ -133,14 +133,14 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSRedelivered() == false );
             cmd.setCMSRedelivered( true );
             CPPUNIT_ASSERT( cmd.getCMSRedelivered() == true );
-            CPPUNIT_ASSERT( cmd.getCMSReplyTo() == NULL );
+            CPPUNIT_ASSERT( cmd.getCMSReplyTo() == "" );
             cmd.setCMSReplyTo( "topic" );
             CPPUNIT_ASSERT( std::string( cmd.getCMSReplyTo() ) == 
                             "topic" );
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 0 );
             cmd.setCMSTimeStamp( 123 );
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 123 );
-            CPPUNIT_ASSERT( cmd.getCMSMessageType() == NULL );
+            CPPUNIT_ASSERT( cmd.getCMSMessageType() == "" );
             cmd.setCMSMessageType( "text" );
             CPPUNIT_ASSERT( std::string( cmd.getCMSMessageType() ) == 
                             "text" );
@@ -148,7 +148,7 @@ namespace commands{
             cmd.setRedeliveryCount( 123 );
             CPPUNIT_ASSERT( cmd.getRedeliveryCount() == 123 );
 
-            CPPUNIT_ASSERT( cmd.getText() == NULL );
+            CPPUNIT_ASSERT( cmd.getText() == "" );
             cmd.setText( "TESTMESSAGE" );
             CPPUNIT_ASSERT( std::string( cmd.getText() ) == "TESTMESSAGE" );
 
