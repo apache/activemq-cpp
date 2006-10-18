@@ -82,7 +82,9 @@ namespace exceptions{
          * Gets the message for this exception.
          * @return Text formatted error message
          */
-        virtual const char* getMessage() const{ return message.c_str(); }
+        virtual std::string getMessage() const{ 
+            return message; 
+        }
    
         /**
          * Sets the cause for this exception.

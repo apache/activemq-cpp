@@ -198,12 +198,12 @@ namespace commands{
          * Get the Transaction Id of this Command
          * @return the Id of the Transaction
          */      
-        virtual const char* getTransactionId(void) const{
+        virtual std::string getTransactionId(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_TRANSACTIONID) );
+                    CommandConstants::HEADER_TRANSACTIONID ), "" );
         }
-      
+
         /**
          * Set the Transaction Id of this Command
          * @param id the Id of the Transaction

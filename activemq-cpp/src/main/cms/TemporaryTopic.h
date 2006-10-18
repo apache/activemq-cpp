@@ -36,7 +36,7 @@ namespace cms{
          * Gets the name of this topic.
          * @return The topic name.
          */
-        virtual const char* getTopicName(void) 
+        virtual std::string getTopicName(void) 
             const throw( CMSException ) = 0;
             
    };

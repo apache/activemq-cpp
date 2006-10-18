@@ -49,10 +49,10 @@ namespace commands{
          * Get the destination
          * @returns the Destination as a string
          */      
-        virtual const char* getDestination(void) const{
+        virtual std::string getDestination(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_DESTINATION ) );
+                    CommandConstants::HEADER_DESTINATION ), "" );
         }
       
         /**

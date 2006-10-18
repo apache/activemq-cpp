@@ -501,7 +501,7 @@ void StompConnector::acknowledge( const SessionInfo* session,
         {
             AckCommand cmd;
 
-            if( message->getCMSMessageId() == NULL )
+            if( message->getCMSMessageId() == "" )
             {
                 throw StompConnectorException(
                     __FILE__, __LINE__,

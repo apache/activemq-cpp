@@ -96,7 +96,7 @@ namespace stomp{
 
             CPPUNIT_ASSERT( textMessage != NULL );
 
-            CPPUNIT_ASSERT( textMessage->getText() != NULL );
+            CPPUNIT_ASSERT( textMessage->getText() != "" );
             std::string text = textMessage->getText();
             CPPUNIT_ASSERT( text == "testMessage" );
 

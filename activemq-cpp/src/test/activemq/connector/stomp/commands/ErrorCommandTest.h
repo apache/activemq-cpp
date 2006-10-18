@@ -53,14 +53,14 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCommandId() == 123 );
             cmd.setCorrelationId( 99 );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == 99 );
-            CPPUNIT_ASSERT( cmd.getTransactionId() == NULL );
+            CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
             CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
                             "ID:123456" );
-            CPPUNIT_ASSERT( cmd.getErrorMessage() == NULL );
+            CPPUNIT_ASSERT( cmd.getErrorMessage() == "" );
             cmd.setErrorMessage( "Error" );
             CPPUNIT_ASSERT( std::string( cmd.getErrorMessage() ) == "Error" );
-            CPPUNIT_ASSERT( cmd.getErrorDetails() == NULL );
+            CPPUNIT_ASSERT( cmd.getErrorDetails() == "" );
             cmd.setErrorDetails( "ErrorD" );
             CPPUNIT_ASSERT( std::string( cmd.getErrorDetails() ) == "ErrorD" );
             
@@ -74,9 +74,9 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getStompCommandId() == cmd1.getStompCommandId() );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == cmd1.isResponseRequired() );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == cmd1.getCorrelationId() );
-            CPPUNIT_ASSERT( std::string(cmd.getTransactionId()) == cmd1.getTransactionId() );
-            CPPUNIT_ASSERT( std::string(cmd.getErrorMessage()) == cmd1.getErrorMessage() );
-            CPPUNIT_ASSERT( std::string(cmd.getErrorDetails()) == cmd1.getErrorDetails() );
+            CPPUNIT_ASSERT( cmd.getTransactionId() == cmd1.getTransactionId() );
+            CPPUNIT_ASSERT( cmd.getErrorMessage() == cmd1.getErrorMessage() );
+            CPPUNIT_ASSERT( cmd.getErrorDetails() == cmd1.getErrorDetails() );
             
         }
 

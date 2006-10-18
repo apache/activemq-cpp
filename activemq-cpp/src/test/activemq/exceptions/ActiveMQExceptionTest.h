@@ -41,13 +41,13 @@ namespace exceptions{
 		void testMessage0(){
 		  	char* text = "This is a test";
 		  	ActiveMQException ex( __FILE__, __LINE__, text );
-		  	CPPUNIT_ASSERT( strcmp( ex.getMessage(), text ) == 0 );
+		  	CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
 		}
 	  
 	  	void testMessage3(){
 	  		ActiveMQException ex( __FILE__, __LINE__, 
                 "This is a test %d %d %d", 1, 100, 1000 );
-	  		CPPUNIT_ASSERT( strcmp( ex.getMessage(), "This is a test 1 100 1000" ) == 0 );
+	  		CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), "This is a test 1 100 1000" ) == 0 );
 	  	}
 	};
 	
