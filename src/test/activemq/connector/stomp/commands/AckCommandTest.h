@@ -57,7 +57,7 @@ namespace commands{
             cmd.setTransactionId( "ID:123456" );
             CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
                             "ID:123456" );
-            CPPUNIT_ASSERT( cmd.getMessageId() == NULL );
+            CPPUNIT_ASSERT( cmd.getMessageId() == "" );
             cmd.setMessageId( "ID:123456789" );
             CPPUNIT_ASSERT( std::string( cmd.getMessageId() ) == "ID:123456789" );
             
