@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="vs2005-activemq-example"
-	ProjectGUID="{23EFE0EC-D277-4AC0-9DDC-0E0C588B54B8}"
-	RootNamespace="vs2005"
+	Name="vc2005-activemq-integration-tests"
+	ProjectGUID="{DC329496-FA10-4BFC-9B55-4C7A6EDDA227}"
+	RootNamespace="vc2005activemqintegrationtests"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -20,7 +20,8 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
+			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,7 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\examples&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test-integration&quot;"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,10 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
-				OutputFile="$(OutDir)\activemq-example.exe"
+				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib cppunitd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,10 +119,10 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\sandbox\activemq-cpp-trunk\activemq-cpp\src\main&quot;"
-				RuntimeLibrary="0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="2"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -136,8 +137,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(OutDir)\activemq.lib"
-				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -180,7 +179,31 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\examples\main.cpp"
+				RelativePath=".\src\test-integration\integration\common\AbstractTester.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\durable\DurableTester.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\common\IntegrationCommon.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\simple\SimpleTester.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\transactional\TransactionTester.cpp"
 				>
 			</File>
 		</Filter>
@@ -189,6 +212,34 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\src\test-integration\integration\common\AbstractTester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\durable\DurableTester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\common\IntegrationCommon.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\simple\SimpleTester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\common\Tester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\transactional\TransactionTester.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
