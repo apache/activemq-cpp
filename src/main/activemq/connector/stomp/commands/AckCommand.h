@@ -53,10 +53,10 @@ namespace commands{
          * Get the Message Id of this Command
          * @return the Id of the Message
          */      
-        virtual const char* getMessageId(void) const{
+        virtual std::string getMessageId(void) const{
             return getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_MESSAGEID) );
+                    CommandConstants::HEADER_MESSAGEID ), "" );
         }
       
         /**
@@ -66,7 +66,7 @@ namespace commands{
         virtual void setMessageId( const std::string& messageId ){
             setPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_MESSAGEID),
+                    CommandConstants::HEADER_MESSAGEID ),
                 messageId );
         }
 
