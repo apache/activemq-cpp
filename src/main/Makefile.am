@@ -226,10 +226,15 @@ h_sources = \
 ## Compiler / Linker Info
 ##
 
-#INCLUDES = -I$(srcdir)
-lib_LTLIBRARIES= libactivemq-cpp.la
-libactivemq_cpp_la_SOURCES= $(h_sources) $(cc_sources)
-libactivemq_cpp_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION) -release $(ACTIVEMQ_VERSION)
+lib_LIBRARIES= libactivemq-cpp.a
+libactivemq_cpp_a_SOURCES= $(h_sources) $(cc_sources)
+
+##
+## Uncomment to build a shared lib
+##
+##lib_LTLIBRARIES= libactivemq-cpp.la
+##libactivemq_cpp_la_SOURCES= $(h_sources) $(cc_sources)
+##libactivemq_cpp_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION) -release $(ACTIVEMQ_VERSION)
 ##libactivemq_cpp_la_LIBADD=-lpthread -ldl -luuid
 
 

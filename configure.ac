@@ -49,7 +49,9 @@ AM_CONFIG_HEADER(config.h)
 
 AC_PROG_CC
 AC_PROG_CXX
-AM_PROG_LIBTOOL
+## Uncomment to use libtool for shared libs
+## AM_PROG_LIBTOOL
+AC_PROG_RANLIB
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
