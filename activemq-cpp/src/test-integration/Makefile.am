@@ -15,5 +15,5 @@ check_PROGRAMS = activemq-test-integration
 ##
 activemq_test_integration_SOURCES = $(cc_sources)
 activemq_test_integration_CXXFLAGS = -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemq_test_integration_LDADD= ../main/libactivemq-cpp.la @CPPUNIT_LIBS@
+activemq_test_integration_LDADD= ../main/libactivemq-cpp.a @CPPUNIT_LIBS@
 
