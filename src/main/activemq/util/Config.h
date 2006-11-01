@@ -39,6 +39,7 @@
 		#define HAVE_OBJBASE_H
 		#define HAVE_RPCDCE_H
 		#define HAVE_WINSOCK2_H
+        #define HAVE_STRUCT_ADDRINFO
 	#elif defined( unix )
 		#define HAVE_UUID_UUID_H
 	#else
