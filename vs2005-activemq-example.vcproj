@@ -118,8 +118,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\sandbox\activemq-cpp-trunk\activemq-cpp\src\main&quot;"
-				RuntimeLibrary="0"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
@@ -136,9 +136,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(OutDir)\activemq.lib"
+				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
