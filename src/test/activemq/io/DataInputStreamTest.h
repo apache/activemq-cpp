@@ -21,10 +21,10 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <activemq/util/Endian.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/io/BufferedInputStream.h>
 #include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/util/Endian.h>
 #include <activemq/io/DataInputStream.h>
 
 #ifdef min
