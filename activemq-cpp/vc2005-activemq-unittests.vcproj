@@ -118,10 +118,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -136,7 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib cppunit.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
