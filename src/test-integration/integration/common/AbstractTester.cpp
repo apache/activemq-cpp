@@ -43,17 +43,16 @@ using namespace integration;
 using namespace integration::common;
 
 AbstractTester::AbstractTester( cms::Session::AcknowledgeMode ackMode )
+ : connectionFactory( NULL ),
+   connection( NULL )
 {
     try
     {
         string url = IntegrationCommon::defaultURL;
         numReceived = 0;
     
-        // Create a Factory
-        connectionFactory = new ActiveMQConnectionFactory( url );
-
         // Now create the connection
-        connection = connectionFactory->createConnection(
+        connection = createDetachedConnection( 
             "", "", Guid().createGUIDString() );
     
         // Set ourself as a recipient of Exceptions        
@@ -80,6 +79,30 @@ AbstractTester::~AbstractTester()
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+cms::Connection* AbstractTester::createDetachedConnection(
+    const std::string& username,
+    const std::string& password,
+    const std::string& clientId ) {
+
+    try
+    {
+        string url = IntegrationCommon::defaultURL;
+    
+        if( connectionFactory == NULL ) {
+            // Create a Factory
+            connectionFactory = new ActiveMQConnectionFactory( url );
+        }
+
+        // Now create the connection
+        cms::Connection* connection = connectionFactory->createConnection(
+            username, password, clientId );
+
+        return connection;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 void AbstractTester::doSleep(void) 
@@ -194,7 +217,7 @@ void AbstractTester::onMessage( const cms::Message* message )
     {
         std::string text = txtMsg->getText();
 
-//            printf("received text msg: %s\n", txtMsg.getText() );
+            printf("received text msg: %s\n", txtMsg->getText() );
 
         numReceived++;
 

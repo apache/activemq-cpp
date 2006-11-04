@@ -52,6 +52,11 @@ namespace common{
         virtual void onException( const cms::CMSException& error );
         virtual void onMessage( const cms::Message* message );
 
+        virtual cms::Connection* createDetachedConnection(
+            const std::string& username,
+            const std::string& password,
+            const std::string& clientId );
+
     public:
         
         cms::ConnectionFactory* connectionFactory;

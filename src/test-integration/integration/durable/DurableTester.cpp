@@ -118,15 +118,16 @@ void DurableTester::test()
         sent += this->produceTextMessages( *producer, 3 );
 
         consumer = session->createDurableConsumer( topic, subName, "" );            
+        consumer->setMessageListener( this );
 
         // Send some text messages
         sent += this->produceTextMessages( *producer, 3 );
 
         // Wait for all remaining messages
-        waitForMessages( sent - numReceived );
+        waitForMessages( sent );
         
         printf("received: %d\n", numReceived );
- //       CPPUNIT_ASSERT( numReceived == sent );
+        CPPUNIT_ASSERT( numReceived == sent );
 
         printf("Shutting Down\n" );
         delete producer;                      
