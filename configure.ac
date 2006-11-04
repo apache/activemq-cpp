@@ -43,6 +43,9 @@ VERSION=$ACTIVEMQ_VERSION
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AM_CONFIG_HEADER(config.h)
 
+# Gives us access to the host_os environment variable
+AC_CANONICAL_HOST
+
 ## -----------------------------------------------
 ## Checks for programs.
 ## -----------------------------------------------
@@ -70,16 +73,24 @@ AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 case "${host_os}" in
 
-  darwin* ) ## Mac OS X configuration
+  *darwin* ) ## Mac OS X configuration
     LIBS=""
     ;;
 
-  cygwin* ) ## Cygwin configuration
+  *cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
     CFLAGS="$CFLAGS -pthread" 
     LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
+    
+  *solaris* ) ## Solaris configuration
+    AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
+                AC_MSG_ERROR([libpthread not found!]))
 
+    CFLAGS="$CFLAGS -pthread" 
+    LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
+    ;;
+    
   *) ## Unix configuration
 
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
