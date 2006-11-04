@@ -1,4 +1,17 @@
 
+Version 1.0
+----------------------
+
+New:
+
+	* New Build system based on Automake
+	* New VC2005 Projects and Solutions
+
+Bug Fixes:
+
+	* Durable subscriptions fixed.
+
+
 Version 0.0.2
 ----------------------
 New Features:
