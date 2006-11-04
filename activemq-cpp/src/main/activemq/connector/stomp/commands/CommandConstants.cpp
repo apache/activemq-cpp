@@ -77,7 +77,7 @@ CommandConstants::StaticInitializer::StaticInitializer(){
     stompHeaders[HEADER_PREFETCHSIZE] = "activemq.prefetchSize";
     stompHeaders[HEADER_CONSUMERPRIORITY] = "activemq.priority";
     stompHeaders[HEADER_RETROACTIVE] = "activemq.retroactive";
-    stompHeaders[HEADER_SUBSCRIPTIONNAME] = "activemq.subscriptionName";
+    stompHeaders[HEADER_SUBSCRIPTIONNAME] = "activemq.subcriptionName";
     stompHeaders[HEADER_TIMESTAMP] = "timestamp";
     stompHeaders[HEADER_REDELIVERED] = "redelivered";
     stompHeaders[HEADER_REDELIVERYCOUNT] = "redelivery_count";
