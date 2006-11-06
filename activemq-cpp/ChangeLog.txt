@@ -6,11 +6,16 @@ New:
 
 	* New Build system based on Automake
 	* New VC2005 Projects and Solutions
+	* Minor API cleanup to make the interfaces all consistant.
 
 Bug Fixes:
 
 	* Durable subscriptions fixed.
+	* other minor fixes.
 
+Known Issues:
+
+	* None at this time.
 
 Version 0.0.2
 ----------------------
