@@ -33,8 +33,8 @@
 
 	// Not using ./configure script and make system.. chances are your using the native build tools
 	// of Windows or OS X to do this build
-        #if defined(__APPLE__)
-		#define HAVE_UUID_H
+   #if defined(__APPLE__)
+      #define HAVE_UUID_UUID_H
 	#elif defined(_WIN32) || defined( __CYGWIN__ )
 		#define HAVE_OBJBASE_H
 		#define HAVE_RPCDCE_H
