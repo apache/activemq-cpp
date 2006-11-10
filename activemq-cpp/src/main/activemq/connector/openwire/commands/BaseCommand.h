@@ -29,6 +29,7 @@ namespace commands{
     {
     public:
     
+        BaseCommand();
         virtual ~BaseCommand() {}
         
         /**

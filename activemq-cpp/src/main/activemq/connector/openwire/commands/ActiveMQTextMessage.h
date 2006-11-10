@@ -74,7 +74,7 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual const char* getCMSCorrelationId(void) const;
+        virtual std::string getCMSCorrelationId(void) const;
 
         /**
          * Sets the Correlation Id used by this message
@@ -122,7 +122,7 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual const char* getCMSMessageId(void) const;
+        virtual std::string getCMSMessageId(void) const;
       
         /**
          * Sets the CMS Message Id for this message
@@ -158,7 +158,7 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const char* getCMSReplyTo(void) const;
+        virtual std::string getCMSReplyTo(void) const;
       
         /**
          * Sets the CMS Reply To Address for this message
@@ -182,7 +182,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual const char* getCMSMessageType(void) const;
+        virtual std::string getCMSMessageType(void) const;
       
         /**
          * Sets the CMS Message Type for this message
@@ -196,7 +196,7 @@ namespace commands{
          * Gets the message character buffer.
          * @return The message character buffer.
          */
-        virtual const char* getText() const throw( cms::CMSException );
+        virtual std::string getText() const throw( cms::CMSException );
 
         /**
          * Sets the message contents, does not take ownership of the passed

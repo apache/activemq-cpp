@@ -74,7 +74,7 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual const char* getCMSCorrelationId(void) const;
+        virtual std::string getCMSCorrelationId(void) const;
 
         /**
          * Sets the Correlation Id used by this message
@@ -122,7 +122,7 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual const char* getCMSMessageId(void) const;
+        virtual std::string getCMSMessageId(void) const;
       
         /**
          * Sets the CMS Message Id for this message
@@ -158,7 +158,7 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const char* getCMSReplyTo(void) const;
+        virtual std::string getCMSReplyTo(void) const;
       
         /**
          * Sets the CMS Reply To Address for this message
@@ -182,7 +182,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual const char* getCMSMessageType(void) const;
+        virtual std::string getCMSMessageType(void) const;
       
         /**
          * Sets the CMS Message Type for this message
@@ -322,7 +322,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual long getLong( const std::string& name );
+        virtual long long getLong( const std::string& name );
         
         /** 
          * Sets a Long value with the specified name into the Map.
