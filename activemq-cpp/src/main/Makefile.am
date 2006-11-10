@@ -241,6 +241,8 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h
 
+## include activemq/connector/openwire/commands/srcmakefile.mk
+
 ##
 ## Compiler / Linker Info
 ##
