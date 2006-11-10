@@ -68,6 +68,7 @@ void ProducerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStr
     else {
         info->setBrokerPath( NULL );
     }
+    info->setDispatchAsync( bs->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,6 +87,7 @@ int ProducerInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStruc
 
     rc += tightMarshalCachedObject1( wireFormat, data, bs );
     rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
+    bs->writeBoolean( info->isDispatchAsync() );
 
     return rc + 0;
 }
@@ -106,6 +108,7 @@ void ProducerInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStru
 
     tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
     tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+    bs->readBoolean();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,6 +133,7 @@ void ProducerInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStr
     else {
         info->setBrokerPath( NULL );
     }
+    info->setDispatchAsync( dataIn->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,5 +151,6 @@ void ProducerInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStruc
 
     looseMarshalCachedObject( wireFormat, data, dataOut );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
+    dataOut->write( info->isDispatchAsync() );
 }
 

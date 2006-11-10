@@ -41,6 +41,9 @@ BrokerInfo::BrokerInfo()
     this->slaveBroker = false;
     this->masterBroker = false;
     this->faultTolerantConfiguration = false;
+    this->duplexConnection = false;
+    this->networkConnection = false;
+    this->connectionId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,9 @@ BrokerInfo* BrokerInfo::clone() const {
     brokerInfo->slaveBroker = this->getSlaveBroker()->clone();
     brokerInfo->masterBroker = this->getMasterBroker()->clone();
     brokerInfo->faultTolerantConfiguration = this->getFaultTolerantConfiguration()->clone();
+    brokerInfo->duplexConnection = this->getDuplexConnection()->clone();
+    brokerInfo->networkConnection = this->getNetworkConnection()->clone();
+    brokerInfo->connectionId = this->getConnectionId()->clone();
 
     return brokerInfo
 }
@@ -89,6 +95,9 @@ void BrokerInfo::copy( BrokerInfo* dest ) const {
     dest->setSlaveBroker( this->getSlaveBroker()->clone() );
     dest->setMasterBroker( this->getMasterBroker()->clone() );
     dest->setFaultTolerantConfiguration( this->getFaultTolerantConfiguration()->clone() );
+    dest->setDuplexConnection( this->getDuplexConnection()->clone() );
+    dest->setNetworkConnection( this->getNetworkConnection()->clone() );
+    dest->setConnectionId( this->getConnectionId()->clone() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -199,5 +208,50 @@ bool BrokerInfo::getFaultTolerantConfiguration() {
 ////////////////////////////////////////////////////////////////////////////////
 void BrokerInfo::setFaultTolerantConfiguration(bool faultTolerantConfiguration ) {
     this->faultTolerantConfiguration = faultTolerantConfiguration;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool BrokerInfo::getDuplexConnection() const {
+    return duplexConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool BrokerInfo::getDuplexConnection() {
+    return duplexConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::setDuplexConnection(bool duplexConnection ) {
+    this->duplexConnection = duplexConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool BrokerInfo::getNetworkConnection() const {
+    return networkConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool BrokerInfo::getNetworkConnection() {
+    return networkConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::setNetworkConnection(bool networkConnection ) {
+    this->networkConnection = networkConnection;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const long long BrokerInfo::getConnectionId() const {
+    return connectionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long BrokerInfo::getConnectionId() {
+    return connectionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::setConnectionId(long long connectionId ) {
+    this->connectionId = connectionId;
 }
 

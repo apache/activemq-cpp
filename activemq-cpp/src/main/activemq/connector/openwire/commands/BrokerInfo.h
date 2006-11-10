@@ -55,6 +55,9 @@ namespace commands{
         bool slaveBroker;
         bool masterBroker;
         bool faultTolerantConfiguration;
+        bool duplexConnection;
+        bool networkConnection;
+        long long connectionId;
 
     public:
 
@@ -113,6 +116,18 @@ namespace commands{
         virtual const bool getFaultTolerantConfiguration() const;
         virtual bool getFaultTolerantConfiguration();
         virtual void setFaultTolerantConfiguration( bool faultTolerantConfiguration );
+
+        virtual const bool getDuplexConnection() const;
+        virtual bool getDuplexConnection();
+        virtual void setDuplexConnection( bool duplexConnection );
+
+        virtual const bool getNetworkConnection() const;
+        virtual bool getNetworkConnection();
+        virtual void setNetworkConnection( bool networkConnection );
+
+        virtual const long long getConnectionId() const;
+        virtual long long getConnectionId();
+        virtual void setConnectionId( long long connectionId );
 
     };
 

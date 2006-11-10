@@ -42,7 +42,7 @@ ConsumerInfo::ConsumerInfo()
     this->maximumPendingMessageLimit = 0;
     this->dispatchAsync = false;
     this->selector = "";
-    this->subcriptionName = "";
+    this->subscriptionName = "";
     this->noLocal = false;
     this->exclusive = false;
     this->retroactive = false;
@@ -78,7 +78,7 @@ ConsumerInfo* ConsumerInfo::clone() const {
     consumerInfo->maximumPendingMessageLimit = this->getMaximumPendingMessageLimit()->clone();
     consumerInfo->dispatchAsync = this->getDispatchAsync()->clone();
     consumerInfo->selector = this->getSelector();
-    consumerInfo->subcriptionName = this->getSubcriptionName();
+    consumerInfo->subscriptionName = this->getSubscriptionName();
     consumerInfo->noLocal = this->getNoLocal()->clone();
     consumerInfo->exclusive = this->getExclusive()->clone();
     consumerInfo->retroactive = this->getRetroactive()->clone();
@@ -108,7 +108,7 @@ void ConsumerInfo::copy( ConsumerInfo* dest ) const {
     dest->setMaximumPendingMessageLimit( this->getMaximumPendingMessageLimit()->clone() );
     dest->setDispatchAsync( this->getDispatchAsync()->clone() );
     dest->setSelector( this->getSelector() );
-    dest->setSubcriptionName( this->getSubcriptionName() );
+    dest->setSubscriptionName( this->getSubscriptionName() );
     dest->setNoLocal( this->getNoLocal()->clone() );
     dest->setExclusive( this->getExclusive()->clone() );
     dest->setRetroactive( this->getRetroactive()->clone() );
@@ -234,18 +234,18 @@ void ConsumerInfo::setSelector(const std::string& selector ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& ConsumerInfo::getSubcriptionName() const {
-    return subcriptionName;
+const std::string& ConsumerInfo::getSubscriptionName() const {
+    return subscriptionName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string& ConsumerInfo::getSubcriptionName() {
-    return subcriptionName;
+std::string& ConsumerInfo::getSubscriptionName() {
+    return subscriptionName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setSubcriptionName(const std::string& subcriptionName ) {
-    this->subcriptionName = subcriptionName;
+void ConsumerInfo::setSubscriptionName(const std::string& subscriptionName ) {
+    this->subscriptionName = subscriptionName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

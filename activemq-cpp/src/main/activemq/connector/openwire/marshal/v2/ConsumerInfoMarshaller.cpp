@@ -60,7 +60,7 @@ void ConsumerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStr
     info->setMaximumPendingMessageLimit( dataIn->readInt() );
     info->setDispatchAsync( bs->readBoolean() );
     info->setSelector( TightUnmarshalString( dataIn, bs ) );
-    info->setSubcriptionName( TightUnmarshalString( dataIn, bs ) );
+    info->setSubscriptionName( TightUnmarshalString( dataIn, bs ) );
     info->setNoLocal( bs->readBoolean() );
     info->setExclusive( bs->readBoolean() );
     info->setRetroactive( bs->readBoolean() );
@@ -103,7 +103,7 @@ int ConsumerInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStruc
     rc += tightMarshalCachedObject1( wireFormat, data, bs );
     bs->writeBoolean( info->isDispatchAsync() );
     rc += tightMarshalString1( info->getSelector(), bs );
-    rc += tightMarshalString1( info->getSubcriptionName(), bs );
+    rc += tightMarshalString1( info->getSubscriptionName(), bs );
     bs->writeBoolean( info->isNoLocal() );
     bs->writeBoolean( info->isExclusive() );
     bs->writeBoolean( info->isRetroactive() );
@@ -139,7 +139,7 @@ void ConsumerInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStru
     dataOut->write( info->getMaximumPendingMessageLimit() );
     bs->readBoolean();
     tightMarshalString2( info->getSelector(), dataOut, bs );
-    tightMarshalString2( info->getSubcriptionName(), dataOut, bs );
+    tightMarshalString2( info->getSubscriptionName(), dataOut, bs );
     bs->readBoolean();
     bs->readBoolean();
     bs->readBoolean();
@@ -168,7 +168,7 @@ void ConsumerInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStr
     info->setMaximumPendingMessageLimit( dataIn->readInt() );
     info->setDispatchAsync( dataIn->readBoolean() );
     info->setSelector( looseUnmarshalString( dataIn ) );
-    info->setSubcriptionName( looseUnmarshalString( dataIn ) );
+    info->setSubscriptionName( looseUnmarshalString( dataIn ) );
     info->setNoLocal( dataIn->readBoolean() );
     info->setExclusive( dataIn->readBoolean() );
     info->setRetroactive( dataIn->readBoolean() );
@@ -212,7 +212,7 @@ void ConsumerInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStruc
     dataOut->write( info->getMaximumPendingMessageLimit() );
     dataOut->write( info->isDispatchAsync() );
     looseMarshalString( info->getSelector(), dataOut );
-    looseMarshalString( info->getSubcriptionName(), dataOut );
+    looseMarshalString( info->getSubscriptionName(), dataOut );
     dataOut->write( info->isNoLocal() );
     dataOut->write( info->isExclusive() );
     dataOut->write( info->isRetroactive() );

@@ -52,6 +52,7 @@ namespace commands{
         ProducerId* producerId;
         ActiveMQDestination* destination;
         std::vector<BrokerId*> brokerPath;
+        bool dispatchAsync;
 
     public:
 
@@ -94,6 +95,10 @@ namespace commands{
         virtual const std::vector<BrokerId*> getBrokerPath() const;
         virtual std::vector<BrokerId*> getBrokerPath();
         virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
+
+        virtual const bool getDispatchAsync() const;
+        virtual bool getDispatchAsync();
+        virtual void setDispatchAsync( bool dispatchAsync );
 
     };
 

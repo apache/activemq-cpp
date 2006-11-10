@@ -57,6 +57,7 @@ Message::Message()
     this->arrival = 0;
     this->userID = "";
     this->recievedByDFBridge = false;
+    this->droppable = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +112,7 @@ Message* Message::clone() const {
     message->arrival = this->getArrival()->clone();
     message->userID = this->getUserID();
     message->recievedByDFBridge = this->getRecievedByDFBridge()->clone();
+    message->droppable = this->getDroppable()->clone();
 
     return message
 }
@@ -149,6 +151,7 @@ void Message::copy( Message* dest ) const {
     dest->setArrival( this->getArrival()->clone() );
     dest->setUserID( this->getUserID() );
     dest->setRecievedByDFBridge( this->getRecievedByDFBridge()->clone() );
+    dest->setDroppable( this->getDroppable()->clone() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -529,5 +532,20 @@ bool Message::getRecievedByDFBridge() {
 ////////////////////////////////////////////////////////////////////////////////
 void Message::setRecievedByDFBridge(bool recievedByDFBridge ) {
     this->recievedByDFBridge = recievedByDFBridge;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool Message::getDroppable() const {
+    return droppable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Message::getDroppable() {
+    return droppable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::setDroppable(bool droppable ) {
+    this->droppable = droppable;
 }
 
