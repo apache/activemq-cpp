@@ -87,6 +87,7 @@ void MessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructur
     info->setArrival( TightUnmarshalLong( wireFormat, dataIn, bs ) );
     info->setUserID( TightUnmarshalString( dataIn, bs ) );
     info->setRecievedByDFBridge( bs->readBoolean() );
+    info->setDroppable( bs->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,6 +148,7 @@ int MessageMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure*
     rc += tightMarshalLong1( wireFormat, info->getArrival(), bs );
     rc += tightMarshalString1( info->getUserID(), bs );
     bs->writeBoolean( info->isRecievedByDFBridge() );
+    bs->writeBoolean( info->isDroppable() );
 
     return rc + 9;
 }
@@ -216,6 +218,7 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure
     tightMarshalLong2( wireFormat, info->getArrival(), dataOut, bs );
     tightMarshalString2( info->getUserID(), dataOut, bs );
     bs->readBoolean();
+    bs->readBoolean();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -269,6 +272,7 @@ void MessageMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructur
     info->setArrival( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setUserID( looseUnmarshalString( dataIn ) );
     info->setRecievedByDFBridge( dataIn->readBoolean() );
+    info->setDroppable( dataIn->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -337,5 +341,6 @@ void MessageMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure*
     looseMarshalLong( wireFormat, info->getArrival(), dataOut );
     looseMarshalString( info->getUserID(), dataOut );
     dataOut->write( info->isRecievedByDFBridge() );
+    dataOut->write( info->isDroppable() );
 }
 

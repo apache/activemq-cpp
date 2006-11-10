@@ -41,6 +41,7 @@ ConnectionInfo::ConnectionInfo()
     this->userName = "";
     this->brokerMasterConnector = false;
     this->manageable = false;
+    this->clientMaster = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +70,7 @@ ConnectionInfo* ConnectionInfo::clone() const {
     }
     connectionInfo->brokerMasterConnector = this->getBrokerMasterConnector()->clone();
     connectionInfo->manageable = this->getManageable()->clone();
+    connectionInfo->clientMaster = this->getClientMaster()->clone();
 
     return connectionInfo
 }
@@ -89,6 +91,7 @@ void ConnectionInfo::copy( ConnectionInfo* dest ) const {
     }
     dest->setBrokerMasterConnector( this->getBrokerMasterConnector()->clone() );
     dest->setManageable( this->getManageable()->clone() );
+    dest->setClientMaster( this->getClientMaster()->clone() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -199,5 +202,20 @@ bool ConnectionInfo::getManageable() {
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionInfo::setManageable(bool manageable ) {
     this->manageable = manageable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool ConnectionInfo::getClientMaster() const {
+    return clientMaster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionInfo::getClientMaster() {
+    return clientMaster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConnectionInfo::setClientMaster(bool clientMaster ) {
+    this->clientMaster = clientMaster;
 }
 

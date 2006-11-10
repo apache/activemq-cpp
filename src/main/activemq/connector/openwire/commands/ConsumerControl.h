@@ -50,6 +50,9 @@ namespace commands{
         bool close;
         ConsumerId* consumerId;
         int prefetch;
+        bool flush;
+        bool start;
+        bool stop;
 
     public:
 
@@ -92,6 +95,18 @@ namespace commands{
         virtual const int getPrefetch() const;
         virtual int getPrefetch();
         virtual void setPrefetch( int prefetch );
+
+        virtual const bool getFlush() const;
+        virtual bool getFlush();
+        virtual void setFlush( bool flush );
+
+        virtual const bool getStart() const;
+        virtual bool getStart();
+        virtual void setStart( bool start );
+
+        virtual const bool getStop() const;
+        virtual bool getStop();
+        virtual void setStop( bool stop );
 
     };
 

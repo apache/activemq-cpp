@@ -81,6 +81,7 @@ namespace commands{
         long long arrival;
         std::string userID;
         bool recievedByDFBridge;
+        bool droppable;
 
     public:
 
@@ -211,6 +212,10 @@ namespace commands{
         virtual const bool getRecievedByDFBridge() const;
         virtual bool getRecievedByDFBridge();
         virtual void setRecievedByDFBridge( bool recievedByDFBridge );
+
+        virtual const bool getDroppable() const;
+        virtual bool getDroppable();
+        virtual void setDroppable( bool droppable );
 
     };
 

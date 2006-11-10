@@ -37,6 +37,7 @@ ProducerInfo::ProducerInfo()
 {
     this->producerId = NULL;
     this->destination = NULL;
+    this->dispatchAsync = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +63,7 @@ ProducerInfo* ProducerInfo::clone() const {
         producerInfo->getBrokerPath().push_back( 
             this->brokerPath[ibrokerPath]->clone();
     }
+    producerInfo->dispatchAsync = this->getDispatchAsync()->clone();
 
     return producerInfo
 }
@@ -78,6 +80,7 @@ void ProducerInfo::copy( ProducerInfo* dest ) const {
         dest->getBrokerPath().push_back( 
             this->brokerPath[ibrokerPath]->clone() );
     }
+    dest->setDispatchAsync( this->getDispatchAsync()->clone() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,5 +131,20 @@ std::vector<BrokerId*> ProducerInfo::getBrokerPath() {
 ////////////////////////////////////////////////////////////////////////////////
 void ProducerInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
     this->brokerPath = brokerPath;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool ProducerInfo::getDispatchAsync() const {
+    return dispatchAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ProducerInfo::getDispatchAsync() {
+    return dispatchAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ProducerInfo::setDispatchAsync(bool dispatchAsync ) {
+    this->dispatchAsync = dispatchAsync;
 }
 

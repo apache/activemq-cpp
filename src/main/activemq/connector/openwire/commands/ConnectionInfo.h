@@ -55,6 +55,7 @@ namespace commands{
         std::vector<BrokerId*> brokerPath;
         bool brokerMasterConnector;
         bool manageable;
+        bool clientMaster;
 
     public:
 
@@ -113,6 +114,10 @@ namespace commands{
         virtual const bool getManageable() const;
         virtual bool getManageable();
         virtual void setManageable( bool manageable );
+
+        virtual const bool getClientMaster() const;
+        virtual bool getClientMaster();
+        virtual void setClientMaster( bool clientMaster );
 
     };
 

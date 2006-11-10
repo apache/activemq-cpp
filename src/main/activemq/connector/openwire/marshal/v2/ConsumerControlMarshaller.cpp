@@ -55,6 +55,9 @@ void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
     info->setConsumerId( dynamic_cast< ConsumerId* >(
         tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
     info->setPrefetch( dataIn->readInt() );
+    info->setFlush( bs->readBoolean() );
+    info->setStart( bs->readBoolean() );
+    info->setStop( bs->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,9 @@ int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataSt
         dynamic_cast< DataStructure* >( info->getConsumerId() );
 
     rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    bs->writeBoolean( info->isFlush() );
+    bs->writeBoolean( info->isStart() );
+    bs->writeBoolean( info->isStop() );
 
     return rc + 4;
 }
@@ -86,6 +92,9 @@ void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataS
 
     tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
     dataOut->write( info->getPrefetch() );
+    bs->readBoolean();
+    bs->readBoolean();
+    bs->readBoolean();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,6 +106,9 @@ void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, Data
    info->setConsumerId( dynamic_cast<ConsumerId* >( 
        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     info->setPrefetch( dataIn->readInt() );
+    info->setFlush( dataIn->readBoolean() );
+    info->setStart( dataIn->readBoolean() );
+    info->setStop( dataIn->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,5 +123,8 @@ void ConsumerControlMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataSt
 
     looseMarshalNestedObject( wireFormat, data, dataOut );
     dataOut->write( info->getPrefetch() );
+    dataOut->write( info->isFlush() );
+    dataOut->write( info->isStart() );
+    dataOut->write( info->isStop() );
 }
 

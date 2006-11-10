@@ -38,6 +38,9 @@ ConsumerControl::ConsumerControl()
     this->close = false;
     this->consumerId = NULL;
     this->prefetch = 0;
+    this->flush = false;
+    this->start = false;
+    this->stop = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +59,9 @@ ConsumerControl* ConsumerControl::clone() const {
     consumerControl->close = this->getClose()->clone();
     consumerControl->consumerId = this->getConsumerId();
     consumerControl->prefetch = this->getPrefetch()->clone();
+    consumerControl->flush = this->getFlush()->clone();
+    consumerControl->start = this->getStart()->clone();
+    consumerControl->stop = this->getStop()->clone();
 
     return consumerControl
 }
@@ -69,6 +75,9 @@ void ConsumerControl::copy( ConsumerControl* dest ) const {
     dest->setClose( this->getClose()->clone() );
     dest->setConsumerId( this->getConsumerId() );
     dest->setPrefetch( this->getPrefetch()->clone() );
+    dest->setFlush( this->getFlush()->clone() );
+    dest->setStart( this->getStart()->clone() );
+    dest->setStop( this->getStop()->clone() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,5 +128,50 @@ int ConsumerControl::getPrefetch() {
 ////////////////////////////////////////////////////////////////////////////////
 void ConsumerControl::setPrefetch(int prefetch ) {
     this->prefetch = prefetch;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool ConsumerControl::getFlush() const {
+    return flush;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerControl::getFlush() {
+    return flush;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::setFlush(bool flush ) {
+    this->flush = flush;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool ConsumerControl::getStart() const {
+    return start;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerControl::getStart() {
+    return start;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::setStart(bool start ) {
+    this->start = start;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const bool ConsumerControl::getStop() const {
+    return stop;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerControl::getStop() {
+    return stop;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ConsumerControl::setStop(bool stop ) {
+    this->stop = stop;
 }
 

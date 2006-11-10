@@ -71,6 +71,9 @@ void BrokerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
     info->setSlaveBroker( bs->readBoolean() );
     info->setMasterBroker( bs->readBoolean() );
     info->setFaultTolerantConfiguration( bs->readBoolean() );
+    info->setDuplexConnection( bs->readBoolean() );
+    info->setNetworkConnection( bs->readBoolean() );
+    info->setConnectionId( TightUnmarshalLong( wireFormat, dataIn, bs ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,6 +93,9 @@ int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructu
     bs->writeBoolean( info->isSlaveBroker() );
     bs->writeBoolean( info->isMasterBroker() );
     bs->writeBoolean( info->isFaultTolerantConfiguration() );
+    bs->writeBoolean( info->isDuplexConnection() );
+    bs->writeBoolean( info->isNetworkConnection() );
+    rc += tightMarshalLong1( wireFormat, info->getConnectionId(), bs );
 
     return rc + 0;
 }
@@ -111,6 +117,9 @@ void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStruct
     bs->readBoolean();
     bs->readBoolean();
     bs->readBoolean();
+    bs->readBoolean();
+    bs->readBoolean();
+    tightMarshalLong2( wireFormat, info->getConnectionId(), dataOut, bs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,6 +147,9 @@ void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStruc
     info->setSlaveBroker( dataIn->readBoolean() );
     info->setMasterBroker( dataIn->readBoolean() );
     info->setFaultTolerantConfiguration( dataIn->readBoolean() );
+    info->setDuplexConnection( dataIn->readBoolean() );
+    info->setNetworkConnection( dataIn->readBoolean() );
+    info->setConnectionId( looseUnmarshalLong( wireFormat, dataIn ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,5 +168,8 @@ void BrokerInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructu
     dataOut->write( info->isSlaveBroker() );
     dataOut->write( info->isMasterBroker() );
     dataOut->write( info->isFaultTolerantConfiguration() );
+    dataOut->write( info->isDuplexConnection() );
+    dataOut->write( info->isNetworkConnection() );
+    looseMarshalLong( wireFormat, info->getConnectionId(), dataOut );
 }
 
