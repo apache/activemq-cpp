@@ -19,18 +19,20 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BASECOMMAND_H_
 
 #include <activemq/transport/Command.h>
+#include <activemq/connector/openwire/commands/BaseDataStructure.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class BaseCommand : transport::Command
+    class BaseCommand : public transport::Command,
+                        public BaseDataStructure
     {
     public:
     
         BaseCommand();
-        virtual ~BaseCommand() {}
+        virtual ~BaseCommand();
         
         /**
          * Sets the Command Id of this Message
