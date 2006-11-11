@@ -330,7 +330,7 @@ namespace commands{
          * @param value - the Long value to set in the Map
          * @throws CMSException
          */
-        virtual void setLong( const std::string& name, long value );
+        virtual void setLong( const std::string& name, long long value );
 
         /**
          * Returns the Short value of the Specified name
