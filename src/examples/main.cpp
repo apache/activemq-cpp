@@ -27,6 +27,7 @@
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <stdlib.h>
+#include <iostream>
 
 using namespace activemq::core;
 using namespace activemq::util;
@@ -42,15 +43,17 @@ private:
 	Destination* destination;
 	MessageProducer* producer;
 	int numMessages;
+    bool useTopic;
 
 public:
 	
-	HelloWorldProducer( int numMessages ){
+	HelloWorldProducer( int numMessages, bool useTopic = false ){
 		connection = NULL;
     	session = NULL;
     	destination = NULL;
     	producer = NULL;
     	this->numMessages = numMessages;
+        this->useTopic = useTopic;
 	}
 	
 	virtual ~HelloWorldProducer(){
@@ -70,7 +73,11 @@ public:
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
 
             // Create the destination (Topic or Queue)
-            destination = session->createQueue( "TEST.FOO" );
+            if( useTopic ) {
+                destination = session->createTopic( "TEST.FOO" );
+            } else {
+                destination = session->createQueue( "TEST.FOO" );
+            }
 
             // Create a MessageProducer from the Session to the Topic or Queue
             producer = session->createProducer( destination );
@@ -141,15 +148,17 @@ private:
 	Destination* destination;
 	MessageConsumer* consumer;
 	long waitMillis;
+    bool useTopic;
 		
 public: 
 
-	HelloWorldConsumer( long waitMillis ){
+	HelloWorldConsumer( long waitMillis, bool useTopic = false ){
 		connection = NULL;
     	session = NULL;
     	destination = NULL;
     	consumer = NULL;
     	this->waitMillis = waitMillis;
+        this->useTopic = useTopic;
 	}
     virtual ~HelloWorldConsumer(){    	
     	cleanup();
@@ -174,7 +183,11 @@ public:
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
 
             // Create the destination (Topic or Queue)
-            destination = session->createQueue( "TEST.FOO" );
+            if( useTopic ) {
+                destination = session->createTopic( "TEST.FOO" );
+            } else {
+                destination = session->createQueue( "TEST.FOO" );
+            }
 
             // Create a MessageConsumer from the Session to the Topic or Queue
             consumer = session->createConsumer( destination );
@@ -189,19 +202,25 @@ public:
         }
     }
     
+    // Called from the consumer since this class is a registered MessageListener.
     virtual void onMessage( const Message* message ){
     	
+        static int count = 0;
+        
         try
         {
+            count++;
     	    const TextMessage* textMessage = 
                 dynamic_cast< const TextMessage* >( message );
             string text = textMessage->getText();
-            printf( "Received: %s\n", text.c_str() );
+            printf( "Message #%d Received: %s\n", count, text.c_str() );
         } catch (CMSException& e) {
             e.printStackTrace();
         }
     }
 
+    // If something bad happens you see it here as this class is also been
+    // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex ) {
         printf("JMS Exception occured.  Shutting down client.\n");
     }
@@ -210,6 +229,11 @@ private:
 
     void cleanup(){
     	
+        //*************************************************
+        // Always close destination, consumers and producers before
+        // you destroy their sessions and connection.
+        //*************************************************
+        
 		// Destroy resources.
 		try{                        
         	if( destination != NULL ) delete destination;
@@ -227,6 +251,7 @@ private:
 			if( connection != NULL ) connection->close();
 		}catch (CMSException& e) {}
 		
+        // Now Destroy them
         try{
         	if( session != NULL ) delete session;
 		}catch (CMSException& e) {}
@@ -240,9 +265,20 @@ private:
 };
     
 int main(int argc, char* argv[]) {
-    
-    HelloWorldProducer producer( 1000 );
-	HelloWorldConsumer consumer( 5000 );
+
+    std::cout << "=====================================================\n";    
+    std::cout << "Starting the example:" << std::endl;
+    std::cout << "-----------------------------------------------------\n";
+
+    //============================================================
+    // set to true to use topics instead of queues
+    // Note in the code above that this causes createTopic or
+    // createQueue to be used in both consumer an producer.
+    //============================================================    
+    bool useTopics = false;  
+
+    HelloWorldProducer producer( 1000, useTopics );
+	HelloWorldConsumer consumer( 8000, useTopics );
 	
 	// Start the consumer thread.
 	Thread consumerThread( &consumer );
@@ -255,6 +291,13 @@ int main(int argc, char* argv[]) {
 	// Wait for the threads to complete.
 	producerThread.join();
 	consumerThread.join();
+
+    std::cout << "-----------------------------------------------------\n";    
+    std::cout << "Finished with the example, ignore errors from this" 
+              << std::endl
+              << "point on as the sockets breaks when we shutdown."
+              << std::endl;
+    std::cout << "=====================================================\n";    
 }
     
 // END SNIPPET: demo
