@@ -432,7 +432,7 @@ out.println("using namespace activemq::connector;");
 out.println("using namespace activemq::connector::openwire;");
 out.println("using namespace activemq::connector::openwire::commands;");
 out.println("using namespace activemq::connector::openwire::marshal;");
-out.println("using namespace activemq::connector::openwire::util;");
+out.println("using namespace activemq::connector::openwire::utils;");
 out.println("using namespace activemq::connector::openwire::marshal::v"+getOpenwireVersion()+";");
 out.println("");
 
@@ -452,7 +452,7 @@ out.println("");
     }
     
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {");
+out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){");
 out.println("   "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
 out.println("");
  
@@ -479,7 +479,7 @@ out.println("    info->afterUnmarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("int "+className+"::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {");
+out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){");
 out.println("");
 
     if( !properties.isEmpty() ) { 
@@ -501,7 +501,7 @@ out.println("    return rc + "+baseSize+";");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {");
+out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){");
 out.println("");
 out.println("    "+baseClass+"::tightMarshal2( wireFormat, dataStructure, dataOut, bs );");
 out.println("");
@@ -520,7 +520,7 @@ out.println("    info->afterMarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {");
+out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){");
 out.println("    "+baseClass+"::looseUnmarshal( wireFormat, dataStructure, dataIn );");
  
     if( !properties.isEmpty() || marshallerAware ) {
@@ -541,7 +541,7 @@ out.println("    info->afterUnmarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {");
+out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){");
 
     if( !properties.isEmpty() || marshallerAware ) {
 out.println("    "+jclass.getSimpleName()+"* info ="); 
