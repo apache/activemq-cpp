@@ -43,14 +43,14 @@ namespace openwire{
          * Gets the DataStructureType that this class marshals/unmarshals
          * @returns byte Id of this classes DataStructureType
          */
-        virtual unsigned char getDataStructureType() = 0;
+        virtual unsigned char getDataStructureType() const = 0;
         
         /**
          * Creates a new instance of the class that this class is a marshaling
          * director for.
          * @returns newly allocated Command
          */
-        virtual commands::DataStructure* createObject() = 0;
+        virtual commands::DataStructure* createObject() const = 0;
     
         /**
          * Tight Marhsal to the given stream
