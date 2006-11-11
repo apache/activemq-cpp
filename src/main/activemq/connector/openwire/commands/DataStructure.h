@@ -41,6 +41,20 @@ namespace commands{
          */
         virtual bool isMarshallAware() const = 0;
 
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneCommand() const = 0;
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyCommand( const DataStructure* src ) = 0;
+
     };
 
 }}}}
