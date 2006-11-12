@@ -135,14 +135,14 @@ out.println("         * Clone this obbject and return a new instance that the");
 out.println("         * caller now owns, this will be an exact copy of this one");
 out.println("         * @returns new copy of this object.");
 out.println("         */");
-out.println("        virtual "+className+"* clone() const;");
+out.println("        virtual DataStructure* cloneDataStructure() const;");
 out.println("");
 out.println("        /**");
-out.println("         * Copy the contents of this object and place them into the");      
-out.println("         * instance of this object type that was passed in.");
-out.println("         * @return dest - Destination Object");
+out.println("         * Copy the contents of the passed object into this objects");
+out.println("         * members, overwriting any existing data.");
+out.println("         * @return src - Source Object");
 out.println("         */");
-out.println("        virtual void clone( "+className+"* dest ) const;");
+out.println("        virtual void copyDataStructure( const DataStructure* src );");
 out.println("");
 
         for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
