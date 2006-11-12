@@ -217,9 +217,11 @@ out.println(" */");
 	protected void generateFile(PrintWriter out) throws Exception {
 		generateLicence(out);		
 out.println("#include <activemq/connector/openwire/commands/"+className+".h>");
+out.println("#include <activemq/exceptions/NullPointerException.h>");
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
+out.println("using namespace activemq::exceptions;");
 out.println("using namespace activemq::connector;");
 out.println("using namespace activemq::connector::openwire;");
 out.println("using namespace activemq::connector::openwire::commands;");
@@ -279,56 +281,37 @@ out.println("}");
 
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println(className+"* "+className+"::clone() const {");
+out.println("DataStructure* "+className+"::cloneDataStructure() const {");
 
     String newInstance = decapitalize( className );
 
 out.println("    "+className+"* "+newInstance+" = new "+className+"();");
 out.println("");
-
-    if( baseClass != null ) {
 out.println("    // Copy the data from the base class or classes");
-out.println("    "+baseClass+"::copy( "+newInstance+" );");
+out.println("    "+newInstance+"->copyDataStructure( this );");
 out.println("");
-    }
-    
-    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
-        JProperty property = (JProperty) iter.next();
-        String type = toCppType(property.getType());
-        String propertyName = property.getSimpleName();
-        String parameterName = decapitalize(propertyName);
-        String constNess = "";
-    
-        if( !property.getType().isPrimitiveType() &&
-            !property.getType().getSimpleName().equals("ByteSequence") && 
-            !type.startsWith("std::vector") ) {
-
-out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName+"();");
-        } else if( property.getType().isArrayType() &&
-                !property.getType().getArrayComponentType().isPrimitiveType() ) {
-out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
-out.println("        "+newInstance+"->get"+propertyName+"().push_back( ");
-out.println("            this->"+parameterName+"[i"+parameterName+"]->clone();");            
-out.println("    }");
-        } else {
-out.println("    "+newInstance+"->"+parameterName+" = this->get"+propertyName+"()->clone();");
-        }
-    }
-
-out.println("");
-out.println("    return "+newInstance);
+out.println("    return "+newInstance+";");
 out.println("}");
 
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::copy( "+className+"* dest ) const {");
+out.println("void "+className+"::copyDataStructure( const DataStructure* src ) {");
 out.println("");
 
         if( baseClass != null ) {
-out.println("    // Copy the data from the base class or classes");
-out.println("    "+baseClass+"::copy( "+newInstance+" );");
+out.println("    // Copy the data of the base class or classes");
+out.println("    "+baseClass+"::copyDataStructure( src );");
 out.println("");
         }
+        
+out.println("    const "+className+"* srcPtr = dynamic_cast<const "+className+"*>( src );");
+out.println("");
+out.println("    if( srcPtr == NULL || src == NULL ) {");
+out.println("    ");
+out.println("        throw exceptions::NullPointerException(");
+out.println("            __FILE__, __LINE__,");
+out.println("            \""+className+"::copyDataStructure - src is NULL or invalid\" );");
+out.println("    }");
 
     for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
         JProperty property = (JProperty) iter.next();
@@ -337,19 +320,23 @@ out.println("");
         String parameterName = decapitalize(propertyName);
         String constNess = "";
     
-        if( !property.getType().isPrimitiveType() &&
-            !property.getType().getSimpleName().equals("ByteSequence") && 
-            !type.startsWith("std::vector") ) {
-    
-    out.println("    dest->set"+propertyName+"( this->get"+propertyName+"() );");
+        if( property.getType().isPrimitiveType() ||
+            type.equals("std::string") ||
+            property.getType().getSimpleName().equals("ByteSequence") ){
+    out.println("    this->set"+propertyName+"( srcPtr->get"+propertyName+"() );");
         } else if( property.getType().isArrayType() &&
                    !property.getType().getArrayComponentType().isPrimitiveType() ) {
-    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
-    out.println("        dest->get"+propertyName+"().push_back( ");
-    out.println("            this->"+parameterName+"[i"+parameterName+"]->clone() );");            
+    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->get"+propertyName+"().size(); ++i" + parameterName + " ) {");
+    out.println("        this->get"+propertyName+"().push_back( ");
+    out.println("            srcPtr->get"+propertyName+"()[i"+parameterName+"]->cloneDataStructure() );");            
     out.println("    }");
+        } else if( property.getType().isArrayType() &&
+                   property.getType().getArrayComponentType().isPrimitiveType() ) {
+    out.println("    this->set"+propertyName+"( srcPtr->get"+propertyName+"() );");
         } else {
-    out.println("    dest->set"+propertyName+"( this->get"+propertyName+"()->clone() );");
+    out.println("    this->set"+propertyName+"( ");
+    out.println("        dynamic_cast<"+type+"*>( ");
+    out.println("            srcPtr->get"+propertyName+"()->cloneDataStructure() ) );");
         }
     }
 
