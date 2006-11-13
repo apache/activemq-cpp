@@ -84,8 +84,8 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const bool getClose() const;
-        virtual bool getClose();
+        virtual const bool isClose() const;
+        virtual bool isClose();
         virtual void setClose( bool close );
 
         virtual const ConsumerId* getConsumerId() const;
@@ -96,16 +96,16 @@ namespace commands{
         virtual int getPrefetch();
         virtual void setPrefetch( int prefetch );
 
-        virtual const bool getFlush() const;
-        virtual bool getFlush();
+        virtual const bool isFlush() const;
+        virtual bool isFlush();
         virtual void setFlush( bool flush );
 
-        virtual const bool getStart() const;
-        virtual bool getStart();
+        virtual const bool isStart() const;
+        virtual bool isStart();
         virtual void setStart( bool start );
 
-        virtual const bool getStop() const;
-        virtual bool getStop();
+        virtual const bool isStop() const;
+        virtual bool isStop();
         virtual void setStop( bool stop );
 
     };

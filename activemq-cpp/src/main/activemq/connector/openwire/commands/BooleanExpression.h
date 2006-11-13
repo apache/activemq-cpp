@@ -18,17 +18,33 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BOOLEANEXPRESSION_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BOOLEANEXPRESSION_H_
 
+#include <activemq/connector/openwire/commands/BaseDataStructure.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class BooleanExpression
+    class BooleanExpression : public BaseDataStructure
     {
     public:
     
         BooleanExpression() {}
         virtual ~BooleanExpression() {}
+        
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneDataStructure() const { return NULL; }
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src ) {}
         
     };
 

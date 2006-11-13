@@ -124,7 +124,7 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );
     this->setCorrelationId( srcPtr->getCorrelationId() );
-    this->setPersistent( srcPtr->getPersistent() );
+    this->setPersistent( srcPtr->isPersistent() );
     this->setExpiration( srcPtr->getExpiration() );
     this->setPriority( srcPtr->getPriority() );
     this->setReplyTo( 
@@ -140,16 +140,17 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setTargetConsumerId( 
         dynamic_cast<ConsumerId*>( 
             srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
-    this->setCompressed( srcPtr->getCompressed() );
+    this->setCompressed( srcPtr->isCompressed() );
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         this->getBrokerPath().push_back( 
-            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
     }
     this->setArrival( srcPtr->getArrival() );
     this->setUserID( srcPtr->getUserID() );
-    this->setRecievedByDFBridge( srcPtr->getRecievedByDFBridge() );
-    this->setDroppable( srcPtr->getDroppable() );
+    this->setRecievedByDFBridge( srcPtr->isRecievedByDFBridge() );
+    this->setDroppable( srcPtr->isDroppable() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -293,12 +294,12 @@ void Message::setCorrelationId(const std::string& correlationId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::getPersistent() const {
+const bool Message::isPersistent() const {
     return persistent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Message::getPersistent() {
+bool Message::isPersistent() {
     return persistent;
 }
 
@@ -443,12 +444,12 @@ void Message::setTargetConsumerId(ConsumerId* targetConsumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::getCompressed() const {
+const bool Message::isCompressed() const {
     return compressed;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Message::getCompressed() {
+bool Message::isCompressed() {
     return compressed;
 }
 
@@ -518,12 +519,12 @@ void Message::setUserID(const std::string& userID ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::getRecievedByDFBridge() const {
+const bool Message::isRecievedByDFBridge() const {
     return recievedByDFBridge;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Message::getRecievedByDFBridge() {
+bool Message::isRecievedByDFBridge() {
     return recievedByDFBridge;
 }
 
@@ -533,12 +534,12 @@ void Message::setRecievedByDFBridge(bool recievedByDFBridge ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::getDroppable() const {
+const bool Message::isDroppable() const {
     return droppable;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Message::getDroppable() {
+bool Message::isDroppable() {
     return droppable;
 }
 

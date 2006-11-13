@@ -102,8 +102,8 @@ namespace commands{
         virtual ConsumerId* getConsumerId();
         virtual void setConsumerId( ConsumerId* consumerId );
 
-        virtual const bool getBrowser() const;
-        virtual bool getBrowser();
+        virtual const bool isBrowser() const;
+        virtual bool isBrowser();
         virtual void setBrowser( bool browser );
 
         virtual const ActiveMQDestination* getDestination() const;
@@ -118,8 +118,8 @@ namespace commands{
         virtual int getMaximumPendingMessageLimit();
         virtual void setMaximumPendingMessageLimit( int maximumPendingMessageLimit );
 
-        virtual const bool getDispatchAsync() const;
-        virtual bool getDispatchAsync();
+        virtual const bool isDispatchAsync() const;
+        virtual bool isDispatchAsync();
         virtual void setDispatchAsync( bool dispatchAsync );
 
         virtual const std::string& getSelector() const;
@@ -130,16 +130,16 @@ namespace commands{
         virtual std::string& getSubscriptionName();
         virtual void setSubscriptionName( const std::string& subscriptionName );
 
-        virtual const bool getNoLocal() const;
-        virtual bool getNoLocal();
+        virtual const bool isNoLocal() const;
+        virtual bool isNoLocal();
         virtual void setNoLocal( bool noLocal );
 
-        virtual const bool getExclusive() const;
-        virtual bool getExclusive();
+        virtual const bool isExclusive() const;
+        virtual bool isExclusive();
         virtual void setExclusive( bool exclusive );
 
-        virtual const bool getRetroactive() const;
-        virtual bool getRetroactive();
+        virtual const bool isRetroactive() const;
+        virtual bool isRetroactive();
         virtual void setRetroactive( bool retroactive );
 
         virtual const char getPriority() const;
@@ -154,16 +154,16 @@ namespace commands{
         virtual BooleanExpression* getAdditionalPredicate();
         virtual void setAdditionalPredicate( BooleanExpression* additionalPredicate );
 
-        virtual const bool getNetworkSubscription() const;
-        virtual bool getNetworkSubscription();
+        virtual const bool isNetworkSubscription() const;
+        virtual bool isNetworkSubscription();
         virtual void setNetworkSubscription( bool networkSubscription );
 
-        virtual const bool getOptimizedAcknowledge() const;
-        virtual bool getOptimizedAcknowledge();
+        virtual const bool isOptimizedAcknowledge() const;
+        virtual bool isOptimizedAcknowledge();
         virtual void setOptimizedAcknowledge( bool optimizedAcknowledge );
 
-        virtual const bool getNoRangeAcks() const;
-        virtual bool getNoRangeAcks();
+        virtual const bool isNoRangeAcks() const;
+        virtual bool isNoRangeAcks();
         virtual void setNoRangeAcks( bool noRangeAcks );
 
     };

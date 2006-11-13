@@ -107,16 +107,16 @@ namespace commands{
         virtual std::vector<BrokerId*> getBrokerPath();
         virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
 
-        virtual const bool getBrokerMasterConnector() const;
-        virtual bool getBrokerMasterConnector();
+        virtual const bool isBrokerMasterConnector() const;
+        virtual bool isBrokerMasterConnector();
         virtual void setBrokerMasterConnector( bool brokerMasterConnector );
 
-        virtual const bool getManageable() const;
-        virtual bool getManageable();
+        virtual const bool isManageable() const;
+        virtual bool isManageable();
         virtual void setManageable( bool manageable );
 
-        virtual const bool getClientMaster() const;
-        virtual bool getClientMaster();
+        virtual const bool isClientMaster() const;
+        virtual bool isClientMaster();
         virtual void setClientMaster( bool clientMaster );
 
     };

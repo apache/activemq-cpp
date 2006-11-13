@@ -84,9 +84,10 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
             srcPtr->getDestination()->cloneDataStructure() ) );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         this->getBrokerPath().push_back( 
-            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
     }
-    this->setDispatchAsync( srcPtr->getDispatchAsync() );
+    this->setDispatchAsync( srcPtr->isDispatchAsync() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,12 +141,12 @@ void ProducerInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ProducerInfo::getDispatchAsync() const {
+const bool ProducerInfo::isDispatchAsync() const {
     return dispatchAsync;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ProducerInfo::getDispatchAsync() {
+bool ProducerInfo::isDispatchAsync() {
     return dispatchAsync;
 }
 

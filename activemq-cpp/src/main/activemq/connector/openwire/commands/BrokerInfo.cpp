@@ -87,14 +87,15 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
     this->setBrokerURL( srcPtr->getBrokerURL() );
     for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < srcPtr->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
         this->getPeerBrokerInfos().push_back( 
-            srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() );
+            dynamic_cast<BrokerInfo*>( 
+                srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() ) );
     }
     this->setBrokerName( srcPtr->getBrokerName() );
-    this->setSlaveBroker( srcPtr->getSlaveBroker() );
-    this->setMasterBroker( srcPtr->getMasterBroker() );
-    this->setFaultTolerantConfiguration( srcPtr->getFaultTolerantConfiguration() );
-    this->setDuplexConnection( srcPtr->getDuplexConnection() );
-    this->setNetworkConnection( srcPtr->getNetworkConnection() );
+    this->setSlaveBroker( srcPtr->isSlaveBroker() );
+    this->setMasterBroker( srcPtr->isMasterBroker() );
+    this->setFaultTolerantConfiguration( srcPtr->isFaultTolerantConfiguration() );
+    this->setDuplexConnection( srcPtr->isDuplexConnection() );
+    this->setNetworkConnection( srcPtr->isNetworkConnection() );
     this->setConnectionId( srcPtr->getConnectionId() );
 }
 
@@ -164,12 +165,12 @@ void BrokerInfo::setBrokerName(const std::string& brokerName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool BrokerInfo::getSlaveBroker() const {
+const bool BrokerInfo::isSlaveBroker() const {
     return slaveBroker;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool BrokerInfo::getSlaveBroker() {
+bool BrokerInfo::isSlaveBroker() {
     return slaveBroker;
 }
 
@@ -179,12 +180,12 @@ void BrokerInfo::setSlaveBroker(bool slaveBroker ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool BrokerInfo::getMasterBroker() const {
+const bool BrokerInfo::isMasterBroker() const {
     return masterBroker;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool BrokerInfo::getMasterBroker() {
+bool BrokerInfo::isMasterBroker() {
     return masterBroker;
 }
 
@@ -194,12 +195,12 @@ void BrokerInfo::setMasterBroker(bool masterBroker ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool BrokerInfo::getFaultTolerantConfiguration() const {
+const bool BrokerInfo::isFaultTolerantConfiguration() const {
     return faultTolerantConfiguration;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool BrokerInfo::getFaultTolerantConfiguration() {
+bool BrokerInfo::isFaultTolerantConfiguration() {
     return faultTolerantConfiguration;
 }
 
@@ -209,12 +210,12 @@ void BrokerInfo::setFaultTolerantConfiguration(bool faultTolerantConfiguration )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool BrokerInfo::getDuplexConnection() const {
+const bool BrokerInfo::isDuplexConnection() const {
     return duplexConnection;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool BrokerInfo::getDuplexConnection() {
+bool BrokerInfo::isDuplexConnection() {
     return duplexConnection;
 }
 
@@ -224,12 +225,12 @@ void BrokerInfo::setDuplexConnection(bool duplexConnection ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool BrokerInfo::getNetworkConnection() const {
+const bool BrokerInfo::isNetworkConnection() const {
     return networkConnection;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool BrokerInfo::getNetworkConnection() {
+bool BrokerInfo::isNetworkConnection() {
     return networkConnection;
 }
 

@@ -73,7 +73,8 @@ void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
     }
     for( size_t idata = 0; idata < srcPtr->getData().size(); ++idata ) {
         this->getData().push_back( 
-            srcPtr->getData()[idata]->cloneDataStructure() );
+            dynamic_cast<DataStructure*>( 
+                srcPtr->getData()[idata]->cloneDataStructure() ) );
     }
 }
 

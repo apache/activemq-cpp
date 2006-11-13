@@ -96,8 +96,8 @@ namespace commands{
         virtual std::vector<BrokerId*> getBrokerPath();
         virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
 
-        virtual const bool getDispatchAsync() const;
-        virtual bool getDispatchAsync();
+        virtual const bool isDispatchAsync() const;
+        virtual bool isDispatchAsync();
         virtual void setDispatchAsync( bool dispatchAsync );
 
     };

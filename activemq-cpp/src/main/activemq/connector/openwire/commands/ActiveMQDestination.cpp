@@ -71,7 +71,7 @@ std::string& ActiveMQDestination::getPhysicalName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
-    this->physicalName = physicalName;
-}
+//void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
+//    this->physicalName = physicalName;
+//}
 

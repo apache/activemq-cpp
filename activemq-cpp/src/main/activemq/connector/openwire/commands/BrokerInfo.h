@@ -105,24 +105,24 @@ namespace commands{
         virtual std::string& getBrokerName();
         virtual void setBrokerName( const std::string& brokerName );
 
-        virtual const bool getSlaveBroker() const;
-        virtual bool getSlaveBroker();
+        virtual const bool isSlaveBroker() const;
+        virtual bool isSlaveBroker();
         virtual void setSlaveBroker( bool slaveBroker );
 
-        virtual const bool getMasterBroker() const;
-        virtual bool getMasterBroker();
+        virtual const bool isMasterBroker() const;
+        virtual bool isMasterBroker();
         virtual void setMasterBroker( bool masterBroker );
 
-        virtual const bool getFaultTolerantConfiguration() const;
-        virtual bool getFaultTolerantConfiguration();
+        virtual const bool isFaultTolerantConfiguration() const;
+        virtual bool isFaultTolerantConfiguration();
         virtual void setFaultTolerantConfiguration( bool faultTolerantConfiguration );
 
-        virtual const bool getDuplexConnection() const;
-        virtual bool getDuplexConnection();
+        virtual const bool isDuplexConnection() const;
+        virtual bool isDuplexConnection();
         virtual void setDuplexConnection( bool duplexConnection );
 
-        virtual const bool getNetworkConnection() const;
-        virtual bool getNetworkConnection();
+        virtual const bool isNetworkConnection() const;
+        virtual bool isNetworkConnection();
         virtual void setNetworkConnection( bool networkConnection );
 
         virtual const long long getConnectionId() const;

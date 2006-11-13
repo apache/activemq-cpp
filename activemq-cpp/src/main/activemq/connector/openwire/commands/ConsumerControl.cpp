@@ -75,14 +75,14 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConsumerControl::copyDataStructure - src is NULL or invalid" );
     }
-    this->setClose( srcPtr->getClose() );
+    this->setClose( srcPtr->isClose() );
     this->setConsumerId( 
         dynamic_cast<ConsumerId*>( 
             srcPtr->getConsumerId()->cloneDataStructure() ) );
     this->setPrefetch( srcPtr->getPrefetch() );
-    this->setFlush( srcPtr->getFlush() );
-    this->setStart( srcPtr->getStart() );
-    this->setStop( srcPtr->getStop() );
+    this->setFlush( srcPtr->isFlush() );
+    this->setStart( srcPtr->isStart() );
+    this->setStop( srcPtr->isStop() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,12 +91,12 @@ unsigned char ConsumerControl::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerControl::getClose() const {
+const bool ConsumerControl::isClose() const {
     return close;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerControl::getClose() {
+bool ConsumerControl::isClose() {
     return close;
 }
 
@@ -136,12 +136,12 @@ void ConsumerControl::setPrefetch(int prefetch ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerControl::getFlush() const {
+const bool ConsumerControl::isFlush() const {
     return flush;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerControl::getFlush() {
+bool ConsumerControl::isFlush() {
     return flush;
 }
 
@@ -151,12 +151,12 @@ void ConsumerControl::setFlush(bool flush ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerControl::getStart() const {
+const bool ConsumerControl::isStart() const {
     return start;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerControl::getStart() {
+bool ConsumerControl::isStart() {
     return start;
 }
 
@@ -166,12 +166,12 @@ void ConsumerControl::setStart(bool start ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerControl::getStop() const {
+const bool ConsumerControl::isStop() const {
     return stop;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerControl::getStop() {
+bool ConsumerControl::isStop() {
     return stop;
 }
 
