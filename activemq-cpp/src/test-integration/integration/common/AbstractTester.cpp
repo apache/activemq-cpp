@@ -217,7 +217,7 @@ void AbstractTester::onMessage( const cms::Message* message )
     {
         std::string text = txtMsg->getText();
 
-            printf("received text msg: %s\n", txtMsg->getText() );
+            printf("received text msg: %s\n", txtMsg->getText().c_str() );
 
         numReceived++;
 
