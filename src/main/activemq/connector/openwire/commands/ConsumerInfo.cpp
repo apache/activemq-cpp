@@ -93,29 +93,30 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
     this->setConsumerId( 
         dynamic_cast<ConsumerId*>( 
             srcPtr->getConsumerId()->cloneDataStructure() ) );
-    this->setBrowser( srcPtr->getBrowser() );
+    this->setBrowser( srcPtr->isBrowser() );
     this->setDestination( 
         dynamic_cast<ActiveMQDestination*>( 
             srcPtr->getDestination()->cloneDataStructure() ) );
     this->setPrefetchSize( srcPtr->getPrefetchSize() );
     this->setMaximumPendingMessageLimit( srcPtr->getMaximumPendingMessageLimit() );
-    this->setDispatchAsync( srcPtr->getDispatchAsync() );
+    this->setDispatchAsync( srcPtr->isDispatchAsync() );
     this->setSelector( srcPtr->getSelector() );
     this->setSubscriptionName( srcPtr->getSubscriptionName() );
-    this->setNoLocal( srcPtr->getNoLocal() );
-    this->setExclusive( srcPtr->getExclusive() );
-    this->setRetroactive( srcPtr->getRetroactive() );
+    this->setNoLocal( srcPtr->isNoLocal() );
+    this->setExclusive( srcPtr->isExclusive() );
+    this->setRetroactive( srcPtr->isRetroactive() );
     this->setPriority( srcPtr->getPriority() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         this->getBrokerPath().push_back( 
-            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
     }
     this->setAdditionalPredicate( 
         dynamic_cast<BooleanExpression*>( 
             srcPtr->getAdditionalPredicate()->cloneDataStructure() ) );
-    this->setNetworkSubscription( srcPtr->getNetworkSubscription() );
-    this->setOptimizedAcknowledge( srcPtr->getOptimizedAcknowledge() );
-    this->setNoRangeAcks( srcPtr->getNoRangeAcks() );
+    this->setNetworkSubscription( srcPtr->isNetworkSubscription() );
+    this->setOptimizedAcknowledge( srcPtr->isOptimizedAcknowledge() );
+    this->setNoRangeAcks( srcPtr->isNoRangeAcks() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -139,12 +140,12 @@ void ConsumerInfo::setConsumerId(ConsumerId* consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getBrowser() const {
+const bool ConsumerInfo::isBrowser() const {
     return browser;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getBrowser() {
+bool ConsumerInfo::isBrowser() {
     return browser;
 }
 
@@ -199,12 +200,12 @@ void ConsumerInfo::setMaximumPendingMessageLimit(int maximumPendingMessageLimit 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getDispatchAsync() const {
+const bool ConsumerInfo::isDispatchAsync() const {
     return dispatchAsync;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getDispatchAsync() {
+bool ConsumerInfo::isDispatchAsync() {
     return dispatchAsync;
 }
 
@@ -244,12 +245,12 @@ void ConsumerInfo::setSubscriptionName(const std::string& subscriptionName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getNoLocal() const {
+const bool ConsumerInfo::isNoLocal() const {
     return noLocal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getNoLocal() {
+bool ConsumerInfo::isNoLocal() {
     return noLocal;
 }
 
@@ -259,12 +260,12 @@ void ConsumerInfo::setNoLocal(bool noLocal ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getExclusive() const {
+const bool ConsumerInfo::isExclusive() const {
     return exclusive;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getExclusive() {
+bool ConsumerInfo::isExclusive() {
     return exclusive;
 }
 
@@ -274,12 +275,12 @@ void ConsumerInfo::setExclusive(bool exclusive ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getRetroactive() const {
+const bool ConsumerInfo::isRetroactive() const {
     return retroactive;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getRetroactive() {
+bool ConsumerInfo::isRetroactive() {
     return retroactive;
 }
 
@@ -334,12 +335,12 @@ void ConsumerInfo::setAdditionalPredicate(BooleanExpression* additionalPredicate
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getNetworkSubscription() const {
+const bool ConsumerInfo::isNetworkSubscription() const {
     return networkSubscription;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getNetworkSubscription() {
+bool ConsumerInfo::isNetworkSubscription() {
     return networkSubscription;
 }
 
@@ -349,12 +350,12 @@ void ConsumerInfo::setNetworkSubscription(bool networkSubscription ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getOptimizedAcknowledge() const {
+const bool ConsumerInfo::isOptimizedAcknowledge() const {
     return optimizedAcknowledge;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getOptimizedAcknowledge() {
+bool ConsumerInfo::isOptimizedAcknowledge() {
     return optimizedAcknowledge;
 }
 
@@ -364,12 +365,12 @@ void ConsumerInfo::setOptimizedAcknowledge(bool optimizedAcknowledge ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::getNoRangeAcks() const {
+const bool ConsumerInfo::isNoRangeAcks() const {
     return noRangeAcks;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::getNoRangeAcks() {
+bool ConsumerInfo::isNoRangeAcks() {
     return noRangeAcks;
 }
 

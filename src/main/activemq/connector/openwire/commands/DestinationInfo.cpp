@@ -87,7 +87,8 @@ void DestinationInfo::copyDataStructure( const DataStructure* src ) {
     this->setTimeout( srcPtr->getTimeout() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         this->getBrokerPath().push_back( 
-            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
     }
 }
 

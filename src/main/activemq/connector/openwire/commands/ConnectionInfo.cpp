@@ -87,11 +87,12 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     this->setUserName( srcPtr->getUserName() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         this->getBrokerPath().push_back( 
-            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
     }
-    this->setBrokerMasterConnector( srcPtr->getBrokerMasterConnector() );
-    this->setManageable( srcPtr->getManageable() );
-    this->setClientMaster( srcPtr->getClientMaster() );
+    this->setBrokerMasterConnector( srcPtr->isBrokerMasterConnector() );
+    this->setManageable( srcPtr->isManageable() );
+    this->setClientMaster( srcPtr->isClientMaster() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,12 +176,12 @@ void ConnectionInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::getBrokerMasterConnector() const {
+const bool ConnectionInfo::isBrokerMasterConnector() const {
     return brokerMasterConnector;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::getBrokerMasterConnector() {
+bool ConnectionInfo::isBrokerMasterConnector() {
     return brokerMasterConnector;
 }
 
@@ -190,12 +191,12 @@ void ConnectionInfo::setBrokerMasterConnector(bool brokerMasterConnector ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::getManageable() const {
+const bool ConnectionInfo::isManageable() const {
     return manageable;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::getManageable() {
+bool ConnectionInfo::isManageable() {
     return manageable;
 }
 
@@ -205,12 +206,12 @@ void ConnectionInfo::setManageable(bool manageable ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::getClientMaster() const {
+const bool ConnectionInfo::isClientMaster() const {
     return clientMaster;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::getClientMaster() {
+bool ConnectionInfo::isClientMaster() {
     return clientMaster;
 }
 

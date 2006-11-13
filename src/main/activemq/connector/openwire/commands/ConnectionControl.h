@@ -82,24 +82,24 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const bool getClose() const;
-        virtual bool getClose();
+        virtual const bool isClose() const;
+        virtual bool isClose();
         virtual void setClose( bool close );
 
-        virtual const bool getExit() const;
-        virtual bool getExit();
+        virtual const bool isExit() const;
+        virtual bool isExit();
         virtual void setExit( bool exit );
 
-        virtual const bool getFaultTolerant() const;
-        virtual bool getFaultTolerant();
+        virtual const bool isFaultTolerant() const;
+        virtual bool isFaultTolerant();
         virtual void setFaultTolerant( bool faultTolerant );
 
-        virtual const bool getResume() const;
-        virtual bool getResume();
+        virtual const bool isResume() const;
+        virtual bool isResume();
         virtual void setResume( bool resume );
 
-        virtual const bool getSuspend() const;
-        virtual bool getSuspend();
+        virtual const bool isSuspend() const;
+        virtual bool isSuspend();
         virtual void setSuspend( bool suspend );
 
     };

@@ -73,11 +73,11 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionControl::copyDataStructure - src is NULL or invalid" );
     }
-    this->setClose( srcPtr->getClose() );
-    this->setExit( srcPtr->getExit() );
-    this->setFaultTolerant( srcPtr->getFaultTolerant() );
-    this->setResume( srcPtr->getResume() );
-    this->setSuspend( srcPtr->getSuspend() );
+    this->setClose( srcPtr->isClose() );
+    this->setExit( srcPtr->isExit() );
+    this->setFaultTolerant( srcPtr->isFaultTolerant() );
+    this->setResume( srcPtr->isResume() );
+    this->setSuspend( srcPtr->isSuspend() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,12 +86,12 @@ unsigned char ConnectionControl::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::getClose() const {
+const bool ConnectionControl::isClose() const {
     return close;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::getClose() {
+bool ConnectionControl::isClose() {
     return close;
 }
 
@@ -101,12 +101,12 @@ void ConnectionControl::setClose(bool close ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::getExit() const {
+const bool ConnectionControl::isExit() const {
     return exit;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::getExit() {
+bool ConnectionControl::isExit() {
     return exit;
 }
 
@@ -116,12 +116,12 @@ void ConnectionControl::setExit(bool exit ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::getFaultTolerant() const {
+const bool ConnectionControl::isFaultTolerant() const {
     return faultTolerant;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::getFaultTolerant() {
+bool ConnectionControl::isFaultTolerant() {
     return faultTolerant;
 }
 
@@ -131,12 +131,12 @@ void ConnectionControl::setFaultTolerant(bool faultTolerant ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::getResume() const {
+const bool ConnectionControl::isResume() const {
     return resume;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::getResume() {
+bool ConnectionControl::isResume() {
     return resume;
 }
 
@@ -146,12 +146,12 @@ void ConnectionControl::setResume(bool resume ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::getSuspend() const {
+const bool ConnectionControl::isSuspend() const {
     return suspend;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::getSuspend() {
+bool ConnectionControl::isSuspend() {
     return suspend;
 }
 

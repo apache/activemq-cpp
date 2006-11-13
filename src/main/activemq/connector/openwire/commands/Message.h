@@ -149,8 +149,8 @@ namespace commands{
         virtual std::string& getCorrelationId();
         virtual void setCorrelationId( const std::string& correlationId );
 
-        virtual const bool getPersistent() const;
-        virtual bool getPersistent();
+        virtual const bool isPersistent() const;
+        virtual bool isPersistent();
         virtual void setPersistent( bool persistent );
 
         virtual const long long getExpiration() const;
@@ -189,8 +189,8 @@ namespace commands{
         virtual ConsumerId* getTargetConsumerId();
         virtual void setTargetConsumerId( ConsumerId* targetConsumerId );
 
-        virtual const bool getCompressed() const;
-        virtual bool getCompressed();
+        virtual const bool isCompressed() const;
+        virtual bool isCompressed();
         virtual void setCompressed( bool compressed );
 
         virtual const int getRedeliveryCounter() const;
@@ -209,12 +209,12 @@ namespace commands{
         virtual std::string& getUserID();
         virtual void setUserID( const std::string& userID );
 
-        virtual const bool getRecievedByDFBridge() const;
-        virtual bool getRecievedByDFBridge();
+        virtual const bool isRecievedByDFBridge() const;
+        virtual bool isRecievedByDFBridge();
         virtual void setRecievedByDFBridge( bool recievedByDFBridge );
 
-        virtual const bool getDroppable() const;
-        virtual bool getDroppable();
+        virtual const bool isDroppable() const;
+        virtual bool isDroppable();
         virtual void setDroppable( bool droppable );
 
     };
