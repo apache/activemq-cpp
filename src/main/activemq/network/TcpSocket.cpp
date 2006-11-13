@@ -33,6 +33,10 @@
     extern int errno;
 #endif
 
+#ifndef SHUT_RDWR 
+    #define SHUT_RDWR 2 // Cygwin doesn't seem to define this
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
