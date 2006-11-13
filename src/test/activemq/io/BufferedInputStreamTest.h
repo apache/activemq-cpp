@@ -48,7 +48,7 @@ namespace io{
 			}
 			virtual ~MyInputStream(){}
 			
-			virtual int available() const{
+			virtual int available() const throw (IOException){
 				int len = data.length();
 				return len - (int)pos;
 			}
@@ -98,7 +98,7 @@ namespace io{
 			
 			std::string testStr = "TEST12345678910";
 			MyInputStream myStream( testStr );
-			BufferedInputStream bufStream( &myStream, 1 );
+			BufferedInputStream bufStream( &myStream, (unsigned int)1 );
 			
 			int available = bufStream.available();
 			CPPUNIT_ASSERT( available == (int)testStr.length() );
@@ -138,7 +138,7 @@ namespace io{
 			
 			std::string testStr = "TEST12345678910";
 			MyInputStream myStream( testStr );
-			BufferedInputStream bufStream( &myStream, 10 );
+			BufferedInputStream bufStream( &myStream, (unsigned int)10 );
 			
 			int available = bufStream.available();
 			CPPUNIT_ASSERT( available == (int)testStr.length() );

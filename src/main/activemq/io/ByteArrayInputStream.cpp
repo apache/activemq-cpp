@@ -25,12 +25,14 @@ using namespace std;
 ByteArrayInputStream::ByteArrayInputStream()
 {
     pos = buffer.end();
+    closing = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer,
                                             int bufferSize )
 {
+    closing = false;
     setByteArray( buffer, bufferSize );
 }
 
@@ -40,39 +42,63 @@ ByteArrayInputStream::~ByteArrayInputStream(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::setByteArray( const unsigned char* buffer,
-                                         int bufferSize )
+void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
+                                         int lbufferSize )
 {
-    // Remove old data
-    this->buffer.clear();
-   
-    // Copy data to internal buffer.
-    for( int ix = 0; ix < bufferSize; ++ix )
-    {
-        this->buffer.push_back(buffer[ix]);
+    synchronized( this ){
+        
+        // Remove old data
+        this->buffer.clear();
+       
+        // Copy data to internal buffer.
+        for( int ix = 0; ix < lbufferSize; ++ix )
+        {
+            this->buffer.push_back(lbuffer[ix]);
+        }
+       
+        // Begin at the Beginning.
+        pos = this->buffer.begin();
+        
+        // Notify any listening threads that there
+        // is now data available.
+        notifyAll();
     }
-   
-    // Begin at the Beginning.
-    pos = this->buffer.begin();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayInputStream::close() throw( cms::CMSException ){
     
-    // Close the delegate stream.
-    buffer.clear();
+    synchronized( this ){
+     
+        // Indicate that this stream is closing.
+        closing = true;
+           
+        // Close the delegate stream.
+        buffer.clear();
+        
+        // Notify that this stream is shutting down.
+        notifyAll();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ByteArrayInputStream::read() throw ( IOException )
 {
-    if(pos != buffer.end())
-    {
-        return *(pos++);
+    synchronized( this ){
+        
+        while( !closing ){
+            
+            if(pos != buffer.end())
+            {
+                return *(pos++);
+            }                        
+            
+            // Wait for data to come in.
+            wait();
+        }
+        
+        throw IOException( __FILE__, __LINE__, "close occurred during a read" );
     }
-   
-    throw IOException( __FILE__, __LINE__, 
-        "ByteArrayInputStream::read: Out of Data");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,17 +106,26 @@ int ByteArrayInputStream::read( unsigned char* buffer,
                                 const int bufferSize ) 
                                    throw ( IOException )
 {
-     int ix = 0;
-   
-     for( ; ix < bufferSize; ++ix, ++pos)
-     {
-        if(pos == this->buffer.end())
-        {        
-            break;
+    synchronized( this ){
+        
+        int ix = 0;
+        
+        for( ; ix < bufferSize && !closing; ++ix, ++pos)
+        {
+            if(pos == this->buffer.end())
+            {   
+                // We don't have the requested data yet -
+                // wait for it.     
+                wait();
+            }
+          
+            buffer[ix] = *(pos);
         }
-      
-        buffer[ix] = *(pos);
+        
+        if( closing ){
+            throw IOException( __FILE__, __LINE__, "close occurred during a read" );
+        }
+       
+        return ix;
     }
-   
-    return ix;
 }

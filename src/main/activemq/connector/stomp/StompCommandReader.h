@@ -111,7 +111,7 @@ namespace stomp{
          * @param reference to a Stomp Frame
          * @throws StompConnectorException
          */
-        void readStompCommand( StompFrame& frame ) 
+        void readStompCommandHeader( StompFrame& frame ) 
             throw ( StompConnectorException );
 
         /** 
@@ -134,7 +134,7 @@ namespace stomp{
          * @param Stomp Frame to place data in
          */
         void readStompBody( StompFrame& frame ) 
-            throw ( StompConnectorException );
+            throw ( StompConnectorException );                
     
     };
 

@@ -44,6 +44,12 @@ namespace io{
          * Synchronization object.
          */
         concurrent::Mutex mutex;
+        
+        /**
+         * Indicates that this stream is in the process
+         * of shutting down.
+         */
+        bool closing;
       
     public:
    
@@ -138,7 +144,7 @@ namespace io{
          * in the buffer and the data available on the target
          * input stream.
          */
-        virtual int available() const{   
+        virtual int available() const throw (IOException) {   
             return std::distance( pos, buffer.end() );
         }
             

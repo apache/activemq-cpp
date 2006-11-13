@@ -86,11 +86,6 @@ Socket* SocketFactory::createSocket(const Properties& properties)
         dummy = properties.getProperty( "soSendBufferSize", "2000000" );  
         sscanf( dummy.c_str(), "%d", &soSendBufferSize );
       
-        // Get the socket send buffer size.
-        int soTimeout = 10000;
-        dummy = properties.getProperty( "soTimeout", "10000" );  
-        sscanf( dummy.c_str(), "%d", &soTimeout );
-      
         // Now that we have all the elements that we wanted - let's do it!
         // Create a TCP Socket and then Wrap it in a buffered socket
         // so that users get the benefit of buffered reads and writes.
@@ -108,7 +103,6 @@ Socket* SocketFactory::createSocket(const Properties& properties)
         socket->setKeepAlive( soKeepAlive );
         socket->setReceiveBufferSize( soReceiveBufferSize );
         socket->setSendBufferSize( soSendBufferSize );
-        socket->setSoTimeout( soTimeout );
 
         return socket;
     }

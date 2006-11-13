@@ -59,9 +59,9 @@ StompSessionManager::StompSessionManager( const std::string& connectionId,
 StompSessionManager::~StompSessionManager(void)
 {
     // NOTE - I am not cleaning out the ConsumerInfo objects in the
-    // map becaise it is really the job of the consumer ot remove itself
+    // map because it is really the job of the consumer to remove itself
     // when it is destructed.  If it doesn't then we would have problems,
-    // but if it does, but it's deleted after this object then we would
+    // but it's deleted after this object then we would
     // still have problems.  
 }
 

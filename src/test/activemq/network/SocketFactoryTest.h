@@ -86,7 +86,7 @@ namespace network{
                network::Socket* socket = server.accept();
                server.close();
                
-               socket->setSoTimeout( 10 );
+               //socket->setSoTimeout( 10 );
                socket->setSoLinger( false );
 
                synchronized(&mutex)
@@ -99,25 +99,19 @@ namespace network{
                while( !done && socket != NULL ){
                                     
                   io::InputStream* stream = socket->getInputStream();
-                  if( stream->available() > 0 ){
+                  memset( buf, 0, 1000 );
+                  try{
+                      stream->read( buf, 1000 );
+                    
+                      lastMessage = (char*)buf;
+                    
+                      if( strcmp( (char*)buf, "reply" ) == 0 ){
+                          io::OutputStream* output = socket->getOutputStream();
+                          output->write( (unsigned char*)"hello", strlen("hello" ) );
+                      }
                      
-                     memset( buf, 0, 1000 );
-                     try{
-                        stream->read( buf, 1000 );
-                        
-                        lastMessage = (char*)buf;
-                        
-                        if( strcmp( (char*)buf, "reply" ) == 0 ){
-                           io::OutputStream* output = socket->getOutputStream();
-                           output->write( (unsigned char*)"hello", strlen("hello" ) );
-                        }
-                        
-                     }catch( io::IOException& ex ){
-                        done = true;
-                     }                                      
-                     
-                  }else{
-                     Thread::sleep( 10 );
+                  }catch( io::IOException& ex ){
+                      done = true;
                   }
                }
                
@@ -132,7 +126,7 @@ namespace network{
                }
                
             }catch( io::IOException& ex ){
-               printf("%s\n", ex.getMessage() );
+               printf("%s\n", ex.getMessage().c_str() );
                CPPUNIT_ASSERT( false );
             }catch( ... ){
                CPPUNIT_ASSERT( false );
@@ -163,7 +157,7 @@ namespace network{
             
             properties.setProperty("uri", ostream.str());
             properties.setProperty("soLinger", "false");
-            properties.setProperty("soTimeout", "5");
+            //properties.setProperty("soTimeout", "5");
 
             Socket* client = SocketFactory::createSocket(properties);
 

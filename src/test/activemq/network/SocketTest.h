@@ -88,7 +88,7 @@ namespace network{
 					Socket* socket = server.accept();
 					server.close();
 					
-					socket->setSoTimeout( 10 );
+					//socket->setSoTimeout( 10 );
 					socket->setSoLinger( false );
 					numClients++;
                
@@ -100,30 +100,25 @@ namespace network{
 					while( !done && socket != NULL ){
 												
 						io::InputStream* stream = socket->getInputStream();
-						if( stream->available() > 0 ){
 							
-							memset( buf, 0, 1000 );
-							try{
-								stream->read( buf, 1000 );
-								
-								lastMessage = (char*)buf;
-								
-								if( strcmp( (char*)buf, "reply" ) == 0 ){
-									io::OutputStream* output = socket->getOutputStream();
-									output->write( (unsigned char*)"hello", strlen("hello" ) );
+						memset( buf, 0, 1000 );
+						try{
+							stream->read( buf, 1000 );
+							
+							lastMessage = (char*)buf;
+							
+							if( strcmp( (char*)buf, "reply" ) == 0 ){
+								io::OutputStream* output = socket->getOutputStream();
+								output->write( (unsigned char*)"hello", strlen("hello" ) );
 
-                                      synchronized(&mutex)
-                                      {
-                                         mutex.notifyAll();
-                                      }
-								}
-								
-							}catch( io::IOException& ex ){
-								done = true;
-							}													
+                                  synchronized(&mutex)
+                                  {
+                                     mutex.notifyAll();
+                                  }
+							}
 							
-						}else{
-							Thread::sleep( 10 );
+						}catch( io::IOException& ex ){
+							done = true;
 						}
 					}
 					
@@ -164,7 +159,7 @@ namespace network{
 				TcpSocket client;				
 				
 				client.connect("127.0.0.1", port);
-				client.setSoTimeout( 5 );
+				//client.setSoTimeout( 5 );
 				client.setSoLinger( false );
 				
                 synchronized(&serverThread.mutex)
@@ -209,7 +204,7 @@ namespace network{
 				TcpSocket client;				
 				
 				client.connect("127.0.0.1", port);
-				client.setSoTimeout( 5 );
+				//client.setSoTimeout( 5 );
 				client.setSoLinger( false );
 								
                 synchronized(&serverThread.mutex)
@@ -263,7 +258,7 @@ namespace network{
 				TcpSocket client;				
 				
 				client.connect("127.0.0.1", port);
-				client.setSoTimeout( 5 );
+				//client.setSoTimeout( 5 );
 				client.setSoLinger(false);
 				
                 synchronized(&serverThread.mutex)
