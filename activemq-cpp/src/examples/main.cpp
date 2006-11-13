@@ -37,29 +37,29 @@ using namespace std;
 
 class HelloWorldProducer : public Runnable {
 private:
-	
-	Connection* connection;
-	Session* session;
-	Destination* destination;
-	MessageProducer* producer;
-	int numMessages;
+    
+    Connection* connection;
+    Session* session;
+    Destination* destination;
+    MessageProducer* producer;
+    int numMessages;
     bool useTopic;
 
 public:
-	
-	HelloWorldProducer( int numMessages, bool useTopic = false ){
-		connection = NULL;
-    	session = NULL;
-    	destination = NULL;
-    	producer = NULL;
-    	this->numMessages = numMessages;
+    
+    HelloWorldProducer( int numMessages, bool useTopic = false ){
+        connection = NULL;
+        session = NULL;
+        destination = NULL;
+        producer = NULL;
+        this->numMessages = numMessages;
         this->useTopic = useTopic;
-	}
-	
-	virtual ~HelloWorldProducer(){
-		cleanup();
-	}
-	
+    }
+    
+    virtual ~HelloWorldProducer(){
+        cleanup();
+    }
+    
     virtual void run() {
         try {
             // Create a ConnectionFactory
@@ -90,15 +90,15 @@ public:
             string text = (string)"Hello world! from thread " + threadIdStr;
             
             for( int ix=0; ix<numMessages; ++ix ){
-	            TextMessage* message = session->createTextMessage( text );
+                TextMessage* message = session->createTextMessage( text );
 
-    	        // Tell the producer to send the message
-        	    printf( "Sent message from thread %s\n", threadIdStr.c_str() );
-            	producer->send( message );
-            	
-            	delete message;
+                // Tell the producer to send the message
+                printf( "Sent message from thread %s\n", threadIdStr.c_str() );
+                producer->send( message );
+                
+                delete message;
             }
-			
+            
         }catch ( CMSException& e ) {
             e.printStackTrace();
         }
@@ -107,65 +107,65 @@ public:
 private:
 
     void cleanup(){
-    				
-			// Destroy resources.
-			try{                        
-            	if( destination != NULL ) delete destination;
-			}catch ( CMSException& e ) {}
-			destination = NULL;
-			
-			try{
-	            if( producer != NULL ) delete producer;
-			}catch ( CMSException& e ) {}
-			producer = NULL;
-			
-    		// Close open resources.
-    		try{
-    			if( session != NULL ) session->close();
-    			if( connection != NULL ) connection->close();
-			}catch ( CMSException& e ) {}
-
-			try{
-            	if( session != NULL ) delete session;
-			}catch ( CMSException& e ) {}
-			session = NULL;
-			
+                    
+            // Destroy resources.
+            try{                        
+                if( destination != NULL ) delete destination;
+            }catch ( CMSException& e ) {}
+            destination = NULL;
+            
             try{
-            	if( connection != NULL ) delete connection;
-			}catch ( CMSException& e ) {}
-    		connection = NULL;
+                if( producer != NULL ) delete producer;
+            }catch ( CMSException& e ) {}
+            producer = NULL;
+            
+            // Close open resources.
+            try{
+                if( session != NULL ) session->close();
+                if( connection != NULL ) connection->close();
+            }catch ( CMSException& e ) {}
+
+            try{
+                if( session != NULL ) delete session;
+            }catch ( CMSException& e ) {}
+            session = NULL;
+            
+            try{
+                if( connection != NULL ) delete connection;
+            }catch ( CMSException& e ) {}
+            connection = NULL;
     }
 };
 
 class HelloWorldConsumer : public ExceptionListener, 
                            public MessageListener,
                            public Runnable {
-	
+    
 private:
-	
-	Connection* connection;
-	Session* session;
-	Destination* destination;
-	MessageConsumer* consumer;
-	long waitMillis;
+    
+    Connection* connection;
+    Session* session;
+    Destination* destination;
+    MessageConsumer* consumer;
+    long waitMillis;
     bool useTopic;
-		
+        
 public: 
 
-	HelloWorldConsumer( long waitMillis, bool useTopic = false ){
-		connection = NULL;
-    	session = NULL;
-    	destination = NULL;
-    	consumer = NULL;
-    	this->waitMillis = waitMillis;
+    HelloWorldConsumer( long waitMillis, bool useTopic = false ){
+        connection = NULL;
+        session = NULL;
+        destination = NULL;
+        consumer = NULL;
+        this->waitMillis = waitMillis;
         this->useTopic = useTopic;
-	}
-    virtual ~HelloWorldConsumer(){    	
-    	cleanup();
+    }
+    virtual ~HelloWorldConsumer(){      
+        cleanup();
     }
     
     virtual void run() {
-    	    	
+                
         try {
 
             // Create a ConnectionFactory
@@ -195,7 +195,7 @@ public:
             consumer->setMessageListener( this );
             
             // Sleep while asynchronous messages come in.
-            Thread::sleep( waitMillis );		
+            Thread::sleep( waitMillis );        
             
         } catch (CMSException& e) {
             e.printStackTrace();
@@ -204,13 +204,13 @@ public:
     
     // Called from the consumer since this class is a registered MessageListener.
     virtual void onMessage( const Message* message ){
-    	
+        
         static int count = 0;
         
         try
         {
             count++;
-    	    const TextMessage* textMessage = 
+            const TextMessage* textMessage = 
                 dynamic_cast< const TextMessage* >( message );
             string text = textMessage->getText();
             printf( "Message #%d Received: %s\n", count, text.c_str() );
@@ -228,39 +228,39 @@ public:
 private:
 
     void cleanup(){
-    	
+        
         //*************************************************
         // Always close destination, consumers and producers before
         // you destroy their sessions and connection.
         //*************************************************
         
-		// Destroy resources.
-		try{                        
-        	if( destination != NULL ) delete destination;
-		}catch (CMSException& e) {}
-		destination = NULL;
-		
-		try{
+        // Destroy resources.
+        try{                        
+            if( destination != NULL ) delete destination;
+        }catch (CMSException& e) {}
+        destination = NULL;
+        
+        try{
             if( consumer != NULL ) delete consumer;
-		}catch (CMSException& e) {}
-		consumer = NULL;
-		
-		// Close open resources.
-		try{
-			if( session != NULL ) session->close();
-			if( connection != NULL ) connection->close();
-		}catch (CMSException& e) {}
-		
+        }catch (CMSException& e) {}
+        consumer = NULL;
+        
+        // Close open resources.
+        try{
+            if( session != NULL ) session->close();
+            if( connection != NULL ) connection->close();
+        }catch (CMSException& e) {}
+        
         // Now Destroy them
         try{
-        	if( session != NULL ) delete session;
-		}catch (CMSException& e) {}
-		session = NULL;
-		
-		try{
-        	if( connection != NULL ) delete connection;
-		}catch (CMSException& e) {}
-		connection = NULL;
+            if( session != NULL ) delete session;
+        }catch (CMSException& e) {}
+        session = NULL;
+        
+        try{
+            if( connection != NULL ) delete connection;
+        }catch (CMSException& e) {}
+        connection = NULL;
     }
 };
     
@@ -278,19 +278,19 @@ int main(int argc, char* argv[]) {
     bool useTopics = false;  
 
     HelloWorldProducer producer( 1000, useTopics );
-	HelloWorldConsumer consumer( 8000, useTopics );
-	
-	// Start the consumer thread.
-	Thread consumerThread( &consumer );
-	consumerThread.start();
-	
-	// Start the producer thread.
-	Thread producerThread( &producer );
-	producerThread.start();
+    HelloWorldConsumer consumer( 8000, useTopics );
+    
+    // Start the consumer thread.
+    Thread consumerThread( &consumer );
+    consumerThread.start();
+    
+    // Start the producer thread.
+    Thread producerThread( &producer );
+    producerThread.start();
 
-	// Wait for the threads to complete.
-	producerThread.join();
-	consumerThread.join();
+    // Wait for the threads to complete.
+    producerThread.join();
+    consumerThread.join();
 
     std::cout << "-----------------------------------------------------\n";    
     std::cout << "Finished with the example, ignore errors from this" 
