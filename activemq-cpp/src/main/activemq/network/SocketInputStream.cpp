@@ -114,37 +114,6 @@ int SocketInputStream::available() const throw (activemq::io::IOException){
 	
 
 #endif // !defined(HAVE_WINSOCK2_H)
-    
-/*#if !defined(HAVE_WINSOCK2_H) 
-    
-    // Poll the socket for input.
-    pollfd fd;
-    fd.fd = socket;
-    fd.events = POLLIN;
-    fd.revents = POLLIN;
-    int status = poll( &fd, 1, 1 );
-    if( status > 0 ){
-        return 1;
-    }
-   
-#else 
-
-    // Poll instantaneously to see if there is data on the socket.
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100;
-   
-    fd_set pollSet;
-    FD_ZERO( &pollSet );
-    FD_SET( 0, &pollSet );
-    pollSet.fd_array[0] = socket;
-    if( ::select( 1, &pollSet, NULL, NULL, &timeout) > 0 ){
-        return 1;
-    }
-   
-#endif
-
-    return 0;*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,78 +184,4 @@ int SocketInputStream::read( unsigned char* buffer, const int bufferSize ) throw
     }
     
     return len;
-    /*int bytesAvailable = available();
-   
-    while( true )
-    {
-        int len = ::recv(socket, (char*)buffer, bufferSize, 0);
-      
-        // Check for typical error conditions.
-        if( len < 0 )
-        {
-			#if !defined(HAVE_WINSOCK2_H) 
-         
-                // If the socket was temporarily unavailable - just try again.
-                if( errno == EAGAIN ){
-                    continue;
-                }
-             
-                // Create the error string.
-                char* errorString = ::strerror(errno);
-             
-            #else
-            
-                // If the socket was temporarily unavailable - just try again.
-                int errorCode = ::WSAGetLastError();
-                if( errorCode == WSAEWOULDBLOCK || errorCode == WSAETIMEDOUT ){
-                    continue;
-                }
-          
-                // Create the error string.
-                static const int errorStringSize = 512;
-                char errorString[errorStringSize];
-                memset( errorString, 0, errorStringSize );
-                FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
-                   0,
-                   errorCode,
-                   0,
-                   errorString,
-                   errorStringSize - 1,
-                   NULL);
-                  
-            #endif
-            
-            // Otherwise, this was a bad error - throw an exception.
-            throw IOException( __FILE__, __LINE__, 
-                "activemq::io::SocketInputStream::read - %s", errorString );
-        }
-      
-        // No error, but no data - check for a broken socket.
-        if( len == 0 )
-        {
-            // If the poll showed data, but we failed to read any,
-            // the socket is broken.
-            if( bytesAvailable > 0 ){
-                throw IOException( __FILE__, __LINE__, 
-                    "activemq::io::SocketInputStream::read - The connection is broken" );
-            }
-         
-            // Socket is not broken, just had no data.
-            return 0;
-        }
-      
-        if( debug ){
-            printf("SocketInputStream:read(), numbytes:%d -", len);
-            for( int ix=0; ix<len; ++ix ){
-                if( buffer[ix] > 20 )
-                    printf("%c", buffer[ix] );
-                else
-                    printf("[%d]", buffer[ix] );
-            }
-            printf("\n");
-        }
-        
-        // Data was read successfully - return the bytes read.
-        return len;
-    }*/
 }
