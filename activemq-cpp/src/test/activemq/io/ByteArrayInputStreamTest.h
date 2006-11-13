@@ -56,6 +56,7 @@ namespace io{
          char c = stream_a.read();
          char d = stream_a.read();
 
+         printf("a=%c, b=%c, c=%c, d=%c\n", a, b, c, d );
          CPPUNIT_ASSERT( a == 't' && b == 'e' && c == 's' && d == 't' );
          CPPUNIT_ASSERT( stream_a.available() == 0 );
 
@@ -78,8 +79,10 @@ namespace io{
          memset(buffer, 0, 6);
 
          CPPUNIT_ASSERT( stream_a.read(buffer, 3) == 3 );
-         CPPUNIT_ASSERT( stream_a.read(&buffer[3], 5) == 2 );
+         CPPUNIT_ASSERT( stream_a.read(&buffer[3], 2) == 2 );
          CPPUNIT_ASSERT( std::string((const char*)buffer) == std::string("teste") );
+         
+         stream_a.close();
          
          delete buffer;
       }

@@ -41,21 +41,24 @@ namespace io{
         /**
          * Indcates the number of bytes avaialable.
          * @return the number of bytes available on this input stream.
+         * @throws IOException if an error occurs.
          */
-        virtual int available() const = 0;
+        virtual int available() const throw ( IOException ) = 0;
         
         /**
-         * Reads a single byte from the buffer.
+         * Reads a single byte from the buffer.  Blocks until
+         * data is available.
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
         virtual unsigned char read() throw ( IOException ) = 0;
         
         /**
-         * Reads an array of bytes from the buffer.
+         * Reads an array of bytes from the buffer.  Blocks until
+         * the requested number of bytes are available.
          * @param buffer (out) the target buffer.
          * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read or -1 if EOS is detected
+         * @return The number of bytes read or -1 if EOF is detected
          * @throws IOException thrown if an error occurs.
          */
         virtual int read( unsigned char* buffer, const int bufferSize ) 

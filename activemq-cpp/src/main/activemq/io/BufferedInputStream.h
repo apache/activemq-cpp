@@ -18,7 +18,7 @@
 #ifndef ACTIVEMQ_IO_BUFFEREDINPUTSTREAM_H_
 #define ACTIVEMQ_IO_BUFFEREDINPUTSTREAM_H_
  
-#include <activemq/io/InputStream.h>
+#include <activemq/io/FilterInputStream.h>
 #include <assert.h>
 
 namespace activemq{
@@ -30,14 +30,9 @@ namespace io{
      * in order to reduce the number of io operations on the
      * input stream.
      */
-    class BufferedInputStream : public InputStream
+    class BufferedInputStream : public FilterInputStream
     {
     private:
-   
-        /**
-         * The target input stream.
-         */
-        InputStream* stream;
       
         /**
          * The internal buffer.
@@ -47,7 +42,7 @@ namespace io{
         /**
          * The buffer size.
          */
-        int bufferSize;
+        unsigned int bufferSize;
       
         /**
          * The current head of the buffer.
@@ -64,83 +59,21 @@ namespace io{
         /**
          * Constructor
          * @param stream The target input stream.
+         * @param own indicates if we own the stream object, defaults to false
          */
-        BufferedInputStream( InputStream* stream );
+        BufferedInputStream( InputStream* stream, bool own = false );
       
         /**
          * Constructor
          * @param stream the target input stream
          * @param bufferSize the size for the internal buffer.
+         * @param own indicates if we own the stream object, defaults to false.
          */
-        BufferedInputStream( InputStream* stream, const int bufferSize );
+        BufferedInputStream( InputStream* stream, 
+                             unsigned int bufferSize, 
+                             bool own = false);
       
         virtual ~BufferedInputStream();
-      
-        /**
-         * Locks the object.
-         * throws ActiveMQException
-         */
-        virtual void lock() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->lock();
-        }
-   
-        /**
-         * Unlocks the object.
-         * throws ActiveMQException
-         */
-        virtual void unlock() throw( exceptions::ActiveMQException ){   
-           assert( stream != NULL );
-           stream->unlock();
-        }
-       
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * throws ActiveMQException
-         */
-        virtual void wait() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->wait();
-        }
-    
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs ) 
-            throw( exceptions::ActiveMQException ) {
-         
-            assert( stream != NULL );
-            stream->wait(millisecs);
-        }
-
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * throws ActiveMQException
-         */
-        virtual void notify() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->notify();
-        }
-        
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * throws ActiveMQException
-         */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->notifyAll();
-        }
     
         /**
          * Indcates the number of bytes avaialable.
@@ -148,19 +81,21 @@ namespace io{
          * in the buffer and the data available on the target
          * input stream.
          */
-        virtual int available() const{   
-            return ( tail - head ) + stream->available();
+        virtual int available() const throw ( IOException ) {   
+            return ( tail - head ) + inputStream->available();
         }
             
         /**
-         * Reads a single byte from the buffer.
+         * Reads a single byte from the buffer.  Blocks until
+         * the data is available.
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
         virtual unsigned char read() throw ( IOException );
       
         /**
-         * Reads an array of bytes from the buffer.
+         * Reads an array of bytes from the buffer.  Blocks
+         * until the requested number of bytes are available.
          * @param buffer (out) the target buffer.
          * @param bufferSize the size of the output buffer.
          * @return The number of bytes read.
@@ -169,20 +104,13 @@ namespace io{
         virtual int read( unsigned char* buffer, const int bufferSize ) 
             throw ( IOException );
       
-        /**
-         * Closes the target input stream.
-         * @throws CMSException
-         */
-        virtual void close(void) throw( cms::CMSException );
-      
     private:
    
         /**
          * Initializes the internal structures.
-         * @param stream to read from
          * @param size of buffer to allocate
          */
-        void init( InputStream* stream, const int bufferSize );
+        void init( unsigned int bufferSize );
       
         /**
          * Populates the buffer with as much data as possible
@@ -190,6 +118,45 @@ namespace io{
          * @throws CMSException
          */
         void bufferData(void) throw ( IOException );
+        
+        /**
+         * Returns the number of bytes that are currently unused
+         * in the buffer.
+         */
+        int getUnusedBytes() const{
+            return bufferSize - tail;
+        }
+        
+        /**
+         * Returns the current tail position of the buffer.
+         */
+        unsigned char* getTail(){
+            return buffer + tail;
+        }
+        
+        /**
+         * Initializes the head and tail indicies to the beginning
+         * of the buffer.
+         */
+        void clear(){
+            head = tail = 0;
+        }
+        
+        /**
+         * Inidicates whether or not the buffer is empty.
+         */
+        bool isEmpty() const{
+            return head == tail;
+        }
+        
+        /**
+         * Clears the buffer if there is no data remaining.
+         */
+        void normalizeBuffer(){
+            if( isEmpty() ){
+                clear();
+            }
+        }
 
     };
    

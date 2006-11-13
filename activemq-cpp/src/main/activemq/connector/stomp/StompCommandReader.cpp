@@ -18,6 +18,7 @@
 
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/concurrent/Thread.h>
+#include <activemq/util/Character.h>
 
 using namespace std;
 using namespace activemq;
@@ -27,6 +28,7 @@ using namespace activemq::connector::stomp;
 using namespace activemq::transport;
 using namespace activemq::io;
 using namespace activemq::exceptions;
+using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 StompCommandReader::StompCommandReader(void)
@@ -49,8 +51,8 @@ Command* StompCommandReader::readCommand(void)
         // Create a new Frame for reading to.
         StompFrame* frame = new StompFrame();
        
-        // Read the command into the frame.
-        readStompCommand( *frame );
+        // Read the command header.
+        readStompCommandHeader( *frame );
        
         // Read the headers.
         readStompHeaders( *frame );
@@ -67,39 +69,24 @@ Command* StompCommandReader::readCommand(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandReader::readStompCommand( StompFrame& frame ) 
+void StompCommandReader::readStompCommandHeader( StompFrame& frame ) 
    throw ( StompConnectorException )
 {  
     while( true ) 
     {
-        // Clean up the mess.
-        buffer.clear();
-
-        // Read the command;
+        // The command header is formatted
+        // just like any other stomp header.
         readStompHeaderLine();
 
         // Ignore all white space before the command.
-        int offset=-1;
+        int offset = -1;
         for( size_t ix = 0; ix < buffer.size()-1; ++ix )
         {
-            // Find the first non space character
-            char b = buffer[ix];
-            switch ( b ) 
-            {
-                case '\n':
-                case '\t':
-                case '\r':
-                    break;
-                  
-                default:
-                    offset = ix;
-                    break; 
-            } 
-            
-            if( offset != -1 )
-            {
+            // Find the first non whitespace character
+            if( !Character::isWhitespace(buffer[ix]) ){
+                offset = ix;
                 break;
-            }            
+            }
         }
     
         if( offset >= 0 )
@@ -110,8 +97,6 @@ void StompCommandReader::readStompCommand( StompFrame& frame )
         }
     
     }
-    // Clean up the mess.
-    buffer.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,10 +107,7 @@ void StompCommandReader::readStompHeaders( StompFrame& frame )
     bool endOfHeaders = false;
 
     while( !endOfHeaders )
-    {
-        // Clean up the mess.
-        buffer.clear();
-
+    {        
         // Read in the next header line.
         int numChars = readStompHeaderLine();
 
@@ -166,15 +148,15 @@ void StompCommandReader::readStompHeaders( StompFrame& frame )
             }
         }
     }
-
-    // Clean up the mess.
-    buffer.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int StompCommandReader::readStompHeaderLine(void) 
     throw ( StompConnectorException )
 {
+    // Clear any data from the buffer.
+    buffer.clear();
+        
     int count = 0;
   
     while( true )
@@ -207,6 +189,9 @@ int StompCommandReader::readStompHeaderLine(void)
 void StompCommandReader::readStompBody( StompFrame& frame ) 
    throw ( StompConnectorException )
 {
+    // Clear any data from the buffer.
+    buffer.clear();
+    
     unsigned long content_length = 0;
    
     if(frame.getProperties().hasProperty(
@@ -287,10 +272,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
 
         // Set the body contents in the frame - copy the memory
         frame.setBody( cpyBody, content_length );
-    }
-
-    // Clean up the mess.
-    buffer.clear();
+    }    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -304,24 +286,8 @@ int StompCommandReader::read( unsigned char* buffer, int count )
             "StompCommandReader::read(char*,int) - input stream is NULL" );
     }
    
-    int head = 0;
-   
-    // We call the read(buffer, size) version asking for one
-    // byte, if this returns zero, then there wasn't anything 
-    // on the stream to read, so we try again after a short 
-    // pause in hopes that some more data will show up.
-    while( true )
-    {
-        head += inputStream->read( &buffer[head], count - head );
-      
-        if( head == count )
-        {
-            return count;
-        }
-      
-        // Got here, so we wait a bit and try again.
-        Thread::sleep( 10 );
-    }
+    // Just delegate to the input stream.
+    return inputStream->read( buffer, count );
 }
  
 ////////////////////////////////////////////////////////////////////////////////
@@ -334,7 +300,5 @@ unsigned char StompCommandReader::readByte(void) throw( io::IOException )
             "StompCommandReader::read(char*,int) - input stream is NULL" );
     }
    
-    unsigned char c = 0;
-    inputStream->read( &c, 1 );
-    return c;
+    return inputStream->read();
 }

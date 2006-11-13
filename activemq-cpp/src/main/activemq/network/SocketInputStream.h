@@ -26,7 +26,8 @@ namespace activemq{
 namespace network{
     
     /**
-     * Input stream for performing reads on a socket.
+     * Input stream for performing reads on a socket.  This
+     * class will only work properly for blocking sockets.
      */
 	class SocketInputStream : public io::InputStream
 	{
@@ -119,21 +120,24 @@ namespace network{
         }
 	    
 	    /**
-	     * Polls instantaneously to see if data is available on 
-	     * the socket.
-	     * @return 1 if data is currently available on the socket, otherwise 0.
+	     * Returns the number of bytes available on the socket to
+         * be read right now.
+	     * @return The number of bytes currently available to
+         * be read on the socket.
 	     */
-		virtual int available() const;
+		virtual int available() const throw (activemq::io::IOException);
 		
 		/**
-		 * Reads a single byte from the buffer.
+		 * Reads a single byte from the buffer.  If no data
+         * is available, blocks until their is.
 		 * @return The next byte.
 		 * @throws IOException thrown if an error occurs.
 		 */
 		virtual unsigned char read() throw ( io::IOException );
 		
 		/**
-		 * Reads an array of bytes from the buffer.
+		 * Reads an array of bytes from the buffer.  If no data
+         * is available, blocks until there is.
 		 * @param buffer (out) the target buffer.
 		 * @param bufferSize the size of the output buffer.
 		 * @return The number of bytes read.

@@ -18,7 +18,7 @@
 #ifndef ACTIVEMQ_IO_BUFFEREDOUTPUTSTREAM_H_
 #define ACTIVEMQ_IO_BUFFEREDOUTPUTSTREAM_H_
  
-#include <activemq/io/OutputStream.h>
+#include <activemq/io/FilterOutputStream.h>
 #include <assert.h>
 
 namespace activemq{
@@ -28,14 +28,9 @@ namespace io{
      * Wrapper around another output stream that buffers
      * output before writing to the target output stream.
      */
-    class BufferedOutputStream : public OutputStream
+    class BufferedOutputStream : public FilterOutputStream
     {
     private:
-   
-        /**
-         * The target output stream.
-         */
-        OutputStream* stream;
       
         /**
          * The internal buffer.
@@ -45,7 +40,7 @@ namespace io{
         /**
          * The size of the internal buffer.
          */
-        int bufferSize;
+        unsigned int bufferSize;
       
         /**
          * The current head of the buffer.
@@ -63,82 +58,18 @@ namespace io{
          * Constructor.
          * @param stream the target output stream.
          */
-        BufferedOutputStream( OutputStream* stream );
+        BufferedOutputStream( OutputStream* stream, bool own = false );
       
         /**
          * Constructor
          * @param stream the target output stream.
          * @param bufSize the size for the internal buffer.
          */
-        BufferedOutputStream( OutputStream* stream, const int bufSize );
+        BufferedOutputStream( OutputStream* stream, 
+                              unsigned int bufSize, 
+                              bool own = false);
       
         virtual ~BufferedOutputStream();
-      
-        /**
-         * Locks the object.
-         * @throws ActiveMQException
-         */
-        virtual void lock() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->lock();
-        }
-   
-        /**
-         * Unlocks the object.
-         * @throws ActiveMQException
-         */
-        virtual void unlock() throw( exceptions::ActiveMQException ){   
-            assert( stream != NULL );
-            stream->unlock();
-        }
-       
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void wait() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->wait();
-        }
-    
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs ) 
-            throw( exceptions::ActiveMQException ) {
-         
-            assert( stream != NULL );
-            stream->wait( millisecs );
-        }
-
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notify() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->notify();
-        }
-        
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
-            assert( stream != NULL );
-            stream->notifyAll();
-        }
        
         /**
          * Writes a single byte to the output stream.
@@ -172,7 +103,7 @@ namespace io{
         /**
          * Initializes the internal structures.
          */
-        void init( OutputStream* stream, const int bufSize );
+        void init( unsigned int bufSize );
       
         /**
          * Writes the contents of the buffer to the output stream.

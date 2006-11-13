@@ -22,17 +22,20 @@ using namespace activemq::io;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedOutputStream::BufferedOutputStream( OutputStream* stream )
+BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
+: FilterOutputStream( stream, own )
 {
     // Default to 1k buffer.
-    init( stream, 1024 );
+    init( 1024 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::BufferedOutputStream( OutputStream* stream, 
-    const int bufSize )
+    unsigned int bufSize,
+    bool own )
+: FilterOutputStream( stream, own )
 {
-    init( stream, bufSize );
+    init( bufSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,9 +49,8 @@ BufferedOutputStream::~BufferedOutputStream()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::init( OutputStream* stream, const int bufSize ){
+void BufferedOutputStream::init( unsigned int bufSize ){
     
-    this->stream = stream;
     this->bufferSize = bufSize;
     
     buffer = new unsigned char[bufSize];
@@ -62,14 +64,14 @@ void BufferedOutputStream::close() throw( cms::CMSException ){
     flush();    
     
     // Close the delegate stream.
-    stream->close();
+    outputStream->close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStream::emptyBuffer() throw ( IOException ){
     
     if( head != tail ){
-        stream->write( buffer+head, tail-head );
+        outputStream->write( buffer+head, tail-head );
     }
     head = tail = 0;
 }
@@ -81,13 +83,13 @@ void BufferedOutputStream::flush() throw ( IOException ){
     emptyBuffer();
     
     // Flush the output stream.
-    stream->flush();
+    outputStream->flush();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStream::write( const unsigned char c ) throw ( IOException ){
     
-    if( tail >= bufferSize ){
+    if( tail >= (int)bufferSize ){
         emptyBuffer();
     }
     
@@ -101,12 +103,12 @@ void BufferedOutputStream::write( const unsigned char* buffer, const int len )
     // Iterate until all the data is written.
     for( int pos=0; pos < len; ){
         
-        if( tail >= bufferSize ){
+        if( tail >= (int)bufferSize ){
             emptyBuffer();
         }
     
         // Get the number of bytes left to write.
-        int bytesToWrite = min( bufferSize-tail, len-pos );
+        int bytesToWrite = min( (int)bufferSize-tail, len-pos );
         
         // Copy the data.
         memcpy( this->buffer+tail, buffer+pos, bytesToWrite );

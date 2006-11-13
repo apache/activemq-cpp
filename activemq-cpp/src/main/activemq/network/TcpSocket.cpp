@@ -201,7 +201,7 @@ void TcpSocket::close() throw( cms::CMSException )
    
     if( isConnected() )
     {
-        ::shutdown( socketHandle, 2 );
+        ::shutdown( socketHandle, SHUT_RDWR );
         
 		#if !defined(HAVE_WINSOCK2_H)
             ::close( socketHandle );

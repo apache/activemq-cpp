@@ -114,33 +114,29 @@ void IOTransport::close() throw( cms::CMSException ){
         // Mark this transport as closed.
         closed = true;
         
+        // We have to close the input stream before
+        // we stop the thread.  this will force us to
+        // wake up the thread if it's stuck in a read
+        // (which is likely).  Otherwise, the join that
+        // follows will block forever.
+        if( inputStream != NULL ){
+            
+            inputStream->close();
+            inputStream = NULL;
+        }
+        
         // Wait for the thread to die.
         if( thread != NULL ){
             thread->join();
             delete thread;
             thread = NULL;
-        }
+        }        
         
-        /**
-         * Close the input stream.
-         */
-        if( inputStream != NULL ){
-            
-            synchronized( inputStream ){
-                inputStream->close();
-                inputStream = NULL;
-            }
-        }
-        
-        /**
-         * Close the output stream.
-         */
+        // Close the output stream.
         if( outputStream != NULL ){
             
-            synchronized( outputStream ){
-                outputStream->close();
-                outputStream = NULL;
-            }
+            outputStream->close();
+            outputStream = NULL;
         }
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -153,29 +149,12 @@ void IOTransport::run(){
    try{
         
       while( !closed ){
-        
-         int available = 0;            
-         synchronized( inputStream ){
-            available = inputStream->available();
-         }
-
-         if( available > 0 ){
-                
-             Command* command = NULL;
-
-             synchronized( inputStream ){
-                 // Read the next command from the input stream.
-                 command = reader->readCommand();
-             }
-                                
-             // Notify the listener.
-             fire( command );
-         }
-         else{
-                
-             // Sleep for a short time and try again.
-             Thread::sleep( 1 );
-         }        
+                 
+         // Read the next command from the input stream.
+         Command* command = reader->readCommand();
+                            
+         // Notify the listener.
+         fire( command );      
       }
         
    }catch( exceptions::ActiveMQException& ex ){
