@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,108 +46,81 @@ unsigned char JournalTopicAckMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void JournalTopicAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     JournalTopicAck* info =
         dynamic_cast<JournalTopicAck*>( dataStructure );
     info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setMessageId( dynamic_cast< MessageId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
-    info->setMessageSequenceId( TightUnmarshalLong( wireFormat, dataIn, bs ) );
-    info->setSubscritionName( TightUnmarshalString( dataIn, bs ) );
-    info->setClientId( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+    info->setMessageSequenceId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setSubscritionName( tightUnmarshalString( dataIn, bs ) );
+    info->setClientId( tightUnmarshalString( dataIn, bs ) );
     info->setTransactionId( dynamic_cast< TransactionId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalTopicAckMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int JournalTopicAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     JournalTopicAck* info =
         dynamic_cast<JournalTopicAck*>( dataStructure );
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getDestination(), bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getMessageId(), bs );
     rc += tightMarshalLong1( wireFormat, info->getMessageSequenceId(), bs );
     rc += tightMarshalString1( info->getSubscritionName(), bs );
     rc += tightMarshalString1( info->getClientId(), bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getTransactionId(), bs );
 
     return rc + 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     JournalTopicAck* info =
         dynamic_cast<JournalTopicAck*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getDestination(), dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getMessageId(), dataOut, bs );
     tightMarshalLong2( wireFormat, info->getMessageSequenceId(), dataOut, bs );
     tightMarshalString2( info->getSubscritionName(), dataOut, bs );
     tightMarshalString2( info->getClientId(), dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     JournalTopicAck* info = 
         dynamic_cast<JournalTopicAck*>( dataStructure );
-   info->setDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-   info->setMessageId( dynamic_cast<MessageId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setMessageId( dynamic_cast< MessageId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     info->setMessageSequenceId( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setSubscritionName( looseUnmarshalString( dataIn ) );
     info->setClientId( looseUnmarshalString( dataIn ) );
-   info->setTransactionId( dynamic_cast<TransactionId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setTransactionId( dynamic_cast< TransactionId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void JournalTopicAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     JournalTopicAck* info =
         dynamic_cast<JournalTopicAck*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getDestination(), dataOut );
+    looseMarshalNestedObject( wireFormat, info->getMessageId(), dataOut );
     looseMarshalLong( wireFormat, info->getMessageSequenceId(), dataOut );
     looseMarshalString( info->getSubscritionName(), dataOut );
     looseMarshalString( info->getClientId(), dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getTransactionId(), dataOut );
 }
 

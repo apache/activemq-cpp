@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/MessageDispatchNotification.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -50,30 +52,39 @@ MessageDispatchNotification::~MessageDispatchNotification()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatchNotification* MessageDispatchNotification::clone() const {
+DataStructure* MessageDispatchNotification::cloneDataStructure() const {
     MessageDispatchNotification* messageDispatchNotification = new MessageDispatchNotification();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( messageDispatchNotification );
+    messageDispatchNotification->copyDataStructure( this );
 
-    messageDispatchNotification->consumerId = this->getConsumerId();
-    messageDispatchNotification->destination = this->getDestination();
-    messageDispatchNotification->deliverySequenceId = this->getDeliverySequenceId()->clone();
-    messageDispatchNotification->messageId = this->getMessageId();
-
-    return messageDispatchNotification
+    return messageDispatchNotification;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotification::copy( MessageDispatchNotification* dest ) const {
+void MessageDispatchNotification::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( messageDispatchNotification );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setDestination( this->getDestination() );
-    dest->setDeliverySequenceId( this->getDeliverySequenceId()->clone() );
-    dest->setMessageId( this->getMessageId() );
+    const MessageDispatchNotification* srcPtr = dynamic_cast<const MessageDispatchNotification*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "MessageDispatchNotification::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setDeliverySequenceId( srcPtr->getDeliverySequenceId() );
+    this->setMessageId( 
+        dynamic_cast<MessageId*>( 
+            srcPtr->getMessageId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

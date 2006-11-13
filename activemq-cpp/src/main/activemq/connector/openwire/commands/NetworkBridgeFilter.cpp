@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/NetworkBridgeFilter.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -46,26 +48,33 @@ NetworkBridgeFilter::~NetworkBridgeFilter()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-NetworkBridgeFilter* NetworkBridgeFilter::clone() const {
+DataStructure* NetworkBridgeFilter::cloneDataStructure() const {
     NetworkBridgeFilter* networkBridgeFilter = new NetworkBridgeFilter();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( networkBridgeFilter );
+    networkBridgeFilter->copyDataStructure( this );
 
-    networkBridgeFilter->networkTTL = this->getNetworkTTL()->clone();
-    networkBridgeFilter->networkBrokerId = this->getNetworkBrokerId();
-
-    return networkBridgeFilter
+    return networkBridgeFilter;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilter::copy( NetworkBridgeFilter* dest ) const {
+void NetworkBridgeFilter::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( networkBridgeFilter );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setNetworkTTL( this->getNetworkTTL()->clone() );
-    dest->setNetworkBrokerId( this->getNetworkBrokerId() );
+    const NetworkBridgeFilter* srcPtr = dynamic_cast<const NetworkBridgeFilter*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "NetworkBridgeFilter::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setNetworkTTL( srcPtr->getNetworkTTL() );
+    this->setNetworkBrokerId( 
+        dynamic_cast<BrokerId*>( 
+            srcPtr->getNetworkBrokerId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

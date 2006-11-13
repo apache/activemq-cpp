@@ -32,117 +32,89 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void MessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     Message* info =
         dynamic_cast<Message*>( dataStructure );
     info->setProducerId( dynamic_cast< ProducerId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setTransactionId( dynamic_cast< TransactionId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setOriginalDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setMessageId( dynamic_cast< MessageId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setOriginalTransactionId( dynamic_cast< TransactionId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
-    info->setGroupID( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    info->setGroupID( tightUnmarshalString( dataIn, bs ) );
     info->setGroupSequence( dataIn->readInt() );
-    info->setCorrelationId( TightUnmarshalString( dataIn, bs ) );
+    info->setCorrelationId( tightUnmarshalString( dataIn, bs ) );
     info->setPersistent( bs->readBoolean() );
-    info->setExpiration( TightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setExpiration( tightUnmarshalLong( wireFormat, dataIn, bs ) );
     info->setPriority( dataIn->readByte() );
     info->setReplyTo( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
-    info->setTimestamp( TightUnmarshalLong( wireFormat, dataIn, bs ) );
-    info->setType( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+    info->setTimestamp( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setType( tightUnmarshalString( dataIn, bs ) );
     info->setContent( tightUnmarshalByteArray( dataIn, bs ) );
     info->setMarshalledProperties( tightUnmarshalByteArray( dataIn, bs ) );
     info->setDataStructure( dynamic_cast< DataStructure* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setTargetConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setCompressed( bs->readBoolean() );
     info->setRedeliveryCounter( dataIn->readInt() );
 
     if( bs->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerId* value = new BrokerId[size];
+        info->getBrokerPath().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast< BrokerId* >(
-                tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+            info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
+                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
         }
-        info->setBrokerPath( value );
     }
     else {
-        info->setBrokerPath( NULL );
+        info->getBrokerPath().clear();
     }
-    info->setArrival( TightUnmarshalLong( wireFormat, dataIn, bs ) );
-    info->setUserID( TightUnmarshalString( dataIn, bs ) );
+    info->setArrival( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setUserID( tightUnmarshalString( dataIn, bs ) );
     info->setRecievedByDFBridge( bs->readBoolean() );
     info->setDroppable( bs->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessageMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int MessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     Message* info =
         dynamic_cast<Message*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getProducerId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalDestination() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalTransactionId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getProducerId(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getTransactionId(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getOriginalDestination(), bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getMessageId(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getOriginalTransactionId(), bs );
     rc += tightMarshalString1( info->getGroupID(), bs );
     rc += tightMarshalString1( info->getCorrelationId(), bs );
     bs->writeBoolean( info->isPersistent() );
     rc += tightMarshalLong1( wireFormat, info->getExpiration(), bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getReplyTo() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getReplyTo(), bs );
     rc += tightMarshalLong1( wireFormat, info->getTimestamp(), bs );
     rc += tightMarshalString1( info->getType(), bs );
     bs->writeBoolean( info->getContent() != NULL );
     rc += info->getContent()() == NULL ? 0 : info->getContent().Length + 4;
     bs->writeBoolean( info->getMarshalledProperties() != NULL );
     rc += info->getMarshalledProperties()() == NULL ? 0 : info->getMarshalledProperties().Length + 4;
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDataStructure() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTargetConsumerId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getDataStructure(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getTargetConsumerId(), bs );
     bs->writeBoolean( info->isCompressed() );
     rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
     rc += tightMarshalLong1( wireFormat, info->getArrival(), bs );
@@ -154,46 +126,25 @@ int MessageMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure*
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     Message* info =
         dynamic_cast<Message*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getProducerId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalDestination() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalTransactionId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getProducerId(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getOriginalDestination(), dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getMessageId(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getOriginalTransactionId(), dataOut, bs );
     tightMarshalString2( info->getGroupID(), dataOut, bs );
     dataOut->write( info->getGroupSequence() );
     tightMarshalString2( info->getCorrelationId(), dataOut, bs );
     bs->readBoolean();
     tightMarshalLong2( wireFormat, info->getExpiration(), dataOut, bs );
     dataOut->write( info->getPriority() );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getReplyTo() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getReplyTo(), dataOut, bs );
     tightMarshalLong2( wireFormat, info->getTimestamp(), dataOut, bs );
     tightMarshalString2( info->getType(), dataOut, bs );
     if( bs->readBoolean() ) {
@@ -204,14 +155,8 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure
         dataOut->write( info->getMarshalledProperties().Length );
         dataOut->write( info->getMarshalledProperties() );
     }
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDataStructure() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTargetConsumerId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getDataStructure(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getTargetConsumerId(), dataOut, bs );
     bs->readBoolean();
     dataOut->write( info->getRedeliveryCounter() );
     tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
@@ -222,52 +167,51 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void MessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     Message* info = 
         dynamic_cast<Message*>( dataStructure );
-   info->setProducerId( dynamic_cast<ProducerId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-   info->setDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-   info->setTransactionId( dynamic_cast<TransactionId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-   info->setOriginalDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-   info->setMessageId( dynamic_cast<MessageId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-   info->setOriginalTransactionId( dynamic_cast<TransactionId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setProducerId( dynamic_cast< ProducerId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setTransactionId( dynamic_cast< TransactionId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setOriginalDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setMessageId( dynamic_cast< MessageId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setOriginalTransactionId( dynamic_cast< TransactionId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setGroupID( looseUnmarshalString( dataIn ) );
     info->setGroupSequence( dataIn->readInt() );
     info->setCorrelationId( looseUnmarshalString( dataIn ) );
     info->setPersistent( dataIn->readBoolean() );
     info->setExpiration( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setPriority( dataIn->readByte() );
-   info->setReplyTo( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setReplyTo( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     info->setTimestamp( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setType( looseUnmarshalString( dataIn ) );
     info->setContent( looseUnmarshalByteArray( dataIn ) );
     info->setMarshalledProperties( looseUnmarshalByteArray( dataIn ) );
-   info->setDataStructure( dynamic_cast<DataStructure* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-   info->setTargetConsumerId( dynamic_cast<ConsumerId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setDataStructure( dynamic_cast< DataStructure* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setTargetConsumerId( dynamic_cast< ConsumerId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setCompressed( dataIn->readBoolean() );
     info->setRedeliveryCounter( dataIn->readInt() );
 
     if( dataIn->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerId* value = new BrokerId[size];
+        info->getBrokerPath().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast<BrokerId* >(
-                looseUnmarshalNestedObject( wireFormat,dataIn ) );
+            info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
+                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
         }
-        info->setBrokerPath( value );
     }
     else {
-        info->setBrokerPath( NULL );
+        info->getBrokerPath().clear();
     }
     info->setArrival( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setUserID( looseUnmarshalString( dataIn ) );
@@ -276,45 +220,24 @@ void MessageMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructur
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     Message* info =
         dynamic_cast<Message*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getProducerId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalDestination() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getOriginalTransactionId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalCachedObject( wireFormat, info->getProducerId(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getTransactionId(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getOriginalDestination(), dataOut );
+    looseMarshalNestedObject( wireFormat, info->getMessageId(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getOriginalTransactionId(), dataOut );
     looseMarshalString( info->getGroupID(), dataOut );
     dataOut->write( info->getGroupSequence() );
     looseMarshalString( info->getCorrelationId(), dataOut );
     dataOut->write( info->isPersistent() );
     looseMarshalLong( wireFormat, info->getExpiration(), dataOut );
     dataOut->write( info->getPriority() );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getReplyTo() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getReplyTo(), dataOut );
     looseMarshalLong( wireFormat, info->getTimestamp(), dataOut );
     looseMarshalString( info->getType(), dataOut );
     dataOut->write( info->getContent() != NULL );
@@ -327,14 +250,8 @@ void MessageMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure*
         dataOut->write( info->getMarshalledProperties().Length );
         dataOut->write( info->getMarshalledProperties() );
     }
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDataStructure() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTargetConsumerId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getDataStructure(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getTargetConsumerId(), dataOut );
     dataOut->write( info->isCompressed() );
     dataOut->write( info->getRedeliveryCounter() );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );

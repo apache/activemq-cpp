@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConnectionId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,24 +46,30 @@ ConnectionId::~ConnectionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId* ConnectionId::clone() const {
+DataStructure* ConnectionId::cloneDataStructure() const {
     ConnectionId* connectionId = new ConnectionId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( connectionId );
+    connectionId->copyDataStructure( this );
 
-    connectionId->value = this->getValue();
-
-    return connectionId
+    return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionId::copy( ConnectionId* dest ) const {
+void ConnectionId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( connectionId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setValue( this->getValue() );
+    const ConnectionId* srcPtr = dynamic_cast<const ConnectionId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConnectionId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setValue( srcPtr->getValue() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

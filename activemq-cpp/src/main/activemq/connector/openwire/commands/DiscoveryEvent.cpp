@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/DiscoveryEvent.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,26 +47,31 @@ DiscoveryEvent::~DiscoveryEvent()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DiscoveryEvent* DiscoveryEvent::clone() const {
+DataStructure* DiscoveryEvent::cloneDataStructure() const {
     DiscoveryEvent* discoveryEvent = new DiscoveryEvent();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( discoveryEvent );
+    discoveryEvent->copyDataStructure( this );
 
-    discoveryEvent->serviceName = this->getServiceName();
-    discoveryEvent->brokerName = this->getBrokerName();
-
-    return discoveryEvent
+    return discoveryEvent;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DiscoveryEvent::copy( DiscoveryEvent* dest ) const {
+void DiscoveryEvent::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( discoveryEvent );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setServiceName( this->getServiceName() );
-    dest->setBrokerName( this->getBrokerName() );
+    const DiscoveryEvent* srcPtr = dynamic_cast<const DiscoveryEvent*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "DiscoveryEvent::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setServiceName( srcPtr->getServiceName() );
+    this->setBrokerName( srcPtr->getBrokerName() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

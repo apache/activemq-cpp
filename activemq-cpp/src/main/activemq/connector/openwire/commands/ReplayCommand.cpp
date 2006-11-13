@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ReplayCommand.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,26 +47,31 @@ ReplayCommand::~ReplayCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ReplayCommand* ReplayCommand::clone() const {
+DataStructure* ReplayCommand::cloneDataStructure() const {
     ReplayCommand* replayCommand = new ReplayCommand();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( replayCommand );
+    replayCommand->copyDataStructure( this );
 
-    replayCommand->firstNakNumber = this->getFirstNakNumber()->clone();
-    replayCommand->lastNakNumber = this->getLastNakNumber()->clone();
-
-    return replayCommand
+    return replayCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ReplayCommand::copy( ReplayCommand* dest ) const {
+void ReplayCommand::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( replayCommand );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setFirstNakNumber( this->getFirstNakNumber()->clone() );
-    dest->setLastNakNumber( this->getLastNakNumber()->clone() );
+    const ReplayCommand* srcPtr = dynamic_cast<const ReplayCommand*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ReplayCommand::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setFirstNakNumber( srcPtr->getFirstNakNumber() );
+    this->setLastNakNumber( srcPtr->getLastNakNumber() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

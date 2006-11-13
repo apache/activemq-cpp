@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BROKERERROR_H_
 
 #include <activemq/connector/openwire/commands/BaseCommand.h>
+#icnlude <activemq/exceptions/NullPointerException.h>
 
 #include <string>
 #include <vector>
@@ -47,8 +48,45 @@ namespace commands{
     public:
 
         BrokerError() {}
-        virtual ~BrokerError() {}
-        
+        virtual ~BrokerError() {
+            for( int i = 0; i < stackTraceElements.size(); ++i ) {
+                delete stackTraceElements[i];
+            }
+        }
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyCommand( const DataStructure* src ) {
+            
+            BrokerError* srcErr = dynamic_cast<BrokerError*>( src );
+            
+            if( srcErr == NULL || src == NULL ) {
+                throw exceptions::NullPointerException(
+                    __FILE__, __LINE__,
+                    "BrokerError::copyCommand - src is NULL or invalid" );
+            } 
+            
+            this->setMessage( srcErr->getMessage() );
+            this->setExceptionClass( srcErr->getExceptionClass() );
+            
+            for( int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
+                if( src->getStackTraceElements()[i] != NULL ) {
+                    StackTraceElement* element = new StatckTraceElement;
+                    element = *( srcErr->getStackTraceElements()[i] );
+
+                    // store the copy
+                    this->getStackTraceElements().push_back( element );
+                }
+            }
+            
+            if( srcErr->getCause() ) {
+                this->cause = srcErr->getCause()->copyCommand();
+            }
+        }
+
         /**
          * Gets the string holding the error message
          * @returns String Message

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/TransactionId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -43,22 +45,29 @@ TransactionId::~TransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId* TransactionId::clone() const {
+DataStructure* TransactionId::cloneDataStructure() const {
     TransactionId* transactionId = new TransactionId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( transactionId );
+    transactionId->copyDataStructure( this );
 
-
-    return transactionId
+    return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionId::copy( TransactionId* dest ) const {
+void TransactionId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( transactionId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
+    const TransactionId* srcPtr = dynamic_cast<const TransactionId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "TransactionId::copyDataStructure - src is NULL or invalid" );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

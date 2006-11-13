@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/BrokerId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,24 +46,30 @@ BrokerId::~BrokerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId* BrokerId::clone() const {
+DataStructure* BrokerId::cloneDataStructure() const {
     BrokerId* brokerId = new BrokerId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( brokerId );
+    brokerId->copyDataStructure( this );
 
-    brokerId->value = this->getValue();
-
-    return brokerId
+    return brokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BrokerId::copy( BrokerId* dest ) const {
+void BrokerId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( brokerId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setValue( this->getValue() );
+    const BrokerId* srcPtr = dynamic_cast<const BrokerId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "BrokerId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setValue( srcPtr->getValue() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

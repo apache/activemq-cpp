@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/DataResponse.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,24 +47,32 @@ DataResponse::~DataResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataResponse* DataResponse::clone() const {
+DataStructure* DataResponse::cloneDataStructure() const {
     DataResponse* dataResponse = new DataResponse();
 
     // Copy the data from the base class or classes
-    Response::copy( dataResponse );
+    dataResponse->copyDataStructure( this );
 
-    dataResponse->data = this->getData();
-
-    return dataResponse
+    return dataResponse;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataResponse::copy( DataResponse* dest ) const {
+void DataResponse::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    Response::copy( dataResponse );
+    // Copy the data of the base class or classes
+    Response::copyDataStructure( src );
 
-    dest->setData( this->getData() );
+    const DataResponse* srcPtr = dynamic_cast<const DataResponse*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "DataResponse::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setData( 
+        dynamic_cast<DataStructure*>( 
+            srcPtr->getData()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

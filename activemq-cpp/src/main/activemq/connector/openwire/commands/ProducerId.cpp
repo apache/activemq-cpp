@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ProducerId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -46,28 +48,32 @@ ProducerId::~ProducerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId* ProducerId::clone() const {
+DataStructure* ProducerId::cloneDataStructure() const {
     ProducerId* producerId = new ProducerId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( producerId );
+    producerId->copyDataStructure( this );
 
-    producerId->connectionId = this->getConnectionId();
-    producerId->value = this->getValue()->clone();
-    producerId->sessionId = this->getSessionId()->clone();
-
-    return producerId
+    return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerId::copy( ProducerId* dest ) const {
+void ProducerId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( producerId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setValue( this->getValue()->clone() );
-    dest->setSessionId( this->getSessionId()->clone() );
+    const ProducerId* srcPtr = dynamic_cast<const ProducerId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ProducerId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConnectionId( srcPtr->getConnectionId() );
+    this->setValue( srcPtr->getValue() );
+    this->setSessionId( srcPtr->getSessionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

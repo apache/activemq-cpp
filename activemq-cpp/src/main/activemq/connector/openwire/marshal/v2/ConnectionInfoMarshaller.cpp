@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,28 +46,27 @@ unsigned char ConnectionInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ConnectionInfo* info =
         dynamic_cast<ConnectionInfo*>( dataStructure );
     info->setConnectionId( dynamic_cast< ConnectionId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
-    info->setClientId( TightUnmarshalString( dataIn, bs ) );
-    info->setPassword( TightUnmarshalString( dataIn, bs ) );
-    info->setUserName( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    info->setClientId( tightUnmarshalString( dataIn, bs ) );
+    info->setPassword( tightUnmarshalString( dataIn, bs ) );
+    info->setUserName( tightUnmarshalString( dataIn, bs ) );
 
     if( bs->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerId* value = new BrokerId[size];
+        info->getBrokerPath().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast< BrokerId* >(
-                tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+            info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
+                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
         }
-        info->setBrokerPath( value );
     }
     else {
-        info->setBrokerPath( NULL );
+        info->getBrokerPath().clear();
     }
     info->setBrokerMasterConnector( bs->readBoolean() );
     info->setManageable( bs->readBoolean() );
@@ -75,16 +74,13 @@ void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     ConnectionInfo* info =
         dynamic_cast<ConnectionInfo*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConnectionId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
     rc += tightMarshalString1( info->getClientId(), bs );
     rc += tightMarshalString1( info->getPassword(), bs );
     rc += tightMarshalString1( info->getUserName(), bs );
@@ -97,16 +93,13 @@ int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     ConnectionInfo* info =
         dynamic_cast<ConnectionInfo*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConnectionId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
     tightMarshalString2( info->getClientId(), dataOut, bs );
     tightMarshalString2( info->getPassword(), dataOut, bs );
     tightMarshalString2( info->getUserName(), dataOut, bs );
@@ -117,27 +110,26 @@ void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ConnectionInfo* info = 
         dynamic_cast<ConnectionInfo*>( dataStructure );
-   info->setConnectionId( dynamic_cast<ConnectionId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setConnectionId( dynamic_cast< ConnectionId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setClientId( looseUnmarshalString( dataIn ) );
     info->setPassword( looseUnmarshalString( dataIn ) );
     info->setUserName( looseUnmarshalString( dataIn ) );
 
     if( dataIn->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerId* value = new BrokerId[size];
+        info->getBrokerPath().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast<BrokerId* >(
-                looseUnmarshalNestedObject( wireFormat,dataIn ) );
+            info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
+                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
         }
-        info->setBrokerPath( value );
     }
     else {
-        info->setBrokerPath( NULL );
+        info->getBrokerPath().clear();
     }
     info->setBrokerMasterConnector( dataIn->readBoolean() );
     info->setManageable( dataIn->readBoolean() );
@@ -145,15 +137,12 @@ void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     ConnectionInfo* info =
         dynamic_cast<ConnectionInfo*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConnectionId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
     looseMarshalString( info->getClientId(), dataOut );
     looseMarshalString( info->getPassword(), dataOut );
     looseMarshalString( info->getUserName(), dataOut );

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/DestinationInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -52,37 +54,40 @@ DestinationInfo::~DestinationInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DestinationInfo* DestinationInfo::clone() const {
+DataStructure* DestinationInfo::cloneDataStructure() const {
     DestinationInfo* destinationInfo = new DestinationInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( destinationInfo );
+    destinationInfo->copyDataStructure( this );
 
-    destinationInfo->connectionId = this->getConnectionId();
-    destinationInfo->destination = this->getDestination();
-    destinationInfo->operationType = this->getOperationType()->clone();
-    destinationInfo->timeout = this->getTimeout()->clone();
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        destinationInfo->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone();
-    }
-
-    return destinationInfo
+    return destinationInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::copy( DestinationInfo* dest ) const {
+void DestinationInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( destinationInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setDestination( this->getDestination() );
-    dest->setOperationType( this->getOperationType()->clone() );
-    dest->setTimeout( this->getTimeout()->clone() );
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        dest->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone() );
+    const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "DestinationInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setOperationType( srcPtr->getOperationType() );
+    this->setTimeout( srcPtr->getTimeout() );
+    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
+        this->getBrokerPath().push_back( 
+            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
     }
 }
 

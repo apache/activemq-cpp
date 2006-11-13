@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,18 +46,18 @@ unsigned char ProducerIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ProducerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ProducerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ProducerId* info =
         dynamic_cast<ProducerId*>( dataStructure );
-    info->setConnectionId( TightUnmarshalString( dataIn, bs ) );
-    info->setValue( TightUnmarshalLong( wireFormat, dataIn, bs ) );
-    info->setSessionId( TightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setConnectionId( tightUnmarshalString( dataIn, bs ) );
+    info->setValue( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setSessionId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ProducerIdMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int ProducerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     ProducerId* info =
         dynamic_cast<ProducerId*>( dataStructure );
@@ -71,7 +71,7 @@ int ProducerIdMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ProducerIdMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void ProducerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -83,7 +83,7 @@ void ProducerIdMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStruct
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ProducerIdMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void ProducerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ProducerId* info = 
         dynamic_cast<ProducerId*>( dataStructure );
@@ -93,7 +93,7 @@ void ProducerIdMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ProducerIdMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void ProducerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     ProducerId* info =
         dynamic_cast<ProducerId*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

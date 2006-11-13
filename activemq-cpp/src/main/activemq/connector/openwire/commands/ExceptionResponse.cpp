@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ExceptionResponse.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,24 +47,32 @@ ExceptionResponse::~ExceptionResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ExceptionResponse* ExceptionResponse::clone() const {
+DataStructure* ExceptionResponse::cloneDataStructure() const {
     ExceptionResponse* exceptionResponse = new ExceptionResponse();
 
     // Copy the data from the base class or classes
-    Response::copy( exceptionResponse );
+    exceptionResponse->copyDataStructure( this );
 
-    exceptionResponse->exception = this->getException();
-
-    return exceptionResponse
+    return exceptionResponse;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ExceptionResponse::copy( ExceptionResponse* dest ) const {
+void ExceptionResponse::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    Response::copy( exceptionResponse );
+    // Copy the data of the base class or classes
+    Response::copyDataStructure( src );
 
-    dest->setException( this->getException() );
+    const ExceptionResponse* srcPtr = dynamic_cast<const ExceptionResponse*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ExceptionResponse::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setException( 
+        dynamic_cast<BrokerError*>( 
+            srcPtr->getException()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

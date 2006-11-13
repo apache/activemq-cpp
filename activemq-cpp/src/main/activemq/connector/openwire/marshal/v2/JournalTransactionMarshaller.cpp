@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,69 +46,60 @@ unsigned char JournalTransactionMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
     info->setTransactionId( dynamic_cast< TransactionId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setType( dataIn->readByte() );
     info->setWasPrepared( bs->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getTransactionId(), bs );
     bs->writeBoolean( info->getWasPrepared() );
 
     return rc + 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
     dataOut->write( info->getType() );
     bs->readBoolean();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     JournalTransaction* info = 
         dynamic_cast<JournalTransaction*>( dataStructure );
-   info->setTransactionId( dynamic_cast<TransactionId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setTransactionId( dynamic_cast< TransactionId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     info->setType( dataIn->readByte() );
     info->setWasPrepared( dataIn->readBoolean() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void JournalTransactionMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getTransactionId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getTransactionId(), dataOut );
     dataOut->write( info->getType() );
     dataOut->write( info->getWasPrepared() );
 }

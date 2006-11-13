@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/JournalTransaction.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -47,28 +49,34 @@ JournalTransaction::~JournalTransaction()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTransaction* JournalTransaction::clone() const {
+DataStructure* JournalTransaction::cloneDataStructure() const {
     JournalTransaction* journalTransaction = new JournalTransaction();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTransaction );
+    journalTransaction->copyDataStructure( this );
 
-    journalTransaction->transactionId = this->getTransactionId();
-    journalTransaction->type = this->getType()->clone();
-    journalTransaction->wasPrepared = this->getWasPrepared()->clone();
-
-    return journalTransaction
+    return journalTransaction;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTransaction::copy( JournalTransaction* dest ) const {
+void JournalTransaction::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTransaction );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setTransactionId( this->getTransactionId() );
-    dest->setType( this->getType()->clone() );
-    dest->setWasPrepared( this->getWasPrepared()->clone() );
+    const JournalTransaction* srcPtr = dynamic_cast<const JournalTransaction*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "JournalTransaction::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    this->setType( srcPtr->getType() );
+    this->setWasPrepared( srcPtr->getWasPrepared() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/KeepAliveInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -43,22 +45,29 @@ KeepAliveInfo::~KeepAliveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-KeepAliveInfo* KeepAliveInfo::clone() const {
+DataStructure* KeepAliveInfo::cloneDataStructure() const {
     KeepAliveInfo* keepAliveInfo = new KeepAliveInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( keepAliveInfo );
+    keepAliveInfo->copyDataStructure( this );
 
-
-    return keepAliveInfo
+    return keepAliveInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void KeepAliveInfo::copy( KeepAliveInfo* dest ) const {
+void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( keepAliveInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
+    const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "KeepAliveInfo::copyDataStructure - src is NULL or invalid" );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/TransactionInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -48,28 +50,36 @@ TransactionInfo::~TransactionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionInfo* TransactionInfo::clone() const {
+DataStructure* TransactionInfo::cloneDataStructure() const {
     TransactionInfo* transactionInfo = new TransactionInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( transactionInfo );
+    transactionInfo->copyDataStructure( this );
 
-    transactionInfo->connectionId = this->getConnectionId();
-    transactionInfo->transactionId = this->getTransactionId();
-    transactionInfo->type = this->getType()->clone();
-
-    return transactionInfo
+    return transactionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::copy( TransactionInfo* dest ) const {
+void TransactionInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( transactionInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setTransactionId( this->getTransactionId() );
-    dest->setType( this->getType()->clone() );
+    const TransactionInfo* srcPtr = dynamic_cast<const TransactionInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "TransactionInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    this->setTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    this->setType( srcPtr->getType() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConnectionInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -54,44 +56,42 @@ ConnectionInfo::~ConnectionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionInfo* ConnectionInfo::clone() const {
+DataStructure* ConnectionInfo::cloneDataStructure() const {
     ConnectionInfo* connectionInfo = new ConnectionInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( connectionInfo );
+    connectionInfo->copyDataStructure( this );
 
-    connectionInfo->connectionId = this->getConnectionId();
-    connectionInfo->clientId = this->getClientId();
-    connectionInfo->password = this->getPassword();
-    connectionInfo->userName = this->getUserName();
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        connectionInfo->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone();
-    }
-    connectionInfo->brokerMasterConnector = this->getBrokerMasterConnector()->clone();
-    connectionInfo->manageable = this->getManageable()->clone();
-    connectionInfo->clientMaster = this->getClientMaster()->clone();
-
-    return connectionInfo
+    return connectionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionInfo::copy( ConnectionInfo* dest ) const {
+void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( connectionInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setClientId( this->getClientId() );
-    dest->setPassword( this->getPassword() );
-    dest->setUserName( this->getUserName() );
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        dest->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone() );
+    const ConnectionInfo* srcPtr = dynamic_cast<const ConnectionInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConnectionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    dest->setBrokerMasterConnector( this->getBrokerMasterConnector()->clone() );
-    dest->setManageable( this->getManageable()->clone() );
-    dest->setClientMaster( this->getClientMaster()->clone() );
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    this->setClientId( srcPtr->getClientId() );
+    this->setPassword( srcPtr->getPassword() );
+    this->setUserName( srcPtr->getUserName() );
+    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
+        this->getBrokerPath().push_back( 
+            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+    }
+    this->setBrokerMasterConnector( srcPtr->getBrokerMasterConnector() );
+    this->setManageable( srcPtr->getManageable() );
+    this->setClientMaster( srcPtr->getClientMaster() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

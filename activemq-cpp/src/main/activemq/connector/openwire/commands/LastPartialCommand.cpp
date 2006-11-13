@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/LastPartialCommand.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -43,22 +45,29 @@ LastPartialCommand::~LastPartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LastPartialCommand* LastPartialCommand::clone() const {
+DataStructure* LastPartialCommand::cloneDataStructure() const {
     LastPartialCommand* lastPartialCommand = new LastPartialCommand();
 
     // Copy the data from the base class or classes
-    PartialCommand::copy( lastPartialCommand );
+    lastPartialCommand->copyDataStructure( this );
 
-
-    return lastPartialCommand
+    return lastPartialCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LastPartialCommand::copy( LastPartialCommand* dest ) const {
+void LastPartialCommand::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    PartialCommand::copy( lastPartialCommand );
+    // Copy the data of the base class or classes
+    PartialCommand::copyDataStructure( src );
 
+    const LastPartialCommand* srcPtr = dynamic_cast<const LastPartialCommand*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "LastPartialCommand::copyDataStructure - src is NULL or invalid" );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

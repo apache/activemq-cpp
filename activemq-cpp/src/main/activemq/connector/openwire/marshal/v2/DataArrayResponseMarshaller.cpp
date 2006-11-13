@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ unsigned char DataArrayResponseMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void DataArrayResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     DataArrayResponse* info =
@@ -54,20 +54,19 @@ void DataArrayResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Da
 
     if( bs->readBoolean() ) {
         short size = dataIn->readShort();
-        DataStructure* value = new DataStructure[size];
+        info->getData().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast< DataStructure* >(
-                tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+            info->getData().push_back( dynamic_cast< DataStructure* >(
+                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
         }
-        info->setData( value );
     }
     else {
-        info->setData( NULL );
+        info->getData().clear();
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int DataArrayResponseMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int DataArrayResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     DataArrayResponse* info =
         dynamic_cast<DataArrayResponse*>( dataStructure );
@@ -79,7 +78,7 @@ int DataArrayResponseMarshaller::tightMarshal1( OpenWireFormat& wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -89,27 +88,26 @@ void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat& wireFormat, Dat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void DataArrayResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     DataArrayResponse* info = 
         dynamic_cast<DataArrayResponse*>( dataStructure );
 
     if( dataIn->readBoolean() ) {
         short size = dataIn->readShort();
-        DataStructure* value = new DataStructure[size];
+        info->getData().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast<DataStructure* >(
-                looseUnmarshalNestedObject( wireFormat,dataIn ) );
+            info->getData().push_back( dynamic_cast<DataStructure* >(
+                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
         }
-        info->setData( value );
     }
     else {
-        info->setData( NULL );
+        info->getData().clear();
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DataArrayResponseMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void DataArrayResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     DataArrayResponse* info =
         dynamic_cast<DataArrayResponse*>( dataStructure );
     ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

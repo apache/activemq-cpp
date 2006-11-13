@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,30 +46,27 @@ unsigned char SubscriptionInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
-    info->setClientId( TightUnmarshalString( dataIn, bs ) );
+    info->setClientId( tightUnmarshalString( dataIn, bs ) );
     info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
-    info->setSelector( TightUnmarshalString( dataIn, bs ) );
-    info->setSubcriptionName( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    info->setSelector( tightUnmarshalString( dataIn, bs ) );
+    info->setSubcriptionName( tightUnmarshalString( dataIn, bs ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     rc += tightMarshalString1( info->getClientId(), bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
     rc += tightMarshalString1( info->getSelector(), bs );
     rc += tightMarshalString1( info->getSubcriptionName(), bs );
 
@@ -77,44 +74,38 @@ int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
     tightMarshalString2( info->getClientId(), dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
     tightMarshalString2( info->getSelector(), dataOut, bs );
     tightMarshalString2( info->getSubcriptionName(), dataOut, bs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     SubscriptionInfo* info = 
         dynamic_cast<SubscriptionInfo*>( dataStructure );
     info->setClientId( looseUnmarshalString( dataIn ) );
-   info->setDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setSelector( looseUnmarshalString( dataIn ) );
     info->setSubcriptionName( looseUnmarshalString( dataIn ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void SubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     looseMarshalString( info->getClientId(), dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
     looseMarshalString( info->getSelector(), dataOut );
     looseMarshalString( info->getSubcriptionName(), dataOut );
 }

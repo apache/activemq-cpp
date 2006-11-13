@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,14 +46,14 @@ unsigned char ConsumerControlMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
     info->setClose( bs->readBoolean() );
     info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setPrefetch( dataIn->readInt() );
     info->setFlush( bs->readBoolean() );
     info->setStart( bs->readBoolean() );
@@ -61,17 +61,14 @@ void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->isClose() );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getConsumerId(), bs );
     bs->writeBoolean( info->isFlush() );
     bs->writeBoolean( info->isStart() );
     bs->writeBoolean( info->isStop() );
@@ -80,17 +77,14 @@ int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
     bs->readBoolean();
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
     dataOut->write( info->getPrefetch() );
     bs->readBoolean();
     bs->readBoolean();
@@ -98,13 +92,13 @@ void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ConsumerControl* info = 
         dynamic_cast<ConsumerControl*>( dataStructure );
     info->setClose( dataIn->readBoolean() );
-   info->setConsumerId( dynamic_cast<ConsumerId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setConsumerId( dynamic_cast< ConsumerId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     info->setPrefetch( dataIn->readInt() );
     info->setFlush( dataIn->readBoolean() );
     info->setStart( dataIn->readBoolean() );
@@ -112,16 +106,13 @@ void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     dataOut->write( info->isClose() );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getConsumerId(), dataOut );
     dataOut->write( info->getPrefetch() );
     dataOut->write( info->isFlush() );
     dataOut->write( info->isStart() );

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/RemoveSubscriptionInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -47,28 +49,34 @@ RemoveSubscriptionInfo::~RemoveSubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveSubscriptionInfo* RemoveSubscriptionInfo::clone() const {
+DataStructure* RemoveSubscriptionInfo::cloneDataStructure() const {
     RemoveSubscriptionInfo* removeSubscriptionInfo = new RemoveSubscriptionInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( removeSubscriptionInfo );
+    removeSubscriptionInfo->copyDataStructure( this );
 
-    removeSubscriptionInfo->connectionId = this->getConnectionId();
-    removeSubscriptionInfo->subcriptionName = this->getSubcriptionName();
-    removeSubscriptionInfo->clientId = this->getClientId();
-
-    return removeSubscriptionInfo
+    return removeSubscriptionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::copy( RemoveSubscriptionInfo* dest ) const {
+void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( removeSubscriptionInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setSubcriptionName( this->getSubcriptionName() );
-    dest->setClientId( this->getClientId() );
+    const RemoveSubscriptionInfo* srcPtr = dynamic_cast<const RemoveSubscriptionInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    this->setSubcriptionName( srcPtr->getSubcriptionName() );
+    this->setClientId( srcPtr->getClientId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

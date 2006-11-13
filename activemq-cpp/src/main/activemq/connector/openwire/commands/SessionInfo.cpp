@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,24 +47,32 @@ SessionInfo::~SessionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionInfo* SessionInfo::clone() const {
+DataStructure* SessionInfo::cloneDataStructure() const {
     SessionInfo* sessionInfo = new SessionInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( sessionInfo );
+    sessionInfo->copyDataStructure( this );
 
-    sessionInfo->sessionId = this->getSessionId();
-
-    return sessionInfo
+    return sessionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SessionInfo::copy( SessionInfo* dest ) const {
+void SessionInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( sessionInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setSessionId( this->getSessionId() );
+    const SessionInfo* srcPtr = dynamic_cast<const SessionInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "SessionInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setSessionId( 
+        dynamic_cast<SessionId*>( 
+            srcPtr->getSessionId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
