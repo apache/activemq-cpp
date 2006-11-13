@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/RemoveInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -45,24 +47,32 @@ RemoveInfo::~RemoveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-RemoveInfo* RemoveInfo::clone() const {
+DataStructure* RemoveInfo::cloneDataStructure() const {
     RemoveInfo* removeInfo = new RemoveInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( removeInfo );
+    removeInfo->copyDataStructure( this );
 
-    removeInfo->objectId = this->getObjectId();
-
-    return removeInfo
+    return removeInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveInfo::copy( RemoveInfo* dest ) const {
+void RemoveInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( removeInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setObjectId( this->getObjectId() );
+    const RemoveInfo* srcPtr = dynamic_cast<const RemoveInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "RemoveInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setObjectId( 
+        dynamic_cast<DataStructure*>( 
+            srcPtr->getObjectId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

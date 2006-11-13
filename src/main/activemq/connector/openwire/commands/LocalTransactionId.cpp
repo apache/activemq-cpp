@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/LocalTransactionId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -46,26 +48,33 @@ LocalTransactionId::~LocalTransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalTransactionId* LocalTransactionId::clone() const {
+DataStructure* LocalTransactionId::cloneDataStructure() const {
     LocalTransactionId* localTransactionId = new LocalTransactionId();
 
     // Copy the data from the base class or classes
-    TransactionId::copy( localTransactionId );
+    localTransactionId->copyDataStructure( this );
 
-    localTransactionId->value = this->getValue()->clone();
-    localTransactionId->connectionId = this->getConnectionId();
-
-    return localTransactionId
+    return localTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LocalTransactionId::copy( LocalTransactionId* dest ) const {
+void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    TransactionId::copy( localTransactionId );
+    // Copy the data of the base class or classes
+    TransactionId::copyDataStructure( src );
 
-    dest->setValue( this->getValue()->clone() );
-    dest->setConnectionId( this->getConnectionId() );
+    const LocalTransactionId* srcPtr = dynamic_cast<const LocalTransactionId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "LocalTransactionId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setValue( srcPtr->getValue() );
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,16 +46,16 @@ unsigned char BrokerIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void BrokerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
-    info->setValue( TightUnmarshalString( dataIn, bs ) );
+    info->setValue( tightUnmarshalString( dataIn, bs ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int BrokerIdMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int BrokerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
@@ -67,7 +67,7 @@ int BrokerIdMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void BrokerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -77,7 +77,7 @@ void BrokerIdMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructur
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     BrokerId* info = 
         dynamic_cast<BrokerId*>( dataStructure );
@@ -85,7 +85,7 @@ void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void BrokerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

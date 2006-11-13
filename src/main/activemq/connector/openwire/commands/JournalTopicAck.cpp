@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/JournalTopicAck.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -52,34 +54,41 @@ JournalTopicAck::~JournalTopicAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTopicAck* JournalTopicAck::clone() const {
+DataStructure* JournalTopicAck::cloneDataStructure() const {
     JournalTopicAck* journalTopicAck = new JournalTopicAck();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTopicAck );
+    journalTopicAck->copyDataStructure( this );
 
-    journalTopicAck->destination = this->getDestination();
-    journalTopicAck->messageId = this->getMessageId();
-    journalTopicAck->messageSequenceId = this->getMessageSequenceId()->clone();
-    journalTopicAck->subscritionName = this->getSubscritionName();
-    journalTopicAck->clientId = this->getClientId();
-    journalTopicAck->transactionId = this->getTransactionId();
-
-    return journalTopicAck
+    return journalTopicAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::copy( JournalTopicAck* dest ) const {
+void JournalTopicAck::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTopicAck );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setDestination( this->getDestination() );
-    dest->setMessageId( this->getMessageId() );
-    dest->setMessageSequenceId( this->getMessageSequenceId()->clone() );
-    dest->setSubscritionName( this->getSubscritionName() );
-    dest->setClientId( this->getClientId() );
-    dest->setTransactionId( this->getTransactionId() );
+    const JournalTopicAck* srcPtr = dynamic_cast<const JournalTopicAck*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "JournalTopicAck::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setMessageId( 
+        dynamic_cast<MessageId*>( 
+            srcPtr->getMessageId()->cloneDataStructure() ) );
+    this->setMessageSequenceId( srcPtr->getMessageSequenceId() );
+    this->setSubscritionName( srcPtr->getSubscritionName() );
+    this->setClientId( srcPtr->getClientId() );
+    this->setTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getTransactionId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

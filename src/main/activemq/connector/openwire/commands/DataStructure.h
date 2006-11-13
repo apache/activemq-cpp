@@ -46,14 +46,14 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneCommand() const = 0;
+        virtual DataStructure* cloneDataStructure() const = 0;
 
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyCommand( const DataStructure* src ) = 0;
+        virtual void copyDataStructure( const DataStructure* src ) = 0;
 
     };
 

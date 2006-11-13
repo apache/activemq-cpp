@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/SubscriptionInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -48,30 +50,35 @@ SubscriptionInfo::~SubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SubscriptionInfo* SubscriptionInfo::clone() const {
+DataStructure* SubscriptionInfo::cloneDataStructure() const {
     SubscriptionInfo* subscriptionInfo = new SubscriptionInfo();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( subscriptionInfo );
+    subscriptionInfo->copyDataStructure( this );
 
-    subscriptionInfo->clientId = this->getClientId();
-    subscriptionInfo->destination = this->getDestination();
-    subscriptionInfo->selector = this->getSelector();
-    subscriptionInfo->subcriptionName = this->getSubcriptionName();
-
-    return subscriptionInfo
+    return subscriptionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfo::copy( SubscriptionInfo* dest ) const {
+void SubscriptionInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( subscriptionInfo );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setClientId( this->getClientId() );
-    dest->setDestination( this->getDestination() );
-    dest->setSelector( this->getSelector() );
-    dest->setSubcriptionName( this->getSubcriptionName() );
+    const SubscriptionInfo* srcPtr = dynamic_cast<const SubscriptionInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "SubscriptionInfo::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setClientId( srcPtr->getClientId() );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setSelector( srcPtr->getSelector() );
+    this->setSubcriptionName( srcPtr->getSubcriptionName() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

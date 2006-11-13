@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/MessageId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -47,28 +49,34 @@ MessageId::~MessageId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId* MessageId::clone() const {
+DataStructure* MessageId::cloneDataStructure() const {
     MessageId* messageId = new MessageId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( messageId );
+    messageId->copyDataStructure( this );
 
-    messageId->producerId = this->getProducerId();
-    messageId->producerSequenceId = this->getProducerSequenceId()->clone();
-    messageId->brokerSequenceId = this->getBrokerSequenceId()->clone();
-
-    return messageId
+    return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageId::copy( MessageId* dest ) const {
+void MessageId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( messageId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setProducerId( this->getProducerId() );
-    dest->setProducerSequenceId( this->getProducerSequenceId()->clone() );
-    dest->setBrokerSequenceId( this->getBrokerSequenceId()->clone() );
+    const MessageId* srcPtr = dynamic_cast<const MessageId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "MessageId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setProducerId( 
+        dynamic_cast<ProducerId*>( 
+            srcPtr->getProducerId()->cloneDataStructure() ) );
+    this->setProducerSequenceId( srcPtr->getProducerSequenceId() );
+    this->setBrokerSequenceId( srcPtr->getBrokerSequenceId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ unsigned char ActiveMQMessageMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void ActiveMQMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    MessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ActiveMQMessage* info =
@@ -58,7 +58,7 @@ void ActiveMQMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ActiveMQMessageMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int ActiveMQMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     info->beforeMarshall( wireFormat );
     int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
@@ -67,7 +67,7 @@ int ActiveMQMessageMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void ActiveMQMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     MessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -77,7 +77,7 @@ void ActiveMQMessageMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessageMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void ActiveMQMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ActiveMQMessage* info = 
         dynamic_cast<ActiveMQMessage*>( dataStructure );
@@ -86,7 +86,7 @@ void ActiveMQMessageMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessageMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void ActiveMQMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
     info->beforeMarshall( wireFormat );

@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ unsigned char IntegerResponseMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void IntegerResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void IntegerResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     IntegerResponse* info =
@@ -55,7 +55,7 @@ void IntegerResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int IntegerResponseMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int IntegerResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     IntegerResponse* info =
         dynamic_cast<IntegerResponse*>( dataStructure );
@@ -66,7 +66,7 @@ int IntegerResponseMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -76,7 +76,7 @@ void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void IntegerResponseMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void IntegerResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     IntegerResponse* info = 
         dynamic_cast<IntegerResponse*>( dataStructure );
@@ -84,7 +84,7 @@ void IntegerResponseMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void IntegerResponseMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void IntegerResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     IntegerResponse* info =
         dynamic_cast<IntegerResponse*>( dataStructure );
     ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

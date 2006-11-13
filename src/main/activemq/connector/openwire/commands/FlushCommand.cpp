@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/FlushCommand.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -43,22 +45,29 @@ FlushCommand::~FlushCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-FlushCommand* FlushCommand::clone() const {
+DataStructure* FlushCommand::cloneDataStructure() const {
     FlushCommand* flushCommand = new FlushCommand();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( flushCommand );
+    flushCommand->copyDataStructure( this );
 
-
-    return flushCommand
+    return flushCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FlushCommand::copy( FlushCommand* dest ) const {
+void FlushCommand::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( flushCommand );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
+    const FlushCommand* srcPtr = dynamic_cast<const FlushCommand*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "FlushCommand::copyDataStructure - src is NULL or invalid" );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ProducerInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -51,36 +53,40 @@ ProducerInfo::~ProducerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerInfo* ProducerInfo::clone() const {
+DataStructure* ProducerInfo::cloneDataStructure() const {
     ProducerInfo* producerInfo = new ProducerInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( producerInfo );
+    producerInfo->copyDataStructure( this );
 
-    producerInfo->producerId = this->getProducerId();
-    producerInfo->destination = this->getDestination();
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        producerInfo->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone();
-    }
-    producerInfo->dispatchAsync = this->getDispatchAsync()->clone();
-
-    return producerInfo
+    return producerInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerInfo::copy( ProducerInfo* dest ) const {
+void ProducerInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( producerInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setProducerId( this->getProducerId() );
-    dest->setDestination( this->getDestination() );
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        dest->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone() );
+    const ProducerInfo* srcPtr = dynamic_cast<const ProducerInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ProducerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    dest->setDispatchAsync( this->getDispatchAsync()->clone() );
+    this->setProducerId( 
+        dynamic_cast<ProducerId*>( 
+            srcPtr->getProducerId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
+        this->getBrokerPath().push_back( 
+            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+    }
+    this->setDispatchAsync( srcPtr->getDispatchAsync() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConsumerInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -65,62 +67,55 @@ ConsumerInfo::~ConsumerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo* ConsumerInfo::clone() const {
+DataStructure* ConsumerInfo::cloneDataStructure() const {
     ConsumerInfo* consumerInfo = new ConsumerInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( consumerInfo );
+    consumerInfo->copyDataStructure( this );
 
-    consumerInfo->consumerId = this->getConsumerId();
-    consumerInfo->browser = this->getBrowser()->clone();
-    consumerInfo->destination = this->getDestination();
-    consumerInfo->prefetchSize = this->getPrefetchSize()->clone();
-    consumerInfo->maximumPendingMessageLimit = this->getMaximumPendingMessageLimit()->clone();
-    consumerInfo->dispatchAsync = this->getDispatchAsync()->clone();
-    consumerInfo->selector = this->getSelector();
-    consumerInfo->subscriptionName = this->getSubscriptionName();
-    consumerInfo->noLocal = this->getNoLocal()->clone();
-    consumerInfo->exclusive = this->getExclusive()->clone();
-    consumerInfo->retroactive = this->getRetroactive()->clone();
-    consumerInfo->priority = this->getPriority()->clone();
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        consumerInfo->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone();
-    }
-    consumerInfo->additionalPredicate = this->getAdditionalPredicate();
-    consumerInfo->networkSubscription = this->getNetworkSubscription()->clone();
-    consumerInfo->optimizedAcknowledge = this->getOptimizedAcknowledge()->clone();
-    consumerInfo->noRangeAcks = this->getNoRangeAcks()->clone();
-
-    return consumerInfo
+    return consumerInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::copy( ConsumerInfo* dest ) const {
+void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( consumerInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setBrowser( this->getBrowser()->clone() );
-    dest->setDestination( this->getDestination() );
-    dest->setPrefetchSize( this->getPrefetchSize()->clone() );
-    dest->setMaximumPendingMessageLimit( this->getMaximumPendingMessageLimit()->clone() );
-    dest->setDispatchAsync( this->getDispatchAsync()->clone() );
-    dest->setSelector( this->getSelector() );
-    dest->setSubscriptionName( this->getSubscriptionName() );
-    dest->setNoLocal( this->getNoLocal()->clone() );
-    dest->setExclusive( this->getExclusive()->clone() );
-    dest->setRetroactive( this->getRetroactive()->clone() );
-    dest->setPriority( this->getPriority()->clone() );
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        dest->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone() );
+    const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConsumerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    dest->setAdditionalPredicate( this->getAdditionalPredicate() );
-    dest->setNetworkSubscription( this->getNetworkSubscription()->clone() );
-    dest->setOptimizedAcknowledge( this->getOptimizedAcknowledge()->clone() );
-    dest->setNoRangeAcks( this->getNoRangeAcks()->clone() );
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setBrowser( srcPtr->getBrowser() );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setPrefetchSize( srcPtr->getPrefetchSize() );
+    this->setMaximumPendingMessageLimit( srcPtr->getMaximumPendingMessageLimit() );
+    this->setDispatchAsync( srcPtr->getDispatchAsync() );
+    this->setSelector( srcPtr->getSelector() );
+    this->setSubscriptionName( srcPtr->getSubscriptionName() );
+    this->setNoLocal( srcPtr->getNoLocal() );
+    this->setExclusive( srcPtr->getExclusive() );
+    this->setRetroactive( srcPtr->getRetroactive() );
+    this->setPriority( srcPtr->getPriority() );
+    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
+        this->getBrokerPath().push_back( 
+            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+    }
+    this->setAdditionalPredicate( 
+        dynamic_cast<BooleanExpression*>( 
+            srcPtr->getAdditionalPredicate()->cloneDataStructure() ) );
+    this->setNetworkSubscription( srcPtr->getNetworkSubscription() );
+    this->setOptimizedAcknowledge( srcPtr->getOptimizedAcknowledge() );
+    this->setNoRangeAcks( srcPtr->getNoRangeAcks() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

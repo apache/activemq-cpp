@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/Message.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -78,80 +80,76 @@ Message::~Message()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Message* Message::clone() const {
+DataStructure* Message::cloneDataStructure() const {
     Message* message = new Message();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( message );
+    message->copyDataStructure( this );
 
-    message->producerId = this->getProducerId();
-    message->destination = this->getDestination();
-    message->transactionId = this->getTransactionId();
-    message->originalDestination = this->getOriginalDestination();
-    message->messageId = this->getMessageId();
-    message->originalTransactionId = this->getOriginalTransactionId();
-    message->groupID = this->getGroupID();
-    message->groupSequence = this->getGroupSequence()->clone();
-    message->correlationId = this->getCorrelationId();
-    message->persistent = this->getPersistent()->clone();
-    message->expiration = this->getExpiration()->clone();
-    message->priority = this->getPriority()->clone();
-    message->replyTo = this->getReplyTo();
-    message->timestamp = this->getTimestamp()->clone();
-    message->type = this->getType();
-    message->content = this->getContent()->clone();
-    message->marshalledProperties = this->getMarshalledProperties()->clone();
-    message->dataStructure = this->getDataStructure();
-    message->targetConsumerId = this->getTargetConsumerId();
-    message->compressed = this->getCompressed()->clone();
-    message->redeliveryCounter = this->getRedeliveryCounter()->clone();
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        message->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone();
-    }
-    message->arrival = this->getArrival()->clone();
-    message->userID = this->getUserID();
-    message->recievedByDFBridge = this->getRecievedByDFBridge()->clone();
-    message->droppable = this->getDroppable()->clone();
-
-    return message
+    return message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::copy( Message* dest ) const {
+void Message::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( message );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setProducerId( this->getProducerId() );
-    dest->setDestination( this->getDestination() );
-    dest->setTransactionId( this->getTransactionId() );
-    dest->setOriginalDestination( this->getOriginalDestination() );
-    dest->setMessageId( this->getMessageId() );
-    dest->setOriginalTransactionId( this->getOriginalTransactionId() );
-    dest->setGroupID( this->getGroupID() );
-    dest->setGroupSequence( this->getGroupSequence()->clone() );
-    dest->setCorrelationId( this->getCorrelationId() );
-    dest->setPersistent( this->getPersistent()->clone() );
-    dest->setExpiration( this->getExpiration()->clone() );
-    dest->setPriority( this->getPriority()->clone() );
-    dest->setReplyTo( this->getReplyTo() );
-    dest->setTimestamp( this->getTimestamp()->clone() );
-    dest->setType( this->getType() );
-    dest->setContent( this->getContent()->clone() );
-    dest->setMarshalledProperties( this->getMarshalledProperties()->clone() );
-    dest->setDataStructure( this->getDataStructure() );
-    dest->setTargetConsumerId( this->getTargetConsumerId() );
-    dest->setCompressed( this->getCompressed()->clone() );
-    dest->setRedeliveryCounter( this->getRedeliveryCounter()->clone() );
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        dest->getBrokerPath().push_back( 
-            this->brokerPath[ibrokerPath]->clone() );
+    const Message* srcPtr = dynamic_cast<const Message*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "Message::copyDataStructure - src is NULL or invalid" );
     }
-    dest->setArrival( this->getArrival()->clone() );
-    dest->setUserID( this->getUserID() );
-    dest->setRecievedByDFBridge( this->getRecievedByDFBridge()->clone() );
-    dest->setDroppable( this->getDroppable()->clone() );
+    this->setProducerId( 
+        dynamic_cast<ProducerId*>( 
+            srcPtr->getProducerId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    this->setOriginalDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getOriginalDestination()->cloneDataStructure() ) );
+    this->setMessageId( 
+        dynamic_cast<MessageId*>( 
+            srcPtr->getMessageId()->cloneDataStructure() ) );
+    this->setOriginalTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getOriginalTransactionId()->cloneDataStructure() ) );
+    this->setGroupID( srcPtr->getGroupID() );
+    this->setGroupSequence( srcPtr->getGroupSequence() );
+    this->setCorrelationId( srcPtr->getCorrelationId() );
+    this->setPersistent( srcPtr->getPersistent() );
+    this->setExpiration( srcPtr->getExpiration() );
+    this->setPriority( srcPtr->getPriority() );
+    this->setReplyTo( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getReplyTo()->cloneDataStructure() ) );
+    this->setTimestamp( srcPtr->getTimestamp() );
+    this->setType( srcPtr->getType() );
+    this->setContent( srcPtr->getContent() );
+    this->setMarshalledProperties( srcPtr->getMarshalledProperties() );
+    this->setDataStructure( 
+        dynamic_cast<DataStructure*>( 
+            srcPtr->getDataStructure()->cloneDataStructure() ) );
+    this->setTargetConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
+    this->setCompressed( srcPtr->getCompressed() );
+    this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
+    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
+        this->getBrokerPath().push_back( 
+            srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() );
+    }
+    this->setArrival( srcPtr->getArrival() );
+    this->setUserID( srcPtr->getUserID() );
+    this->setRecievedByDFBridge( srcPtr->getRecievedByDFBridge() );
+    this->setDroppable( srcPtr->getDroppable() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

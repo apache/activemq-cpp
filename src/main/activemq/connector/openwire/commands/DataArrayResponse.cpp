@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/DataArrayResponse.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -46,29 +48,32 @@ DataArrayResponse::~DataArrayResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataArrayResponse* DataArrayResponse::clone() const {
+DataStructure* DataArrayResponse::cloneDataStructure() const {
     DataArrayResponse* dataArrayResponse = new DataArrayResponse();
 
     // Copy the data from the base class or classes
-    Response::copy( dataArrayResponse );
+    dataArrayResponse->copyDataStructure( this );
 
-    for( size_t idata = 0; idata < data.size(); ++idata ) {
-        dataArrayResponse->getData().push_back( 
-            this->data[idata]->clone();
-    }
-
-    return dataArrayResponse
+    return dataArrayResponse;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataArrayResponse::copy( DataArrayResponse* dest ) const {
+void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    Response::copy( dataArrayResponse );
+    // Copy the data of the base class or classes
+    Response::copyDataStructure( src );
 
-    for( size_t idata = 0; idata < data.size(); ++idata ) {
-        dest->getData().push_back( 
-            this->data[idata]->clone() );
+    const DataArrayResponse* srcPtr = dynamic_cast<const DataArrayResponse*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "DataArrayResponse::copyDataStructure - src is NULL or invalid" );
+    }
+    for( size_t idata = 0; idata < srcPtr->getData().size(); ++idata ) {
+        this->getData().push_back( 
+            srcPtr->getData()[idata]->cloneDataStructure() );
     }
 }
 

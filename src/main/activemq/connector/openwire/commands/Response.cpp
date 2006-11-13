@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/Response.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,24 +46,30 @@ Response::~Response()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* Response::clone() const {
+DataStructure* Response::cloneDataStructure() const {
     Response* response = new Response();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( response );
+    response->copyDataStructure( this );
 
-    response->correlationId = this->getCorrelationId()->clone();
-
-    return response
+    return response;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Response::copy( Response* dest ) const {
+void Response::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( response );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setCorrelationId( this->getCorrelationId()->clone() );
+    const Response* srcPtr = dynamic_cast<const Response*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "Response::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setCorrelationId( srcPtr->getCorrelationId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

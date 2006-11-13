@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConsumerId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -46,28 +48,32 @@ ConsumerId::~ConsumerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId* ConsumerId::clone() const {
+DataStructure* ConsumerId::cloneDataStructure() const {
     ConsumerId* consumerId = new ConsumerId();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( consumerId );
+    consumerId->copyDataStructure( this );
 
-    consumerId->connectionId = this->getConnectionId();
-    consumerId->sessionId = this->getSessionId()->clone();
-    consumerId->value = this->getValue()->clone();
-
-    return consumerId
+    return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerId::copy( ConsumerId* dest ) const {
+void ConsumerId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( consumerId );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setConnectionId( this->getConnectionId() );
-    dest->setSessionId( this->getSessionId()->clone() );
-    dest->setValue( this->getValue()->clone() );
+    const ConsumerId* srcPtr = dynamic_cast<const ConsumerId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConsumerId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConnectionId( srcPtr->getConnectionId() );
+    this->setSessionId( srcPtr->getSessionId() );
+    this->setValue( srcPtr->getValue() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

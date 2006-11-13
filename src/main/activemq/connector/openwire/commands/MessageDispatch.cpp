@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -50,30 +52,39 @@ MessageDispatch::~MessageDispatch()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageDispatch* MessageDispatch::clone() const {
+DataStructure* MessageDispatch::cloneDataStructure() const {
     MessageDispatch* messageDispatch = new MessageDispatch();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( messageDispatch );
+    messageDispatch->copyDataStructure( this );
 
-    messageDispatch->consumerId = this->getConsumerId();
-    messageDispatch->destination = this->getDestination();
-    messageDispatch->message = this->getMessage();
-    messageDispatch->redeliveryCounter = this->getRedeliveryCounter()->clone();
-
-    return messageDispatch
+    return messageDispatch;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatch::copy( MessageDispatch* dest ) const {
+void MessageDispatch::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( messageDispatch );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setDestination( this->getDestination() );
-    dest->setMessage( this->getMessage() );
-    dest->setRedeliveryCounter( this->getRedeliveryCounter()->clone() );
+    const MessageDispatch* srcPtr = dynamic_cast<const MessageDispatch*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "MessageDispatch::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setMessage( 
+        dynamic_cast<Message*>( 
+            srcPtr->getMessage()->cloneDataStructure() ) );
+    this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

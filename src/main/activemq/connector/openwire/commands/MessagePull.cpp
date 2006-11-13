@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/MessagePull.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -48,28 +50,36 @@ MessagePull::~MessagePull()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessagePull* MessagePull::clone() const {
+DataStructure* MessagePull::cloneDataStructure() const {
     MessagePull* messagePull = new MessagePull();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( messagePull );
+    messagePull->copyDataStructure( this );
 
-    messagePull->consumerId = this->getConsumerId();
-    messagePull->destination = this->getDestination();
-    messagePull->timeout = this->getTimeout()->clone();
-
-    return messagePull
+    return messagePull;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePull::copy( MessagePull* dest ) const {
+void MessagePull::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( messagePull );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setDestination( this->getDestination() );
-    dest->setTimeout( this->getTimeout()->clone() );
+    const MessagePull* srcPtr = dynamic_cast<const MessagePull*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "MessagePull::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setTimeout( srcPtr->getTimeout() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

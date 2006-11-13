@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -56,48 +58,44 @@ BrokerInfo::~BrokerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerInfo* BrokerInfo::clone() const {
+DataStructure* BrokerInfo::cloneDataStructure() const {
     BrokerInfo* brokerInfo = new BrokerInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( brokerInfo );
+    brokerInfo->copyDataStructure( this );
 
-    brokerInfo->brokerId = this->getBrokerId();
-    brokerInfo->brokerURL = this->getBrokerURL();
-    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < peerBrokerInfos.size(); ++ipeerBrokerInfos ) {
-        brokerInfo->getPeerBrokerInfos().push_back( 
-            this->peerBrokerInfos[ipeerBrokerInfos]->clone();
-    }
-    brokerInfo->brokerName = this->getBrokerName();
-    brokerInfo->slaveBroker = this->getSlaveBroker()->clone();
-    brokerInfo->masterBroker = this->getMasterBroker()->clone();
-    brokerInfo->faultTolerantConfiguration = this->getFaultTolerantConfiguration()->clone();
-    brokerInfo->duplexConnection = this->getDuplexConnection()->clone();
-    brokerInfo->networkConnection = this->getNetworkConnection()->clone();
-    brokerInfo->connectionId = this->getConnectionId()->clone();
-
-    return brokerInfo
+    return brokerInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BrokerInfo::copy( BrokerInfo* dest ) const {
+void BrokerInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( brokerInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setBrokerId( this->getBrokerId() );
-    dest->setBrokerURL( this->getBrokerURL() );
-    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < peerBrokerInfos.size(); ++ipeerBrokerInfos ) {
-        dest->getPeerBrokerInfos().push_back( 
-            this->peerBrokerInfos[ipeerBrokerInfos]->clone() );
+    const BrokerInfo* srcPtr = dynamic_cast<const BrokerInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "BrokerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    dest->setBrokerName( this->getBrokerName() );
-    dest->setSlaveBroker( this->getSlaveBroker()->clone() );
-    dest->setMasterBroker( this->getMasterBroker()->clone() );
-    dest->setFaultTolerantConfiguration( this->getFaultTolerantConfiguration()->clone() );
-    dest->setDuplexConnection( this->getDuplexConnection()->clone() );
-    dest->setNetworkConnection( this->getNetworkConnection()->clone() );
-    dest->setConnectionId( this->getConnectionId()->clone() );
+    this->setBrokerId( 
+        dynamic_cast<BrokerId*>( 
+            srcPtr->getBrokerId()->cloneDataStructure() ) );
+    this->setBrokerURL( srcPtr->getBrokerURL() );
+    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < srcPtr->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
+        this->getPeerBrokerInfos().push_back( 
+            srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() );
+    }
+    this->setBrokerName( srcPtr->getBrokerName() );
+    this->setSlaveBroker( srcPtr->getSlaveBroker() );
+    this->setMasterBroker( srcPtr->getMasterBroker() );
+    this->setFaultTolerantConfiguration( srcPtr->getFaultTolerantConfiguration() );
+    this->setDuplexConnection( srcPtr->getDuplexConnection() );
+    this->setNetworkConnection( srcPtr->getNetworkConnection() );
+    this->setConnectionId( srcPtr->getConnectionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/MessageAck.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -55,36 +57,46 @@ MessageAck::~MessageAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck* MessageAck::clone() const {
+DataStructure* MessageAck::cloneDataStructure() const {
     MessageAck* messageAck = new MessageAck();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( messageAck );
+    messageAck->copyDataStructure( this );
 
-    messageAck->destination = this->getDestination();
-    messageAck->transactionId = this->getTransactionId();
-    messageAck->consumerId = this->getConsumerId();
-    messageAck->ackType = this->getAckType()->clone();
-    messageAck->firstMessageId = this->getFirstMessageId();
-    messageAck->lastMessageId = this->getLastMessageId();
-    messageAck->messageCount = this->getMessageCount()->clone();
-
-    return messageAck
+    return messageAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::copy( MessageAck* dest ) const {
+void MessageAck::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( messageAck );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setDestination( this->getDestination() );
-    dest->setTransactionId( this->getTransactionId() );
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setAckType( this->getAckType()->clone() );
-    dest->setFirstMessageId( this->getFirstMessageId() );
-    dest->setLastMessageId( this->getLastMessageId() );
-    dest->setMessageCount( this->getMessageCount()->clone() );
+    const MessageAck* srcPtr = dynamic_cast<const MessageAck*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "MessageAck::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setTransactionId( 
+        dynamic_cast<TransactionId*>( 
+            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setAckType( srcPtr->getAckType() );
+    this->setFirstMessageId( 
+        dynamic_cast<MessageId*>( 
+            srcPtr->getFirstMessageId()->cloneDataStructure() ) );
+    this->setLastMessageId( 
+        dynamic_cast<MessageId*>( 
+            srcPtr->getLastMessageId()->cloneDataStructure() ) );
+    this->setMessageCount( srcPtr->getMessageCount() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

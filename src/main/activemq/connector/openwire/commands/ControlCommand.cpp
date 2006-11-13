@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ControlCommand.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,24 +46,30 @@ ControlCommand::~ControlCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ControlCommand* ControlCommand::clone() const {
+DataStructure* ControlCommand::cloneDataStructure() const {
     ControlCommand* controlCommand = new ControlCommand();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( controlCommand );
+    controlCommand->copyDataStructure( this );
 
-    controlCommand->command = this->getCommand();
-
-    return controlCommand
+    return controlCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ControlCommand::copy( ControlCommand* dest ) const {
+void ControlCommand::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( controlCommand );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setCommand( this->getCommand() );
+    const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ControlCommand::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setCommand( srcPtr->getCommand() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

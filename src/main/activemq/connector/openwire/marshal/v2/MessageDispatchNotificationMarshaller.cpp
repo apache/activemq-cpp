@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,98 +46,71 @@ unsigned char MessageDispatchNotificationMarshaller::getDataStructureType() cons
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
     info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
     info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
-    info->setDeliverySequenceId( TightUnmarshalLong( wireFormat, dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    info->setDeliverySequenceId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
     info->setMessageId( dynamic_cast< MessageId* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
     rc += tightMarshalLong1( wireFormat, info->getDeliverySequenceId(), bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getMessageId(), bs );
 
     return rc + 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
     tightMarshalLong2( wireFormat, info->getDeliverySequenceId(), dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getMessageId(), dataOut, bs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     MessageDispatchNotification* info = 
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
-   info->setConsumerId( dynamic_cast<ConsumerId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-   info->setDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setConsumerId( dynamic_cast< ConsumerId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setDeliverySequenceId( looseUnmarshalLong( wireFormat, dataIn ) );
-   info->setMessageId( dynamic_cast<MessageId* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setMessageId( dynamic_cast< MessageId* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getConsumerId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
+    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
     looseMarshalLong( wireFormat, info->getDeliverySequenceId(), dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageId() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getMessageId(), dataOut );
 }
 

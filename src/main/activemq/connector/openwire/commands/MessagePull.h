@@ -73,14 +73,14 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual MessagePull* clone() const;
+        virtual DataStructure* cloneDataStructure() const;
 
         /**
-         * Copy the contents of this object and place them into the
-         * instance of this object type that was passed in.
-         * @return dest - Destination Object
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
          */
-        virtual void clone( MessagePull* dest ) const;
+        virtual void copyDataStructure( const DataStructure* src );
 
         virtual const ConsumerId* getConsumerId() const;
         virtual ConsumerId* getConsumerId();

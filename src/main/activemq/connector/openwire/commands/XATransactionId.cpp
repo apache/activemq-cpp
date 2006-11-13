@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/XATransactionId.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,28 +46,32 @@ XATransactionId::~XATransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-XATransactionId* XATransactionId::clone() const {
+DataStructure* XATransactionId::cloneDataStructure() const {
     XATransactionId* xATransactionId = new XATransactionId();
 
     // Copy the data from the base class or classes
-    TransactionId::copy( xATransactionId );
+    xATransactionId->copyDataStructure( this );
 
-    xATransactionId->formatId = this->getFormatId()->clone();
-    xATransactionId->globalTransactionId = this->getGlobalTransactionId()->clone();
-    xATransactionId->branchQualifier = this->getBranchQualifier()->clone();
-
-    return xATransactionId
+    return xATransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::copy( XATransactionId* dest ) const {
+void XATransactionId::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    TransactionId::copy( xATransactionId );
+    // Copy the data of the base class or classes
+    TransactionId::copyDataStructure( src );
 
-    dest->setFormatId( this->getFormatId()->clone() );
-    dest->setGlobalTransactionId( this->getGlobalTransactionId()->clone() );
-    dest->setBranchQualifier( this->getBranchQualifier()->clone() );
+    const XATransactionId* srcPtr = dynamic_cast<const XATransactionId*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "XATransactionId::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setFormatId( srcPtr->getFormatId() );
+    this->setGlobalTransactionId( srcPtr->getGlobalTransactionId() );
+    this->setBranchQualifier( srcPtr->getBranchQualifier() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

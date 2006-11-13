@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -31,6 +33,25 @@ ActiveMQDestination::ActiveMQDestination()
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::~ActiveMQDestination()
 {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
+
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
+
+    const ActiveMQDestination* srcPtr = 
+        dynamic_cast<const ActiveMQDestination*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "BrokerId::copyDataStructure - src is NULL or invalid" );
+    }
+    
+    this->setPhysicalName( srcPtr->getPhysicalName() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +71,7 @@ std::string& ActiveMQDestination::getPhysicalName() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQDestination::setPhysicalName(const std::string& physicalName ) {
+void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
     this->physicalName = physicalName;
 }
 

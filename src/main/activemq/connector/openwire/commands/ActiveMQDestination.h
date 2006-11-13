@@ -23,6 +23,8 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/connector/openwire/commands/BaseDataStructure.h>
+
 #include <vector>
 #include <string>
 
@@ -31,7 +33,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQDestination
+    class ActiveMQDestination : public BaseDataStructure
     {
     protected:
 
@@ -45,6 +47,13 @@ namespace commands{
 
         ActiveMQDestination();
         virtual ~ActiveMQDestination();
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyCommand( const DataStructure* src );
 
         virtual unsigned char getDataStructureType() const;
         virtual const std::string& getPhysicalName() const;

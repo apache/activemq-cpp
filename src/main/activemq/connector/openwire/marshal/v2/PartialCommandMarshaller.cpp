@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ unsigned char PartialCommandMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PartialCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void PartialCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     PartialCommand* info =
@@ -56,7 +56,7 @@ void PartialCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int PartialCommandMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int PartialCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     PartialCommand* info =
         dynamic_cast<PartialCommand*>( dataStructure );
@@ -69,7 +69,7 @@ int PartialCommandMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PartialCommandMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void PartialCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -83,7 +83,7 @@ void PartialCommandMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PartialCommandMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void PartialCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     PartialCommand* info = 
         dynamic_cast<PartialCommand*>( dataStructure );
@@ -92,7 +92,7 @@ void PartialCommandMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PartialCommandMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void PartialCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     PartialCommand* info =
         dynamic_cast<PartialCommand*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

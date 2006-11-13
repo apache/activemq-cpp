@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,47 +46,43 @@ unsigned char BrokerInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void BrokerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     BrokerInfo* info =
         dynamic_cast<BrokerInfo*>( dataStructure );
     info->setBrokerId( dynamic_cast< BrokerId* >(
-        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );
-    info->setBrokerURL( TightUnmarshalString( dataIn, bs ) );
+        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    info->setBrokerURL( tightUnmarshalString( dataIn, bs ) );
 
     if( bs->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerInfo* value = new BrokerInfo[size];
+        info->getPeerBrokerInfos().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast< BrokerInfo* >(
-                tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+            info->getPeerBrokerInfos().push_back( dynamic_cast< BrokerInfo* >(
+                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
         }
-        info->setPeerBrokerInfos( value );
     }
     else {
-        info->setPeerBrokerInfos( NULL );
+        info->getPeerBrokerInfos().clear();
     }
-    info->setBrokerName( TightUnmarshalString( dataIn, bs ) );
+    info->setBrokerName( tightUnmarshalString( dataIn, bs ) );
     info->setSlaveBroker( bs->readBoolean() );
     info->setMasterBroker( bs->readBoolean() );
     info->setFaultTolerantConfiguration( bs->readBoolean() );
     info->setDuplexConnection( bs->readBoolean() );
     info->setNetworkConnection( bs->readBoolean() );
-    info->setConnectionId( TightUnmarshalLong( wireFormat, dataIn, bs ) );
+    info->setConnectionId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     BrokerInfo* info =
         dynamic_cast<BrokerInfo*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getBrokerId() );
-
-    rc += tightMarshalCachedObject1( wireFormat, data, bs );
+    rc += tightMarshalCachedObject1( wireFormat, info->getBrokerId(), bs );
     rc += tightMarshalString1( info->getBrokerURL(), bs );
     rc += tightMarshalObjectArray1( wireFormat, info->getPeerBrokerInfos(), bs );
     rc += tightMarshalString1( info->getBrokerName(), bs );
@@ -101,16 +97,13 @@ int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     BrokerInfo* info =
         dynamic_cast<BrokerInfo*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getBrokerId() );
-
-    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalCachedObject2( wireFormat, info->getBrokerId(), dataOut, bs );
     tightMarshalString2( info->getBrokerURL(), dataOut, bs );
     tightMarshalObjectArray2( wireFormat, info->getPeerBrokerInfos(), dataOut, bs );
     tightMarshalString2( info->getBrokerName(), dataOut, bs );
@@ -123,25 +116,24 @@ void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStruct
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     BrokerInfo* info = 
         dynamic_cast<BrokerInfo*>( dataStructure );
-   info->setBrokerId( dynamic_cast<BrokerId* >( 
-       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    info->setBrokerId( dynamic_cast< BrokerId* >( 
+        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
     info->setBrokerURL( looseUnmarshalString( dataIn ) );
 
     if( dataIn->readBoolean() ) {
         short size = dataIn->readShort();
-        BrokerInfo* value = new BrokerInfo[size];
+        info->getPeerBrokerInfos().reserve( size );
         for( int i = 0; i < size; i++ ) {
-            value[i] = dynamic_cast<BrokerInfo* >(
-                looseUnmarshalNestedObject( wireFormat,dataIn ) );
+            info->getPeerBrokerInfos().push_back( dynamic_cast<BrokerInfo* >(
+                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
         }
-        info->setPeerBrokerInfos( value );
     }
     else {
-        info->setPeerBrokerInfos( NULL );
+        info->getPeerBrokerInfos().clear();
     }
     info->setBrokerName( looseUnmarshalString( dataIn ) );
     info->setSlaveBroker( dataIn->readBoolean() );
@@ -153,15 +145,12 @@ void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerInfoMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void BrokerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     BrokerInfo* info =
         dynamic_cast<BrokerInfo*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getBrokerId() );
-
-    looseMarshalCachedObject( wireFormat, data, dataOut );
+    looseMarshalCachedObject( wireFormat, info->getBrokerId(), dataOut );
     looseMarshalString( info->getBrokerURL(), dataOut );
     looseMarshalObjectArray( wireFormat, info->getPeerBrokerInfos(), dataOut );
     looseMarshalString( info->getBrokerName(), dataOut );

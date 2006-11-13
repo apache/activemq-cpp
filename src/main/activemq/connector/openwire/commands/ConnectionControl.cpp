@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConnectionControl.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -48,32 +50,34 @@ ConnectionControl::~ConnectionControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionControl* ConnectionControl::clone() const {
+DataStructure* ConnectionControl::cloneDataStructure() const {
     ConnectionControl* connectionControl = new ConnectionControl();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( connectionControl );
+    connectionControl->copyDataStructure( this );
 
-    connectionControl->close = this->getClose()->clone();
-    connectionControl->exit = this->getExit()->clone();
-    connectionControl->faultTolerant = this->getFaultTolerant()->clone();
-    connectionControl->resume = this->getResume()->clone();
-    connectionControl->suspend = this->getSuspend()->clone();
-
-    return connectionControl
+    return connectionControl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionControl::copy( ConnectionControl* dest ) const {
+void ConnectionControl::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( connectionControl );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setClose( this->getClose()->clone() );
-    dest->setExit( this->getExit()->clone() );
-    dest->setFaultTolerant( this->getFaultTolerant()->clone() );
-    dest->setResume( this->getResume()->clone() );
-    dest->setSuspend( this->getSuspend()->clone() );
+    const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConnectionControl::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setClose( srcPtr->getClose() );
+    this->setExit( srcPtr->getExit() );
+    this->setFaultTolerant( srcPtr->getFaultTolerant() );
+    this->setResume( srcPtr->getResume() );
+    this->setSuspend( srcPtr->getSuspend() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

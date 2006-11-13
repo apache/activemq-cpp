@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/PartialCommand.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,26 +46,31 @@ PartialCommand::~PartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PartialCommand* PartialCommand::clone() const {
+DataStructure* PartialCommand::cloneDataStructure() const {
     PartialCommand* partialCommand = new PartialCommand();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( partialCommand );
+    partialCommand->copyDataStructure( this );
 
-    partialCommand->commandId = this->getCommandId()->clone();
-    partialCommand->data = this->getData()->clone();
-
-    return partialCommand
+    return partialCommand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PartialCommand::copy( PartialCommand* dest ) const {
+void PartialCommand::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( partialCommand );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setCommandId( this->getCommandId()->clone() );
-    dest->setData( this->getData()->clone() );
+    const PartialCommand* srcPtr = dynamic_cast<const PartialCommand*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "PartialCommand::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setCommandId( srcPtr->getCommandId() );
+    this->setData( srcPtr->getData() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

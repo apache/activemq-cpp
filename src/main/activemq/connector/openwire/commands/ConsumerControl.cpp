@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConsumerControl.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -50,34 +52,37 @@ ConsumerControl::~ConsumerControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerControl* ConsumerControl::clone() const {
+DataStructure* ConsumerControl::cloneDataStructure() const {
     ConsumerControl* consumerControl = new ConsumerControl();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( consumerControl );
+    consumerControl->copyDataStructure( this );
 
-    consumerControl->close = this->getClose()->clone();
-    consumerControl->consumerId = this->getConsumerId();
-    consumerControl->prefetch = this->getPrefetch()->clone();
-    consumerControl->flush = this->getFlush()->clone();
-    consumerControl->start = this->getStart()->clone();
-    consumerControl->stop = this->getStop()->clone();
-
-    return consumerControl
+    return consumerControl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::copy( ConsumerControl* dest ) const {
+void ConsumerControl::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( consumerControl );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setClose( this->getClose()->clone() );
-    dest->setConsumerId( this->getConsumerId() );
-    dest->setPrefetch( this->getPrefetch()->clone() );
-    dest->setFlush( this->getFlush()->clone() );
-    dest->setStart( this->getStart()->clone() );
-    dest->setStop( this->getStop()->clone() );
+    const ConsumerControl* srcPtr = dynamic_cast<const ConsumerControl*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConsumerControl::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setClose( srcPtr->getClose() );
+    this->setConsumerId( 
+        dynamic_cast<ConsumerId*>( 
+            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    this->setPrefetch( srcPtr->getPrefetch() );
+    this->setFlush( srcPtr->getFlush() );
+    this->setStart( srcPtr->getStart() );
+    this->setStop( srcPtr->getStop() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

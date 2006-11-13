@@ -32,7 +32,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::util;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,77 +46,59 @@ unsigned char JournalQueueAckMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalQueueAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) {
+void JournalQueueAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     JournalQueueAck* info =
         dynamic_cast<JournalQueueAck*>( dataStructure );
     info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     info->setMessageAck( dynamic_cast< MessageAck* >(
-        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );
+        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalQueueAckMarshaller::tightMarshal1( OpenWireFormat& wireFormat, DataStructure* dataStructure, BooleanStream& bs ) {
+int JournalQueueAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
     JournalQueueAck* info =
         dynamic_cast<JournalQueueAck*>( dataStructure );
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageAck() );
-
-    rc += tightMarshalNestedObject1( wireFormat, data, bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getDestination(), bs );
+    rc += tightMarshalNestedObject1( wireFormat, info->getMessageAck(), bs );
 
     return rc + 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalQueueAckMarshaller::tightMarshal2( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut, BooleanStream& bs ) {
+void JournalQueueAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
     JournalQueueAck* info =
         dynamic_cast<JournalQueueAck*>( dataStructure );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageAck() );
-
-    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getDestination(), dataOut, bs );
+    tightMarshalNestedObject2( wireFormat, info->getMessageAck(), dataOut, bs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalQueueAckMarshaller::looseUnmarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataInputStream& dataIn ) {
+void JournalQueueAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     JournalQueueAck* info = 
         dynamic_cast<JournalQueueAck*>( dataStructure );
-   info->setDestination( dynamic_cast<ActiveMQDestination* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-   info->setMessageAck( dynamic_cast<MessageAck* >( 
-       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    info->setMessageAck( dynamic_cast< MessageAck* >( 
+        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalQueueAckMarshaller::looseMarshal( OpenWireFormat& wireFormat, DataStructure* dataStructure, DataOutputStream& dataOut ) {
+void JournalQueueAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
     JournalQueueAck* info =
         dynamic_cast<JournalQueueAck*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getDestination() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
-    DataStructure* data = 
-        dynamic_cast< DataStructure* >( info->getMessageAck() );
-
-    looseMarshalNestedObject( wireFormat, data, dataOut );
+    looseMarshalNestedObject( wireFormat, info->getDestination(), dataOut );
+    looseMarshalNestedObject( wireFormat, info->getMessageAck(), dataOut );
 }
 

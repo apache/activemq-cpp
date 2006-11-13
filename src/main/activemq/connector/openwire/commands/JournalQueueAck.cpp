@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/JournalQueueAck.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -47,26 +49,35 @@ JournalQueueAck::~JournalQueueAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalQueueAck* JournalQueueAck::clone() const {
+DataStructure* JournalQueueAck::cloneDataStructure() const {
     JournalQueueAck* journalQueueAck = new JournalQueueAck();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalQueueAck );
+    journalQueueAck->copyDataStructure( this );
 
-    journalQueueAck->destination = this->getDestination();
-    journalQueueAck->messageAck = this->getMessageAck();
-
-    return journalQueueAck
+    return journalQueueAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::copy( JournalQueueAck* dest ) const {
+void JournalQueueAck::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalQueueAck );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setDestination( this->getDestination() );
-    dest->setMessageAck( this->getMessageAck() );
+    const JournalQueueAck* srcPtr = dynamic_cast<const JournalQueueAck*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "JournalQueueAck::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setDestination( 
+        dynamic_cast<ActiveMQDestination*>( 
+            srcPtr->getDestination()->cloneDataStructure() ) );
+    this->setMessageAck( 
+        dynamic_cast<MessageAck*>( 
+            srcPtr->getMessageAck()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

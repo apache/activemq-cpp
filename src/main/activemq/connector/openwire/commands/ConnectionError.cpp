@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConnectionError.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -47,26 +49,35 @@ ConnectionError::~ConnectionError()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionError* ConnectionError::clone() const {
+DataStructure* ConnectionError::cloneDataStructure() const {
     ConnectionError* connectionError = new ConnectionError();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( connectionError );
+    connectionError->copyDataStructure( this );
 
-    connectionError->exception = this->getException();
-    connectionError->connectionId = this->getConnectionId();
-
-    return connectionError
+    return connectionError;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::copy( ConnectionError* dest ) const {
+void ConnectionError::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( connectionError );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
-    dest->setException( this->getException() );
-    dest->setConnectionId( this->getConnectionId() );
+    const ConnectionError* srcPtr = dynamic_cast<const ConnectionError*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ConnectionError::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setException( 
+        dynamic_cast<BrokerError*>( 
+            srcPtr->getException()->cloneDataStructure() ) );
+    this->setConnectionId( 
+        dynamic_cast<ConnectionId*>( 
+            srcPtr->getConnectionId()->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/JournalTrace.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -44,24 +46,30 @@ JournalTrace::~JournalTrace()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-JournalTrace* JournalTrace::clone() const {
+DataStructure* JournalTrace::cloneDataStructure() const {
     JournalTrace* journalTrace = new JournalTrace();
 
     // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTrace );
+    journalTrace->copyDataStructure( this );
 
-    journalTrace->message = this->getMessage();
-
-    return journalTrace
+    return journalTrace;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTrace::copy( JournalTrace* dest ) const {
+void JournalTrace::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseDataStructure::copy( journalTrace );
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
 
-    dest->setMessage( this->getMessage() );
+    const JournalTrace* srcPtr = dynamic_cast<const JournalTrace*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "JournalTrace::copyDataStructure - src is NULL or invalid" );
+    }
+    this->setMessage( srcPtr->getMessage() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

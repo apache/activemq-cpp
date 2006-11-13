@@ -23,13 +23,14 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/connector/openwire/marshal/V2/PartialCommandMarshaller.h>
+#include <activemq/connector/openwire/marshal/v2/PartialCommandMarshaller.h>
 
 #include <activemq/io/DataInputStream.h>
 #include <activemq/io/DataOutputStream.h>
 #include <activemq/io/IOException.h>
+#include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
-#include <activemq/connector/openwire/util/BooleanStream.h>
+#include <activemq/connector/openwire/utils/BooleanStream.h>
 
 namespace activemq{
 namespace connector{
@@ -55,7 +56,7 @@ namespace v2{
          * Creates a new instance of this marshalable type.
          * @return new DataStructure object pointer caller owns it.
          */
-        virtual DataStructure* createObject() const;
+        virtual commands::DataStructure* createObject() const;
 
         /**
          * Get the Data Structure Type that identifies this Marshaller
@@ -73,7 +74,7 @@ namespace v2{
         virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
                                      io::DataInputStream* dataIn,
-                                     util::BooleanStream* bs ) throws( io::IOException );
+                                     utils::BooleanStream* bs ) throw( io::IOException );
 
         /**
          * Write the booleans that this object uses to a BooleanStream
@@ -84,7 +85,7 @@ namespace v2{
          */
         virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   BooleanStream* bs ) throws( io::IOException );
+                                   utils::BooleanStream* bs ) throw( io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -96,7 +97,7 @@ namespace v2{
         virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
                                     io::DataOutputStream* dataOut,
-                                    BooleanStream* bs ) throws( io::IOException );
+                                    utils::BooleanStream* bs ) throw( io::IOException );
 
         /**
          * Un-marshal an object instance from the data input stream
@@ -106,7 +107,7 @@ namespace v2{
          */
         virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     io::DataInputStream* dataIn ) throws( io::IOException );
+                                     io::DataInputStream* dataIn ) throw( io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -116,7 +117,7 @@ namespace v2{
          */
         virtual void looseMarshal( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   io::DataOutputStream* dataOut ) throws( io::IOException );
+                                   io::DataOutputStream* dataOut ) throw( io::IOException );
 
     };
 

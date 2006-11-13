@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ShutdownInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -43,22 +45,29 @@ ShutdownInfo::~ShutdownInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ShutdownInfo* ShutdownInfo::clone() const {
+DataStructure* ShutdownInfo::cloneDataStructure() const {
     ShutdownInfo* shutdownInfo = new ShutdownInfo();
 
     // Copy the data from the base class or classes
-    BaseCommand::copy( shutdownInfo );
+    shutdownInfo->copyDataStructure( this );
 
-
-    return shutdownInfo
+    return shutdownInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ShutdownInfo::copy( ShutdownInfo* dest ) const {
+void ShutdownInfo::copyDataStructure( const DataStructure* src ) {
 
-    // Copy the data from the base class or classes
-    BaseCommand::copy( shutdownInfo );
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
 
+    const ShutdownInfo* srcPtr = dynamic_cast<const ShutdownInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "ShutdownInfo::copyDataStructure - src is NULL or invalid" );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
