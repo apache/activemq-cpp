@@ -20,6 +20,8 @@ package org.apache.activemq.openwire.tool;
 import java.io.File;
 import java.io.PrintWriter;
 
+import org.codehaus.jam.JClass;
+
 /**
  *
  * @version $Revision: 381410 $
@@ -40,6 +42,48 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
         return ".h";
     }
     
+    public String toCppType(JClass type) {
+        String name = type.getSimpleName();
+        if (name.equals("String")) {
+            return "std::string";
+        }
+        else if( type.isArrayType() ) {
+            if( name.equals( "byte[]" ) )
+                name = "char[]";
+            
+            JClass arrayClass = type.getArrayComponentType();
+            
+            if( arrayClass.isPrimitiveType() ) {
+                return "std::vector<" + name.substring(0, name.length()-2) + ">";
+            } else {
+                return "std::vector<" + name.substring(0, name.length()-2) + "*>";                
+            }
+        }
+        else if( name.equals( "Throwable" ) || name.equals( "Exception" ) ) {
+            return "BrokerError";
+        }
+        else if( name.equals("BaseDataStructure" ) ){
+            return "DataStructure";
+        }
+        else if( name.equals("ByteSequence") ) {
+            return "std::vector<char>";
+        }
+        else if( name.equals("boolean") ) {
+            return "bool";
+        }
+        else if( name.equals("long") ) {
+            return "long long";
+        }
+        else if( name.equals("byte") ) {
+            return "char";
+        }
+        else if( !type.isPrimitiveType() ) {
+            return name;
+        }
+        else {
+            return name;
+        }
+    }
     
 	protected void generateLicence(PrintWriter out) {
 out.println("/*");

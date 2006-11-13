@@ -47,6 +47,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
         String setter = property.getSetter().getSimpleName();
         String type = property.getType().getSimpleName();
+        String nativeType = toCppType(property.getType());
         String propertyName = property.getType().getSimpleName();
 
         if( type.equals("boolean") ) {
@@ -65,10 +66,10 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             out.println("    info->" + setter + "( dataIn->readInt() );");
         }
         else if( type.equals("long") ) {
-            out.println("    info->" + setter + "( TightUnmarshalLong( wireFormat, dataIn, bs ) );");
+            out.println("    info->" + setter + "( tightUnmarshalLong( wireFormat, dataIn, bs ) );");
         }
         else if( type.equals("String") ) {
-            out.println("    info->" + setter + "( TightUnmarshalString( dataIn, bs ) );");
+            out.println("    info->" + setter + "( tightUnmarshalString( dataIn, bs ) );");
         }
         else if( type.equals("byte[]") || type.equals("ByteSequence") ) {
             if( size != null ) {
@@ -79,16 +80,16 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
         else if (isThrowable(property.getType())) {
-            out.println("    info->" + setter + "( dynamic_cast< " + propertyName + "* >(");
-            out.println("        tightUnmarsalThrowable( wireFormat, dataIn, bs ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
+            out.println("        tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );");
         }
         else if (isCachedProperty(property)) {
-            out.println("    info->" + setter + "( dynamic_cast< " + propertyName + "* >(");
-            out.println("        tightUnmarsalCachedObject( wireFormat, dataIn, bs ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
+            out.println("        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );");
         }
         else {
-            out.println("    info->" + setter + "( dynamic_cast< " + propertyName + "* >(");
-            out.println("        tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
+            out.println("        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );");
         }
     }
 
@@ -96,12 +97,13 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         JClass propertyType = property.getType();
         String arrayType = propertyType.getArrayComponentType().getSimpleName();
         String setter = property.getSetter().getSimpleName();
+        String getter = property.getGetter().getSimpleName();
         out.println();
         if (size != null) {
             out.println("    {");
             out.println("        " + arrayType + " value[] = new " + arrayType + "[" + size.asInt() + "];");
             out.println("        " + "for( int i = 0; i < " + size.asInt() + "; i++ ) {");
-            out.println("            value[i] = (" + arrayType + ") tightUnmarsalNestedObject( wireFormat,dataIn, bs );");
+            out.println("            value[i] = (" + arrayType + ") tightUnmarshalNestedObject( wireFormat, dataIn, bs );");
             out.println("        }");
             out.println("        info->" + setter + "( value );");
             out.println("    }");
@@ -109,15 +111,14 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         else {
             out.println("    if( bs->readBoolean() ) {");
             out.println("        short size = dataIn->readShort();");
-            out.println("        " + arrayType + "* value = new " + arrayType + "[size];");
+            out.println("        info->" + getter + "().reserve( size );");
             out.println("        for( int i = 0; i < size; i++ ) {");
-            out.println("            value[i] = dynamic_cast< " + arrayType + "* >(");
-            out.println("                tightUnmarsalNestedObject( wireFormat, dataIn, bs ) );");
+            out.println("            info->" + getter + "().push_back( dynamic_cast< " + arrayType + "* >(");
+            out.println("                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );");
             out.println("        }");
-            out.println("        info->" + setter + "( value );");
             out.println("    }");
             out.println("    else {");
-            out.println("        info->" + setter + "( NULL );");
+            out.println("        info->" + getter + "().clear();");
             out.println("    }");
         }
     }
@@ -132,7 +133,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
             String getter = "info->" + property.getGetter().getSimpleName() + "()";
-
+            
             if (type.equals("boolean")) {
                 out.println("    bs->writeBoolean( " + getter + " );");
             }
@@ -176,14 +177,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    rc += tightMarshalBrokerError1( wireFormat, " + getter + ", bs );");
             }
             else {
-                out.println( "    DataStructure* data = " );
-                out.println( "        dynamic_cast< DataStructure* >( " + getter + " );\n" );
-
                 if (isCachedProperty(property)) {
-                    out.println("    rc += tightMarshalCachedObject1( wireFormat, data, bs );");
+                    out.println("    rc += tightMarshalCachedObject1( wireFormat, " + getter + ", bs );");
                 }
                 else {
-                    out.println("    rc += tightMarshalNestedObject1( wireFormat, data, bs );");
+                    out.println("    rc += tightMarshalNestedObject1( wireFormat, " + getter + ", bs );");
                 }
             }
         }
@@ -192,6 +190,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
     protected void generateTightMarshal2Body(PrintWriter out) {
         List properties = getProperties();
+        int count = 0;
         for (Iterator iter = properties.iterator(); iter.hasNext();) {
             JProperty property = (JProperty) iter.next();
             JAnnotation annotation = property.getAnnotation("openwire:property");
@@ -199,6 +198,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
             String getter = "info->" + property.getGetter().getSimpleName() + "()";
+            count++;
 
             if (type.equals("boolean")) {
                 out.println("    bs->readBoolean();");
@@ -244,14 +244,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    tightMarshalBrokerError2( wireFormat, " + getter + ", dataOut, bs );");
             }
             else {
-                out.println( "    DataStructure* data = " );
-                out.println( "        dynamic_cast< DataStructure* >( " + getter + " );\n" );
-
                 if( isCachedProperty(property) ) {
-                    out.println("    tightMarshalCachedObject2( wireFormat, data, dataOut, bs );");
+                    out.println("    tightMarshalCachedObject2( wireFormat, "+getter+", dataOut, bs );");
                 }
                 else {
-                    out.println("    tightMarshalNestedObject2( wireFormat, data, dataOut, bs );");
+                    out.println("    tightMarshalNestedObject2( wireFormat, "+getter+", dataOut, bs );");
                 }
             }
         }
@@ -265,6 +262,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
         String propertyName = property.getSimpleName();
         String type = property.getType().getSimpleName();
+        String nativeType = toCppType(property.getType());
         String setter = property.getSetter().getSimpleName();
 
         if (type.equals("boolean")) {
@@ -297,15 +295,16 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
         else if (isThrowable(property.getType())) {
-            out.println("    info->" + setter + "( looseUnmarshalBrokerError( wireFormat, dataIn ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
+            out.println("        looseUnmarshalBrokerError( wireFormat, dataIn ) ) );");
         }
         else if (isCachedProperty(property)) {
-            out.println("   info->" + setter + "( dynamic_cast<" + type + "* >( ");
-            out.println("       looseUnmarshalCachedObject( wireFormat, dataIn ) ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >( ");
+            out.println("        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );");
         }
         else {
-            out.println("   info->" + setter + "( dynamic_cast<" + type + "* >( ");
-            out.println("       looseUnmarshalNestedObject( wireFormat, dataIn ) ) );");
+            out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >( ");
+            out.println("        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );");
         }
     }
 
@@ -314,7 +313,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         String arrayType = propertyType.getArrayComponentType().getSimpleName();
         String propertyName = property.getSimpleName();
         String setter = property.getSetter().getSimpleName();
-
+        String getter = property.getGetter().getSimpleName();
+        
         out.println();
         if (size != null) {
             out.println("    {");
@@ -328,15 +328,14 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         else {
             out.println("    if( dataIn->readBoolean() ) {");
             out.println("        short size = dataIn->readShort();");
-            out.println("        " + arrayType + "* value = new " + arrayType + "[size];");
+            out.println("        info->" + getter + "().reserve( size );");
             out.println("        for( int i = 0; i < size; i++ ) {");
-            out.println("            value[i] = dynamic_cast<" + arrayType + "* >(");
-            out.println("                looseUnmarshalNestedObject( wireFormat,dataIn ) );");
+            out.println("            info->" + getter + "().push_back( dynamic_cast<" + arrayType + "* >(");
+            out.println("                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );");
             out.println("        }");
-            out.println("        info->" + setter + "( value );");
             out.println("    }");
             out.println("    else {");
-            out.println("        info->" + setter + "( NULL );");
+            out.println("        info->" + getter + "().clear();");
             out.println("    }");
         }
     }
@@ -397,14 +396,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    looseMarshalBrokerError( wireFormat, " + getter + ", dataOut );");
             }
             else {
-                out.println( "    DataStructure* data = " );
-                out.println( "        dynamic_cast< DataStructure* >( " + getter + " );\n" );
-                
                 if( isCachedProperty( property ) ) {
-                    out.println("    looseMarshalCachedObject( wireFormat, data, dataOut );");
+                    out.println("    looseMarshalCachedObject( wireFormat, "+getter+", dataOut );");
                 }
                 else {
-                    out.println("    looseMarshalNestedObject( wireFormat, data, dataOut );");
+                    out.println("    looseMarshalNestedObject( wireFormat, "+getter+", dataOut );");
                 }
             }
         }
