@@ -319,24 +319,30 @@ out.println("    }");
         String propertyName = property.getSimpleName();
         String parameterName = decapitalize(propertyName);
         String constNess = "";
-    
+        String getter = property.getGetter().getSimpleName();
+        String setter = property.getSetter().getSimpleName();
+        
         if( property.getType().isPrimitiveType() ||
             type.equals("std::string") ||
             property.getType().getSimpleName().equals("ByteSequence") ){
-    out.println("    this->set"+propertyName+"( srcPtr->get"+propertyName+"() );");
+    out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
         } else if( property.getType().isArrayType() &&
                    !property.getType().getArrayComponentType().isPrimitiveType() ) {
-    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->get"+propertyName+"().size(); ++i" + parameterName + " ) {");
-    out.println("        this->get"+propertyName+"().push_back( ");
-    out.println("            srcPtr->get"+propertyName+"()[i"+parameterName+"]->cloneDataStructure() );");            
+
+            String arrayType = property.getType().getArrayComponentType().getSimpleName();
+            
+    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
+    out.println("        this->"+getter+"().push_back( ");
+    out.println("            dynamic_cast<"+arrayType+"*>( ");
+    out.println("                srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");            
     out.println("    }");
         } else if( property.getType().isArrayType() &&
                    property.getType().getArrayComponentType().isPrimitiveType() ) {
-    out.println("    this->set"+propertyName+"( srcPtr->get"+propertyName+"() );");
+    out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
         } else {
-    out.println("    this->set"+propertyName+"( ");
+    out.println("    this->"+setter+"( ");
     out.println("        dynamic_cast<"+type+"*>( ");
-    out.println("            srcPtr->get"+propertyName+"()->cloneDataStructure() ) );");
+    out.println("            srcPtr->"+getter+"()->cloneDataStructure() ) );");
         }
     }
 
@@ -354,6 +360,8 @@ out.println("}");
 	        String type = toCppType(property.getType());
 	        String propertyName = property.getSimpleName();
 	        String parameterName = decapitalize(propertyName);
+            String getter = property.getGetter().getSimpleName();
+            String setter = property.getSetter().getSimpleName();
             String constNess = "";
 
             if( !property.getType().isPrimitiveType() &&
@@ -370,17 +378,17 @@ out.println("}");
            
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println("const "+type+" "+className+"::get"+propertyName+"() const {");
+out.println("const "+type+" "+className+"::"+getter+"() const {");
 out.println("    return "+parameterName+";");
 out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println(""+type+" "+className+"::get"+propertyName+"() {");
+out.println(""+type+" "+className+"::"+getter+"() {");
 out.println("    return "+parameterName+";");
 out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println("void " + className + "::set" + propertyName+"(" + constNess + type+ " " + parameterName +" ) {");
+out.println("void " + className + "::" + setter+"(" + constNess + type+ " " + parameterName +" ) {");
 out.println("    this->"+parameterName+" = "+parameterName+";");
 out.println("}");
 	    }

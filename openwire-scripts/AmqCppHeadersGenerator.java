@@ -163,9 +163,9 @@ out.println("");
                 constness = "const ";
             }
             
-            out.println("        virtual const "+type+" get"+propertyName+"() const;");
-            out.println("        virtual "+type+" get"+propertyName+"();");
-            out.println("        virtual void set"+propertyName+"( "+constness+type+" "+parameterName+" );");
+            out.println("        virtual const "+type+" "+property.getGetter().getSimpleName()+"() const;");
+            out.println("        virtual "+type+" "+property.getGetter().getSimpleName()+"();");
+            out.println("        virtual void "+property.getSetter().getSimpleName()+"( "+constness+type+" "+parameterName+" );");
             out.println("");
         }
 
