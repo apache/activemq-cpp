@@ -26,7 +26,7 @@
 namespace activemq{
 namespace connector{
 namespace openwire{
-namespace marshal{
+namespace utils{
     
     /**
      * The HexTable class maps hexidecimal strings to the value of an index

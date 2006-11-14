@@ -47,7 +47,7 @@ cc_sources = \
     activemq/connector/stomp/StompConnectorFactory.cpp \
     activemq/connector/stomp/marshal/Marshaler.cpp \
     activemq/connector/stomp/StompConnector.cpp \
-    activemq/connector/openwire/marshal/HexTable.cpp \
+    activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/network/SocketInputStream.cpp \
@@ -173,7 +173,7 @@ h_sources = \
     activemq/connector/stomp/StompConnector.h \
     activemq/connector/stomp/StompDestination.h \
     activemq/connector/stomp/StompTopic.h \
-    activemq/connector/openwire/marshal/HexTable.h \
+    activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
     activemq/connector/ConnectorFactoryMap.h \
     activemq/connector/Connector.h \
