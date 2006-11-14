@@ -158,8 +158,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
             else if (type.equals("byte[]") || type.equals("ByteSequence")) {
                 if (size == null) {
-                    out.println("    bs->writeBoolean( " + getter + " != NULL );" );
-                    out.println("    rc += " + getter + "() == NULL ? 0 : " + getter + ".Length + 4;");
+                    out.println("    bs->writeBoolean( " + getter + ".size() != 0 );" );
+                    out.println("    rc += " + getter + ".size() == 0 ? 0 : " + getter + ".size() + 4;");
                 }
                 else {
                     baseSize += size.asInt();
@@ -227,8 +227,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 }
                 else {
                     out.println("    if( bs->readBoolean() ) {");
-                    out.println("        dataOut->write( " + getter + ".Length );");
-                    out.println("        dataOut->write( " + getter + " );");
+                    out.println("        dataOut->write( " + getter + ".size() );");
+                    out.println("        dataOut->write( (const unsigned char*)&(" + getter + "[0]), " + getter + ".size() );");
                     out.println("    }");
                 }
             }
@@ -377,10 +377,10 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                     out.println("    dataOut->write( " + getter + ", 0, " + size.asInt() + " );");
                 }
                 else {
-                    out.println("    dataOut->write( " + getter + " != NULL );");
-                    out.println("    if( " + getter + " != NULL ) {");
-                    out.println("        dataOut->write( " + getter + ".Length );");
-                    out.println("        dataOut->write( " + getter + " );");
+                    out.println("    dataOut->write( " + getter + ".size() != 0 );");
+                    out.println("    if( " + getter + ".size() != 0 ) {");
+                    out.println("        dataOut->write( " + getter + ".size() );");
+                    out.println("        dataOut->write( (const unsigned char*)&(" + getter + "[0]), " + getter + ".size() );");
                     out.println("    }");
                 }
             }
