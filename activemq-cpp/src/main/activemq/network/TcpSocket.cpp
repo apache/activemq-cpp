@@ -34,7 +34,7 @@
 #endif
 
 #ifndef SHUT_RDWR 
-    #define SHUT_RDWR 2 // Cygwin doesn't seem to define this
+    #define SHUT_RDWR 2 // Winsock2 doesn't seem to define this
 #endif
 
 #include <stdio.h>
