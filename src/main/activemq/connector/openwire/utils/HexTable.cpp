@@ -25,7 +25,7 @@ using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
-using namespace activemq::connector::openwire::marshal;
+using namespace activemq::connector::openwire::utils;
 
 ////////////////////////////////////////////////////////////////////////////////
 HexTable::HexTable(){

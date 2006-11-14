@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_HEXTABLETEST_H_
-#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_HEXTABLETEST_H_
+#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_
+#define _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/connector/openwire/marshal/HexTable.h>
+#include <activemq/connector/openwire/utils/HexTable.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
-namespace marshal{
+namespace utils{
 
     class HexTableTest : public CppUnit::TestFixture {
 
@@ -64,4 +64,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_HEXTABLETEST_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_*/

@@ -42,7 +42,7 @@ cc_sources = \
   activemq/connector/stomp/StompConnectorTest.cpp \
   activemq/connector/stomp/StompFrameTest.cpp \
   activemq/connector/stomp/StompSessionManagerTest.cpp \
-  activemq/connector/openwire/marshal/HexTableTest.cpp \
+  activemq/connector/openwire/utils/HexTableTest.cpp \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
