@@ -63,10 +63,10 @@ int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
         dynamic_cast<XATransactionId*>( dataStructure );
 
     int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    bs->writeBoolean( info->getGlobalTransactionId() != NULL );
-    rc += info->getGlobalTransactionId()() == NULL ? 0 : info->getGlobalTransactionId().Length + 4;
-    bs->writeBoolean( info->getBranchQualifier() != NULL );
-    rc += info->getBranchQualifier()() == NULL ? 0 : info->getBranchQualifier().Length + 4;
+    bs->writeBoolean( info->getGlobalTransactionId().size() != 0 );
+    rc += info->getGlobalTransactionId().size() == 0 ? 0 : info->getGlobalTransactionId().size() + 4;
+    bs->writeBoolean( info->getBranchQualifier().size() != 0 );
+    rc += info->getBranchQualifier().size() == 0 ? 0 : info->getBranchQualifier().size() + 4;
 
     return rc + 4;
 }
@@ -80,12 +80,12 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
         dynamic_cast<XATransactionId*>( dataStructure );
     dataOut->write( info->getFormatId() );
     if( bs->readBoolean() ) {
-        dataOut->write( info->getGlobalTransactionId().Length );
-        dataOut->write( info->getGlobalTransactionId() );
+        dataOut->write( info->getGlobalTransactionId().size() );
+        dataOut->write( (const unsigned char*)&(info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size() );
     }
     if( bs->readBoolean() ) {
-        dataOut->write( info->getBranchQualifier().Length );
-        dataOut->write( info->getBranchQualifier() );
+        dataOut->write( info->getBranchQualifier().size() );
+        dataOut->write( (const unsigned char*)&(info->getBranchQualifier()[0]), info->getBranchQualifier().size() );
     }
 }
 
@@ -106,15 +106,15 @@ void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
     TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     dataOut->write( info->getFormatId() );
-    dataOut->write( info->getGlobalTransactionId() != NULL );
-    if( info->getGlobalTransactionId() != NULL ) {
-        dataOut->write( info->getGlobalTransactionId().Length );
-        dataOut->write( info->getGlobalTransactionId() );
+    dataOut->write( info->getGlobalTransactionId().size() != 0 );
+    if( info->getGlobalTransactionId().size() != 0 ) {
+        dataOut->write( info->getGlobalTransactionId().size() );
+        dataOut->write( (const unsigned char*)&(info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size() );
     }
-    dataOut->write( info->getBranchQualifier() != NULL );
-    if( info->getBranchQualifier() != NULL ) {
-        dataOut->write( info->getBranchQualifier().Length );
-        dataOut->write( info->getBranchQualifier() );
+    dataOut->write( info->getBranchQualifier().size() != 0 );
+    if( info->getBranchQualifier().size() != 0 ) {
+        dataOut->write( info->getBranchQualifier().size() );
+        dataOut->write( (const unsigned char*)&(info->getBranchQualifier()[0]), info->getBranchQualifier().size() );
     }
 }
 
