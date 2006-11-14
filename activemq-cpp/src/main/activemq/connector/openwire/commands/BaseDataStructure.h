@@ -23,6 +23,10 @@
 namespace activemq{
 namespace connector{
 namespace openwire{
+
+    // Forward Declare for now
+    class OpenWireFormat;
+    
 namespace commands{
 
     class BaseDataStructure : public DataStructure
@@ -39,6 +43,30 @@ namespace commands{
         virtual bool isMarshallAware() const {
             return false;
         }
+
+        /**
+         * Perform any processing needed before an marshal
+         * @param wireformat - the OpenWireFormat object in use.
+         */
+        virtual void beforeMarshall( OpenWireFormat* wireFormat ) {}
+        
+        /**
+         * Perform any processing needed after an unmarshal
+         * @param wireformat - the OpenWireFormat object in use.
+         */
+        virtual void afterMarshall( OpenWireFormat* wireFormat ) {}
+        
+        /**
+         * Perform any processing needed before an unmarshal
+         * @param wireformat - the OpenWireFormat object in use.
+         */
+        virtual void beforeUnmarshall( OpenWireFormat* wireFormat ) {}
+        
+        /**
+         * Perform any processing needed after an unmarshal
+         * @param wireformat - the OpenWireFormat object in use.
+         */
+        virtual void afterUnmarshall( OpenWireFormat* wireFormat ) {}
 
     };
 

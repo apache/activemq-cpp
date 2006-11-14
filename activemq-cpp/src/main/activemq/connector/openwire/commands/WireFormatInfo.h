@@ -18,12 +18,14 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 
+#include <activemq/connector/openwire/commands/BaseDataStructure.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class WireFormatInfo
+    class WireFormatInfo : public BaseDataStructure
     {
     public:
     
