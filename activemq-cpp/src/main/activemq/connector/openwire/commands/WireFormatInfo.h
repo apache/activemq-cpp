@@ -20,6 +20,8 @@
 
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 
+#include <vector>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -28,10 +30,35 @@ namespace commands{
     class WireFormatInfo : public BaseDataStructure
     {
     public:
+
+        const static unsigned char ID_WIREFORMATINFO = 1;
+
+    public:
     
         WireFormatInfo();
     
         virtual ~WireFormatInfo();
+
+        /**
+         * Get the unique identifier that this object and its own
+         * Marshaller share.
+         * @returns new DataStructure type copy.
+         */
+        virtual unsigned char getDataStructureType() const;
+
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneDataStructure() const;
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src );
 
         /**
          * Checks if the stackTraceEnabled flag is on
@@ -146,6 +173,20 @@ namespace commands{
         }
 
     private:
+
+        static std::vector<char> MAGIC;
+//         = new byte[] {
+//            'A'&0xFF,
+//            'c'&0xFF,
+//            't'&0xFF,
+//            'i'&0xFF,
+//            'v'&0xFF,
+//            'e'&0xFF,
+//            'M'&0xFF,
+//            'Q'&0xFF };
+        
+        std::vector<char> magic;
+        std::vector<char> marshalledProperties;
     
         int version;
         bool stackTraceEnabled;
