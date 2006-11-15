@@ -119,6 +119,31 @@ namespace marshal{
             { return std::vector<char>(); }
 
         /**
+         * Tight Unmarshal a fixed size array from that data input stream
+         * and return an stl vector of char as the resultant.
+         * @param dataIn - the DataInputStream to Un-Marshal from
+         * @param bs - boolean stream to unmarshal from.
+         * @param size - size of the const array to unmarshal
+         * @returns the unmarshalled vector of chars.
+         */
+        virtual std::vector<char> tightUnmarshalConstByteArray( 
+            io::DataInputStream* dataIn, 
+            utils::BooleanStream* bs, 
+            int size ) { return std::vector<char>(); }
+
+        /**
+         * Tight Unmarshal a fixed size array from that data input stream
+         * and return an stl vector of char as the resultant.
+         * @param dataIn - the DataInputStream to Un-Marshal from
+         * @param bs - boolean stream to unmarshal from.
+         * @param size - size of the const array to unmarshal
+         * @returns the unmarshalled vector of chars.
+         */
+        virtual std::vector<char> looseUnmarshalConstByteArray( 
+            io::DataInputStream* dataIn, 
+            int size ) { return std::vector<char>(); }
+
+        /**
          * Performs Tight Unmarshalling of String Objects
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.

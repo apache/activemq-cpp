@@ -171,6 +171,38 @@ namespace commands{
         void setMaxInactivityDuration( long maxInactivityDuration ) {
             this->maxInactivityDuration = maxInactivityDuration;
         }
+        
+        /**
+         * Get the Magic field
+         * @return const reference to a std::vector<char>
+         */
+        const std::vector<char>& getMagic() const {
+            return magic;
+        }
+        
+        /**
+         * Sets the value of the magic field
+         * @param magic - const std::vector<char>
+         */
+        void setMagic( const std::vector<char>& magic ) {
+            this->magic = magic;
+        }
+
+        /**
+         * Get the marshalledProperties field
+         * @return const reference to a std::vector<char>
+         */
+        const std::vector<char>& getMarshalledProperties() const {
+            return magic;
+        }
+        
+        /**
+         * Sets the value of the marshalledProperties field
+         * @param magic - const std::vector<char>
+         */
+        void setMarshalledProperties( const std::vector<char>& magic ) {
+            this->magic = magic;
+        }
 
     private:
 
