@@ -16,9 +16,11 @@
  */
 
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
@@ -31,4 +33,35 @@ WireFormatInfo::WireFormatInfo()
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatInfo::~WireFormatInfo()
 {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+DataStructure* WireFormatInfo::cloneDataStructure() const {
+    WireFormatInfo* wireFormatInfo = new WireFormatInfo();
+
+    // Copy the data from the base class or classes
+    wireFormatInfo->copyDataStructure( this );
+
+    return wireFormatInfo;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
+
+    // Copy the data of the base class or classes
+    BaseDataStructure::copyDataStructure( src );
+
+    const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>( src );
+
+    if( srcPtr == NULL || src == NULL ) {
+    
+        throw exceptions::NullPointerException(
+            __FILE__, __LINE__,
+            "WireFormatInfo::copyDataStructure - src is NULL or invalid" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char WireFormatInfo::getDataStructureType() const {
+    return WireFormatInfo::ID_WIREFORMATINFO; 
 }
