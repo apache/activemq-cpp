@@ -79,11 +79,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    info->" + setter + "( tightUnmarshalByteArray( dataIn, bs ) );");
             }
         }
-        else if (isThrowable(property.getType())) {
+        else if( isThrowable( property.getType() ) ) {
             out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
             out.println("        tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );");
         }
-        else if (isCachedProperty(property)) {
+        else if( isCachedProperty(property) ) {
             out.println("    info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
             out.println("        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );");
         }
@@ -223,12 +223,12 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
             else if (type.equals("byte[]") || type.equals("ByteSequence")) {
                 if (size != null) {
-                    out.println("    dataOut->write( " + getter + ", 0, " + size.asInt() + " );");
+                    out.println("    dataOut->write( &" + getter + "[0], " + size.asInt() + " );");
                 }
                 else {
                     out.println("    if( bs->readBoolean() ) {");
                     out.println("        dataOut->write( " + getter + ".size() );");
-                    out.println("        dataOut->write( (const unsigned char*)&(" + getter + "[0]), " + getter + ".size() );");
+                    out.println("        dataOut->write( &" + getter + "[0], " + getter + ".size() );");
                     out.println("    }");
                 }
             }
@@ -374,13 +374,13 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
             else if( type.equals("byte[]") || type.equals("ByteSequence") ) {
                 if(size != null) {
-                    out.println("    dataOut->write( " + getter + ", 0, " + size.asInt() + " );");
+                    out.println("    dataOut->write( &" + getter + "[0], " + size.asInt() + " );");
                 }
                 else {
                     out.println("    dataOut->write( " + getter + ".size() != 0 );");
                     out.println("    if( " + getter + ".size() != 0 ) {");
                     out.println("        dataOut->write( " + getter + ".size() );");
-                    out.println("        dataOut->write( (const unsigned char*)&(" + getter + "[0]), " + getter + ".size() );");
+                    out.println("        dataOut->write( &" + getter + "[0], " + getter + ".size() );");
                     out.println("    }");
                 }
             }
