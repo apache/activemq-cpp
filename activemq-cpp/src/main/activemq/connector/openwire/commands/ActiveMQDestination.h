@@ -53,7 +53,7 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyCommand( const DataStructure* src );
+        virtual void copyDataStructure( const DataStructure* src );
 
         virtual unsigned char getDataStructureType() const;
         virtual const std::string& getPhysicalName() const;
