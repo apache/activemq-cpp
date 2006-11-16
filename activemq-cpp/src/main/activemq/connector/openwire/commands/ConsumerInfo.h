@@ -61,7 +61,7 @@ namespace commands{
         bool noLocal;
         bool exclusive;
         bool retroactive;
-        char priority;
+        unsigned char priority;
         std::vector<BrokerId*> brokerPath;
         BooleanExpression* additionalPredicate;
         bool networkSubscription;
@@ -142,9 +142,9 @@ namespace commands{
         virtual bool isRetroactive();
         virtual void setRetroactive( bool retroactive );
 
-        virtual const char getPriority() const;
-        virtual char getPriority();
-        virtual void setPriority( char priority );
+        virtual const unsigned char getPriority() const;
+        virtual unsigned char getPriority();
+        virtual void setPriority( unsigned char priority );
 
         virtual const std::vector<BrokerId*> getBrokerPath() const;
         virtual std::vector<BrokerId*> getBrokerPath();

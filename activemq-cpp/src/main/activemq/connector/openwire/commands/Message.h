@@ -67,12 +67,12 @@ namespace commands{
         std::string correlationId;
         bool persistent;
         long long expiration;
-        char priority;
+        unsigned char priority;
         ActiveMQDestination* replyTo;
         long long timestamp;
         std::string type;
-        std::vector<char> content;
-        std::vector<char> marshalledProperties;
+        std::vector<unsigned char> content;
+        std::vector<unsigned char> marshalledProperties;
         DataStructure* dataStructure;
         ConsumerId* targetConsumerId;
         bool compressed;
@@ -157,9 +157,9 @@ namespace commands{
         virtual long long getExpiration();
         virtual void setExpiration( long long expiration );
 
-        virtual const char getPriority() const;
-        virtual char getPriority();
-        virtual void setPriority( char priority );
+        virtual const unsigned char getPriority() const;
+        virtual unsigned char getPriority();
+        virtual void setPriority( unsigned char priority );
 
         virtual const ActiveMQDestination* getReplyTo() const;
         virtual ActiveMQDestination* getReplyTo();
@@ -173,13 +173,13 @@ namespace commands{
         virtual std::string& getType();
         virtual void setType( const std::string& type );
 
-        virtual const std::vector<char> getContent() const;
-        virtual std::vector<char> getContent();
-        virtual void setContent( std::vector<char> content );
+        virtual const std::vector<unsigned char> getContent() const;
+        virtual std::vector<unsigned char> getContent();
+        virtual void setContent( std::vector<unsigned char> content );
 
-        virtual const std::vector<char> getMarshalledProperties() const;
-        virtual std::vector<char> getMarshalledProperties();
-        virtual void setMarshalledProperties( std::vector<char> marshalledProperties );
+        virtual const std::vector<unsigned char> getMarshalledProperties() const;
+        virtual std::vector<unsigned char> getMarshalledProperties();
+        virtual void setMarshalledProperties( std::vector<unsigned char> marshalledProperties );
 
         virtual const DataStructure* getDataStructure() const;
         virtual DataStructure* getDataStructure();

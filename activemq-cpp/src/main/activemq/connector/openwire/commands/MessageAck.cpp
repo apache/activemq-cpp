@@ -150,17 +150,17 @@ void MessageAck::setConsumerId(ConsumerId* consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char MessageAck::getAckType() const {
+const unsigned char MessageAck::getAckType() const {
     return ackType;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char MessageAck::getAckType() {
+unsigned char MessageAck::getAckType() {
     return ackType;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageAck::setAckType(char ackType ) {
+void MessageAck::setAckType(unsigned char ackType ) {
     this->ackType = ackType;
 }
 

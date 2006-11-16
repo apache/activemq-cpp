@@ -176,7 +176,7 @@ namespace commands{
          * Get the Magic field
          * @return const reference to a std::vector<char>
          */
-        const std::vector<char>& getMagic() const {
+        const std::vector<unsigned char>& getMagic() const {
             return magic;
         }
         
@@ -184,7 +184,7 @@ namespace commands{
          * Sets the value of the magic field
          * @param magic - const std::vector<char>
          */
-        void setMagic( const std::vector<char>& magic ) {
+        void setMagic( const std::vector<unsigned char>& magic ) {
             this->magic = magic;
         }
 
@@ -192,7 +192,7 @@ namespace commands{
          * Get the marshalledProperties field
          * @return const reference to a std::vector<char>
          */
-        const std::vector<char>& getMarshalledProperties() const {
+        const std::vector<unsigned char>& getMarshalledProperties() const {
             return magic;
         }
         
@@ -200,7 +200,7 @@ namespace commands{
          * Sets the value of the marshalledProperties field
          * @param magic - const std::vector<char>
          */
-        void setMarshalledProperties( const std::vector<char>& magic ) {
+        void setMarshalledProperties( const std::vector<unsigned char>& magic ) {
             this->magic = magic;
         }
 
@@ -217,8 +217,8 @@ namespace commands{
 //            'M'&0xFF,
 //            'Q'&0xFF };
         
-        std::vector<char> magic;
-        std::vector<char> marshalledProperties;
+        std::vector<unsigned char> magic;
+        std::vector<unsigned char> marshalledProperties;
     
         int version;
         bool stackTraceEnabled;

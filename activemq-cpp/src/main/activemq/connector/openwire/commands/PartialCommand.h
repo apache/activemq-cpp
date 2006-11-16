@@ -47,7 +47,7 @@ namespace commands{
     protected:
 
         int commandId;
-        std::vector<char> data;
+        std::vector<unsigned char> data;
 
     public:
 
@@ -83,9 +83,9 @@ namespace commands{
         virtual int getCommandId();
         virtual void setCommandId( int commandId );
 
-        virtual const std::vector<char> getData() const;
-        virtual std::vector<char> getData();
-        virtual void setData( std::vector<char> data );
+        virtual const std::vector<unsigned char> getData() const;
+        virtual std::vector<unsigned char> getData();
+        virtual void setData( std::vector<unsigned char> data );
 
     };
 

@@ -78,7 +78,7 @@ void PartialCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
     dataOut->write( info->getCommandId() );
     if( bs->readBoolean() ) {
         dataOut->write( info->getData().size() );
-        dataOut->write( (const unsigned char*)&(info->getData()[0]), info->getData().size() );
+        dataOut->write( &info->getData()[0], info->getData().size() );
     }
 }
 
@@ -101,7 +101,7 @@ void PartialCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
     dataOut->write( info->getData().size() != 0 );
     if( info->getData().size() != 0 ) {
         dataOut->write( info->getData().size() );
-        dataOut->write( (const unsigned char*)&(info->getData()[0]), info->getData().size() );
+        dataOut->write( &info->getData()[0], info->getData().size() );
     }
 }
 

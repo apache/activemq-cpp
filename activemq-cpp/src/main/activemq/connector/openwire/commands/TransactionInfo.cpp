@@ -118,17 +118,17 @@ void TransactionInfo::setTransactionId(TransactionId* transactionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char TransactionInfo::getType() const {
+const unsigned char TransactionInfo::getType() const {
     return type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char TransactionInfo::getType() {
+unsigned char TransactionInfo::getType() {
     return type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionInfo::setType(char type ) {
+void TransactionInfo::setType(unsigned char type ) {
     this->type = type;
 }
 

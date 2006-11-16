@@ -290,17 +290,17 @@ void ConsumerInfo::setRetroactive(bool retroactive ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char ConsumerInfo::getPriority() const {
+const unsigned char ConsumerInfo::getPriority() const {
     return priority;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char ConsumerInfo::getPriority() {
+unsigned char ConsumerInfo::getPriority() {
     return priority;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setPriority(char priority ) {
+void ConsumerInfo::setPriority(unsigned char priority ) {
     this->priority = priority;
 }
 
