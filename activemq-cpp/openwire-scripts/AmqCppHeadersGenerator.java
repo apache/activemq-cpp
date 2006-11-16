@@ -131,7 +131,7 @@ out.println("         */");
 out.println("        virtual unsigned char getDataStructureType() const;");
 out.println("");
 out.println("        /**");
-out.println("         * Clone this obbject and return a new instance that the");      
+out.println("         * Clone this object and return a new instance that the");      
 out.println("         * caller now owns, this will be an exact copy of this one");
 out.println("         * @returns new copy of this object.");
 out.println("         */");

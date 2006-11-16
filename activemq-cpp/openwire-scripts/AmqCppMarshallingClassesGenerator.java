@@ -478,7 +478,7 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){");
 out.println("");
 
-    if( !properties.isEmpty() ) { 
+    if( !properties.isEmpty()  || marshallerAware ) { 
 out.println("    "+jclass.getSimpleName()+"* info ="); 
 out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
 out.println("");
