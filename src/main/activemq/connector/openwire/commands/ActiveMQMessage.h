@@ -42,6 +42,15 @@ namespace commands{
 
         virtual unsigned char getDataStructureType() const;
 
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src ) {
+            ActiveMQMessage::copyDataStructure( src );
+        }
+
     public:   // core::ActiveMQMessage
     
         /**

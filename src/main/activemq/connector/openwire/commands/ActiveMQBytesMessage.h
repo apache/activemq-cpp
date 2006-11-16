@@ -46,6 +46,26 @@ namespace commands{
         virtual ~ActiveMQBytesMessage();
 
         virtual unsigned char getDataStructureType() const;
+
+        /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneDataStructure() const { 
+            ActiveMQBytesMessage* message = new ActiveMQBytesMessage();
+            message->copyDataStructure( this );            
+            return message;
+        }
+
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src ) {
+            ActiveMQMessage::copyDataStructure( src );
+        }
         
     public:   // CMS Message
     
