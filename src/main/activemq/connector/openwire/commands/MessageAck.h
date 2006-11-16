@@ -54,7 +54,7 @@ namespace commands{
         ActiveMQDestination* destination;
         TransactionId* transactionId;
         ConsumerId* consumerId;
-        char ackType;
+        unsigned char ackType;
         MessageId* firstMessageId;
         MessageId* lastMessageId;
         int messageCount;
@@ -101,9 +101,9 @@ namespace commands{
         virtual ConsumerId* getConsumerId();
         virtual void setConsumerId( ConsumerId* consumerId );
 
-        virtual const char getAckType() const;
-        virtual char getAckType();
-        virtual void setAckType( char ackType );
+        virtual const unsigned char getAckType() const;
+        virtual unsigned char getAckType();
+        virtual void setAckType( unsigned char ackType );
 
         virtual const MessageId* getFirstMessageId() const;
         virtual MessageId* getFirstMessageId();

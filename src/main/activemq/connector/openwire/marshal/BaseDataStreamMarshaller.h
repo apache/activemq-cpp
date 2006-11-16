@@ -104,19 +104,19 @@ namespace marshal{
          * @param bs - boolean stream to unmarshal from.
          * @returns the unmarshalled vector of chars.
          */
-        virtual std::vector<char> tightUnmarshalByteArray( 
+        virtual std::vector<unsigned char> tightUnmarshalByteArray( 
             io::DataInputStream* dataIn, 
             utils::BooleanStream* bs ) 
-                { return std::vector<char>(); }
+                { return std::vector<unsigned char>(); }
 
         /**
          * Loose Unmarshal an array of char
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @returns the unmarshalled vector of chars.
          */
-        virtual std::vector<char> looseUnmarshalByteArray( 
+        virtual std::vector<unsigned char> looseUnmarshalByteArray( 
             io::DataInputStream* dataIn )    
-            { return std::vector<char>(); }
+            { return std::vector<unsigned char>(); }
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -126,10 +126,10 @@ namespace marshal{
          * @param size - size of the const array to unmarshal
          * @returns the unmarshalled vector of chars.
          */
-        virtual std::vector<char> tightUnmarshalConstByteArray( 
+        virtual std::vector<unsigned char> tightUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
             utils::BooleanStream* bs, 
-            int size ) { return std::vector<char>(); }
+            int size ) { return std::vector<unsigned char>(); }
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -139,9 +139,9 @@ namespace marshal{
          * @param size - size of the const array to unmarshal
          * @returns the unmarshalled vector of chars.
          */
-        virtual std::vector<char> looseUnmarshalConstByteArray( 
+        virtual std::vector<unsigned char> looseUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
-            int size ) { return std::vector<char>(); }
+            int size ) { return std::vector<unsigned char>(); }
 
         /**
          * Performs Tight Unmarshalling of String Objects
@@ -414,6 +414,23 @@ namespace marshal{
                                               commands::DataStructure* error, 
                                               io::DataOutputStream* dataOut ) {}
         
+        template<typename T>
+        int tightMarshalObjectArray1( OpenWireFormat* wireFormat, 
+                                      std::vector<T*>, 
+                                      utils::BooleanStream* bs )
+        { return 0; }
+        
+        template<typename T>
+        void tightMarshalObjectArray2( OpenWireFormat* wireFormat, 
+                                       std::vector<T*>, 
+                                       io::DataOutputStream* dataOut, 
+                                       utils::BooleanStream* bs ) {}
+
+        template<typename T>
+        void looseMarshalObjectArray( OpenWireFormat* wireFormat, 
+                                      std::vector<T*>, 
+                                      io::DataOutputStream* dataOut ) {}
+                                      
     };
 
 }}}}

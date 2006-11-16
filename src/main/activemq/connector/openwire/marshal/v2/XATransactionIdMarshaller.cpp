@@ -81,11 +81,11 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
     dataOut->write( info->getFormatId() );
     if( bs->readBoolean() ) {
         dataOut->write( info->getGlobalTransactionId().size() );
-        dataOut->write( (const unsigned char*)&(info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size() );
+        dataOut->write( &info->getGlobalTransactionId()[0], info->getGlobalTransactionId().size() );
     }
     if( bs->readBoolean() ) {
         dataOut->write( info->getBranchQualifier().size() );
-        dataOut->write( (const unsigned char*)&(info->getBranchQualifier()[0]), info->getBranchQualifier().size() );
+        dataOut->write( &info->getBranchQualifier()[0], info->getBranchQualifier().size() );
     }
 }
 
@@ -109,12 +109,12 @@ void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
     dataOut->write( info->getGlobalTransactionId().size() != 0 );
     if( info->getGlobalTransactionId().size() != 0 ) {
         dataOut->write( info->getGlobalTransactionId().size() );
-        dataOut->write( (const unsigned char*)&(info->getGlobalTransactionId()[0]), info->getGlobalTransactionId().size() );
+        dataOut->write( &info->getGlobalTransactionId()[0], info->getGlobalTransactionId().size() );
     }
     dataOut->write( info->getBranchQualifier().size() != 0 );
     if( info->getBranchQualifier().size() != 0 ) {
         dataOut->write( info->getBranchQualifier().size() );
-        dataOut->write( (const unsigned char*)&(info->getBranchQualifier()[0]), info->getBranchQualifier().size() );
+        dataOut->write( &info->getBranchQualifier()[0], info->getBranchQualifier().size() );
     }
 }
 

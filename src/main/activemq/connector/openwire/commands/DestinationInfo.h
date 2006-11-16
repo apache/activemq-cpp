@@ -51,7 +51,7 @@ namespace commands{
 
         ConnectionId* connectionId;
         ActiveMQDestination* destination;
-        char operationType;
+        unsigned char operationType;
         long long timeout;
         std::vector<BrokerId*> brokerPath;
 
@@ -93,9 +93,9 @@ namespace commands{
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const char getOperationType() const;
-        virtual char getOperationType();
-        virtual void setOperationType( char operationType );
+        virtual const unsigned char getOperationType() const;
+        virtual unsigned char getOperationType();
+        virtual void setOperationType( unsigned char operationType );
 
         virtual const long long getTimeout() const;
         virtual long long getTimeout();

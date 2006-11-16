@@ -324,17 +324,17 @@ void Message::setExpiration(long long expiration ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char Message::getPriority() const {
+const unsigned char Message::getPriority() const {
     return priority;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char Message::getPriority() {
+unsigned char Message::getPriority() {
     return priority;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setPriority(char priority ) {
+void Message::setPriority(unsigned char priority ) {
     this->priority = priority;
 }
 
@@ -384,32 +384,32 @@ void Message::setType(const std::string& type ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<char> Message::getContent() const {
+const std::vector<unsigned char> Message::getContent() const {
     return content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<char> Message::getContent() {
+std::vector<unsigned char> Message::getContent() {
     return content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setContent(std::vector<char> content ) {
+void Message::setContent(std::vector<unsigned char> content ) {
     this->content = content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<char> Message::getMarshalledProperties() const {
+const std::vector<unsigned char> Message::getMarshalledProperties() const {
     return marshalledProperties;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<char> Message::getMarshalledProperties() {
+std::vector<unsigned char> Message::getMarshalledProperties() {
     return marshalledProperties;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setMarshalledProperties(std::vector<char> marshalledProperties ) {
+void Message::setMarshalledProperties(std::vector<unsigned char> marshalledProperties ) {
     this->marshalledProperties = marshalledProperties;
 }
 

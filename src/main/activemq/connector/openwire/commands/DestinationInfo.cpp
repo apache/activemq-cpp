@@ -128,17 +128,17 @@ void DestinationInfo::setDestination(ActiveMQDestination* destination ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char DestinationInfo::getOperationType() const {
+const unsigned char DestinationInfo::getOperationType() const {
     return operationType;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DestinationInfo::getOperationType() {
+unsigned char DestinationInfo::getOperationType() {
     return operationType;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setOperationType(char operationType ) {
+void DestinationInfo::setOperationType(unsigned char operationType ) {
     this->operationType = operationType;
 }
 

@@ -48,7 +48,7 @@ namespace commands{
     protected:
 
         TransactionId* transactionId;
-        char type;
+        unsigned char type;
         bool wasPrepared;
 
     public:
@@ -85,9 +85,9 @@ namespace commands{
         virtual TransactionId* getTransactionId();
         virtual void setTransactionId( TransactionId* transactionId );
 
-        virtual const char getType() const;
-        virtual char getType();
-        virtual void setType( char type );
+        virtual const unsigned char getType() const;
+        virtual unsigned char getType();
+        virtual void setType( unsigned char type );
 
         virtual const bool getWasPrepared() const;
         virtual bool getWasPrepared();

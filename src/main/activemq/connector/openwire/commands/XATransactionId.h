@@ -47,8 +47,8 @@ namespace commands{
     protected:
 
         int formatId;
-        std::vector<char> globalTransactionId;
-        std::vector<char> branchQualifier;
+        std::vector<unsigned char> globalTransactionId;
+        std::vector<unsigned char> branchQualifier;
 
     public:
 
@@ -84,13 +84,13 @@ namespace commands{
         virtual int getFormatId();
         virtual void setFormatId( int formatId );
 
-        virtual const std::vector<char> getGlobalTransactionId() const;
-        virtual std::vector<char> getGlobalTransactionId();
-        virtual void setGlobalTransactionId( std::vector<char> globalTransactionId );
+        virtual const std::vector<unsigned char> getGlobalTransactionId() const;
+        virtual std::vector<unsigned char> getGlobalTransactionId();
+        virtual void setGlobalTransactionId( std::vector<unsigned char> globalTransactionId );
 
-        virtual const std::vector<char> getBranchQualifier() const;
-        virtual std::vector<char> getBranchQualifier();
-        virtual void setBranchQualifier( std::vector<char> branchQualifier );
+        virtual const std::vector<unsigned char> getBranchQualifier() const;
+        virtual std::vector<unsigned char> getBranchQualifier();
+        virtual void setBranchQualifier( std::vector<unsigned char> branchQualifier );
 
     };
 

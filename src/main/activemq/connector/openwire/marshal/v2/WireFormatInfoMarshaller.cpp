@@ -81,11 +81,11 @@ void WireFormatInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
 
     WireFormatInfo* info =
         dynamic_cast<WireFormatInfo*>( dataStructure );
-    dataOut->write( &info->getMagic()[0], 0, 8 );
+    dataOut->write( &info->getMagic()[0], 8 );
     dataOut->write( info->getVersion() );
     if( bs->readBoolean() ) {
         dataOut->write( info->getMarshalledProperties().size() );
-        dataOut->write( (const unsigned char*)&(info->getMarshalledProperties()[0]), info->getMarshalledProperties().size() );
+        dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
     info->afterMarshall( wireFormat );
 }
@@ -109,12 +109,12 @@ void WireFormatInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
     info->beforeMarshall( wireFormat );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( &info->getMagic()[0], 0, 8 );
+    dataOut->write( &info->getMagic()[0], 8 );
     dataOut->write( info->getVersion() );
     dataOut->write( info->getMarshalledProperties().size() != 0 );
     if( info->getMarshalledProperties().size() != 0 ) {
         dataOut->write( info->getMarshalledProperties().size() );
-        dataOut->write( (const unsigned char*)&(info->getMarshalledProperties()[0]), info->getMarshalledProperties().size() );
+        dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
     info->afterMarshall( wireFormat );
 }

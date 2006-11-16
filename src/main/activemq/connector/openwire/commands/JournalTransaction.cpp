@@ -100,17 +100,17 @@ void JournalTransaction::setTransactionId(TransactionId* transactionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const char JournalTransaction::getType() const {
+const unsigned char JournalTransaction::getType() const {
     return type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char JournalTransaction::getType() {
+unsigned char JournalTransaction::getType() {
     return type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTransaction::setType(char type ) {
+void JournalTransaction::setType(unsigned char type ) {
     this->type = type;
 }
 
