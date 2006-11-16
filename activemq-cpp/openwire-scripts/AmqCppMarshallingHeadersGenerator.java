@@ -49,7 +49,7 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
         }
         else if( type.isArrayType() ) {
             if( name.equals( "byte[]" ) )
-                name = "char[]";
+                name = "unsigned char[]";
             
             JClass arrayClass = type.getArrayComponentType();
             
@@ -75,7 +75,7 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             return "long long";
         }
         else if( name.equals("byte") ) {
-            return "char";
+            return "unsigned char";
         }
         else if( !type.isPrimitiveType() ) {
             return name;
