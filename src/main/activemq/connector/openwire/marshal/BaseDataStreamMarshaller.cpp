@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include <activemq/connector/openwire/marhsal/BaseDataStreamMarshaller.h>
+#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/connector/openwire/commands/MessageId.h>
 #include <activemq/connector/openwire/commands/ProducerId.h>
 #include <activemq/connector/openwire/commands/TransactionId.h>
@@ -44,7 +44,7 @@ std::string BaseDataStreamMarshaller::toString( commands::MessageId* id )
 {
     if( id == NULL ) return "";
     
-    return OpenWireFormat::toString( id->getProducerId() ) + ":" + 
+    return toString( id->getProducerId() ) + ":" + 
            Long::toString( id->getProducerSequenceId() );
 }
 
@@ -74,4 +74,18 @@ std::string BaseDataStreamMarshaller::toString( commands::TransactionId* txnId )
     }
 
     return "";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string BaseDataStreamMarshaller::toHexFromBytes( 
+    const std::vector<unsigned char>& data )
+{
+    std::string buffer = "";
+    
+    for( int i = 0; i < data.size(); i++ )
+    {
+        buffer.append( hexTable[ data[i] ] );
+    }
+    
+    return buffer;
 }
