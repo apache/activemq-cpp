@@ -19,6 +19,9 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_BASEDATASTREAMMARSHALLER_H_
 
 #include <activemq/connector/openwire/DataStreamMarshaller.h>
+#include <activemq/connector/openwire/commands/MessageId.h>
+#include <activemq/connector/openwire/commands/ProducerId.h>
+#include <activemq/connector/openwire/commands/TransactionId.h>
 
 namespace activemq{
 namespace connector{
@@ -95,6 +98,29 @@ namespace marshal{
                                      commands::DataStructure* command, 
                                      io::DataInputStream* dis ) 
                                         throw ( io::IOException ) {};
+
+    public:      // Statics
+
+        /**
+         * Converts the object to a String
+         * @param id - MessageId pointer
+         * @returns string representing the id
+         */
+        static std::string toString( commands::MessageId* id );
+
+        /**
+         * Converts the object to a String
+         * @param id - ProducerId pointer
+         * @returns string representing the id
+         */
+        static std::string toString( commands::ProducerId* id );
+
+        /**
+         * Converts the given transaction ID into a String
+         * @param txnId - TransactionId poitner
+         * @returns string representation of the id
+         */
+        static std::string toString( commands::TransactionId* txnId );
 
     protected:
 

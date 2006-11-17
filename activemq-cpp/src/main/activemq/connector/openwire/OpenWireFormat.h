@@ -24,10 +24,6 @@
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/util/SimpleProperties.h>
 #include <activemq/exceptions/IllegalStateException.h>
-#include <activemq/connector/openwire/commands/MessageId.h>
-#include <activemq/connector/openwire/commands/ProducerId.h>
-#include <activemq/connector/openwire/commands/TransactionId.h>
-    
 
 namespace activemq{
 namespace connector{
@@ -250,29 +246,6 @@ namespace openwire{
         void setMaxInactivityDuration( long maxInactivityDuration ) {
             this->maxInactivityDuration = maxInactivityDuration;
         }
-
-    public:      // Statics
-
-        /**
-         * Converts the object to a String
-         * @param id - MessageId pointer
-         * @returns string representing the id
-         */
-        static std::string toString( commands::MessageId* id );
-
-        /**
-         * Converts the object to a String
-         * @param id - ProducerId pointer
-         * @returns string representing the id
-         */
-        static std::string toString( commands::ProducerId* id );
-
-        /**
-         * Converts the given transaction ID into a String
-         * @param txnId - TransactionId poitner
-         * @returns string representation of the id
-         */
-        static std::string toString( commands::TransactionId* txnId );
 
     protected:
     
