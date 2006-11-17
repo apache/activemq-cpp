@@ -37,7 +37,50 @@ namespace commands{
     {
     protected:
 
+        enum DESTINATION_TYPE_IDS {
+            ACTIVEMQ_TOPIC = 1,
+            ACTIVEMQ_TEMPORARY_TOPIC = 2,
+            ACTIVEMQ_QUEUE = 3,
+            ACTIVEMQ_TEMPORARY_QUEUE = 4
+        };
+        
+        /**
+         * prefix for Advisory message destinations
+         */
+        static const std::string ADVISORY_PREFIX;
+        
+        /**
+         * prefix for consumer advisory destinations
+         */
+        static const std::string CONSUMER_ADVISORY_PREFIX;
+        
+        /**
+         * prefix for producer advisory destinations
+         */
+        static const std::string PRODUCER_ADVISORY_PREFIX;
+        
+        /**
+         * prefix for connection advisory destinations
+         */
+        static const std::string CONNECTION_ADVISORY_PREFIX;
+        
+        /**
+         * The default target for ordered destinations
+         */
+        static const std::string DEFAULT_ORDERED_TARGET;
+        
+        static const std::string TEMP_PREFIX;
+        static const std::string TEMP_POSTFIX;
+        static const std::string COMPOSITE_SEPARATOR;
+
+        // Cached transient data
+        bool exclusive;
+        bool ordered;
+        bool advisory;
+        std::string orderedTarget = DEFAULT_ORDERED_TARGET;
+        
         std::string physicalName;
+        std::map<std::string, std::string> options;
 
     public:
 
@@ -56,9 +99,105 @@ namespace commands{
         virtual void copyDataStructure( const DataStructure* src );
 
         virtual unsigned char getDataStructureType() const;
-        virtual const std::string& getPhysicalName() const;
-        virtual std::string& getPhysicalName();
-        virtual void setPhysicalName( const std::string& physicalName );
+
+        /**
+         * Fetch this destination's physical name
+         * @returns const string containing the name
+         */
+        virtual const std::string& getPhysicalName() const {
+            return this->physicalName;
+        }
+        virtual std::string& getPhysicalName() {
+            return this->physicalName;
+        }
+
+        /**
+         * Set this destination's physical name
+         * @returns const string containing the name
+         */
+        virtual void setPhysicalName( const std::string& physicalName ){
+            this->physicalName = physicalName;
+        }
+
+        /**
+         * @return Returns the advisory.
+         */
+        virtual bool isAdvisory() {
+            return advisory;
+        }
+        
+        /**
+         * @param advisory The advisory to set.
+         */
+        void setAdvisory( bool advisory ){
+            this->advisory = advisory;
+        }
+        
+        /**
+         * @return true if this is a destination for Consumer advisories
+         */
+        bool isConsumerAdvisory() {
+            return isAdvisory() && 
+                   physicalName.find(CONSUMER_ADVISORY_PREFIX) == 0;
+        }
+        
+        /**
+         * @return true if this is a destination for Producer advisories
+         */
+        bool isProducerAdvisory() {
+            return isAdvisory() && 
+                   physicalName.find(PRODUCER_ADVISORY_PREFIX) == 0;
+        }
+        
+        /**
+         * @return true if this is a destination for Connection advisories
+         */
+        bool isConnectionAdvisory() {
+            return isAdvisory() && 
+                   physicalName.find(CONNECTION_ADVISORY_PREFIX) == 0;
+        }
+        
+        /**
+         * @return Returns the exclusive.
+         */
+        bool isExclusive() {
+            return exclusive;
+        }
+        
+        /**
+         * @param exclusive The exclusive to set.
+         */
+        void setExclusive( bool exclusive ) {
+            this.exclusive = exclusive;
+        }
+        
+        /**
+         * @return Returns the ordered.
+         */
+        bool isOrdered() {
+            return ordered;
+        }
+
+        /**
+         * @param ordered The ordered to set.
+         */
+        void setOrdered( bool ordered ) {
+            this.ordered = ordered;
+        }
+
+        /**
+         * @return Returns the orderedTarget.
+         */
+        std::string getOrderedTarget() {
+            return orderedTarget;
+        }
+
+        /**
+         * @param orderedTarget The orderedTarget to set.
+         */
+        void setOrderedTarget( const std::string& orderedTarget) {
+            this.orderedTarget = orderedTarget;
+        }
 
     };
 

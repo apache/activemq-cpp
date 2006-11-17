@@ -73,13 +73,17 @@ namespace commands{
          * Retrieve the Destination Type for this Destination
          * @return The Destination Type
          */
-        virtual cms::Destination::DestinationType getDestinationType(void) const;
+        virtual cms::Destination::DestinationType getDestinationType(void) const {
+            return cms::Destination::QUEUE;
+        }
         
         /**
          * Converts the Destination Name into a String 
          * @return string name
          */
-        virtual std::string toString(void) const;
+        virtual std::string toString(void) const {
+            return this->getPhysicalName();
+        }
 
         /**
          * Converts the Destination to a String value representing the
@@ -87,20 +91,28 @@ namespace commands{
          * necessarily equal to the User Supplied name of the Destination
          * @return Provider specific Name
          */
-        virtual std::string toProviderString(void) const;
+        virtual std::string toProviderString(void) const {
+            return this->getPhysicalName();
+        }
         
         /**
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const;
+        virtual cms::Destination* clone(void) const {
+            return dynamic_cast<cms::Destination*>( 
+                this->cloneDataStructure() );
+        }
       
         /**
          * Copies the contents of the given Destinastion object to this one.
          * @param source The source Destination object.
          */
-        virtual void copy( const cms::Destination& source );
+        virtual void copy( const cms::Destination& source ) {
+            this->copyDataStructure( 
+                dynamic_cast<const DataStructure*>( &source ) );
+        }
 
         /**
          * Retrieve any properties that might be part of the destination
@@ -117,7 +129,9 @@ namespace commands{
          * @return The queue name.
          */
         virtual std::string getQueueName() const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+                return this->getPhysicalName();
+        }
 
     };
 
