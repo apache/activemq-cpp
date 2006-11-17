@@ -67,6 +67,8 @@ AC_CHECK_SIZEOF(char, 1)
 AC_CHECK_SIZEOF(short, 2)
 AC_CHECK_SIZEOF(int, 4)
 AC_CHECK_SIZEOF(long long, 8)
+AC_CHECK_SIZEOF(float, 4)
+AC_CHECK_SIZEOF(double, 8)
 
 AC_CHECK_HEADERS([uuid.h])
 AC_CHECK_HEADERS([uuid/uuid.h])
