@@ -41,6 +41,7 @@ const std::string ActiveMQDestination::COMPOSITE_SEPARATOR = ",";
 ActiveMQDestination::ActiveMQDestination()
 {
     this->physicalName = "";
+    this->orderedTarget = DEFAULT_ORDERED_TARGET;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

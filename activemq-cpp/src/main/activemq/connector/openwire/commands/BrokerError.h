@@ -61,10 +61,10 @@ namespace commands{
          */
         virtual void copyCommand( const DataStructure* src ) {
             
-            BrokerError* srcErr = dynamic_cast<BrokerError*>( src );
+            BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
             
             if( srcErr == NULL || src == NULL ) {
-                throw exceptions::NullPointerException(
+                throw activemq::exceptions::NullPointerException(
                     __FILE__, __LINE__,
                     "BrokerError::copyCommand - src is NULL or invalid" );
             } 
