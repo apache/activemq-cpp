@@ -25,6 +25,19 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
+const std::string ActiveMQDestination::ADVISORY_PREFIX = "ActiveMQ.Advisory.";
+const std::string ActiveMQDestination::CONSUMER_ADVISORY_PREFIX = 
+    ActiveMQDestination::ADVISORY_PREFIX + "Consumers.";
+const std::string ActiveMQDestination::PRODUCER_ADVISORY_PREFIX = 
+    ActiveMQDestination::ADVISORY_PREFIX + "Producers.";
+const std::string ActiveMQDestination::CONNECTION_ADVISORY_PREFIX = 
+    ActiveMQDestination::ADVISORY_PREFIX + "Connections.";
+const std::string ActiveMQDestination::DEFAULT_ORDERED_TARGET = "coordinator";
+const std::string ActiveMQDestination::TEMP_PREFIX = "{TD{";
+const std::string ActiveMQDestination::TEMP_POSTFIX = "}TD}";
+const std::string ActiveMQDestination::COMPOSITE_SEPARATOR = ",";
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination()
 {
     this->physicalName = "";
@@ -59,19 +72,3 @@ unsigned char ActiveMQDestination::getDataStructureType() const
 {
     return ActiveMQDestination::ID_ACTIVEMQDESTINATION; 
 }
-
-////////////////////////////////////////////////////////////////////////////////
-const std::string& ActiveMQDestination::getPhysicalName() const {
-    return physicalName;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string& ActiveMQDestination::getPhysicalName() {
-    return physicalName;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
-//    this->physicalName = physicalName;
-//}
-
