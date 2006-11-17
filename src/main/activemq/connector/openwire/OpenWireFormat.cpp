@@ -24,11 +24,6 @@
 #include <activemq/util/Math.h>
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
-#include <activemq/connector/openwire/commands/MessageId.h>
-#include <activemq/connector/openwire/commands/ProducerId.h>
-#include <activemq/connector/openwire/commands/TransactionId.h>
-#include <activemq/connector/openwire/commands/LocalTransactionId.h>
-#include <activemq/connector/openwire/commands/XATransactionId.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/marshal/MarshalAware.h>
@@ -472,41 +467,4 @@ void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
     this->sizePrefixDisabled = info->isSizePrefixDisabled() && 
                                preferedWireFormatInfo->isSizePrefixDisabled();
     
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string OpenWireFormat::toString( commands::MessageId* id )
-{
-    if( id == NULL ) return "";
-    
-    return OpenWireFormat::toString( id->getProducerId() ) + ":" + 
-           Long::toString( id->getProducerSequenceId() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string OpenWireFormat::toString( commands::ProducerId* id )
-{
-    return id->getConnectionId() + ":" + 
-           Long::toString( id->getSessionId() ) + ":" + 
-           Long::toString( id->getValue() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string OpenWireFormat::toString( commands::TransactionId* txnId )
-{
-    LocalTransactionId* ltxnId = dynamic_cast<LocalTransactionId*>( txnId );
-    XATransactionId* xaTxnId = dynamic_cast<XATransactionId*>( txnId );
-        
-    if( ltxnId != NULL )
-    {
-        return Long::toString( ltxnId->getValue() );
-    }
-    else if( xaTxnId != NULL )
-    {
-//        return string("XID:") + Integer::toString( xaTxnId->getFormatId() ) + ":" + 
-//               toHexFromBytes( xaTxnId->getGlobalTransactionId() ) + ":" + 
-//               toHexFromBytes( xaTxnId->getBranchQualifier() );        
-    }
-
-    return "";
 }
