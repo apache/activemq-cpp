@@ -77,7 +77,7 @@ namespace commands{
         bool exclusive;
         bool ordered;
         bool advisory;
-        std::string orderedTarget = DEFAULT_ORDERED_TARGET;
+        std::string orderedTarget;
         
         std::string physicalName;
         std::map<std::string, std::string> options;
@@ -168,7 +168,7 @@ namespace commands{
          * @param exclusive The exclusive to set.
          */
         void setExclusive( bool exclusive ) {
-            this.exclusive = exclusive;
+            this->exclusive = exclusive;
         }
         
         /**
@@ -182,7 +182,7 @@ namespace commands{
          * @param ordered The ordered to set.
          */
         void setOrdered( bool ordered ) {
-            this.ordered = ordered;
+            this->ordered = ordered;
         }
 
         /**
@@ -196,7 +196,7 @@ namespace commands{
          * @param orderedTarget The orderedTarget to set.
          */
         void setOrderedTarget( const std::string& orderedTarget) {
-            this.orderedTarget = orderedTarget;
+            this->orderedTarget = orderedTarget;
         }
 
     };
