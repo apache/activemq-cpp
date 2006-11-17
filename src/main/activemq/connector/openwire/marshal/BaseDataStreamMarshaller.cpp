@@ -22,9 +22,12 @@
 #include <activemq/connector/openwire/commands/LocalTransactionId.h>
 #include <activemq/connector/openwire/commands/XATransactionId.h>
 #include <activemq/connector/openwire/utils/HexTable.h>
+#include <activemq/util/Long.h>
+#include <activemq/util/Integer.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
@@ -68,9 +71,9 @@ std::string BaseDataStreamMarshaller::toString( commands::TransactionId* txnId )
     }
     else if( xaTxnId != NULL )
     {
-//        return string("XID:") + Integer::toString( xaTxnId->getFormatId() ) + ":" + 
-//               toHexFromBytes( xaTxnId->getGlobalTransactionId() ) + ":" + 
-//               toHexFromBytes( xaTxnId->getBranchQualifier() );        
+        return string("XID:") + Integer::toString( xaTxnId->getFormatId() ) + ":" + 
+               toHexFromBytes( xaTxnId->getGlobalTransactionId() ) + ":" + 
+               toHexFromBytes( xaTxnId->getBranchQualifier() );        
     }
 
     return "";

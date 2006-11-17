@@ -35,8 +35,8 @@ namespace util{
          * @param String to parse
          * @return long value
          */
-        static long parseLong( const std::string& value ){
-            long ret = 0;
+        static long long parseLong( const std::string& value ){
+            long long ret = 0;
             std::istringstream istream(value);
             istream.clear();
             istream >> ret;
@@ -48,7 +48,7 @@ namespace util{
          * @param long to convert
          * @return string representation
          */
-        static std::string toString( long value ){
+        static std::string toString( long long value ){
             std::ostringstream ostream;
             ostream << value;
             return ostream.str();
