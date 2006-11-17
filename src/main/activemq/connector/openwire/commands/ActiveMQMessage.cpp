@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
+#include <activemq/connector/openwire/OpenWireFormat.h>
 
 using namespace std;
 using namespace activemq;
@@ -35,3 +36,12 @@ unsigned char ActiveMQMessage::getDataStructureType() const {
     return ActiveMQMessage::ID_ACTIVEMQMESSAGE; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat )
+{
+//    marshalledProperties.clear();
+//    if( !properties.empty() )
+//    {
+//        properties.Marshal( marshalledProperties );
+//    }
+}
