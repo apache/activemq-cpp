@@ -22,14 +22,24 @@
 #include <activemq/connector/openwire/commands/MessageId.h>
 #include <activemq/connector/openwire/commands/ProducerId.h>
 #include <activemq/connector/openwire/commands/TransactionId.h>
+#include <activemq/connector/openwire/utils/HexTable.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace marshal{
 
+    /**
+     * Base class for all Marshallers that marshal DataStructures to and
+     * from the wire using the OpenWire protocal.  
+     */
     class BaseDataStreamMarshaller : public DataStreamMarshaller
     {
+    private:
+    
+        // Table for converting bytes to Hex Strings.
+        static utils::HexTable hexTable;
+    
     public:
     
     	BaseDataStreamMarshaller();
@@ -121,6 +131,15 @@ namespace marshal{
          * @returns string representation of the id
          */
         static std::string toString( commands::TransactionId* txnId );
+
+        /**
+         * given an array of bytes, convert that array to a Hexidecimal 
+         * coded string that represents that data.
+         * @param data - unsigned char data array pointer
+         * @returns a string coded in hex that represents the data
+         */
+        static std::string toHexFromBytes( 
+            const std::vector<unsigned char>& data );
 
     protected:
 
