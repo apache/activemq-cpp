@@ -42,8 +42,7 @@ namespace marshal{
     
     public:
     
-    	BaseDataStreamMarshaller();
-    	virtual ~BaseDataStreamMarshaller();
+    	virtual ~BaseDataStreamMarshaller() {}
 
         /**
          * Tight Marhsal to the given stream
@@ -55,7 +54,7 @@ namespace marshal{
         virtual int tightMarshal1( OpenWireFormat* format, 
                                    commands::DataStructure* command, 
                                    utils::BooleanStream* bs ) 
-                                       throw ( io::IOException ) { return 0; };
+                                       throw ( io::IOException ) = 0;
 
         /**
          * Tight Marhsal to the given stream
@@ -69,7 +68,7 @@ namespace marshal{
                                     commands::DataStructure* command, 
                                     io::DataOutputStream* ds, 
                                     utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) {};
+                                        throw ( io::IOException ) = 0;
 
         /**
          * Tight Un-marhsal to the given stream
@@ -83,7 +82,7 @@ namespace marshal{
                                      commands::DataStructure* command, 
                                      io::DataInputStream* dis, 
                                      utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) {};
+                                        throw ( io::IOException ) = 0;
     
         /**
          * Tight Marhsal to the given stream
@@ -95,7 +94,7 @@ namespace marshal{
         virtual void looseMarshal( OpenWireFormat* format, 
                                    commands::DataStructure* command, 
                                    io::DataOutputStream* ds ) 
-                                       throw ( io::IOException ) {};
+                                       throw ( io::IOException ) = 0;
 
         /**
          * Loose Un-marhsal to the given stream
@@ -107,7 +106,7 @@ namespace marshal{
         virtual void looseUnmarshal( OpenWireFormat* format, 
                                      commands::DataStructure* command, 
                                      io::DataInputStream* dis ) 
-                                        throw ( io::IOException ) {};
+                                        throw ( io::IOException ) = 0;
 
     public:      // Statics
 
@@ -144,23 +143,274 @@ namespace marshal{
     protected:
 
         /**
+         * Tight Unmarshall the cached object
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @param bs - boolean stream to marshal to.
+         * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
+         */
+        virtual commands::DataStructure* tightUnmarshalCachedObject(
+            OpenWireFormat* wireFormat, 
+            io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( io::IOException );
+
+        /**
+         * Tightly marshalls the passed DataStructure based object to the passed
+         * BooleanStream returning the size of the data marshalled
+         * @param wireFormat - The OpenwireFormat properties
+         * @param data - DataStructure Object Pointer to marshal 
+         * @param bs - boolean stream to marshal to.
+         * @returns size of data written.
+         * @throws IOException if an error occurs.
+         */
+        virtual int tightMarshalCachedObject1( OpenWireFormat* wireFormat, 
+                                               commands::DataStructure* data, 
+                                               utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Tightly marshalls the passed DataStructure based object to the passed
+         * streams returning nothing
+         * @param wireFormat - The OpenwireFormat properties
+         * @param data - DataStructure Object Pointer to marshal 
+         * @param bs - boolean stream to marshal to.
+         * @param dataOut - stream to write marshalled data to
+         * @throws IOException if an error occurs.
+         */
+        virtual void tightMarshalCachedObject2( OpenWireFormat* wireFormat, 
+                                                commands::DataStructure* data, 
+                                                io::DataOutputStream* dataOut, 
+                                                utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Loosely marshalls the passed DataStructure based object to the passed
+         * stream returning nothing
+         * @param wireFormat - The OpenwireFormat properties
+         * @param data - DataStructure Object Pointer to marshal 
+         * @param bs - boolean stream to marshal to.
+         * @param dataOut - stream to write marshalled data to
+         * @throws IOException if an error occurs.
+         */
+        virtual void looseMarshalCachedObject( OpenWireFormat* wireFormat, 
+                                               commands::DataStructure* data, 
+                                               io::DataOutputStream* dataOut ) 
+                                                    throw ( io::IOException );
+        
+        /**
+         * Loose Unmarshall the cached object
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
+         */
+        virtual commands::DataStructure* looseUnmarshalCachedObject( 
+            OpenWireFormat* wireFormat, 
+            io::DataInputStream* dataIn ) throw ( io::IOException );
+
+        /**
+         * Tightly marshalls the passed DataStructure based object to the passed
+         * BooleanStream returning the size of the data marshalled
+         * @param wireFormat - The OpenwireFormat properties
+         * @param object - DataStructure Object Pointer to marshal 
+         * @param bs - boolean stream to marshal to.
+         * @returns size of data written.
+         * @throws IOException if an error occurs.
+         */
+        virtual int tightMarshalNestedObject1( OpenWireFormat* wireFormat, 
+                                               commands::DataStructure* object, 
+                                               utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Tightly marshalls the passed DataStructure based object to the passed
+         * streams returning nothing
+         * @param wireFormat - The OpenwireFormat properties
+         * @param object - DataStructure Object Pointer to marshal 
+         * @param bs - boolean stream to marshal to.
+         * @param dataOut - stream to write marshalled data to
+         * @throws IOException if an error occurs.
+         */
+        virtual void tightMarshalNestedObject2( OpenWireFormat* wireFormat, 
+                                                commands::DataStructure* object, 
+                                                io::DataOutputStream* dataOut, 
+                                                utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Tight Unmarshall the nested object
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @param bs - boolean stream to marshal to.
+         * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
+         */
+        virtual commands::DataStructure* tightUnmarshalNestedObject(
+            OpenWireFormat* wireFormat,
+            io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( io::IOException );
+
+        /**
+         * Loose Unmarshall the nested object
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
+         */
+        virtual commands::DataStructure* looseUnmarshalNestedObject( 
+            OpenWireFormat* wireFormat,
+            io::DataInputStream* dataIn ) throw ( io::IOException );
+
+        /**
+         * Loose marshall the nested object
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param object - DataStructure Object Pointer to marshal 
+         * @param dataOut - stream to write marshalled data to
+         * @throws IOException if an error occurs.
+         */
+        virtual void looseMarshalNestedObject( OpenWireFormat* wireFormat, 
+                                               commands::DataStructure* object, 
+                                               io::DataOutputStream* dataOut ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Performs Tight Unmarshalling of String Objects
+         * @param dataIn - the DataInputStream to Un-Marshal from
+         * @param bs - boolean stream to unmarshal from.
+         * @returns the unmarshalled string.
+         * @throws IOException if an error occurs.
+         */
+        virtual std::string tightUnmarshalString( io::DataInputStream* dataIn, 
+                                                  utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
+
+        /**
+         * Tight Marshals the String to a Booleans Stream Object, returns
+         * the marshalled size.
+         * @param value - string to marshal
+         * @param bs - BooleanStream to use.
+         * @returns size of marshalled string. 
+         * @throws IOException if an error occurs.
+         */
+        virtual int tightMarshalString1( const std::string& value, 
+                                         utils::BooleanStream* bs ) 
+                                            throw ( io::IOException );
+
+        /**
+         * Tight Marshals the passed string to the streams passed
+         * @param value - string to marshal
+         * @param dataOut - the DataOutputStream to Marshal to
+         * @param bs - boolean stream to marshal to.
+         * @throws IOException if an error occurs.
+         */ 
+        virtual void tightMarshalString2( const std::string& value, 
+                                          io::DataOutputStream* dataOut, 
+                                          utils::BooleanStream* bs ) 
+                                                throw ( io::IOException );
+
+        /**
+         * Loose Marshal the String to the DataOuputStream passed
+         * @param value - string to marshal
+         * @param dataOut - stream to write marshalled form to
+         * @throws IOException if an error occurs.
+         */
+        virtual void looseMarshalString( const std::string value, 
+                                         io::DataOutputStream* dataOut ) 
+                                            throw ( io::IOException );
+                                         
+        /**
+         * Loose Un-Marshal the String to the DataOuputStream passed
+         * @param dataIn - stream to read marshalled form from
+         * @return the unmarshalled string
+         * @throws IOException if an error occurs.
+         */
+        virtual std::string looseUnmarshalString( io::DataInputStream* dataIn ) 
+            throw ( io::IOException );
+
+        /**
+         * Tightly marshal the long long to the BooleanStream passed.
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param value - long long to marshal
+         * @param bs - boolean stream to marshal to.
+         * @returns size of data written.
+         * @throws IOException if an error occurs.
+         */ 
+        virtual int tightMarshalLong1( OpenWireFormat* wireFormat, 
+                                       long long value,
+                                       utils::BooleanStream* bs ) 
+                                            throw ( io::IOException );
+
+        /**
+         * Tightly marshal the long long to the Streams passed.
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param value - long long to marshal
+         * @param dataOut - stream to write marshalled form to
+         * @param bs - boolean stream to marshal to.
+         * @throws IOException if an error occurs.
+         */ 
+        virtual void tightMarshalLong2( OpenWireFormat* wireFormat, 
+                                        long long value, 
+                                        io::DataOutputStream* dataOut, 
+                                        utils::BooleanStream* bs ) 
+                                            throw ( io::IOException );
+
+        /**
+         * Tight marshal the long long type.  
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @param bs - boolean stream to marshal to.
+         * @returns the unmarshalled long long 
+         * @throws IOException if an error occurs.
+         */
+        virtual long long tightUnmarshalLong( OpenWireFormat* wireFormat, 
+                                              io::DataInputStream* dataIn, 
+                                              utils::BooleanStream* bs ) 
+                                                throw ( io::IOException );
+        
+        /**
+         * Tightly marshal the long long to the BooleanStream passed.
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param value - long long to marshal
+         * @param dataOut - DataOutputStream to marshal to.
+         * @throws IOException if an error occurs.
+         */ 
+        virtual void looseMarshalLong( OpenWireFormat* wireFormat, 
+                                       long long value, 
+                                       io::DataOutputStream* dataOut ) 
+                                            throw ( io::IOException );
+        
+        /**
+         * Loose marshal the long long type.  
+         * @param wireFormat - The OpenwireFormat properties 
+         * @param dataIn - stream to read marshalled form from
+         * @returns the unmarshalled long long 
+         * @throws IOException if an error occurs.
+         */
+        virtual long long looseUnmarshalLong( OpenWireFormat* wireFormat, 
+                                              io::DataInputStream* dataIn ) 
+                                                throw ( io::IOException );
+
+        /**
          * Tight Unmarshal an array of char
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.
          * @returns the unmarshalled vector of chars.
+         * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalByteArray( 
             io::DataInputStream* dataIn, 
-            utils::BooleanStream* bs ) 
+            utils::BooleanStream* bs ) throw ( io::IOException )
                 { return std::vector<unsigned char>(); }
 
         /**
          * Loose Unmarshal an array of char
          * @param dataIn - the DataInputStream to Un-Marshal from
          * @returns the unmarshalled vector of chars.
+         * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalByteArray( 
-            io::DataInputStream* dataIn )    
+            io::DataInputStream* dataIn ) throw ( io::IOException )  
             { return std::vector<unsigned char>(); }
 
         /**
@@ -170,11 +420,14 @@ namespace marshal{
          * @param bs - boolean stream to unmarshal from.
          * @param size - size of the const array to unmarshal
          * @returns the unmarshalled vector of chars.
+         * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
             utils::BooleanStream* bs, 
-            int size ) { return std::vector<unsigned char>(); }
+            int size ) throw ( io::IOException ) { 
+                return std::vector<unsigned char>(); 
+        }
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -183,238 +436,25 @@ namespace marshal{
          * @param bs - boolean stream to unmarshal from.
          * @param size - size of the const array to unmarshal
          * @returns the unmarshalled vector of chars.
+         * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
-            int size ) { return std::vector<unsigned char>(); }
-
-        /**
-         * Performs Tight Unmarshalling of String Objects
-         * @param dataIn - the DataInputStream to Un-Marshal from
-         * @param bs - boolean stream to unmarshal from.
-         * @returns the unmarshalled string.
-         */
-        virtual std::string tightUnmarshalString( io::DataInputStream* dataIn, 
-                                                  utils::BooleanStream* bs ) {}
-
-
-        /**
-         * Tight Marshals the String to a Booleans Stream Object, returns
-         * the marshalled size.
-         * @param value - string to marshal
-         * @param bs - BooleanStream to use.
-         * @returns size of marshalled string. 
-         */
-        virtual int tightMarshalString1( const std::string& value, 
-                                         utils::BooleanStream* bs ) {}
-
-        /**
-         * Tight Marshals the passed string to the streams passed
-         * @param value - string to marshal
-         * @param dataOut - the DataOutputStream to Marshal to
-         * @param bs - boolean stream to marshal to.
-         */ 
-        virtual void tightMarshalString2( const std::string& value, 
-                                          io::DataOutputStream* dataOut, 
-                                          utils::BooleanStream* bs ) {}
-
-        /**
-         * Loose Marshal the String to the DataOuputStream passed
-         * @param value - string to marshal
-         * @param dataOut - stream to write marshalled form to
-         */
-        virtual void looseMarshalString( const std::string value, 
-                                         io::DataOutputStream* dataOut ) {}
-                                         
-        /**
-         * Loose Un-Marshal the String to the DataOuputStream passed
-         * @param dataIn - stream to read marshalled form from
-         * @return the unmarshalled string
-         */
-        virtual std::string looseUnmarshalString( io::DataInputStream* dataIn ) {}
-
-        /**
-         * Tightly marshal the long long to the BooleanStream passed.
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param value - long long to marshal
-         * @param bs - boolean stream to marshal to.
-         * @returns size of data written.
-         */ 
-        virtual int tightMarshalLong1( OpenWireFormat* wireFormat, 
-                                       long long value,
-                                       utils::BooleanStream* bs ) {}
-
-        /**
-         * Tightly marshal the long long to the Streams passed.
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param value - long long to marshal
-         * @param dataOut - stream to write marshalled form to
-         * @param bs - boolean stream to marshal to.
-         */ 
-        virtual void tightMarshalLong2( OpenWireFormat* wireFormat, 
-                                        long long value, 
-                                        io::DataOutputStream* dataOut, 
-                                        utils::BooleanStream* bs ) {}
-
-        /**
-         * Tight marshal the long long type.  
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @param bs - boolean stream to marshal to.
-         * @returns the unmarshalled long long 
-         */
-        virtual long long tightUnmarshalLong( OpenWireFormat* wireFormat, 
-                                              io::DataInputStream* dataIn, 
-                                              utils::BooleanStream* bs ) {}
-
+            int size ) throw ( io::IOException ) 
+        { return std::vector<unsigned char>(); }
         
-        /**
-         * Tightly marshal the long long to the BooleanStream passed.
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param value - long long to marshal
-         * @param dataOut - DataOutputStream to marshal to.
-         */ 
-        virtual void looseMarshalLong( OpenWireFormat* wireFormat, 
-                                       long long value, 
-                                       io::DataOutputStream* dataOut ) {}
-        
-        /**
-         * Loose marshal the long long type.  
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @returns the unmarshalled long long 
-         */
-        virtual long long looseUnmarshalLong( OpenWireFormat* wireFormat, 
-                                              io::DataInputStream* dataIn ) { return 0; }
-        
-        /**
-         * Tight Unmarshall the cached object
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @param bs - boolean stream to marshal to.
-         * @returns pointer to a new DataStructure Object
-         */
-        virtual commands::DataStructure* tightUnmarshalCachedObject(
-            OpenWireFormat* wireFormat, 
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) {}
-
-        /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * BooleanStream returning the size of the data marshalled
-         * @param wireFormat - The OpenwireFormat properties
-         * @param data - DataStructure Object Pointer to marshal 
-         * @param bs - boolean stream to marshal to.
-         * @returns size of data written.
-         */
-        virtual int tightMarshalCachedObject1( OpenWireFormat* wireFormat, 
-                                               commands::DataStructure* data, 
-                                               utils::BooleanStream* bs ) { return 0; }
-
-        /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * streams returning nothing
-         * @param wireFormat - The OpenwireFormat properties
-         * @param data - DataStructure Object Pointer to marshal 
-         * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
-         */
-        virtual void tightMarshalCachedObject2( OpenWireFormat* wireFormat, 
-                                                commands::DataStructure* data, 
-                                                io::DataOutputStream* dataOut, 
-                                                utils::BooleanStream* bs ) {}
-
-
-        /**
-         * Loosely marshalls the passed DataStructure based object to the passed
-         * stream returning nothing
-         * @param wireFormat - The OpenwireFormat properties
-         * @param data - DataStructure Object Pointer to marshal 
-         * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
-         */
-        virtual void looseMarshalCachedObject( OpenWireFormat* wireFormat, 
-                                               commands::DataStructure* data, 
-                                               io::DataOutputStream* dataOut ) {}
-        
-        /**
-         * Loose Unmarshall the cached object
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @returns pointer to a new DataStructure Object
-         */
-        virtual commands::DataStructure* looseUnmarshalCachedObject( 
-            OpenWireFormat* wireFormat, 
-            io::DataInputStream* dataIn ) { return NULL; }
-
-        /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * BooleanStream returning the size of the data marshalled
-         * @param wireFormat - The OpenwireFormat properties
-         * @param object - DataStructure Object Pointer to marshal 
-         * @param bs - boolean stream to marshal to.
-         * @returns size of data written.
-         */
-        virtual int tightMarshalNestedObject1( OpenWireFormat* wireFormat, 
-                                               commands::DataStructure* object, 
-                                               utils::BooleanStream* bs ) { return 0; } 
-
-        /**
-         * Tightly marshalls the passed DataStructure based object to the passed
-         * streams returning nothing
-         * @param wireFormat - The OpenwireFormat properties
-         * @param object - DataStructure Object Pointer to marshal 
-         * @param bs - boolean stream to marshal to.
-         * @param dataOut - stream to write marshalled data to
-         */
-        virtual void tightMarshalNestedObject2( OpenWireFormat* wireFormat, 
-                                                commands::DataStructure* object, 
-                                                io::DataOutputStream* dataOut, 
-                                                utils::BooleanStream* bs ) {}
-
-        /**
-         * Tight Unmarshall the nested object
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @param bs - boolean stream to marshal to.
-         * @returns pointer to a new DataStructure Object
-         */
-        virtual commands::DataStructure* tightUnmarshalNestedObject(
-            OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) { return NULL; }
-
-        /**
-         * Loose Unmarshall the nested object
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param dataIn - stream to read marshalled form from
-         * @returns pointer to a new DataStructure Object
-         */
-        virtual commands::DataStructure* looseUnmarshalNestedObject( 
-            OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn ) { return NULL; }
-
-        /**
-         * Loose marshall the nested object
-         * @param wireFormat - The OpenwireFormat properties 
-         * @param object - DataStructure Object Pointer to marshal 
-         * @param dataOut - stream to write marshalled data to
-         */
-        virtual void looseMarshalNestedObject( OpenWireFormat* wireFormat, 
-                                               commands::DataStructure* object, 
-                                               io::DataOutputStream* dataOut ) {}
-
         /**
          * Tight Unarshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
          * @param dataIn - stream to read marshalled form from
          * @param bs - boolean stream to marshal to.
          * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
          */
         virtual commands::DataStructure* tightUnmarshalBrokerError( 
             OpenWireFormat* wireFormat, 
             io::DataInputStream* dataIn, 
-            utils::BooleanStream* bs ) { return NULL; }
+            utils::BooleanStream* bs ) throw ( io::IOException );
             
         /**
          * Tight Marshall the Error object
@@ -422,10 +462,12 @@ namespace marshal{
          * @param error - Error to Marshal
          * @param bs - boolean stream to marshal to.
          * @returns size of the marshalled data
+         * @throws IOException if an error occurs.
          */
         virtual int tightMarshalBrokerError1( OpenWireFormat* wireFormat, 
                                               commands::DataStructure* error, 
-                                              utils::BooleanStream* bs ) { return 0; }
+                                              utils::BooleanStream* bs ) 
+                                                    throw ( io::IOException );
                                               
         /**
          * Tight Marshall the Error object
@@ -433,49 +475,68 @@ namespace marshal{
          * @param error - Error to Marshal
          * @param dataOut - stream to write marshalled data to
          * @param bs - boolean stream to marshal to.
+         * @throws IOException if an error occurs.
          */
         virtual void tightMarshalBrokerError2( OpenWireFormat* wireFormat, 
                                                commands::DataStructure* error, 
                                                io::DataOutputStream* dataOut, 
-                                               utils::BooleanStream* bs ) {}
+                                               utils::BooleanStream* bs )
+                                                    throw ( io::IOException );
                                                
         /**
          * Loose Unarshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
          * @param dataIn - stream to read marshalled form from
          * @returns pointer to a new DataStructure Object
+         * @throws IOException if an error occurs.
          */
         virtual commands::DataStructure* looseUnmarshalBrokerError( 
             OpenWireFormat* wireFormat, 
-            io::DataInputStream* dataIn ) { return NULL; }
+            io::DataInputStream* dataIn ) throw ( io::IOException );
             
         /**
          * Tight Marshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
          * @param error - Error to Marshal
          * @param dataOut - stream to write marshalled data to
+         * @throws IOException if an error occurs.
          */
         virtual void looseMarshalBrokerError( OpenWireFormat* wireFormat, 
                                               commands::DataStructure* error, 
-                                              io::DataOutputStream* dataOut ) {}
+                                              io::DataOutputStream* dataOut ) 
+                                                  throw ( io::IOException );
         
         template<typename T>
         int tightMarshalObjectArray1( OpenWireFormat* wireFormat, 
                                       std::vector<T*>, 
                                       utils::BooleanStream* bs )
+                                        throw ( io::IOException )
         { return 0; }
         
         template<typename T>
         void tightMarshalObjectArray2( OpenWireFormat* wireFormat, 
                                        std::vector<T*>, 
                                        io::DataOutputStream* dataOut, 
-                                       utils::BooleanStream* bs ) {}
+                                       utils::BooleanStream* bs ) 
+                                        throw ( io::IOException ) {}
 
         template<typename T>
         void looseMarshalObjectArray( OpenWireFormat* wireFormat, 
                                       std::vector<T*>, 
-                                      io::DataOutputStream* dataOut ) {}
-                                      
+                                      io::DataOutputStream* dataOut ) 
+                                        throw ( io::IOException ) {}
+                         
+    protected:
+
+        /**
+         * Given an DataInputStream read a know ASCII formatted string from
+         * the input and return that string
+         * @param dataIn - DataInputStream to read from
+         * @return string value read from stream
+         */
+        virtual std::string readAsciiString( io::DataInputStream* dataIn )
+            throw ( io::IOException );
+            
     };
 
 }}}}
