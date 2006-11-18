@@ -69,7 +69,7 @@ namespace commands{
          */
         virtual DataStructure* cloneDataStructure() const {
 
-            BrokerError error = new BrokerError();
+            BrokerError* error = new BrokerError();
             error->copyDataStructure( this );
             return error;
         }            
