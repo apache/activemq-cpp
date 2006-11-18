@@ -69,6 +69,17 @@ namespace openwire{
         virtual transport::Command* unmarshal( io::DataInputStream* dis ) throw ( io::IOException );
 
         /**
+         * Utility method for Tight Marshalling the given object to the boolean
+         * stream passed.
+         * @param object - The DataStructure to marshal
+         * @param bs - the BooleanStream to write to
+         * @returns size of the data returned.
+         */
+        virtual int tightMarshalNestedObject1( commands::DataStructure* object, 
+                                               utils::BooleanStream* bs )
+            throw ( io::IOException );
+        
+        /**
          * Utility method that will Tight marshall some internally nested object
          * that implements the DataStructure interface.  Writes the data to the
          * Data Ouput Stream provided.

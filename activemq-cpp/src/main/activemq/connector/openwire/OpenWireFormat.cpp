@@ -285,6 +285,47 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object, 
+                                               utils::BooleanStream* bs )
+    throw ( io::IOException ) {
+
+    try {
+    
+        bs->writeBoolean( object != NULL );
+        if( object == NULL ) {
+            return 0;
+        }
+            
+//            if (o.IsMarshallAware())
+//            {
+//                MarshallAware ma = (MarshallAware) o;
+//                byte[] sequence = ma.GetMarshalledForm(this);
+//                bs.WriteBoolean(sequence != null);
+//                if (sequence != null)
+//                {
+//                    return 1 + sequence.Length;
+//                }
+//            }
+//            
+//            byte type = o.GetDataStructureType();
+//            if (type == 0) {
+//                throw new IOException("No valid data structure type for: " + o + " of type: " + o.GetType());
+//            }
+//            BaseDataStreamMarshaller dsm = (BaseDataStreamMarshaller) dataMarshallers[type & 0xFF];
+//            if (dsm == null)
+//                throw new IOException("Unknown data type: " + type);
+//            //Console.WriteLine("Marshalling type: " + type + " with structure: " + o);
+//            return 1 + dsm.TightMarshal1(this, o, bs);
+
+        return 0;              
+
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o, 
                                                 DataOutputStream* ds, 
                                                 BooleanStream* bs ) 
