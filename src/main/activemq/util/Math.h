@@ -18,6 +18,9 @@
 #ifndef _ACTIVEMQ_UTIL_MATH_H_
 #define _ACTIVEMQ_UTIL_MATH_H_
 
+#undef min
+#undef max
+
 namespace activemq{
 namespace util{
 
@@ -28,7 +31,7 @@ namespace util{
      */ 
     class Math
     {
-    private:
+    public:
         
         Math();
         virtual ~Math();

@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include "Math.h"
+#include <activemq/util/Math.h>
 
 using namespace activemq;
 using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 Math::Math() {}
-Math::~Math() {} 
+Math::~Math() {}
