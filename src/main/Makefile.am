@@ -47,6 +47,8 @@ cc_sources = \
     activemq/connector/stomp/StompConnectorFactory.cpp \
     activemq/connector/stomp/marshal/Marshaler.cpp \
     activemq/connector/stomp/StompConnector.cpp \
+    activemq/connector/openwire/OpenWireFormat.cpp \
+    activemq/connector/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
@@ -173,6 +175,8 @@ h_sources = \
     activemq/connector/stomp/StompConnector.h \
     activemq/connector/stomp/StompDestination.h \
     activemq/connector/stomp/StompTopic.h \
+    activemq/connector/openwire/OpenWireFormat.h \
+    activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
     activemq/connector/ConnectorFactoryMap.h \
@@ -241,8 +245,8 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h
 
-## include activemq/connector/openwire/commands/srcmakefile.mk
-## include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+include activemq/connector/openwire/commands/srcmakefile.mk
+include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ##
 ## Compiler / Linker Info
