@@ -55,11 +55,31 @@ namespace commands{
         }
 
         /**
+         * Get the DataStructure Type as defined in CommandTypes.h
+         * @return The type of the data structure
+         */
+        virtual unsigned char getDataStructureType() const {
+            return 0;
+        }
+
+        /**
+         * Clone this obbject and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneDataStructure() const {
+
+            BrokerError error = new BrokerError();
+            error->copyDataStructure( this );
+            return error;
+        }            
+        
+        /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyCommand( const DataStructure* src ) {
+        virtual void copyDataStructure( const DataStructure* src ) {
             
             const BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
             
@@ -148,10 +168,10 @@ namespace commands{
          * Sets the Stack Trace Elements for this Exception
          * @param stackTraceElements - Stack Trace Elements
          */
-        virtual void getStackTraceElements( const std::vector<StackTraceElement*>& stackTraceElements ) {
+        virtual void setStackTraceElements( const std::vector<StackTraceElement*>& stackTraceElements ) {
             this->stackTraceElements = stackTraceElements;
         }
-
+        
     private:
 
         std::string message;
