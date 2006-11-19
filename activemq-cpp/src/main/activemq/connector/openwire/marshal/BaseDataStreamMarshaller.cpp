@@ -683,6 +683,81 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray( 
+    io::DataInputStream* dataIn, 
+    utils::BooleanStream* bs ) 
+        throw ( io::IOException ) {
+
+    try{
+        
+        std::vector<unsigned char> data;
+                
+        if( bs->readBoolean() ) {
+            int size = dataIn->readInt();
+            data.resize( size );
+            dataIn->readFully( data );
+        }
+        
+        return data;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray( 
+    io::DataInputStream* dataIn ) 
+        throw ( io::IOException ) {  
+
+    try{
+        int size = dataIn->readInt();
+        std::vector<unsigned char> data;
+        data.resize( size );
+        dataIn->readFully( data );
+        return data;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArray( 
+    io::DataInputStream* dataIn, 
+    utils::BooleanStream* bs, 
+    int size ) 
+        throw ( io::IOException ) {
+         
+    try{
+        std::vector<unsigned char> data;
+        data.resize( size );
+        dataIn->readFully( data );
+        return data;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArray( 
+    io::DataInputStream* dataIn, 
+    int size ) 
+        throw ( io::IOException ) { 
+
+    try{
+        std::vector<unsigned char> data;
+        data.resize( size );
+        dataIn->readFully( data );
+        return data;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::toString( commands::MessageId* id )
 {
     if( id == NULL ) return "";
