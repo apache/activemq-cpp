@@ -296,29 +296,34 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
             return 0;
         }
             
-//            if (o.IsMarshallAware())
-//            {
-//                MarshallAware ma = (MarshallAware) o;
-//                byte[] sequence = ma.GetMarshalledForm(this);
-//                bs.WriteBoolean(sequence != null);
-//                if (sequence != null)
-//                {
-//                    return 1 + sequence.Length;
-//                }
-//            }
-//            
-//            byte type = o.GetDataStructureType();
-//            if (type == 0) {
-//                throw new IOException("No valid data structure type for: " + o + " of type: " + o.GetType());
-//            }
-//            BaseDataStreamMarshaller dsm = (BaseDataStreamMarshaller) dataMarshallers[type & 0xFF];
-//            if (dsm == null)
-//                throw new IOException("Unknown data type: " + type);
-//            //Console.WriteLine("Marshalling type: " + type + " with structure: " + o);
-//            return 1 + dsm.TightMarshal1(this, o, bs);
+        if( object->isMarshallAware() ) {
+            
+            std::vector<unsigned char> sequence = 
+                object->getMarshalledForm(this);
+            bs->writeBoolean( !sequence.empty() );
+            if( !sequence.empty() ) {
+                return 1 + sequence.size();
+            }
+        }
+        
+        unsigned char type = object->getDataStructureType();
+        if( type == 0 ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "No valid data structure type for object of this type");
+        }
+        
+        DataStreamMarshaller* dsm = 
+            dynamic_cast< DataStreamMarshaller* >( dataMarshallers[type & 0xFF] );
+        
+        if( dsm == NULL ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                ( string( "OpenWireFormat::marshal - Unknown data type: " ) + 
+                Integer::toString( type ) ).c_str() );
+        }
 
-        return 0;              
-
+        return 1 + dsm->tightMarshal1( this, object, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
@@ -344,7 +349,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
         if( o->isMarshallAware() && bs->readBoolean() ) {
     
             MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
-            vector<unsigned char> sequence = ma->GetMarshalledForm( this );
+            vector<unsigned char> sequence = ma->getMarshalledForm( this );
             ds->write( &sequence[0], sequence.size() );
             
         } else {
@@ -377,7 +382,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
         
         if( bs->readBoolean() ) {
             
-            byte dataType = dis->readByte();
+            const unsigned char dataType = dis->readByte();
             
             DataStreamMarshaller* dsm = 
                 dynamic_cast< DataStreamMarshaller* >( 

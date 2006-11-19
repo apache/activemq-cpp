@@ -18,12 +18,14 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_DATASTRUCTURE_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_DATASTRUCTURE_H_
 
+#include <activemq/connector/openwire/marshal/MarshalAware.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class DataStructure
+    class DataStructure : public marshal::MarshalAware
     {
     public:
 
@@ -34,12 +36,6 @@ namespace commands{
          * @return The type of the data structure
          */
         virtual unsigned char getDataStructureType() const = 0;
-
-        /**
-         * Get whether this object is aware of marshalling.
-         * @returns true if aware of marshalling.
-         */
-        virtual bool isMarshallAware() const = 0;
 
         /**
          * Clone this obbject and return a new instance that the
