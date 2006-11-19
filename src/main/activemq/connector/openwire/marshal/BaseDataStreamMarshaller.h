@@ -400,8 +400,7 @@ namespace marshal{
          */
         virtual std::vector<unsigned char> tightUnmarshalByteArray( 
             io::DataInputStream* dataIn, 
-            utils::BooleanStream* bs ) throw ( io::IOException )
-                { return std::vector<unsigned char>(); }
+            utils::BooleanStream* bs ) throw ( io::IOException );
 
         /**
          * Loose Unmarshal an array of char
@@ -410,8 +409,7 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalByteArray( 
-            io::DataInputStream* dataIn ) throw ( io::IOException )  
-            { return std::vector<unsigned char>(); }
+            io::DataInputStream* dataIn ) throw ( io::IOException );
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -425,9 +423,7 @@ namespace marshal{
         virtual std::vector<unsigned char> tightUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
             utils::BooleanStream* bs, 
-            int size ) throw ( io::IOException ) { 
-                return std::vector<unsigned char>(); 
-        }
+            int size ) throw ( io::IOException );
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -440,8 +436,7 @@ namespace marshal{
          */
         virtual std::vector<unsigned char> looseUnmarshalConstByteArray( 
             io::DataInputStream* dataIn, 
-            int size ) throw ( io::IOException ) 
-        { return std::vector<unsigned char>(); }
+            int size ) throw ( io::IOException );
         
         /**
          * Tight Unarshall the Error object
@@ -459,26 +454,26 @@ namespace marshal{
         /**
          * Tight Marshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
-         * @param error - Error to Marshal
+         * @param data - Error to Marshal
          * @param bs - boolean stream to marshal to.
          * @returns size of the marshalled data
          * @throws IOException if an error occurs.
          */
         virtual int tightMarshalBrokerError1( OpenWireFormat* wireFormat, 
-                                              commands::DataStructure* error, 
+                                              commands::DataStructure* data, 
                                               utils::BooleanStream* bs ) 
                                                     throw ( io::IOException );
                                               
         /**
          * Tight Marshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
-         * @param error - Error to Marshal
+         * @param data - Error to Marshal
          * @param dataOut - stream to write marshalled data to
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
         virtual void tightMarshalBrokerError2( OpenWireFormat* wireFormat, 
-                                               commands::DataStructure* error, 
+                                               commands::DataStructure* data, 
                                                io::DataOutputStream* dataOut, 
                                                utils::BooleanStream* bs )
                                                     throw ( io::IOException );
@@ -497,34 +492,117 @@ namespace marshal{
         /**
          * Tight Marshall the Error object
          * @param wireFormat - The OpenwireFormat properties 
-         * @param error - Error to Marshal
+         * @param data - Error to Marshal
          * @param dataOut - stream to write marshalled data to
          * @throws IOException if an error occurs.
          */
         virtual void looseMarshalBrokerError( OpenWireFormat* wireFormat, 
-                                              commands::DataStructure* error, 
+                                              commands::DataStructure* data, 
                                               io::DataOutputStream* dataOut ) 
                                                   throw ( io::IOException );
         
+        /**
+         * Tightly Marshal an array of DataStructure objects to the provided
+         * boolean stream, and return the size that the tight marshalling is
+         * going to take.
+         * @param wireFormat - The OpenwireFormat properties
+         * @param objects - array of DataStructure object pointers.
+         * @param bs - boolean stream to marshal to.
+         * @returns size of the marshalled data
+         * @throws IOException if an error occurs.
+         */ 
         template<typename T>
         int tightMarshalObjectArray1( OpenWireFormat* wireFormat, 
-                                      std::vector<T*>, 
+                                      std::vector<T*> objects, 
                                       utils::BooleanStream* bs )
                                         throw ( io::IOException )
-        { return 0; }
+        {
+            try{ 
+                if( !objects.empty() )
+                {
+                    int rc = 0;
+                    bs->writeBoolean( true );
+                    rc += 2;
+                    for( int i = 0; i < objects.size(); ++i ) {
+                        rc += tightMarshalNestedObject1( 
+                                wireFormat, objects[i], bs );
+                    }
+                    return rc;
+                    
+                } else {
+                    bs->writeBoolean( false );
+                    return 0;
+                }
+            }
+            AMQ_CATCH_RETHROW( io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+            AMQ_CATCHALL_THROW( io::IOException )
+        }
         
+        /**
+         * Tightly Marshal an array of DataStructure objects to the provided
+         * boolean stream and data output stream
+         * @param wireFormat - The OpenwireFormat properties
+         * @param objects - array of DataStructure object pointers.
+         * @param dataOut - stream to write marshalled data to
+         * @param bs - boolean stream to marshal to.
+         * @returns size of the marshalled data
+         * @throws IOException if an error occurs.
+         */ 
         template<typename T>
         void tightMarshalObjectArray2( OpenWireFormat* wireFormat, 
-                                       std::vector<T*>, 
+                                       std::vector<T*> objects, 
                                        io::DataOutputStream* dataOut, 
                                        utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) {}
+                                        throw ( io::IOException ) {
+                                            
+            try {
 
+                if( bs->readBoolean() ) {
+                    
+                    dataOut->writeShort( (short)objects.size() );
+                    for( int i = 0; i < objects.size(); ++i ) {
+                        tightMarshalNestedObject2(
+                            wireFormat, objects[i], dataOut, bs );
+                    }
+                }
+            }
+            AMQ_CATCH_RETHROW( io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+            AMQ_CATCHALL_THROW( io::IOException )
+        }
+
+        /**
+         * Loosely Marshal an array of DataStructure objects to the provided
+         * boolean stream and data output stream
+         * @param wireFormat - The OpenwireFormat properties
+         * @param objects - array of DataStructure object pointers.
+         * @param dataOut - stream to write marshalled data to
+         * @returns size of the marshalled data
+         * @throws IOException if an error occurs.
+         */ 
         template<typename T>
         void looseMarshalObjectArray( OpenWireFormat* wireFormat, 
-                                      std::vector<T*>, 
+                                      std::vector<T*> objects, 
                                       io::DataOutputStream* dataOut ) 
-                                        throw ( io::IOException ) {}
+                                        throw ( io::IOException ) {
+
+            try {
+
+                dataOut->writeBoolean( !objects.empty() );
+                if( !objects.empty() ) {
+                    
+                    dataOut->writeShort( (short)objects.size() );
+                    for( int i = 0; i < objects.size(); ++i ) {
+                        looseMarshalNestedObject(
+                            wireFormat, objects[i], dataOut );
+                    }
+                }
+            }
+            AMQ_CATCH_RETHROW( io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+            AMQ_CATCHALL_THROW( io::IOException )
+        }
                          
     protected:
 
