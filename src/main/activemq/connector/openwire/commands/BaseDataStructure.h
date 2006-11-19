@@ -68,6 +68,25 @@ namespace commands{
          */
         virtual void afterUnmarshall( OpenWireFormat* wireFormat ) {}
 
+        /**
+         * Called to set the data to this object that will contain the objects
+         * marshalled form.
+         * @param wireFormat - the wireformat object to control unmarshaling
+         * @param data - vector of object binary data
+         */ 
+        virtual void setMarshalledForm( OpenWireFormat* wireFormat, 
+                                        const std::vector<char>& data ) {}
+
+        /**
+         * Called to get the data to this object that will contain the objects
+         * marshalled form.
+         * @param wireFormat - the wireformat object to control unmarshaling
+         * @return buffer that holds the objects data.
+         */ 
+        virtual std::vector<unsigned char> getMarshalledForm( OpenWireFormat* wireFormat ) {
+            return std::vector<unsigned char>(); 
+        }
+
     };
 
 }}}}
