@@ -20,6 +20,7 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::io;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
@@ -41,98 +42,130 @@ BooleanStream::~BooleanStream()
 
 ///////////////////////////////////////////////////////////////////////////////
 bool BooleanStream::readBoolean() throw ( IOException ) {
-    //assert arrayPos <= arrayLimit;
-    unsigned char b = data[arrayPos];
-    bool rc = ( ( b >> bytePos ) & 0x01 ) != 0;
-    bytePos++;
-    if( bytePos >= 8 ) {
-        bytePos = 0;
-        arrayPos++;
+
+    try {
+        //assert arrayPos <= arrayLimit;
+        unsigned char b = data[arrayPos];
+        bool rc = ( ( b >> bytePos ) & 0x01 ) != 0;
+        bytePos++;
+        if( bytePos >= 8 ) {
+            bytePos = 0;
+            arrayPos++;
+        }
+        return rc;
     }
-    return rc;
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
-    if( bytePos == 0 ) {
-        arrayLimit++;
+
+    try{
         
-        if( (size_t)arrayLimit >= data.capacity() ) {
-            // re-grow the array if necessary
-            data.resize( data.size() * 2 );
+        if( bytePos == 0 ) {
+            arrayLimit++;
+            
+            if( (size_t)arrayLimit >= data.capacity() ) {
+                // re-grow the array if necessary
+                data.resize( data.size() * 2 );
+            }
+        }
+        
+        if( value ) {
+            data[arrayPos] |= ( 0x01 << bytePos ); 
+        }
+        
+        bytePos++;
+        
+        // Wrap around when we hit the next byte
+        if( bytePos >= 8 ) {
+            bytePos=0;
+            arrayPos++;
         }
     }
-    
-    if( value ) {
-        data[arrayPos] |= ( 0x01 << bytePos ); 
-    }
-    
-    bytePos++;
-    
-    // Wrap around when we hit the next byte
-    if( bytePos >= 8 ) {
-        bytePos=0;
-        arrayPos++;
-    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////    
 void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
-    if( arrayLimit < 64 ) {
-        dataOut->writeByte( arrayLimit );
-    } else if( arrayLimit < 256 ) { // max value of unsigned char
-        dataOut->writeByte( 0xC0 );
-        dataOut->writeByte( arrayLimit );            
-    } else {
-        dataOut->writeByte( 0x80 );
-        dataOut->writeShort( arrayLimit );            
+
+    try {
+        
+        if( arrayLimit < 64 ) {
+            dataOut->writeByte( arrayLimit );
+        } else if( arrayLimit < 256 ) { // max value of unsigned char
+            dataOut->writeByte( 0xC0 );
+            dataOut->writeByte( arrayLimit );            
+        } else {
+            dataOut->writeByte( 0x80 );
+            dataOut->writeShort( arrayLimit );            
+        }
+        
+        // Dump the payload
+        dataOut->write( &data[0], arrayLimit );
+        clear();
     }
-    
-    // Dump the payload
-    dataOut->write( &data[0], arrayLimit );
-    clear();
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////    
 void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
-    if( arrayLimit < 64 ) {
-        dataOut.push_back( ( unsigned char ) arrayLimit );
-    } else if( arrayLimit < 256 ) { // max value of unsigned byte
-        dataOut.push_back( ( unsigned char ) 0xC0 );
-        dataOut.push_back( ( unsigned char ) arrayLimit );            
-    } else {
-        dataOut.push_back( ( unsigned char ) 0x80 );
-        dataOut.push_back( arrayLimit >> 8 );   // High Byte
-        dataOut.push_back( arrayLimit & 0xFF ); // Low Byte 
-    }
     
-    // Insert all data from data into the passed buffer
-    dataOut.insert( dataOut.end(), &data[0], &data[arrayLimit] );
+    try{
+        if( arrayLimit < 64 ) {
+            dataOut.push_back( ( unsigned char ) arrayLimit );
+        } else if( arrayLimit < 256 ) { // max value of unsigned byte
+            dataOut.push_back( ( unsigned char ) 0xC0 );
+            dataOut.push_back( ( unsigned char ) arrayLimit );            
+        } else {
+            dataOut.push_back( ( unsigned char ) 0x80 );
+            dataOut.push_back( arrayLimit >> 8 );   // High Byte
+            dataOut.push_back( arrayLimit & 0xFF ); // Low Byte 
+        }
+        
+        // Insert all data from data into the passed buffer
+        dataOut.insert( dataOut.end(), &data[0], &data[arrayLimit] );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////    
 void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
-    
-    arrayLimit = (short)( dataIn->readByte() & 0xFF );
-    
-    if ( arrayLimit == 0xC0 ) {
-        arrayLimit = (short)( dataIn->readByte() & 0xFF );
-    } else if( arrayLimit == 0x80 ) {
-        arrayLimit = dataIn->readShort();
-    } 
-    
-    // Reserve space all at once if needed.
-    if( data.capacity() < (size_t)arrayLimit ) {
-        data.reserve( arrayLimit );
-    }
-    
-    // Make sure we can accomodate all the data.
-    data.resize( arrayLimit );
 
-    // Make sure we get all the data we are expecting
-    dataIn->readFully( &data[0], 0, arrayLimit );
+    try{
+            
+        arrayLimit = (short)( dataIn->readByte() & 0xFF );
+        
+        if ( arrayLimit == 0xC0 ) {
+            arrayLimit = (short)( dataIn->readByte() & 0xFF );
+        } else if( arrayLimit == 0x80 ) {
+            arrayLimit = dataIn->readShort();
+        } 
+        
+        // Reserve space all at once if needed.
+        if( data.capacity() < (size_t)arrayLimit ) {
+            data.reserve( arrayLimit );
+        }
+        
+        // Make sure we can accomodate all the data.
+        data.resize( arrayLimit );
     
-    clear();
+        // Make sure we get all the data we are expecting
+        dataIn->readFully( &data[0], 0, arrayLimit );
+        
+        clear();
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////    
