@@ -21,6 +21,7 @@
 #include <activemq/connector/openwire/commands/Message.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
+#include <activemq/core/ActiveMQAckHandler.h>
 
 namespace activemq{
 namespace connector{
@@ -80,6 +81,15 @@ namespace commands{
         }
         
         /**
+         * Gets the Acknowledgement Handler that this Message will use
+         * when the Acknowledge method is called.
+         * @returns handler ActiveMQAckHandler to call or NULL if not set
+         */
+        virtual core::ActiveMQAckHandler* getAckHandler() const {
+            return this->ackHandler;
+        }
+
+        /**
          * Gets the number of times this message has been redelivered.
          * @return redelivery count
          */
@@ -97,9 +107,9 @@ namespace commands{
         }
 
     private:
-    
-        int redeliveryCount;
+   
         core::ActiveMQAckHandler* ackHandler;
+        int redeliveryCount;
 
     };
 

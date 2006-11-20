@@ -170,7 +170,7 @@ namespace commands{
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long getCMSExpiration(void) const {
+        virtual long long getCMSExpiration(void) const {
             return util::Long::parseLong( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_EXPIRES ), "0" ) );
@@ -180,7 +180,7 @@ namespace commands{
          * Sets the Expiration Time for this message
          * @param expireTime time value
          */
-        virtual void setCMSExpiration( long expireTime ) {
+        virtual void setCMSExpiration( long long expireTime ) {
             setPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_EXPIRES) ,
@@ -276,7 +276,7 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long getCMSTimeStamp(void) const {
+        virtual long long getCMSTimeStamp(void) const {
             return util::Long::parseLong( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_TIMESTAMP ), "0" ) );
@@ -286,7 +286,7 @@ namespace commands{
          * Sets the Time Stamp for this message
          * @param timeStamp time stamp value
          */
-        virtual void setCMSTimeStamp( long timeStamp ) {
+        virtual void setCMSTimeStamp( long long timeStamp ) {
             setPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_TIMESTAMP ),

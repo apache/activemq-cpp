@@ -37,4 +37,3 @@ unsigned char ActiveMQObjectMessage::getDataStructureType() const
 {
     return ActiveMQObjectMessage::ID_ACTIVEMQOBJECTMESSAGE; 
 }
-

@@ -96,13 +96,13 @@ namespace cms{
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long getCMSExpiration(void) const = 0;
+        virtual long long getCMSExpiration(void) const = 0;
       
         /**
          * Sets the Expiration Time for this message
          * @param expireTime - time value
          */
-        virtual void setCMSExpiration( long expireTime ) = 0;
+        virtual void setCMSExpiration( long long expireTime ) = 0;
       
         /**
          * Gets the CMS Message Id for this Message
@@ -156,13 +156,13 @@ namespace cms{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long getCMSTimeStamp(void) const = 0;
+        virtual long long getCMSTimeStamp(void) const = 0;
       
         /**
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
          */
-        virtual void setCMSTimeStamp( long timeStamp ) = 0;
+        virtual void setCMSTimeStamp( long long timeStamp ) = 0;
 
         /**
          * Gets the CMS Message Type for this Message

@@ -115,21 +115,21 @@ namespace marshal{
          * @param id - MessageId pointer
          * @returns string representing the id
          */
-        static std::string toString( commands::MessageId* id );
+        static std::string toString( const commands::MessageId* id );
 
         /**
          * Converts the object to a String
          * @param id - ProducerId pointer
          * @returns string representing the id
          */
-        static std::string toString( commands::ProducerId* id );
+        static std::string toString( const commands::ProducerId* id );
 
         /**
          * Converts the given transaction ID into a String
          * @param txnId - TransactionId poitner
          * @returns string representation of the id
          */
-        static std::string toString( commands::TransactionId* txnId );
+        static std::string toString( const commands::TransactionId* txnId );
 
         /**
          * given an array of bytes, convert that array to a Hexidecimal 
