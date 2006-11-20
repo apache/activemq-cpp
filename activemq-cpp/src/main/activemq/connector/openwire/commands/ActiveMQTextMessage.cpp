@@ -38,3 +38,12 @@ unsigned char ActiveMQTextMessage::getDataStructureType() const
     return ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTextMessage::acknowledge(void) const throw( cms::CMSException ) {
+
+    try{
+        this->getAckHandler()->acknowledgeMessage( this );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}

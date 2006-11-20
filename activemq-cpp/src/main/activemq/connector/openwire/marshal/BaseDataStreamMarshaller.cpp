@@ -758,7 +758,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( commands::MessageId* id )
+std::string BaseDataStreamMarshaller::toString( const commands::MessageId* id )
 {
     if( id == NULL ) return "";
     
@@ -767,7 +767,7 @@ std::string BaseDataStreamMarshaller::toString( commands::MessageId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( commands::ProducerId* id )
+std::string BaseDataStreamMarshaller::toString( const commands::ProducerId* id )
 {
     return id->getConnectionId() + ":" + 
            Long::toString( id->getSessionId() ) + ":" + 
@@ -775,10 +775,12 @@ std::string BaseDataStreamMarshaller::toString( commands::ProducerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( commands::TransactionId* txnId )
+std::string BaseDataStreamMarshaller::toString( const commands::TransactionId* txnId )
 {
-    LocalTransactionId* ltxnId = dynamic_cast<LocalTransactionId*>( txnId );
-    XATransactionId* xaTxnId = dynamic_cast<XATransactionId*>( txnId );
+    const LocalTransactionId* ltxnId = 
+        dynamic_cast<const LocalTransactionId*>( txnId );
+    const XATransactionId* xaTxnId = 
+        dynamic_cast<const XATransactionId*>( txnId );
         
     if( ltxnId != NULL )
     {

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
+#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -38,3 +39,17 @@ unsigned char ActiveMQBytesMessage::getDataStructureType() const
     return ActiveMQBytesMessage::ID_ACTIVEMQBYTESMESSAGE; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQBytesMessage::acknowledge(void) const throw( cms::CMSException ) {
+
+    try{
+        this->getAckHandler()->acknowledgeMessage( this );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQBytesMessage::getCMSMessageId(void) const {
+    return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
+}

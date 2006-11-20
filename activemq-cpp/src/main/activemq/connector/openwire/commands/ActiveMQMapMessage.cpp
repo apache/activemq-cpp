@@ -38,3 +38,12 @@ unsigned char ActiveMQMapMessage::getDataStructureType() const
     return ActiveMQMapMessage::ID_ACTIVEMQMAPMESSAGE; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::acknowledge(void) const throw( cms::CMSException ) {
+
+    try{
+        this->getAckHandler()->acknowledgeMessage( this );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
