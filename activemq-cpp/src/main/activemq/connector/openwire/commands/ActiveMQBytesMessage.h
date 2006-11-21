@@ -113,25 +113,34 @@ namespace commands{
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode(void) const;
+        virtual int getCMSDeliveryMode(void) const {
+            return this->isPersistent();
+        }
 
         /**
          * Sets the DeliveryMode for this message
          * @param mode - DeliveryMode enumerated value.
          */
-        virtual void setCMSDeliveryMode( int mode );
+        virtual void setCMSDeliveryMode( int mode ) {
+            this->setPersistent( mode != 0 );
+        }
       
         /**
          * Gets the Destination for this Message, returns a
          * @return Destination object
          */
-        virtual const cms::Destination* getCMSDestination(void) const;
+        virtual const cms::Destination* getCMSDestination(void) const {
+            return dynamic_cast<const cms::Destination*>(
+                this->getDestination() );
+        }
       
         /**
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
-        virtual void setCMSDestination( const cms::Destination* destination );
+        virtual void setCMSDestination( const cms::Destination* destination ) {
+ //           this->setDestination( destination );
+        }
       
         /**
          * Gets the Expiration Time for this Message

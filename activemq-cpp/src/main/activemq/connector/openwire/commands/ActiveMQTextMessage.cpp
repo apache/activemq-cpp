@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
+#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -46,4 +47,10 @@ void ActiveMQTextMessage::acknowledge(void) const throw( cms::CMSException ) {
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQTextMessage::getCMSMessageId(void) const {
+    return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
 }
