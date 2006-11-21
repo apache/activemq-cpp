@@ -84,7 +84,7 @@ namespace commands{
          * of this consumed message.
          */
         virtual void acknowledge(void) const throw( cms::CMSException );
-      
+
         /**
          * Retrieves a reference to the properties object owned
          * by this message
@@ -97,49 +97,67 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationId(void) const;
+        virtual std::string getCMSCorrelationId(void) const {
+            return this->getCorrelationId();
+        }
 
         /**
          * Sets the Correlation Id used by this message
          * @param correlationId - String representing the correlation id.
          */
-        virtual void setCMSCorrelationId( const std::string& correlationId );
+        virtual void setCMSCorrelationId( const std::string& correlationId ) {
+            this->setCorrelationId( correlationId );
+        }
 
         /**
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode(void) const;
+        virtual int getCMSDeliveryMode(void) const {
+            return this->isPersistent();
+        }
 
         /**
          * Sets the DeliveryMode for this message
          * @param mode - DeliveryMode enumerated value.
          */
-        virtual void setCMSDeliveryMode( int mode );
+        virtual void setCMSDeliveryMode( int mode ) {
+            this->setPersistent( mode != 0 );
+        }
       
         /**
          * Gets the Destination for this Message, returns a
          * @return Destination object
          */
-        virtual const cms::Destination* getCMSDestination(void) const;
+        virtual const cms::Destination* getCMSDestination(void) const {
+            return dynamic_cast<const cms::Destination*>(
+                this->getDestination() );
+        }
       
         /**
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
-        virtual void setCMSDestination( const cms::Destination* destination );
+        virtual void setCMSDestination( const cms::Destination* destination ) {
+//            this->setDestination( 
+//                dynamic_cast<const ActiveMQDestination*>( destination ) );
+        }
       
         /**
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long long getCMSExpiration(void) const;
+        virtual long long getCMSExpiration(void) const {
+            return this->getExpiration();
+        }
       
         /**
          * Sets the Expiration Time for this message
          * @param expireTime - time value
          */
-        virtual void setCMSExpiration( long long expireTime );
+        virtual void setCMSExpiration( long long expireTime ) {
+            this->setExpiration( expireTime );
+        }
       
         /**
          * Gets the CMS Message Id for this Message
@@ -151,31 +169,37 @@ namespace commands{
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
-        virtual void setCMSMessageId( const std::string& id );
+        virtual void setCMSMessageId( const std::string& id ) {}
       
         /**
          * Gets the Priority Value for this Message
          * @return priority value
          */
-        virtual int getCMSPriority(void) const;
+        virtual int getCMSPriority(void) const {
+            return this->getPriority();
+        }
       
         /**
          * Sets the Priority Value for this message
          * @param priority - priority value for this message
          */
-        virtual void setCMSPriority( int priority );
+        virtual void setCMSPriority( int priority ) {
+            this->setPriority( priority );
+        }
 
         /**
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
          */
-        virtual bool getCMSRedelivered(void) const;
+        virtual bool getCMSRedelivered(void) const {
+            return this->getRedeliveryCounter() != 0;
+        }
       
         /**
          * Sets the Redelivered Flag for this message
          * @param redelivered - boolean redelivered value
          */
-        virtual void setCMSRedelivered( bool redelivered );
+        virtual void setCMSRedelivered( bool redelivered ) {}
 
         /**
          * Gets the CMS Reply To Address for this Message
@@ -193,26 +217,34 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimeStamp(void) const;
+        virtual long long getCMSTimeStamp(void) const {
+            return this->getTimestamp();
+        }
       
         /**
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
          */
-        virtual void setCMSTimeStamp( long long timeStamp );
+        virtual void setCMSTimeStamp( long long timeStamp ) {
+            this->setTimestamp( timeStamp );
+        }
 
         /**
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSMessageType(void) const;
+        virtual std::string getCMSMessageType(void) const {
+            return this->getType();
+        }
       
         /**
          * Sets the CMS Message Type for this message
          * @param type - message type value string
          */
-        virtual void setCMSMessageType( const std::string& type );
-
+        virtual void setCMSMessageType( const std::string& type ) {
+            this->setType( type );
+        }
+        
     public:   // CMS TextMessage
     
         /**
