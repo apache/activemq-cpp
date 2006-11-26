@@ -66,6 +66,7 @@ cc_sources = \
     activemq/transport/TcpTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
+    activemq/util/Date.cpp \
     activemq/util/Math.cpp
 
 h_sources = \
@@ -222,6 +223,7 @@ h_sources = \
     activemq/util/Boolean.h \
     activemq/util/StringTokenizer.h \
     activemq/util/Queue.h \
+    activemq/util/Date.h \
     activemq/util/Math.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
