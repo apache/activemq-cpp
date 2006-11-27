@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -119,7 +119,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;"
-				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
@@ -266,6 +266,10 @@
 			</File>
 			<File
 				RelativePath=".\src\test\activemq\io\DataOutputStreamTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test\activemq\util\DateTest.cpp"
 				>
 			</File>
 			<File
@@ -480,6 +484,10 @@
 			</File>
 			<File
 				RelativePath=".\src\test\activemq\io\DataOutputStreamTest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test\activemq\util\DateTest.h"
 				>
 			</File>
 			<File
