@@ -42,9 +42,10 @@ namespace util{
             Date date1;
             CPPUNIT_ASSERT( date1.getTime() != 0 );
             
-            activemq::concurrent::Thread::sleep(10);
+            activemq::concurrent::Thread::sleep(55);
             
             Date date2;
+            
             CPPUNIT_ASSERT( date1.before(date2) == true );
             CPPUNIT_ASSERT( date1.after(date2) == false );
             

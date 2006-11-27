@@ -98,14 +98,14 @@ namespace stomp{
          * Return the number of bytes contained in this frames body
          * @return Body bytes length.
          */
-        int getBodyLength(void) const{ return bodyLength; }
+        long long getBodyLength(void) const{ return bodyLength; }
         
         /**
          * Sets the body data of this frame as a byte sequence.
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
-        void setBody( const char* bytes, const int numBytes ){
+        void setBody( const char* bytes, const long long numBytes ){
             body = bytes;
             bodyLength = numBytes;
         }   
@@ -120,7 +120,7 @@ namespace stomp{
 
         // Byte data of Body.
         const char* body;
-        int bodyLength;     
+        long long bodyLength;     
         
     };
     

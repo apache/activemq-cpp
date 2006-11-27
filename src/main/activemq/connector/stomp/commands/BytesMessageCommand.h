@@ -64,7 +64,7 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBodyBytes( const unsigned char* buffer, 
-                                   const unsigned long numBytes ) 
+                                   const unsigned long long numBytes ) 
             throw( cms::CMSException ) {
             this->setBytes(
                 reinterpret_cast<const char*>( buffer ), numBytes );
@@ -86,7 +86,7 @@ namespace commands{
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual unsigned long getBodyLength(void) const {
+        virtual unsigned long long getBodyLength(void) const {
             return this->getNumBytes();
         }
 

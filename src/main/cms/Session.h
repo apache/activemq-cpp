@@ -196,7 +196,7 @@ namespace cms
          */
         virtual BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            unsigned long bytesSize ) 
+            unsigned long long bytesSize ) 
                 throw ( CMSException) = 0;
 
         /**
