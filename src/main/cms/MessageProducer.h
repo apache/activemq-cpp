@@ -34,26 +34,56 @@ namespace cms
     {
     public:
 
-        virtual ~MessageProducer(void) {}
+        virtual ~MessageProducer() {}
       
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
+         * Uses default values for deliveryMode, priority, and time to live.
          * @param message - a Message Object Pointer
          * @throws CMSException
          */
-        virtual void send( Message* message ) throw ( CMSException ) = 0;
-      
+        virtual void send( Message* message ) throw ( CMSException ) = 0;             
+
+        /**
+         * Sends the message to the default producer destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         * @param message - a Message Object Pointer
+         * @param deliverMode The delivery mode to be used.
+         * @param priority The priority for this message.
+         * @param timeToLive The time to live value for this message in
+         * milliseconds.
+         * @throws CMSException
+         */
+        virtual void send( Message* message, int deliveryMode, int priority, 
+            long long timeToLive) throw ( CMSException ) = 0;
+            
         /**
          * Sends the message to the designated destination, but does
          * not take ownership of the message, caller must still destroy it.
+         * Uses default values for deliveryMode, priority, and time to live.
          * @param destination - a Message Object Pointer
          * @param message - the message to send to the destination
          * @throws CMSException
          */
         virtual void send( const Destination* destination,
                            Message* message ) throw ( CMSException ) = 0;
-
+                           
+        /**
+         * Sends the message to the designated destination, but does
+         * not take ownership of the message, caller must still destroy it.
+         * @param destination - a Message Object Pointer
+         * @param message - a Message Object Pointer
+         * @param deliverMode The delivery mode to be used.
+         * @param priority The priority for this message.
+         * @param timeToLive The time to live value for this message in
+         * milliseconds.
+         * @throws CMSException
+         */     
+        virtual void send( const Destination* destination,
+            Message* message, int deliveryMode, int priority, 
+            long long timeToLive) throw ( CMSException ) = 0;
+            
         /** 
          * Sets the delivery mode for this Producer
          * @param mode - The DeliveryMode
@@ -64,7 +94,7 @@ namespace cms
          * Gets the delivery mode for this Producer
          * @return The DeliveryMode
          */
-        virtual int getDeliveryMode(void) const = 0;
+        virtual int getDeliveryMode() const = 0;
       
         /**
          * Sets if Message Ids are disbled for this Producer
@@ -76,7 +106,7 @@ namespace cms
          * Gets if Message Ids are disbled for this Producer
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageId(void) const = 0;
+        virtual bool getDisableMessageId() const = 0;
 
         /**
          * Sets if Message Time Stamps are disbled for this Producer
@@ -88,7 +118,7 @@ namespace cms
          * Gets if Message Time Stamps are disbled for this Producer
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageTimeStamp(void) const = 0;
+        virtual bool getDisableMessageTimeStamp() const = 0;
       
         /**
          * Sets the Priority that this Producers sends messages at
@@ -100,19 +130,21 @@ namespace cms
          * Gets the Priority level that this producer sends messages at
          * @return int based priority level
          */
-        virtual int getPriority(void) const = 0;
+        virtual int getPriority() const = 0;
       
         /**
-         * Sets the Time to Live that this Producers sends messages with
-         * @param time - int value for time to live
+         * Sets the Time to Live that this Producers sends messages with.  This
+         * value will be used if the time to live is not specified via the
+         * send method.
+         * @param time - default time to live value in milliseconds
          */
-        virtual void setTimeToLive( int time ) = 0;
+        virtual void setTimeToLive( long long time ) = 0;
       
         /**
          * Gets the Time to Live that this producer sends messages with
-         * @return int based Time to Live
+         * @return Time to live value in milliseconds
          */
-        virtual int getTimeToLive(void) const = 0;
+        virtual long long getTimeToLive() const = 0;
       
     };
 

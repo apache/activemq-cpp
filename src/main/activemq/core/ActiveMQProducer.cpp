@@ -18,12 +18,14 @@
 
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/util/Date.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
+using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
@@ -41,11 +43,11 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
     this->producerInfo = producerInfo;
 
     // Default the Delivery options
-    deliveryMode      = cms::DeliveryMode::PERSISTANT;
-    disableMsgId      = false;
-    disableTimestamps = false;
-    priority          = 4;
-    timeToLive        = 0;
+    defaultDeliveryMode     = cms::DeliveryMode::PERSISTANT;
+    disableMsgId            = false;
+    disableTimestamps       = false;
+    defaultPriority         = 4;
+    defaultTimeToLive       = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +75,38 @@ void ActiveMQProducer::send( cms::Message* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::send( cms::Message* message, int deliveryMode, 
+    int priority, 
+    long long timeToLive ) 
+    throw ( cms::CMSException )
+{
+    try
+    {
+        send( &producerInfo->getDestination(), message, deliveryMode,
+            priority, timeToLive );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( const cms::Destination* destination,
                              cms::Message* message) throw ( cms::CMSException )
+{
+    try
+    {
+        send( destination, message, defaultDeliveryMode,
+            defaultPriority, defaultTimeToLive );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::send( const cms::Destination* destination,
+                             cms::Message* message, int deliveryMode, 
+                             int priority, long long timeToLive) 
+    throw ( cms::CMSException )
 {
     try
     {
@@ -82,10 +114,22 @@ void ActiveMQProducer::send( const cms::Destination* destination,
         message->setCMSDestination( destination );
         message->setCMSDeliveryMode( deliveryMode );
         message->setCMSPriority( priority );
-        message->setCMSExpiration( timeToLive );
+        
+        long long expiration = 0LL;
+
+        if( !disableTimestamps ) {
+            long long timeStamp = Date::getCurrentTimeMilliseconds();
+            message->setCMSTimeStamp(timeStamp);
+            if( timeToLive > 0LL ) {
+                expiration = timeToLive + timeStamp;
+            }
+        }
+
+        message->setCMSExpiration(expiration);
 
         session->send( message, this );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
