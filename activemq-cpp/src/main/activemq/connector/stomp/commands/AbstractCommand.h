@@ -249,7 +249,7 @@ namespace commands{
          * Fetch the number of bytes in the Stomp Frame Body
          * @return number of bytes
          */
-        virtual unsigned long getNumBytes(void) const{
+        virtual unsigned long long getNumBytes(void) const{
             return getFrame().getBodyLength();
         }
 
@@ -271,7 +271,7 @@ namespace commands{
          * be set
          */
         virtual void setBytes( const char* bytes, 
-                               const unsigned long numBytes,
+                               const unsigned long long numBytes,
                                const bool setContentLength = true )
         {
             char* copy = new char[numBytes];

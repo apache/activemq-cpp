@@ -359,7 +359,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage(void)
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* ActiveMQSession::createBytesMessage(
     const unsigned char* bytes,
-    unsigned long bytesSize ) 
+    unsigned long long bytesSize ) 
         throw ( cms::CMSException )
 {
     try
