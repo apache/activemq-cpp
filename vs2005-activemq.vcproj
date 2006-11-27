@@ -42,7 +42,7 @@
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;$(NOINHERIT)"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
 				ExceptionHandling="1"
@@ -109,7 +109,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;$(NOINHERIT)"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\main\activemq\util\Date.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main\activemq\util\Guid.cpp"
 				>
 			</File>
@@ -256,6 +260,10 @@
 			</File>
 			<File
 				RelativePath=".\src\main\activemq\connector\stomp\marshal\Marshaler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\main\activemq\util\Math.cpp"
 				>
 			</File>
 			<File
@@ -453,6 +461,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\main\activemq\util\Character.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main\cms\Closeable.h"
 				>
 			</File>
@@ -557,6 +569,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\main\activemq\util\Date.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main\cms\DeliveryMode.h"
 				>
 			</File>
@@ -570,6 +586,10 @@
 			</File>
 			<File
 				RelativePath=".\src\main\activemq\util\Endian.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\main\activemq\io\EOFException.h"
 				>
 			</File>
 			<File
@@ -622,6 +642,14 @@
 			</File>
 			<File
 				RelativePath=".\src\main\activemq\exceptions\IllegalMonitorStateException.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\main\activemq\exceptions\IllegalStateException.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\main\activemq\exceptions\IndexOutOfBoundsException.h"
 				>
 			</File>
 			<File
@@ -717,6 +745,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\main\activemq\util\Math.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\main\cms\Message.h"
 				>
 			</File>
@@ -777,11 +809,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\main\cms\Queue.h"
+				RelativePath=".\src\main\activemq\util\Queue.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\main\activemq\util\Queue.h"
+				RelativePath=".\src\main\cms\Queue.h"
 				>
 			</File>
 			<File
