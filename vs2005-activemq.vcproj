@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="src\main;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -108,7 +108,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;"
+				AdditionalIncludeDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\main"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -809,11 +809,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\main\activemq\util\Queue.h"
+				RelativePath=".\src\main\cms\Queue.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\main\cms\Queue.h"
+				RelativePath=".\src\main\activemq\util\Queue.h"
 				>
 			</File>
 			<File
