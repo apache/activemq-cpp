@@ -250,8 +250,8 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h
 
-# include activemq/connector/openwire/commands/srcmakefile.mk
-# include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+include activemq/connector/openwire/commands/srcmakefile.mk
+include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ##
 ## Compiler / Linker Info
