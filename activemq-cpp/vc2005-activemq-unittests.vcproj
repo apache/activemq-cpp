@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;"
+				AdditionalIncludeDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;src\test;src\main;&quot;E:\dev\cppunit-1.11.6\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib cppunitd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\test&quot;;&quot;C:\Eclipse\ActiveMQ\activemq-trunk-cpp\src\main&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\test;src\main;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -139,7 +139,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib cppunit.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
