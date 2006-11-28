@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\main;src\examples"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\main;src\examples"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -63,7 +63,7 @@
 				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\examples;src\main"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\examples;src\main"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="2"
@@ -139,7 +139,7 @@
 				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
