@@ -68,6 +68,7 @@ cc_sources = \
   activemq/util/GuidTest.cpp \
   activemq/util/IntegerTest.cpp \
   activemq/util/LongTest.cpp \
+  activemq/util/MapTest.cpp \
   activemq/util/QueueTest.cpp \
   activemq/util/StringTokenizerTest.cpp \
   main.cpp

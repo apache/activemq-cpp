@@ -23,12 +23,16 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/exceptions/IllegalArgumentException.h>
+#include <activemq/exceptions/NoSuchElementException.h>
+#include <activemq/exceptions/RuntimeException.h>
 
 #include <activemq/util/Long.h>
 #include <activemq/util/Integer.h>
 #include <activemq/util/Boolean.h>
 
 #include <string>
+#include <sstream>
 
 namespace activemq{
 namespace connector{
@@ -60,7 +64,7 @@ namespace commands{
         
     public:
 
-        StompMessage(void) :
+        StompMessage() :
             AbstractCommand< transport::Command >(),
             ackHandler( NULL ) { dest = NULL; }
         StompMessage( StompFrame* frame ) : 
@@ -73,24 +77,163 @@ namespace commands{
                         CommandConstants::HEADER_DESTINATION ), "" ) );
         }
 
-    	virtual ~StompMessage(void) { delete dest; }
+    	virtual ~StompMessage() { delete dest; }
 
         /**
-         * Gets the properties map for this command.
-         * @return Reference to a Properties object
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
          */
-        virtual util::Properties& getProperties(void){
-            return getFrame().getProperties();
-        }   
-        virtual const util::Properties& getProperties(void) const{
-            return getFrame().getProperties();
-        }   
+        virtual void clearBody(){
+            getFrame().setBody( NULL, 0 );
+        }
+        
+        /**
+         * Clears the message properties.  Does not clear the body or
+         * header values.
+         */
+        virtual void clearProperties(){
+            
+            util::Properties& props = getFrame().getProperties();
+            std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
+            for( int ix=0; ix<propArray.size(); ++ix ){
+                
+                const std::string& name = propArray[ix].first;
+                
+                // Only clear properties that aren't Stomp headers.
+                if( !CommandConstants::isStompHeader(name) ){
+                    props.remove( name );
+                }
+            }
+        }
+        
+        /**
+         * Retrieves the propery names.
+         * @return The complete set of property names currently in this
+         * message.
+         */
+        virtual std::vector<std::string> getPropertyNames() const{
+            std::vector<std::string> names;
+            
+            const util::Properties& props = getFrame().getProperties();
+            std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
+            for( int ix=0; ix<propArray.size(); ++ix ){
+                
+                const std::string& name = propArray[ix].first;
+                
+                // Only clear properties that aren't Stomp headers.
+                if( !CommandConstants::isStompHeader(name) ){
+                    names.push_back( name );
+                }
+            }
+            
+            return names;
+        }
+        
+        /**
+         * Indicates whether or not a given property exists.
+         * @param name The name of the property to look up.
+         * @return True if the property exists in this message.
+         */
+        virtual bool propertyExists( const std::string& name ) const{
+            if( CommandConstants::isStompHeader( name ) ){
+                return false;
+            }
+            
+            return getFrame().getProperties().hasProperty( name );
+        }                
+        
+        virtual bool getBooleanProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            testProperty(name);
+            std::string value = getPropertyValue( name );
+            return value == "true";
+        }
+        
+        virtual unsigned char getByteProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<unsigned char>(name);
+        }
+        
+        virtual double getDoubleProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<double>(name);
+        }
+        
+        virtual float getFloatProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<float>(name);
+        }
+        
+        virtual int getIntProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<int>(name);
+        }
+        
+        virtual long long getLongProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<long long>(name);
+        }
+        
+        virtual short getShortProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            return getStrictPropertyValue<short>(name);
+        }
+        
+        virtual std::string getStringProperty( const std::string& name ) const 
+            throw( cms::CMSException ){
+            testProperty( name );
+            return getPropertyValue( name );
+        }
+        
+        virtual void setBooleanProperty( const std::string& name,
+            bool value ) throw( cms::CMSException ){
+            testProperty( name );
+            
+            std::string strvalue = value? "true" : "false";
+            setPropertyValue( name, strvalue );
+        }
+        
+        virtual void setByteProperty( const std::string& name,
+            unsigned char value ) throw( cms::CMSException ){
+            setStrictPropertyValue<unsigned char>( name, value );
+        }
+        
+        virtual void setDoubleProperty( const std::string& name,
+            double value ) throw( cms::CMSException ){
+            setStrictPropertyValue<double>( name, value );
+        }
+        
+        virtual void setFloatProperty( const std::string& name,
+            float value ) throw( cms::CMSException ){
+            setStrictPropertyValue<float>( name, value );
+        }
+        
+        virtual void setIntProperty( const std::string& name,
+            int value ) throw( cms::CMSException ){
+            setStrictPropertyValue<int>( name, value );
+        }
+        
+        virtual void setLongProperty( const std::string& name,
+            long long value ) throw( cms::CMSException ){
+            setStrictPropertyValue<long long>( name, value );
+        }
+        
+        virtual void setShortProperty( const std::string& name,
+            short value ) throw( cms::CMSException ){
+            setStrictPropertyValue<short>( name, value );
+        }
+        
+        virtual void setStringProperty( const std::string& name,
+            const std::string& value ) throw( cms::CMSException ){
+            testProperty( name );            
+            setPropertyValue( name, value );
+        }
 
         /**
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationId(void) const {
+        virtual std::string getCMSCorrelationId() const {
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_CORRELATIONID ), "" );
@@ -112,7 +255,7 @@ namespace commands{
          * of this consumed message.
          * @throws CMSException
          */
-        virtual void acknowledge(void) const throw( cms::CMSException ) {
+        virtual void acknowledge() const throw( cms::CMSException ) {
             if(ackHandler != NULL) ackHandler->acknowledgeMessage( this );
         }
 
@@ -120,7 +263,7 @@ namespace commands{
          * Sets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode(void) const {
+        virtual int getCMSDeliveryMode() const {
             if(!getFrame().getProperties().hasProperty( 
                    CommandConstants::toString( 
                        CommandConstants::HEADER_PERSISTANT ) ) ) {
@@ -147,7 +290,7 @@ namespace commands{
          * Gets the Destination for this Message
          * @return Destination object can be NULL
          */
-        virtual const cms::Destination* getCMSDestination(void) const{
+        virtual const cms::Destination* getCMSDestination() const{
             return dest;
         }
               
@@ -170,7 +313,7 @@ namespace commands{
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long long getCMSExpiration(void) const {
+        virtual long long getCMSExpiration() const {
             return util::Long::parseLong( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_EXPIRES ), "0" ) );
@@ -191,7 +334,7 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageId(void) const {
+        virtual std::string getCMSMessageId() const {
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_MESSAGEID ), "" );
@@ -212,7 +355,7 @@ namespace commands{
          * Gets the Priority Value for this Message
          * @return priority value
          */
-        virtual int getCMSPriority(void) const {
+        virtual int getCMSPriority() const {
             return util::Integer::parseInt( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_JMSPRIORITY ), "0" ) );
@@ -233,7 +376,7 @@ namespace commands{
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
          */
-        virtual bool getCMSRedelivered(void) const {
+        virtual bool getCMSRedelivered() const {
             return util::Boolean::parseBoolean( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_REDELIVERED ), 
@@ -255,7 +398,7 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual std::string getCMSReplyTo(void) const {
+        virtual std::string getCMSReplyTo() const {
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_REPLYTO ), "" );
@@ -276,7 +419,7 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimeStamp(void) const {
+        virtual long long getCMSTimeStamp() const {
             return util::Long::parseLong( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_TIMESTAMP ), "0" ) );
@@ -297,7 +440,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSMessageType(void) const {
+        virtual std::string getCMSMessageType() const {
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_TYPE ), "" );
@@ -329,7 +472,7 @@ namespace commands{
          * Gets the number of times this message has been redelivered.
          * @return redelivery count
          */
-        virtual int getRedeliveryCount(void) const {
+        virtual int getRedeliveryCount() const {
             return util::Integer::parseInt( getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_REDELIVERYCOUNT ),
@@ -348,8 +491,64 @@ namespace commands{
                 util::Integer::toString( count ) );
         }
 
-    protected:
-    
+    protected:   
+        
+        /**
+         * Checks to see if the given property has the name of a
+         * pre-defined header.  If so, throws an exception.
+         */
+        virtual void testProperty( const std::string& name ) const
+            throw( cms::CMSException ){
+            if( CommandConstants::isStompHeader( name ) ){
+                throw exceptions::IllegalArgumentException( __FILE__, __LINE__, 
+                    "searching for property with name of pre-defined header" );
+            }
+        }
+        
+        /**
+         * Attempts to get a property from the frame's property
+         * map.
+         */
+        template <typename TYPE>
+        TYPE getStrictPropertyValue( const std::string& name ) const
+            throw( cms::CMSException ){
+                
+            testProperty( name );
+            
+            const char* strProp = getPropertyValue(name);
+            if( strProp == NULL ){
+                throw exceptions::NoSuchElementException( __FILE__, __LINE__, 
+                    "property not available in message" );
+            }
+            
+            std::istringstream stream( strProp );
+            TYPE value;
+            stream >> value;
+            
+            if( stream.fail() ){
+                throw exceptions::RuntimeException( __FILE__, __LINE__, 
+                    "Error extracting property from string" );
+            }
+            
+            return value;
+        }
+        
+        /**
+         * Attempts to set the property in the frame.  If an error occurs or
+         * the property name is that of a pre-defined header, an exception
+         * is thrown.
+         */
+        template <typename TYPE>
+        void setStrictPropertyValue( const std::string& name, TYPE value ) 
+            throw( cms::CMSException ){
+            testProperty( name );
+            
+            std::ostringstream stream;
+            stream << value;
+            
+            setPropertyValue( name, stream.str() );
+        }
+        
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.

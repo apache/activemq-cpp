@@ -32,6 +32,8 @@ namespace commands{
     {
         CPPUNIT_TEST_SUITE( CommandConstantsTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testIsCommandId );
+        CPPUNIT_TEST( testIsStompHeader );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -89,6 +91,26 @@ namespace commands{
             CPPUNIT_ASSERT( CommandConstants::queuePrefix != NULL );
             CPPUNIT_ASSERT( CommandConstants::topicPrefix != NULL );
 
+        }
+        
+        void testIsCommandId(){
+            
+            for( int ix=0; ix<CommandConstants::NUM_COMMANDS; ++ix ){
+                CPPUNIT_ASSERT( CommandConstants::isCommandId( 
+                    CommandConstants::toString( (CommandConstants::CommandId)ix ) ) );
+            }
+            
+            CPPUNIT_ASSERT( CommandConstants::isCommandId( "not-a-command-id" ) == false );
+        }
+        
+        void testIsStompHeader(){
+            
+            for( int ix=0; ix<CommandConstants::NUM_STOMP_HEADERS; ++ix ){
+                CPPUNIT_ASSERT( CommandConstants::isStompHeader( 
+                    CommandConstants::toString( (CommandConstants::StompHeader)ix ) ) );
+            }
+            
+            CPPUNIT_ASSERT( CommandConstants::isStompHeader( "not-a-header" ) == false );
         }
 
     };

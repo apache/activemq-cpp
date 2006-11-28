@@ -67,7 +67,8 @@ cc_sources = \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
     activemq/util/Date.cpp \
-    activemq/util/Math.cpp
+    activemq/util/Math.cpp \
+    activemq/util/PrimitiveMap.cpp
 
 h_sources = \
     activemq/core/ActiveMQSessionResource.h \
@@ -224,7 +225,9 @@ h_sources = \
     activemq/util/StringTokenizer.h \
     activemq/util/Queue.h \
     activemq/util/Date.h \
+    activemq/util/Map.h \
     activemq/util/Math.h \
+    activemq/util/PrimitiveMap.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
@@ -247,8 +250,8 @@ h_sources = \
     cms/Message.h \
     cms/MessageConsumer.h
 
-include activemq/connector/openwire/commands/srcmakefile.mk
-include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+# include activemq/connector/openwire/commands/srcmakefile.mk
+# include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ##
 ## Compiler / Linker Info

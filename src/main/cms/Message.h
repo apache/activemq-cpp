@@ -27,34 +27,198 @@
 namespace cms{
    
     /**
-     * Root of all messages.
+     * Root of all messages.  As in JMS, a message is comprised of
+     * 3 parts: CMS-specific headers, user-defined properties, and
+     * the body.
      */
     class Message
     {         
     public:
    
-        virtual ~Message(void){}
+        virtual ~Message(){}
       
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual Message* clone(void) const = 0;
+        virtual Message* clone() const = 0;                
         
         /**
          * Acknowledges all consumed messages of the session 
          * of this consumed message.
          */
-        virtual void acknowledge(void) const throw( CMSException ) = 0;
+        virtual void acknowledge() const throw( CMSException ) = 0;
       
         /**
-         * Retrieves a reference to the properties object owned
-         * by this message
-         * @return A Properties Object reference
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
          */
-        virtual activemq::util::Properties& getProperties(void) = 0;
-        virtual const activemq::util::Properties& getProperties(void) const = 0;
+        virtual void clearBody() = 0;
+        
+        /**
+         * Clears the message properties.  Does not clear the body or
+         * header values.
+         */
+        virtual void clearProperties() = 0;
+        
+        /**
+         * Retrieves the propery names.
+         * @return The complete set of property names currently in this
+         * message.
+         */
+        virtual std::vector<std::string> getPropertyNames() const = 0;
+        
+        /**
+         * Indicates whether or not a given property exists.
+         * @param name The name of the property to look up.
+         * @return True if the property exists in this message.
+         */
+        virtual bool propertyExists( const std::string& name ) const = 0;
+        
+        /**
+         * Gets a boolean property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual bool getBooleanProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a byte property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual unsigned char getByteProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a double property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual double getDoubleProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a float property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual float getFloatProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a int property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual int getIntProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a long property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual long long getLongProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a short property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual short getShortProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+            
+        /**
+         * Gets a string property.
+         * @param name The name of the property to retrieve.
+         * @return The value for the named property.
+         * @throws CMSException if the property does not exist.
+         */
+        virtual std::string getStringProperty( const std::string& name ) const 
+            throw( CMSException ) = 0;
+        
+        /**
+         * Sets a boolean property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setBooleanProperty( const std::string& name,
+            bool value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a byte property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setByteProperty( const std::string& name,
+            unsigned char value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a double property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setDoubleProperty( const std::string& name,
+            double value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a float property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setFloatProperty( const std::string& name,
+            float value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a int property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setIntProperty( const std::string& name,
+            int value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a long property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setLongProperty( const std::string& name,
+            long long value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a short property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setShortProperty( const std::string& name,
+            short value ) throw( CMSException ) = 0;
+            
+        /**
+         * Sets a string property.
+         * @param name The name of the property to retrieve.
+         * @param value The value for the named property.
+         * @throws CMSException
+         */
+        virtual void setStringProperty( const std::string& name,
+            const std::string& value ) throw( CMSException ) = 0;
       
         /**
          * Get the Correlation Id for this message
@@ -72,7 +236,7 @@ namespace cms{
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode(void) const = 0;
+        virtual int getCMSDeliveryMode() const = 0;
 
         /**
          * Sets the DeliveryMode for this message
@@ -84,7 +248,7 @@ namespace cms{
          * Gets the Destination for this Message, returns a
          * @return Destination object
          */
-        virtual const Destination* getCMSDestination(void) const = 0;
+        virtual const Destination* getCMSDestination() const = 0;
       
         /**
          * Sets the Destination for this message
@@ -96,7 +260,7 @@ namespace cms{
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long long getCMSExpiration(void) const = 0;
+        virtual long long getCMSExpiration() const = 0;
       
         /**
          * Sets the Expiration Time for this message
@@ -108,7 +272,7 @@ namespace cms{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageId(void) const = 0;
+        virtual std::string getCMSMessageId() const = 0;
       
         /**
          * Sets the CMS Message Id for this message
@@ -120,7 +284,7 @@ namespace cms{
          * Gets the Priority Value for this Message
          * @return priority value
          */
-        virtual int getCMSPriority(void) const = 0;
+        virtual int getCMSPriority() const = 0;
       
         /**
          * Sets the Priority Value for this message
@@ -132,7 +296,7 @@ namespace cms{
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
          */
-        virtual bool getCMSRedelivered(void) const = 0;
+        virtual bool getCMSRedelivered() const = 0;
       
         /**
          * Sets the Redelivered Flag for this message
@@ -144,7 +308,7 @@ namespace cms{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual std::string getCMSReplyTo(void) const = 0;
+        virtual std::string getCMSReplyTo() const = 0;
       
         /**
          * Sets the CMS Reply To Address for this message
@@ -156,7 +320,7 @@ namespace cms{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimeStamp(void) const = 0;
+        virtual long long getCMSTimeStamp() const = 0;
       
         /**
          * Sets the Time Stamp for this message
@@ -168,7 +332,7 @@ namespace cms{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSMessageType(void) const = 0;
+        virtual std::string getCMSMessageType() const = 0;
       
         /**
          * Sets the CMS Message Type for this message

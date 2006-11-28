@@ -35,6 +35,10 @@ namespace commands{
     {
         CPPUNIT_TEST_SUITE( MessageCommandTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testSetProperties );
+        CPPUNIT_TEST( testFailedGetProperties );
+        CPPUNIT_TEST( testGetPropertyNames );
+        CPPUNIT_TEST( testClearProperties );
         CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -181,6 +185,92 @@ namespace commands{
             delete cmd2;
         }
 
+        void testSetProperties(){
+            MessageCommand cmd;
+            
+            cmd.setBooleanProperty( "bool", true );
+            CPPUNIT_ASSERT( cmd.getBooleanProperty( "bool" ) == true );
+            
+            cmd.setByteProperty( "byte", 1 );
+            CPPUNIT_ASSERT( cmd.getByteProperty( "byte" ) == 1 );
+            
+            cmd.setDoubleProperty( "double", 2.2 );
+            CPPUNIT_ASSERT( cmd.getDoubleProperty( "double" ) == 2.2 );
+            
+            cmd.setFloatProperty( "float", 3.3f );
+            CPPUNIT_ASSERT( cmd.getFloatProperty( "float" ) == 3.3f );
+            
+            cmd.setIntProperty( "int", 4 );
+            CPPUNIT_ASSERT( cmd.getIntProperty( "int" ) == 4 );
+            
+            cmd.setLongProperty( "long", 5LL );
+            CPPUNIT_ASSERT( cmd.getLongProperty( "long" ) == 5LL );
+            
+            cmd.setShortProperty( "short", 6 );
+            CPPUNIT_ASSERT( cmd.getShortProperty( "short" ) == 6 );
+            
+            cmd.setStringProperty( "string", "hello" );
+            CPPUNIT_ASSERT( cmd.getStringProperty( "string" ) == "hello" );                        
+        }
+
+        void testFailedGetProperties(){
+            MessageCommand cmd;
+            
+            // Test accessing non-existent property
+            try{
+                cmd.getIntProperty("string");
+                CPPUNIT_ASSERT(false);
+            } catch( cms::CMSException& e ){                
+            }
+            
+            // Test failed extraction
+            try{
+                cmd.setStringProperty("string", "hello");
+                cmd.getIntProperty("string");
+                CPPUNIT_ASSERT(false);
+            } catch( cms::CMSException& e ){                
+            }
+        }      
+        
+        void testGetPropertyNames(){
+            
+            MessageCommand cmd;
+            
+            std::vector<std::string> names = cmd.getPropertyNames();
+            CPPUNIT_ASSERT( names.size() == 0 );
+            
+            cmd.setIntProperty( "int1", 1 );
+            names = cmd.getPropertyNames();
+            CPPUNIT_ASSERT( names.size() == 1 );
+            CPPUNIT_ASSERT( names[0] == "int1" );
+            
+            cmd.setIntProperty( "int2", 2 );
+            names = cmd.getPropertyNames();
+            CPPUNIT_ASSERT( names.size() == 2 );
+            CPPUNIT_ASSERT( names[0] == "int1" || names[1] == "int1" );
+            CPPUNIT_ASSERT( names[0] == "int2" || names[1] == "int2" );
+            
+            // Make sure headers aren't included in the property names.
+            cmd.setCMSExpiration( 10000 );
+            names = cmd.getPropertyNames();
+            CPPUNIT_ASSERT( names.size() == 2 );
+        }
+        
+        void testClearProperties(){
+            MessageCommand cmd;
+            
+            cmd.setIntProperty( "int1", 1 );
+            cmd.setIntProperty( "int2", 2 );
+            
+            CPPUNIT_ASSERT( cmd.propertyExists( "int1" ) == true );
+            CPPUNIT_ASSERT( cmd.propertyExists( "int2" ) == true );
+            
+            cmd.clearProperties();
+            
+            CPPUNIT_ASSERT( cmd.propertyExists( "int1" ) == false );
+            CPPUNIT_ASSERT( cmd.propertyExists( "int2" ) == false );                        
+        }
+          
     };
 
 }}}}
