@@ -77,6 +77,12 @@ namespace util{
         virtual bool hasProperty( const std::string& name ) const = 0;
 
         /**
+         * Removes the property with the given name.
+         * @param name the name of the property to be removed.s
+         */
+        virtual void remove( const std::string& name ) = 0;
+        
+        /**
          * Method that serializes the contents of the property map to
          * an arryay.
          * @return list of pairs where the first is the name and the second

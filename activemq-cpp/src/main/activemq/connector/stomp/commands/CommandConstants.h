@@ -118,7 +118,14 @@ namespace commands{
             }
                     
             return iter->second;
-        }             
+        }
+        
+        static bool isCommandId( const std::string& str ){
+            std::map<std::string, CommandId>::iterator iter = 
+                StaticInitializer::commandMap.find(str);
+
+            return iter != StaticInitializer::commandMap.end();
+        }         
         
         static std::string toString( const StompHeader header ){
             return StaticInitializer::stompHeaders[header];
@@ -134,7 +141,14 @@ namespace commands{
             }
                     
             return iter->second;            
-        }        
+        }
+        
+        static bool isStompHeader( const std::string& str ){
+            std::map<std::string, StompHeader>::iterator iter = 
+                StaticInitializer::stompHeaderMap.find(str);
+
+            return iter != StaticInitializer::stompHeaderMap.end();
+        }     
         
         static std::string toString( const AckMode mode ){
             return StaticInitializer::ackModes[mode];
