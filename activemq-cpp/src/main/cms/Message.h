@@ -308,13 +308,13 @@ namespace cms{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual std::string getCMSReplyTo() const = 0;
+        virtual const cms::Destination* getCMSReplyTo() const = 0;
       
         /**
          * Sets the CMS Reply To Address for this message
          * @param id - Reply To value
          */
-        virtual void setCMSReplyTo( const std::string& id ) = 0;
+        virtual void setCMSReplyTo( const cms::Destination* destination ) = 0;
 
         /**
          * Gets the Time Stamp for this Message
