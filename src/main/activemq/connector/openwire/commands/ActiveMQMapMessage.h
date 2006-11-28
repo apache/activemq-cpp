@@ -204,13 +204,13 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual std::string getCMSReplyTo(void) const;
+        virtual const cms::Destination* getCMSReplyTo(void) const;
       
         /**
          * Sets the CMS Reply To Address for this message
          * @param id - Reply To value
          */
-        virtual void setCMSReplyTo( const std::string& id );
+        virtual void setCMSReplyTo( const cms::Destination* destination );
 
         /**
          * Gets the Time Stamp for this Message
