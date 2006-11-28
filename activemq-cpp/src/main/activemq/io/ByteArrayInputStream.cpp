@@ -99,6 +99,8 @@ unsigned char ByteArrayInputStream::read() throw ( IOException )
         
         throw IOException( __FILE__, __LINE__, "close occurred during a read" );
     }
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,4 +130,6 @@ int ByteArrayInputStream::read( unsigned char* buffer,
        
         return ix;
     }
+
+    return 0;
 }
