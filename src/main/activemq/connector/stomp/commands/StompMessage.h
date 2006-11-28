@@ -62,19 +62,35 @@ namespace commands{
         // Cached Destination
         cms::Destination* dest;
         
+        // Cached Destination
+        cms::Destination* replyTo;
+
     public:
 
         StompMessage() :
             AbstractCommand< transport::Command >(),
-            ackHandler( NULL ) { dest = NULL; }
+            ackHandler( NULL ),
+            dest( NULL ),
+            replyTo( NULL) {}
         StompMessage( StompFrame* frame ) : 
             AbstractCommand< transport::Command >( frame ),
-            ackHandler( NULL )
+            ackHandler( NULL ),
+            dest( NULL ),
+            replyTo( NULL )
         {
             dest = CommandConstants::toDestination( 
                 getPropertyValue(
                     CommandConstants::toString( 
                         CommandConstants::HEADER_DESTINATION ), "" ) );
+            if( getPropertyValue(
+                    CommandConstants::toString( 
+                        CommandConstants::HEADER_REPLYTO ), "" ) != "" ) {
+                            
+                replyTo = CommandConstants::toDestination( 
+                    getPropertyValue(
+                        CommandConstants::toString( 
+                            CommandConstants::HEADER_REPLYTO ), "" ) );                
+            }
         }
 
     	virtual ~StompMessage() { delete dest; }
@@ -301,6 +317,7 @@ namespace commands{
         virtual void setCMSDestination( const cms::Destination* destination ) {
             if( destination != NULL )
             {
+                delete dest;
                 dest = destination->clone();
                 setPropertyValue( 
                     CommandConstants::toString( 
@@ -398,21 +415,24 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual std::string getCMSReplyTo() const {
-            return getPropertyValue( 
-                CommandConstants::toString( 
-                    CommandConstants::HEADER_REPLYTO ), "" );
+        virtual const cms::Destination* getCMSReplyTo() const {
+            return replyTo;
         }
 
         /**
          * Sets the CMS Reply To Address for this message
          * @param id Reply To value
          */
-        virtual void setCMSReplyTo( const std::string& id ) {
-            setPropertyValue( 
-                CommandConstants::toString( 
-                    CommandConstants::HEADER_REPLYTO ),
-                id );
+        virtual void setCMSReplyTo( const cms::Destination* destination ) {
+            if( destination != NULL )
+            {
+                delete replyTo;
+                replyTo = destination->clone();
+                setPropertyValue( 
+                    CommandConstants::toString( 
+                        CommandConstants::HEADER_REPLYTO ),
+                    replyTo->toProviderString() );
+            }
         }
 
         /**
