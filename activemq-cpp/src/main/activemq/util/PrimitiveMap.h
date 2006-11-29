@@ -109,6 +109,8 @@ namespace openwire{
                 } else{
                     value = node.value;
                 }
+                
+                return *this;
             }
             
             ValueTypeEnum getValueType() const { return valueType; }
