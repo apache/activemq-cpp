@@ -17,7 +17,7 @@
 
 #include "PrimitiveMap.h"
 
-using namespace activemq::connector::openwire;
+using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace std;
 
@@ -187,7 +187,7 @@ string PrimitiveMap::getString( const string& key ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMap::setString( const string& key, string& value ){
+void PrimitiveMap::setString( const string& key, const string& value ){
     ValueNode node;
     node.setString( value );
     
