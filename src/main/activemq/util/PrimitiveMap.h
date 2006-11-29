@@ -15,15 +15,14 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_OPENWIRE_PRIMITIVEMAP_H_
-#define ACTIVEMQ_CONNECTOR_OPENWIRE_PRIMITIVEMAP_H_
+#ifndef ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
+#define ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
 
 #include <string>
 #include <activemq/util/Map.h>
 
 namespace activemq{
-namespace connector{
-namespace openwire{
+namespace util{
         
     /**
      * Map of named primitives.
@@ -243,7 +242,7 @@ namespace openwire{
                 return value.floatValue;
             }
             
-            void setString( std::string& lvalue ){
+            void setString( const std::string& lvalue ){
                 clear();
                 valueType = STRING_TYPE;
                 value.stringValue = new std::string( lvalue );
@@ -326,7 +325,7 @@ namespace openwire{
         
         virtual std::string getString( const std::string& key ) const 
             throw(activemq::exceptions::NoSuchElementException);
-        virtual void setString( const std::string& key, std::string& value );
+        virtual void setString( const std::string& key, const std::string& value );
         
         /**
          * Removes the value (key/value pair) for the specified key from 
@@ -346,6 +345,6 @@ namespace openwire{
         virtual std::vector<ValueNode> getValues() const;
     };
 
-}}}
+}}
 
-#endif /*ACTIVEMQ_CONNECTOR_OPENWIRE_PRIMITIVEMAP_H_*/
+#endif /*ACTIVEMQ_UTIL_PRIMITIVEMAP_H_*/
