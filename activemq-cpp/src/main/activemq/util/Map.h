@@ -144,13 +144,15 @@ namespace util{
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>
     std::vector<K> Map<K,V>::getKeys() const{
-        std::vector<K> values(valueMap.size());
+        std::vector<K> keys(valueMap.size());
         
         typename std::map<K,V>::const_iterator iter;
         iter=valueMap.begin();
         for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-            values[ix] = iter->first;
+            keys[ix] = iter->first;
         }
+        
+        return keys;
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -163,6 +165,8 @@ namespace util{
         for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
             values[ix] = iter->second;
         }
+        
+        return values;
     }
 
 }}
