@@ -129,12 +129,12 @@ namespace stomp{
          * Sends the connect message to the broker and
          * waits for the response.
          */
-        void connect(void);
+        void connect();
         
         /**
          * Sends a oneway disconnect message to the broker.
          */
-        void disconnect(void);
+        void disconnect();
         
         /**
          * Fires a consumer message to the observer.
@@ -175,26 +175,26 @@ namespace stomp{
                         const util::Properties& properties )
             throw ( exceptions::IllegalArgumentException );
 
-        virtual ~StompConnector(void);
+        virtual ~StompConnector();
         
         /**
          * Starts the service.
          * @throws CMSException
          */
-        virtual void start(void) throw( cms::CMSException );
+        virtual void start() throw( cms::CMSException );
         
         /**
          * Closes this object and deallocates the appropriate resources.
          * @throws CMSException
          */
-        virtual void close(void) throw( cms::CMSException );
+        virtual void close() throw( cms::CMSException );
 
         /**
          * Gets the Client Id for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Client Id String
          */
-        virtual std::string getClientId(void) const {
+        virtual std::string getClientId() const {
             return properties.getProperty( 
                 core::ActiveMQConstants::toString( 
                     core::ActiveMQConstants::PARAM_CLIENTID ), "" );
@@ -205,7 +205,7 @@ namespace stomp{
          * connection has been closed, then this method returns ""
          * @return Username String
          */
-        virtual std::string getUsername(void) const {
+        virtual std::string getUsername() const {
             return properties.getProperty( 
                 core::ActiveMQConstants::toString( 
                     core::ActiveMQConstants::PARAM_USERNAME ), "" );
@@ -216,7 +216,7 @@ namespace stomp{
          * connection has been closed, then this method returns ""
          * @return Password String
          */
-        virtual std::string getPassword(void) const {
+        virtual std::string getPassword() const {
             return properties.getProperty( 
                 core::ActiveMQConstants::toString( 
                     core::ActiveMQConstants::PARAM_PASSWORD ), "" );
@@ -228,7 +228,7 @@ namespace stomp{
          * @return reference to a transport
          * @throws InvalidStateException if the Transport is not set
          */
-        virtual transport::Transport& getTransport(void) const 
+        virtual transport::Transport& getTransport() const 
             throw ( exceptions::InvalidStateException ) {
 
             if( transport == NULL ) {
@@ -535,11 +535,11 @@ namespace stomp{
         
     private:
     
-        unsigned int getNextProducerId(void);
-        unsigned int getNextTransactionId(void);
+        unsigned int getNextProducerId();
+        unsigned int getNextTransactionId();
 
         // Check for Connected State and Throw an exception if not.
-        void enforceConnected( void ) throw ( ConnectorException );
+        void enforceConnected() throw ( ConnectorException );
         
     };
 

@@ -81,7 +81,7 @@ StompConnector::StompConnector( Transport* transport,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompConnector::~StompConnector(void)
+StompConnector::~StompConnector()
 {
     try
     {
@@ -94,7 +94,7 @@ StompConnector::~StompConnector(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompConnector::getNextProducerId(void)
+unsigned int StompConnector::getNextProducerId()
 {
     synchronized( &mutex )
     {
@@ -105,7 +105,7 @@ unsigned int StompConnector::getNextProducerId(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompConnector::getNextTransactionId(void)
+unsigned int StompConnector::getNextTransactionId()
 {
     synchronized( &mutex )
     {
@@ -116,7 +116,7 @@ unsigned int StompConnector::getNextTransactionId(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::enforceConnected( void ) throw ( ConnectorException )
+void StompConnector::enforceConnected() throw ( ConnectorException )
 {
     if( state != CONNECTED )
     {
@@ -142,7 +142,7 @@ void StompConnector::removeCmdListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::start(void) throw( cms::CMSException )
+void StompConnector::start() throw( cms::CMSException )
 {
     try
     {
@@ -167,20 +167,22 @@ void StompConnector::start(void) throw( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::close(void) throw( cms::CMSException ){
+void StompConnector::close() throw( cms::CMSException ){
     
     try
     {
+        if( state == DISCONNECTED ){
+            return;
+        }
+        
         synchronized( &mutex )
-        {  
-            if( state == this->CONNECTED )
-            {
-                // Send the disconnect message to the broker.
-                disconnect();
+        {
+            // Send the disconnect message to the broker.
+            disconnect();
 
-                // Close the transport.
-                transport->close();
-            }
+            // Close the transport.
+            printf("StompConnector::close - about to close the transport\n");
+            transport->close();
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -188,12 +190,12 @@ void StompConnector::close(void) throw( cms::CMSException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::connect(void)
+void StompConnector::connect()
 {
     try
     {
         // Mark this connector as started.
-        state = this->CONNECTING;
+        state = CONNECTING;
 
         // Send the connect command to the broker 
         ConnectCommand cmd;
@@ -268,12 +270,12 @@ void StompConnector::connect(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::disconnect(void)
+void StompConnector::disconnect()
 {
     try
     {
         // Mark state as no longer connected.
-        state = this->DISCONNECTED;
+        state = DISCONNECTED;
 
         // Send the disconnect command to the broker.
         DisconnectCommand cmd;
@@ -771,8 +773,11 @@ void StompConnector::onTransportException(
         // Inform the user.
         fire( ex );
         
+        // NOT closing here ... let the user close it through the connection
+        // class! 
+        
         // Close down.
-        close();
+        //close();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );

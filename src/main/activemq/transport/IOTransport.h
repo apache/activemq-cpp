@@ -25,6 +25,7 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Command.h>
+#include <activemq/logger/LoggerDefines.h>
 
 namespace activemq{
 namespace transport{
@@ -46,6 +47,9 @@ namespace transport{
         public Transport,
         public concurrent::Runnable
     {
+        
+        LOGCMS_DECLARE( logger )
+        
     private:
         
         /**
