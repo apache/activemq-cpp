@@ -47,6 +47,8 @@ using namespace activemq::exceptions;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
 
+LOGCMS_INITIALIZE(logger, StompConnector, "activemq.connector.stomp.StompConnector" )
+
 ////////////////////////////////////////////////////////////////////////////////
 StompConnector::StompConnector( Transport* transport, 
                                 const util::Properties& properties )
@@ -179,9 +181,7 @@ void StompConnector::close() throw( cms::CMSException ){
         {
             // Send the disconnect message to the broker.
             disconnect();
-
-            // Close the transport.
-            printf("StompConnector::close - about to close the transport\n");
+            
             transport->close();
         }
     }
@@ -770,14 +770,16 @@ void StompConnector::onTransportException(
 {
     try
     {
-        // Inform the user.
+        // We're disconnected - the asynchronous error is expected.
+        if( state == DISCONNECTED ){
+            return;
+        }
+        
+        // We were not closing - log the stack trace.
+        LOGCMS_WARN(logger, ex.getStackTraceString() );
+        
+        // Inform the user of the error.
         fire( ex );
-        
-        // NOT closing here ... let the user close it through the connection
-        // class! 
-        
-        // Close down.
-        //close();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
