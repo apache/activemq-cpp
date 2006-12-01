@@ -160,33 +160,20 @@ void IOTransport::run(){
         }
         
     }
-    catch( activemq::io::IOException& ex ){
-
-        // This is expected for your typical broken socket - this
-        // is an error to be handled by the user, so let's not bother
-        // logging it - just inform the user through a callback.
-        ex.setMark( __FILE__, __LINE__ );        
-        fire( ex );
-    }
     catch( exceptions::ActiveMQException& ex ){
 
-        ex.setMark( __FILE__, __LINE__ );
-        
-        LOGCMS_WARN(logger, ex.getStackTraceString().c_str() )
-            
+        ex.setMark( __FILE__, __LINE__ );            
         fire( ex );
     }
     catch( ... ){
         
-        if( !closed ) {
-            exceptions::ActiveMQException ex( 
-                __FILE__, __LINE__, 
-                "IOTransport::run - caught unknown exception" );
-                
-            LOGCMS_WARN(logger, ex.getStackTraceString().c_str() )
+        exceptions::ActiveMQException ex( 
+            __FILE__, __LINE__, 
+            "IOTransport::run - caught unknown exception" );
 
-            fire( ex );
-        }
+        LOGCMS_WARN(logger, ex.getStackTraceString() );
+        
+        fire( ex );
     }
 }
 

@@ -31,6 +31,7 @@
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
+#include <activemq/logger/LoggerDefines.h>
 
 namespace activemq{
 namespace connector{
@@ -46,6 +47,9 @@ namespace stomp{
         public transport::TransportExceptionListener,
         public StompCommandListener
     {
+        
+        LOGCMS_DECLARE( logger )
+        
     private:
     
         // Flags the state we are in for connection to broker.
