@@ -53,7 +53,7 @@ namespace stomp{
         /**
          * Deafult Constructor
          */
-        StompCommandReader( void );
+        StompCommandReader();
 
         /**
          * Constructor.
@@ -61,14 +61,14 @@ namespace stomp{
          */
         StompCommandReader( io::InputStream* is );
 
-        virtual ~StompCommandReader(void) {}
+        virtual ~StompCommandReader() {}
 
         /**
          * Reads a command from the given input stream.
          * @return The next command available on the stream.
          * @throws CommandIOException if a problem occurs during the read.
          */
-        virtual transport::Command* readCommand(void) 
+        virtual transport::Command* readCommand() 
             throw ( transport::CommandIOException );
 
         /**
@@ -83,7 +83,7 @@ namespace stomp{
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual io::InputStream* getInputStream(void){
+        virtual io::InputStream* getInputStream(){
             return inputStream;
         }
 
@@ -102,7 +102,7 @@ namespace stomp{
          * @return The byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char readByte(void) throw( io::IOException );
+        virtual unsigned char readByte() throw( io::IOException );
 
     private:
     
@@ -112,7 +112,7 @@ namespace stomp{
          * @throws StompConnectorException
          */
         void readStompCommandHeader( StompFrame& frame ) 
-            throw ( StompConnectorException );
+            throw ( transport::CommandIOException );
 
         /** 
          * Read all the Stomp Headers for the incoming Frame
@@ -120,21 +120,21 @@ namespace stomp{
          * @throws StompConnectorException
          */
         void readStompHeaders( StompFrame& frame ) 
-            throw ( StompConnectorException );
+            throw ( transport::CommandIOException );
 
         /**
          * Reads a Stomp Header line and stores it in the buffer object
          * @return number of bytes read, zero if there was a problem.
          * @throws StompConnectorException
          */
-        int readStompHeaderLine(void) throw ( StompConnectorException );
+        int readStompHeaderLine() throw ( transport::CommandIOException );
 
         /**
          * Reads the Stomp Body from the Wire and store it in the frame.
          * @param Stomp Frame to place data in
          */
         void readStompBody( StompFrame& frame ) 
-            throw ( StompConnectorException );                
+            throw ( transport::CommandIOException );                
     
     };
 
