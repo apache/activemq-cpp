@@ -62,88 +62,100 @@ void BufferedInputStream::init( unsigned int bufferSize ){
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char BufferedInputStream::read() throw ( IOException ){
 
-    // If there's no data left, reset to pointers to the beginning of the
-    // buffer.
-    normalizeBuffer();                
-
-    // If we don't have any data buffered yet - read as much as 
-    // we can. 
-    if( isEmpty() ){
-        bufferData();
+    try{
+        // If there's no data left, reset to pointers to the beginning of the
+        // buffer.
+        normalizeBuffer();                
+    
+        // If we don't have any data buffered yet - read as much as 
+        // we can. 
+        if( isEmpty() ){
+            bufferData();
+        }
+        
+        // Get the next character.
+        char returnValue = buffer[head++];
+        
+        return returnValue;
     }
-    
-    // Get the next character.
-    char returnValue = buffer[head++];
-    
-    return returnValue;
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int BufferedInputStream::read( unsigned char* targetBuffer, 
     const int targetBufferSize ) throw ( IOException ){
     
-    // If there's no data left, reset to pointers to the beginning of the
-    // buffer.
-    normalizeBuffer();
-    
-    // If we still haven't filled the output buffer AND there is data
-    // on the input stream to be read, read a buffer's
-    // worth from the stream.
-    int totalRead = 0;
-    while( totalRead < targetBufferSize ){        
-        
-        // Get the remaining bytes to copy.
-        int bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
-        
-        // Copy the data to the output buffer.  
-        memcpy( targetBuffer+totalRead, this->buffer+head, bytesToCopy );
-        
-        // Increment the total bytes read.
-        totalRead += bytesToCopy;
-        
-        // Increment the head position.
-        head += bytesToCopy;
-        
-        // If the buffer is now empty, reset the positions to the
-        // head of the buffer.
+    try{
+        // If there's no data left, reset to pointers to the beginning of the
+        // buffer.
         normalizeBuffer();
         
-        // If we still haven't satisified the request, 
-        // read more data.
-        if( totalRead < targetBufferSize ){                  
+        // If we still haven't filled the output buffer AND there is data
+        // on the input stream to be read, read a buffer's
+        // worth from the stream.
+        int totalRead = 0;
+        while( totalRead < targetBufferSize ){        
             
-            // Buffer as much data as we can.
-            bufferData();
-        }              
+            // Get the remaining bytes to copy.
+            int bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
+            
+            // Copy the data to the output buffer.  
+            memcpy( targetBuffer+totalRead, this->buffer+head, bytesToCopy );
+            
+            // Increment the total bytes read.
+            totalRead += bytesToCopy;
+            
+            // Increment the head position.
+            head += bytesToCopy;
+            
+            // If the buffer is now empty, reset the positions to the
+            // head of the buffer.
+            normalizeBuffer();
+            
+            // If we still haven't satisified the request, 
+            // read more data.
+            if( totalRead < targetBufferSize ){                  
+                
+                // Buffer as much data as we can.
+                bufferData();
+            }              
+        }
+        
+        // Return the total number of bytes read.
+        return totalRead;
     }
-    
-    // Return the total number of bytes read.
-    return totalRead;
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::bufferData() throw ( IOException ){
     
-    if( getUnusedBytes() == 0 ){
-        throw IOException( __FILE__, __LINE__, 
-            "BufferedInputStream::bufferData - buffer full" );
+    try{
+        if( getUnusedBytes() == 0 ){
+            throw IOException( __FILE__, __LINE__, 
+                "BufferedInputStream::bufferData - buffer full" );
+        }
+        
+        // Get the number of bytes currently available on the input stream
+        // that could be read without blocking.
+        int available = inputStream->available();
+        
+        // Calculate the number of bytes that we can read.  Always >= 1 byte!
+        int bytesToRead = max( 1, min( available, getUnusedBytes() ) );
+        
+        // Read the bytes from the input stream.    
+        int bytesRead = inputStream->read( getTail(), bytesToRead );
+        if( bytesRead == 0 ){
+            throw IOException( __FILE__, __LINE__, 
+                "BufferedInputStream::read() - failed reading bytes from stream");
+        }
+        
+        // Increment the tail to the new end position.
+        tail += bytesRead;
     }
-    
-    // Get the number of bytes currently available on the input stream
-    // that could be read without blocking.
-    int available = inputStream->available();
-    
-    // Calculate the number of bytes that we can read.  Always >= 1 byte!
-    int bytesToRead = max( 1, min( available, getUnusedBytes() ) );
-    
-    // Read the bytes from the input stream.
-    int bytesRead = inputStream->read( getTail(), bytesToRead );
-    if( bytesRead == 0 ){
-        throw IOException( __FILE__, __LINE__, 
-            "BufferedInputStream::read() - failed reading bytes from stream");
-    }
-    
-    // Increment the tail to the new end position.
-    tail += bytesRead;   
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
