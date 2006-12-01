@@ -138,7 +138,7 @@ cms::Destination* CommandConstants::toDestination( const std::string& dest )
     {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
-            "CommandConstants::toDestionation - Not a valid Stomp Dest");
+            "CommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
     }
 }  
 

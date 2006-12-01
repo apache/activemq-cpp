@@ -77,20 +77,19 @@ namespace commands{
             ackHandler( NULL ),
             dest( NULL ),
             replyTo( NULL )
-        {
+        {             
+            const std::string& destHeader = CommandConstants::toString( 
+                CommandConstants::HEADER_DESTINATION );
+            const std::string& replyToHeader = CommandConstants::toString( 
+                CommandConstants::HEADER_REPLYTO );
+                        
             dest = CommandConstants::toDestination( 
-                getPropertyValue(
-                    CommandConstants::toString( 
-                        CommandConstants::HEADER_DESTINATION ), "" ) );
-            if( getPropertyValue(
-                    CommandConstants::toString( 
-                        CommandConstants::HEADER_REPLYTO ), "" ) != "" ) {
-                            
-                replyTo = CommandConstants::toDestination( 
-                    getPropertyValue(
-                        CommandConstants::toString( 
-                            CommandConstants::HEADER_REPLYTO ), "" ) );                
-            }
+                getPropertyValue( destHeader, "" ) );
+            
+            std::string replyToValue = getPropertyValue( replyToHeader, "null" );
+            if( replyToValue != "null" ) {                            
+                replyTo = CommandConstants::toDestination( replyToValue );                
+            }            
         }
 
     	virtual ~StompMessage() { delete dest; }
@@ -250,9 +249,13 @@ namespace commands{
          * @return string representation of the correlation Id
          */
         virtual std::string getCMSCorrelationId() const {
-            return getPropertyValue( 
+            std::string correlationId = getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_CORRELATIONID ), "" );
+                    CommandConstants::HEADER_CORRELATIONID ), "null" );
+            if( correlationId == "null" ){
+                return "";
+            }
+            return correlationId;
         }
 
         /**
@@ -461,9 +464,13 @@ namespace commands{
          * @return type value
          */
         virtual std::string getCMSMessageType() const {
-            return getPropertyValue( 
+            std::string type = getPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_TYPE ), "" );
+                    CommandConstants::HEADER_TYPE ), "null" );
+            if( type == "null" ){
+                return "";
+            }
+            return type;
         }
       
         /**
