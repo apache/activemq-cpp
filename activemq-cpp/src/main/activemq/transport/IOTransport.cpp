@@ -26,6 +26,8 @@ using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::concurrent;
 
+LOGCMS_INITIALIZE(logger, IOTransport, "activemq.transport.IOTransport" )
+
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::IOTransport(){
     
@@ -146,34 +148,45 @@ void IOTransport::close() throw( cms::CMSException ){
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::run(){
     
-   try{
+    try{
         
-      while( !closed ){
+        while( !closed ){
                  
-         // Read the next command from the input stream.
-         Command* command = reader->readCommand();
+            // Read the next command from the input stream.
+            Command* command = reader->readCommand();
                             
-         // Notify the listener.
-         fire( command );      
-      }
+            // Notify the listener.
+            fire( command );
+        }
         
-   }catch( exceptions::ActiveMQException& ex ){
-        
-      ex.setMark( __FILE__, __LINE__ );
+    }
+    catch( activemq::io::IOException& ex ){
 
-      if( !closed ) {
-         fire( ex );
-      }
-   }
-   catch( ... ){
-        
-      if( !closed ) {
-         exceptions::ActiveMQException ex( 
-            __FILE__, __LINE__, 
-            "IOTransport::run - caught unknown exception" );
+        // This is expected for your typical broken socket - this
+        // is an error to be handled by the user, so let's not bother
+        // logging it - just inform the user through a callback.
+        ex.setMark( __FILE__, __LINE__ );        
+        fire( ex );
+    }
+    catch( exceptions::ActiveMQException& ex ){
 
-         fire( ex );
-      }
-   }
+        ex.setMark( __FILE__, __LINE__ );
+        
+        LOGCMS_WARN(logger, ex.getStackTraceString().c_str() )
+            
+        fire( ex );
+    }
+    catch( ... ){
+        
+        if( !closed ) {
+            exceptions::ActiveMQException ex( 
+                __FILE__, __LINE__, 
+                "IOTransport::run - caught unknown exception" );
+                
+            LOGCMS_WARN(logger, ex.getStackTraceString().c_str() )
+
+            fire( ex );
+        }
+    }
 }
 

@@ -53,8 +53,8 @@ void ActiveMQException::buildMessage(const char* format, va_list& vargs)
         size *= 2;
     }
     
-    activemq::logger::SimpleLogger logger("com.yadda1");
-    logger.log( message );   
+    //activemq::logger::SimpleLogger logger("com.yadda1");
+    //logger.log( message );   
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,8 +67,8 @@ void ActiveMQException::setMark( const char* file, const int lineNumber ){
     stream << "\tFILE: " << stackTrace[stackTrace.size()-1].first;
     stream << ", LINE: " << stackTrace[stackTrace.size()-1].second;
                  
-    activemq::logger::SimpleLogger logger("com.yadda2");
-    logger.log( stream.str() );    
+    //activemq::logger::SimpleLogger logger("com.yadda2");
+    //logger.log( stream.str() );    
 }
 
 
