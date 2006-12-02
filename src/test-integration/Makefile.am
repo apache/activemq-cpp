@@ -19,6 +19,7 @@ cc_sources = \
   integration/common/AbstractTester.cpp \
   integration/common/IntegrationCommon.cpp \
   integration/durable/DurableTester.cpp \
+  integration/expiration/ExpirationTest.cpp \
   integration/simple/SimpleTester.cpp \
   integration/transactional/TransactionTester.cpp \
   integration/various/SimpleRollbackTest.cpp \
