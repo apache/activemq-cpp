@@ -434,6 +434,22 @@ namespace commands{
          */
         virtual unsigned long long getBodyLength(void) const;
 
+    public:  // ActiveMQMessage
+
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const {
+            long long expireTime = this->getCMSExpiration();
+            long long currentTime = util::Date::getCurrentTimeMilliseconds();
+            if( expireTime > 0 && currentTime > expireTime ) {
+                return true;
+            }
+            return false;
+        }
+
     };
 
 }}}}

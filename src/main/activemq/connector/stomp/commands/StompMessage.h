@@ -27,6 +27,7 @@
 #include <activemq/exceptions/NoSuchElementException.h>
 #include <activemq/exceptions/RuntimeException.h>
 
+#include <activemq/util/Date.h>
 #include <activemq/util/Long.h>
 #include <activemq/util/Integer.h>
 #include <activemq/util/Boolean.h>
@@ -516,6 +517,20 @@ namespace commands{
                 CommandConstants::toString( 
                     CommandConstants::HEADER_REDELIVERYCOUNT ),
                 util::Integer::toString( count ) );
+        }
+
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const {
+            long long expireTime = this->getCMSExpiration();
+            long long currentTime = util::Date::getCurrentTimeMilliseconds();
+            if( expireTime > 0 && currentTime > expireTime ) {
+                return true;
+            }
+            return false;
         }
 
     protected:   

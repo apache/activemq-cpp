@@ -57,6 +57,13 @@ namespace core{
          * @param count the redelivery count
          */
         virtual void setRedeliveryCount( int count ) = 0;
+        
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const = 0;
 
     };
 
