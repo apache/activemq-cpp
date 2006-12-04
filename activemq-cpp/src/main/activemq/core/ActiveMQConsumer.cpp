@@ -291,23 +291,31 @@ void ActiveMQConsumer::dispatch( ActiveMQMessage* message )
 {
     try
     {
+        // Don't dispatch expired messages, ack it and then destroy it
+        if( message->isExpired() ) {
+            session->acknowledge( this, message );
+            delete message;
+
+            // stop now, don't queue
+            return;
+        }
+        
         // If the Session is in ClientAcknowledge mode, then we set the 
         // handler in the message to this object and send it out.  Otherwise
         // we ack it here for all the other Modes.
-        if( session->getAcknowledgeMode() == Session::CLIENT_ACKNOWLEDGE )
-        {
+        if( session->getAcknowledgeMode() == Session::CLIENT_ACKNOWLEDGE ) {
+            
             // Register ourself so that we can handle the Message's
             // acknowledge method.
             message->setAckHandler( this );
-        }
-        else
-        {
+            
+        } else {
             session->acknowledge( this, message );
         }
 
         // No listener, so we queue it
-        synchronized( &msgQueue )
-        {
+        synchronized( &msgQueue ) {
+            
             msgQueue.push( dynamic_cast< cms::Message* >( message ) );
             msgQueue.notifyAll();
         }

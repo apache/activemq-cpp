@@ -22,6 +22,7 @@
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/util/Date.h>
 
 namespace activemq{
 namespace connector{
@@ -106,6 +107,15 @@ namespace commands{
             this->redeliveryCount = count;
         }
 
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const {
+            return false;
+        }
+      
     private:
    
         core::ActiveMQAckHandler* ackHandler;

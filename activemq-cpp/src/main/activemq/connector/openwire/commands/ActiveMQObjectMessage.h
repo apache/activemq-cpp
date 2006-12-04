@@ -67,6 +67,18 @@ namespace commands{
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQMessage::copyDataStructure( src );
         }
+
+
+    public:  // ActiveMQMessage
+
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const {
+            return false;
+        }
         
     };
 
