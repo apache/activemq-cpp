@@ -9,6 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq-example", "
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc2005-activemq-integration-tests", "vc2005-activemq-integration-tests.vcproj", "{DC329496-FA10-4BFC-9B55-4C7A6EDDA227}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26} = {60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc2005-activemq-unittests", "vc2005-activemq-unittests.vcproj", "{C215A965-3E75-431F-A1A6-EDC3EF2D682B}"
 	ProjectSection(ProjectDependencies) = postProject
