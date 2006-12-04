@@ -36,8 +36,8 @@ namespace expiration{
     class ExpirationTest : public CppUnit::TestFixture   
     {
         CPPUNIT_TEST_SUITE( ExpirationTest );
-        //CPPUNIT_TEST( testExpired );
-        //CPPUNIT_TEST( testNotExpired );
+        CPPUNIT_TEST( testExpired );
+        CPPUNIT_TEST( testNotExpired );
         CPPUNIT_TEST_SUITE_END();
 
     public:

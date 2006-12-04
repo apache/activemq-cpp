@@ -19,7 +19,7 @@
 
 #include <integration/common/IntegrationCommon.h>
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( integration::expiration::ExpirationTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::expiration::ExpirationTest );
 
 #include <sstream>
 
@@ -89,6 +89,7 @@ private:
     MessageProducer* producer;
     int numMessages;
     long long timeToLive;
+    bool disableTimeStamps;
 
 public:
 
@@ -99,10 +100,19 @@ public:
         producer = NULL;
         this->numMessages = numMessages;
         this->timeToLive = timeToLive;
+        this->disableTimeStamps = false;
     }
 
     virtual ~Producer(){
         cleanup();
+    }
+
+    virtual bool getDisableTimeStamps() const {
+        return disableTimeStamps;
+    }
+
+    virtual void setDisableTimeStamps( bool value ) {
+        this->disableTimeStamps = value;
     }
 
     virtual void run() {
@@ -123,6 +133,7 @@ public:
 
             producer = session->createProducer( destination );
             producer->setDeliveryMode( DeliveryMode::PERSISTANT );
+            producer->setDisableMessageTimeStamp( disableTimeStamps );
 
             //unsigned long ttt=getcurt();
             producer->setTimeToLive( 1);
@@ -291,30 +302,37 @@ private:
 
 void ExpirationTest::testExpired()
 {
-    Producer producer( 2, 1 );
+    Producer producer( 1, 1 );
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
     
+    Thread::sleep( 100 );
+
     Consumer consumer( 2000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
     
+    Thread::sleep( 100 );
+
     CPPUNIT_ASSERT( consumer.getNumReceived() == 0 );
 }
 
 void ExpirationTest::testNotExpired()
 {
     Producer producer( 2, 2000 );
+    producer.setDisableTimeStamps( true );
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
     
-    Consumer consumer( 2000 );
+    Consumer consumer( 3000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
+
+    Thread::sleep( 50 );
     
     CPPUNIT_ASSERT( consumer.getNumReceived() == 2 );
 }
