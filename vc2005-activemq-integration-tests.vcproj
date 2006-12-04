@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\test-integration\integration\common\IntegrationCommon.cpp"
 				>
 			</File>
@@ -221,6 +225,10 @@
 			</File>
 			<File
 				RelativePath=".\src\test-integration\integration\durable\DurableTester.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.h"
 				>
 			</File>
 			<File
