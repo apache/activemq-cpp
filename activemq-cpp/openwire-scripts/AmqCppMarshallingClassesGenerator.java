@@ -564,7 +564,7 @@ out.println("");
     public void generateFactory(PrintWriter out) {
 		generateLicence(out);
         
-out.println("#include <activemq/connector/openwire/marshal/V"+getOpenwireVersion()+"/MarshallerFactory.h>");
+out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/MarshallerFactory.h>");
 
     List list = new ArrayList(getConcreteClasses());
     Collections.sort(list, new Comparator(){
