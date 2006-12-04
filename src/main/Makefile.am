@@ -216,6 +216,7 @@ h_sources = \
     activemq/transport/TransportFilter.h \
     activemq/util/Endian.h \
     activemq/util/Number.h \
+    activemq/util/Config.h \
     activemq/util/Integer.h \
     activemq/util/Guid.h \
     activemq/util/Properties.h \
