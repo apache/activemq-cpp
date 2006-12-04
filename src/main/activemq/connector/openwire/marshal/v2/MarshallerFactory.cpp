@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/connector/openwire/marshal/V2/MarshallerFactory.h>
+#include <activemq/connector/openwire/marshal/v2/MarshallerFactory.h>
 #include <activemq/connector/openwire/marshal/v2/ActiveMQBytesMessageMarshaller.h>
 #include <activemq/connector/openwire/marshal/v2/ActiveMQMapMessageMarshaller.h>
 #include <activemq/connector/openwire/marshal/v2/ActiveMQMessageMarshaller.h>
