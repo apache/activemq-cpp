@@ -290,6 +290,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\main\activemq\util\Map.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\main\activemq\util\Math.cpp"
 					>
 				</File>
@@ -299,6 +303,14 @@
 				</File>
 				<File
 					RelativePath=".\src\main\activemq\util\Number.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\main\activemq\util\PrimitiveMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\main\activemq\util\PrimitiveMap.h"
 					>
 				</File>
 				<File
