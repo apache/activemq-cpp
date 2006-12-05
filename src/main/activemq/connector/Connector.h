@@ -109,13 +109,16 @@ namespace connector{
          * Create a Consumer for the given Session
          * @param destination Destination to Subscribe to.
          * @param session Session Information.
+         * @param Message Selector String
+         * @param should local messages be delivered back to this consumer
          * @return Consumer Information
          * @throws ConnectorException
          */
         virtual ConsumerInfo* createConsumer(
             const cms::Destination* destination, 
             SessionInfo* session,
-            const std::string& selector = "" )
+            const std::string& selector = "",
+            bool noLocal = false )
                 throw ( ConnectorException ) = 0;
          
         /** 

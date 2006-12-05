@@ -111,7 +111,8 @@ namespace stomp{
         virtual connector::ConsumerInfo* createConsumer(
             const cms::Destination* destination, 
             SessionInfo* session,
-            const std::string& selector )
+            const std::string& selector = "",
+            bool noLocal = false )
                 throw( StompConnectorException );
 
         /**
@@ -130,8 +131,8 @@ namespace stomp{
             const cms::Destination* destination, 
             SessionInfo* session,
             const std::string& name,
-            const std::string& selector,
-            bool noLocal )
+            const std::string& selector = "",
+            bool noLocal = false )
                 throw ( StompConnectorException );
 
         /**

@@ -304,7 +304,8 @@ SessionInfo* StompConnector::createSession(
 ConsumerInfo* StompConnector::createConsumer(
     const cms::Destination* destination, 
     SessionInfo* session,
-    const std::string& selector )
+    const std::string& selector,
+    bool noLocal )
         throw ( ConnectorException )
 {
     try
@@ -312,7 +313,7 @@ ConsumerInfo* StompConnector::createConsumer(
         enforceConnected();
         
         return sessionManager->createConsumer( 
-            destination, session, selector );
+            destination, session, selector, noLocal );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );

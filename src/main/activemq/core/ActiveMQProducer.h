@@ -55,7 +55,10 @@ namespace core{
       
         // This Producers protocal specific info object
         connector::ProducerInfo* producerInfo;
-      
+        
+        // Boolean that indicates if the consumer has been closed
+        bool closed;
+
     public:
 
         /**
@@ -65,6 +68,15 @@ namespace core{
                           ActiveMQSession* session );
 
         virtual ~ActiveMQProducer();
+
+        /**
+         * Closes the Consumer.  This will return all allocated resources
+         * and purge any outstanding messages.  This method will block if
+         * there is a call to receive in progress, or a dispatch to a
+         * MessageListener in place
+         * @throws CMSException
+         */
+        virtual void close() throw ( cms::CMSException );
 
         /**
          * Sends the message to the default producer destination.

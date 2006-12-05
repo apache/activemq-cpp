@@ -20,6 +20,7 @@
 
 #include <cms/Message.h>
 #include <cms/Destination.h>
+#include <cms/Closeable.h>
 #include <cms/CMSException.h>
 #include <cms/DeliveryMode.h>
 
@@ -30,7 +31,7 @@ namespace cms
      * by all MessageProducer derivations.  This class defines the JMS
      * spec'd interface for a MessageProducer.
      */
-    class MessageProducer
+    class MessageProducer : public Closeable
     {
     public:
 

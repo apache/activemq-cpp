@@ -260,13 +260,15 @@ namespace stomp{
          * @param destination Destination to Subscribe to.
          * @param session the session this consumer is attached to
          * @param selector the selector string for this consumer
+         * @param noLocal should local message be delivered to the consumer
          * @return Consumer Information
          * @throws ConnectorException
          */
         virtual ConsumerInfo* createConsumer(
             const cms::Destination* destination, 
             SessionInfo* session,
-            const std::string& selector = "" )
+            const std::string& selector = "",
+            bool noLocal = false )
                 throw ( ConnectorException );
          
         /** 
