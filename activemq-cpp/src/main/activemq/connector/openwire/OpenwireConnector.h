@@ -255,13 +255,16 @@ namespace openwire{
          * Create a Consumer for the given Session
          * @param Destination to Subscribe to.
          * @param Session Information.
+         * @param Message Selector
+         * @param No Local redelivery indicator
          * @return Consumer Information
          * @throws ConnectorException
          */
         virtual ConsumerInfo* createConsumer(
             const cms::Destination* destination, 
             SessionInfo* session,
-            const std::string& selector = "" )
+            const std::string& selector = "",
+            bool noLocal = false )
                 throw ( ConnectorException );
          
         /** 

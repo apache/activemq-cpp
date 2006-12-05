@@ -91,11 +91,28 @@ namespace core{
          * Creates a MessageConsumer for the specified destination, using a 
          * message selector.
          * @param the Destination that this consumer receiving messages for.
+         * @param the Message Selector string to use for this destination
          * @throws CMSException
          */
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination,
             const std::string& selector )
+                throw ( cms::CMSException );
+        /**
+         * Creates a MessageConsumer for the specified destination, using a 
+         * message selector.
+         * @param the Destination that this consumer receiving messages for.
+         * @param the Message Selector string to use for this destination
+         * @param if true, and the destination is a topic, inhibits the 
+         *        delivery of messages published by its own connection. The 
+         *        behavior for NoLocal is not specified if the destination is 
+         *        a queue.
+         * @throws CMSException
+         */
+        virtual cms::MessageConsumer* createConsumer(
+            const cms::Destination* destination,
+            const std::string& selector,
+            bool noLocal )
                 throw ( cms::CMSException );
          
         /**

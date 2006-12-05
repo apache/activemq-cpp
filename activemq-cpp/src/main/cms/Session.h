@@ -105,6 +105,7 @@ namespace cms
          * Creates a MessageConsumer for the specified destination, using a 
          * message selector.
          * @param the Destination that this consumer receiving messages for.
+         * @param the Message Selector to use
          * @return pointer to a new MessageConsumer that is owned by the 
          *         caller ( caller deletes )
          * @throws CMSException
@@ -112,6 +113,24 @@ namespace cms
         virtual MessageConsumer* createConsumer( 
             const Destination* destination,
             const std::string& selector )
+                throw ( CMSException ) = 0;
+
+        /**
+         * Creates a MessageConsumer for the specified destination, using a 
+         * message selector.
+         * @param the Destination that this consumer receiving messages for.
+         * @param the Message Selector to use
+         * @param if true, and the destination is a topic, inhibits the 
+         * delivery of messages published by its own connection. The behavior 
+         * for NoLocal is not specified if the destination is a queue. 
+         * @return pointer to a new MessageConsumer that is owned by the 
+         *         caller ( caller deletes )
+         * @throws CMSException
+         */
+        virtual MessageConsumer* createConsumer( 
+            const Destination* destination,
+            const std::string& selector,
+            bool noLocal )
                 throw ( CMSException ) = 0;
 
         /**

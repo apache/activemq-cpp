@@ -119,7 +119,8 @@ void StompSessionManager::removeSession(
 connector::ConsumerInfo* StompSessionManager::createConsumer(
     const cms::Destination* destination, 
     SessionInfo* session,
-    const std::string& selector )
+    const std::string& selector,
+    bool noLocal )
         throw( StompConnectorException )
 {
     try
@@ -128,7 +129,7 @@ connector::ConsumerInfo* StompSessionManager::createConsumer(
         // appropriate params so that a regular consumer is created on
         // the broker side.
         return createDurableConsumer( 
-            destination, session, "", selector, false );    
+            destination, session, "", selector, noLocal );    
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )

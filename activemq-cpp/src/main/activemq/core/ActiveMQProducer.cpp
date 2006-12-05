@@ -18,6 +18,7 @@
 
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/exceptions/InvalidStateException.h>
 #include <activemq/util/Date.h>
 
 using namespace std;
@@ -41,13 +42,14 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
     // Init Producer Data
     this->session      = session;
     this->producerInfo = producerInfo;
+    this->closed       = false;
 
     // Default the Delivery options
-    defaultDeliveryMode     = cms::DeliveryMode::PERSISTANT;
-    disableMsgId            = false;
-    disableTimestamps       = false;
-    defaultPriority         = 4;
-    defaultTimeToLive       = 0;
+    this->defaultDeliveryMode = cms::DeliveryMode::PERSISTANT;
+    this->disableMsgId        = false;
+    this->disableTimestamps   = false;
+    this->defaultPriority     = 4;
+    this->defaultTimeToLive   = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,11 +57,27 @@ ActiveMQProducer::~ActiveMQProducer(void)
 {
     try
     {
-        // Dispose of the ProducerInfo
-        session->onDestroySessionResource( this );
+        close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::close() 
+    throw ( cms::CMSException )
+{
+    try
+    {
+        if( !closed ) {
+            // Dispose of the ProducerInfo
+            session->onDestroySessionResource( this );
+            
+            closed = true;
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +86,13 @@ void ActiveMQProducer::send( cms::Message* message )
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::send - This Producer is closed" );
+        }
+
         send( &producerInfo->getDestination(), message );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -82,6 +107,13 @@ void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::send - This Producer is closed" );
+        }
+
         send( &producerInfo->getDestination(), message, deliveryMode,
             priority, timeToLive );
     }
@@ -95,6 +127,13 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::send - This Producer is closed" );
+        }
+
         send( destination, message, defaultDeliveryMode,
             defaultPriority, defaultTimeToLive );
     }
@@ -110,6 +149,13 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::send - This Producer is closed" );
+        }
+
         // configure the message
         message->setCMSDestination( destination );
         message->setCMSDeliveryMode( deliveryMode );

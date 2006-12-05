@@ -66,6 +66,9 @@ namespace core{
         // down and the run method should return.
         bool shutdown;
         
+        // Boolean that indicates if the consumer has been closed
+        bool closed;
+        
     public:
 
         /**
@@ -77,7 +80,16 @@ namespace core{
         virtual ~ActiveMQConsumer(void);
 
     public:  // Interface Implementation
-    
+
+        /**
+         * Closes the Consumer.  This will return all allocated resources
+         * and purge any outstanding messages.  This method will block if
+         * there is a call to receive in progress, or a dispatch to a
+         * MessageListener in place
+         * @throws CMSException
+         */
+        virtual void close() throw ( cms::CMSException );
+         
         /**
          * Synchronously Receive a Message
          * @return new message

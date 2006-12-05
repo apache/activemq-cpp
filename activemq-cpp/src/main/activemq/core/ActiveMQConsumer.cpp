@@ -17,6 +17,7 @@
 #include "ActiveMQConsumer.h"
 
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/exceptions/InvalidStateException.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <cms/ExceptionListener.h>
@@ -45,6 +46,7 @@ ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
     this->listenerThread = NULL;
     this->listener       = NULL;
     this->shutdown       = false;
+    this->closed         = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,19 +54,35 @@ ActiveMQConsumer::~ActiveMQConsumer(void)
 {
     try
     {
-        // Dispose of the Consumer Info, this should stop us from getting
-        // any more messages.
-        session->onDestroySessionResource( this );
-        
-        // Stop the asynchronous message processin thread if it's
-        // running.
-        stopThread();
-        
-        // Purge all the pending messages
-        purgeMessages();
+        close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::close() 
+    throw ( cms::CMSException )
+{
+    try
+    {
+        if( !closed ) {
+            // Dispose of the Consumer Info, this should stop us from getting
+            // any more messages.
+            session->onDestroySessionResource( this );
+            
+            // Stop the asynchronous message processin thread if it's
+            // running.
+            stopThread();
+            
+            // Purge all the pending messages
+            purgeMessages();
+            
+            closed = true;
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,10 +99,17 @@ std::string ActiveMQConsumer::getMessageSelector(void) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive(void) throw ( cms::CMSException )
+cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::receive - This Consumer is closed" );
+        }
+
         synchronized( &msgQueue )
         {
             // Check for empty in case of spurious wakeup, or race to
@@ -128,6 +153,13 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::receive - This Consumer is closed" );
+        }
+
         synchronized( &msgQueue )
         {
             // Check for empty, and wait if its not
@@ -166,6 +198,13 @@ cms::Message* ActiveMQConsumer::receiveNoWait(void)
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::receive - This Consumer is closed" );
+        }
+
         synchronized( &msgQueue )
         {
             if( !msgQueue.empty() )
@@ -196,6 +235,13 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener )
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::receive - This Consumer is closed" );
+        }
+
         synchronized( &listenerLock )
         {
             this->listener = listener;
@@ -217,6 +263,13 @@ void ActiveMQConsumer::acknowledgeMessage( const ActiveMQMessage* message )
 {
     try
     {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::receive - This Consumer is closed" );
+        }
+
         // Delegate the Ack to the Session, we cast away copnstness since
         // in a transactional session we might need to redeliver this
         // message and update its data.

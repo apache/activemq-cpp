@@ -20,11 +20,12 @@
 
 #include <cms/MessageListener.h>
 #include <cms/Message.h>
+#include <cms/Closeable.h>
 
 namespace cms
 {
 
-    class MessageConsumer
+    class MessageConsumer : public Closeable
     {
     public:
 

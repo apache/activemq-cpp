@@ -148,7 +148,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
 
-        return createConsumer( destination, "" );
+        return createConsumer( destination, "", false );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -169,9 +169,33 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
 
+        return createConsumer( destination, selector, false );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageConsumer* ActiveMQSession::createConsumer(
+    const cms::Destination* destination,
+    const std::string& selector,
+    bool noLocal )
+        throw ( cms::CMSException )
+{
+    try
+    {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQSession::createConsumer - Session Already Closed" );
+        }
+
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
             connection->getConnectionData()->getConnector()->
-                createConsumer( destination, sessionInfo, selector), this );
+                createConsumer( destination, 
+                                sessionInfo, 
+                                selector, 
+                                noLocal ), this );
 
         connection->addMessageListener(
             consumer->getConsumerInfo()->getConsumerId(), consumer );

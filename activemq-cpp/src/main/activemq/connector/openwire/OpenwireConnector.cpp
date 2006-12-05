@@ -247,7 +247,8 @@ SessionInfo* OpenwireConnector::createSession(
 ConsumerInfo* OpenwireConnector::createConsumer(
     const cms::Destination* destination, 
     SessionInfo* session,
-    const std::string& selector )
+    const std::string& selector,
+    bool noLocal )
         throw ( ConnectorException )
 {
     try
