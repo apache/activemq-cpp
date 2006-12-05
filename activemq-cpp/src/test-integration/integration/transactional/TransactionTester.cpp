@@ -83,12 +83,14 @@ void TransactionTester::test()
 {
     try
     {
-        cout << "Starting activemqcms transactional test (sending "
-             << IntegrationCommon::defaultMsgCount
-             << " messages per type and sleeping "
-             << IntegrationCommon::defaultDelay 
-             << " milli-seconds) ...\n"
-             << endl;
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms transactional test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                << " milli-seconds) ...\n"
+                << endl;
+        }
         
         // Create CMS Object for Comms
         cms::Topic* topic = session->createTopic("mytopic");
@@ -113,7 +115,9 @@ void TransactionTester::test()
         // Wait till we get all the messages
         waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
         
-        printf("received: %d\n", numReceived );
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
         CPPUNIT_ASSERT( 
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
@@ -128,11 +132,15 @@ void TransactionTester::test()
         // Wait till we get all the messages
         waitForMessages( IntegrationCommon::defaultMsgCount );
 
-        printf("received: %d\n", numReceived );
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
         CPPUNIT_ASSERT( 
             numReceived == IntegrationCommon::defaultMsgCount );
 
-        printf("Shutting Down\n" );
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
         delete producer;                      
         delete consumer;
     }

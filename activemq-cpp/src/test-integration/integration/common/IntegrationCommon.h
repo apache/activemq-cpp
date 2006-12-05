@@ -33,6 +33,8 @@ namespace common{
         static const int          defaultDelay;
         static const unsigned int defaultMsgCount;
         
+        static bool debug;
+        
     };
 
 }}
