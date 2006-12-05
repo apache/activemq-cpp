@@ -374,6 +374,34 @@ namespace stomp{
             cmdListener.cmd = NULL;
             cmdListener.subscribe = NULL;
 
+            cmdListener.expected.clear();
+            cmdListener.expected.push_back( retroactive );         
+            cmdListener.expected.push_back( prefetchSize );         
+            cmdListener.expected.push_back( maxPendingMsgLimit );         
+            cmdListener.expected.push_back( noLocal );         
+            cmdListener.expected.push_back( dispatchAsync );         
+            cmdListener.expected.push_back( selector );         
+            cmdListener.expected.push_back( exclusive );         
+            cmdListener.expected.push_back( priority );         
+            StompTopic dest4( 
+                std::string( "dummy.topic.1?" ) + 
+                "consumer.retroactive=" + retroactive.second + "&" +
+                "consumer.prefetchSize=" + prefetchSize.second + "&" +
+                "consumer.maximumPendingMessageLimit=" + maxPendingMsgLimit.second + "&" +
+                "consumer.dispatchAsync=" + dispatchAsync.second + "&" +
+                "consumer.selector=" + selector.second + "&" +
+                "consumer.exclusive=" + exclusive.second + "&" +
+                "consumer.priority=" + priority.second );
+            consumer = manager.createConsumer( &dest4, session, "", true );                    
+            CPPUNIT_ASSERT( consumer != NULL );
+            CPPUNIT_ASSERT( cmdListener.subscribe != NULL );            
+
+            manager.removeConsumer( consumer );
+            CPPUNIT_ASSERT( cmdListener.cmd != NULL );
+            delete consumer;
+            cmdListener.cmd = NULL;
+            cmdListener.subscribe = NULL;
+
             // Done
             delete session;
 
