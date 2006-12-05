@@ -83,12 +83,14 @@ void DurableTester::test()
 {
     try
     {
-        cout << "Starting activemqcms durable test (sending "
-             << IntegrationCommon::defaultMsgCount
-             << " messages per type and sleeping "
-             << IntegrationCommon::defaultDelay 
-             << " milli-seconds) ...\n"
-             << endl;
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms durable test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
         
         std::string subName = Guid().createGUID();
 
@@ -108,7 +110,10 @@ void DurableTester::test()
         // Wait for all messages
         waitForMessages( sent );
 
-        printf("received: %d\n", numReceived );
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
+        
         CPPUNIT_ASSERT( numReceived == sent );
 
         // Nuke the consumer
@@ -126,10 +131,14 @@ void DurableTester::test()
         // Wait for all remaining messages
         waitForMessages( sent );
         
-        printf("received: %d\n", numReceived );
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
         CPPUNIT_ASSERT( numReceived == sent );
 
-        printf("Shutting Down\n" );
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
         delete producer;                      
         delete consumer;
     }

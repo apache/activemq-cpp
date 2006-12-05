@@ -185,7 +185,9 @@ void SimpleRollbackTest::test()
         producer->send( textMsg );
         delete textMsg;
 
-        printf( "Shutting Down\n" );
+        if( IntegrationCommon::debug ) {
+            printf( "Shutting Down\n" );
+        }
 
         delete producer;                      
         delete consumer;
@@ -210,9 +212,9 @@ void SimpleRollbackTest::onMessage( const cms::Message* message )
             
         if( txtMsg != NULL )
         {
-            std::string text = txtMsg->getText();
-    
-    //            printf("received text msg: %s\n", txtMsg.getText() );
+            if( IntegrationCommon::debug ) {
+                printf("received text msg: %s\n", txtMsg->getText().c_str() );
+            }
     
             numReceived++;
     
@@ -234,13 +236,10 @@ void SimpleRollbackTest::onMessage( const cms::Message* message )
             const unsigned char* bytes = bytesMsg->getBodyBytes();
             
             string transcode( (const char*)bytes, bytesMsg->getBodyLength() );
-    
-            //printf("received bytes msg: " );
-            //int numBytes = bytesMsg.getBodyLength();
-            //for( int ix=0; ix<numBytes; ++ix ){
-               // printf("[%d]", bytes[ix] );
-            //}
-            //printf("\n");
+
+            if( IntegrationCommon::debug ) {
+                printf("Received Bytes Message: %s", transcode.c_str() );
+            }
     
             numReceived++;
             

@@ -217,7 +217,9 @@ void AbstractTester::onMessage( const cms::Message* message )
     {
         std::string text = txtMsg->getText();
 
+        if( IntegrationCommon::debug ) {
             printf("received text msg: %s\n", txtMsg->getText().c_str() );
+        }
 
         numReceived++;
 
@@ -240,12 +242,9 @@ void AbstractTester::onMessage( const cms::Message* message )
         
         string transcode( (const char*)bytes, bytesMsg->getBodyLength() );
 
-        //printf("received bytes msg: " );
-        //int numBytes = bytesMsg.getBodyLength();
-        //for( int ix=0; ix<numBytes; ++ix ){
-           // printf("[%d]", bytes[ix] );
-        //}
-        //printf("\n");
+        if( IntegrationCommon::debug ) {
+            printf("received bytes msg: %s\n", transcode.c_str() );
+        }
 
         numReceived++;
         

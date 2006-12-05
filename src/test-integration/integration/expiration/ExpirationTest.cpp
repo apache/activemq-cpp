@@ -242,7 +242,7 @@ public:
             // Create the destination (Topic or Queue)
             destination = session->createTopic( "mytopic?consumer.retroactive=true");
 
-            consumer = session->createDurableConsumer( destination , user ,"",false);
+            consumer = session->createConsumer( destination );
 
             consumer->setMessageListener( this );
 
