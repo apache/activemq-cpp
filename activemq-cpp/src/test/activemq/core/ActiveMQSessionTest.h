@@ -36,6 +36,7 @@
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Date.h>
 #include <activemq/transport/DummyTransport.h>
 #include <activemq/transport/DummyTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
@@ -59,6 +60,7 @@ namespace core{
         CPPUNIT_TEST( testAutoAcking );
         CPPUNIT_TEST( testClientAck );
         CPPUNIT_TEST( testTransactional );
+        CPPUNIT_TEST( testExpiration );
         CPPUNIT_TEST_SUITE_END();
         
     private:
@@ -188,7 +190,9 @@ namespace core{
         }
         
         void injectTextMessage( const std::string message,
-                                const cms::Destination& destination )
+                                const cms::Destination& destination,
+                                const long long timeStamp = -1,
+                                const long long timeToLive = -1 )
         {
             connector::stomp::StompFrame* frame = 
                 new connector::stomp::StompFrame();
@@ -205,6 +209,18 @@ namespace core{
             msg->setText( message.c_str() );
             msg->setCMSDestination( &destination );
             msg->setCMSMessageId( "Id: 123456" );
+            
+            long long expiration = 0LL;
+            
+            if( timeStamp != 0 ) {
+                msg->setCMSTimeStamp( timeStamp );
+
+                if( timeToLive > 0LL ) {
+                    expiration = timeToLive + timeStamp;
+                }
+            }
+            
+            msg->setCMSExpiration( expiration );
 
             // Send the Message
             CPPUNIT_ASSERT( dTransport != NULL );
@@ -577,6 +593,83 @@ namespace core{
             delete session;
         }
 
+        void testExpiration()
+        {
+            MyCMSMessageListener msgListener1;
+            MyCMSMessageListener msgListener2;
+            
+            CPPUNIT_ASSERT( connection != NULL );
+            
+            // Create an Auto Ack Session
+            cms::Session* session = connection->createSession();
+
+            // Create a Topic
+            cms::Topic* topic1 = session->createTopic( "TestTopic1");
+            cms::Topic* topic2 = session->createTopic( "TestTopic2");
+            
+            CPPUNIT_ASSERT( topic1 != NULL );                
+            CPPUNIT_ASSERT( topic2 != NULL );                
+
+            // Create a consumer
+            cms::MessageConsumer* consumer1 = 
+                session->createConsumer( topic1 );
+            cms::MessageConsumer* consumer2 = 
+                session->createConsumer( topic2 );
+
+            CPPUNIT_ASSERT( consumer1 != NULL );                
+            CPPUNIT_ASSERT( consumer2 != NULL );
+
+            consumer1->setMessageListener( &msgListener1 );
+            consumer2->setMessageListener( &msgListener2 );
+            
+            injectTextMessage( "This is a Test 1" , 
+                               *topic1, 
+                               activemq::util::Date::getCurrentTimeMilliseconds(),
+                               50 );
+
+            synchronized( &msgListener1.mutex )
+            {
+                if( msgListener1.messages.size() == 0 )
+                {
+                    msgListener1.mutex.wait( 3000 );
+                }
+            }
+
+            CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
+
+            injectTextMessage( "This is a Test 2" , 
+                               *topic2, 
+                               activemq::util::Date::getCurrentTimeMilliseconds() - 100,
+                               1 );
+
+            synchronized( &msgListener2.mutex )
+            {
+                if( msgListener2.messages.size() == 0 )
+                {
+                    msgListener2.mutex.wait( 100 );
+                }
+            }
+
+            CPPUNIT_ASSERT( msgListener2.messages.size() == 0 );
+            
+            cms::TextMessage* msg1 = 
+                dynamic_cast< cms::TextMessage* >( 
+                    msgListener1.messages[0] );
+
+            CPPUNIT_ASSERT( msg1 != NULL );                
+            
+            std::string text1 = msg1->getText();
+            
+            CPPUNIT_ASSERT( text1 == "This is a Test 1" );
+
+            delete topic1;
+            delete topic2;
+
+            delete consumer1;
+            delete consumer2;
+
+            delete session;
+        }
     };
 
 }}
