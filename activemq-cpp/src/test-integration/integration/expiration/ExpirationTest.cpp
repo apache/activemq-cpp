@@ -129,7 +129,7 @@ public:
             cout << sss << endl;
 
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
-            destination = session->createTopic( "mytopic" );
+            destination = session->createTopic( "expirationTopic" );
 
             producer = session->createProducer( destination );
             producer->setDeliveryMode( DeliveryMode::PERSISTANT );
@@ -240,7 +240,7 @@ public:
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
 
             // Create the destination (Topic or Queue)
-            destination = session->createTopic( "mytopic?consumer.retroactive=true");
+            destination = session->createTopic( "expirationTopic?consumer.retroactive=true");
 
             consumer = session->createConsumer( destination );
 
