@@ -52,7 +52,134 @@ namespace cms{
          * @return number of bytes.
          */
         virtual unsigned long long getBodyLength(void) const = 0;
+        
+        /**
+         * Puts the message body in read-only mode and repositions the stream 
+         * of bytes to the beginning.
+         * @throws CMSException
+         */
+        //virtual void reset() throw ( cms::CMSException ) = 0;
+        
+        /**
+         * Reads a Boolean from the Bytes message stream
+         * @returns boolean value from stream
+         * @throws CMSException
+         */
+        //virtual bool readBoolean() throw ( cms::CMSException ) = 0;
       
+        /**
+         * Reads a Byte from the Bytes message stream
+         * @returns unsigned char value from stream
+         * @throws CMSException
+         */
+        //virtual unsigned char readByte() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a byte array from the bytes message stream.
+         *
+         * If the length of vector value is less than the number of bytes
+         * remaining to be read from the stream, the vector should be filled. A 
+         * subsequent call reads the next increment, and so on.
+         *
+         * If the number of bytes remaining in the stream is less than the 
+         * length of vector value, the bytes should be read into the vector. The 
+         * return value of the total number of bytes read will be less than the
+         * length of the vector, indicating that there are no more bytes left to 
+         * be read from the stream. The next read of the stream returns -1.
+         * 
+         * @param value - buffer to place data in
+         * @returns the total number of bytes read into the buffer, or -1 if 
+         *          there is no more data because the end of the stream has 
+         *          been reached
+         * @throws CMSException if an error occurs.
+         */
+        //virtual int readBytes( std::vector<unsigned char>& value ) 
+        //    throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a portion of the bytes message stream.
+         * 
+         * If the length of array value is less than the number of bytes 
+         * remaining to be read from the stream, the array should be filled. A 
+         * subsequent call reads the next increment, and so on.
+         * 
+         * If the number of bytes remaining in the stream is less than the 
+         * length of array value, the bytes should be read into the array. The 
+         * return value of the total number of bytes read will be less than the 
+         * length of the array, indicating that there are no more bytes left to 
+         * be read from the stream. The next read of the stream returns -1.
+         * 
+         * If length is negative, or length is greater than the length of the 
+         * array value, then an IndexOutOfBoundsException is thrown. No bytes 
+         * will be read from the stream for this exception case.
+         * 
+         * @param value - the buffer into which the data is read
+         * @param length - the number of bytes to read; must be less than or 
+         *                 equal to value.length
+         * @returns the total number of bytes read into the buffer, or -1 if 
+         *          there is no more data because the end of the stream has 
+         *          been reached
+         * @throws CMSException
+         */
+        //virtual int readBytes( unsigned char*& buffer, int length ) 
+        //    throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a Char from the Bytes message stream
+         * @returns char value from stream
+         * @throws CMSException
+         */
+        //virtual char readChar() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 64 bit float from the Bytes message stream
+         * @returns double value from stream
+         * @throws CMSException
+         */
+        //virtual float readFloat() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 64 bit double from the Bytes message stream
+         * @returns double value from stream
+         * @throws CMSException
+         */
+        //virtual double readDouble() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 16 bit signed short from the Bytes message stream
+         * @returns short value from stream
+         * @throws CMSException
+         */
+        //virtual short readShort() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 16 bit unsigned short from the Bytes message stream
+         * @returns unsigned short value from stream
+         * @throws CMSException
+         */
+        //virtual unsigned short readUnsignedShort() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 32 bit signed intger from the Bytes message stream
+         * @returns int value from stream
+         * @throws CMSException
+         */
+        //virtual int readInt() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads an ASCII String from the Bytes message stream
+         * @returns String from stream
+         * @throws CMSException
+         */
+        //virtual std::string readString() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Reads a 64 bit long from the Bytes message stream
+         * @returns long long value from stream
+         * @throws CMSException
+         */
+        //virtual long long readLong() throw ( cms::CMSException ) = 0;
+
    };
 }
 
