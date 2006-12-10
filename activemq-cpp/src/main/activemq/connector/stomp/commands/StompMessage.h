@@ -290,9 +290,13 @@ namespace commands{
                 return cms::DeliveryMode::PERSISTANT;
             }
             
-            return util::Integer::parseInt( getPropertyValue( 
+            if( util::Boolean::parseBoolean( getPropertyValue( 
                        CommandConstants::toString( 
-                           CommandConstants::HEADER_PERSISTANT ) ) );
+                           CommandConstants::HEADER_PERSISTANT ) ) ) == true ) {
+                return (int)cms::DeliveryMode::PERSISTANT;
+            }
+            
+            return cms::DeliveryMode::NON_PERSISTANT;
         }
 
         /**
@@ -300,10 +304,16 @@ namespace commands{
          * @param mode DeliveryMode enumerated value.
          */
         virtual void setCMSDeliveryMode( int mode ) {
+            std::string persistant = "true"; 
+            
+            if( mode == (int)cms::DeliveryMode::NON_PERSISTANT ) {
+                persistant = "false";
+            }
+            
             setPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_PERSISTANT ) ,
-                util::Integer::toString( mode ) );
+                persistant );            
         }
       
         /**
