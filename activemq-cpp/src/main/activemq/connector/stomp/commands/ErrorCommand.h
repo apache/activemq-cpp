@@ -35,21 +35,23 @@ namespace commands{
     {
     public:
 
-        ErrorCommand(void) :
+        ErrorCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
+        
         ErrorCommand( StompFrame* frame ) : 
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        virtual ~ErrorCommand(void) {};
+        
+        virtual ~ErrorCommand() {};
 
         /**
          * Get the error message
          * @return the error message string
          */      
-        virtual std::string getErrorMessage(void) const {
+        virtual std::string getErrorMessage() const {
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_MESSAGE ), "" );
@@ -71,15 +73,21 @@ namespace commands{
          * @param text Detailed Error Message
          */
         virtual void setErrorDetails( const std::string& text ) {
-            setBytes( text.c_str(), text.length() + 1 );
+            setBytes( (unsigned char*)text.c_str(), text.length() + 1 );
         }
 
         /**
          * Get the Text associated with this Error
          * @return Error Message String
          */
-        virtual std::string getErrorDetails(void) const {
-            return getBytes() != NULL ? getBytes() : "";
+        virtual std::string getErrorDetails() const {
+            
+            const std::vector<unsigned char>& bytes = getBytes();
+            if( bytes.size() == 0 ){
+                return "";
+            }
+            
+            return std::string((char*)&getBytes()[0]);
         }
 
     protected:

@@ -78,10 +78,10 @@ void StompCommandWriter::writeCommand( const Command* command )
         writeByte( '\n' );
 
         // Write the body.
-        const char* body = frame.getBody();
-        if( body != NULL ) 
+        const std::vector<unsigned char>& body = frame.getBody();
+        if( body.size() > 0 ) 
         {
-            write( body, frame.getBodyLength() );
+            write( &body[0], body.size() );
         }
 
         if( ( frame.getBodyLength() == 0 ) ||

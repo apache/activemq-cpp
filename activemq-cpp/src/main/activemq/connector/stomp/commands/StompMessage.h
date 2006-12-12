@@ -72,7 +72,9 @@ namespace commands{
             AbstractCommand< transport::Command >(),
             ackHandler( NULL ),
             dest( NULL ),
-            replyTo( NULL) {}
+            replyTo( NULL) {
+        }
+            
         StompMessage( StompFrame* frame ) : 
             AbstractCommand< transport::Command >( frame ),
             ackHandler( NULL ),
@@ -93,14 +95,23 @@ namespace commands{
             }            
         }
 
-    	virtual ~StompMessage() { delete dest; }
+    	virtual ~StompMessage() {
+            
+            if( dest != NULL ){
+                delete dest;
+            }
+            
+            if( replyTo != NULL ){
+                delete replyTo;
+            } 
+        }
 
         /**
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
         virtual void clearBody(){
-            getFrame().setBody( NULL, 0 );
+            getFrame().getBody().clear();
         }
         
         /**

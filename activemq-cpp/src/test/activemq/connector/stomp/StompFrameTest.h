@@ -52,14 +52,14 @@ namespace stomp{
          
          CPPUNIT_ASSERT( result == "value" );         
          
-         CPPUNIT_ASSERT( frame.getBody() == NULL );
+         CPPUNIT_ASSERT( frame.getBody().size() == 0 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 0 );
          
-         frame.setBody( strdup("ABC"), 4 );
+         frame.setBody( (unsigned char*)strdup("ABC"), 4 );
          
-         CPPUNIT_ASSERT( frame.getBody() != NULL );
+         CPPUNIT_ASSERT( frame.getBody().size() == 4 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 4 );
-         CPPUNIT_ASSERT( std::string(frame.getBody()) == "ABC" );
+         CPPUNIT_ASSERT( std::string((char*)&frame.getBody()[0]) == "ABC" );
       }
       
    };

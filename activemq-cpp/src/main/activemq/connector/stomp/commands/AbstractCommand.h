@@ -257,7 +257,11 @@ namespace commands{
          * Returns a char array of bytes that are contained in the message
          * @return pointer to array of bytes.
          */
-        virtual const char* getBytes(void) const{
+        virtual const std::vector<unsigned char>& getBytes() const{
+            return getFrame().getBody();
+        }
+        
+        virtual std::vector<unsigned char>& getBytes(){
             return getFrame().getBody();
         }
     
@@ -270,19 +274,30 @@ namespace commands{
          * @param setContentLength true if the content length header should 
          * be set
          */
-        virtual void setBytes( const char* bytes, 
+        virtual void setBytes( const unsigned char* bytes, 
                                const unsigned long long numBytes,
                                const bool setContentLength = true )
         {
-            char* copy = new char[numBytes];
-            memcpy( copy, bytes, numBytes );
-            getFrame().setBody( copy, numBytes );
+            getFrame().setBody( bytes, numBytes );
             if( setContentLength )
             {
                 setPropertyValue( 
                     CommandConstants::toString( 
                         CommandConstants::HEADER_CONTENTLENGTH),
                     util::Long::toString( numBytes ) );
+            }
+        }
+        
+        virtual void setBytes( const std::vector<unsigned char>& bytes,
+                               const bool setContentLength = true )
+        {
+            getFrame().getBody() = bytes;
+            if( setContentLength )
+            {
+                setPropertyValue( 
+                    CommandConstants::toString( 
+                        CommandConstants::HEADER_CONTENTLENGTH),
+                    util::Long::toString( bytes.size() ) );
             }
         }
     };
