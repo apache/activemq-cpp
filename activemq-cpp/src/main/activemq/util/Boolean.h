@@ -35,7 +35,7 @@ namespace util{
          * @param String to parse
          * @return bool value
          */
-        static int parseBoolean( const std::string& value ){
+        static bool parseBoolean( const std::string& value ){
             bool ret = 0;
             std::istringstream istream(value);
             istream.clear();
