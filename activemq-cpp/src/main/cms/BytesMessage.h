@@ -66,13 +66,29 @@ namespace cms{
          * @throws CMSException
          */
         //virtual bool readBoolean() throw ( cms::CMSException ) = 0;
-      
+        
+        /**
+         * Writes a boolean to the bytes message stream as a 1-byte value. 
+         * The value true is written as the value (byte)1; the value false 
+         * is written as the value (byte)0.
+         * @param value - boolean to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeBoolean( const bool value ) throw cms::CMSException ) = 0;
+
         /**
          * Reads a Byte from the Bytes message stream
          * @returns unsigned char value from stream
          * @throws CMSException
          */
         //virtual unsigned char readByte() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a byte to the bytes message stream as a 1-byte value
+         * @param value - byte to write to the stream
+         * @throws CMSException
+         */
+        virtual void writeByte( const unsigned char value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads a byte array from the bytes message stream.
@@ -95,6 +111,14 @@ namespace cms{
          */
         //virtual int readBytes( std::vector<unsigned char>& value ) 
         //    throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a byte array to the bytes message stream using the vector
+         * size as the number of bytes to write.
+         * @param value - bytes to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeBytes( const std::vector<unsigned char>& value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads a portion of the bytes message stream.
@@ -125,6 +149,18 @@ namespace cms{
         //    throw ( cms::CMSException ) = 0;
 
         /**
+         * Writes a portion of a byte array to the bytes message stream.
+         * size as the number of bytes to write.
+         * @param value - bytes to write to the stream
+         * @param offset - the initial offset within the byte array
+         * @param length - the number of bytes to use
+         * @throws CMSException
+         */
+//        virtual void writeBytes( const unsigned char* value,
+//                                 unsigned int offset,
+//                                 unsigned int length ) throw cms::CMSException ) = 0;
+
+        /**
          * Reads a Char from the Bytes message stream
          * @returns char value from stream
          * @throws CMSException
@@ -132,11 +168,25 @@ namespace cms{
         //virtual char readChar() throw ( cms::CMSException ) = 0;
 
         /**
-         * Reads a 64 bit float from the Bytes message stream
+         * Writes a char to the bytes message stream as a 1-byte value
+         * @param value - char to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeChar( const char value ) throw cms::CMSException ) = 0;
+
+        /**
+         * Reads a 32 bit float from the Bytes message stream
          * @returns double value from stream
          * @throws CMSException
          */
         //virtual float readFloat() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a float to the bytes message stream as a 4 byte value
+         * @param value - float to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeFloat( const float value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads a 64 bit double from the Bytes message stream
@@ -146,11 +196,25 @@ namespace cms{
         //virtual double readDouble() throw ( cms::CMSException ) = 0;
 
         /**
+         * Writes a double to the bytes message stream as a 8 byte value
+         * @param value - double to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeDouble( const double value ) throw cms::CMSException ) = 0;
+
+        /**
          * Reads a 16 bit signed short from the Bytes message stream
          * @returns short value from stream
          * @throws CMSException
          */
         //virtual short readShort() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a signed short to the bytes message stream as a 2 byte value
+         * @param value - signed short to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeShort( const short value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads a 16 bit unsigned short from the Bytes message stream
@@ -160,11 +224,39 @@ namespace cms{
         //virtual unsigned short readUnsignedShort() throw ( cms::CMSException ) = 0;
 
         /**
+         * Writes a unsigned short to the bytes message stream as a 2 byte value
+         * @param value - unsigned short to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeUnsignedShort( const unsigned short value ) throw cms::CMSException ) = 0;
+
+        /**
          * Reads a 32 bit signed intger from the Bytes message stream
          * @returns int value from stream
          * @throws CMSException
          */
         //virtual int readInt() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a signed int to the bytes message stream as a 4 byte value
+         * @param value - signed int to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeInt( const int value ) throw cms::CMSException ) = 0;
+
+        /**
+         * Reads a 64 bit long from the Bytes message stream
+         * @returns long long value from stream
+         * @throws CMSException
+         */
+        //virtual long long readLong() throw ( cms::CMSException ) = 0;
+
+        /**
+         * Writes a long long to the bytes message stream as a 8 byte value
+         * @param value - signed long long to write to the stream
+         * @throws CMSException
+         */
+        //virtual void writeLong( const long long value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads an ASCII String from the Bytes message stream
@@ -174,11 +266,11 @@ namespace cms{
         //virtual std::string readString() throw ( cms::CMSException ) = 0;
 
         /**
-         * Reads a 64 bit long from the Bytes message stream
-         * @returns long long value from stream
+         * Writes an ASCII String to the Bytes message stream
+         * @param value - String to write to the stream
          * @throws CMSException
          */
-        //virtual long long readLong() throw ( cms::CMSException ) = 0;
+        //virtual void readString( const std::string& value ) throw ( cms::CMSException ) = 0;
 
    };
 }
