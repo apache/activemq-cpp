@@ -37,28 +37,23 @@ namespace stomp{
         /**
          * Default constructor.
          */
-        StompFrame(void){
-            body = NULL;
-            bodyLength = 0;
-        }
+        StompFrame(){}
         
         /**
-         * Destruction - frees the memory pool.
+         * Destruction.
          */
-        virtual ~StompFrame(void) { delete body; }
+        virtual ~StompFrame() {}
         
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual StompFrame* clone(void) const {
+        virtual StompFrame* clone() const {
             StompFrame* frame = new StompFrame();
             frame->command = command;
             frame->properties = properties;
-            char* cpyBody = new char[bodyLength];
-            memcpy(cpyBody, body, bodyLength);
-            frame->setBody(cpyBody, bodyLength);
+            frame->body = body;
             return frame;
         }
         
@@ -73,7 +68,7 @@ namespace stomp{
         /**
          * Accessor for this frame's command field.
          */
-        const std::string& getCommand(void) const{
+        const std::string& getCommand() const{
             return command;
         }
         
@@ -81,8 +76,8 @@ namespace stomp{
          * Gets access to the header properties for this frame.
          * @return the Properties object owned by this Frame
          */
-        util::Properties& getProperties(void){ return properties; }
-        const util::Properties& getProperties(void) const { 
+        util::Properties& getProperties(){ return properties; }
+        const util::Properties& getProperties() const { 
             return properties;
         }
         
@@ -90,7 +85,14 @@ namespace stomp{
          * Accessor for the body data of this frame.
          * @return char pointer to body data
          */
-        const char* getBody(void) const{
+        const std::vector<unsigned char>& getBody() const{
+            return body;
+        }
+        
+        /**
+         * Non-const version of the body accessor.
+         */
+        std::vector<unsigned char>& getBody(){
             return body;
         }
         
@@ -98,16 +100,23 @@ namespace stomp{
          * Return the number of bytes contained in this frames body
          * @return Body bytes length.
          */
-        long long getBodyLength(void) const{ return bodyLength; }
+        unsigned long long getBodyLength() const{ return (unsigned long long)body.size(); }
         
         /**
          * Sets the body data of this frame as a byte sequence.
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
-        void setBody( const char* bytes, const long long numBytes ){
-            body = bytes;
-            bodyLength = numBytes;
+        void setBody( const unsigned char* bytes, unsigned long long numBytes ){
+            
+            // Remove old data
+            body.clear();
+           
+            // Copy data to internal buffer.
+            for( long long ix = 0; ix < numBytes; ++ix )
+            {
+                body.push_back(bytes[ix]);
+            }
         }   
         
     private:
@@ -119,9 +128,7 @@ namespace stomp{
         util::SimpleProperties properties;
 
         // Byte data of Body.
-        const char* body;
-        long long bodyLength;     
-        
+        std::vector<unsigned char> body;         
     };
     
 }}}

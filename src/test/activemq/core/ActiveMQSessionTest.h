@@ -200,7 +200,7 @@ namespace core{
             frame->getProperties().setProperty( 
                 "destination", destination.toProviderString() );
             const char* buffer = strdup( message.c_str() );
-            frame->setBody( buffer, 12 );
+            frame->setBody( (unsigned char*)buffer, 12 );
 
             connector::stomp::commands::TextMessageCommand* msg = 
                 new connector::stomp::commands::TextMessageCommand( frame );

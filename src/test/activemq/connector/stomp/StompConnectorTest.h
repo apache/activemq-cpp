@@ -247,7 +247,7 @@ namespace stomp{
             frame->getProperties().setProperty( 
                 "destination", dest1.toProviderString() );
             const char* buffer = strdup("hello world");
-            frame->setBody( buffer, 12 );
+            frame->setBody( (const unsigned char*)buffer, 12 );
 
             commands::TextMessageCommand* msg = 
                 new commands::TextMessageCommand( frame );
@@ -267,7 +267,7 @@ namespace stomp{
             frame->getProperties().setProperty( 
                 "destination", dest2.toProviderString() );
             buffer = strdup("hello world");
-            frame->setBody( buffer, 12 );
+            frame->setBody( (unsigned char*)buffer, 12 );
 
             msg = new commands::TextMessageCommand( frame );
             transport.fireCommand( msg );

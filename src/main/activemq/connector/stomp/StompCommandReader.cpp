@@ -282,11 +282,8 @@ void StompCommandReader::readStompBody( StompFrame& frame )
     
         if( content_length != 0 )
         {
-            char* cpyBody = new char[content_length];
-            memcpy( cpyBody, &buffer[0], content_length );
-    
             // Set the body contents in the frame - copy the memory
-            frame.setBody( cpyBody, content_length );
+            frame.getBody() = buffer;
         }    
     }
     AMQ_CATCH_EXCEPTION_CONVERT( IOException, CommandIOException )

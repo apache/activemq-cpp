@@ -21,6 +21,7 @@
 #include <cms/BytesMessage.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
+#include <activemq/exceptions/IllegalStateException.h>
 
 namespace activemq{
 namespace connector{
@@ -34,24 +35,59 @@ namespace commands{
      */    
     class BytesMessageCommand : public StompMessage< cms::BytesMessage >
     {
+    private:
+    
+        /**
+         * Flag that indicates what state the stream is in.  If true, the
+         * message may only be read from.  If false, the message may only be
+         * written to.
+         */
+        bool readOnly;
+        
     public:
 
-        BytesMessageCommand(void) :
-            StompMessage< cms::BytesMessage >() {
-                initialize( getFrame() );
+        BytesMessageCommand() :
+        StompMessage< cms::BytesMessage >() {
+            initialize( getFrame() );
+            readOnly = false;    
         }
+        
         BytesMessageCommand( StompFrame* frame ) : 
-            StompMessage< cms::BytesMessage >( frame ) {
-                validate( getFrame() );
+        StompMessage< cms::BytesMessage >( frame ) {
+            validate( getFrame() );
+            readOnly = false;
         }
-    	virtual ~BytesMessageCommand(void) {}
+        
+    	virtual ~BytesMessageCommand() {}
 
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
+        virtual void clearBody(){
+            
+            // Invoke base class's version.
+            StompMessage< cms::BytesMessage >::clearBody();
+            
+            // Set the stream in write only mode.
+            readOnly = false;
+        }
+        
+        /**
+         * Puts the message body in read-only mode and repositions the stream 
+         * of bytes to the beginning.
+         * @throws CMSException
+         */
+        virtual void reset() throw ( cms::CMSException ){
+            readOnly = true;
+        }
+        
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::Message* clone(void) const {
+        virtual cms::Message* clone() const {
             StompFrame* frame = getFrame().clone();
             
             return new BytesMessageCommand( frame );
@@ -66,8 +102,13 @@ namespace commands{
         virtual void setBodyBytes( const unsigned char* buffer, 
                                    const unsigned long long numBytes ) 
             throw( cms::CMSException ) {
-            this->setBytes(
-                reinterpret_cast<const char*>( buffer ), numBytes );
+            
+            if( readOnly ){
+                throw exceptions::IllegalStateException( __FILE__, __LINE__, 
+                    "message is in read-only mode and cannot be written to" );
+            }
+            
+            this->setBytes( buffer, numBytes );
         }
         
         /**
@@ -77,19 +118,23 @@ namespace commands{
          * to expect.
          * @return const pointer to a byte buffer
          */
-        virtual const unsigned char* getBodyBytes(void) const {
-            return reinterpret_cast<const unsigned char*>( 
-                this->getBytes() );
+        virtual const unsigned char* getBodyBytes() const {
+            const std::vector<unsigned char>& bytes = getBytes();
+            if( bytes.size() == 0 ){
+                return NULL;
+            }
+            
+            return &this->getBytes()[0];
         }
       
         /**
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual unsigned long long getBodyLength(void) const {
+        virtual unsigned long long getBodyLength() const {
             return this->getNumBytes();
-        }
-
+        }               
+        
     };
 
 }}}}

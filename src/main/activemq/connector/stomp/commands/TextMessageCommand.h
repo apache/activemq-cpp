@@ -32,22 +32,24 @@ namespace commands{
     {
     public:
 
-        TextMessageCommand(void) :
+        TextMessageCommand() :
             StompMessage< cms::TextMessage >() {
                 initialize( getFrame() );
         }
+        
         TextMessageCommand( StompFrame* frame ) : 
             StompMessage< cms::TextMessage >( frame ) {
                 validate( getFrame() );
         }
-    	virtual ~TextMessageCommand(void) {}
+        
+    	virtual ~TextMessageCommand() {}
 
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::Message* clone(void) const {
+        virtual cms::Message* clone() const {
             StompFrame* frame = getFrame().clone();
             
             return new TextMessageCommand( frame );
@@ -57,8 +59,14 @@ namespace commands{
          * Gets the message character buffer.
          * @return The message character buffer.
          */
-        virtual std::string getText(void) const throw( cms::CMSException ) {
-            return getBytes() != NULL ? getBytes() : "";
+        virtual std::string getText() const throw( cms::CMSException ) {
+            
+            const std::vector<unsigned char>& bytes = getBytes();
+            if( bytes.size() == 0 ){
+                return "";
+            }
+            
+            return std::string( (char*)&bytes[0] );
         }
         
         /**
@@ -66,7 +74,7 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const char* msg ) throw( cms::CMSException ) {
-            setBytes( msg, strlen(msg) + 1, false );
+            setBytes( (unsigned char*)msg, strlen(msg) + 1, false );
         }
 
         /**
@@ -74,7 +82,7 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const std::string& msg ) throw( cms::CMSException ) {
-            setBytes( msg.c_str(), msg.length() + 1, false );
+            setBytes( (unsigned char*)msg.c_str(), msg.length() + 1, false );
         }
 
     };
