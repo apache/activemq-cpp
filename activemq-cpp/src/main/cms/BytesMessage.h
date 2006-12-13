@@ -88,7 +88,7 @@ namespace cms{
          * @param value - byte to write to the stream
          * @throws CMSException
          */
-        virtual void writeByte( const unsigned char value ) throw cms::CMSException ) = 0;
+        //virtual void writeByte( const unsigned char value ) throw cms::CMSException ) = 0;
 
         /**
          * Reads a byte array from the bytes message stream.
