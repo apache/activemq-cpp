@@ -46,11 +46,39 @@ void DataOutputStream::write( const unsigned char c ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char* buffer, const int len )
+void DataOutputStream::write( const std::vector<unsigned char>& buffer )
+    throw ( IOException ) {
+
+    try {
+        
+        if( buffer.size() == 0 ){
+            // nothing to write.
+            return;
+        }
+        
+        outputStream->write( &buffer[0], buffer.size() );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::write( const unsigned char* buffer, int len )
     throw ( IOException ) {
 
     try {
         outputStream->write( buffer, len );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::write( const unsigned char* buffer, int offset, int len )
+    throw ( IOException ) {
+
+    try {
+        outputStream->write( buffer+offset, len );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -80,8 +108,13 @@ void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeShort( short value ) throw ( IOException ) {
+    writeUnsignedShort( (unsigned short)value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::writeUnsignedShort( unsigned short value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( ( unsigned short )value );
+        value = Endian::byteSwap( value );
         write( ( unsigned char* )&value, sizeof( value ) );
     }
     AMQ_CATCH_RETHROW( IOException )

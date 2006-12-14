@@ -104,47 +104,6 @@
 namespace activemq{
 namespace util{
     
-/*#ifdef IFR_IS_BIGENDIAN
-inline unsigned int       htoni   (unsigned int i)        { return i; }
-inline unsigned long long htonll  (unsigned long long ll) { return ll; }
-inline float              htonf   (float f)               { return f; }
-inline double             htond   (double d)              { return d; }
-inline unsigned int       ntohi   (unsigned int i)        { return i; }
-inline unsigned long long ntohll  (unsigned long long ll) { return ll; }
-inline float              ntohf   (float f)               { return f; }
-inline double             ntohd   (double d)              { return d; }
-#else // !IFR_IS_BIGENDIAN
-
-inline unsigned int htoni (unsigned int i) {
-  return ( i << 8  ) & 0xFF00 |
-         ( i >> 8  ) & 0x00FF;
-}
-inline unsigned long long htonll (unsigned long long ll) {
-  return
-    ( ll << 56 ) & 0xFF00000000000000ULL |
-    ( ll << 40 ) & 0x00FF000000000000ULL |
-    ( ll << 24 ) & 0x0000FF0000000000ULL |
-    ( ll << 8  ) & 0x000000FF00000000ULL |
-    ( ll >> 8  ) & 0x00000000FF000000ULL |
-    ( ll >> 24 ) & 0x0000000000FF0000ULL |
-    ( ll >> 40 ) & 0x000000000000FF00ULL |
-    ( ll >> 56 ) & 0x00000000000000FFULL;
-}
-
-
-inline float htonf (float f) {
-  unsigned int i = htonl( *(unsigned int *)&f ) ;
-  return *(float *)&i ;
-}
-inline double htond (double d) {
-  unsigned long long ll = htonll( *(unsigned long long *)&d ) ;
-  return *(double *)&ll ;
-}
-inline unsigned int       ntohi   (unsigned int i)        { return htoni (i); }
-inline unsigned long long ntohll  (unsigned long long ll) { return htonll (ll); }
-inline float              ntohf   (float f)               { return htonf (f); }
-inline double             ntohd   (double d)              { return htond (d); }
-*/
     class Endian{
     public:
     
@@ -162,38 +121,71 @@ inline double             ntohd   (double d)              { return htond (d); }
         }
         
         static uint8_t byteSwap( uint8_t value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+            
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+
+            return value;            
         }
         
         static uint16_t byteSwap( uint16_t value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+
+            return (((unsigned short)value & 0xFF00 ) >> 8 ) |
+                   (((unsigned short)value & 0x00FF ) << 8 );
         }
         
         static uint32_t byteSwap( uint32_t value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+
+            return (((unsigned int)value & 0xFF000000 ) >> 24 ) |
+                   (((unsigned int)value & 0x00FF0000 ) >> 8 )  |
+                   (((unsigned int)value & 0x0000FF00 ) << 8 )  |
+                   (((unsigned int)value & 0x000000FF ) << 24 );
         }
         
         static uint64_t byteSwap( uint64_t value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+
+            return (((unsigned long long)value & 0xFF00000000000000ULL ) >> 56 ) |
+                   (((unsigned long long)value & 0x00FF000000000000ULL ) >> 40 ) |
+                   (((unsigned long long)value & 0x0000FF0000000000ULL ) >> 24 ) |
+                   (((unsigned long long)value & 0x000000FF00000000ULL ) >> 8 )  |
+                   (((unsigned long long)value & 0x00000000FF000000ULL ) << 8 )  |
+                   (((unsigned long long)value & 0x0000000000FF0000ULL ) << 24 ) |
+                   (((unsigned long long)value & 0x000000000000FF00ULL ) << 40 ) |
+                   (((unsigned long long)value & 0x00000000000000FFULL ) << 56 );
         }
         
         static float byteSwap( float value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+
+            return (float)( byteSwap( (unsigned int)value ) );
         }
         
         static double byteSwap( double value ){
-            byteSwap( (unsigned char*)&value, sizeof( value ) );
-            return value;
+
+            #ifdef IFR_IS_BIGENDIAN
+                return value;
+            #endif
+            
+            return (double)( byteSwap( (unsigned long long)value ) );
         }
     };
     
-//#endif // IFR_IS_BIGENDIAN
-
 }}
 
 #endif /*ACTIVEMQ_UTIL_ENDIAN_H*/
