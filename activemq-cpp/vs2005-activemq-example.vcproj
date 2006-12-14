@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="$(OutDir)\libactivemq-cppd.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(OutDir)\activemq.lib ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="$(OutDir)\libactivemq-cpp.lib ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-example.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;"
