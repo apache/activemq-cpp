@@ -134,8 +134,18 @@ char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
 short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
     try {
         unsigned short value = 0;
+
+        //unsigned char byte1 = this->readByte();
+        //unsigned char byte2 = this->readByte();
+        //
+        //value |= (byte2 << 8 | byte1 << 0);
+
+        //char* temp = (char*)&value;
+        //
+        //return (short)Endian::byteSwap( value );
+
         this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned short ) );
-        return (short)Endian::byteSwap( value );
+        return Endian::byteSwap( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -196,6 +206,28 @@ long long DataInputStream::readLong()
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string DataInputStream::readString() 
+    throw ( io::IOException, io::EOFException ) {
+    try {
+        std::string retVal;
+        char temp = 0;
+        
+        while( true ){
+            temp = readChar();
+            
+            // Append no matter what
+            retVal += temp;
+            
+            // if null is found we are done.
+            if( temp == '\0' ) break;
+        }
+        return retVal;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )    
 }
 
 ////////////////////////////////////////////////////////////////////////////////

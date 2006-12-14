@@ -63,7 +63,7 @@ namespace io{
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char c ) throw ( IOException );
+        virtual void write( unsigned char c ) throw ( IOException );
         
         /**
          * Writes an array of bytes to the output stream.  the counter 
@@ -72,7 +72,25 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, const int len )
+        virtual void write( const unsigned char* buffer, int len )
+            throw ( IOException );
+            
+        /**
+         * Writes an array of bytes to the output stream.  the counter 
+         * written is incremented by len.
+         * @param buffer The array of bytes to write.
+         * @param len The number of bytes from the buffer to be written.
+         * @throws IOException thrown if an error occurs.
+         */
+        virtual void write( const unsigned char* buffer, int offset, int len )
+            throw ( IOException );
+            
+        /**
+         * Writes an array of bytes to the output stream.
+         * @param buffer The bytes to write.
+         * @throws IOException thrown if an error occurs.
+         */
+        virtual void write( const std::vector<unsigned char>& buffer ) 
             throw ( IOException );
         
         /**
@@ -103,6 +121,13 @@ namespace io{
          * @throws IOException
          */
         virtual void writeShort( short value ) throw ( IOException );
+        
+        /**
+         * Writes a unsigned short to the bytes message stream as a 2 byte value
+         * @param value - unsigned short to write to the stream
+         * @throws IOException
+         */
+        virtual void writeUnsignedShort( unsigned short value ) throw ( IOException );
         
         /**
          * Writes out a char to the underlying output stream as a one byte 

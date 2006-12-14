@@ -256,6 +256,14 @@ namespace io{
          * @throws IOException
          * @throws EOFException
          */
+        virtual std::string readString() 
+            throw ( io::IOException, io::EOFException );
+            
+        /**
+         * 
+         * @throws IOException
+         * @throws EOFException
+         */
         virtual std::string readUTF() 
             throw ( io::IOException, io::EOFException );
 
