@@ -80,6 +80,8 @@ using namespace integration;
 using namespace integration::expiration;
 using namespace integration::common;
 
+std::string messageTag = Guid().createGUID();
+
 class Producer : public Runnable {
 private:
 
@@ -146,6 +148,7 @@ public:
 
             for( int ix=0; ix<numMessages; ++ix ){
                 TextMessage* message = session->createTextMessage( text );
+                message->setStringProperty( "messageTag", messageTag );
                 producer->send( message );
                 delete message;
            }
@@ -258,6 +261,11 @@ public:
 
         try
         {
+            if( !message->propertyExists( "messageTag" ) || 
+                message->getStringProperty("messageTag") != messageTag ){
+                return;
+            }
+            
             const TextMessage* textMessage =
                 dynamic_cast< const TextMessage* >( message );
             string text = textMessage->getText();
