@@ -108,7 +108,7 @@ namespace io{
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char c ) 
+        virtual void write( unsigned char c ) 
             throw ( IOException )
         {
            std::cerr << c;
@@ -120,7 +120,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, const int len ) 
+        virtual void write( const unsigned char* buffer, int len ) 
             throw ( IOException )
         {
             for(int i = 0; i < len; ++i)

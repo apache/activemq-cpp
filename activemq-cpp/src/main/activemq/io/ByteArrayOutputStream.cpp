@@ -22,28 +22,35 @@ using namespace activemq::io;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::close() throw( cms::CMSException )
-{  
-    // Clear the Buffer
-    flush();
+ByteArrayOutputStream::ByteArrayOutputStream()
+{
+    activeBuffer = &defaultBuffer;
 }
-      
+
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::flush() throw ( IOException )
-{}
+ByteArrayOutputStream::ByteArrayOutputStream( vector<unsigned char>& buffer)
+{
+    setBuffer( buffer );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayOutputStream::setBuffer( vector<unsigned char>& buffer)
+{
+    activeBuffer = &buffer;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayOutputStream::clear() throw ( IOException )
 {
     // Empty the contents of the buffer to the output stream.
-    buffer.clear();
+    activeBuffer->clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( const unsigned char c ) 
+void ByteArrayOutputStream::write( unsigned char c ) 
    throw ( IOException )
 {
-    buffer.push_back( c );  
+    activeBuffer->push_back( c );  
 }
 
 ////////////////////////////////////////////////////////////////////////////////    
@@ -54,7 +61,7 @@ void ByteArrayOutputStream::write( const unsigned char* buffer,
     // Iterate until all the data is written.
     for( int ix = 0; ix < len; ++ix)
     {
-        this->buffer.push_back( buffer[ix] );
+        activeBuffer->push_back( buffer[ix] );
     }  
 }
 

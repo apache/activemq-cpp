@@ -49,18 +49,18 @@ SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::~SocketOutputStream(void)
+SocketOutputStream::~SocketOutputStream()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char c ) throw (IOException)
+void SocketOutputStream::write( unsigned char c ) throw (IOException)
 {
     write( &c, 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char* buffer, const int len ) 
+void SocketOutputStream::write( const unsigned char* buffer, int len ) 
     throw (IOException)
 {
     int remaining = len;

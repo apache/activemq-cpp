@@ -108,7 +108,7 @@ namespace io{
          * @return The number of bytes read or -1 if EOS is detected
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, const int bufferSize ) 
+        virtual int read( unsigned char* buffer, int bufferSize ) 
             throw ( IOException )
         {
             try {

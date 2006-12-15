@@ -29,6 +29,7 @@ cc_sources = \
     activemq/logger/LogManager.cpp \
     activemq/logger/SimpleLogger.cpp \
     activemq/support/InitDirector.cpp \
+    activemq/io/BlockingByteArrayInputStream.cpp \
     activemq/io/ByteArrayInputStream.cpp \
     activemq/io/BufferedInputStream.cpp \
     activemq/io/DataInputStream.cpp \
@@ -103,6 +104,7 @@ h_sources = \
     activemq/support/LibraryInit.h \
     activemq/support/InitDirector.h \
     activemq/io/StandardErrorOutputStream.h \
+    activemq/io/BlockingByteArrayInputStream.h \
     activemq/io/ByteArrayInputStream.h \
     activemq/io/InputStream.h \
     activemq/io/DataOutputStream.h \

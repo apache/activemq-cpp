@@ -42,7 +42,7 @@ namespace io{
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char c ) throw ( IOException ) = 0;
+        virtual void write( unsigned char c ) throw ( IOException ) = 0;
         
         /**
          * Writes an array of bytes to the output stream.
@@ -50,7 +50,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, const int len ) 
+        virtual void write( const unsigned char* buffer, int len ) 
             throw ( IOException ) = 0;
         
         /**

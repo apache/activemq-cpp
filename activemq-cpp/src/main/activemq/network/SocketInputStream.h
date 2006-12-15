@@ -55,7 +55,7 @@ namespace network{
          * Enables socket level output of the recieved data
          * @param debug true to turn on debugging
          */
-        virtual void setDebug( const bool debug ){
+        virtual void setDebug( bool debug ){
             this->debug = debug;
         }
         
@@ -143,7 +143,7 @@ namespace network{
 		 * @return The number of bytes read.
 		 * @throws IOException thrown if an error occurs.
 		 */
-		virtual int read( unsigned char* buffer, const int bufferSize ) throw (io::IOException);
+		virtual int read( unsigned char* buffer, int bufferSize ) throw (io::IOException);
 		
 		/**
 		 * Close - does nothing.  It is the responsibility of the owner

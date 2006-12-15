@@ -52,7 +52,7 @@ namespace network{
          * Enables Debugging of Socket Data
          * @param debug true to enable
          */      
-        virtual void setDebug( const bool debug ){
+        virtual void setDebug( bool debug ){
             this->debug = debug;
         }
       
@@ -120,7 +120,7 @@ namespace network{
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char c ) throw ( io::IOException );
+        virtual void write( unsigned char c ) throw ( io::IOException );
       
         /**
          * Writes an array of bytes to the output stream.
@@ -128,7 +128,7 @@ namespace network{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, const int len ) throw ( io::IOException );
+        virtual void write( const unsigned char* buffer, int len ) throw ( io::IOException );
       
         /**
          * Flush - does nothing.

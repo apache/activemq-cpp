@@ -218,12 +218,15 @@ std::string DataInputStream::readString()
         while( true ){
             temp = readChar();
             
-            // Append no matter what
-            retVal += temp;
-            
             // if null is found we are done.
-            if( temp == '\0' ) break;
+            if( temp == '\0' ){
+                break;
+            }
+            
+            // Append no matter what
+            retVal += temp;            
         }
+        
         return retVal;
     }
     AMQ_CATCH_RETHROW( IOException )
