@@ -174,7 +174,7 @@ namespace io{
          * @return the number of bytes read.
          * @throws IOException f an error occurs.
          */
-        virtual int read( unsigned char* buffer, const int bufferSize )
+        virtual int read( unsigned char* buffer, int bufferSize )
             throw (IOException);
             
         /**
