@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\libactivemq-cppd.lib"
+				OutputFile="$(OutDir)\activemq-cppd.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -127,7 +127,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\libactivemq-cpp.lib"
+				OutputFile="$(OutDir)\activemq-cpp.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -1147,6 +1147,14 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
