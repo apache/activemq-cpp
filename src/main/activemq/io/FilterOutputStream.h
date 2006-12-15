@@ -84,7 +84,7 @@ namespace io{
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char c ) throw ( IOException ) {
+        virtual void write( unsigned char c ) throw ( IOException ) {
             try {
                 outputStream->write( c );
             }
@@ -100,7 +100,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, const int len ) throw ( IOException ) {
+        virtual void write( const unsigned char* buffer, int len ) throw ( IOException ) {
             try {
                 for( int ix = 0; ix < len; ++ix )
                 {

@@ -26,14 +26,23 @@
 namespace activemq{
 namespace io{
 
+    /**
+     * Simple implementation of InputStream that wraps around
+     * a std::vector<unsigned char>.  
+     */
     class ByteArrayInputStream : public InputStream
     {
     private:
       
         /** 
-         * The Array of Bytes to read from.
+         * Default buffer to use, if none provided.
          */
-        std::vector<unsigned char> buffer;
+        std::vector<unsigned char> defaultBuffer;
+        
+        /**
+         * Reference to the buffer being used by this stream.
+         */
+        const std::vector<unsigned char>* activeBuffer;
       
         /**
          * iterator to current position in buffer.
@@ -43,21 +52,22 @@ namespace io{
         /**
          * Synchronization object.
          */
-        concurrent::Mutex mutex;
-        
-        /**
-         * Indicates that this stream is in the process
-         * of shutting down.
-         */
-        bool closing;
+        concurrent::Mutex mutex;        
       
     public:
    
         /**
          * Default Constructor
          */
-        ByteArrayInputStream(void);
+        ByteArrayInputStream();
       
+        /**
+         * Creates the input stream and calls setBuffer with the
+         * specified buffer object.
+         * @param buffer The buffer to be used.
+         */
+        ByteArrayInputStream( const std::vector<unsigned char>& buffer );
+            
         /**
          * Constructor
          * @param buffer initial byte array to use to read from
@@ -66,8 +76,19 @@ namespace io{
         ByteArrayInputStream( const unsigned char* buffer,
                               int bufferSize );
 
-        virtual ~ByteArrayInputStream(void);
+        virtual ~ByteArrayInputStream();
 
+        /**
+         * Sets the internal buffer.  The input stream will wrap around
+         * this buffer and will perform all read operations on it.  The
+         * position will be reinitialized to the beginning of the specified
+         * buffer.  This class will not own the given buffer - it is the
+         * caller's responsibility to free the memory of the given buffer
+         * as appropriate.
+         * @param buffer The buffer to be used.
+         */
+        virtual void setBuffer( const std::vector<unsigned char>& buffer );
+        
         /** 
          * Sets the data that this reader uses, replaces any existing
          * data and resets to beginning of the buffer.
@@ -140,12 +161,14 @@ namespace io{
        
         /**
          * Indcates the number of bytes avaialable.
-         * @return the sum of the amount of data avalable
-         * in the buffer and the data available on the target
-         * input stream.
+         * @return The number of bytes until the end of the internal buffer.
          */
-        virtual int available() const throw (IOException) {   
-            return std::distance( pos, buffer.end() );
+        virtual int available() const throw (IOException) {
+            if( activeBuffer == NULL ){
+                throw IOException( __FILE__, __LINE__, "buffer has not been initialized");
+            }
+            
+            return std::distance( pos, activeBuffer->end() );
         }
             
         /**
@@ -162,14 +185,20 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, const int bufferSize ) 
+        virtual int read( unsigned char* buffer, int bufferSize ) 
             throw (IOException);
       
         /**
          * Closes the target input stream.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void close() throw(cms::CMSException);
+        virtual void close() throw(cms::CMSException){ /* do nothing */ }
+        
+        /**
+         * Resets the read index to the beginning of the byte
+         * array.
+         */
+        virtual void reset() throw (cms::CMSException);
 
     };
 

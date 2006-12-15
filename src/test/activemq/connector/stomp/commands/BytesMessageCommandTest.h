@@ -34,6 +34,8 @@ namespace commands{
     {
         CPPUNIT_TEST_SUITE( BytesMessageCommandTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testReadOnly );
+        CPPUNIT_TEST( testWriteOnly );
         CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -42,8 +44,8 @@ namespace commands{
         {
         public:
         
-            TestAckHandler(void) { wasAcked = false; }
-            virtual ~TestAckHandler(void) {}
+            TestAckHandler() { wasAcked = false; }
+            virtual ~TestAckHandler() {}
             
             virtual void acknowledgeMessage( const core::ActiveMQMessage* message)
                 throw ( cms::CMSException ) 
@@ -62,7 +64,7 @@ namespace commands{
     	BytesMessageCommandTest() {}
     	virtual ~BytesMessageCommandTest() {}
 
-        void test(void)
+        void test()
         {
             TestAckHandler ackHandler;
             BytesMessageCommand cmd;
@@ -196,6 +198,201 @@ namespace commands{
                             (const char*)cmd5->getBodyBytes() );
 
             delete cmd2;
+        }
+        
+        void testReadOnly(){
+            
+            StompFrame* frame = new StompFrame();
+            frame->setCommand( CommandConstants::toString( CommandConstants::MESSAGE ) );
+            frame->getProperties().setProperty( CommandConstants::toString( CommandConstants::HEADER_DESTINATION ), 
+                (std::string)CommandConstants::topicPrefix + "mytopic" );
+            
+            // write a bunch of values to the frame's body.
+            io::ByteArrayOutputStream os( frame->getBody() );
+            io::DataOutputStream dos(&os);
+            dos.writeBoolean( true );
+            dos.writeByte( 1 );
+            dos.writeChar( 'a' );
+            dos.writeFloat( 2.0f );
+            dos.writeDouble( 3.0 );
+            dos.writeShort( 4 );
+            dos.writeUnsignedShort( 5 );
+            dos.writeInt( 6 );
+            dos.writeLong( 7LL );
+            dos.writeBytes( "hello world" );
+            
+            // Assign the frame to the bytes message.
+            BytesMessageCommand cmd(frame);
+            
+            // First, verify that we can't write (read-only)
+            
+            try{
+                cmd.setBodyBytes( (unsigned char*)"test", 5 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeBoolean( true );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeByte( 2 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeBytes( std::vector<unsigned char>() );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeBytes( (unsigned char*)"test", 0, 5 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeChar( 'a' );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeFloat( 1.0f );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeDouble( 2.0 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeUnsignedShort( 3 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeShort( 4 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeInt( 5 );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeLong( 6LL );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.writeString( "test" );
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            // Now, verify that all the reads work properly
+            
+            CPPUNIT_ASSERT( cmd.readBoolean() == true );
+            CPPUNIT_ASSERT( cmd.readByte() == 1 );
+            CPPUNIT_ASSERT( cmd.readChar() == 'a' );
+            CPPUNIT_ASSERT( cmd.readFloat() == 2.0f );
+            CPPUNIT_ASSERT( cmd.readDouble() == 3.0 );
+            CPPUNIT_ASSERT( cmd.readShort() == 4 );
+            CPPUNIT_ASSERT( cmd.readUnsignedShort() == 5 );
+            CPPUNIT_ASSERT( cmd.readInt() == 6 );
+            CPPUNIT_ASSERT( cmd.readLong() == 7LL );
+            CPPUNIT_ASSERT( cmd.readString() == "hello world" );
+        }
+        
+        void testWriteOnly(){
+            
+            BytesMessageCommand cmd;
+            
+            // First, verify that we can't read (write-only)
+            
+            try{
+                cmd.readBoolean();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readByte();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                std::vector<unsigned char> buf;
+                cmd.readBytes(buf);
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readChar();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readFloat();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readDouble();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readUnsignedShort();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readShort();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readInt();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readLong();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            try{
+                cmd.readString();
+                CPPUNIT_ASSERT( false );
+            } catch( exceptions::IllegalStateException& e ){}
+            
+            // Now, verify that all the writes work properly
+            
+            cmd.writeBoolean( true );
+            cmd.writeByte( 1 );
+            cmd.writeChar( 'a' );
+            cmd.writeFloat( 2.0f );
+            cmd.writeDouble( 3.0 );
+            cmd.writeShort( 4 );
+            cmd.writeUnsignedShort( 5 );
+            cmd.writeInt( 6 );
+            cmd.writeLong( 7LL );
+            cmd.writeString( "hello world" );
+            
+            // Switch to read-only mode.
+            cmd.reset();
+            
+            CPPUNIT_ASSERT( cmd.readBoolean() == true );
+            CPPUNIT_ASSERT( cmd.readByte() == 1 );
+            CPPUNIT_ASSERT( cmd.readChar() == 'a' );
+            CPPUNIT_ASSERT( cmd.readFloat() == 2.0f );
+            CPPUNIT_ASSERT( cmd.readDouble() == 3.0 );
+            CPPUNIT_ASSERT( cmd.readShort() == 4 );
+            CPPUNIT_ASSERT( cmd.readUnsignedShort() == 5 );
+            CPPUNIT_ASSERT( cmd.readInt() == 6 );
+            CPPUNIT_ASSERT( cmd.readLong() == 7LL );
+            CPPUNIT_ASSERT( cmd.readString() == "hello world" );
         }
 
     };

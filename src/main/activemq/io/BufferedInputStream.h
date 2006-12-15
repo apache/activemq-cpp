@@ -101,7 +101,7 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, const int bufferSize ) 
+        virtual int read( unsigned char* buffer, int bufferSize ) 
             throw ( IOException );
       
     private:
@@ -117,7 +117,7 @@ namespace io{
          * from the target input stream.
          * @throws CMSException
          */
-        void bufferData(void) throw ( IOException );
+        void bufferData() throw ( IOException );
         
         /**
          * Returns the number of bytes that are currently unused

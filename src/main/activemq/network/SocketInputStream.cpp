@@ -130,7 +130,7 @@ unsigned char SocketInputStream::read() throw (IOException){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::read( unsigned char* buffer, const int bufferSize ) throw (IOException){
+int SocketInputStream::read( unsigned char* buffer, int bufferSize ) throw (IOException){
    
     int len = ::recv(socket, (char*)buffer, bufferSize, 0);
     

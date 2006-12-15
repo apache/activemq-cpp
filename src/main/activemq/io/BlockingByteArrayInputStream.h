@@ -15,82 +15,76 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_IO_BYTEARRAYOUTPUTSTREAM_H_
-#define _ACTIVEMQ_IO_BYTEARRAYOUTPUTSTREAM_H_
+#ifndef _ACTIVEMQ_IO_BLOCKINGBYTEARRAYINPUTSTREAM_H_
+#define _ACTIVEMQ_IO_BLOCKINGBYTEARRAYINPUTSTREAM_H_
 
-#include <activemq/io/OutputStream.h>
+#include <activemq/io/InputStream.h>
 #include <activemq/concurrent/Mutex.h>
 #include <vector>
 
 namespace activemq{
 namespace io{
 
-    class ByteArrayOutputStream : public OutputStream
+    /**
+     * This is a blocking version of a byte buffer stream.  Read operations
+     * block until the requested data becomes available in the internal
+     * buffer via a call to setByteArray.
+     */
+    class BlockingByteArrayInputStream : public InputStream
     {
     private:
          
         /** 
          * Default buffer to use, if none provided.
          */
-        std::vector<unsigned char> defaultBuffer;
+        std::vector<unsigned char> buffer;
         
         /**
-         * Reference to the buffer being used by this stream.
+         * iterator to current position in buffer.
          */
-        std::vector<unsigned char>* activeBuffer;
+        std::vector<unsigned char>::const_iterator pos;
 
         /**
          * Synchronization object.
          */
         concurrent::Mutex mutex;
+        
+        /**
+         * Indicates that this stream is in the process of shutting
+         * down.
+         */
+        bool closing;
       
     public:
 
         /**
          * Default Constructor - uses a default internal buffer
          */
-        ByteArrayOutputStream();
+        BlockingByteArrayInputStream();
         
         /**
-         * Uses the given buffer as the target.  Calls setBuffer.
-         * @param buffer the target buffer.
+         * Constructor that initializes the internal buffer. 
+         * @see setByteArray.
          */
-        ByteArrayOutputStream( std::vector<unsigned char>& buffer );
+        BlockingByteArrayInputStream( const unsigned char* buffer,
+                                      int bufferSize );
 
         /**
          * Destructor
          */
-   	    virtual ~ByteArrayOutputStream() {};
-      
-        /**
-         * Sets the internal buffer.  This input stream will wrap around
-         * the given buffer and all writes will be performed directly on
-         * the buffer.  This object does not retain control of the buffer's
-         * lifetime however - this is the job of the caller.
-         * @param buffer The target buffer.
-         */
-        virtual void setBuffer( std::vector<unsigned char>& buffer );
-        
-        /**
-         * Get a snapshot of the data
-         * @return pointer to the data
-         */
-        virtual const unsigned char* getByteArray() const {
-            if( activeBuffer->size() == 0 ){
-                return NULL;
-            }
-            
-            return &(*activeBuffer)[0];
-        }
-      
-        /**
-         * Get the Size of the Internal Buffer
-         * @return size of the internal buffer
-         */
-        virtual int getByteArraySize() const {
-            return activeBuffer->size();
-        }
+        virtual ~BlockingByteArrayInputStream();
 
+        /**
+         * Sets the data that this reader uses.  Replaces any existing
+         * data and resets the read index to the beginning of the buffer.
+         * When this method is called, it notifies any other threads that
+         * data is now available to be read.
+         * @param buffer The new data to be copied to the internal buffer.
+         * @param bufferSize The size of the new buffer.
+         */
+        virtual void setByteArray( const unsigned char* buffer,
+            int bufferSize );
+            
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -150,44 +144,47 @@ namespace io{
         virtual void notifyAll() throw( exceptions::ActiveMQException ){
             mutex.notifyAll();
         }
-       
-        /**
-         * Writes a single byte to the output stream.
-         * @param c the byte.
-         * @throws IOException thrown if an error occurs.
-         */
-        virtual void write( unsigned char c ) 
-           throw ( IOException );
       
         /**
-         * Writes an array of bytes to the output stream.
-         * @param buffer The array of bytes to write.
-         * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
+         * Indicates the number of bytes available to be read without
+         * blocking.
+         * @return the data available in the internal buffer.
+         * @throws IOException if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len ) 
-            throw ( IOException );
-      
+        virtual int available() const throw (IOException){
+            return std::distance( pos, buffer.end() );
+        }
+        
         /**
-         * Invokes flush on the target output stream, has no affect.
-         * @throws IOException
+         * Reads a single byte from the buffer.  This operation will
+         * block until data has been added to the buffer via a call
+         * to setByteArray.
+         * @return the next byte.
+         * @throws IOException if an error occurs.
          */
-        virtual void flush() throw ( IOException ){ /* do nothing */ }
-      
+        virtual unsigned char read() throw (IOException);
+        
         /**
-         * Clear current Stream contents
-         * @throws IOException
+         * Reads an array of bytes from the buffer.  If the desired amount
+         * of data is not currently available, this operation
+         * will block until the appropriate amount of data is available
+         * in the buffer via a call to setByteArray.
+         * @param buffer (out) the target buffer
+         * @param bufferSize the size of the output buffer.
+         * @return the number of bytes read.
+         * @throws IOException f an error occurs.
          */
-        virtual void clear() throw ( IOException );
-
+        virtual int read( unsigned char* buffer, const int bufferSize )
+            throw (IOException);
+            
         /**
-         * Invokes close on the target output stream.
-         * @throws CMSException
+         * Closes the target input stream.
+         * @throws IOException if an error occurs.
          */
-        void close() throw( cms::CMSException ){ /* do nothing */ }
+        virtual void close() throw (cms::CMSException);
 
    };
 
 }}
 
-#endif /*_ACTIVEMQ_IO_BYTEARRAYOUTPUTSTREAM_H_*/
+#endif /*_ACTIVEMQ_IO_BLOCKINGBYTEARRAYINPUTSTREAM_H_*/

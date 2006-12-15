@@ -50,7 +50,7 @@ namespace io{
 			
 			const char* getBuffer() const{ return buffer; }
 			
-			virtual void write( const unsigned char c ) throw (IOException){
+			virtual void write( unsigned char c ) throw (IOException){
 				if( pos >= 100 ){
 					throw IOException();
 				}
@@ -58,7 +58,7 @@ namespace io{
 				buffer[pos++] = c;
 			}
 		
-			virtual void write( const unsigned char* buffer, const int len ) throw (IOException){
+			virtual void write( const unsigned char* buffer, int len ) throw (IOException){
 				
 				if( (pos + len) > 100 ){
 					throw IOException();

@@ -28,7 +28,7 @@
 #include <activemq/transport/Command.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/concurrent/Concurrent.h>
-#include <activemq/io/ByteArrayInputStream.h>
+#include <activemq/io/BlockingByteArrayInputStream.h>
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>
@@ -200,7 +200,7 @@ namespace transport{
         // transport without any exceptions.
         void testStartClose(){
             
-            io::ByteArrayInputStream is;
+            io::BlockingByteArrayInputStream is;
             io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
@@ -223,7 +223,7 @@ namespace transport{
         
         void testRead(){
             
-            io::ByteArrayInputStream is;
+            io::BlockingByteArrayInputStream is;
             io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
@@ -259,7 +259,7 @@ namespace transport{
         
         void testWrite(){
             
-            io::ByteArrayInputStream is;
+            io::BlockingByteArrayInputStream is;
             io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
@@ -301,7 +301,7 @@ namespace transport{
         
         void testException(){
             
-            io::ByteArrayInputStream is;
+            io::BlockingByteArrayInputStream is;
             io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;

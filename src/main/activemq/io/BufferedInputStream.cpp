@@ -84,7 +84,7 @@ unsigned char BufferedInputStream::read() throw ( IOException ){
 
 ////////////////////////////////////////////////////////////////////////////////
 int BufferedInputStream::read( unsigned char* targetBuffer, 
-    const int targetBufferSize ) throw ( IOException ){
+    int targetBufferSize ) throw ( IOException ){
     
     try{
         // If there's no data left, reset to pointers to the beginning of the
