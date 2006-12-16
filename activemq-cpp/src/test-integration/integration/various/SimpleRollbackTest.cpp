@@ -191,6 +191,7 @@ void SimpleRollbackTest::test()
 
         delete producer;                      
         delete consumer;
+        delete topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
