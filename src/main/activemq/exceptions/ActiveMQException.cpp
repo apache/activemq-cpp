@@ -42,7 +42,7 @@ void ActiveMQException::buildMessage(const char* format, va_list& vargs)
             
             // assign isn't passing ownership, just copying, delete
             // the allocated buffer.
-            delete buffer;
+            delete [] buffer;
             
             break;
         }

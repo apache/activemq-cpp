@@ -71,7 +71,7 @@ namespace util{
 
          CPPUNIT_ASSERT( guid == bytesGUID );
 
-         delete bytes;
+         delete [] bytes;
 
          Guid bytesGUID2;
          bytesGUID2.fromBytes((const unsigned char*)guid);
