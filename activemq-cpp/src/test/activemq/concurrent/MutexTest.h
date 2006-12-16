@@ -417,15 +417,16 @@ namespace concurrent{
         void test()
         {
             MyThread test;
-            test.lock();
+            
+            synchronized(&test){
 
-            test.start();
-         
-            for( int ix=0; ix<100; ix++ ){
-                test.value += 1;
+                test.start();
+             
+                for( int ix=0; ix<100; ix++ ){
+                    test.value += 1;
+                }
             }
          
-            test.unlock();
             test.join();
          
             CPPUNIT_ASSERT( test.value == 2500 );
