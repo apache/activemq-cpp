@@ -115,9 +115,15 @@ namespace transport{
         void fire( Command* command ){
             
             try{
-                if( listener != NULL ){
-                    listener->onCommand( command );
+                // Since the listener is responsible for freeing the memory,
+                // if there is no listener - free the command here.
+                if( listener == NULL ){
+                    delete command;
+                    return;
                 }
+                
+                listener->onCommand( command );
+                
             }catch( ... ){}
         }
         

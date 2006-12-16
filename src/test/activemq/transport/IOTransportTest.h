@@ -105,7 +105,17 @@ namespace transport{
                     
                     synchronized( inputStream ){
                         MyCommand* command = new MyCommand();
-                        command->c = inputStream->read();
+                        try{
+                            command->c = inputStream->read();
+                        } catch( exceptions::ActiveMQException& ex ){
+                            
+                            // Free the memory.
+                            delete command;
+                            
+                            ex.setMark( __FILE__, __LINE__ );
+                            throw ex;
+                        }
+                        
                         return command;
                     }
                     

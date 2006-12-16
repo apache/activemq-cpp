@@ -72,17 +72,75 @@ namespace core{
             this->properties = properties;
         }
         
-        virtual ~ActiveMQConnectionData(void) 
-        {
+        virtual ~ActiveMQConnectionData(){
+            close();
+        }
+        
+        virtual void close() throw (exceptions::ActiveMQException) {
+            
+            bool hasException = false;
+            exceptions::ActiveMQException e;
+            
             try
             {
-                connector->close();
-                delete connector;
+                if( connector != NULL ){
+                    
+                    try{
+                        connector->close();
+                    }catch( exceptions::ActiveMQException& ex ){                        
+                        if( !hasException ){
+                            hasException = true;
+                            ex.setMark(__FILE__, __LINE__ );
+                            e = ex;
+                        }
+                    }
+                    
+                    try{
+                        delete connector;
+                    }catch( exceptions::ActiveMQException& ex ){                        
+                        if( !hasException ){
+                            hasException = true;
+                            ex.setMark(__FILE__, __LINE__ );
+                            e = ex;
+                        }
+                    }
+                    connector = NULL;
+                }
                 
-                transport->close();
-                delete transport;
+                if( transport != NULL ){
+                    
+                    try{
+                        transport->close();
+                    }catch( exceptions::ActiveMQException& ex ){                        
+                        if( !hasException ){
+                            hasException = true;
+                            ex.setMark(__FILE__, __LINE__ );
+                            e = ex;
+                        }
+                    }
+                    
+                    try{
+                        delete transport;                        
+                    }catch( exceptions::ActiveMQException& ex ){                        
+                        if( !hasException ){
+                            hasException = true;
+                            ex.setMark(__FILE__, __LINE__ );
+                            e = ex;
+                        }
+                    }
+                    transport = NULL;
+                }
                 
-                delete properties;
+                if( properties != NULL ){
+                    delete properties;
+                    properties = NULL;
+                }
+                
+                // If we encountered an exception - throw the first
+                // one we encountered.
+                if( hasException ){
+                    throw e;
+                }
             }
             AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_NOTHROW( )
@@ -92,7 +150,7 @@ namespace core{
          * Get the Connector that this Connection Data object holds
          * @return Connector Pointer
          */
-        virtual connector::Connector* getConnector(void){
+        virtual connector::Connector* getConnector(){
             return connector;
         }
 
@@ -100,7 +158,7 @@ namespace core{
          * Get the Connector that this Connection Data object holds
          * @return Connector Pointer
          */
-        virtual transport::Transport* getTransport(void){
+        virtual transport::Transport* getTransport(){
             return transport;
         }
 
@@ -109,7 +167,7 @@ namespace core{
          * this Connection.
          * @return Properties object reference.
          */
-        virtual const util::Properties& getProperties(void) const {
+        virtual const util::Properties& getProperties() const {
             return *properties;
         }
         
