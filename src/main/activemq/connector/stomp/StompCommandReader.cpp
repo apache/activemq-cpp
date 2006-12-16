@@ -46,10 +46,11 @@ StompCommandReader::StompCommandReader( InputStream* is )
 Command* StompCommandReader::readCommand(void) 
     throw ( CommandIOException )
 {
+    StompFrame* frame = NULL;
     try
     {
         // Create a new Frame for reading to.
-        StompFrame* frame = new StompFrame();
+        frame = new StompFrame();
        
         // Read the command header.
         readStompCommandHeader( *frame );
@@ -63,9 +64,26 @@ Command* StompCommandReader::readCommand(void)
         // Return the Command, caller must delete it.
         return marshaler.marshal( frame );
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    catch( CommandIOException& ex ){
+        if( frame != NULL ){
+            delete frame;
+        }
+        ex.setMark( __FILE__, __LINE__);
+        throw ex;
+    }
+    catch( ActiveMQException& ex ){
+        if( frame != NULL ){
+            delete frame;
+        }
+        ex.setMark( __FILE__, __LINE__ );
+        throw CommandIOException(ex);
+    }
+    catch( ... ){
+        if( frame != NULL ){
+            delete frame;
+        }
+        throw CommandIOException(__FILE__, __LINE__, "caught unknown exception");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
