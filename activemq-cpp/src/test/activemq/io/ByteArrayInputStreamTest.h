@@ -84,7 +84,7 @@ namespace io{
          
          stream_a.close();
          
-         delete buffer;
+         delete [] buffer;
       }
    };
 
