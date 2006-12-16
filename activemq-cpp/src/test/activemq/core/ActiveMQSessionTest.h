@@ -199,7 +199,7 @@ namespace core{
             frame->setCommand( "MESSAGE" );
             frame->getProperties().setProperty( 
                 "destination", destination.toProviderString() );
-            const char* buffer = strdup( message.c_str() );
+            const char* buffer = message.c_str();
             frame->setBody( (unsigned char*)buffer, 12 );
 
             connector::stomp::commands::TextMessageCommand* msg = 

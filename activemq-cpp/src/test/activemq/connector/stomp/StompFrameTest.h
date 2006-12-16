@@ -55,7 +55,7 @@ namespace stomp{
          CPPUNIT_ASSERT( frame.getBody().size() == 0 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 0 );
          
-         frame.setBody( (unsigned char*)strdup("ABC"), 4 );
+         frame.setBody( (unsigned char*)"ABC", 4 );
          
          CPPUNIT_ASSERT( frame.getBody().size() == 4 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 4 );
