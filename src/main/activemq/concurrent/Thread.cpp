@@ -36,8 +36,8 @@ static struct ThreadStaticInitializer {
     pthread_attr_t threadAttribute;
     // Static Initializer:
     ThreadStaticInitializer() {
-        pthread_attr_init (&threadAttribute);
-        pthread_attr_setdetachstate (&threadAttribute, PTHREAD_CREATE_JOINABLE);
+        ::pthread_attr_init (&threadAttribute);
+        ::pthread_attr_setdetachstate (&threadAttribute, PTHREAD_CREATE_JOINABLE);
     }
 } threadStaticInitializer;
 #endif
@@ -73,9 +73,9 @@ void Thread::start() throw ( exceptions::ActiveMQException )
     
 #ifdef unix
     
-    pthread_attr_init (&attributes);
-    pthread_attr_setdetachstate (&attributes, PTHREAD_CREATE_JOINABLE);
-    int err = pthread_create (
+    ::pthread_attr_init (&attributes);
+    ::pthread_attr_setdetachstate (&attributes, PTHREAD_CREATE_JOINABLE);
+    int err = ::pthread_create (
         &this->threadHandle,
         &attributes,
         runCallback,
@@ -89,7 +89,7 @@ void Thread::start() throw ( exceptions::ActiveMQException )
 
     unsigned int threadId = 0;
     this->threadHandle = 
-        (HANDLE)_beginthreadex(NULL, 0, runCallback, this, 0, &threadId);
+        (HANDLE)::_beginthreadex(NULL, 0, runCallback, this, 0, &threadId);
     if (this->threadHandle == NULL) {
         throw exceptions::ActiveMQException( __FILE__, __LINE__,
             "Coud not start thread");
@@ -111,9 +111,9 @@ void Thread::join() throw( exceptions::ActiveMQException )
     if (!this->joined) {
         
 #ifdef unix
-        pthread_join(this->threadHandle, NULL);
+        ::pthread_join(this->threadHandle, NULL);
 #else
-        WaitForSingleObject (this->threadHandle, INFINITE);       
+        ::WaitForSingleObject (this->threadHandle, INFINITE);       
 #endif
 
     }
@@ -134,7 +134,7 @@ void Thread::sleep( int millisecs )
     }
     
 #else
-    Sleep (millisecs);
+    ::Sleep (millisecs);
 #endif
 }
 
@@ -165,8 +165,14 @@ Thread::runCallback( void* param )
 #ifdef unix
     return NULL;
 #else
-    // Return 0 if no exception was threwn. Otherwise -1.
-    _endthreadex(0); // Needed when using threads and CRT in Windows. Otherwise memleak can appear.
+
+    // Needed when using threads and CRT in Windows. Otherwise memleak can appear.
+    ::_endthreadex(0); 
+    
+    // _endthreadex (unlike _endthread) does not automatically close the thread handle
+    // so we need to do this manually.
+    ::CloseHandle(thread->threadHandle);
+    
     return 0;
 #endif
 }
