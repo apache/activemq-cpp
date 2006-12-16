@@ -26,6 +26,7 @@
 #endif
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/exceptions/RuntimeException.h>
 
 using namespace activemq;
 using namespace activemq::concurrent;
@@ -160,9 +161,15 @@ Thread::runCallback( void* param )
     Thread* thread = (Thread*)param;
     
     // Invoke run on the task.
-    thread->task->run();
+    try{
+        thread->task->run();
+    } catch( ... ){
+        exceptions::RuntimeException ex(__FILE__, __LINE__, "unhandled exception bubbled up to Thread::run");
+        ex.printStackTrace();
+    }
 
 #ifdef unix
+    ::pthread_exit( NULL );
     return NULL;
 #else
 
