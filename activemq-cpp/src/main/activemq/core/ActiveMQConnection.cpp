@@ -101,13 +101,12 @@ void ActiveMQConnection::close(void) throw ( cms::CMSException )
         started = false;
         closed = true;
 
-        // Shutdown connector and transport
-        connectionData->getConnector()->close();
-        connectionData->getTransport()->close();
-
-        // Destroy the connection data
-        delete connectionData;
-        connectionData = NULL;
+        // Destroy the connection data.  This will close the connector
+        // and transports.
+        if( connectionData != NULL ){
+            delete connectionData;
+            connectionData = NULL;
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

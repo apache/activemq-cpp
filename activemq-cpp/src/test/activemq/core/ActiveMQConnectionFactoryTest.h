@@ -114,6 +114,9 @@ namespace core{
                 CPPUNIT_ASSERT( password == connector->getPassword() );
                 CPPUNIT_ASSERT( clientId == connector->getClientId() );
 
+                // Free the allocated connection object.
+                delete connection;
+                
                 return;
             }
             AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
