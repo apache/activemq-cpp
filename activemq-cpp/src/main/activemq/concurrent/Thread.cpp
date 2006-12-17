@@ -31,17 +31,6 @@
 using namespace activemq;
 using namespace activemq::concurrent;
 
-#ifdef unix
-static struct ThreadStaticInitializer {
-    // Thread Attribute member
-    pthread_attr_t threadAttribute;
-    // Static Initializer:
-    ThreadStaticInitializer() {
-        ::pthread_attr_init (&threadAttribute);
-        ::pthread_attr_setdetachstate (&threadAttribute, PTHREAD_CREATE_JOINABLE);
-    }
-} threadStaticInitializer;
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::Thread()
@@ -169,7 +158,7 @@ Thread::runCallback( void* param )
     }
 
 #ifdef unix
-    ::pthread_exit( NULL );
+    ::pthread_attr_destroy( &thread->attributes );
     return NULL;
 #else
 
