@@ -22,6 +22,7 @@
 			ConfigurationType="1"
 			CharacterSet="0"
 			ManagedExtensions="0"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -47,6 +48,9 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -65,6 +69,7 @@
 				AdditionalDependencies="$(OutDir)\activemq-cppd.lib ws2_32.lib rpcrt4.lib cppunitd.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -74,6 +79,9 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -101,6 +109,7 @@
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -123,6 +132,9 @@
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
 				WarningLevel="2"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -141,6 +153,7 @@
 				AdditionalDependencies="$(OutDir)\activemq-cpp.lib ws2_32.lib rpcrt4.lib cppunit.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -152,6 +165,9 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
