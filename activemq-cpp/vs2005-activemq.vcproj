@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="vs2005-activemq"
+	Name="vc2005-activemq"
 	ProjectGUID="{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}"
 	RootNamespace="vs2005"
 	Keyword="Win32Proj"
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="src\main;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;src\main"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -157,12 +157,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-		</Filter>
 		<Filter
 			Name="cms"
 			>
@@ -641,6 +635,30 @@
 						</File>
 					</Filter>
 				</Filter>
+				<Filter
+					Name="openwire"
+					>
+					<Filter
+						Name="utils"
+						>
+						<File
+							RelativePath=".\src\main\activemq\connector\openwire\utils\BooleanStream.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\src\main\activemq\connector\openwire\utils\BooleanStream.h"
+							>
+						</File>
+						<File
+							RelativePath=".\src\main\activemq\connector\openwire\utils\HexTable.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\src\main\activemq\connector\openwire\utils\HexTable.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="core"
@@ -785,6 +803,14 @@
 			<Filter
 				Name="io"
 				>
+				<File
+					RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.h"
+					>
+				</File>
 				<File
 					RelativePath=".\src\main\activemq\io\BufferedInputStream.cpp"
 					>
@@ -1155,14 +1181,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\src\main\activemq\io\BlockingByteArrayInputStream.h"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
