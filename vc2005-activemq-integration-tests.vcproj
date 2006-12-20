@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;src\main;&quot;src\test-integration&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;src\test-integration&quot;;src\main"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(OutDir)\activemq-cppd.lib ws2_32.lib rpcrt4.lib cppunitd.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -152,7 +152,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(OutDir)\activemq-cpp.lib ws2_32.lib rpcrt4.lib cppunit.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -193,86 +193,100 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="test-integration"
 			>
-			<File
-				RelativePath=".\src\test-integration\integration\common\AbstractTester.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\durable\DurableTester.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\common\IntegrationCommon.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\src\test-integration\main.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.cpp"
+			<Filter
+				Name="Integration"
 				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\simple\SimpleTester.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\transactional\TransactionTester.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\src\test-integration\integration\common\AbstractTester.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\durable\DurableTester.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\common\IntegrationCommon.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\simple\SimpleTester.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\common\Tester.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\test-integration\integration\transactional\TransactionTester.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
+				<Filter
+					Name="common"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\common\AbstractTester.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\common\AbstractTester.h"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\common\IntegrationCommon.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\common\IntegrationCommon.h"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\common\Tester.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="durable"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\durable\DurableTester.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\durable\DurableTester.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="expiration"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\expiration\ExpirationTest.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="simple"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\simple\SimpleTester.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\simple\SimpleTester.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="transactional"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\transactional\TransactionTester.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\transactional\TransactionTester.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="various"
+					>
+					<File
+						RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\src\test-integration\integration\various\SimpleRollbackTest.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
