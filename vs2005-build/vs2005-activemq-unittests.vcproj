@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;..\src\test;..\src\main"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,7 @@
 				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -128,7 +128,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;..\src\test;..\src\main"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -153,7 +153,7 @@
 				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunit.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;c:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
