@@ -25,15 +25,15 @@
 #include <list>
 
 #if (defined(__unix__) || defined(unix) || defined(MACOSX)) && !defined(USG)
-    #ifndef unix
-        #define unix
+    #ifndef AMQCPP_USE_PTHREADS
+        #define AMQCPP_USE_PTHREADS
     #endif
    
     #include <pthread.h>
     #include <sys/time.h>
 #endif
 
-#if defined(WIN32) || defined(__CYGWIN__) && !defined unix
+#if defined(WIN32) || defined(__CYGWIN__) && !defined AMQCPP_USE_PTHREADS
    
     #include <windows.h>
    
@@ -63,7 +63,7 @@ namespace concurrent{
         /**
          * The mutex object.
          */
-        #ifdef unix
+        #ifdef AMQCPP_USE_PTHREADS
             pthread_mutex_t mutex;
 
             std::list<pthread_cond_t*> eventQ;
@@ -84,7 +84,7 @@ namespace concurrent{
          */
         Mutex()
         {
-            #ifdef unix
+            #ifdef AMQCPP_USE_PTHREADS
                 pthread_mutexattr_t attr;
                 pthread_mutexattr_init(&attr);
                 pthread_mutex_init(&mutex, &attr);
@@ -105,7 +105,7 @@ namespace concurrent{
             // Unlock the mutex.
             unlock();
       
-            #ifdef unix
+            #ifdef AMQCPP_USE_PTHREADS
                 pthread_mutex_destroy(&mutex);
             #else
                 DeleteCriticalSection(&mutex);
@@ -124,7 +124,7 @@ namespace concurrent{
             }
             else
             {
-                #ifdef unix               
+                #ifdef AMQCPP_USE_PTHREADS               
                     pthread_mutex_lock(&mutex);
                 #else
                     EnterCriticalSection(&mutex);
@@ -159,7 +159,7 @@ namespace concurrent{
             {         
                 lock_owner = 0;
 
-                #ifdef unix
+                #ifdef AMQCPP_USE_PTHREADS
                     pthread_mutex_unlock(&mutex);
                 #else
                     LeaveCriticalSection(&mutex);
@@ -206,7 +206,7 @@ namespace concurrent{
             this->lock_count = 0;
             this->lock_owner = 0;
          
-            #ifdef unix
+            #ifdef AMQCPP_USE_PTHREADS
 
                 // Create this threads wait event
                 pthread_cond_t waitEvent;
@@ -305,7 +305,7 @@ namespace concurrent{
 
             if( !eventQ.empty() )
             {
-                #ifdef unix
+                #ifdef AMQCPP_USE_PTHREADS
                     pthread_cond_signal( eventQ.front() );
                     eventQ.pop_front();
                 #else
@@ -329,7 +329,7 @@ namespace concurrent{
                     "Mutex::NotifyAll - Failed, not Lock Owner!" );
             }
          
-            #ifdef unix
+            #ifdef AMQCPP_USE_PTHREADS
 
                 while(!eventQ.empty())
                 {
