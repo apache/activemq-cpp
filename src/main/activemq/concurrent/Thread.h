@@ -24,8 +24,8 @@
 
 #if (defined(__unix__) || defined(unix) || defined(MACOSX) || defined(__APPLE__)) && !defined(USG)
    
-    #ifndef unix
-        #define unix
+    #ifndef AMQCPP_USE_PTHREADS
+        #define AMQCPP_USE_PTHREADS
     #endif
 
     #include <pthread.h>
@@ -51,7 +51,7 @@ namespace concurrent{
          */
         Runnable* task;
       
-        #ifdef unix
+        #ifdef AMQCPP_USE_PTHREADS
             pthread_attr_t attributes;
             pthread_t threadHandle;
         #else
@@ -125,7 +125,7 @@ namespace concurrent{
     private:
    
         // Internal thread handling
-        #ifdef unix
+        #ifdef AMQCPP_USE_PTHREADS
             static void* runCallback (void* param);
         #else
             static unsigned int WINAPI runCallback (void* param);
