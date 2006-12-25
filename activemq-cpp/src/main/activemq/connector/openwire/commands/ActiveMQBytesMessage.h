@@ -74,8 +74,8 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::Message* clone(void) const {
-            return dynamic_cast<cms::Message*>( 
+        virtual cms::BytesMessage* clone(void) const {
+            return dynamic_cast<cms::BytesMessage*>( 
                 this->cloneDataStructure() );
         }
         

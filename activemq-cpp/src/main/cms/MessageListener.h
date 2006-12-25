@@ -33,12 +33,12 @@ namespace cms{
          * Called asynchronously when a new message is received, the message
          * reference can be to any othe Message types. a dynamic cast is used
          * to find out what type of message this is.  The lifetime of this
-         * object is only garunteed to be for life of the onMessage function
+         * object is only guaranteed to be for life of the onMessage function
          * after this returns the message may no longer exists.  User should
          * copy the data or clone the message if they wish to keep something
          * around about this message.
          * 
-         * It is considered a programming error for this method to throw and
+         * It is considered a programming error for this method to throw an
          * exception.
          * 
          * @param Message object const pointer recipient does not own.

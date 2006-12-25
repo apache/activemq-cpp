@@ -125,7 +125,7 @@ connector::ConsumerInfo* StompSessionManager::createConsumer(
 {
     try
     {
-        // Delegate to the createDurableConsumer method, just pas the
+        // Delegate to the createDurableConsumer method, just pass the
         // appropriate params so that a regular consumer is created on
         // the broker side.
         return createDurableConsumer( 
