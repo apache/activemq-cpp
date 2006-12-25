@@ -273,6 +273,7 @@ namespace cms{
          */
         virtual void writeString( const std::string& value ) throw ( cms::CMSException ) = 0;
 
+        virtual BytesMessage* clone() const = 0;
    };
 }
 
