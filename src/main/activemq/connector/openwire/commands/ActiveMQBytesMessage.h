@@ -654,6 +654,20 @@ namespace commands{
          */
         virtual void writeString( const std::string& value ) throw ( cms::CMSException );
 
+        /**
+         * Reads an UTF String from the BytesMessage stream
+         * @returns String from stream
+         * @throws CMSException
+         */
+        virtual std::string readUTF() throw ( cms::CMSException );
+
+        /**
+         * Writes an UTF String to the BytesMessage stream
+         * @param value - String to write to the stream
+         * @throws CMSException
+         */
+        virtual void writeUTF( const std::string& value ) throw ( cms::CMSException );
+
     public:  // ActiveMQMessage
 
         /**

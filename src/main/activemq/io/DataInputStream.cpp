@@ -237,7 +237,11 @@ std::string DataInputStream::readString()
 std::string DataInputStream::readUTF() 
     throw ( io::IOException, io::EOFException ) {
     try {
-        return "";
+        std::string buffer;
+        unsigned short len = readUnsignedShort();
+        buffer.resize(len);
+        readFully( (unsigned char*)buffer.c_str(), 0, len );
+        return buffer;
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )    

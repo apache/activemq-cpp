@@ -180,3 +180,13 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::writeUTF( const std::string& value ) throw ( IOException ) {
+    try {
+        this->writeUnsignedShort( value.length() );
+        this->write( (const unsigned char*)value.c_str(), value.length() );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}

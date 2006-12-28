@@ -457,6 +457,26 @@ namespace commands{
             checkWriteOnly();
             dataOutputStream.writeBytes( value );
         }
+
+        /**
+         * Reads an UTF String from the BytesMessage stream
+         * @returns String from stream
+         * @throws CMSException
+         */
+        virtual std::string readUTF() throw ( cms::CMSException ){
+            checkReadOnly();
+            return dataInputStream.readUTF();
+        }
+        
+        /**
+         * Writes an UTF String to the BytesMessage stream
+         * @param value The string to be written to the stream.
+         * @throws CMSException
+         */
+        virtual void writeUTF( const std::string& value ) throw ( cms::CMSException ){
+            checkWriteOnly();
+            dataOutputStream.writeUTF( value );
+        }
         
     protected:
     
