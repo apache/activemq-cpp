@@ -60,6 +60,8 @@ namespace io{
 			unsigned char arrayVal[3] = {
 				'a', 'b', 'c'
 			};
+            std::string stringVal1 = "ASCII_String";
+            std::string stringVal2 = "UTF8_String";
 			
 			int size = sizeof(char);
 			memcpy( (char*)(buffer+ix), (char*)&byteVal, size );
@@ -93,6 +95,16 @@ namespace io{
 			size = 3;
 			memcpy( (char*)(buffer+ix), (char*)&arrayVal, size );
 			ix += size;
+            
+            memcpy( (char*)(buffer+ix), stringVal1.c_str(), stringVal1.size() + 1 );
+            ix += stringVal1.size() + 1;
+
+            size = sizeof(uint16_t);
+            uint16_t tempShort2 = util::Endian::byteSwap((unsigned short)stringVal2.size());
+            memcpy( (char*)(buffer+ix), (char*)&tempShort2, size );
+            ix += size;
+            memcpy( (char*)(buffer+ix), stringVal2.c_str(), stringVal2.size() );
+            ix += stringVal2.size();
 
 			// Create the stream with the buffer we just wrote to.
 			ByteArrayInputStream myStream( buffer, 1000 );
@@ -120,6 +132,13 @@ namespace io{
 			CPPUNIT_ASSERT( arrayVal[0] == 'a' );
 			CPPUNIT_ASSERT( arrayVal[1] == 'b' );
 			CPPUNIT_ASSERT( arrayVal[2] == 'c' );
+            
+            std::string resultStrVal1 = reader.readString();
+            CPPUNIT_ASSERT( resultStrVal1 == stringVal1 );
+
+            std::string resultStrVal2 = reader.readUTF();
+            CPPUNIT_ASSERT( resultStrVal2 == stringVal2 );
+
 		}
 
 	};

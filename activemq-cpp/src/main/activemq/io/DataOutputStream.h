@@ -199,6 +199,14 @@ namespace io{
          */
         virtual void writeChars( const std::string& value ) throw ( IOException ) {};
 
+        /**
+         * Writes out the string to the underlying output stream as a
+         * unsigned short indicating its length followed by the rest of
+         * the string.
+         * @param value the value to write.
+         * @throws IOException
+         */
+        virtual void writeUTF( const std::string& value ) throw ( io::IOException );
     };
 
 }}

@@ -252,7 +252,9 @@ namespace io{
             throw ( io::IOException, io::EOFException );
         
         /**
-         * 
+         * Reads an null terminated ASCII string to the stream and returns the
+         * string to the caller. 
+         * @returns string object containing the string read.
          * @throws IOException
          * @throws EOFException
          */
@@ -260,7 +262,10 @@ namespace io{
             throw ( io::IOException, io::EOFException );
             
         /**
-         * 
+         * Reads a UTF8 encoded string in ASCII format and returns it, this is
+         * only useful if you know for sure that the string that is to be read
+         * was a string that contained all ascii values, and not uncide chars.
+         * @returns string read from stream.
          * @throws IOException
          * @throws EOFException
          */
