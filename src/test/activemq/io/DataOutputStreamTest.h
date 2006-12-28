@@ -49,6 +49,8 @@ namespace io{
 			unsigned char arrayVal[3] = {
 				'a', 'b', 'c'
 			};
+            std::string stringVal1 = "ASCII_String";
+            std::string stringVal2 = "UTF8_String";
 			
 			// Create the stream with the buffer we just wrote to.
 			ByteArrayOutputStream myStream;
@@ -61,7 +63,8 @@ namespace io{
 			writer.writeFloat( floatVal );
 			writer.writeDouble( doubleVal );
 			writer.write( arrayVal, 3 );
-			
+            writer.writeBytes( stringVal1 );
+            writer.writeUTF( stringVal2 );
 			
 			const unsigned char* buffer = myStream.getByteArray();
 			int ix = 0;
@@ -89,6 +92,19 @@ namespace io{
 			double tempDouble = util::Endian::byteSwap( *(double*)(buffer+ix) );
 			CPPUNIT_ASSERT( tempDouble == doubleVal );
 			ix += sizeof( tempDouble );
+            
+            char tempChar1 = *(char*)(buffer+ix);
+            CPPUNIT_ASSERT( tempChar1 == arrayVal[0] );
+            ix += sizeof( tempChar1 );
+            
+            char tempChar2 = *(char*)(buffer+ix);
+            CPPUNIT_ASSERT( tempChar2 == arrayVal[1] );
+            ix += sizeof( tempChar2 );
+
+            char tempChar3 = *(char*)(buffer+ix);
+            CPPUNIT_ASSERT( tempChar3 == arrayVal[2] );
+            ix += sizeof( tempChar3 );
+
 		}
 
 	};
