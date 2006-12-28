@@ -113,7 +113,7 @@ namespace stomp{
             body.clear();
            
             // Copy data to internal buffer.
-            for( long long ix = 0; ix < numBytes; ++ix )
+            for( unsigned long long ix = 0; ix < numBytes; ++ix )
             {
                 body.push_back(bytes[ix]);
             }
