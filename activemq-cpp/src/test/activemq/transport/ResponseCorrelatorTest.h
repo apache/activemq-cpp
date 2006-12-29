@@ -553,7 +553,7 @@ namespace transport{
                 }
                 
                 // Wait to make sure we get the asynchronous message back.
-                concurrent::Thread::sleep( 100 );
+                concurrent::Thread::sleep( 200 );
                 
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
