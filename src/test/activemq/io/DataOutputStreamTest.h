@@ -104,6 +104,17 @@ namespace io{
             char tempChar3 = *(char*)(buffer+ix);
             CPPUNIT_ASSERT( tempChar3 == arrayVal[2] );
             ix += sizeof( tempChar3 );
+            
+            std::string tempStr1( (char*)(buffer+ix), stringVal1.size() );            
+            CPPUNIT_ASSERT( tempStr1 == stringVal1 );
+            ix += stringVal1.size() + 1;
+
+            uint16_t tempShort1 = util::Endian::byteSwap( *(uint16_t*)(buffer+ix) );
+            CPPUNIT_ASSERT( tempShort1 == stringVal2.size() );
+            ix += sizeof( tempShort1 );
+            std::string tempStr2( (char*)(buffer+ix), tempShort1 );            
+            CPPUNIT_ASSERT( tempStr2 == stringVal2 );
+            ix += stringVal2.size();
 
 		}
 
