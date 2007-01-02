@@ -78,7 +78,7 @@ namespace stomp{
          * @param os the target stream for the write.
          * @throws CommandIOException if a problem occurs during the write.
          */
-        virtual void writeCommand( const transport::Command* command ) 
+        virtual void writeCommand( transport::Command* command ) 
             throw ( transport::CommandIOException );
 
         /**

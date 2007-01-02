@@ -74,7 +74,7 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const char* msg ) throw( cms::CMSException ) {
-            setBytes( (unsigned char*)msg, strlen(msg) + 1, false );
+            setBytes( (unsigned char*)msg, strlen(msg) + 1 );
         }
 
         /**
@@ -82,7 +82,7 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const std::string& msg ) throw( cms::CMSException ) {
-            setBytes( (unsigned char*)msg.c_str(), msg.length() + 1, false );
+            setBytes( (unsigned char*)msg.c_str(), msg.length() + 1 );
         }
 
     };

@@ -39,7 +39,7 @@ namespace marshal{
          * @throws MarshalException if the command is not
          * in a state that can be marshalled.
          */
-        virtual const StompFrame& marshal(void) const 
+        virtual const StompFrame& marshal(void)
             throw ( marshal::MarshalException ) = 0;
 
     };

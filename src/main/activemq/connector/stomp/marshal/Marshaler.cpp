@@ -89,13 +89,13 @@ transport::Command* Marshaler::marshal( StompFrame* frame )
 }
 
 ////////////////////////////////////////////////////////////////////////////////      
-const StompFrame& Marshaler::marshal( const transport::Command* command )
+const StompFrame& Marshaler::marshal( transport::Command* command )
     throw ( MarshalException )
 {
     try
     {
-        const Marshalable* marshalable = 
-            dynamic_cast<const Marshalable*>(command);
+        Marshalable* marshalable = 
+            dynamic_cast<Marshalable*>(command);
 
         // Easy, just get the frame from the command
         if(marshalable != NULL)

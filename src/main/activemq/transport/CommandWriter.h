@@ -41,7 +41,7 @@ namespace transport{
          * @param command the command to write.
          * @throws CommandIOException if a problem occurs during the write.
          */
-        virtual void writeCommand( const Command* command ) 
+        virtual void writeCommand( Command* command ) 
             throw ( CommandIOException ) = 0;
 
     };
