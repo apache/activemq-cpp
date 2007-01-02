@@ -41,7 +41,7 @@ StompCommandWriter::StompCommandWriter( OutputStream* os )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::writeCommand( const Command* command ) 
+void StompCommandWriter::writeCommand( Command* command ) 
     throw ( transport::CommandIOException )
 {
     try

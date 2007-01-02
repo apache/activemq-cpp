@@ -57,7 +57,7 @@ namespace marshal{
          * @throws MarshalException
          */
         virtual const StompFrame& marshal( 
-            const transport::Command* command )
+            transport::Command* command )
                 throw ( MarshalException );
 
     };

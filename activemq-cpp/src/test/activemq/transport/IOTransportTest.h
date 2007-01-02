@@ -157,7 +157,7 @@ namespace transport{
                 return outputStream;
             }
 
-            virtual void writeCommand( const Command* command ) 
+            virtual void writeCommand( Command* command ) 
                 throw (CommandIOException)
             {
                 try{

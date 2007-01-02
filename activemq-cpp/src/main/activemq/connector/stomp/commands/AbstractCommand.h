@@ -231,7 +231,7 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal(void) const 
+        virtual const StompFrame& marshal(void)
             throw (marshal::MarshalException)
         {
             if( frame == NULL || !validate( *frame ) ){
@@ -275,30 +275,14 @@ namespace commands{
          * be set
          */
         virtual void setBytes( const unsigned char* bytes, 
-                               const unsigned long long numBytes,
-                               const bool setContentLength = true )
+                               const unsigned long long numBytes )
         {
             getFrame().setBody( bytes, numBytes );
-            if( setContentLength )
-            {
-                setPropertyValue( 
-                    CommandConstants::toString( 
-                        CommandConstants::HEADER_CONTENTLENGTH),
-                    util::Long::toString( numBytes ) );
-            }
         }
         
-        virtual void setBytes( const std::vector<unsigned char>& bytes,
-                               const bool setContentLength = true )
+        virtual void setBytes( const std::vector<unsigned char>& bytes )
         {
             getFrame().getBody() = bytes;
-            if( setContentLength )
-            {
-                setPropertyValue( 
-                    CommandConstants::toString( 
-                        CommandConstants::HEADER_CONTENTLENGTH),
-                    util::Long::toString( bytes.size() ) );
-            }
         }
     };
     

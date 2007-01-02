@@ -106,12 +106,33 @@ namespace commands{
         virtual void clearBody(){
             
             // Invoke base class's version.
-            StompMessage< cms::BytesMessage >::clearBody();
+            StompMessage<cms::BytesMessage>::clearBody();
             
             // Set the stream in write only mode.
             readOnly = false;
             
             outputStream.setBuffer( getBytes() );
+        }
+        
+        /**
+         * Marshals the command to a stomp frame.
+         * @returns the stomp frame representation of this
+         * command.
+         * @throws MarshalException if the command is not
+         * in a state that can be marshaled.
+         */
+        virtual const StompFrame& marshal(void)
+            throw (marshal::MarshalException)
+        {
+            // Before we send out the frame tag it with the content length
+            // as this is a bytes message and we can't ensure we have only
+            // a trailing NULL.
+            setPropertyValue( 
+                CommandConstants::toString( 
+                    CommandConstants::HEADER_CONTENTLENGTH),
+                util::Long::toString( getFrame().getBodyLength() ) );
+                        
+            return StompMessage<cms::BytesMessage>::marshal();
         }
         
         /**

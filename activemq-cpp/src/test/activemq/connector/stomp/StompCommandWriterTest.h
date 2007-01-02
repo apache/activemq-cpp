@@ -22,13 +22,16 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/connector/stomp/StompCommandWriter.h>
+#include <activemq/connector/stomp/StompCommandReader.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
 #include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/connector/stomp/commands/CommandConstants.h>
 
 #include <activemq/io/ByteArrayOutputStream.h>
+#include <activemq/io/ByteArrayInputStream.h>
 #include <algorithm>
 
 namespace activemq{
@@ -39,7 +42,50 @@ namespace stomp{
     {
         CPPUNIT_TEST_SUITE( StompCommandWriterTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testWriteAndReads );
         CPPUNIT_TEST_SUITE_END();
+
+        class MyBytesMessageCommand : public commands::BytesMessageCommand {
+        public:
+
+            virtual const StompFrame& marshal(void)
+                throw (marshal::MarshalException)
+            {
+                const StompFrame& frame = 
+                    commands::BytesMessageCommand::marshal();
+
+                // Before we send out the frame tag it with the content length
+                // as this is a bytes message and we can't ensure we have only
+                // a trailing NULL.
+                const_cast< StompFrame* >( &frame )->setCommand(
+                    commands::CommandConstants::toString( 
+                        commands::CommandConstants::MESSAGE ) );
+
+                return frame;
+            }
+
+        };
+
+        class MyTextMessageCommand : public commands::TextMessageCommand {
+        public:
+
+            virtual const StompFrame& marshal(void)
+                throw (marshal::MarshalException)
+            {
+                const StompFrame& frame = 
+                    commands::TextMessageCommand::marshal();
+
+                // Before we send out the frame tag it with the content length
+                // as this is a bytes message and we can't ensure we have only
+                // a trailing NULL.
+                const_cast< StompFrame* >( &frame )->setCommand(
+                    commands::CommandConstants::toString( 
+                        commands::CommandConstants::MESSAGE ) );
+
+                return frame;
+            }
+
+        };
 
     public:
     
@@ -114,8 +160,78 @@ namespace stomp{
                             boStream.getByteArray() ) );
         }
 
-    };
+        void testWriteAndReads() {
+            
+            io::ByteArrayOutputStream boStream;
+            io::ByteArrayInputStream biStream;
 
+            StompCommandWriter writer( &boStream );
+            StompCommandReader reader( &biStream );
+            
+            MyTextMessageCommand textCommand;
+            MyBytesMessageCommand bytesCommand;
+
+            StompTopic topic2("a");
+            bytesCommand.setCMSDestination( &topic2 );
+            bytesCommand.setCMSMessageId( "123" );
+            textCommand.setCMSDestination( &topic2 );
+            textCommand.setCMSMessageId( "123" );
+
+            textCommand.setText("This is a TextMessage");
+
+            const int testInt1 = 45678;
+            const int testInt2 = 42;
+            
+            const std::string testStr1 = "Test String 1";
+            const std::string testStr2 = "Test String 2";
+            
+            const bool testBool1 = true;
+            const bool testBool2 = false;
+
+            bytesCommand.writeInt( testInt1 );
+            bytesCommand.writeInt( testInt2 );
+            
+            bytesCommand.writeString( testStr1 );
+            bytesCommand.writeUTF( testStr2 );
+            
+            bytesCommand.writeBoolean( testBool1 );
+            bytesCommand.writeBoolean( testBool2 );
+
+            writer.writeCommand( &textCommand );
+            writer.writeCommand( &bytesCommand );
+
+            // Copy output Command to the Input Stream
+            biStream.setByteArray( boStream.getByteArray(), 
+                                   boStream.getByteArraySize() );
+
+            commands::TextMessageCommand* textMessage = 
+                dynamic_cast< commands::TextMessageCommand* >( 
+                    reader.readCommand() );
+
+            CPPUNIT_ASSERT( textMessage != NULL );
+            CPPUNIT_ASSERT( textMessage->getText() != "" );
+            std::string text = textMessage->getText();
+            CPPUNIT_ASSERT( text == "This is a TextMessage" );
+
+            commands::BytesMessageCommand* bytesMessage = 
+                dynamic_cast< commands::BytesMessageCommand* >( 
+                    reader.readCommand() );
+
+            CPPUNIT_ASSERT( bytesMessage != NULL );
+
+            CPPUNIT_ASSERT( bytesMessage->readInt() == testInt1 );
+            CPPUNIT_ASSERT( bytesMessage->readInt() == testInt2 );
+            CPPUNIT_ASSERT( bytesMessage->readString() == testStr1 );
+            CPPUNIT_ASSERT( bytesMessage->readUTF() == testStr2 );
+            CPPUNIT_ASSERT( bytesMessage->readBoolean() == testBool1 );
+            CPPUNIT_ASSERT( bytesMessage->readBoolean() == testBool2 );
+
+            delete bytesMessage;
+            delete textMessage;
+        }
+        
+    };
+    
 }}}
 
 #endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDWRITERTEST_H_*/
