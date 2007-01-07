@@ -39,7 +39,7 @@ int main( int argc, char **argv)
     catch(...) {
         std::cout << "----------------------------------------" << std::endl;
         std::cout << "- AN ERROR HAS OCCURED:                -" << std::endl;
-        std::cout << "- Do yuo have a Broker Running?        -" << std::endl;
+        std::cout << "- Do you have a Broker Running?        -" << std::endl;
         std::cout << "----------------------------------------" << std::endl;        
     }
 }
