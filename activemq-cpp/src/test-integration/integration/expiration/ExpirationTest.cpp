@@ -85,6 +85,7 @@ std::string messageTag = Guid().createGUID();
 class Producer : public Runnable {
 private:
 
+    ActiveMQConnectionFactory* connectionFactory;
     Connection* connection;
     Session* session;
     Topic* destination;
@@ -120,8 +121,7 @@ public:
     virtual void run() {
         try {
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory = new
-                ActiveMQConnectionFactory("tcp://localhost:61613");
+            connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61613");
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -188,6 +188,11 @@ private:
             if( connection != NULL ) delete connection;
         }catch ( CMSException& e ) {}
         connection = NULL;
+
+        try{
+            if( connectionFactory != NULL ) delete connectionFactory;
+        }catch ( CMSException& e ) {}
+        connectionFactory = NULL;
     }
 };
 
