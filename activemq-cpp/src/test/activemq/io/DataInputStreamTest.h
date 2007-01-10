@@ -35,114 +35,106 @@
 
 namespace activemq{
 namespace io{
-	
-	class DataInputStreamTest : public CppUnit::TestFixture {
-		
-	  CPPUNIT_TEST_SUITE( DataInputStreamTest );
-	  CPPUNIT_TEST( test );
-	  CPPUNIT_TEST_SUITE_END();
-			
-	public:
-	
-		virtual void setUp(){};	
-	 	virtual void tearDown(){};
-		void test(){
-			
-			unsigned char buffer[1000];			
-			int ix = 0;	
-			
-			unsigned char byteVal = (unsigned char)'T';
-			uint16_t shortVal = 5;
-			uint32_t intVal = 10000;
-			uint64_t longVal = 1000000000;
-			float floatVal = 10.0f;
-			double doubleVal = 100.0;
-			unsigned char arrayVal[3] = {
-				'a', 'b', 'c'
-			};
-            std::string stringVal1 = "ASCII_String";
-            std::string stringVal2 = "UTF8_String";
-			
-			int size = sizeof(char);
-			memcpy( (char*)(buffer+ix), (char*)&byteVal, size );
-			ix += size;
-			
-			size = sizeof(uint16_t);
-			uint16_t tempShort = util::Endian::byteSwap(shortVal);
-			memcpy( (char*)(buffer+ix), (char*)&tempShort, size );
-			ix += size;
-			
-			size = sizeof(uint32_t);
-			uint32_t tempInt = util::Endian::byteSwap(intVal);
-			memcpy( (char*)(buffer+ix), (char*)&tempInt, size );
-			ix += size;
-			
-			size = sizeof(uint64_t);
-			uint64_t tempLong = util::Endian::byteSwap(longVal);
-			memcpy( (char*)(buffer+ix), (char*)&tempLong, size );
-			ix += size;
-			
-			size = sizeof(float);
-			float tempFloat = util::Endian::byteSwap(floatVal);
-			memcpy( (char*)(buffer+ix), (char*)&tempFloat, size );
-			ix += size;
-			
-			size = sizeof(double);
-			double tempDouble = util::Endian::byteSwap(doubleVal);
-			memcpy( (char*)(buffer+ix), (char*)&tempDouble, size );
-			ix += size;
-			
-			size = 3;
-			memcpy( (char*)(buffer+ix), (char*)&arrayVal, size );
-			ix += size;
+    
+    class DataInputStreamTest : public CppUnit::TestFixture {
+        
+      CPPUNIT_TEST_SUITE( DataInputStreamTest );
+      CPPUNIT_TEST( test );
+      CPPUNIT_TEST_SUITE_END();
             
-            memcpy( (char*)(buffer+ix), stringVal1.c_str(), stringVal1.size() + 1 );
-            ix += stringVal1.size() + 1;
-
-            size = sizeof(uint16_t);
-            uint16_t tempShort2 = util::Endian::byteSwap((unsigned short)stringVal2.size());
-            memcpy( (char*)(buffer+ix), (char*)&tempShort2, size );
+    public:
+    
+        virtual void setUp(){}; 
+        virtual void tearDown(){};
+        void test(){
+            
+            unsigned char buffer[30];         
+            int ix = 0; 
+            
+            unsigned char byteVal = (unsigned char)'T';
+            unsigned short shortVal = 5;
+            unsigned int intVal = 10000;
+            unsigned long long longVal = 1000000000;
+            float floatVal = 10.0f;
+            double doubleVal = 100.0;
+            unsigned char arrayVal[3] = {
+                'a', 'b', 'c'
+            };
+            
+            int size = sizeof(char);
+            memcpy( (char*)(buffer+ix), (char*)&byteVal, size );
             ix += size;
-            memcpy( (char*)(buffer+ix), stringVal2.c_str(), stringVal2.size() );
-            ix += stringVal2.size();
-
-			// Create the stream with the buffer we just wrote to.
-			ByteArrayInputStream myStream( buffer, 1000 );
-			DataInputStream reader( &myStream );
-			
-			byteVal = reader.readByte();
-			CPPUNIT_ASSERT( byteVal == (unsigned char)'T' );
-			
-			shortVal = reader.readShort();
-			CPPUNIT_ASSERT( shortVal == 5 );
-			
-			intVal = reader.readInt();
-			CPPUNIT_ASSERT( intVal == 10000 );
-			
-			longVal = reader.readLong();
-			CPPUNIT_ASSERT( longVal == 1000000000 );
-			
-			floatVal = reader.readFloat();
-			CPPUNIT_ASSERT( floatVal == 10.0f );
-			
-			doubleVal = reader.readDouble();
-			CPPUNIT_ASSERT( doubleVal == 100.0 );
-			
-			reader.read( arrayVal, 0, 3 );
-			CPPUNIT_ASSERT( arrayVal[0] == 'a' );
-			CPPUNIT_ASSERT( arrayVal[1] == 'b' );
-			CPPUNIT_ASSERT( arrayVal[2] == 'c' );
             
-            std::string resultStrVal1 = reader.readString();
-            CPPUNIT_ASSERT( resultStrVal1 == stringVal1 );
+            size = sizeof(unsigned short);
+            unsigned short tempShort = util::Endian::byteSwap(shortVal);
+            memcpy( (char*)(buffer+ix), (char*)&tempShort, size );
+            ix += size;
+            
+            size = sizeof(unsigned int);
+            unsigned int tempInt = util::Endian::byteSwap(intVal);
+            memcpy( (char*)(buffer+ix), (char*)&tempInt, size );
+            ix += size;
+            
+            size = sizeof(unsigned long long);
+            unsigned long long tempLong = util::Endian::byteSwap(longVal);
+            memcpy( (char*)(buffer+ix), (char*)&tempLong, size );
+            ix += size;
 
-            std::string resultStrVal2 = reader.readUTF();
-            CPPUNIT_ASSERT( resultStrVal2 == stringVal2 );
+            size = sizeof(float);
+            float tempFloat = util::Endian::byteSwap(floatVal);
+            unsigned int x1 = *((unsigned int*)&floatVal );
+            unsigned int x2 = *((unsigned int*)&tempFloat );
+            memcpy( (char*)(buffer+ix), (char*)&tempFloat, size );
+            ix += size;
 
-		}
+            size = sizeof(double);
+            double tempDouble = util::Endian::byteSwap(doubleVal);
+            memcpy( (char*)(buffer+ix), (char*)&tempDouble, size );          
+            ix += size;
+            
+            size = 3;
+            memcpy( (char*)(buffer+ix), (char*)&arrayVal, size );
+            ix += size;
 
-	};
-	
+            // Create the stream with the buffer we just wrote to.
+            ByteArrayInputStream myStream( buffer, 30 );
+            DataInputStream reader( &myStream );
+            
+            byteVal = reader.readByte();
+            //std::cout << "Byte Value = " << byteVal << std::endl;
+            CPPUNIT_ASSERT( byteVal == (unsigned char)'T' );
+            
+            shortVal = reader.readShort();
+            //std::cout << "short Value = " << shortVal << std::endl;
+            CPPUNIT_ASSERT( shortVal == 5 );
+            
+            intVal = reader.readInt();
+            //std::cout << "int Value = " << intVal << std::endl;
+            CPPUNIT_ASSERT( intVal == 10000 );
+            
+            longVal = reader.readLong();
+            //std::cout << "long long Value = " << longVal << std::endl;
+            CPPUNIT_ASSERT( longVal == 1000000000 );
+            
+            floatVal = reader.readFloat();
+            //std::cout << "float Value = " << floatVal << std::endl;
+            CPPUNIT_ASSERT( floatVal == 10.0f );
+            
+            doubleVal = reader.readDouble();
+            //std::cout << "double Value = " << doubleVal << std::endl;
+            CPPUNIT_ASSERT( doubleVal == 100.0 );
+            
+            reader.read( arrayVal, 0, 3 );
+            //std::cout << "char[0] Value = " << (int)arrayVal[0] << std::endl;
+            CPPUNIT_ASSERT( arrayVal[0] == 'a' );
+            //std::cout << "char[1] Value = " << (int)arrayVal[1] << std::endl;
+            CPPUNIT_ASSERT( arrayVal[1] == 'b' );
+            //std::cout << "char[2] Value = " << (int)arrayVal[2] << std::endl;
+            CPPUNIT_ASSERT( arrayVal[2] == 'c' );
+        }
+
+    };
+    
 }}
 
 #endif /*ACTIVEMQ_IO_DATAINPUTSTREAMTEST_H_*/

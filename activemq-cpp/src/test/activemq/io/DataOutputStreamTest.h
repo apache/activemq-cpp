@@ -49,8 +49,6 @@ namespace io{
 			unsigned char arrayVal[3] = {
 				'a', 'b', 'c'
 			};
-            std::string stringVal1 = "ASCII_String";
-            std::string stringVal2 = "UTF8_String";
 			
 			// Create the stream with the buffer we just wrote to.
 			ByteArrayOutputStream myStream;
@@ -63,8 +61,6 @@ namespace io{
 			writer.writeFloat( floatVal );
 			writer.writeDouble( doubleVal );
 			writer.write( arrayVal, 3 );
-            writer.writeBytes( stringVal1 );
-            writer.writeUTF( stringVal2 );
 			
 			const unsigned char* buffer = myStream.getByteArray();
 			int ix = 0;
@@ -73,48 +69,35 @@ namespace io{
 			CPPUNIT_ASSERT( tempByte == byteVal );
 			ix += sizeof( tempByte );
 
-			uint16_t tempShort = util::Endian::byteSwap( *(uint16_t*)(buffer+ix) );
+            unsigned short tempShort = 0;
+            memcpy( &tempShort, buffer+ix, sizeof( unsigned short ) );
+			tempShort = util::Endian::byteSwap( tempShort );
 			CPPUNIT_ASSERT( tempShort == shortVal );
 			ix += sizeof( tempShort );
 			
-			uint32_t tempInt = util::Endian::byteSwap( *(uint32_t*)(buffer+ix) );
+            unsigned int tempInt = 0;
+            memcpy( &tempInt, buffer+ix, sizeof( unsigned int ) );
+            tempInt = util::Endian::byteSwap( tempInt );
 			CPPUNIT_ASSERT( tempInt == intVal );
 			ix += sizeof( tempInt );
 			
-			uint64_t tempLong = util::Endian::byteSwap( *(uint64_t*)(buffer+ix) );
+            unsigned long long tempLong = 0;
+            memcpy( &tempLong, buffer+ix, sizeof( unsigned long long ) );
+            tempLong = util::Endian::byteSwap( tempLong );
 			CPPUNIT_ASSERT( tempLong == longVal );
 			ix += sizeof( tempLong );
 			
-			float tempFloat = util::Endian::byteSwap( *(float*)(buffer+ix) );
+            float tempFloat = 0;
+            memcpy( &tempFloat, buffer+ix, sizeof( float ) );
+            tempFloat = util::Endian::byteSwap( tempFloat );
 			CPPUNIT_ASSERT( tempFloat == floatVal );
 			ix += sizeof( tempFloat );
 			
-			double tempDouble = util::Endian::byteSwap( *(double*)(buffer+ix) );
+            double tempDouble = 0;
+            memcpy( &tempDouble, buffer+ix, sizeof( double ) );
+            tempDouble = util::Endian::byteSwap( tempDouble );
 			CPPUNIT_ASSERT( tempDouble == doubleVal );
 			ix += sizeof( tempDouble );
-            
-            char tempChar1 = *(char*)(buffer+ix);
-            CPPUNIT_ASSERT( tempChar1 == arrayVal[0] );
-            ix += sizeof( tempChar1 );
-            
-            char tempChar2 = *(char*)(buffer+ix);
-            CPPUNIT_ASSERT( tempChar2 == arrayVal[1] );
-            ix += sizeof( tempChar2 );
-
-            char tempChar3 = *(char*)(buffer+ix);
-            CPPUNIT_ASSERT( tempChar3 == arrayVal[2] );
-            ix += sizeof( tempChar3 );
-            
-            std::string tempStr1( (char*)(buffer+ix), stringVal1.size() );            
-            CPPUNIT_ASSERT( tempStr1 == stringVal1 );
-            ix += stringVal1.size() + 1;
-
-            uint16_t tempShort1 = util::Endian::byteSwap( *(uint16_t*)(buffer+ix) );
-            CPPUNIT_ASSERT( tempShort1 == stringVal2.size() );
-            ix += sizeof( tempShort1 );
-            std::string tempStr2( (char*)(buffer+ix), tempShort1 );            
-            CPPUNIT_ASSERT( tempStr2 == stringVal2 );
-            ix += stringVal2.size();
 
 		}
 
