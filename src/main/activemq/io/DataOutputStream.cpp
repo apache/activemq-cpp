@@ -89,8 +89,8 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
     try {
         unsigned char ivalue = 0;
         value == true ? ivalue = 1 : ivalue = 0;
-        ivalue = Endian::byteSwap( ivalue );
-        write( ( unsigned char* )&ivalue, sizeof( ivalue ) );
+
+        write( ivalue );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -99,8 +99,7 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        write( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -108,14 +107,18 @@ void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeShort( short value ) throw ( IOException ) {
-    writeUnsignedShort( (unsigned short)value );
+    try {
+        writeUnsignedShort( (unsigned short)value );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeUnsignedShort( unsigned short value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        write( (unsigned char)( (value & 0xFF00) >> 8 ) );
+        write( (unsigned char)( (value & 0x00FF) >> 0 ) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -124,8 +127,7 @@ void DataOutputStream::writeUnsignedShort( unsigned short value ) throw ( IOExce
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeChar( char value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( ( unsigned char )value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        write( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -134,8 +136,10 @@ void DataOutputStream::writeChar( char value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeInt( int value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( ( unsigned int )value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        write( (unsigned char)( (value & 0xFF000000) >> 24 ) );
+        write( (unsigned char)( (value & 0x00FF0000) >> 16 ) );
+        write( (unsigned char)( (value & 0x0000FF00) >> 8 ) );
+        write( (unsigned char)( (value & 0x000000FF) >> 0 ) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -144,8 +148,14 @@ void DataOutputStream::writeInt( int value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( ( unsigned long long )value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        write( (unsigned char)( (value & 0xFF00000000000000ULL) >> 56 ) );
+        write( (unsigned char)( (value & 0x00FF000000000000ULL) >> 48 ) );
+        write( (unsigned char)( (value & 0x0000FF0000000000ULL) >> 40 ) );
+        write( (unsigned char)( (value & 0x000000FF00000000ULL) >> 32 ) );
+        write( (unsigned char)( (value & 0x00000000FF000000ULL) >> 24 ) );
+        write( (unsigned char)( (value & 0x0000000000FF0000ULL) >> 16 ) );
+        write( (unsigned char)( (value & 0x000000000000FF00ULL) >> 8 ) );
+        write( (unsigned char)( (value & 0x00000000000000FFULL) >> 0 ) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -154,8 +164,7 @@ void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        this->writeInt( *((unsigned int*)&value) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -164,8 +173,7 @@ void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
     try {
-        value = Endian::byteSwap( value );
-        write( ( unsigned char* )&value, sizeof( value ) );
+        writeLong( *((unsigned long long*)&value) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
