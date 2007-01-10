@@ -41,9 +41,9 @@ namespace io{
 		void test(){
 			
 			unsigned char byteVal = (unsigned char)'T';
-			uint16_t shortVal = 5;
-			uint32_t intVal = 10000;
-			uint64_t longVal = 1000000000;
+			unsigned short shortVal = 5;
+			unsigned int intVal = 10000;
+			unsigned long long longVal = 1000000000;
 			float floatVal = 10.0f;
 			double doubleVal = 100.0;
 			unsigned char arrayVal[3] = {
