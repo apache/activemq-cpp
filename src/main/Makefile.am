@@ -116,6 +116,9 @@ h_sources = \
     activemq/io/ByteArrayOutputStream.h \
     activemq/io/OutputStream.h \
     activemq/io/IOException.h \
+    activemq/io/FilterInputStream.h \
+    activemq/io/FilterOutputStream.h \
+    activemq/io/EOFException.h \
     activemq/concurrent/Lock.h \
     activemq/concurrent/ThreadPool.h \
     activemq/concurrent/Thread.h \
@@ -136,6 +139,8 @@ h_sources = \
     activemq/exceptions/UnsupportedOperationException.h \
     activemq/exceptions/NullPointerException.h \
     activemq/exceptions/IllegalArgumentException.h \
+    activemq/exceptions/IllegalStateException.h \
+    activemq/exceptions/IndexOutOfBoundsException.h \
     activemq/connector/ConsumerMessageListener.h \
     activemq/connector/ConnectorException.h \
     activemq/connector/TransactionInfo.h \
