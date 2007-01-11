@@ -17,6 +17,8 @@
 #ifndef ACTIVEMQ_UTIL_ENDIAN_H
 #define ACTIVEMQ_UTIL_ENDIAN_H
 
+#include <activemq/util/Config.h>
+
 namespace activemq{
 namespace util{
     
@@ -82,16 +84,18 @@ namespace util{
                    (((unsigned long long)value & 0x000000000000FF00ULL ) << 40 ) |
                    (((unsigned long long)value & 0x00000000000000FFULL ) << 56 );
         }
-        
+
         static float byteSwap( float value ){
 
             #ifdef WORDS_BIGENDIAN
                 return value;
             #endif
 
-            unsigned int lvalue = *((unsigned int*)&value);
+            unsigned int lvalue = 0;
+            memcpy( &lvalue, &value, sizeof( float ) );
             lvalue = byteSwap( lvalue );
-            return *((float*)&lvalue);
+            memcpy( &value, &lvalue, sizeof( unsigned int ) );
+            return value;
         }
         
         static double byteSwap( double value ){
@@ -100,9 +104,11 @@ namespace util{
                 return value;
             #endif
 
-            unsigned long long lvalue = *((unsigned long long*)&value);
+            unsigned long long lvalue = 0;
+            memcpy( &lvalue, &value, sizeof( double ) );
             lvalue = byteSwap( lvalue );
-            return *((double*)&lvalue);
+            memcpy( &value, &lvalue, sizeof( unsigned long long ) );
+            return value;
         }
     };
     
