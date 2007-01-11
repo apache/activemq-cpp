@@ -213,8 +213,8 @@ namespace commands{
             dos.writeBoolean( true );
             dos.writeByte( 1 );
             dos.writeChar( 'a' );
-            dos.writeFloat( 2.0f );
-            dos.writeDouble( 3.0 );
+            dos.writeFloat( 123456.789012f );
+            dos.writeDouble( 123456.789012 );
             dos.writeShort( 4 );
             dos.writeUnsignedShort( 5 );
             dos.writeInt( 6 );
@@ -262,7 +262,7 @@ namespace commands{
             } catch( exceptions::IllegalStateException& e ){}
             
             try{
-                cmd.writeDouble( 2.0 );
+                cmd.writeDouble( 1.0 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
             
@@ -296,8 +296,8 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.readBoolean() == true );
             CPPUNIT_ASSERT( cmd.readByte() == 1 );
             CPPUNIT_ASSERT( cmd.readChar() == 'a' );
-            CPPUNIT_ASSERT( cmd.readFloat() == 2.0f );
-            CPPUNIT_ASSERT( cmd.readDouble() == 3.0 );
+            CPPUNIT_ASSERT( cmd.readFloat() == 123456.789012f );
+            CPPUNIT_ASSERT( cmd.readDouble() == 123456.789012 );
             CPPUNIT_ASSERT( cmd.readShort() == 4 );
             CPPUNIT_ASSERT( cmd.readUnsignedShort() == 5 );
             CPPUNIT_ASSERT( cmd.readInt() == 6 );
@@ -372,8 +372,8 @@ namespace commands{
             cmd.writeBoolean( true );
             cmd.writeByte( 1 );
             cmd.writeChar( 'a' );
-            cmd.writeFloat( 2.0f );
-            cmd.writeDouble( 3.0 );
+            cmd.writeFloat( 123456.789012f );
+            cmd.writeDouble( 123456.789012 );
             cmd.writeShort( 4 );
             cmd.writeUnsignedShort( 5 );
             cmd.writeInt( 6 );
@@ -386,8 +386,8 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.readBoolean() == true );
             CPPUNIT_ASSERT( cmd.readByte() == 1 );
             CPPUNIT_ASSERT( cmd.readChar() == 'a' );
-            CPPUNIT_ASSERT( cmd.readFloat() == 2.0f );
-            CPPUNIT_ASSERT( cmd.readDouble() == 3.0 );
+            CPPUNIT_ASSERT( cmd.readFloat() == 123456.789012f );
+            CPPUNIT_ASSERT( cmd.readDouble() == 123456.789012 );
             CPPUNIT_ASSERT( cmd.readShort() == 4 );
             CPPUNIT_ASSERT( cmd.readUnsignedShort() == 5 );
             CPPUNIT_ASSERT( cmd.readInt() == 6 );
