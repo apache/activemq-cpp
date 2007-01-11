@@ -88,12 +88,13 @@ AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
+    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing" 
     LIBS=""
     ;;
 
   *cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
-    CFLAGS="$CFLAGS -pthread" 
+    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing" 
     LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
     
@@ -101,7 +102,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CFLAGS="$CFLAGS -pthread" 
+    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing"
     LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
     ;;
     
@@ -110,7 +111,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CFLAGS="$CFLAGS -pthread" 
+    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing" 
     LIBS="$LIBS -lm -lpthread -luuid"
 esac
 
