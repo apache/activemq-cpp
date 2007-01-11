@@ -141,13 +141,6 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
         value |= (byte1 << 8 | byte2 << 0);
         
         return value;
-
-        //char* temp = (char*)&value;
-        //
-        //return (short)Endian::byteSwap( value );
-
-        //this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned short ) );
-        //return Endian::byteSwap( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -166,10 +159,6 @@ unsigned short DataInputStream::readUnsignedShort()
         value |= (byte1 << 8 | byte2 << 0);
         
         return value;
-
-//        unsigned short value;
-//        this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned short ) );
-//        return Endian::byteSwap( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -189,10 +178,6 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
         value |= (byte1 << 24 | byte2 << 16 | byte3 << 8 | byte4 << 0);
         
         return value;
-
-//        unsigned int value;    
-//        this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned int ) );
-//        return (int)Endian::byteSwap( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -202,13 +187,10 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
     try {
 
-        unsigned long long value = this->readLong();
-        
-        return *((double*)&value);
-
-//        double value;
-//        this->readFully( ( unsigned char* )&value, 0, sizeof( double ) );
-//        return Endian::byteSwap( value );
+        unsigned long long lvalue = this->readLong();
+        double value = 0.0;
+        memcpy( &value, &lvalue, sizeof( unsigned long long ) );        
+        return value;
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -218,20 +200,10 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
     try {
 
-        unsigned int value = 0;
-
-        unsigned char byte1 = this->readByte();
-        unsigned char byte2 = this->readByte();
-        unsigned char byte3 = this->readByte();
-        unsigned char byte4 = this->readByte();
-
-        value |= (byte1 << 24 | byte2 << 16 | byte3 << 8 | byte4 << 0);
-
-        return *((float*)&value);
-
-//        float value;
-//        this->readFully( ( unsigned char* )&value, 0, sizeof( float ) );
-//        return Endian::byteSwap( value );
+        unsigned int lvalue = this->readInt();
+        float value = 0.0f;
+        memcpy( &value, &lvalue, sizeof( unsigned int ) );
+        return value;
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -257,10 +229,6 @@ long long DataInputStream::readLong()
                   byte5 << 24 | byte6 << 16 | byte7 << 8  | byte8 << 0 );
 
         return value;
-
-//        unsigned long long value;
-//        this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned long long ) );
-//        return (long long)Endian::byteSwap( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -309,7 +277,7 @@ std::string DataInputStream::readUTF()
 void DataInputStream::readFully( std::vector< unsigned char >& buffer ) 
     throw ( io::IOException, io::EOFException ) {
     try {
-        readFully( &buffer[0], 0, buffer.size() );
+        this->readFully( &buffer[0], 0, buffer.size() );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
