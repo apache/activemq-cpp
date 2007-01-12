@@ -82,8 +82,6 @@ namespace io{
 
             size = sizeof(float);
             float tempFloat = util::Endian::byteSwap(floatVal);
-            unsigned int x1 = *((unsigned int*)&floatVal );
-            unsigned int x2 = *((unsigned int*)&tempFloat );
             memcpy( (char*)(buffer+ix), (char*)&tempFloat, size );
             ix += size;
 
