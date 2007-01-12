@@ -159,7 +159,7 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     ::setsockopt(socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) );
       
     status = ::bind(socketHandle,
-             (sockaddr *)&bind_addr, sizeof( bind_addr ));
+             reinterpret_cast<sockaddr*>(&bind_addr), sizeof( bind_addr ));
 
     if( status < 0 ){
         close();
@@ -205,7 +205,7 @@ Socket* ServerSocket::accept () throw (SocketException)
     #endif
 
     SocketHandle ss_socket_handle = 
-        ::accept( socketHandle, (struct sockaddr*)&temp, &temp_len );
+        ::accept( socketHandle, reinterpret_cast<struct sockaddr*>(&temp), &temp_len );
     if( ss_socket_handle < 0 ) {
         throw SocketException( __FILE__, __LINE__, 
             "ServerSocket::accept- %s", ::strerror( errno ) );
