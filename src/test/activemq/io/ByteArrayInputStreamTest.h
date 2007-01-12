@@ -56,7 +56,7 @@ namespace io{
          char c = stream_a.read();
          char d = stream_a.read();
 
-         printf("a=%c, b=%c, c=%c, d=%c\n", a, b, c, d );
+         //printf("a=%c, b=%c, c=%c, d=%c\n", a, b, c, d );
          CPPUNIT_ASSERT( a == 't' && b == 'e' && c == 's' && d == 't' );
          CPPUNIT_ASSERT( stream_a.available() == 0 );
 
