@@ -580,7 +580,7 @@ namespace concurrent{
                         numComplete++;
                     }  
                 }
-                printf("numComplete: %d, numThreads: %d\n", numComplete, numThreads );
+                //printf("numComplete: %d, numThreads: %d\n", numComplete, numThreads );
                 CPPUNIT_ASSERT( numComplete == numThreads );
              
                 // Delete all the threads.
