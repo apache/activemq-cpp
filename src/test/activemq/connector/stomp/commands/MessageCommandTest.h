@@ -216,6 +216,13 @@ namespace commands{
         void testFailedGetProperties(){
             MessageCommand cmd;
             
+            // Test getting a string property that doesn't exist. 
+            try {
+                std::string str = cmd.getStringProperty( "text" );
+            } catch( cms::CMSException& e){
+                CPPUNIT_ASSERT(false);
+            }
+            
             // Test accessing non-existent property
             try{
                 cmd.getIntProperty("string");

@@ -209,7 +209,7 @@ namespace commands{
         virtual std::string getStringProperty( const std::string& name ) const 
             throw( cms::CMSException ){
             testProperty( name );
-            return getPropertyValue( name );
+            return getPropertyValue( name, "" );
         }
         
         virtual void setBooleanProperty( const std::string& name,
