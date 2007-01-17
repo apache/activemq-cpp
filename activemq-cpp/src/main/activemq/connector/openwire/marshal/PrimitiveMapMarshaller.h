@@ -43,7 +43,7 @@ namespace marshal{
          * @param Reference to a byte array to house the data
          * @throws CMSException
          */
-        static void marshal( const util::PrimitiveMap& map, 
+        static void marshal( const util::PrimitiveMap* map, 
                              std::vector<unsigned char>& dest ) throw ( cms::CMSException );        
 
         /**
