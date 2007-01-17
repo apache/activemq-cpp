@@ -18,6 +18,8 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 
+#include <activemq/util/PrimitiveMap.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -34,6 +36,24 @@ namespace marshal{
     
         PrimitiveMapMarshaller();
         virtual ~PrimitiveMapMarshaller();
+        
+        /**
+         * Static Marshal of a primitive map object
+         * @param Map to Marshal
+         * @param Reference to a byte array to house the data
+         * @throws CMSException
+         */
+        static void marshal( const util::PrimitiveMap& map, 
+                             std::vector<unsigned char>& dest ) throw ( cms::CMSException );        
+
+        /**
+         * Static Map Unmarshaler, takes an array of bytes and returns a 
+         * new instance of a PrimitiveMap object.  Caller owns the pointer.
+         * @param reference to a byte array to read data from.
+         * @return newly create PrimitiveMap with unmarshaled data.
+         */
+        static PrimitiveMap* unmarshal( const std::vector<unsigned char>& src ) 
+            throw ( cms::CMSException );
         
     };
 
