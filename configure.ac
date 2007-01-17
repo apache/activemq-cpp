@@ -150,7 +150,7 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
+## DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
 
 
 ## -----------------------------------------------------
