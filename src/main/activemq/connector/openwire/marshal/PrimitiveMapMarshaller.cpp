@@ -33,10 +33,15 @@ PrimitiveMapMarshaller::~PrimitiveMapMarshaller()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap& map, 
+void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map, 
                                       std::vector<unsigned char>& dest ) 
                                         throw ( cms::CMSException ) 
-{}
+{
+    if( map != NULL ) {
+    }
+    
+    return dest;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::PrimitiveMap* unmarshal( 
