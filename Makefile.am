@@ -29,8 +29,8 @@ DIST_SUBDIRS = src/main
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = activemq-cpp.pc
 
-ACLOCAL_AMFLAGS = -I m4
+## ACLOCAL_AMFLAGS = -I m4
 
-include doxygen-include.am
+## include doxygen-include.am
 
 EXTRA_DIST=autogen.sh $(DX_CONFIG) doc/html
