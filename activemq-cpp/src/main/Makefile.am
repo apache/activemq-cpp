@@ -52,6 +52,7 @@ cc_sources = \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
+    activemq/connector/openwire/utils/PrimitiveMapMarshaller.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/network/SocketInputStream.cpp \
     activemq/network/ServerSocket.cpp \
@@ -188,6 +189,7 @@ h_sources = \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
+    activemq/connector/openwire/utils/PrimitiveMapMarshaller.h \
     activemq/connector/ConnectorFactoryMap.h \
     activemq/connector/Connector.h \
     activemq/connector/ConnectorFactoryMapRegistrar.h \
