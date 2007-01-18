@@ -122,7 +122,7 @@ namespace commands{
             
             util::Properties& props = getFrame().getProperties();
             std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
-            for( int ix=0; ix<propArray.size(); ++ix ){
+            for( unsigned int ix=0; ix<propArray.size(); ++ix ){
                 
                 const std::string& name = propArray[ix].first;
                 
@@ -143,7 +143,7 @@ namespace commands{
             
             const util::Properties& props = getFrame().getProperties();
             std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
-            for( int ix=0; ix<propArray.size(); ++ix ){
+            for( unsigned int ix=0; ix<propArray.size(); ++ix ){
                 
                 const std::string& name = propArray[ix].first;
                 

@@ -523,7 +523,7 @@ namespace marshal{
                     int rc = 0;
                     bs->writeBoolean( true );
                     rc += 2;
-                    for( int i = 0; i < objects.size(); ++i ) {
+                    for( unsigned int i = 0; i < objects.size(); ++i ) {
                         rc += tightMarshalNestedObject1( 
                                 wireFormat, objects[i], bs );
                     }
@@ -561,7 +561,7 @@ namespace marshal{
                 if( bs->readBoolean() ) {
                     
                     dataOut->writeShort( (short)objects.size() );
-                    for( int i = 0; i < objects.size(); ++i ) {
+                    for( unsigned int i = 0; i < objects.size(); ++i ) {
                         tightMarshalNestedObject2(
                             wireFormat, objects[i], dataOut, bs );
                     }
@@ -593,7 +593,7 @@ namespace marshal{
                 if( !objects.empty() ) {
                     
                     dataOut->writeShort( (short)objects.size() );
-                    for( int i = 0; i < objects.size(); ++i ) {
+                    for( unsigned int i = 0; i < objects.size(); ++i ) {
                         looseMarshalNestedObject(
                             wireFormat, objects[i], dataOut );
                     }

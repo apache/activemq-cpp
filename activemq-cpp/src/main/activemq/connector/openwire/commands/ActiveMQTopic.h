@@ -74,7 +74,7 @@ namespace commands{
          * @return The Destination Type
          */
         virtual cms::Destination::DestinationType getDestinationType(void) const {
-            cms::Destination::TOPIC;
+            return cms::Destination::TOPIC;
         }
         
         /**
