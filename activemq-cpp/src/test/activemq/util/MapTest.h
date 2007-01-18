@@ -29,22 +29,27 @@ namespace util{
     class MapTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( MapTest );
-        CPPUNIT_TEST( testContains );
+        CPPUNIT_TEST( testContainsKey );
         CPPUNIT_TEST( testClear );
-        CPPUNIT_TEST( testCount );
+        CPPUNIT_TEST( testSize );
         CPPUNIT_TEST( testValue );
         CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testContiansValue );
+        CPPUNIT_TEST( testIsEmpty );
         CPPUNIT_TEST_SUITE_END();
         
     public:
     	MapTest();
     	virtual ~MapTest();
         
-        void testContains();
+        void testContainsKey();
         void testClear();
-        void testCount();
+        void testSize();
         void testValue();
         void testRemove();
+        void testContiansValue();
+        void testIsEmpty();
+        
     };
 
 }}

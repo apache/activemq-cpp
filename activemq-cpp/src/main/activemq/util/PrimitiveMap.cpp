@@ -40,13 +40,13 @@ void PrimitiveMap::clear()
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::contains( const string& key ) const{
     
-    return valueNodeMap.contains( key );
+    return valueNodeMap.containsKey( key );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveMap::count() const{
+unsigned int PrimitiveMap::size() const{
     
-    return valueNodeMap.count();
+    return valueNodeMap.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

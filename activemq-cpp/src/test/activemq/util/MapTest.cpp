@@ -31,15 +31,15 @@ MapTest::~MapTest()
 {
 }
 
-void MapTest::testContains(){
+void MapTest::testContainsKey(){
     
     Map<string, bool> boolMap;
-    CPPUNIT_ASSERT(boolMap.contains("bob") == false);
+    CPPUNIT_ASSERT(boolMap.containsKey("bob") == false);
     
     boolMap.setValue( "bob", true );
     
-    CPPUNIT_ASSERT(boolMap.contains("bob") == true );
-    CPPUNIT_ASSERT(boolMap.contains("fred") == false );
+    CPPUNIT_ASSERT(boolMap.containsKey("bob") == true );
+    CPPUNIT_ASSERT(boolMap.containsKey("fred") == false );
 }
 
 void MapTest::testClear(){
@@ -48,26 +48,31 @@ void MapTest::testClear(){
     boolMap.setValue( "bob", true );
     boolMap.setValue( "fred", true );
     
-    CPPUNIT_ASSERT(boolMap.count() == 2 );
-    
+    CPPUNIT_ASSERT(boolMap.size() == 2 );
     boolMap.clear();
-    
-    CPPUNIT_ASSERT(boolMap.count() == 0 );
+    CPPUNIT_ASSERT(boolMap.size() == 0 );
 }
 
-void MapTest::testCount(){
+void MapTest::testIsEmpty(){
+    
+    Map<string, bool> boolMap;
+    boolMap.setValue( "bob", true );
+    boolMap.setValue( "fred", true );
+
+    CPPUNIT_ASSERT(boolMap.isEmpty() == false );
+    boolMap.clear();
+    CPPUNIT_ASSERT(boolMap.isEmpty() == true );
+}
+
+void MapTest::testSize(){
     
     Map<string, bool> boolMap;
     
-    CPPUNIT_ASSERT(boolMap.count() == 0 );
-    
+    CPPUNIT_ASSERT(boolMap.size() == 0 );
     boolMap.setValue( "bob", true );
-    
-    CPPUNIT_ASSERT(boolMap.count() == 1 );
-    
+    CPPUNIT_ASSERT(boolMap.size() == 1 );
     boolMap.setValue( "fred", true );
-    
-    CPPUNIT_ASSERT(boolMap.count() == 2 );
+    CPPUNIT_ASSERT(boolMap.size() == 2 );
 }
 
 void MapTest::testValue(){
@@ -92,8 +97,17 @@ void MapTest::testRemove(){
     Map<string, bool> boolMap;
     
     boolMap.setValue( "fred", true );    
-    CPPUNIT_ASSERT( boolMap.contains("fred") == true );
+    CPPUNIT_ASSERT( boolMap.containsKey("fred") == true );
     boolMap.remove( "fred" );
-    CPPUNIT_ASSERT( boolMap.contains("fred") == false );    
+    CPPUNIT_ASSERT( boolMap.containsKey("fred") == false );    
 }
 
+void MapTest::testContiansValue(){
+    Map<string, bool> boolMap;
+    
+    boolMap.setValue( "fred", true );
+    boolMap.setValue( "fred1", false );
+    CPPUNIT_ASSERT( boolMap.containsValue(true) == true );
+    boolMap.remove( "fred" );
+    CPPUNIT_ASSERT( boolMap.containsValue(true) == false );
+}
