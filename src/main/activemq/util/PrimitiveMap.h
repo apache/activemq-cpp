@@ -350,7 +350,7 @@ namespace util{
          * @returns the concrete Value
          * @throws NoSuchElementException
          */ 
-        const ValueNode& getValue( const std::string& key ) const
+        ValueNode getValue( const std::string& key ) const
             throw( activemq::exceptions::NoSuchElementException );
 
     };

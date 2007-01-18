@@ -133,7 +133,7 @@ namespace commands{
          */
         virtual std::string getQueueName(void) const 
             throw( cms::CMSException ) {
-                this->getPhysicalName();
+                return this->getPhysicalName();
         }
             
     };

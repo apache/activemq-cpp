@@ -526,7 +526,7 @@ int BaseDataStreamMarshaller::tightMarshalBrokerError1(
 
                 rc += 2;
                 
-                for( int i = 0; i < error->getStackTraceElements().size(); ++i ) {
+                for( unsigned int i = 0; i < error->getStackTraceElements().size(); ++i ) {
                     
                     const BrokerError::StackTraceElement* element = 
                         error->getStackTraceElements()[i];
@@ -802,7 +802,7 @@ std::string BaseDataStreamMarshaller::toHexFromBytes(
 {
     std::string buffer = "";
     
-    for( int i = 0; i < data.size(); i++ )
+    for( unsigned int i = 0; i < data.size(); i++ )
     {
         buffer.append( hexTable[ data[i] ] );
     }

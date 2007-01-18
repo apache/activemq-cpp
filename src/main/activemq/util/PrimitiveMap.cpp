@@ -212,7 +212,7 @@ vector<PrimitiveMap::ValueNode> PrimitiveMap::getValues() const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const PrimitiveMap::ValueNode& PrimitiveMap::getValue( const std::string& key ) const
+PrimitiveMap::ValueNode PrimitiveMap::getValue( const std::string& key ) const
     throw ( activemq::exceptions::NoSuchElementException ) {
 
     return valueNodeMap.getValue( key );
