@@ -165,13 +165,17 @@ namespace core{
                     new connector::stomp::StompConnector( 
                         transport, *properties );
 
-                connector->start();
+                connector->start();                
                 
                 ActiveMQConnection connection( 
                     new ActiveMQConnectionData(
                         connector, transport, properties) );
 
+                // First - make sure exceptions are working.
                 connection.setExceptionListener( &exListener );
+                CPPUNIT_ASSERT( exListener.caughtOne == false );
+                dTransport->fireException( exceptions::ActiveMQException( __FILE__, __LINE__, "test" ) );
+                CPPUNIT_ASSERT( exListener.caughtOne == true );                                
                         
                 cms::Session* session1 = connection.createSession();
                 cms::Session* session2 = connection.createSession();
@@ -242,6 +246,7 @@ namespace core{
                 session3->close();
                 connection.close();
 
+                exListener.caughtOne = false;
                 consumerListener->onConsumerMessage( &consumer, cmd );
                 CPPUNIT_ASSERT( exListener.caughtOne == true );
 

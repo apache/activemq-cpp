@@ -46,12 +46,23 @@ namespace stomp{
         CPPUNIT_TEST( testProducers );
         CPPUNIT_TEST( testCommand );
         CPPUNIT_TEST( testSendingCommands );
+        CPPUNIT_TEST( testException );
         CPPUNIT_TEST_SUITE_END();
 
     public:
     
-    	StompConnectorTest() {}
-    	virtual ~StompConnectorTest() {}
+        StompConnectorTest() {}
+        virtual ~StompConnectorTest() {}
+        
+        class MyExceptionListener : public cms::ExceptionListener{
+            public:
+                int num;
+                MyExceptionListener(){ num=0;}
+                virtual ~MyExceptionListener(){}
+                virtual void onException( const cms::CMSException& ex ){
+                    num++;
+                }
+        };        
         
         class MyCommandListener : public transport::CommandListener{
         public:
@@ -362,7 +373,32 @@ namespace stomp{
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
         }
 
-    };
+        void testException()
+        {
+            std::string connectionId = "testConnectionId";
+            StompResponseBuilder responseBuilder("testConnectionId");
+            transport::DummyTransport transport( &responseBuilder );
+            MyExceptionListener exListener;
+            util::SimpleProperties properties;
+            
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            
+            connector->setExceptionListener(&exListener);
+            
+            connector->start();
+            
+            // Initiate an exception from the transport.
+            transport.fireException( exceptions::ActiveMQException(__FILE__, __LINE__, "test") );
+            
+            CPPUNIT_ASSERT( exListener.num == 1 );
+
+            // Delete the connector here - this assures the propery order
+            // of destruction.
+            delete connector;
+        }
+    };    
 
 }}}
 

@@ -37,12 +37,14 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData)
     this->closed = false;
     this->exceptionListener = NULL;
 
-    // We want to be the sink for all messages from the Connector
-    connectionData->getConnector()->setConsumerMessageListener( this );
+    // Register for messages and exceptions from the connector.
+    Connector* connector = connectionData->getConnector();
+    connector->setConsumerMessageListener( this );
+    connector->setExceptionListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnection::~ActiveMQConnection(void)
+ActiveMQConnection::~ActiveMQConnection()
 {
     try
     {
@@ -53,7 +55,7 @@ ActiveMQConnection::~ActiveMQConnection(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession(void) 
+cms::Session* ActiveMQConnection::createSession() 
     throw ( cms::CMSException )
 {
     try
@@ -81,13 +83,13 @@ cms::Session* ActiveMQConnection::createSession(
 }
    
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnection::getClientId(void) const
+std::string ActiveMQConnection::getClientId() const
 {
    return connectionData->getConnector()->getClientId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::close(void) throw ( cms::CMSException )
+void ActiveMQConnection::close() throw ( cms::CMSException )
 {
     try
     {
@@ -113,7 +115,7 @@ void ActiveMQConnection::close(void) throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::start(void) throw ( cms::CMSException )
+void ActiveMQConnection::start() throw ( cms::CMSException )
 {
     // This starts or restarts the delivery of all incomming messages
     // messages delivered while this connection is stopped are dropped
@@ -122,7 +124,7 @@ void ActiveMQConnection::start(void) throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::stop(void) throw ( cms::CMSException )
+void ActiveMQConnection::stop() throw ( cms::CMSException )
 {
     // Once current deliveries are done this stops the delivery of any
     // new messages.
@@ -207,5 +209,13 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
         fire( ex );            
     }
 
-}                                             
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::onException( const CMSException& ex ){
+    
+    if( exceptionListener != NULL ){
+        exceptionListener->onException( ex );
+    }
+}                                        
 
