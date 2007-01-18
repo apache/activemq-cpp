@@ -343,6 +343,16 @@ namespace util{
          * @return the entire set of values in this map as a std::vector.
          */
         virtual std::vector<ValueNode> getValues() const;
+        
+        /**
+         * Get a Value from the Map, or throws a NoSuchElementException
+         * @param key - string key to lookup
+         * @returns the concrete Value
+         * @throws NoSuchElementException
+         */ 
+        const ValueNode& getValue( const std::string& key ) const
+            throw( activemq::exceptions::NoSuchElementException );
+
     };
 
 }}
