@@ -37,7 +37,8 @@ namespace core{
 
     class ActiveMQConnection : 
         public cms::Connection,
-        public connector::ConsumerMessageListener
+        public connector::ConsumerMessageListener,
+        public cms::ExceptionListener
     {
     private:
    
@@ -68,7 +69,7 @@ namespace core{
          */       
         ActiveMQConnection( ActiveMQConnectionData* connectionData );
 
-        virtual ~ActiveMQConnection(void);
+        virtual ~ActiveMQConnection();
    
     public:   // Connection Interface Methods
    
@@ -76,7 +77,7 @@ namespace core{
          * Creates a new Session to work for this Connection
          * @throws CMSException
          */
-        virtual cms::Session* createSession(void) throw ( cms::CMSException );
+        virtual cms::Session* createSession() throw ( cms::CMSException );
       
         /**
          * Creates a new Session to work for this Connection using the
@@ -91,13 +92,13 @@ namespace core{
          * Get the Client Id for this session
          * @return string version of Client Id
          */
-        virtual std::string getClientId(void) const;
+        virtual std::string getClientId() const;
       
         /**
          * Retrieves the Connection Data object for this object.
          * @return pointer to a connection data object.
          */
-        virtual ActiveMQConnectionData* getConnectionData(void){
+        virtual ActiveMQConnectionData* getConnectionData(){
             return connectionData;
         } 
          
@@ -105,7 +106,7 @@ namespace core{
          * Gets the registered Exception Listener for this connection
          * @return pointer to an exception listnener or NULL
          */
-        virtual cms::ExceptionListener* getExceptionListener(void) const{
+        virtual cms::ExceptionListener* getExceptionListener() const{
             return exceptionListener; };
       
         /**
@@ -113,25 +114,26 @@ namespace core{
          * @param listener pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener( cms::ExceptionListener* listener ){
-            exceptionListener = listener; };
+            exceptionListener = listener; 
+        };
          
         /**
          * Close the currently open connection
          * @throws CMSException
          */
-        virtual void close(void) throw ( cms::CMSException );
+        virtual void close() throw ( cms::CMSException );
       
         /**
          * Starts or (restarts) a connections delivery of incoming messages
          * @throws CMSException
          */
-        virtual void start(void) throw ( cms::CMSException );
+        virtual void start() throw ( cms::CMSException );
       
         /**
          * Stop the flow of incoming messages
          * @throws CMSException
          */
-        virtual void stop(void) throw ( cms::CMSException );
+        virtual void stop() throw ( cms::CMSException );
 
     public:   // ActiveMQConnection Methods
    
@@ -151,6 +153,26 @@ namespace core{
          */
         virtual void removeMessageListener( const unsigned int consumerId );
 
+    public:     // ExceptionListener interface methods
+    
+        /**
+         * Called when an exception occurs.  Once notified of an exception
+         * the caller should no longer use the resource that generated the
+         * exception.
+         * @param Exception Object that occurred.
+         */
+        virtual void onException( const cms::CMSException& ex );
+        
+    public:     // ConsumerMessageListener interface methods
+    
+        /**
+         * Called to dispatch a message to a particular consumer.
+         * @param consumer the target consumer of the dispatch.
+         * @param message the message to be dispatched.
+         */
+        virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
+                                        core::ActiveMQMessage* message );
+                                                                                
     private:
    
         /**
@@ -167,15 +189,7 @@ namespace core{
                 }
                 catch(...){}
             }
-        }
-
-        /**
-         * Called to dispatch a message to a particular consumer.
-         * @param consumer the target consumer of the dispatch.
-         * @param message the message to be dispatched.
-         */
-        virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
-                                        core::ActiveMQMessage* message );
+        }        
    
     };
 
