@@ -52,12 +52,26 @@ namespace util{
          * @param key The key to look up.
          * @return true if this map contains the value, otherwise false.
          */
-        virtual bool contains( const K& key ) const;
+        virtual bool containsKey( const K& key ) const;
         
+        /**
+         * Indicates whether or this map contains a value for the
+         * given value, i.e. they are equal, this is done by operator==
+         * so the types must pass equivalence testing in this manner.
+         * @param value The Value to look up.
+         * @return true if this map contains the value, otherwise false.
+         */
+        virtual bool containsValue( const V& value ) const;
+
+        /**
+         * @return if the Map contains any element or not, TRUE or FALSE
+         */
+        virtual bool isEmpty() const;
+
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual int count() const;
+        virtual unsigned int size() const;
         
         /**
          * Gets the value for the specified key.
@@ -101,7 +115,7 @@ namespace util{
     
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>
-    bool Map<K,V>::contains(const K& key) const{
+    bool Map<K,V>::containsKey(const K& key) const{
         typename std::map<K,V>::const_iterator iter;
         iter = valueMap.find(key);
         return iter != valueMap.end();
@@ -109,7 +123,31 @@ namespace util{
     
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>
-    int Map<K,V>::count() const{
+    bool Map<K,V>::containsValue( const V& value ) const {
+
+        if( valueMap.empty() ){
+            return false;
+        }
+
+        typename std::map<K,V>::const_iterator iter = valueMap.begin();        
+        for( ; iter != valueMap.end(); ++iter ){
+            if( (*iter).second == value ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename K, typename V>
+    bool Map<K,V>::isEmpty() const{
+        return valueMap.empty();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename K, typename V>
+    unsigned int Map<K,V>::size() const{
         return valueMap.size();
     }
     

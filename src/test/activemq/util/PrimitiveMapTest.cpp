@@ -160,15 +160,15 @@ void PrimitiveMapTest::testRemove(){
 void PrimitiveMapTest::testCount(){
     
     PrimitiveMap pmap;
-    CPPUNIT_ASSERT( pmap.count() == 0 );
+    CPPUNIT_ASSERT( pmap.size() == 0 );
     pmap.setInt("int", 5 );
-    CPPUNIT_ASSERT( pmap.count() == 1);
+    CPPUNIT_ASSERT( pmap.size() == 1);
     pmap.setFloat( "float", 5.5f );
-    CPPUNIT_ASSERT( pmap.count() == 2 );
+    CPPUNIT_ASSERT( pmap.size() == 2 );
     pmap.setInt("int2", 6 );
-    CPPUNIT_ASSERT( pmap.count() == 3 );
+    CPPUNIT_ASSERT( pmap.size() == 3 );
     pmap.remove("int");
-    CPPUNIT_ASSERT( pmap.count() == 2 );
+    CPPUNIT_ASSERT( pmap.size() == 2 );
 }
 
 void PrimitiveMapTest::testClear(){
@@ -179,7 +179,7 @@ void PrimitiveMapTest::testClear(){
     pmap.setInt("int2", 6 );
     
     pmap.clear();
-    CPPUNIT_ASSERT( pmap.count() == 0 );
+    CPPUNIT_ASSERT( pmap.size() == 0 );
     
     try{
         pmap.getInt("int");

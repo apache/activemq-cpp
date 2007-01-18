@@ -44,8 +44,8 @@ namespace util{
             LONG_TYPE               = 6,
             DOUBLE_TYPE             = 7,
             FLOAT_TYPE              = 8,
-            STRING_TYPE             = 9
-            //BYTE_ARRAY_TYPE         = 10,
+            STRING_TYPE             = 9,
+            BYTE_ARRAY_TYPE         = 10
             //MAP_TYPE                = 11,
             //LIST_TYPE               = 12,
             //BIG_STRING_TYPE         = 13
@@ -65,6 +65,7 @@ namespace util{
             double doubleValue;
             float floatValue;
             std::string* stringValue;
+            std::vector<unsigned char>* byteArrayValue;
         };
     
         /**
@@ -105,11 +106,54 @@ namespace util{
                 
                 if( valueType == STRING_TYPE && node.value.stringValue != NULL ){
                     value.stringValue = new std::string( *node.value.stringValue );
+                } else if( valueType == BYTE_ARRAY_TYPE && node.value.byteArrayValue != NULL ){
+                    value.byteArrayValue = new std::vector<unsigned char>( *node.value.byteArrayValue );
                 } else{
                     value = node.value;
                 }
                 
                 return *this;
+            }
+            
+            bool operator==( const ValueNode& node ) const{
+
+                if( valueType != node.valueType ) {
+                     return false; 
+                }
+
+                if( valueType == BOOLEAN_TYPE &&
+                    value.boolValue == node.value.boolValue ) {
+                        return true;
+                } else if( valueType == BYTE_TYPE &&
+                    value.byteValue == node.value.byteValue ) {
+                        return true;
+                } else if( valueType == CHAR_TYPE &&
+                    value.charValue == node.value.charValue ) {
+                        return true;
+                } else if( valueType == SHORT_TYPE &&
+                    value.shortValue == node.value.shortValue ) {
+                        return true;
+                } else if(  valueType == INTEGER_TYPE &&
+                    value.intValue == node.value.intValue ) {
+                        return true;
+                } else if( valueType == LONG_TYPE &&
+                    value.longValue == node.value.longValue ) {
+                        return true;
+                } else if( valueType == DOUBLE_TYPE &&
+                    value.doubleValue == node.value.doubleValue ) {
+                        return true;
+                } else if( valueType == FLOAT_TYPE &&
+                    value.floatValue == node.value.floatValue ) {
+                        return true;
+                } else if( valueType == STRING_TYPE &&
+                    *value.stringValue == *node.value.stringValue ) {
+                        return true;
+                } else if( valueType == BYTE_ARRAY_TYPE &&
+                    *value.byteArrayValue == *node.value.byteArrayValue ) {
+                        return true;
+                }
+                
+                return false;
             }
             
             ValueTypeEnum getValueType() const { return valueType; }
@@ -288,7 +332,7 @@ namespace util{
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual int count() const;
+        virtual unsigned int size() const;
         
 
         virtual bool getBool( const std::string& key ) const 
