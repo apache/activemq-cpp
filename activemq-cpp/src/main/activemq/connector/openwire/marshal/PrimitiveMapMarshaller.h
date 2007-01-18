@@ -52,7 +52,7 @@ namespace marshal{
          * @param reference to a byte array to read data from.
          * @return newly create PrimitiveMap with unmarshaled data.
          */
-        static PrimitiveMap* unmarshal( const std::vector<unsigned char>& src ) 
+        static util::PrimitiveMap* unmarshal( const std::vector<unsigned char>& src ) 
             throw ( cms::CMSException );
         
     };
