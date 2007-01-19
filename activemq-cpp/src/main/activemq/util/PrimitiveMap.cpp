@@ -195,6 +195,24 @@ void PrimitiveMap::setString( const string& key, const string& value ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned char> PrimitiveMap::getByteArray( const std::string& key ) const 
+    throw( activemq::exceptions::NoSuchElementException ) {
+
+    ValueNode node = valueNodeMap.getValue( key );
+    return node.getByteArray();        
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PrimitiveMap::setByteArray( const std::string& key, 
+                                 const std::vector<unsigned char>& value ) {
+                                    
+    ValueNode node;
+    node.setByteArray( value );
+
+    valueNodeMap.setValue( key, node );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::remove( const string& key ){
     valueNodeMap.remove( key );
 }
