@@ -63,7 +63,17 @@ void PrimitiveMapTest::testValueNode(){
     node.setString( "hello" );
     CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::STRING_TYPE );
     CPPUNIT_ASSERT( node.getString() == "hello" );
+
+    std::vector<unsigned char> byteArray;
+    byteArray.push_back( 'a' );
+    byteArray.push_back( 'b' );
+    byteArray.push_back( 'c' );
+    byteArray.push_back( 'd' );
     
+    node.setByteArray( byteArray );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( node.getByteArray() == byteArray );
+
     try{        
         node.getFloat();
         CPPUNIT_ASSERT( false );
@@ -142,6 +152,20 @@ void PrimitiveMapTest::testSetGet(){
     } catch( activemq::exceptions::NoSuchElementException& e ){}
     pmap.setString( "string", "hello" );
     CPPUNIT_ASSERT( pmap.getString("string") == "hello" );
+    
+    std::vector<unsigned char> byteArray;
+    byteArray.push_back( 'a' );
+    byteArray.push_back( 'b' );
+    byteArray.push_back( 'c' );
+    byteArray.push_back( 'd' );
+    
+    try{
+        pmap.getByteArray( "byteArray" );
+        CPPUNIT_ASSERT( false );
+    } catch( activemq::exceptions::NoSuchElementException& e ){}
+    pmap.setByteArray( "byteArray", byteArray );
+    CPPUNIT_ASSERT( pmap.getByteArray("byteArray") == byteArray );
+
 }
 
 void PrimitiveMapTest::testRemove(){

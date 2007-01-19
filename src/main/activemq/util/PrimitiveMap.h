@@ -305,8 +305,31 @@ namespace util{
                 return *value.stringValue;
             }
                         
+            void setByteArray( const std::vector<unsigned char>& lvalue ){
+                clear();
+                valueType = BYTE_ARRAY_TYPE;
+                value.byteArrayValue = new std::vector<unsigned char>( lvalue );
+            }
+            
+            std::vector<unsigned char> getByteArray() const throw( activemq::exceptions::NoSuchElementException ) {
+
+                if( valueType != BYTE_ARRAY_TYPE ){
+                    throw activemq::exceptions::NoSuchElementException( 
+                        __FILE__,
+                        __LINE__, 
+                        "Value is not BYTE_ARRAY_TYPE" );
+                }
+                
+                if( value.byteArrayValue == NULL ){
+                    return std::vector<unsigned char>();
+                }
+                
+                return *value.byteArrayValue;
+            }
+
         };
         
+
     private:
     
         activemq::util::Map<std::string, ValueNode> valueNodeMap;
@@ -371,6 +394,10 @@ namespace util{
             throw(activemq::exceptions::NoSuchElementException);
         virtual void setString( const std::string& key, const std::string& value );
         
+        virtual std::vector<unsigned char> getByteArray( const std::string& key ) const 
+            throw( activemq::exceptions::NoSuchElementException );
+        virtual void setByteArray( const std::string& key, const std::vector<unsigned char>& value );
+
         /**
          * Removes the value (key/value pair) for the specified key from 
          * the map.
