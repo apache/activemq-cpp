@@ -19,6 +19,8 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 
 #include <activemq/util/PrimitiveMap.h>
+#include <activemq/io/DataOutputStream.h>
+#include <activemq/io/DataInputStream.h>
 
 namespace activemq{
 namespace connector{
@@ -34,8 +36,8 @@ namespace marshal{
     {
     public:
     
-        PrimitiveMapMarshaller();
-        virtual ~PrimitiveMapMarshaller();
+        PrimitiveMapMarshaller() {}
+        virtual ~PrimitiveMapMarshaller() {}
         
         /**
          * Static Marshal of a primitive map object
@@ -54,7 +56,33 @@ namespace marshal{
          */
         static util::PrimitiveMap* unmarshal( const std::vector<unsigned char>& src ) 
             throw ( cms::CMSException );
-        
+    
+    protected:
+    
+        /**
+         * Used to Marshal the Primitive types that are contianed in the 
+         * map, out on the Wire.
+         * @param dataOut - the DataOutputStream to write to
+         * @param value - the ValueNode to write.
+         * @throws CMSException
+         */
+        static void marshalPrimitive( io::DataOutputStream* dataOut,
+                                      util::PrimitiveMap::ValueNode& value )
+                                        throw ( cms::CMSException );
+
+        /**
+         * Unmarshals a Primitive Type from the stream, and returns it as a
+         * value Node.
+         * @param dataIn - DataInputStream to read from.
+         * @param key - key where the element should be inserted
+         * @param map - Map to insert data into.
+         * @throws CMSException
+         */        
+        static void unmarshalPrimitive( io::DataInputStream* dataIn,
+                                        const std::string& key,
+                                        util::PrimitiveMap& map )
+                                            throw ( cms::CMSException );
+
     };
 
 }}}}
