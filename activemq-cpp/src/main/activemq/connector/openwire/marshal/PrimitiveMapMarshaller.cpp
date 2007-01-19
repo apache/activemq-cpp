@@ -23,45 +23,44 @@
 #include <activemq/io/DataOutputStream.h>
 
 using namespace activemq;
+using namespace activemq::io;
 using namespace activemq::util;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
-
-///////////////////////////////////////////////////////////////////////////////
-PrimitiveMapMarshaller::PrimitiveMapMarshaller()
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-PrimitiveMapMarshaller::~PrimitiveMapMarshaller()
-{
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map, 
                                       std::vector<unsigned char>& dest ) 
                                         throw ( cms::CMSException ) 
 {
-//    ByteArrayOutputStream bytesOut( dest );
-//    DataOutputStream dataOut( &bytesOut );
-//
-//    if( map == NULL )
-//    {
-//        dataOut.writeInt( -1 );
-//    }
-//    else
-//    {
-//        dataOut.write( map.count() );
-//        
-//        foreach (DictionaryEntry entry in map)
-//        {
-//            std::string name = (std::string) entry.Key;
-//            dataOut.Write(name);
-//            Object value = entry.Value;
-//            MarshalPrimitive(dataOut, value);
-//    }
+    try {
 
+        ByteArrayOutputStream bytesOut( dest );
+        DataOutputStream dataOut( &bytesOut );
+    
+        if( map == NULL )
+        {
+            dataOut.writeInt( -1 );
+        }
+        else
+        {
+            dataOut.write( map->size() );
+            
+            std::vector<std::string> keys = map->getKeys();
+            std::vector<std::string>::const_iterator iter = keys.begin();
+            
+            for(; iter != keys.end(); ++iter ) {
+    
+                dataOut.writeChars( *iter );
+                PrimitiveMap::ValueNode value = map->getValue( *iter );
+                marshalPrimitive( &dataOut, value );
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )        
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,83 +68,135 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
     const std::vector<unsigned char>& src ) 
         throw ( cms::CMSException ) 
 {
-    return NULL;
+    try{
+        
+        ByteArrayInputStream bytesIn( src );
+        DataInputStream dataIn( &bytesIn );
+    
+        int size = dataIn.readInt();
+        
+        if( size > 0 )
+        {
+            PrimitiveMap* map = new PrimitiveMap;
+    
+            for( int i=0; i < size; i++ )
+            {
+                std::string key = dataIn.readString();
+                unmarshalPrimitive( &dataIn, key, *map );
+            }
+    
+            return map;
+        }
+    
+        return NULL;
+    
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut,
+                                               util::PrimitiveMap::ValueNode& value )
+                                                    throw ( cms::CMSException ) {
+
+    try {
+        
+//        if( value is bool )
+//        {
+//            dataOut.writeByte( BOOLEAN_TYPE );
+//            dataOut.writeBoolean( value );
+//        }
+//        else if( value is byte )
+//        {
+//            dataOut.writeByte( BYTE_TYPE );
+//            dataOut.writeByte( value );
+//        }
+//        else if( value is char )
+//        {
+//            dataOut.writeByte( CHAR_TYPE );
+//            dataOut.writeChar( value );
+//        }
+//        else if( value is short )
+//        {
+//            dataOut.writeByte( SHORT_TYPE );
+//            dataOut.writeShort( value );
+//        }
+//        else if( value is int )
+//        {
+//            dataOut.writeByte( INTEGER_TYPE );
+//            dataOut.writeInt( value );
+//        }
+//        else if( value is long )
+//        {
+//            dataOut.writeByte( LONG_TYPE );
+//            dataOut.writeLong( value );
+//        }
+//        else if( value is float )
+//        {
+//            dataOut.writeByte( FLOAT_TYPE );
+//            dataOut.writeFloat( value );
+//        }
+//        else if( value is double )
+//        {
+//            dataOut.writeByte( DOUBLE_TYPE );
+//            dataOut.writeDouble( value );
+//        }
+//        else if( value is byte[] )
+//        {
+//            dataOut.writeByte( BYTE_ARRAY_TYPE );
+//            dataOut.writeInt( value.byeArrayValue.size() );
+//            dataOut.write( value.byeArrayValue );
+//        }
+//        else if( value is string )
+//        {
+//            // is the string big??
+//            if( value.stringValue.size() > 8191 )
+//            {
+//                dataOut.writeByte( BIG_STRING_TYPE );
+//                dataOut.writeChars( value.stringValue );
+//            }
+//            else
+//            {
+//                dataOut.writeByte( STRING_TYPE );
+//                dataOut.writeChars( value.stringValue );
+//            }
+//        }
+//        else if( value is IDictionary )
+//        {
+//            dataOut.Write( MAP_TYPE );
+//            MarshalPrimitiveMap((IDictionary) value, dataOut);
+//        }
+//        else if( value is IList )
+//        {
+//            dataOut.Write( LIST_TYPE );
+//            MarshalPrimitiveList((IList) value, dataOut);
+//        }
+//        else
+//        {
+//            throw IOException(
+//                __FILE__,
+//                __LINE__,
+//                "Object is not a primitive: ");
+//        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )        
+}
+                                                    
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream* dataIn,
+                                                 const std::string& key,
+                                                 util::PrimitiveMap& map )
+                                                    throw ( cms::CMSException ) {
+
+    try {
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )        
 }
 
 /*
-
-
-        /// <summary>
-        /// Marshals the primitive type map to a byte array
-        /// </summary>
-        public static byte[] MarshalPrimitiveMap(IDictionary map)
-        {
-            if (map == null)
-            {
-                return null;
-            }
-            else
-            {
-                MemoryStream memoryStream = new MemoryStream();
-                MarshalPrimitiveMap(map, new OpenWireBinaryWriter(memoryStream));
-                return memoryStream.GetBuffer();
-            }
-        }
-        
-        public static void MarshalPrimitiveMap(IDictionary map, BinaryWriter dataOut)
-        {
-            if (map == null)
-            {
-                dataOut.Write((int)-1);
-            }
-            else
-            {
-                dataOut.Write(map.Count);
-                foreach (DictionaryEntry entry in map)
-                {
-                    String name = (String) entry.Key;
-                    dataOut.Write(name);
-                    Object value = entry.Value;
-                    MarshalPrimitive(dataOut, value);
-                }
-            }}
-        
-        
-        
-        /// <summary>
-        /// Unmarshals the primitive type map from the given byte array
-        /// </summary>
-        public static  IDictionary UnmarshalPrimitiveMap(byte[] data)
-        {
-            if (data == null)
-            {
-                return new Hashtable();
-            }
-            else
-            {
-                return UnmarshalPrimitiveMap(new OpenWireBinaryReader(new MemoryStream(data)));
-            }
-        }
-        
-        public static  IDictionary UnmarshalPrimitiveMap(BinaryReader dataIn)
-        {
-            int size = dataIn.ReadInt32();
-            if (size < 0)
-            {
-                return null;
-            }
-            else
-            {
-                IDictionary answer = new Hashtable(size);
-                for (int i=0; i < size; i++)
-                {
-                    String name = dataIn.ReadString();
-                    answer[name] = UnmarshalPrimitive(dataIn);
-                }
-                return answer;
-            }
-            
-        }
 
         public static void MarshalPrimitiveList(IList list, BinaryWriter dataOut)
         {
