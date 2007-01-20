@@ -45,10 +45,10 @@ namespace util{
             DOUBLE_TYPE             = 7,
             FLOAT_TYPE              = 8,
             STRING_TYPE             = 9,
-            BYTE_ARRAY_TYPE         = 10
-            //MAP_TYPE                = 11,
-            //LIST_TYPE               = 12,
-            //BIG_STRING_TYPE         = 13
+            BYTE_ARRAY_TYPE         = 10,
+            MAP_TYPE                = 11,
+            LIST_TYPE               = 12,
+            BIG_STRING_TYPE         = 13
         };
         
         /**
