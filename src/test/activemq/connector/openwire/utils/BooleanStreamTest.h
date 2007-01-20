@@ -23,11 +23,6 @@
 
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -45,71 +40,8 @@ namespace utils{
         BooleanStreamTest() {}
         virtual ~BooleanStreamTest() {}
         
-        void test(){
-
-            BooleanStream b1Stream;
-
-            io::ByteArrayOutputStream baoStream;
-            io::DataOutputStream daoStream( &baoStream );
-
-            b1Stream.writeBoolean( false );
-            b1Stream.writeBoolean( true );
-            b1Stream.writeBoolean( false );
-            b1Stream.writeBoolean( false );
-            b1Stream.writeBoolean( true );
-            b1Stream.writeBoolean( false );
-            b1Stream.writeBoolean( true );
-            b1Stream.writeBoolean( true );
-            
-            b1Stream.marshal( &daoStream );
-            
-            BooleanStream b2Stream;
-            io::ByteArrayInputStream baiStream( baoStream.getByteArray(),
-                                                baoStream.getByteArraySize() );
-            io::DataInputStream daiStream( &baiStream );
-
-            b2Stream.unmarshal( &daiStream );
-            
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
-            CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
-
-        }
-
-        void test2(){
-
-            BooleanStream b1Stream;
-
-            io::ByteArrayOutputStream baoStream;
-            io::DataOutputStream daoStream( &baoStream );
-
-            bool value = false;
-            for( int i = 0; i < 65536; i++ ) {
-                b1Stream.writeBoolean( value );
-                value = !value;
-            }
-
-            b1Stream.marshal( &daoStream );
-            
-            BooleanStream b2Stream;
-            io::ByteArrayInputStream baiStream( baoStream.getByteArray(),
-                                                baoStream.getByteArraySize() );
-            io::DataInputStream daiStream( &baiStream );
-
-            b2Stream.unmarshal( &daiStream );
-
-            value = false;
-            for( int i = 0; i < 65536; i++ ) {
-                CPPUNIT_ASSERT( b2Stream.readBoolean() == value );
-                value = !value;
-            }
-        }
-
+        void test();
+        void test2();
     };
 
 }}}}
