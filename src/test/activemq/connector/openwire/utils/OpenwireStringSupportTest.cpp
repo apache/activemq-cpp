@@ -14,34 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#include "OpenwireStringSupportTest.h"
 
-#include "HexTableTest.h"
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireStringSupportTest );
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::HexTableTest );
+#include <activemq/connector/openwire/utils/OpenwireStringSupport.h>
 
+#include <activemq/io/ByteArrayInputStream.h>
+#include <activemq/io/ByteArrayOutputStream.h>
+#include <activemq/io/DataInputStream.h>
+#include <activemq/io/DataOutputStream.h>
+
+using namespace std;
 using namespace activemq;
+using namespace activemq::io;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
 
 ////////////////////////////////////////////////////////////////////////////////
-void HexTableTest::test(){
+void OpenwireStringSupportTest::test()
+{
+    ByteArrayInputStream bytesIn;
+    ByteArrayOutputStream bytesOut;
     
-    HexTable table;
-    
-    CPPUNIT_ASSERT( table[0] == "00" );
-    CPPUNIT_ASSERT( table[32] == "20" );
-    CPPUNIT_ASSERT( table[55] == "37" );
-    CPPUNIT_ASSERT( table[96] == "60" );
-    CPPUNIT_ASSERT( table[156] == "9c" );
-    CPPUNIT_ASSERT( table[232] == "e8" );
-    CPPUNIT_ASSERT( table[255] == "ff" );
+    DataInputStream dataIn( &bytesIn );
+    DataOutputStream dataOut( &bytesOut );
 
-    CPPUNIT_ASSERT( table.size() == 256 );
+    string testStr = "This is a test string for Openwire";
+
+    OpenwireStringSupport::writeString( dataOut, &testStr );
     
-    try{
-        std::string test = table[277];
-        CPPUNIT_ASSERT( false );
-    }
-    catch(...) {}
+    // Move the output back to the input.
+    bytesIn.setByteArray( bytesOut.getByteArray(), bytesOut.getByteArraySize() );
+
+    string resultStr = OpenwireStringSupport::readString( dataIn );
+    
+    CPPUNIT_ASSERT( testStr == resultStr );
 }

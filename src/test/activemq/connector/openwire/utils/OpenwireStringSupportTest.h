@@ -15,34 +15,32 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_
-#define _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_
+#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_
+#define _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include <activemq/connector/openwire/utils/HexTable.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace utils{
-
-    class HexTableTest : public CppUnit::TestFixture {
-
-      CPPUNIT_TEST_SUITE( HexTableTest );
-      CPPUNIT_TEST( test );
-      CPPUNIT_TEST_SUITE_END();
-
+        
+    class OpenwireStringSupportTest : public CppUnit::TestFixture {
+        
+        CPPUNIT_TEST_SUITE( OpenwireStringSupportTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+        
     public:
     
-        HexTableTest() {}
-        virtual ~HexTableTest() {}
-
+        OpenwireStringSupportTest() {}
+        virtual ~OpenwireStringSupportTest() {}
+        
         void test();
         
     };
 
 }}}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_HEXTABLETEST_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORTTEST_H_*/
