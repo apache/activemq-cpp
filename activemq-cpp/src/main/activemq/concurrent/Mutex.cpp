@@ -17,6 +17,7 @@
  
 #include <activemq/concurrent/Mutex.h>
 
+using namespace activemq;
 using namespace activemq::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
