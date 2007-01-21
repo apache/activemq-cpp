@@ -48,6 +48,7 @@ cc_sources = \
     activemq/connector/stomp/StompConnectorFactory.cpp \
     activemq/connector/stomp/marshal/Marshaler.cpp \
     activemq/connector/stomp/StompConnector.cpp \
+    activemq/connector/stomp/StompSelector.cpp \
     activemq/connector/openwire/OpenWireFormat.cpp \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/connector/openwire/utils/HexTable.cpp \
@@ -70,6 +71,7 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
+    activemq/util/Endian.cpp \
     activemq/util/Date.cpp \
     activemq/util/Math.cpp \
     activemq/util/PrimitiveMap.cpp
