@@ -272,6 +272,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\Endian.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\Endian.h"
 					>
 				</File>
@@ -667,6 +671,18 @@
 						</File>
 						<File
 							RelativePath="..\src\main\activemq\connector\openwire\utils\OpenwireStringSupport.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="marshal"
+						>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\marshal\PrimitiveMapMarshaller.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\marshal\PrimitiveMapMarshaller.h"
 							>
 						</File>
 					</Filter>
