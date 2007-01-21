@@ -103,6 +103,9 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
                 }
             }
 
+            // C++ strings need a NULL terminator
+            value.push_back( '\0' );
+
             // Let the Compiler give us a string.
             return reinterpret_cast<const char*>( &value[0] );
         }
