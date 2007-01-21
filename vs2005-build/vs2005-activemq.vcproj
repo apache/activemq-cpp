@@ -657,6 +657,14 @@
 							RelativePath="..\src\main\activemq\connector\openwire\utils\HexTable.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\utils\OpenwireStringSupport.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\utils\OpenwireStringSupport.h"
+							>
+						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -1161,6 +1169,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\transport\TransportFactoryMapRegistrar.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\TransportFilter.cpp"
 					>
 				</File>
 				<File
