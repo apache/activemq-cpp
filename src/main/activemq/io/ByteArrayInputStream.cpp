@@ -18,8 +18,10 @@
 #include "ByteArrayInputStream.h"
 #include <algorithm>
 
-using namespace activemq::io;
 using namespace std;
+using namespace activemq;
+using namespace activemq::io;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream(){
@@ -110,7 +112,7 @@ int ByteArrayInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 int ByteArrayInputStream::skip( int num ) 
-throw ( IOException, exceptions::UnsupportedOperationException ){
+    throw ( IOException, exceptions::UnsupportedOperationException ){
     
     int ix = 0;
     

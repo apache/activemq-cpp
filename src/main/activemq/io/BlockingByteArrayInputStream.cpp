@@ -18,8 +18,10 @@
 #include "BlockingByteArrayInputStream.h"
 #include <algorithm>
 
-using namespace activemq::io;
 using namespace std;
+using namespace activemq;
+using namespace activemq::io;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BlockingByteArrayInputStream::BlockingByteArrayInputStream(){
@@ -132,7 +134,7 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 int BlockingByteArrayInputStream::skip( int num ) 
-throw ( io::IOException, exceptions::UnsupportedOperationException ){
+    throw ( io::IOException, exceptions::UnsupportedOperationException ){
     
     int ix = 0;
     
