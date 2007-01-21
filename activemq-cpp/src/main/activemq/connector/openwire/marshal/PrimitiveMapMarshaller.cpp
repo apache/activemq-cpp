@@ -21,7 +21,7 @@
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/io/DataInputStream.h>
 #include <activemq/io/DataOutputStream.h>
-#include <activemq/util/Config.h>
+#include <activemq/connector/openwire/utils/OpenwireStringSupport.h>
 
 using namespace activemq;
 using namespace activemq::io;
@@ -29,6 +29,7 @@ using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
+using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +57,7 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
     
                 dataOut.writeChars( *iter );
                 PrimitiveMap::ValueNode value = map->getValue( *iter );
-                marshalPrimitive( &dataOut, value );
+                marshalPrimitive( dataOut, value );
             }
         }
     }
@@ -83,7 +84,7 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
             for( int i=0; i < size; i++ )
             {
                 std::string key = dataIn.readString();
-                unmarshalPrimitive( &dataIn, key, *map );
+                unmarshalPrimitive( dataIn, key, *map );
             }
     
             return map;
@@ -97,72 +98,74 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut ACTIVEMQ_ATTRIBUTE_UNUSED,
-                                               util::PrimitiveMap::ValueNode& value ACTIVEMQ_ATTRIBUTE_UNUSED)
+void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
+                                               util::PrimitiveMap::ValueNode& value )
                                                     throw ( cms::CMSException ) {
 
     try {
         
-//        if( value is bool )
-//        {
-//            dataOut.writeByte( BOOLEAN_TYPE );
-//            dataOut.writeBoolean( value );
-//        }
-//        else if( value is byte )
-//        {
-//            dataOut.writeByte( BYTE_TYPE );
-//            dataOut.writeByte( value );
-//        }
-//        else if( value is char )
-//        {
-//            dataOut.writeByte( CHAR_TYPE );
-//            dataOut.writeChar( value );
-//        }
-//        else if( value is short )
-//        {
-//            dataOut.writeByte( SHORT_TYPE );
-//            dataOut.writeShort( value );
-//        }
-//        else if( value is int )
-//        {
-//            dataOut.writeByte( INTEGER_TYPE );
-//            dataOut.writeInt( value );
-//        }
-//        else if( value is long )
-//        {
-//            dataOut.writeByte( LONG_TYPE );
-//            dataOut.writeLong( value );
-//        }
-//        else if( value is float )
-//        {
-//            dataOut.writeByte( FLOAT_TYPE );
-//            dataOut.writeFloat( value );
-//        }
-//        else if( value is double )
-//        {
-//            dataOut.writeByte( DOUBLE_TYPE );
-//            dataOut.writeDouble( value );
-//        }
-//        else if( value is byte[] )
-//        {
-//            dataOut.writeByte( BYTE_ARRAY_TYPE );
-//            dataOut.writeInt( value.byeArrayValue.size() );
-//            dataOut.write( value.byeArrayValue );
-//        }
-//        else if( value is string )
-//        {
-//            // is the string big??
-//            if( value.stringValue.size() > 8191 )
-//            {
-//                dataOut.writeByte( BIG_STRING_TYPE );
-//                dataOut.writeChars( value.stringValue );
-//            }
-//            else
-//            {
-//                dataOut.writeByte( STRING_TYPE );
-//                dataOut.writeChars( value.stringValue );
-//            }
-//        }
+        if( value.getValueType() == PrimitiveMap::BOOLEAN_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::BOOLEAN_TYPE );
+            dataOut.writeBoolean( value.getBool() );
+        }
+        else if( value.getValueType() == PrimitiveMap::BYTE_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::BYTE_TYPE );
+            dataOut.writeByte( value.getByte() );
+        }
+        else if( value.getValueType() == PrimitiveMap::CHAR_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::CHAR_TYPE );
+            dataOut.writeChar( value.getChar() );
+        }
+        else if( value.getValueType() == PrimitiveMap::SHORT_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::SHORT_TYPE );
+            dataOut.writeShort( value.getShort() );
+        }
+        else if( value.getValueType() == PrimitiveMap::INTEGER_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::INTEGER_TYPE );
+            dataOut.writeInt( value.getInt() );
+        }
+        else if( value.getValueType() == PrimitiveMap::LONG_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::LONG_TYPE );
+            dataOut.writeLong( value.getLong() );
+        }
+        else if( value.getValueType() == PrimitiveMap::FLOAT_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::FLOAT_TYPE );
+            dataOut.writeFloat( value.getFloat() );
+        }
+        else if( value.getValueType() == PrimitiveMap::DOUBLE_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::DOUBLE_TYPE );
+            dataOut.writeDouble( value.getDouble() );
+        }
+        else if( value.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE )
+        {
+            dataOut.writeByte( PrimitiveMap::BYTE_ARRAY_TYPE );
+            
+            std::vector<unsigned char> data = value.getByteArray();
+            
+            dataOut.writeInt( data.size() );
+            dataOut.write( data );
+        }
+        else if( value.getValueType() == PrimitiveMap::STRING_TYPE )
+        {
+            std::string data = value.getString();
+            
+            // is the string big??
+            if( data.size() > 8191 ) {
+                dataOut.writeByte( PrimitiveMap::BIG_STRING_TYPE );
+            } else {
+                dataOut.writeByte( PrimitiveMap::STRING_TYPE );
+            }
+
+            OpenwireStringSupport::writeString( dataOut, &data );
+        }
 //        else if( value is IDictionary )
 //        {
 //            dataOut.Write( MAP_TYPE );
@@ -173,25 +176,82 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut ACT
 //            dataOut.Write( LIST_TYPE );
 //            MarshalPrimitiveList((IList) value, dataOut);
 //        }
-//        else
-//        {
-//            throw IOException(
-//                __FILE__,
-//                __LINE__,
-//                "Object is not a primitive: ");
-//        }
+        else
+        {
+            throw IOException(
+                __FILE__,
+                __LINE__,
+                "Object is not a primitive: ");
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )        
 }
                                                     
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream* dataIn ACTIVEMQ_ATTRIBUTE_UNUSED,
-                                                 const std::string& key ACTIVEMQ_ATTRIBUTE_UNUSED,
-                                                 util::PrimitiveMap& map ACTIVEMQ_ATTRIBUTE_UNUSED)
+void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
+                                                 const std::string& key,
+                                                 util::PrimitiveMap& map )
                                                     throw ( cms::CMSException ) {
 
     try {
+
+        unsigned char type = dataIn.readByte();
+
+        switch( type )
+        {
+            case PrimitiveMap::BYTE_TYPE:
+                map.setByte( key, dataIn.readByte() );
+                break;
+            case PrimitiveMap::BOOLEAN_TYPE:
+                map.setBool( key, dataIn.readBoolean() );
+                break;
+            case PrimitiveMap::CHAR_TYPE:
+                map.setChar( key, dataIn.readChar() );
+                break;
+            case PrimitiveMap::SHORT_TYPE:
+                map.setShort( key, dataIn.readShort() );
+                break;
+            case PrimitiveMap::INTEGER_TYPE:
+                map.setInt( key, dataIn.readInt() );
+                break;
+            case PrimitiveMap::LONG_TYPE:
+                map.setLong( key, dataIn.readLong() );
+                break;
+            case PrimitiveMap::FLOAT_TYPE:
+                map.setFloat( key, dataIn.readFloat() );
+                break;
+            case PrimitiveMap::DOUBLE_TYPE:
+                map.setDouble( key, dataIn.readDouble() );
+                break;
+            case PrimitiveMap::BYTE_ARRAY_TYPE:
+            {
+                int size = dataIn.readInt();
+                std::vector<unsigned char> data;
+                data.resize( size );
+                dataIn.readFully( data );
+                map.setByteArray( key, data );
+                break;
+            }
+            case PrimitiveMap::STRING_TYPE:
+            case PrimitiveMap::BIG_STRING_TYPE:
+                map.setString( 
+                    key, 
+                    OpenwireStringSupport::readString( dataIn ) );
+                break;
+//            case PrimitiveMap::MAP_TYPE:
+//                value = UnmarshalPrimitiveMap(dataIn);
+//                break;
+//            case PrimitiveMap::LIST_TYPE:
+//                value = UnmarshalPrimitiveList(dataIn);
+//                break;
+            default:
+                throw IOException(
+                    __FILE__,
+                    __LINE__,
+                    "PrimitiveMapMarshaller::unmarshalPrimitive - "
+                    "Unsupported data type: ");
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )        
@@ -217,147 +277,6 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream* dataIn ACT
             }
             return answer;
         }
-
-
-        public static void MarshalPrimitive(BinaryWriter dataOut, Object value)
-        {
-            if (value == null)
-            {
-                dataOut.Write(NULL);
-            }
-            else if (value is bool)
-            {
-                dataOut.Write(BOOLEAN_TYPE);
-                dataOut.Write((bool) value);
-            }
-            else if (value is byte)
-            {
-                dataOut.Write(BYTE_TYPE);
-                dataOut.Write(((byte)value));
-            }
-            else if (value is char)
-            {
-                dataOut.Write(CHAR_TYPE);
-                dataOut.Write((char) value);
-            }
-            else if (value is short)
-            {
-                dataOut.Write(SHORT_TYPE);
-                dataOut.Write((short) value);
-            }
-            else if (value is int)
-            {
-                dataOut.Write(INTEGER_TYPE);
-                dataOut.Write((int) value);
-            }
-            else if (value is long)
-            {
-                dataOut.Write(LONG_TYPE);
-                dataOut.Write((long) value);
-            }
-            else if (value is float)
-            {
-                dataOut.Write(FLOAT_TYPE);
-                dataOut.Write((float) value);
-            }
-            else if (value is double)
-            {
-                dataOut.Write(DOUBLE_TYPE);
-                dataOut.Write((double) value);
-            }
-            else if (value is byte[])
-            {
-                byte[] data = (byte[]) value;
-                dataOut.Write(BYTE_ARRAY_TYPE);
-                dataOut.Write(data.Length);
-                dataOut.Write(data);
-            }
-            else if (value is string)
-            {
-                string s = (string) value;
-                // is the string big??
-                if (s.Length > 8191)
-                {
-                    dataOut.Write(BIG_STRING_TYPE);
-                    dataOut.Write(s);
-                }
-                else
-                {
-                    dataOut.Write(STRING_TYPE);
-                    dataOut.Write(s);
-                }
-            }
-            else if (value is IDictionary)
-            {
-                dataOut.Write(MAP_TYPE);
-                MarshalPrimitiveMap((IDictionary) value, dataOut);
-            }
-            else if (value is IList)
-            {
-                dataOut.Write(LIST_TYPE);
-                MarshalPrimitiveList((IList) value, dataOut);
-            }
-            else
-            {
-                throw new IOException("Object is not a primitive: " + value);
-            }
-        }
         
-        public static Object UnmarshalPrimitive(BinaryReader dataIn)
-        {
-            Object value=null;
-            byte type = dataIn.ReadByte();
-            switch (type)
-            {
-                case BYTE_TYPE:
-                    value = dataIn.ReadByte();
-                    break;
-                case BOOLEAN_TYPE:
-                    value = dataIn.ReadBoolean();
-                    break;
-                case CHAR_TYPE:
-                    value = dataIn.ReadChar();
-                    break;
-                case SHORT_TYPE:
-                    value = dataIn.ReadInt16();
-                    break;
-                case INTEGER_TYPE:
-                    value = dataIn.ReadInt32();
-                    break;
-                case LONG_TYPE:
-                    value = dataIn.ReadInt64();
-                    break;
-                case FLOAT_TYPE:
-                    value = dataIn.ReadSingle();
-                    break;
-                case DOUBLE_TYPE:
-                    value = dataIn.ReadDouble();
-                    break;
-                case BYTE_ARRAY_TYPE:
-                    int size = dataIn.ReadInt32();
-                    byte[] data = new byte[size];
-                    dataIn.Read(data, 0, size);
-                    value = data;
-                    break;
-                case STRING_TYPE:
-                    value = dataIn.ReadString();
-                    break;
-                case BIG_STRING_TYPE:
-                    value = dataIn.ReadString();
-                    break;
-                case MAP_TYPE:
-                    value = UnmarshalPrimitiveMap(dataIn);
-                    break;
-
-                case LIST_TYPE:
-                    value = UnmarshalPrimitiveList(dataIn);
-                    break;
-
-                default:
-                    throw new Exception("Unsupported data type: " + type);
-            }
-            return value;
-        }
-
 
 */
