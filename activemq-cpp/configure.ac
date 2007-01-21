@@ -93,13 +93,13 @@ LIBS="$LIBS"
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    CXXFLAGS="$CXXFLAGS" 
+    CXXFLAGS="$CXXFLAGS -ansi -pedantic" 
     LIBS="$LIBS"
     ;;
 
   *cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
-    CXXFLAGS="$CXXFLAGS" 
+    CXXFLAGS="$CXXFLAGS -Wno-unused-parameter -Wno-uninitialized" 
     LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
     
@@ -107,7 +107,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -ansi -pedantic"
     LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
     ;;
     
@@ -116,7 +116,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="$CXXFLAGS" 
+    CXXFLAGS="$CXXFLAGS -ansi -pedantic" 
     LIBS="$LIBS -lm -lpthread -luuid"
 esac
 
