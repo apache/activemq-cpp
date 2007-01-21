@@ -49,7 +49,7 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual TextMessageCommand* clone() const {
+        virtual cms::TextMessage* clone() const {
             StompFrame* frame = getFrame().clone();
             
             return new TextMessageCommand( frame );

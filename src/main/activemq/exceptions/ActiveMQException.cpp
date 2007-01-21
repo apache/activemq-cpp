@@ -22,6 +22,11 @@ using namespace activemq;
 using namespace activemq::exceptions;
 using namespace std;
 
+// For supporting older versions of msvc (<=2003)
+#if defined(_MSC_VER) && (_MSC_VER < 1400)
+    #define vsnprintf _vsnprintf
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException(){
 }

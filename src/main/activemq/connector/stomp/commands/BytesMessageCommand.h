@@ -150,7 +150,7 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual BytesMessageCommand* clone() const {
+        virtual cms::BytesMessage* clone() const {
             StompFrame* frame = getFrame().clone();
             
             return new BytesMessageCommand( frame );
