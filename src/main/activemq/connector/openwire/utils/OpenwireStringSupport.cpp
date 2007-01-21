@@ -42,7 +42,7 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
             value.resize( utflen );
             dataIn.readFully( value );            
 
-            int c, char2, char3;
+            int c;//, char2, char3;
             int count = 0;
             
             while( count < utflen )
@@ -134,7 +134,7 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
                     Integer::toString( str->size() ) + " characters long." ).c_str() );
             }
             
-            short strlen = (short)str->size();
+            //short strlen = (short)str->size();
             short utflen = 0;
             int c, count = 0;
             

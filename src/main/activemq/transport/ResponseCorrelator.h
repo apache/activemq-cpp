@@ -269,7 +269,8 @@ namespace transport{
                 }
                 
                 // Get the future response (if it's in the map, it's not NULL).
-                FutureResponse* futureResponse = iter->second;
+                FutureResponse* futureResponse = NULL;
+                futureResponse = iter->second;
                 
                 // If it's an exception response, notify the exception listener.
                 ExceptionResponse* exResp = 

@@ -47,16 +47,12 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        ActiveMQException() {}
+        ActiveMQException();
        
         /**
          * Copy Constructor
          */
-        ActiveMQException( const ActiveMQException& ex )
-        : cms::CMSException()
-        {
-            *this = ex;
-        }
+        ActiveMQException( const ActiveMQException& ex );
        
         /**
          * Constructor - Initializes the file name and line number where
@@ -68,17 +64,9 @@ namespace exceptions{
          * @param list of primitives that are formatted into the message
          */
         ActiveMQException( const char* file, const int lineNumber, 
-                           const char* msg, ... )
-        {
-            va_list vargs;
-            va_start( vargs, msg ) ;
-            buildMessage( msg, vargs );
-            
-            // Set the first mark for this exception.
-            setMark( file, lineNumber );
-        }
+                           const char* msg, ... );
 
-        virtual ~ActiveMQException(){}
+        virtual ~ActiveMQException();
    
         /**
          * Gets the message for this exception.
@@ -93,11 +81,7 @@ namespace exceptions{
          * @param msg the format string for the msg.
          * @param variable - params to format into the string
          */
-        virtual void setMessage( const char* msg, ... ){
-            va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
-        }
+        virtual void setMessage( const char* msg, ... );
         
         /**
          * Adds a file/line number to the stack trace.
@@ -112,9 +96,7 @@ namespace exceptions{
          * All subclasses should override.
          * @return Copy of this Exception object
          */
-        virtual ActiveMQException* clone() const{
-            return new ActiveMQException( *this );
-        }
+        virtual ActiveMQException* clone() const;
         
         /**
          * Provides the stack trace for every point where
@@ -123,55 +105,30 @@ namespace exceptions{
          * was set (e.g. where the exception was created).  
          * @return the stack trace.
          */
-        virtual std::vector< std::pair< std::string, int> > getStackTrace() const{ 
-            return stackTrace; 
-        }
+        virtual std::vector< std::pair< std::string, int> > getStackTrace() const;
 
         /**
          * Prints the stack trace to std::err
          */
-        virtual void printStackTrace() const{
-            printStackTrace( std::cerr );
-        }
+        virtual void printStackTrace() const;
         
         /**
          * Prints the stack trace to the given output stream.
          * @param stream the target output stream.
          */
-        virtual void printStackTrace( std::ostream& stream ) const{
-            stream << getStackTraceString();
-        }
+        virtual void printStackTrace( std::ostream& stream ) const;
         
         /**
          * Gets the stack trace as one contiguous string.
          * @return string with formatted stack trace data
          */
-        virtual std::string getStackTraceString() const{
-            
-            // Create the output stream.
-            std::ostringstream stream;
-            
-            // Write the message and each stack entry.
-            stream << message << std::endl;
-            for( unsigned int ix=0; ix<stackTrace.size(); ++ix ){
-                stream << "\tFILE: " << stackTrace[ix].first;
-                stream << ", LINE: " << stackTrace[ix].second;
-                stream << std::endl;                    
-            }
-            
-            // Return the string from the output stream.
-            return stream.str();
-        }
+        virtual std::string getStackTraceString() const;
         
         /**
          * Assignment operator.
          * @param const reference to another ActiveMQException
          */
-        virtual ActiveMQException& operator =( const ActiveMQException& ex ){
-            this->message = ex.message;
-            this->stackTrace = ex.stackTrace;
-            return *this;
-        }
+        virtual ActiveMQException& operator =( const ActiveMQException& ex );
         
     protected:
    
