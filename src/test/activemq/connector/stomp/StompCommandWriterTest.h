@@ -33,6 +33,7 @@
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/io/ByteArrayInputStream.h>
 #include <algorithm>
+#include <string.h>
 
 namespace activemq{
 namespace connector{
@@ -156,8 +157,7 @@ namespace stomp{
 
             // Use STL Compare
             CPPUNIT_ASSERT( 
-                std::equal( &result[0], &result[200], 
-                            boStream.getByteArray() ) );
+                memcmp( &result[0], boStream.getByteArray(), 200 ) == 0 );
         }
 
         void testWriteAndReads() {
