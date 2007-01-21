@@ -21,8 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/connector/openwire/utils/HexTable.h>
-
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -30,9 +28,9 @@ namespace utils{
 
     class HexTableTest : public CppUnit::TestFixture {
 
-      CPPUNIT_TEST_SUITE( HexTableTest );
-      CPPUNIT_TEST( test );
-      CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE( HexTableTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
     

@@ -21,8 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/connector/openwire/utils/BooleanStream.h>
-
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -30,10 +28,10 @@ namespace utils{
 
     class BooleanStreamTest : public CppUnit::TestFixture {
 
-      CPPUNIT_TEST_SUITE( BooleanStreamTest );
-      CPPUNIT_TEST( test );
-      CPPUNIT_TEST( test2 );
-      CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE( BooleanStreamTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test2 );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
     

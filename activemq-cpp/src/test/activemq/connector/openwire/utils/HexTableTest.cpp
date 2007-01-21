@@ -19,6 +19,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::HexTableTest );
 
+#include <activemq/connector/openwire/utils/HexTable.h>
+
 using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
