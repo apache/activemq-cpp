@@ -21,6 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/util/Config.h>
 #include <cms/Message.h>
 
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
@@ -47,7 +48,7 @@ namespace commands{
             TestAckHandler() { wasAcked = false; }
             virtual ~TestAckHandler() {}
             
-            virtual void acknowledgeMessage( const core::ActiveMQMessage* message)
+            virtual void acknowledgeMessage( const core::ActiveMQMessage* message ACTIVEMQ_ATTRIBUTE_UNUSED)
                 throw ( cms::CMSException ) 
             {
                 wasAcked = true;

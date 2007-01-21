@@ -46,12 +46,10 @@ namespace transport{
         virtual ~TransportFactoryMap() {};
  
         // Hidden Copy Constructore
-        TransportFactoryMap( const TransportFactoryMap& factoryMap ){};
+        TransportFactoryMap( const TransportFactoryMap& factoryMap );
       
         // Hidden Assignment operator
-        TransportFactoryMap& operator=( const TransportFactoryMap& factoryMap ){ 
-            return *this;
-        }     
+        TransportFactoryMap& operator=( const TransportFactoryMap& factoryMap );
         
     public:
         

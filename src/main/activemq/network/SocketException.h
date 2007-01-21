@@ -30,14 +30,19 @@ namespace network{
 	public:
 	
 		SocketException(){}
-        SocketException( const ActiveMQException& ex ){
+        SocketException( const ActiveMQException& ex )
+        : io::IOException()
+        {
             *(ActiveMQException*)this = ex;
         }
-        SocketException( const SocketException& ex ){
+        SocketException( const SocketException& ex )
+        : io::IOException()
+        {
             *(ActiveMQException*)this = ex;
         }
 	    SocketException( const char* file, const int lineNumber, 
                          const char* msg, ...)
+        : io::IOException()
 	    {
 	        va_list vargs;
             va_start(vargs, msg);

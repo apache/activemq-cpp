@@ -38,14 +38,18 @@ namespace exceptions{
        * Conversion Constructor from some other ActiveMQException
        * @param An exception that should become this type of Exception
        */
-      IllegalArgumentException( const ActiveMQException& ex ){
+      IllegalArgumentException( const ActiveMQException& ex )
+      : ActiveMQException()
+      {
          *(ActiveMQException*)this = ex;
       }
       
       /**
        * Copy Constructor
        */
-      IllegalArgumentException( const IllegalArgumentException& ex ){
+      IllegalArgumentException( const IllegalArgumentException& ex )
+      : ActiveMQException()
+      {
          *(ActiveMQException*)this = ex;
       }
         
@@ -60,6 +64,7 @@ namespace exceptions{
        */
       IllegalArgumentException(const char* file, const int lineNumber,
          const char* msg, ...)
+      : ActiveMQException()
       {
          va_list vargs ;
          va_start(vargs, msg) ;

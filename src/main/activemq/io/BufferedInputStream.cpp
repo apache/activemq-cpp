@@ -130,6 +130,45 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+int BufferedInputStream::skip( int num ) 
+throw ( IOException, exceptions::UnsupportedOperationException ){
+    
+    try{
+        // If there's no data left, reset to pointers to the beginning of the
+        // buffer.
+        normalizeBuffer();
+        
+        // loop until we've skipped the desired number of bytes
+        int totalSkipped = 0;
+        while( totalSkipped < num ){        
+            
+            // Get the remaining bytes to copy.
+            int bytesToSkip = min( tail-head, num-totalSkipped );
+            
+            // Increment the head position.
+            head += bytesToSkip;
+            
+            // If the buffer is now empty, reset the positions to the
+            // head of the buffer.
+            normalizeBuffer();
+            
+            // If we still haven't satisified the request, 
+            // read more data.
+            if( totalSkipped < num ){                  
+                
+                // Buffer as much data as we can.
+                bufferData();
+            }              
+        }
+        
+        // Return the total number of bytes read.
+        return totalSkipped;
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void BufferedInputStream::bufferData() throw ( IOException ){
     
     try{

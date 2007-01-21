@@ -47,12 +47,14 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        ActiveMQException(void) {}
+        ActiveMQException() {}
        
         /**
          * Copy Constructor
          */
-        ActiveMQException( const ActiveMQException& ex ){
+        ActiveMQException( const ActiveMQException& ex )
+        : cms::CMSException()
+        {
             *this = ex;
         }
        

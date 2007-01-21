@@ -16,6 +16,7 @@
  */
 
 #include "TransportFactoryMap.h"
+#include <activemq/util/Config.h>
 
 using namespace activemq::transport;
 using namespace std;
@@ -38,6 +39,16 @@ void TransportFactoryMap::registerTransportFactory(
     factoryMap[name] = factory;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+TransportFactoryMap::TransportFactoryMap( 
+const TransportFactoryMap& factoryMap ACTIVEMQ_ATTRIBUTE_UNUSED ){
+}
+      
+////////////////////////////////////////////////////////////////////////////////
+TransportFactoryMap& TransportFactoryMap::operator=( 
+const TransportFactoryMap& factoryMap ACTIVEMQ_ATTRIBUTE_UNUSED ){ 
+    return *this;
+}
 ////////////////////////////////////////////////////////////////////////////////
 void TransportFactoryMap::unregisterTransportFactory( const std::string& name ){
     factoryMap.erase( name );

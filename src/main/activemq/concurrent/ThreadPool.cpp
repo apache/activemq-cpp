@@ -17,6 +17,7 @@
 #include <activemq/concurrent/ThreadPool.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
+#include <activemq/util/Config.h>
 
 #ifdef min
 #undef min
@@ -270,7 +271,7 @@ void ThreadPool::AllocateThreads( unsigned long count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::onTaskStarted( PooledThread* thread )
+void ThreadPool::onTaskStarted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     try
     {
@@ -299,7 +300,7 @@ void ThreadPool::onTaskStarted( PooledThread* thread )
 }
  
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::onTaskCompleted( PooledThread* thread )
+void ThreadPool::onTaskCompleted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     try
     {    
@@ -317,7 +318,7 @@ void ThreadPool::onTaskCompleted( PooledThread* thread )
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::onTaskException(
    PooledThread* thread, 
-   exceptions::ActiveMQException& ex)
+   exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     //LOGCMS_DEBUG(logger, "ThreadPool::onTaskException: ");
 

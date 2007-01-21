@@ -219,10 +219,10 @@ namespace concurrent{
                 int returnValue = 0;
                 if(millisecs != WAIT_INFINITE)
                 {
-                    timeval now = {};
+                    timeval now = {0,0};
                     gettimeofday(&now, NULL);
                
-                    timespec wait = {};
+                    timespec wait = {0,0};
                     wait.tv_sec = now.tv_sec + (millisecs / 1000);
                     wait.tv_nsec = (now.tv_usec * 1000) + ((millisecs % 1000) * 1000000);
                

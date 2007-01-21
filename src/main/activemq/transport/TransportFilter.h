@@ -131,9 +131,7 @@ namespace transport{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( Transport* source, const exceptions::ActiveMQException& ex ){
-            fire( ex );
-        }
+        virtual void onTransportException( Transport* source, const exceptions::ActiveMQException& ex );
         
         /**
          * Sends a one-way command.  Does not wait for any response from the

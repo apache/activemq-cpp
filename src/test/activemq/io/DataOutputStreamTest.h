@@ -36,6 +36,7 @@ namespace io{
 	  
 	public:
 	
+        virtual ~DataOutputStreamTest(){}
 		virtual void setUp(){};	
 	 	virtual void tearDown(){};
 		void test(){

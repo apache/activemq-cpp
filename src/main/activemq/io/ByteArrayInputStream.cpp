@@ -107,3 +107,16 @@ int ByteArrayInputStream::read( unsigned char* buffer,
    
     return ix;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int ByteArrayInputStream::skip( int num ) 
+throw ( IOException, exceptions::UnsupportedOperationException ){
+    
+    int ix = 0;
+    
+    // Increment the position until we've skipped the desired number
+    // or we've hit the end of the buffer.
+    for( ; ix < num && pos != activeBuffer->end(); ++ix, ++pos) {}
+   
+    return ix;
+}

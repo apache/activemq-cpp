@@ -152,6 +152,12 @@ namespace network{
 		 */
 		virtual void close() throw( cms::CMSException ){}
         
+        /**
+         * Not supported.
+         * @throws an UnsupportedOperationException.
+         */ 
+        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException );
+        
 	};
 	
 }}

@@ -33,20 +33,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalStateException(void) {};
+        IllegalStateException() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        IllegalStateException(const ActiveMQException& ex){
+        IllegalStateException(const ActiveMQException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        IllegalStateException(const IllegalStateException& ex){
+        IllegalStateException(const IllegalStateException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -60,8 +64,9 @@ namespace exceptions{
          * @param list of primitives that are formatted into the message
          */
         IllegalStateException( const char* file, 
-                                      const int lineNumber,
-                                      const char* msg, ...)
+                               const int lineNumber,
+                               const char* msg, ...)
+        : ActiveMQException()
         {
             va_list vargs;
             va_start(vargs, msg);
@@ -76,11 +81,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new IllegalStateException(*this);
         }
 
-        virtual ~IllegalStateException(void) {}
+        virtual ~IllegalStateException() {}
 
    };
 

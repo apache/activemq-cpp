@@ -22,6 +22,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/io/BufferedInputStream.h>
+#include <activemq/util/Config.h>
 
 
 namespace activemq{
@@ -75,6 +76,9 @@ namespace io{
 			virtual void close() throw(cms::CMSException){
 				// do nothing.
 			}
+            virtual int skip( int num ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+                return 0;
+            }
 			
 		    virtual void lock() throw(exceptions::ActiveMQException){
 		    }
@@ -82,7 +86,7 @@ namespace io{
 		    }
             virtual void wait() throw(exceptions::ActiveMQException){
             }
-            virtual void wait(unsigned long millisecs) throw(exceptions::ActiveMQException){                
+            virtual void wait(unsigned long millisecs ACTIVEMQ_ATTRIBUTE_UNUSED) throw(exceptions::ActiveMQException){                
             }
             virtual void notify() throw(exceptions::ActiveMQException){
             }
@@ -92,6 +96,7 @@ namespace io{
 		
 	public:
 	
+        virtual ~BufferedInputStreamTest(){}
 		virtual void setUp(){};	
 	 	virtual void tearDown(){};
 		void testSmallerBuffer(){

@@ -17,6 +17,7 @@
 #include "Logger.h"
 
 #include <activemq/logger/Handler.h>
+#include <activemq/util/Config.h>
 #include <algorithm>
 
 using namespace std;
@@ -25,7 +26,8 @@ using namespace activemq::logger;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger::Logger(const std::string& name, Logger* parent)
+Logger::Logger( const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                Logger* parent ACTIVEMQ_ATTRIBUTE_UNUSED )
 {
 }
 
@@ -65,99 +67,100 @@ void Logger::removeHandler(Handler* handler)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::setFilter(Filter* filter)
+void Logger::setFilter( Filter* filter ACTIVEMQ_ATTRIBUTE_UNUSED )
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Logger::isLoggable(Level level) const
+bool Logger::isLoggable( Level level ACTIVEMQ_ATTRIBUTE_UNUSED ) const
 {
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::entry(const std::string& blockName, 
-                   const std::string& file, 
-                   const int line)
+void Logger::entry(const std::string& blockName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const int line ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::exit(const std::string& blockName, 
-                  const std::string& file, 
-                  const int line)
+void Logger::exit(const std::string& blockName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const int line ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::debug(const std::string& file, 
-                   const int line, 
-                   const std::string fnctionName, 
-                   const std::string& message)
+void Logger::debug(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string fnctionName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::info(const std::string& file, 
-                  const int line, 
-                  const std::string fnctionName, 
-                  const std::string& message)
+void Logger::info(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string fnctionName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::error(const std::string& file, 
-                   const int line, 
-                   const std::string fnctionName,
-                   const std::string& message)
+void Logger::error(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string fnctionName ACTIVEMQ_ATTRIBUTE_UNUSED,
+                   const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::warn(const std::string& file, 
-                  const int line, 
-                  const std::string fnctionName, 
-                  const std::string& message)
+void Logger::warn(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string fnctionName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::fatal(const std::string& file, 
-                   const int line, 
-                   const std::string fnctionName, 
-                   const std::string& message)
+void Logger::fatal(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string fnctionName ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                   const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(Level level, const std::string& message)
+void Logger::log( Level level ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                  const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(Level level, 
-                 const std::string& file, 
-                 const int line, 
-                 const std::string& message, 
-                 cms::CMSException& ex)
+void Logger::log(Level level ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(Level level, 
-                 const std::string& file, 
-                 const int line, 
-                 const std::string& message, ...)
+void Logger::log(Level level ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const int line ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                 const std::string& message ACTIVEMQ_ATTRIBUTE_UNUSED, ...)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(LogRecord& record)
+void Logger::log(LogRecord& record ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* Logger::getLogger(const std::string& name)
+Logger* Logger::getLogger(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     return NULL;
 }

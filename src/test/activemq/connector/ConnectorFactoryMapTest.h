@@ -24,6 +24,7 @@
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/TransactionInfo.h>
+#include <activemq/util/Config.h>
 #include <cms/Topic.h>
 #include <cms/Queue.h>
 #include <cms/TemporaryTopic.h>
@@ -47,62 +48,64 @@ namespace connector{
 		      virtual SessionInfo* createSessionInfo(void) throw( ConnectorException )
 		      { return NULL; };
 		
-		      virtual cms::Topic* createTopic(const std::string& name, SessionInfo* session)
+		      virtual cms::Topic* createTopic(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		          throw ( ConnectorException )
 		      { return NULL; };
-		      virtual cms::Queue* createQueue(const std::string& name, SessionInfo* session)
+		      virtual cms::Queue* createQueue(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException )
 		      { return NULL; };
 		          
-		      virtual cms::TemporaryTopic* createTemporaryTopic(const std::string& name, 
-		                                                    SessionInfo*       session)
+		      virtual cms::TemporaryTopic* createTemporaryTopic(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, 
+		                                                    SessionInfo*       session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException )
 		     { return NULL; };
 		         
-		       virtual cms::TemporaryQueue* createTemporaryQueue(const std::string& name, 
-		                                                    SessionInfo*       session)
+		       virtual cms::TemporaryQueue* createTemporaryQueue(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, 
+		                                                    SessionInfo*       session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		          throw ( ConnectorException )
 		       { return NULL; };
 		          
-		      virtual void Send(cms::Message* message) throw ( ConnectorException ) {};
-		      virtual void Send(std::list<cms::Message*>& messages) 
+		      virtual void Send(cms::Message* message ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( ConnectorException ) {};
+		      virtual void Send(std::list<cms::Message*>& messages ACTIVEMQ_ATTRIBUTE_UNUSED) 
 		         throw ( ConnectorException ) {};
-            virtual void Acknowledge(cms::Message* message) throw ( ConnectorException ) {};
-		      virtual TransactionInfo* startTransaction(SessionInfo* session) 
+            virtual void Acknowledge(cms::Message* message ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( ConnectorException ) {};
+		      virtual TransactionInfo* startTransaction(SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED) 
 		         throw ( ConnectorException ) { return NULL; };
-		      virtual void commit(TransactionInfo* transaction, SessionInfo* session)
+		      virtual void commit(TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void rollback(TransactionInfo* transaction, SessionInfo* session)
+		      virtual void rollback(TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException ) {};
 		
-		      virtual cms::BytesMessage* createByteMessage(SessionInfo*     session,
-		                                             TransactionInfo* transaction)
+		      virtual cms::BytesMessage* createByteMessage(SessionInfo*     session ACTIVEMQ_ATTRIBUTE_UNUSED,
+		                                             TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED)
 		                                               throw ( ConnectorException )
 		      { return NULL; };
-		      virtual cms::TextMessage* createTextMessage(SessionInfo*     session,
-		                                             TransactionInfo* transaction)
+		      virtual cms::TextMessage* createTextMessage(SessionInfo*     session ACTIVEMQ_ATTRIBUTE_UNUSED,
+		                                             TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED)
 		                                               throw ( ConnectorException )
 		      { return NULL; };
-		      virtual void subscribe(cms::Destination* destination, SessionInfo* session)
+		      virtual void subscribe(cms::Destination* destination ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void unsubscribe(cms::Destination* destination, SessionInfo* session)
+		      virtual void unsubscribe(cms::Destination* destination ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void addMessageListener(cms::MessageListener* listener) {};
-		      virtual void removeMessageListener(cms::MessageListener* listener) {};
-            virtual void addExceptionListener(cms::ExceptionListener* listener) {};
-            virtual void removeExceptionListener(cms::ExceptionListener* listener) {};
+		      virtual void addMessageListener(cms::MessageListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
+		      virtual void removeMessageListener(cms::MessageListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
+            virtual void addExceptionListener(cms::ExceptionListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
+            virtual void removeExceptionListener(cms::ExceptionListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
 		
 		};
 		
 	public:
+    
+        virtual ~ConnectorFactoryMapTest(){}
 	
 		class TestConnectoryFactory : public ConnectorFactory
 		{
 		public:
 		
 		   virtual Connector* createConnector(
-		      const activemq::util::Properties& properties,
-            activemq::transport::Transport*   transport) { return NULL; };
+		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED,
+            activemq::transport::Transport*   transport ACTIVEMQ_ATTRIBUTE_UNUSED) { return NULL; };
 		};
 		
 		void test(){

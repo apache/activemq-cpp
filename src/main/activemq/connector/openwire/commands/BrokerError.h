@@ -49,7 +49,7 @@ namespace commands{
 
         BrokerError() {}
         virtual ~BrokerError() {
-            for( int i = 0; i < stackTraceElements.size(); ++i ) {
+            for( unsigned int i = 0; i < stackTraceElements.size(); ++i ) {
                 delete stackTraceElements[i];
             }
         }
@@ -92,7 +92,7 @@ namespace commands{
             this->setMessage( srcErr->getMessage() );
             this->setExceptionClass( srcErr->getExceptionClass() );
             
-            for( int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
+            for( unsigned int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
                 if( srcErr->getStackTraceElements()[i] != NULL ) {
                     StackTraceElement* element = new StackTraceElement;
                     *element = *( srcErr->getStackTraceElements()[i] );

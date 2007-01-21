@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BOOLEANEXPRESSION_H_
 
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -44,7 +45,7 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {}
+        virtual void copyDataStructure( const DataStructure* src ACTIVEMQ_ATTRIBUTE_UNUSED) {}
         
     };
 

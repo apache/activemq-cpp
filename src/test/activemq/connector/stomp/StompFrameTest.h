@@ -36,7 +36,7 @@ namespace stomp{
 
    public:
 
-   	virtual ~StompFrameTest() {}
+   	    virtual ~StompFrameTest() {}
 
       void test()
       {

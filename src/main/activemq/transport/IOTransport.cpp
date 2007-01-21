@@ -21,6 +21,7 @@
 
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
+#include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::transport;
@@ -175,5 +176,11 @@ void IOTransport::run(){
         
         fire( ex );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* IOTransport::request( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED ) 
+throw( CommandIOException, exceptions::UnsupportedOperationException ){
+    throw exceptions::UnsupportedOperationException( __FILE__, __LINE__, "IOTransport::request() - unsupported operation" );
 }
 

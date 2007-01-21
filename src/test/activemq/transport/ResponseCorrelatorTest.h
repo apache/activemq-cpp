@@ -26,6 +26,7 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
+#include <activemq/util/Config.h>
 #include <queue>
 
 namespace activemq{
@@ -172,7 +173,7 @@ namespace transport{
                 }
             }
             
-            virtual Response* request( Command* command ) 
+            virtual Response* request( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED) 
                 throw(CommandIOException, exceptions::UnsupportedOperationException)
             {
                 throw exceptions::UnsupportedOperationException( 
@@ -308,7 +309,7 @@ namespace transport{
             MyBrokenTransport(){}            
             virtual ~MyBrokenTransport(){}
             
-            virtual Response* createResponse( Command* command ){                
+            virtual Response* createResponse( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED){                
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "bad stuff" );
             }
@@ -341,8 +342,8 @@ namespace transport{
             }
             
             virtual void onTransportException( 
-                Transport* source, 
-                const exceptions::ActiveMQException& ex )
+                Transport* source ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                const exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
             {
                 synchronized( &mutex ){
                     exCount++;
@@ -387,8 +388,7 @@ namespace transport{
         
     public:
 
-        virtual void setUp(){}; 
-        virtual void tearDown(){};
+        virtual ~ResponseCorrelatorTest(){}
         
         void testBasics(){
             

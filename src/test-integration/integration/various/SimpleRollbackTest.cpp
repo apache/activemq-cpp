@@ -42,6 +42,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::various::SimpleRollbackTest );
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/util/StringTokenizer.h>
 #include <activemq/util/Boolean.h>
+#include <activemq/util/Config.h>
 
 #include <cms/Connection.h>
 #include <cms/MessageConsumer.h>
@@ -197,7 +198,7 @@ void SimpleRollbackTest::test()
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-void SimpleRollbackTest::onException( const cms::CMSException& error )
+void SimpleRollbackTest::onException( const cms::CMSException& error ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     bool AbstractTester = false;
     CPPUNIT_ASSERT( AbstractTester );

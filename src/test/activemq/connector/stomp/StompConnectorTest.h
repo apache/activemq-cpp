@@ -30,6 +30,7 @@
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
 #include <activemq/transport/DummyTransport.h>
+#include <activemq/util/Config.h>
 
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <algorithm>
@@ -59,7 +60,7 @@ namespace stomp{
                 int num;
                 MyExceptionListener(){ num=0;}
                 virtual ~MyExceptionListener(){}
-                virtual void onException( const cms::CMSException& ex ){
+                virtual void onException( const cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
                     num++;
                 }
         };        

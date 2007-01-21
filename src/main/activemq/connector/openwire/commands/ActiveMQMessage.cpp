@@ -16,6 +16,7 @@
  */
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/util/Config.h>
 
 using namespace std;
 using namespace activemq;
@@ -37,7 +38,7 @@ unsigned char ActiveMQMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat )
+void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED )
 {
 //    marshalledProperties.clear();
 //    if( !properties.empty() )

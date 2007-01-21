@@ -85,16 +85,22 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled])) 
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
+# Define globals for all platforms
+CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2 -W -Wall"
+#-Wno-unused-parameter
+
+LIBS="$LIBS"
+
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2" 
-    LIBS=""
+    CXXFLAGS="$CXXFLAGS" 
+    LIBS="$LIBS"
     ;;
 
   *cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
-    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2" 
+    CXXFLAGS="$CXXFLAGS" 
     LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
     
@@ -102,7 +108,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2"
+    CXXFLAGS="$CXXFLAGS"
     LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
     ;;
     
@@ -111,7 +117,7 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2" 
+    CXXFLAGS="$CXXFLAGS" 
     LIBS="$LIBS -lm -lpthread -luuid"
 esac
 

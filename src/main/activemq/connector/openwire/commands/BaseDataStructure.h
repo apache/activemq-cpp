@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BASEDATASTRUCTURE_H_
 
 #include <activemq/connector/openwire/commands/DataStructure.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -48,25 +49,25 @@ namespace commands{
          * Perform any processing needed before an marshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat ) {}
+        virtual void beforeMarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED) {}
         
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void afterMarshall( OpenWireFormat* wireFormat ) {}
+        virtual void afterMarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED) {}
         
         /**
          * Perform any processing needed before an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeUnmarshall( OpenWireFormat* wireFormat ) {}
+        virtual void beforeUnmarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED) {}
         
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void afterUnmarshall( OpenWireFormat* wireFormat ) {}
+        virtual void afterUnmarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED) {}
 
         /**
          * Called to set the data to this object that will contain the objects
@@ -74,8 +75,8 @@ namespace commands{
          * @param wireFormat - the wireformat object to control unmarshaling
          * @param data - vector of object binary data
          */ 
-        virtual void setMarshalledForm( OpenWireFormat* wireFormat, 
-                                        const std::vector<char>& data ) {}
+        virtual void setMarshalledForm( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                                        const std::vector<char>& data ACTIVEMQ_ATTRIBUTE_UNUSED) {}
 
         /**
          * Called to get the data to this object that will contain the objects
@@ -83,7 +84,7 @@ namespace commands{
          * @param wireFormat - the wireformat object to control unmarshaling
          * @return buffer that holds the objects data.
          */ 
-        virtual std::vector<unsigned char> getMarshalledForm( OpenWireFormat* wireFormat ) {
+        virtual std::vector<unsigned char> getMarshalledForm( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED) {
             return std::vector<unsigned char>(); 
         }
 

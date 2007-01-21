@@ -334,7 +334,7 @@ namespace io{
          * @param num - number of bytes to skip
          * @return the total number of bytes skipped
          */
-        virtual int skipBytes( int num ) throw( io::IOException );
+        virtual int skip( int num ) throw( io::IOException, exceptions::UnsupportedOperationException );
 
     };
 

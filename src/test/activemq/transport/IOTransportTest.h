@@ -32,6 +32,7 @@
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -54,10 +55,10 @@ namespace transport{
             
             char c;
             
-            virtual void setCommandId( const unsigned int id ){}
+            virtual void setCommandId( const unsigned int id ACTIVEMQ_ATTRIBUTE_UNUSED){}
             virtual unsigned int getCommandId() const{ return 0; }
             
-            virtual void setResponseRequired( const bool required ){}
+            virtual void setResponseRequired( const bool required ACTIVEMQ_ATTRIBUTE_UNUSED){}
             virtual bool isResponseRequired() const{ return false; }
         };
         
@@ -128,7 +129,8 @@ namespace transport{
                 }
             }
 
-            virtual int read(unsigned char* buffer, int count) 
+            virtual int read(unsigned char* buffer ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                             int count ACTIVEMQ_ATTRIBUTE_UNUSED) 
                 throw( io::IOException ) {
                 return 0;
             }
@@ -174,10 +176,11 @@ namespace transport{
                 }
             }
 
-            virtual void write(const unsigned char* buffer, int count) 
+            virtual void write( const unsigned char* buffer ACTIVEMQ_ATTRIBUTE_UNUSED, 
+                                int count ACTIVEMQ_ATTRIBUTE_UNUSED) 
                 throw(io::IOException) {}
            
-            virtual void writeByte(unsigned char v) throw(io::IOException) {}
+            virtual void writeByte(unsigned char v ACTIVEMQ_ATTRIBUTE_UNUSED) throw(io::IOException) {}
         };
         
         class MyExceptionListener : public TransportExceptionListener{
@@ -191,7 +194,8 @@ namespace transport{
             }
             virtual ~MyExceptionListener(){}
             
-            virtual void onTransportException( Transport* source, const exceptions::ActiveMQException& ex ){
+            virtual void onTransportException( Transport* source, 
+                        const exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
                 transport = source;
 
                 synchronized(&mutex)
@@ -203,8 +207,7 @@ namespace transport{
     
     public:
 
-        virtual void setUp(){}; 
-        virtual void tearDown(){};
+        virtual ~IOTransportTest(){}
         
         // This will just test that we can start and stop the 
         // transport without any exceptions.
