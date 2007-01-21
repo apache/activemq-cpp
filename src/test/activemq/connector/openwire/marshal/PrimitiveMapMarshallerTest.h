@@ -30,7 +30,6 @@ namespace marshal{
         
         CPPUNIT_TEST_SUITE( PrimitiveMapMarshallerTest );
         CPPUNIT_TEST( test );
-        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -39,7 +38,6 @@ namespace marshal{
         virtual ~PrimitiveMapMarshallerTest() {}
 
         void test();
-        void test2();
         
     };
 
