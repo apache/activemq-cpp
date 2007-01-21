@@ -356,7 +356,11 @@ namespace util{
          * @return The number of elements (key/value pairs) in this map.
          */
         virtual unsigned int size() const;
-        
+
+        /**
+         * @returns if there are any entries in the map.
+         */
+        virtual bool isEmpty() const;        
 
         virtual bool getBool( const std::string& key ) const 
             throw(activemq::exceptions::NoSuchElementException);

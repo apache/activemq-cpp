@@ -58,8 +58,8 @@ void ReplayCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataSt
 ///////////////////////////////////////////////////////////////////////////////
 int ReplayCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
 
-    /*ReplayCommand* info =
-        dynamic_cast<ReplayCommand*>( dataStructure );*/
+    ReplayCommand* info =
+        dynamic_cast<ReplayCommand*>( dataStructure );
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 

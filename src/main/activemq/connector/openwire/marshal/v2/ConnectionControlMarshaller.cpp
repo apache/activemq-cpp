@@ -79,8 +79,8 @@ void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
-    /*ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );*/
+    ConnectionControl* info =
+        dynamic_cast<ConnectionControl*>( dataStructure );
     bs->readBoolean();
     bs->readBoolean();
     bs->readBoolean();
