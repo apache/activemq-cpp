@@ -18,8 +18,10 @@
 #include "BufferedInputStream.h"
 #include <algorithm>
 
-using namespace activemq::io;
 using namespace std;
+using namespace activemq;
+using namespace activemq::io;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedInputStream::BufferedInputStream( InputStream* stream, bool own )
@@ -131,7 +133,7 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 int BufferedInputStream::skip( int num ) 
-throw ( IOException, exceptions::UnsupportedOperationException ){
+    throw ( IOException, exceptions::UnsupportedOperationException ){
     
     try{
         // If there's no data left, reset to pointers to the beginning of the
