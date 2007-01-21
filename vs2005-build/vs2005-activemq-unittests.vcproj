@@ -437,6 +437,14 @@
 					<Filter
 						Name="marshal"
 						>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\marshal\PrimitiveMapMarshallerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\marshal\PrimitiveMapMarshallerTest.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="utils"
