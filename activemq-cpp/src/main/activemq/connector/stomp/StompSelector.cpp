@@ -14,30 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_UTIL_ENDIAN_H
-#define ACTIVEMQ_UTIL_ENDIAN_H
 
-namespace activemq{
-namespace util{
-    
-    class Endian{
-    public:
-    
-        static void byteSwap(unsigned char* data, int dataLength);
-        
-        static unsigned char byteSwap( unsigned char value );
-        
-        static unsigned short byteSwap( unsigned short value );
-        
-        static unsigned int byteSwap( unsigned int value );
-        
-        static unsigned long long byteSwap( unsigned long long value );
+#include "StompSelector.h"
+#include <activemq/util/Config.h>
 
-        static float byteSwap( float value );
-        
-        static double byteSwap( double value );
-    };
-    
-}}
+using namespace activemq::connector::stomp;
+using namespace std;
 
-#endif /*ACTIVEMQ_UTIL_ENDIAN_H*/
+////////////////////////////////////////////////////////////////////////////////
+bool StompSelector::isSelected( const string& selector ACTIVEMQ_ATTRIBUTE_UNUSED,
+    cms::Message* msg ACTIVEMQ_ATTRIBUTE_UNUSED)
+{
+    return true;
+}
+

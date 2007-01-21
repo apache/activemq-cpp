@@ -86,8 +86,7 @@ AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Int
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 # Define globals for all platforms
-CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2 -W -Wall"
-#-Wno-unused-parameter
+CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2 -W -Wall -ansi -pedantic -D HAVE_ACTIVEMQ_CONFIG"
 
 LIBS="$LIBS"
 
@@ -171,6 +170,7 @@ AC_CONFIG_FILES(src/examples/Makefile)
 
 if test x$cppunit = xyes
 then
+  CXXFLAGS="-D HAVE_ACTIVEMQ_CONFIG"
   AC_CONFIG_FILES(src/test/Makefile)
   AC_CONFIG_FILES(src/test-integration/Makefile)
 fi

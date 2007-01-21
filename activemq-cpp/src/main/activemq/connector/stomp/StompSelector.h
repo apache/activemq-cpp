@@ -20,7 +20,6 @@
 
 #include <cms/Message.h>
 #include <string>
-#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -36,11 +35,7 @@ namespace stomp{
     class StompSelector{
     public:
     
-        static bool isSelected( const std::string& selector ACTIVEMQ_ATTRIBUTE_UNUSED,
-            cms::Message* msg ACTIVEMQ_ATTRIBUTE_UNUSED)
-        {
-            return true;
-        }
+        static bool isSelected( const std::string& selector, cms::Message* msg );
         
     };
     

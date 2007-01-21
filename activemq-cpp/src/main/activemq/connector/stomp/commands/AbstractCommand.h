@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABSTRACTCOMMAND_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABSTRACTCOMMAND_H_
 
@@ -37,7 +38,6 @@ namespace commands{
      * Commands help to abstract the stomp frame by providing a
      * more user-friendly interface to the frame content.  
      */
-    
     template<typename T>
     class AbstractCommand
     : 
@@ -51,7 +51,7 @@ namespace commands{
 
     protected:
     
-        StompFrame& getFrame(void) {
+        StompFrame& getFrame() {
             if( frame == NULL ){
                 throw exceptions::NullPointerException(
                     __FILE__, __LINE__,
@@ -61,7 +61,7 @@ namespace commands{
             return *frame;
         }
         
-        const StompFrame& getFrame(void) const {
+        const StompFrame& getFrame() const {
             if( frame == NULL ){
                 throw exceptions::NullPointerException(
                     __FILE__, __LINE__,
@@ -71,7 +71,7 @@ namespace commands{
             return *frame;
         }
         
-        void destroyFrame(void)
+        void destroyFrame()
         {
             if( frame != NULL ){
                 delete frame;
@@ -111,13 +111,13 @@ namespace commands{
         
     public:
     
-        AbstractCommand(void){ 
+        AbstractCommand(){ 
             frame = new StompFrame;
         }
         AbstractCommand( StompFrame* frame ){ 
             this->frame = frame;
         }
-        virtual ~AbstractCommand(void){
+        virtual ~AbstractCommand(){
             destroyFrame();
         }
         
@@ -125,10 +125,10 @@ namespace commands{
          * Gets the properties map for this command.
          * @return Reference to a Properties object
          */
-        virtual util::Properties& getProperties(void){
+        virtual util::Properties& getProperties(){
             return getFrame().getProperties();
         }   
-        virtual const util::Properties& getProperties(void) const{
+        virtual const util::Properties& getProperties() const{
             return getFrame().getProperties();
         }   
 
@@ -147,7 +147,7 @@ namespace commands{
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual unsigned int getCommandId(void) const {
+        virtual unsigned int getCommandId() const {
             return util::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString( 
@@ -166,7 +166,7 @@ namespace commands{
          * Is a Response required for this Command
          * @return true if a response is required.
          */
-        virtual bool isResponseRequired(void) const {
+        virtual bool isResponseRequired() const {
             return frame->getProperties().hasProperty( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_REQUESTID) );
@@ -176,7 +176,7 @@ namespace commands{
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
          */
-        virtual unsigned int getCorrelationId(void) const {
+        virtual unsigned int getCorrelationId() const {
             return util::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString( 
@@ -199,7 +199,7 @@ namespace commands{
          * Get the Transaction Id of this Command
          * @return the Id of the Transaction
          */      
-        virtual std::string getTransactionId(void) const{
+        virtual std::string getTransactionId() const{
             return getPropertyValue( 
                 CommandConstants::toString( 
                     CommandConstants::HEADER_TRANSACTIONID ), "" );
@@ -220,7 +220,7 @@ namespace commands{
          * Retrieve the Stomp Command Id for this message.
          * @return Stomp CommandId enum
          */
-        virtual CommandConstants::CommandId getStompCommandId(void) const {
+        virtual CommandConstants::CommandId getStompCommandId() const {
             return CommandConstants::toCommandId(
                 getFrame().getCommand() );
         }
@@ -232,7 +232,7 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal(void)
+        virtual const StompFrame& marshal()
             throw (marshal::MarshalException)
         {
             if( frame == NULL || !validate( *frame ) ){
@@ -250,7 +250,7 @@ namespace commands{
          * Fetch the number of bytes in the Stomp Frame Body
          * @return number of bytes
          */
-        virtual unsigned long long getNumBytes(void) const{
+        virtual unsigned long long getNumBytes() const{
             return getFrame().getBodyLength();
         }
 

@@ -26,6 +26,7 @@
 #include <activemq/connector/stomp/commands/UnsubscribeCommand.h>
 #include <activemq/connector/stomp/StompSelector.h>
 #include <activemq/util/Properties.h>
+#include <activemq/util/Config.h>
 
 using namespace std;
 using namespace activemq;
