@@ -362,8 +362,9 @@ namespace concurrent{
 
    public:
     
-        virtual void setUp(){}; 
-        virtual void tearDown(){};
+        virtual ~MutexTest(){}
+        virtual void setUp(){} 
+        virtual void tearDown(){}
         
       void testTimedWait(){
 

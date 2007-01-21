@@ -21,6 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/connector/ConnectorFactoryMapRegistrar.h>
 
@@ -40,9 +41,11 @@ namespace connector{
 		public:
 		
 		   virtual Connector* createConnector(
-		      const activemq::util::Properties& properties,
-            activemq::transport::Transport*   transport) { return NULL; };
+		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED,
+            activemq::transport::Transport*   transport ACTIVEMQ_ATTRIBUTE_UNUSED) { return NULL; };
 		};
+        
+        virtual ~ConnectorFactoryMapRegistrarTest(){}
 		
 		void test(){
 			

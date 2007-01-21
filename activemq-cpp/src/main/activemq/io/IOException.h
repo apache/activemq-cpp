@@ -38,7 +38,9 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        IOException( const exceptions::ActiveMQException& ex ){
+        IOException( const exceptions::ActiveMQException& ex )
+        : exceptions::ActiveMQException()
+        {
             *(exceptions::ActiveMQException*)this = ex;
         }
         
@@ -46,7 +48,9 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        IOException( const IOException& ex ){
+        IOException( const IOException& ex )
+        : exceptions::ActiveMQException()
+        {
             *(exceptions::ActiveMQException*)this = ex;
         }
 
@@ -58,6 +62,7 @@ namespace io{
          */
         IOException( const char* file, const int lineNumber,
                      const char* msg, ... )
+        : exceptions::ActiveMQException()
         {
             va_list vargs;
             va_start( vargs, msg );

@@ -93,8 +93,9 @@ namespace concurrent{
 		
 	public:
 	
-		virtual void setUp(){};	
-	 	virtual void tearDown(){};
+        virtual ~ThreadTest(){}
+		virtual void setUp(){}	
+	 	virtual void tearDown(){}
 		void testDelegate(){
 		  	
 		  	Delegate test;

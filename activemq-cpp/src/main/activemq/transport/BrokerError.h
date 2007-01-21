@@ -40,7 +40,9 @@ namespace transport{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        BrokerError( const exceptions::ActiveMQException& ex ){
+        BrokerError( const exceptions::ActiveMQException& ex )
+        : exceptions::ActiveMQException()
+        {
             *(exceptions::ActiveMQException*)this = ex;
         }
 
@@ -48,7 +50,9 @@ namespace transport{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        BrokerError( const BrokerError& ex ){
+        BrokerError( const BrokerError& ex )
+        : exceptions::ActiveMQException()
+        {
             *(exceptions::ActiveMQException*)this = ex;
         }
 
@@ -60,6 +64,7 @@ namespace transport{
          */
         BrokerError(const char* file, const int lineNumber, 
             const char* msg, ...)
+        : exceptions::ActiveMQException()
         {
             va_list vargs ;
             va_start(vargs, msg) ;

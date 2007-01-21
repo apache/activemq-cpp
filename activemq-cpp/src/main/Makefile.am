@@ -66,6 +66,7 @@ cc_sources = \
     activemq/transport/IOTransport.cpp \
     activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TcpTransportFactory.cpp \
+    activemq/transport/TransportFilter.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
     activemq/util/Date.cpp \

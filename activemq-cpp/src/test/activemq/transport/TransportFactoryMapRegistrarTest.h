@@ -23,6 +23,7 @@
 
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -40,8 +41,10 @@ namespace transport{
 		public:
 		
 		   virtual Transport* createTransport(
-		      const activemq::util::Properties& properties ) { return NULL; };
+		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED ) { return NULL; };
 		};
+        
+        virtual ~TransportFactoryMapRegistrarTest(){}
 		
 		void test(){
 			

@@ -101,7 +101,7 @@ namespace logger{
          * Sets the Source Log File Name
          * @param loggerName the source loggers name
          */
-        void setSourceFile( const std::string& loggerName ) { 
+        void setSourceFile( const std::string& sourceFile ) { 
             this->sourceFile = sourceFile;
         };
 

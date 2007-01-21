@@ -19,8 +19,9 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
+#include <activemq/util/Config.h>
 
-int main( int argc, char **argv)
+int main( int argc ACTIVEMQ_ATTRIBUTE_UNUSED, char **argv ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     CppUnit::TextUi::TestRunner runner;
     CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();

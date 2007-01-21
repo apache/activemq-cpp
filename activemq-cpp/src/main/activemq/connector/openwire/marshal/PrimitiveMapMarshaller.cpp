@@ -21,6 +21,7 @@
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/io/DataInputStream.h>
 #include <activemq/io/DataOutputStream.h>
+#include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::io;
@@ -96,8 +97,8 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut,
-                                               util::PrimitiveMap::ValueNode& value )
+void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut ACTIVEMQ_ATTRIBUTE_UNUSED,
+                                               util::PrimitiveMap::ValueNode& value ACTIVEMQ_ATTRIBUTE_UNUSED)
                                                     throw ( cms::CMSException ) {
 
     try {
@@ -185,9 +186,9 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream* dataOut,
 }
                                                     
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream* dataIn,
-                                                 const std::string& key,
-                                                 util::PrimitiveMap& map )
+void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream* dataIn ACTIVEMQ_ATTRIBUTE_UNUSED,
+                                                 const std::string& key ACTIVEMQ_ATTRIBUTE_UNUSED,
+                                                 util::PrimitiveMap& map ACTIVEMQ_ATTRIBUTE_UNUSED)
                                                     throw ( cms::CMSException ) {
 
     try {

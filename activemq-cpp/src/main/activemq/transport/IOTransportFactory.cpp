@@ -16,9 +16,17 @@
  */
  
 #include "IOTransportFactory.h"
+#include <activemq/util/Config.h>
 
 using namespace activemq::transport;
 
+////////////////////////////////////////////////////////////////////////////////
+Transport* IOTransportFactory::createTransport( 
+    const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED )
+{
+    return new IOTransport();
+}
+        
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactory& IOTransportFactory::getInstance(void)
 {

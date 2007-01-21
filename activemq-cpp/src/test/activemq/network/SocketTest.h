@@ -144,9 +144,7 @@ namespace network{
 		
 	public:
 	
-		virtual void setUp(){};	
-	 	virtual void tearDown(){	 			 		
-	 	};
+        virtual ~SocketTest(){}
 		void testConnect(){
 
 			try{

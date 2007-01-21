@@ -149,9 +149,7 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException ){
-            throw exceptions::UnsupportedOperationException( __FILE__, __LINE__, "IOTransport::request() - unsupported operation" );
-        }
+        virtual Response* request( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
         
         /**
          * Assigns the command listener for non-response commands.

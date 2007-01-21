@@ -33,20 +33,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        InvalidStateException(void) {}
+        InvalidStateException() {}
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        InvalidStateException(const ActiveMQException& ex){
+        InvalidStateException(const ActiveMQException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        InvalidStateException( const InvalidStateException& ex ){
+        InvalidStateException( const InvalidStateException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -62,6 +66,7 @@ namespace exceptions{
         InvalidStateException( const char* file, 
                                const int lineNumber,
                                const char* msg, ... )
+        : ActiveMQException()
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -76,11 +81,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new InvalidStateException(*this);
         }
 
-        virtual ~InvalidStateException(void) {}
+        virtual ~InvalidStateException() {}
       
     };
 

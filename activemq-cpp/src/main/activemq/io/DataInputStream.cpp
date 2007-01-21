@@ -315,7 +315,8 @@ void DataInputStream::readFully( unsigned char* buffer, int offset, int length )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::skipBytes( int num ) throw( io::IOException ) {
+int DataInputStream::skip( int num ) 
+throw( io::IOException, exceptions::UnsupportedOperationException ) {
     try {
         int total = 0;
         int cur = 0;

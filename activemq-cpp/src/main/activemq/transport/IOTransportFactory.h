@@ -43,10 +43,7 @@ namespace transport{
          * @param properties The properties for the transport.
          */
         virtual Transport* createTransport( 
-            const activemq::util::Properties& properties )
-        {
-            return new IOTransport();
-        }
+            const activemq::util::Properties& properties );
 
         /**
          * Returns a reference to this TransportFactory

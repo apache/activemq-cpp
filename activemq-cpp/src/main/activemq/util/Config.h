@@ -50,5 +50,12 @@
 
 #endif /* !defined(HAVE_CONFIG_H) */
 
+// Macro to mark attributes as unused
+#ifdef __GNUC__
+   #define ACTIVEMQ_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+#else
+   #define ACTIVEMQ_ATTRIBUTE_UNUSED
+#endif
+
 
 #endif /*ACTIVEMQ_UTIL_CONFIG_H_*/

@@ -18,6 +18,7 @@
 
 #include <activemq/logger/PropertiesChangeListener.h>
 #include <activemq/concurrent/Concurrent.h>
+#include <activemq/util/Config.h>
 
 #include <algorithm>
 
@@ -65,13 +66,13 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* LogManager::getLogger( const std::string& name )
+Logger* LogManager::getLogger( const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LogManager::getLoggerNames( const std::vector<std::string>& names )
+int LogManager::getLoggerNames( const std::vector<std::string>& names  ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     return 0;
 }

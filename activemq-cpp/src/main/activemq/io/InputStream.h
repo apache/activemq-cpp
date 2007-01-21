@@ -21,6 +21,7 @@
 #include <activemq/io/IOException.h>
 #include <cms/Closeable.h>
 #include <activemq/concurrent/Synchronizable.h>
+#include <activemq/exceptions/UnsupportedOperationException.h>
 
 namespace activemq{
 namespace io{
@@ -80,9 +81,7 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */ 
-        virtual int skip( int num ) throw ( io::IOException ) {
-            return 0;
-        };
+        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException ) = 0;
 
     };
     

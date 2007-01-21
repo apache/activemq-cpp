@@ -26,6 +26,7 @@
 #include <activemq/concurrent/ThreadPool.h>
 #include <activemq/concurrent/TaskListener.h>
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace concurrent{
@@ -56,7 +57,7 @@ namespace concurrent{
       
    	virtual ~ThreadPoolTest() {};
       
-      virtual void onTaskComplete(Runnable* task)
+      virtual void onTaskComplete(Runnable* task ACTIVEMQ_ATTRIBUTE_UNUSED)
       {
         try{
              synchronized(&mutex)
@@ -73,7 +74,8 @@ namespace concurrent{
         }
       }
 
-      virtual void onTaskException(Runnable* task, exceptions::ActiveMQException& ex)
+      virtual void onTaskException(Runnable* task ACTIVEMQ_ATTRIBUTE_UNUSED, 
+        exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
       {
          caughtEx = true;
       }
@@ -136,7 +138,7 @@ namespace concurrent{
       };
 
    public:
-
+        
       void test2()
       {
          try

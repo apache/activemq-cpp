@@ -20,6 +20,7 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::logger;
@@ -40,8 +41,8 @@ LogWriter::~LogWriter(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogWriter::log(const std::string& file,
-                    const int          line,
+void LogWriter::log(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED,
+                    const int          line ACTIVEMQ_ATTRIBUTE_UNUSED,
                     const std::string& prefix,
                     const std::string& message)
 {

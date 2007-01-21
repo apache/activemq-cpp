@@ -26,6 +26,7 @@
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Thread.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -216,9 +217,9 @@ namespace transport{
             outgoingCommandListener = listener;
         }
         
-        virtual void setCommandReader( CommandReader* reader ){}
+        virtual void setCommandReader( CommandReader* reader ACTIVEMQ_ATTRIBUTE_UNUSED){}
         
-        virtual void setCommandWriter( CommandWriter* writer ){}
+        virtual void setCommandWriter( CommandWriter* writer ACTIVEMQ_ATTRIBUTE_UNUSED){}
         
         virtual void setTransportExceptionListener( 
             TransportExceptionListener* listener )

@@ -197,7 +197,7 @@ namespace io{
          * @param value the value to write.
          * @throws IOException
          */
-        virtual void writeChars( const std::string& value ) throw ( IOException ) {};
+        virtual void writeChars( const std::string& value ) throw ( IOException );
 
         /**
          * Writes out the string to the underlying output stream as a

@@ -32,20 +32,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        NullPointerException(void) {};
+        NullPointerException() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        NullPointerException( const ActiveMQException& ex ){
+        NullPointerException( const ActiveMQException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        NullPointerException(const NullPointerException& ex){
+        NullPointerException(const NullPointerException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -61,6 +65,7 @@ namespace exceptions{
         NullPointerException( const char* file, 
                               const int lineNumber,
                               const char* msg, ... )
+        : ActiveMQException()
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -75,11 +80,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new NullPointerException( *this );
         }
 
-        virtual ~NullPointerException(void) {}
+        virtual ~NullPointerException() {}
 
     };
 

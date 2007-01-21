@@ -34,20 +34,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        RuntimeException(void) {};
+        RuntimeException() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        RuntimeException( const ActiveMQException& ex ){
+        RuntimeException( const ActiveMQException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        RuntimeException( const RuntimeException& ex ){
+        RuntimeException( const RuntimeException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -63,6 +67,7 @@ namespace exceptions{
         RuntimeException( const char* file, 
                           const int lineNumber,
                           const char* msg, ... )
+        : ActiveMQException()
         {
             va_list vargs;
             va_start(vargs, msg);
@@ -77,11 +82,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new RuntimeException( *this );
         }
 
-        virtual ~RuntimeException(void) {}
+        virtual ~RuntimeException() {}
 
     };
 

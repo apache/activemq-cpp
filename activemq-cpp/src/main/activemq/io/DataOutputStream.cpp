@@ -17,6 +17,7 @@
  
 #include "DataOutputStream.h"
 #include <activemq/util/Endian.h>
+#include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::io;
@@ -193,6 +194,12 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::writeChars( const std::string& value ACTIVEMQ_ATTRIBUTE_UNUSED) 
+throw ( IOException ) {
+    /* do nothing */
 }
 
 ////////////////////////////////////////////////////////////////////////////////

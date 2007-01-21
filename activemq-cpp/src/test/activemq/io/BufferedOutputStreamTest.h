@@ -23,6 +23,7 @@
 
 #include <activemq/io/BufferedOutputStream.h>
 #include <string.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace io{
@@ -82,7 +83,7 @@ namespace io{
             }
             virtual void wait() throw(exceptions::ActiveMQException){
             }
-            virtual void wait(unsigned long millisecs) throw(exceptions::ActiveMQException){
+            virtual void wait(unsigned long millisecs ACTIVEMQ_ATTRIBUTE_UNUSED) throw(exceptions::ActiveMQException){
             }
             virtual void notify() throw(exceptions::ActiveMQException){
             }
@@ -92,6 +93,7 @@ namespace io{
 		
 	public:
 	
+        virtual ~BufferedOutputStreamTest(){}
 		virtual void setUp(){};	
 	 	virtual void tearDown(){};
 		void testSmallerBuffer(){

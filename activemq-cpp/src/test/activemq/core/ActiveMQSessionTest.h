@@ -50,6 +50,7 @@
 #include <activemq/connector/stomp/StompSessionInfo.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace core{
@@ -92,7 +93,7 @@ namespace core{
             MyExceptionListener(){ caughtOne = false; }
             virtual ~MyExceptionListener(){}
             
-            virtual void onException(const cms::CMSException& ex){
+            virtual void onException(const cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
                 caughtOne = true;
             }
         };

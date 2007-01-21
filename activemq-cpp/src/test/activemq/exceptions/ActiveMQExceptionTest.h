@@ -36,6 +36,8 @@ namespace exceptions{
 	  
 	public:
 	
+        virtual ~ActiveMQExceptionTest(){}
+        
 		virtual void setUp(){};	
 	 	virtual void tearDown(){};
 		void testMessage0(){

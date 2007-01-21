@@ -32,20 +32,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        UnsupportedOperationException(void) {};
+        UnsupportedOperationException() {};
       
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        UnsupportedOperationException( const ActiveMQException& ex ){
+        UnsupportedOperationException( const ActiveMQException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        UnsupportedOperationException( const UnsupportedOperationException& ex ){
+        UnsupportedOperationException( const UnsupportedOperationException& ex )
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -61,6 +65,7 @@ namespace exceptions{
         UnsupportedOperationException( const char* file, 
                                        const int lineNumber,
                                        const char* msg, ... )
+        : ActiveMQException()
         {
             va_list vargs;
             va_start( vargs, msg );

@@ -24,6 +24,7 @@
 #include <activemq/connector/stomp/commands/MessageCommand.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/util/Config.h>
 #include <cms/Message.h>
 
 namespace activemq{
@@ -50,7 +51,7 @@ namespace commands{
             TestAckHandler(void) { wasAcked = false; }
             virtual ~TestAckHandler(void) {}
             
-            virtual void acknowledgeMessage( const core::ActiveMQMessage* message)
+            virtual void acknowledgeMessage( const core::ActiveMQMessage* message ACTIVEMQ_ATTRIBUTE_UNUSED)
                 throw ( cms::CMSException ) 
             {
                 wasAcked = true;

@@ -129,3 +129,21 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer,
     
     return 0;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int BlockingByteArrayInputStream::skip( int num ) 
+throw ( io::IOException, exceptions::UnsupportedOperationException ){
+    
+    int ix = 0;
+    
+    synchronized( this ){
+        
+        // Increment the pos until we'v skipped the desired num
+        // or we've hit the end of the buffer.
+        for( ; ix < num && !closing && pos != buffer.end(); ++ix, ++pos) {}       
+    }
+    
+    return ix;
+}
+
+

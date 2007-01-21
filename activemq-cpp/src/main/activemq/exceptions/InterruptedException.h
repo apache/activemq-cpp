@@ -32,20 +32,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        InterruptedException(void) {};
+        InterruptedException() {};
         
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        InterruptedException(const ActiveMQException& ex){
+        InterruptedException(const ActiveMQException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        InterruptedException(const InterruptedException& ex){
+        InterruptedException(const InterruptedException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -61,6 +65,7 @@ namespace exceptions{
         InterruptedException( const char* file, 
                               const int lineNumber,
                               const char* msg, ... )
+        : ActiveMQException()
         {
             va_list vargs;
             va_start(vargs, msg);
@@ -75,11 +80,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new InterruptedException(*this);
         }
 
-        virtual ~InterruptedException(void) {}
+        virtual ~InterruptedException() {}
 
    };
 

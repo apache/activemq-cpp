@@ -22,6 +22,7 @@
 #include <activemq/exceptions/NullPointerException.h>
 #include <activemq/util/Integer.h>
 #include <activemq/util/Long.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -158,7 +159,7 @@ namespace commands{
          * Set if this Message requires a Response
          * @param required true if response is required
          */
-        virtual void setResponseRequired( const bool required ) {
+        virtual void setResponseRequired( const bool required ACTIVEMQ_ATTRIBUTE_UNUSED) {
         }
         
         /**

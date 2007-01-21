@@ -26,6 +26,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/Long.h>
 #include <activemq/util/Integer.h>
+#include <activemq/util/Config.h>
 
 using namespace std;
 using namespace activemq;
@@ -324,7 +325,7 @@ std::string BaseDataStreamMarshaller::looseUnmarshalString(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat, 
+int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
                                                  long long value,
                                                  utils::BooleanStream* bs ) 
                                                     throw ( io::IOException ) {
@@ -366,7 +367,7 @@ int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat, 
+void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
                                                   long long value, 
                                                   io::DataOutputStream* dataOut, 
                                                   utils::BooleanStream* bs ) 
@@ -395,7 +396,7 @@ void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat,
 
 ////////////////////////////////////////////////////////////////////////////////
 long long BaseDataStreamMarshaller::tightUnmarshalLong( 
-    OpenWireFormat* wireFormat, 
+    OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
     io::DataInputStream* dataIn, 
     utils::BooleanStream* bs ) 
         throw ( io::IOException ) {
@@ -424,7 +425,7 @@ long long BaseDataStreamMarshaller::tightUnmarshalLong(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat, 
+void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
                                                  long long value, 
                                                  io::DataOutputStream* dataOut ) 
                                                     throw ( io::IOException ) {
@@ -439,7 +440,7 @@ void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat,
 
 ////////////////////////////////////////////////////////////////////////////////
 long long BaseDataStreamMarshaller::looseUnmarshalLong( 
-    OpenWireFormat* wireFormat, 
+    OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED, 
     io::DataInputStream* dataIn ) 
         throw ( io::IOException ) { 
 
@@ -725,7 +726,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArray( 
     io::DataInputStream* dataIn, 
-    utils::BooleanStream* bs, 
+    utils::BooleanStream* bs ACTIVEMQ_ATTRIBUTE_UNUSED, 
     int size ) 
         throw ( io::IOException ) {
          

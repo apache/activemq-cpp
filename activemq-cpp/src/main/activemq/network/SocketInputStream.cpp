@@ -185,3 +185,11 @@ int SocketInputStream::read( unsigned char* buffer, int bufferSize ) throw (IOEx
     
     return len;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int SocketInputStream::skip( int num ACTIVEMQ_ATTRIBUTE_UNUSED ) 
+throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+    throw exceptions::UnsupportedOperationException(__FILE__, __LINE__, 
+        "skip() method is not supported"); 
+}
+

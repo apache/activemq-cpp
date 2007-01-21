@@ -19,9 +19,10 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
+#include <activemq/util/Config.h>
 #include <iostream>
 
-int main( int argc, char **argv)
+int main( int argc ACTIVEMQ_ATTRIBUTE_UNUSED, char **argv ACTIVEMQ_ATTRIBUTE_UNUSED)
 {
     try
     {

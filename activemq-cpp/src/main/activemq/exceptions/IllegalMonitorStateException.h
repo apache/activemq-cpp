@@ -33,20 +33,24 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalMonitorStateException(void) {};
+        IllegalMonitorStateException() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        IllegalMonitorStateException(const ActiveMQException& ex){
+        IllegalMonitorStateException(const ActiveMQException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        IllegalMonitorStateException(const IllegalMonitorStateException& ex){
+        IllegalMonitorStateException(const IllegalMonitorStateException& ex)
+        : ActiveMQException()
+        {
             *(ActiveMQException*)this = ex;
         }
 
@@ -76,11 +80,11 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone(void) const{
+        virtual ActiveMQException* clone() const{
             return new IllegalMonitorStateException(*this);
         }
 
-        virtual ~IllegalMonitorStateException(void) {}
+        virtual ~IllegalMonitorStateException() {}
 
    };
 

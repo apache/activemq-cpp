@@ -21,6 +21,7 @@
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Integer.h>
+#include <activemq/util/Config.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -221,7 +222,7 @@ public:
 
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex ) {
+    virtual void onException( const CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED) {
         printf("JMS Exception occured.  Shutting down client.\n");
     }
     
@@ -264,7 +265,7 @@ private:
     }
 };
     
-int main(int argc, char* argv[]) {
+int main(int argc ACTIVEMQ_ATTRIBUTE_UNUSED, char* argv[] ACTIVEMQ_ATTRIBUTE_UNUSED) {
 
     std::cout << "=====================================================\n";    
     std::cout << "Starting the example:" << std::endl;
