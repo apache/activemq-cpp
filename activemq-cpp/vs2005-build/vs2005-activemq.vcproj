@@ -511,6 +511,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\activemq\connector\stomp\StompSelector.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\connector\stomp\StompSelector.h"
 						>
 					</File>
