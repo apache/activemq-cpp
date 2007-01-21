@@ -23,6 +23,40 @@ using namespace activemq::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQException::ActiveMQException(){
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException::ActiveMQException( const ActiveMQException& ex )
+: cms::CMSException()
+{
+    *this = ex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException::ActiveMQException( const char* file, const int lineNumber, 
+                   const char* msg, ... )
+{
+    va_list vargs;
+    va_start( vargs, msg ) ;
+    buildMessage( msg, vargs );
+    
+    // Set the first mark for this exception.
+    setMark( file, lineNumber );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException::~ActiveMQException(){
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQException::setMessage( const char* msg, ... ){
+    va_list vargs;
+    va_start(vargs, msg);
+    buildMessage(msg, vargs);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQException::buildMessage(const char* format, va_list& vargs)
 {
     // Allocate buffer with a guess of it's size
@@ -71,5 +105,48 @@ void ActiveMQException::setMark( const char* file, const int lineNumber ){
     //logger.log( stream.str() );    
 }
 
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException* ActiveMQException::clone() const{
+    return new ActiveMQException( *this );
+}
 
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::pair< std::string, int> > ActiveMQException::getStackTrace() const{ 
+    return stackTrace; 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQException::printStackTrace() const{
+    printStackTrace( std::cerr );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQException::printStackTrace( std::ostream& stream ) const{
+    stream << getStackTraceString();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQException::getStackTraceString() const{
+    
+    // Create the output stream.
+    std::ostringstream stream;
+    
+    // Write the message and each stack entry.
+    stream << message << std::endl;
+    for( unsigned int ix=0; ix<stackTrace.size(); ++ix ){
+        stream << "\tFILE: " << stackTrace[ix].first;
+        stream << ", LINE: " << stackTrace[ix].second;
+        stream << std::endl;                    
+    }
+    
+    // Return the string from the output stream.
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQException& ActiveMQException::operator =( const ActiveMQException& ex ){
+    this->message = ex.message;
+    this->stackTrace = ex.stackTrace;
+    return *this;
+}
 
