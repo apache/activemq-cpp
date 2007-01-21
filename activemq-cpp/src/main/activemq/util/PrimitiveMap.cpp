@@ -50,6 +50,12 @@ unsigned int PrimitiveMap::size() const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool PrimitiveMap::isEmpty() const{
+    
+    return valueNodeMap.isEmpty();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::getBool( const string& key ) const 
     throw(NoSuchElementException){
         

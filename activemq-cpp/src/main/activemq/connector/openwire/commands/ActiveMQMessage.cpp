@@ -17,12 +17,15 @@
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/util/Config.h>
+#include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMessage::ActiveMQMessage()
@@ -40,9 +43,10 @@ unsigned char ActiveMQMessage::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED )
 {
-//    marshalledProperties.clear();
-//    if( !properties.empty() )
-//    {
-//        properties.Marshal( marshalledProperties );
-//    }
+    marshalledProperties.clear();
+    if( !properties.isEmpty() )
+    {
+        PrimitiveMapMarshaller::marshal( 
+            &properties, marshalledProperties );
+    }
 }

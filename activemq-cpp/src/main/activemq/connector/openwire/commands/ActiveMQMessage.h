@@ -23,6 +23,7 @@
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/util/Date.h>
+#include <activemq/util/PrimitiveMap.h>
 
 namespace activemq{
 namespace connector{
@@ -120,6 +121,7 @@ namespace commands{
    
         core::ActiveMQAckHandler* ackHandler;
         int redeliveryCount;
+        util::PrimitiveMap properties;
 
     };
 
