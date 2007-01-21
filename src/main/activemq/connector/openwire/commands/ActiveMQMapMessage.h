@@ -429,7 +429,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual bool getBoolean( const std::string& name );
+        virtual bool getBoolean( const std::string& name ) const;
         
         /** 
          * Sets a boolean value with the specified name into the Map.
@@ -445,7 +445,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual unsigned char getByte( const std::string& name );
+        virtual unsigned char getByte( const std::string& name ) const;
         
         /** 
          * Sets a Byte value with the specified name into the Map.
@@ -461,7 +461,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual unsigned char* getBytes( const std::string& name );
+        virtual const unsigned char* getBytes( const std::string& name ) const;
         
         /** 
          * Sets a Bytes value with the specified name into the Map.
@@ -477,7 +477,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual char getChar( const std::string& name );
+        virtual char getChar( const std::string& name ) const;
         
         /** 
          * Sets a Char value with the specified name into the Map.
@@ -492,7 +492,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual double getDouble( const std::string& name );
+        virtual double getDouble( const std::string& name ) const;
         
         /** 
          * Sets a Double value with the specified name into the Map.
@@ -508,7 +508,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual float getFloat( const std::string& name );
+        virtual float getFloat( const std::string& name ) const;
         
         /** 
          * Sets a Float value with the specified name into the Map.
@@ -523,7 +523,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual int getInt( const std::string& name );
+        virtual int getInt( const std::string& name ) const;
         
         /** 
          * Sets a Int value with the specified name into the Map.
@@ -538,7 +538,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual long long getLong( const std::string& name );
+        virtual long long getLong( const std::string& name ) const;
         
         /** 
          * Sets a Long value with the specified name into the Map.
@@ -553,7 +553,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual short getShort( const std::string& name );
+        virtual short getShort( const std::string& name ) const;
         
         /** 
          * Sets a Short value with the specified name into the Map.
@@ -568,7 +568,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual std::string getString( const std::string& name );
+        virtual std::string getString( const std::string& name ) const;
         
         /** 
          * Sets a String value with the specified name into the Map.
