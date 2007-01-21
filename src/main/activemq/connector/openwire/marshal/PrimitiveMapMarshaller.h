@@ -66,7 +66,7 @@ namespace marshal{
          * @param value - the ValueNode to write.
          * @throws CMSException
          */
-        static void marshalPrimitive( io::DataOutputStream* dataOut,
+        static void marshalPrimitive( io::DataOutputStream& dataOut,
                                       util::PrimitiveMap::ValueNode& value )
                                         throw ( cms::CMSException );
 
@@ -78,7 +78,7 @@ namespace marshal{
          * @param map - Map to insert data into.
          * @throws CMSException
          */        
-        static void unmarshalPrimitive( io::DataInputStream* dataIn,
+        static void unmarshalPrimitive( io::DataInputStream& dataIn,
                                         const std::string& key,
                                         util::PrimitiveMap& map )
                                             throw ( cms::CMSException );
