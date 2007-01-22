@@ -34,17 +34,37 @@
 	// of Windows or OS X to do this build
     
 	#if defined(_WIN32)
-		#define HAVE_OBJBASE_H
-		#define HAVE_RPCDCE_H
-		#define HAVE_WINSOCK2_H
-        #define HAVE_STRUCT_ADDRINFO
-        #define HAVE_SYS_TIMEB_H
-        #define HAVE_FTIME
-        #define HAVE_WINDOWS_H
+        #ifndef HAVE_OBJBASE_H
+		    #define HAVE_OBJBASE_H
+        #endif
+        #ifndef HAVE_RPCDCE_H
+		    #define HAVE_RPCDCE_H
+        #endif
+        #ifndef HAVE_WINSOCK2_H
+		    #define HAVE_WINSOCK2_H
+        #endif
+        #ifndef HAVE_STRUCT_ADDRINFO
+            #define HAVE_STRUCT_ADDRINFO
+        #endif
+        #ifndef HAVE_SYS_TIMEB_H
+            #define HAVE_SYS_TIMEB_H
+        #endif
+        #ifndef HAVE_FTIME
+            #define HAVE_FTIME
+        #endif
+        #ifndef HAVE_WINDOWS_H
+            #define HAVE_WINDOWS_H
+        #endif
 	#else
-		#define HAVE_UUID_UUID_H
-        #define HAVE_UUID_T
-        #define HAVE_PTHREAD_H
+        #ifndef HAVE_UUID_UUID_H
+		    #define HAVE_UUID_UUID_H
+        #endif
+        #ifndef HAVE_UUID_T
+            #define HAVE_UUID_T
+        #endif
+        #ifndef HAVE_PTHREAD_H
+            #define HAVE_PTHREAD_H
+        #endif
 	#endif
 
 #endif /* !defined(HAVE_CONFIG_H) */
