@@ -32,13 +32,13 @@ namespace io{
         /**
          * Default Constructor
          */
-        IOException(){}
+        IOException() throw() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        IOException( const exceptions::ActiveMQException& ex )
+        IOException( const exceptions::ActiveMQException& ex ) throw()
         : exceptions::ActiveMQException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -48,7 +48,7 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        IOException( const IOException& ex )
+        IOException( const IOException& ex ) throw()
         : exceptions::ActiveMQException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -61,7 +61,7 @@ namespace io{
          * @param msg the message that was generated
          */
         IOException( const char* file, const int lineNumber,
-                     const char* msg, ... )
+                     const char* msg, ... ) throw()
         : exceptions::ActiveMQException()
         {
             va_list vargs;
@@ -81,7 +81,7 @@ namespace io{
             return new IOException( *this );
         }
         
-        virtual ~IOException(){}
+        virtual ~IOException() throw() {}
         
     };
 

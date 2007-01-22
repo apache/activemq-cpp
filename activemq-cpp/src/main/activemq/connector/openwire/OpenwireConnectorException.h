@@ -31,16 +31,16 @@ namespace openwire{
     {
     public:
    
-        OpenwireConnectorException() {}
-        OpenwireConnectorException( const exceptions::ActiveMQException& ex ){
+        OpenwireConnectorException() throw(){}
+        OpenwireConnectorException( const exceptions::ActiveMQException& ex ) throw(){
             *( exceptions::ActiveMQException* )this = ex;
         }
-        OpenwireConnectorException( const OpenwireConnectorException& ex ){
+        OpenwireConnectorException( const OpenwireConnectorException& ex ) throw(){
             *( exceptions::ActiveMQException* )this = ex;
         }
         OpenwireConnectorException( const char* file, 
                                     const int lineNumber, 
-                                    const char* msg, ... )
+                                    const char* msg, ... ) throw()
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -59,7 +59,7 @@ namespace openwire{
             return new OpenwireConnectorException( *this );
         }
       
-        virtual ~OpenwireConnectorException() {}
+        virtual ~OpenwireConnectorException() throw() {}
 
     };
 

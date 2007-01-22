@@ -29,19 +29,19 @@ namespace network{
 	{
 	public:
 	
-		SocketException(){}
-        SocketException( const ActiveMQException& ex )
+		SocketException() throw() {}
+        SocketException( const ActiveMQException& ex ) throw()
         : io::IOException()
         {
             *(ActiveMQException*)this = ex;
         }
-        SocketException( const SocketException& ex )
+        SocketException( const SocketException& ex ) throw()
         : io::IOException()
         {
             *(ActiveMQException*)this = ex;
         }
 	    SocketException( const char* file, const int lineNumber, 
-                         const char* msg, ...)
+                         const char* msg, ...) throw()
         : io::IOException()
 	    {
 	        va_list vargs;
@@ -61,7 +61,7 @@ namespace network{
             return new SocketException( *this );
         }
         
-	    virtual ~SocketException(){}
+	    virtual ~SocketException() throw() {}
         
 	};
 

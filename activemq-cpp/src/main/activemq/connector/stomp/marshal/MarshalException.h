@@ -34,13 +34,13 @@ namespace marshal{
         /**
          * Default Constructor
          */
-        MarshalException() {}
+        MarshalException() throw() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        MarshalException( const exceptions::ActiveMQException& ex )
+        MarshalException( const exceptions::ActiveMQException& ex ) throw()
         : exceptions::ActiveMQException()
         {
           *(ActiveMQException*)this = ex;
@@ -50,7 +50,7 @@ namespace marshal{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        MarshalException( const MarshalException& ex )
+        MarshalException( const MarshalException& ex ) throw()
         : exceptions::ActiveMQException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -63,7 +63,7 @@ namespace marshal{
          * @param msg the message that was generated
          */
         MarshalException(const char* file, const int lineNumber, 
-            const char* msg, ...)
+            const char* msg, ...) throw()
         : exceptions::ActiveMQException()
         {
             va_list vargs ;
@@ -82,7 +82,7 @@ namespace marshal{
         virtual exceptions::ActiveMQException* clone() const{
             return new MarshalException( *this );
         }
-        virtual ~MarshalException() {}
+        virtual ~MarshalException() throw(){}
 	    
 	};
 

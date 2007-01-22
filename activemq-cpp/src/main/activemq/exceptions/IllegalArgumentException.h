@@ -32,13 +32,13 @@ namespace exceptions{
       /**
        * Default Constructor
        */
-      IllegalArgumentException(){};
+      IllegalArgumentException() throw() {};
       
       /**
        * Conversion Constructor from some other ActiveMQException
        * @param An exception that should become this type of Exception
        */
-      IllegalArgumentException( const ActiveMQException& ex )
+      IllegalArgumentException( const ActiveMQException& ex ) throw()
       : ActiveMQException()
       {
          *(ActiveMQException*)this = ex;
@@ -47,7 +47,7 @@ namespace exceptions{
       /**
        * Copy Constructor
        */
-      IllegalArgumentException( const IllegalArgumentException& ex )
+      IllegalArgumentException( const IllegalArgumentException& ex ) throw()
       : ActiveMQException()
       {
          *(ActiveMQException*)this = ex;
@@ -63,7 +63,7 @@ namespace exceptions{
        * @param list of primitives that are formatted into the message
        */
       IllegalArgumentException(const char* file, const int lineNumber,
-         const char* msg, ...)
+         const char* msg, ...) throw()
       : ActiveMQException()
       {
          va_list vargs ;
@@ -86,7 +86,7 @@ namespace exceptions{
       /**
        * Destructor
        */
-      virtual ~IllegalArgumentException(){}
+      virtual ~IllegalArgumentException() throw() {}
         
     };
 

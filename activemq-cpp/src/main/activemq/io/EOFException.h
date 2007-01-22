@@ -33,13 +33,13 @@ namespace io{
         /**
          * Default Constructor
          */
-        EOFException(){}
+        EOFException() throw(){}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        EOFException( const exceptions::ActiveMQException& ex )
+        EOFException( const exceptions::ActiveMQException& ex ) throw()
         : IOException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -49,7 +49,7 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        EOFException( const EOFException& ex )
+        EOFException( const EOFException& ex ) throw()
         : IOException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -62,7 +62,7 @@ namespace io{
          * @param msg the message that was generated
          */
         EOFException( const char* file, const int lineNumber,
-                      const char* msg, ... )
+                      const char* msg, ... ) throw()
         : IOException()
         {
             va_list vargs;
@@ -82,7 +82,7 @@ namespace io{
             return new EOFException( *this );
         }
         
-        virtual ~EOFException(){}
+        virtual ~EOFException() throw(){}
         
     };
 

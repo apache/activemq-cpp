@@ -28,11 +28,11 @@ using namespace std;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException(){
+ActiveMQException::ActiveMQException() throw(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException( const ActiveMQException& ex )
+ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
 : cms::CMSException()
 {
     *this = ex;
@@ -40,7 +40,7 @@ ActiveMQException::ActiveMQException( const ActiveMQException& ex )
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const char* file, const int lineNumber, 
-                   const char* msg, ... )
+                   const char* msg, ... ) throw()
 {
     va_list vargs;
     va_start( vargs, msg ) ;
@@ -51,7 +51,7 @@ ActiveMQException::ActiveMQException( const char* file, const int lineNumber,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::~ActiveMQException(){
+ActiveMQException::~ActiveMQException() throw(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////

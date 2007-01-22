@@ -32,13 +32,13 @@ namespace exceptions{
       /**
        * Default Constructor
        */
-      IndexOutOfBoundsException(){};
+      IndexOutOfBoundsException() throw() {};
       
       /**
        * Conversion Constructor from some other ActiveMQException
        * @param An exception that should become this type of Exception
        */
-      IndexOutOfBoundsException( const ActiveMQException& ex )
+      IndexOutOfBoundsException( const ActiveMQException& ex ) throw()
       : ActiveMQException()
       {
          *(ActiveMQException*)this = ex;
@@ -47,7 +47,7 @@ namespace exceptions{
       /**
        * Copy Constructor
        */
-      IndexOutOfBoundsException( const IndexOutOfBoundsException& ex )
+      IndexOutOfBoundsException( const IndexOutOfBoundsException& ex ) throw()
       : ActiveMQException()
       {
          *(ActiveMQException*)this = ex;
@@ -63,7 +63,7 @@ namespace exceptions{
        * @param list of primitives that are formatted into the message
        */
       IndexOutOfBoundsException(const char* file, const int lineNumber,
-         const char* msg, ...)
+         const char* msg, ...) throw()
       : ActiveMQException()
       {
          va_list vargs ;
@@ -86,7 +86,7 @@ namespace exceptions{
       /**
        * Destructor
        */
-      virtual ~IndexOutOfBoundsException(){}
+      virtual ~IndexOutOfBoundsException() throw() {}
         
     };
 
