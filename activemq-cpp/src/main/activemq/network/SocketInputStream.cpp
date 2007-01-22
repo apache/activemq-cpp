@@ -18,11 +18,8 @@
 #include <activemq/util/Config.h>
 
 #if !defined(HAVE_WINSOCK2_H) 
-    //#include <sys/poll.h>
     #include <sys/select.h>
     #include <sys/socket.h>
-    #include <errno.h>    
-    extern int errno;
 #else
     #include <Winsock2.h>
 #endif
@@ -38,6 +35,7 @@
 #endif
 
 #include <activemq/network/SocketInputStream.h>
+#include <activemq/network/SocketError.h>
 #include <activemq/io/IOException.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <stdlib.h>
@@ -102,7 +100,7 @@ int SocketInputStream::available() const throw (activemq::io::IOException){
         tv.tv_usec = 0;
         int returnCode = ::select(socket+1, &rd, NULL, NULL, &tv);
         if(returnCode == -1){
-            throw IOException(__FILE__, __LINE__, ::strerror(errno));
+            throw IOException(__FILE__, __LINE__, SocketError::getErrorString().c_str() );
         }
         return (returnCode == 0)? 0 : 1;
         
@@ -143,33 +141,9 @@ int SocketInputStream::read( unsigned char* buffer, int bufferSize ) throw (IOEx
     // Check for error.
     if( len == -1 ){
         
-        #if !defined(HAVE_WINSOCK2_H) 
-         
-            // Create the error string.
-            char* errorString = ::strerror(errno);
-         
-        #else
-        
-            // If the socket was temporarily unavailable - just try again.
-            int errorCode = ::WSAGetLastError();
-      
-            // Create the error string.
-            static const int errorStringSize = 512;
-            char errorString[errorStringSize];
-            memset( errorString, 0, errorStringSize );
-            FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
-               0,
-               errorCode,
-               0,
-               errorString,
-               errorStringSize - 1,
-               NULL);
-              
-        #endif
-        
         // Otherwise, this was a bad error - throw an exception.
         throw IOException( __FILE__, __LINE__, 
-                "activemq::io::SocketInputStream::read - %s", errorString );
+                "activemq::io::SocketInputStream::read - %s", SocketError::getErrorString().c_str() );
     }
     
     if( debug ){

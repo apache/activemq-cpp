@@ -17,12 +17,12 @@
  
 #include "SocketOutputStream.h"
 #include <activemq/util/Config.h>
+#include "SocketError.h"
 
 #ifdef HAVE_WINSOCK2_H
     #include <Winsock2.h>
 #else
     #include <sys/socket.h>
-    extern int errno;
 #endif
 
 #include <errno.h>
@@ -87,7 +87,7 @@ void SocketOutputStream::write( const unsigned char* buffer, int len )
         int length = ::send( socket, (const char*)buffer, remaining, sendOpts );      	
         if( length < 0 ){
             throw IOException( __FILE__, __LINE__, 
-                "activemq::io::SocketOutputStream::write - %s", ::strerror(errno) );
+                "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
         }
          
         buffer+=length;

@@ -62,6 +62,7 @@ cc_sources = \
     activemq/network/BufferedSocket.cpp \
     activemq/network/SocketOutputStream.cpp \
     activemq/network/SocketFactory.cpp \
+    activemq/network/SocketError.cpp \
     activemq/transport/IOTransportFactory.cpp \
     activemq/transport/ResponseCorrelator.cpp \
     activemq/transport/TcpTransport.cpp \
@@ -208,6 +209,7 @@ h_sources = \
     activemq/network/BufferedSocket.h \
     activemq/network/SocketOutputStream.h \
     activemq/network/SocketFactory.h \
+    activemq/network/SocketError.h \
     activemq/transport/IOTransportFactory.h \
     activemq/transport/Transport.h \
     activemq/transport/TransportFactory.h \
