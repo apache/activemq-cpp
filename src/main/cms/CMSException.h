@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <exception>
 
 namespace cms{
     
@@ -29,17 +30,27 @@ namespace cms{
      * This class represents an error that has occurred in 
      * cms.
      */
-    class CMSException{
+    class CMSException : public std::exception {
         
     public:
         
-        virtual ~CMSException(){}
+        CMSException() throw() {}
+        
+        virtual ~CMSException() throw() {}
         
         /**
          * Gets the cause of the error.
          * @return string errors message
          */
         virtual std::string getMessage() const = 0;
+        
+        /**
+         * Implement method from std::exception
+         * @return the const char* of <code>getMessage()</code>.
+         */
+        virtual const char * what () const throw (){
+            return getMessage().c_str();
+        }
         
         /**
          * Provides the stack trace for every point where

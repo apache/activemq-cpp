@@ -33,13 +33,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        NoSuchElementException() {};
+        NoSuchElementException() throw() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        NoSuchElementException( const ActiveMQException& ex )
+        NoSuchElementException( const ActiveMQException& ex ) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -48,7 +48,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        NoSuchElementException( const NoSuchElementException& ex )
+        NoSuchElementException( const NoSuchElementException& ex ) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -65,7 +65,7 @@ namespace exceptions{
          */
         NoSuchElementException( const char* file, 
                                 const int lineNumber,
-                                const char* msg, ... )
+                                const char* msg, ... ) throw()
         : ActiveMQException()
         {
             va_list vargs;
@@ -85,7 +85,7 @@ namespace exceptions{
             return new NoSuchElementException(*this);
         }
 
-        virtual ~NoSuchElementException() {}
+        virtual ~NoSuchElementException() throw() {}
 
     };
 

@@ -32,13 +32,13 @@ namespace connector{
         /**
          * Default Constructor
          */
-        ConnectorException() {}
+        ConnectorException() throw() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        ConnectorException( const exceptions::ActiveMQException& ex )
+        ConnectorException( const exceptions::ActiveMQException& ex ) throw()
         : exceptions::ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -48,7 +48,7 @@ namespace connector{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        ConnectorException( const ConnectorException& ex )
+        ConnectorException( const ConnectorException& ex ) throw()
         : exceptions::ActiveMQException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -62,7 +62,7 @@ namespace connector{
          */
         ConnectorException( const char* file, 
                             const int lineNumber, 
-                            const char* msg, ... )
+                            const char* msg, ... ) throw()
         : exceptions::ActiveMQException()
         {
             va_list vargs;
@@ -82,7 +82,7 @@ namespace connector{
             return new ConnectorException( *this );
         }
         
-   	    virtual ~ConnectorException() {}
+   	    virtual ~ConnectorException() throw() {}
    
     };
 

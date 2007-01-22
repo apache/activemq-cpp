@@ -33,13 +33,13 @@ namespace stomp{
         /**
          * Default Constructor
          */
-        StompConnectorException() {}
+        StompConnectorException() throw(){}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        StompConnectorException( const exceptions::ActiveMQException& ex )
+        StompConnectorException( const exceptions::ActiveMQException& ex ) throw()
         : connector::ConnectorException()
         {
             *( ActiveMQException* )this = ex;
@@ -49,7 +49,7 @@ namespace stomp{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        StompConnectorException( const StompConnectorException& ex )
+        StompConnectorException( const StompConnectorException& ex ) throw()
         : connector::ConnectorException()
         {
             *( exceptions::ActiveMQException* )this = ex;
@@ -63,7 +63,7 @@ namespace stomp{
          */
         StompConnectorException( const char* file, 
                                  const int lineNumber, 
-                                 const char* msg, ... )
+                                 const char* msg, ... ) throw()
         : connector::ConnectorException()
         {
             va_list vargs;
@@ -83,7 +83,7 @@ namespace stomp{
             return new StompConnectorException( *this );
         }
       
-        virtual ~StompConnectorException() {}
+        virtual ~StompConnectorException() throw() {}
 
     };
 

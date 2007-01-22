@@ -32,13 +32,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        NullPointerException() {};
+        NullPointerException() throw() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        NullPointerException( const ActiveMQException& ex )
+        NullPointerException( const ActiveMQException& ex ) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -47,7 +47,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        NullPointerException(const NullPointerException& ex)
+        NullPointerException(const NullPointerException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -64,7 +64,7 @@ namespace exceptions{
          */
         NullPointerException( const char* file, 
                               const int lineNumber,
-                              const char* msg, ... )
+                              const char* msg, ... ) throw()
         : ActiveMQException()
         {
             va_list vargs;
@@ -84,7 +84,7 @@ namespace exceptions{
             return new NullPointerException( *this );
         }
 
-        virtual ~NullPointerException() {}
+        virtual ~NullPointerException() throw() {}
 
     };
 

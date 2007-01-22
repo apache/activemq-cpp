@@ -47,12 +47,12 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        ActiveMQException();
+        ActiveMQException() throw();
        
         /**
          * Copy Constructor
          */
-        ActiveMQException( const ActiveMQException& ex );
+        ActiveMQException( const ActiveMQException& ex ) throw();
        
         /**
          * Constructor - Initializes the file name and line number where
@@ -64,9 +64,9 @@ namespace exceptions{
          * @param list of primitives that are formatted into the message
          */
         ActiveMQException( const char* file, const int lineNumber, 
-                           const char* msg, ... );
+                           const char* msg, ... ) throw();
 
-        virtual ~ActiveMQException();
+        virtual ~ActiveMQException() throw();
    
         /**
          * Gets the message for this exception.

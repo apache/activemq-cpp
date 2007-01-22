@@ -30,13 +30,13 @@ namespace transport{
         /**
          * Default Constructor
          */
-        CommandIOException(){};
+        CommandIOException() throw() {};
         
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        CommandIOException( const exceptions::ActiveMQException& ex )
+        CommandIOException( const exceptions::ActiveMQException& ex ) throw()
         : io::IOException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -46,7 +46,7 @@ namespace transport{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        CommandIOException( const CommandIOException& ex )
+        CommandIOException( const CommandIOException& ex ) throw()
         : io::IOException()
         {
             *(exceptions::ActiveMQException*)this = ex;
@@ -59,7 +59,7 @@ namespace transport{
          * @param msg the message that was generated
          */
         CommandIOException( const char* file, const int lineNumber, 
-                            const char* msg, ... )
+                            const char* msg, ... ) throw()
         : io::IOException()
         {
             va_list vargs;
@@ -80,7 +80,7 @@ namespace transport{
             return new CommandIOException( *this );
         }
         
-        virtual ~CommandIOException(){}
+        virtual ~CommandIOException() throw() {}
     };
     
 }}

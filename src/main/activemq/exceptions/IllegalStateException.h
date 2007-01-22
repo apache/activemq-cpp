@@ -33,13 +33,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalStateException() {};
+        IllegalStateException() throw() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        IllegalStateException(const ActiveMQException& ex)
+        IllegalStateException(const ActiveMQException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -48,7 +48,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        IllegalStateException(const IllegalStateException& ex)
+        IllegalStateException(const IllegalStateException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -65,7 +65,7 @@ namespace exceptions{
          */
         IllegalStateException( const char* file, 
                                const int lineNumber,
-                               const char* msg, ...)
+                               const char* msg, ...) throw()
         : ActiveMQException()
         {
             va_list vargs;
@@ -85,7 +85,7 @@ namespace exceptions{
             return new IllegalStateException(*this);
         }
 
-        virtual ~IllegalStateException() {}
+        virtual ~IllegalStateException() throw() {}
 
    };
 

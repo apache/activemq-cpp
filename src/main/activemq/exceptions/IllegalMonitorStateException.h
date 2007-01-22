@@ -33,13 +33,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        IllegalMonitorStateException() {};
+        IllegalMonitorStateException() throw() {};
 
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        IllegalMonitorStateException(const ActiveMQException& ex)
+        IllegalMonitorStateException(const ActiveMQException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -48,7 +48,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        IllegalMonitorStateException(const IllegalMonitorStateException& ex)
+        IllegalMonitorStateException(const IllegalMonitorStateException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -65,7 +65,7 @@ namespace exceptions{
          */
         IllegalMonitorStateException( const char* file, 
                                       const int lineNumber,
-                                      const char* msg, ...)
+                                      const char* msg, ...) throw()
         {
             va_list vargs;
             va_start(vargs, msg);
@@ -84,7 +84,7 @@ namespace exceptions{
             return new IllegalMonitorStateException(*this);
         }
 
-        virtual ~IllegalMonitorStateException() {}
+        virtual ~IllegalMonitorStateException() throw() {}
 
    };
 

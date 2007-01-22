@@ -32,13 +32,13 @@ namespace exceptions{
         /**
          * Default Constructor
          */
-        InterruptedException() {};
+        InterruptedException() throw() {};
         
         /**
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        InterruptedException(const ActiveMQException& ex)
+        InterruptedException(const ActiveMQException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -47,7 +47,7 @@ namespace exceptions{
         /**
          * Copy Constructor
          */
-        InterruptedException(const InterruptedException& ex)
+        InterruptedException(const InterruptedException& ex) throw()
         : ActiveMQException()
         {
             *(ActiveMQException*)this = ex;
@@ -64,7 +64,7 @@ namespace exceptions{
          */
         InterruptedException( const char* file, 
                               const int lineNumber,
-                              const char* msg, ... )
+                              const char* msg, ... ) throw()
         : ActiveMQException()
         {
             va_list vargs;
@@ -84,7 +84,7 @@ namespace exceptions{
             return new InterruptedException(*this);
         }
 
-        virtual ~InterruptedException() {}
+        virtual ~InterruptedException() throw() {}
 
    };
 
