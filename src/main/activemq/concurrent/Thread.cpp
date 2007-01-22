@@ -18,7 +18,7 @@
 #include "Thread.h"
 #include <errno.h>
 
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     #include <errno.h> // EINTR
     extern int errno;
 #else
@@ -61,7 +61,7 @@ void Thread::start() throw ( exceptions::ActiveMQException )
             "Thread already started");
     }
     
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     
     ::pthread_attr_init (&attributes);
     ::pthread_attr_setdetachstate (&attributes, PTHREAD_CREATE_JOINABLE);
@@ -100,7 +100,7 @@ void Thread::join() throw( exceptions::ActiveMQException )
     }
     if (!this->joined) {
         
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
         ::pthread_join(this->threadHandle, NULL);
 #else
         ::WaitForSingleObject (this->threadHandle, INFINITE);       
@@ -113,7 +113,7 @@ void Thread::join() throw( exceptions::ActiveMQException )
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::sleep( int millisecs )
 {
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     struct timespec rec, rem;
     rec.tv_sec = millisecs / 1000;
     rec.tv_nsec = (millisecs % 1000) * 1000000;
@@ -131,7 +131,7 @@ void Thread::sleep( int millisecs )
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Thread::getId(void)
 {
-   #ifdef AMQCPP_USE_PTHREADS
+   #ifdef HAVE_PTHREAD_H
       return (long)(pthread_self());
    #else
       return GetCurrentThreadId();
@@ -139,10 +139,10 @@ unsigned long Thread::getId(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef AMQCPP_USE_PTHREADS
-void*
+#ifdef HAVE_PTHREAD_H
+    void*
 #else
-unsigned int WINAPI
+    unsigned int WINAPI
 #endif
 Thread::runCallback( void* param )
 {
@@ -157,7 +157,7 @@ Thread::runCallback( void* param )
         ex.printStackTrace();
     }
 
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     ::pthread_attr_destroy( &thread->attributes );
     return NULL;
 #else

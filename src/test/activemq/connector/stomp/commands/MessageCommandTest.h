@@ -51,7 +51,7 @@ namespace commands{
             TestAckHandler(void) { wasAcked = false; }
             virtual ~TestAckHandler(void) {}
             
-            virtual void acknowledgeMessage( const core::ActiveMQMessage* message ACTIVEMQ_ATTRIBUTE_UNUSED)
+            virtual void acknowledgeMessage( const core::ActiveMQMessage* message AMQCPP_UNUSED)
                 throw ( cms::CMSException ) 
             {
                 wasAcked = true;

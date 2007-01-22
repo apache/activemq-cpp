@@ -66,13 +66,13 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* LogManager::getLogger( const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED)
+Logger* LogManager::getLogger( const std::string& name AMQCPP_UNUSED)
 {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LogManager::getLoggerNames( const std::vector<std::string>& names  ACTIVEMQ_ATTRIBUTE_UNUSED)
+int LogManager::getLoggerNames( const std::vector<std::string>& names  AMQCPP_UNUSED)
 {
     return 0;
 }

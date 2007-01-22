@@ -89,7 +89,7 @@ namespace core{
             
             virtual void onConsumerMessage( 
                 connector::ConsumerInfo* consumer,
-                core::ActiveMQMessage* msg ACTIVEMQ_ATTRIBUTE_UNUSED )
+                core::ActiveMQMessage* msg AMQCPP_UNUSED )
             {
                 consumers.push_back( consumer );
             }
@@ -105,7 +105,7 @@ namespace core{
             MyExceptionListener(){ caughtOne = false; }
             virtual ~MyExceptionListener(){}
             
-            virtual void onException(const cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
+            virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
                 caughtOne = true;
             }
         };

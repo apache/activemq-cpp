@@ -41,12 +41,12 @@ void TransportFactoryMap::registerTransportFactory(
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactoryMap::TransportFactoryMap( 
-const TransportFactoryMap& factoryMap ACTIVEMQ_ATTRIBUTE_UNUSED ){
+const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){
 }
       
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactoryMap& TransportFactoryMap::operator=( 
-const TransportFactoryMap& factoryMap ACTIVEMQ_ATTRIBUTE_UNUSED ){ 
+const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){ 
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

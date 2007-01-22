@@ -19,15 +19,11 @@
 
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/concurrent/Runnable.h>
+#include <activemq/util/Config.h>
 #include <stdexcept>
 #include <assert.h>
 
-#if (defined(__unix__) || defined(unix) || defined(MACOSX) || defined(__APPLE__)) && !defined(USG)
-   
-    #ifndef AMQCPP_USE_PTHREADS
-        #define AMQCPP_USE_PTHREADS
-    #endif
-
+#ifdef HAVE_PTHREAD_H
     #include <pthread.h>
 #else
     #include <windows.h>
@@ -51,7 +47,7 @@ namespace concurrent{
          */
         Runnable* task;
       
-        #ifdef AMQCPP_USE_PTHREADS
+        #ifdef HAVE_PTHREAD_H
             pthread_attr_t attributes;
             pthread_t threadHandle;
         #else
@@ -125,7 +121,7 @@ namespace concurrent{
     private:
    
         // Internal thread handling
-        #ifdef AMQCPP_USE_PTHREADS
+        #ifdef HAVE_PTHREAD_H
             static void* runCallback (void* param);
         #else
             static unsigned int WINAPI runCallback (void* param);

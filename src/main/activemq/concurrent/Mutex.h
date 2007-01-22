@@ -22,25 +22,22 @@
 #include <activemq/concurrent/Synchronizable.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Thread.h>
+#include <activemq/util/Config.h>
 #include <list>
 
-#if (defined(__unix__) || defined(unix) || defined(MACOSX)) && !defined(USG)
-    #ifndef AMQCPP_USE_PTHREADS
-        #define AMQCPP_USE_PTHREADS
-    #endif
-   
-    #include <pthread.h>
+#ifdef HAVE_SYS_TIME_H
     #include <sys/time.h>
 #endif
 
-#if defined(WIN32) || defined(__CYGWIN__) && !defined AMQCPP_USE_PTHREADS
-   
+#ifdef HAVE_PTHREAD_H
+    #include <pthread.h>
+#else
     #include <windows.h>
    
     #if ( !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0400)
-    #if ( !defined(WINVER) || WINVER < 0x0400)
-        #pragma message ("Unsupported platform, Windows NT 4.0 or later required")
-    #endif
+        #if ( !defined(WINVER) || WINVER < 0x0400)
+            #pragma message ("Unsupported platform, Windows NT 4.0 or later required")
+        #endif
     #endif
 
 #endif
@@ -63,7 +60,7 @@ namespace concurrent{
         /**
          * The mutex object.
          */
-        #ifdef AMQCPP_USE_PTHREADS
+        #ifdef HAVE_PTHREAD_H
             pthread_mutex_t mutex;
 
             std::list<pthread_cond_t*> eventQ;

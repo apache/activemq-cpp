@@ -179,7 +179,7 @@ void IOTransport::run(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* IOTransport::request( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED ) 
+Response* IOTransport::request( Command* command AMQCPP_UNUSED ) 
 throw( CommandIOException, exceptions::UnsupportedOperationException ){
     throw exceptions::UnsupportedOperationException( __FILE__, __LINE__, "IOTransport::request() - unsupported operation" );
 }

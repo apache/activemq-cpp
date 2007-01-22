@@ -301,7 +301,7 @@ namespace commands{
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
-        virtual void setCMSDestination( const cms::Destination* destination ACTIVEMQ_ATTRIBUTE_UNUSED ) {
+        virtual void setCMSDestination( const cms::Destination* destination AMQCPP_UNUSED ) {
 //            this->setDestination( 
 //                dynamic_cast<const ActiveMQDestination*>( destination ) );
         }
@@ -332,7 +332,7 @@ namespace commands{
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
-        virtual void setCMSMessageId( const std::string& id ACTIVEMQ_ATTRIBUTE_UNUSED ) {}
+        virtual void setCMSMessageId( const std::string& id AMQCPP_UNUSED ) {}
       
         /**
          * Gets the Priority Value for this Message
@@ -362,7 +362,7 @@ namespace commands{
          * Sets the Redelivered Flag for this message
          * @param redelivered - boolean redelivered value
          */
-        virtual void setCMSRedelivered( bool redelivered ACTIVEMQ_ATTRIBUTE_UNUSED ) {}
+        virtual void setCMSRedelivered( bool redelivered AMQCPP_UNUSED ) {}
 
         /**
          * Gets the CMS Reply To Address for this Message

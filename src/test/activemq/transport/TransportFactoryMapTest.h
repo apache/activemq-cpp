@@ -41,7 +41,7 @@ namespace transport{
 		public:
 		
 		   virtual Transport* createTransport(
-		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED) { return NULL; };
+		      const activemq::util::Properties& properties AMQCPP_UNUSED) { return NULL; };
 		};
         
         virtual ~TransportFactoryMapTest(){}

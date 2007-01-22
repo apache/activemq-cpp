@@ -41,8 +41,8 @@ LogWriter::~LogWriter(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogWriter::log(const std::string& file ACTIVEMQ_ATTRIBUTE_UNUSED,
-                    const int          line ACTIVEMQ_ATTRIBUTE_UNUSED,
+void LogWriter::log(const std::string& file AMQCPP_UNUSED,
+                    const int          line AMQCPP_UNUSED,
                     const std::string& prefix,
                     const std::string& message)
 {

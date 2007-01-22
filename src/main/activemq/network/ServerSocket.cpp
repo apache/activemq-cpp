@@ -16,9 +16,17 @@
  */
 
 #include "ServerSocket.h"
-#include <activemq/util/Config.h>
 
-#if !defined(HAVE_WINSOCK2_H)
+#ifdef HAVE_WINSOCK2_H
+    #include <Winsock2.h>
+    #include <Ws2tcpip.h> 
+    #include <sys/stat.h>
+    #define stat _stat
+    #ifdef errno
+    #undef errno
+    #endif
+    int errno;
+#else
     #include <unistd.h>
     #include <netdb.h>
     #include <fcntl.h>
@@ -28,15 +36,6 @@
     #include <arpa/inet.h>
     #include <string.h>
     extern int errno;
-#else
-    #include <Winsock2.h>
-    #include <Ws2tcpip.h> 
-    #include <sys/stat.h>
-    #define stat _stat
-    #ifdef errno
-    #undef errno
-    #endif
-    int errno;
 #endif
 
 #include <stdio.h>
@@ -51,7 +50,7 @@
 
 using namespace activemq::network;
 
-#if defined(HAVE_WINSOCK2_H)
+#ifdef HAVE_WINSOCK2_H
 
     // Static socket initializer needed for winsock
 

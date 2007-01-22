@@ -197,7 +197,7 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChars( const std::string& value ACTIVEMQ_ATTRIBUTE_UNUSED) 
+void DataOutputStream::writeChars( const std::string& value AMQCPP_UNUSED) 
 throw ( IOException ) {
     /* do nothing */
 }

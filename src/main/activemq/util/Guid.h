@@ -40,36 +40,36 @@ namespace util{
     {
     public:
 
-        Guid(void);
+        Guid();
         Guid(const Guid& source);
         Guid(const std::string& source)
             throw ( exceptions::IllegalArgumentException );
-        virtual ~Guid(void);
+        virtual ~Guid();
 
         /**
          * Determines if this GUID is null, if so it can be initialized with a 
          * call to <code>createGUID</code>.
          * @return true for Null GUID, false otherwise.
          */
-        bool isNull(void) const;
+        bool isNull() const;
       
         /**
          * Clears the GUID's current value and sets it to a NULL GUID value
          * will now pass <code>isNull</code>.
          */
-        void setNull(void);
+        void setNull();
 
         /**
          * Generate a new GUID which will overwrite any current GUID value
          * @return Reference to this object that now has a new GUID
          */       
-        Guid& createGUID(void) throw( exceptions::RuntimeException );
+        Guid& createGUID() throw( exceptions::RuntimeException );
 
         /** 
          * Converts the GUID to a string and returns that string
          * @return a string with this GUID's stringified value
          */
-        std::string toString(void) const throw( exceptions::RuntimeException );
+        std::string toString() const throw( exceptions::RuntimeException );
       
         /** 
          * Converts the GUID to a byte array and return a pointer to the
@@ -77,7 +77,7 @@ namespace util{
          * when done.  
          * @return a byte array with the GUID byte value, size = 16
          */
-        const unsigned char* toBytes(void) const;
+        const unsigned char* toBytes() const;
       
         /**
          * Initializes this GUID with the GUID specified in the bytes parameter
@@ -91,7 +91,7 @@ namespace util{
          * GUID.
          * @return size of the Raw bytes representation
          */
-        int getRawBytesSize(void) const;
+        int getRawBytesSize() const;
 
         /**
          * string type cast operator
@@ -162,22 +162,24 @@ namespace util{
          * Static Guid Creation Method, creates a GUID and returns it as a string
          * @return Guid string.
          */
-        static std::string createGUIDString(void);
+        static std::string createGUIDString();
       
         /**
          * Static Guid Create Method, create a GUID and returns the byte representation
          * of the new GUID.
          * @return Guid bytes array, size is 16
          */
-        static const unsigned char* createGUIDBytes(void);
+        static const unsigned char* createGUIDBytes();
    
     private:
 
         // the uuid that this object represents.
-        #if defined( unix ) || defined(__APPLE__)
+        #ifdef HAVE_OBJBASE_H
+            ::GUID uuid;
+        #elif defined(HAVE_UUID_T)
             uuid_t uuid;
         #else
-            ::GUID uuid;
+            #error Platform does not support any of the standard UUID types
         #endif
 
    };

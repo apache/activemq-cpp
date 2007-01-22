@@ -222,7 +222,7 @@ public:
 
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED) {
+    virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
         printf("JMS Exception occured.  Shutting down client.\n");
     }
     
@@ -265,7 +265,7 @@ private:
     }
 };
     
-int main(int argc ACTIVEMQ_ATTRIBUTE_UNUSED, char* argv[] ACTIVEMQ_ATTRIBUTE_UNUSED) {
+int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     std::cout << "=====================================================\n";    
     std::cout << "Starting the example:" << std::endl;

@@ -76,7 +76,7 @@ namespace io{
 			virtual void close() throw(cms::CMSException){
 				// do nothing.
 			}
-            virtual int skip( int num ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+            virtual int skip( int num AMQCPP_UNUSED) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
                 return 0;
             }
 			
@@ -86,7 +86,7 @@ namespace io{
 		    }
             virtual void wait() throw(exceptions::ActiveMQException){
             }
-            virtual void wait(unsigned long millisecs ACTIVEMQ_ATTRIBUTE_UNUSED) throw(exceptions::ActiveMQException){                
+            virtual void wait(unsigned long millisecs AMQCPP_UNUSED) throw(exceptions::ActiveMQException){                
             }
             virtual void notify() throw(exceptions::ActiveMQException){
             }

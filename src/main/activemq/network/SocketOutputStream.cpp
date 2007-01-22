@@ -18,23 +18,27 @@
 #include "SocketOutputStream.h"
 #include <activemq/util/Config.h>
 
-#if !defined(HAVE_WINSOCK2_H)
+#ifdef HAVE_WINSOCK2_H
+    #include <Winsock2.h>
+#else
     #include <sys/socket.h>
     extern int errno;
-#else
-    #include <Winsock2.h>
 #endif
 
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#if defined( __APPLE__ )
-#define SOCKET_NOSIGNAL SO_NOSIGPIPE
-#elif defined( unix ) && !defined( __CYGWIN__ ) && !defined( sun )
-#define SOCKET_NOSIGNAL MSG_NOSIGNAL
-#else
-#define SOCKET_NOSIGNAL 0
+#if !defined(SOCKET_NOSIGNAL)
+
+    #if defined(SO_NOSIGPIPE)
+        #define SOCKET_NOSIGNAL SO_NOSIGPIPE
+    #elif defined(MSG_NOSIGNAL)
+        #define SOCKET_NOSIGNAL MSG_NOSIGNAL
+    #else
+        #define SOCKET_NOSIGNAL 0
+    #endif
+
 #endif
 
 using namespace activemq::network;

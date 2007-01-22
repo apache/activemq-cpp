@@ -217,9 +217,9 @@ namespace transport{
             outgoingCommandListener = listener;
         }
         
-        virtual void setCommandReader( CommandReader* reader ACTIVEMQ_ATTRIBUTE_UNUSED){}
+        virtual void setCommandReader( CommandReader* reader AMQCPP_UNUSED){}
         
-        virtual void setCommandWriter( CommandWriter* writer ACTIVEMQ_ATTRIBUTE_UNUSED){}
+        virtual void setCommandWriter( CommandWriter* writer AMQCPP_UNUSED){}
         
         virtual void setTransportExceptionListener( 
             TransportExceptionListener* listener )

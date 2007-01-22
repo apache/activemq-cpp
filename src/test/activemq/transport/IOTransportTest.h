@@ -55,10 +55,10 @@ namespace transport{
             
             char c;
             
-            virtual void setCommandId( const unsigned int id ACTIVEMQ_ATTRIBUTE_UNUSED){}
+            virtual void setCommandId( const unsigned int id AMQCPP_UNUSED){}
             virtual unsigned int getCommandId() const{ return 0; }
             
-            virtual void setResponseRequired( const bool required ACTIVEMQ_ATTRIBUTE_UNUSED){}
+            virtual void setResponseRequired( const bool required AMQCPP_UNUSED){}
             virtual bool isResponseRequired() const{ return false; }
         };
         
@@ -129,8 +129,8 @@ namespace transport{
                 }
             }
 
-            virtual int read(unsigned char* buffer ACTIVEMQ_ATTRIBUTE_UNUSED, 
-                             int count ACTIVEMQ_ATTRIBUTE_UNUSED) 
+            virtual int read(unsigned char* buffer AMQCPP_UNUSED, 
+                             int count AMQCPP_UNUSED) 
                 throw( io::IOException ) {
                 return 0;
             }
@@ -176,11 +176,11 @@ namespace transport{
                 }
             }
 
-            virtual void write( const unsigned char* buffer ACTIVEMQ_ATTRIBUTE_UNUSED, 
-                                int count ACTIVEMQ_ATTRIBUTE_UNUSED) 
+            virtual void write( const unsigned char* buffer AMQCPP_UNUSED, 
+                                int count AMQCPP_UNUSED) 
                 throw(io::IOException) {}
            
-            virtual void writeByte(unsigned char v ACTIVEMQ_ATTRIBUTE_UNUSED) throw(io::IOException) {}
+            virtual void writeByte(unsigned char v AMQCPP_UNUSED) throw(io::IOException) {}
         };
         
         class MyExceptionListener : public TransportExceptionListener{
@@ -195,7 +195,7 @@ namespace transport{
             virtual ~MyExceptionListener(){}
             
             virtual void onTransportException( Transport* source, 
-                        const exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
+                        const exceptions::ActiveMQException& ex AMQCPP_UNUSED){
                 transport = source;
 
                 synchronized(&mutex)

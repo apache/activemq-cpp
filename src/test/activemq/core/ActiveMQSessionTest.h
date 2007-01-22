@@ -93,7 +93,7 @@ namespace core{
             MyExceptionListener(){ caughtOne = false; }
             virtual ~MyExceptionListener(){}
             
-            virtual void onException(const cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
+            virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
                 caughtOne = true;
             }
         };

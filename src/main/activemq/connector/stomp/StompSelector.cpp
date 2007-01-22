@@ -22,8 +22,8 @@ using namespace activemq::connector::stomp;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-bool StompSelector::isSelected( const string& selector ACTIVEMQ_ATTRIBUTE_UNUSED,
-    cms::Message* msg ACTIVEMQ_ATTRIBUTE_UNUSED)
+bool StompSelector::isSelected( const string& selector AMQCPP_UNUSED,
+    cms::Message* msg AMQCPP_UNUSED)
 {
     return true;
 }

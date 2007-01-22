@@ -198,7 +198,7 @@ void SimpleRollbackTest::test()
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-void SimpleRollbackTest::onException( const cms::CMSException& error ACTIVEMQ_ATTRIBUTE_UNUSED)
+void SimpleRollbackTest::onException( const cms::CMSException& error AMQCPP_UNUSED)
 {
     bool AbstractTester = false;
     CPPUNIT_ASSERT( AbstractTester );

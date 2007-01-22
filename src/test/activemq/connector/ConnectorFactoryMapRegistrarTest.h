@@ -41,8 +41,8 @@ namespace connector{
 		public:
 		
 		   virtual Connector* createConnector(
-		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED,
-            activemq::transport::Transport*   transport ACTIVEMQ_ATTRIBUTE_UNUSED) { return NULL; };
+		      const activemq::util::Properties& properties AMQCPP_UNUSED,
+            activemq::transport::Transport*   transport AMQCPP_UNUSED) { return NULL; };
 		};
         
         virtual ~ConnectorFactoryMapRegistrarTest(){}

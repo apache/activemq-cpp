@@ -60,7 +60,7 @@ namespace stomp{
                 int num;
                 MyExceptionListener(){ num=0;}
                 virtual ~MyExceptionListener(){}
-                virtual void onException( const cms::CMSException& ex ACTIVEMQ_ATTRIBUTE_UNUSED){
+                virtual void onException( const cms::CMSException& ex AMQCPP_UNUSED){
                     num++;
                 }
         };        
