@@ -364,7 +364,7 @@ ProducerInfo* StompConnector::createProducer(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* StompConnector::createTopic( const std::string& name, 
-                                         SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+                                         SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
     try
@@ -379,7 +379,7 @@ cms::Topic* StompConnector::createTopic( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* StompConnector::createQueue( const std::string& name, 
-                                         SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+                                         SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
     try
@@ -394,7 +394,7 @@ cms::Queue* StompConnector::createQueue( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* StompConnector::createTemporaryTopic(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+    SessionInfo* session AMQCPP_UNUSED)
         throw ( ConnectorException )
 {
     try
@@ -410,7 +410,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* StompConnector::createTemporaryQueue(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+    SessionInfo* session AMQCPP_UNUSED)
         throw ( ConnectorException )
 {
     try
@@ -492,7 +492,7 @@ void StompConnector::send( std::list<cms::Message*>& messages,
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::acknowledge( const SessionInfo* session,
                                   const cms::Message* message,
-                                  AckType ackType ACTIVEMQ_ATTRIBUTE_UNUSED)
+                                  AckType ackType AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
     try
@@ -560,7 +560,7 @@ TransactionInfo* StompConnector::startTransaction(
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::commit( TransactionInfo* transaction, 
-                             SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+                             SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
     try
@@ -580,7 +580,7 @@ void StompConnector::commit( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::rollback( TransactionInfo* transaction, 
-                               SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+                               SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
     try
@@ -600,7 +600,7 @@ void StompConnector::rollback( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* StompConnector::createMessage(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED,
+    SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -624,7 +624,7 @@ cms::Message* StompConnector::createMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* StompConnector::createBytesMessage(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED,
+    SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -648,7 +648,7 @@ cms::BytesMessage* StompConnector::createBytesMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* StompConnector::createTextMessage(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED,
+    SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -672,8 +672,8 @@ cms::TextMessage* StompConnector::createTextMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MapMessage* StompConnector::createMapMessage(
-    SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED,
-    TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED )
+    SessionInfo* session AMQCPP_UNUSED,
+    TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
@@ -688,7 +688,7 @@ cms::MapMessage* StompConnector::createMapMessage(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::unsubscribe( const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED )
+void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
     throw ( ConnectorException )
 {
     try
@@ -767,7 +767,7 @@ void StompConnector::onCommand( transport::Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::onTransportException( 
-    transport::Transport* source ACTIVEMQ_ATTRIBUTE_UNUSED, 
+    transport::Transport* source AMQCPP_UNUSED, 
     const exceptions::ActiveMQException& ex )
 {
     try

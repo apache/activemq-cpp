@@ -159,7 +159,7 @@ namespace commands{
          * Set if this Message requires a Response
          * @param required true if response is required
          */
-        virtual void setResponseRequired( const bool required ACTIVEMQ_ATTRIBUTE_UNUSED) {
+        virtual void setResponseRequired( const bool required AMQCPP_UNUSED) {
         }
         
         /**

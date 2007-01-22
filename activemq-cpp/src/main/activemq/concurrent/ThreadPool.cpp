@@ -271,7 +271,7 @@ void ThreadPool::AllocateThreads( unsigned long count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::onTaskStarted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED)
+void ThreadPool::onTaskStarted( PooledThread* thread AMQCPP_UNUSED)
 {
     try
     {
@@ -300,7 +300,7 @@ void ThreadPool::onTaskStarted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED)
 }
  
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::onTaskCompleted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED)
+void ThreadPool::onTaskCompleted( PooledThread* thread AMQCPP_UNUSED)
 {
     try
     {    
@@ -318,7 +318,7 @@ void ThreadPool::onTaskCompleted( PooledThread* thread ACTIVEMQ_ATTRIBUTE_UNUSED
 ////////////////////////////////////////////////////////////////////////////////
 void ThreadPool::onTaskException(
    PooledThread* thread, 
-   exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
+   exceptions::ActiveMQException& ex AMQCPP_UNUSED)
 {
     //LOGCMS_DEBUG(logger, "ThreadPool::onTaskException: ");
 

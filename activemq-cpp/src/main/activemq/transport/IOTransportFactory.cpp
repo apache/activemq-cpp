@@ -22,7 +22,7 @@ using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* IOTransportFactory::createTransport( 
-    const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED )
+    const activemq::util::Properties& properties AMQCPP_UNUSED )
 {
     return new IOTransport();
 }

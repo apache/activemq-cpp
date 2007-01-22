@@ -41,7 +41,7 @@ unsigned char ActiveMQMessage::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat ACTIVEMQ_ATTRIBUTE_UNUSED )
+void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED )
 {
     marshalledProperties.clear();
     if( !properties.isEmpty() )

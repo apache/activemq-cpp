@@ -22,7 +22,7 @@
 #include <activemq/util/Config.h>
 #include <iostream>
 
-int main( int argc ACTIVEMQ_ATTRIBUTE_UNUSED, char **argv ACTIVEMQ_ATTRIBUTE_UNUSED)
+int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
 {
     try
     {

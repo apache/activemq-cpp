@@ -57,7 +57,7 @@ namespace concurrent{
       
    	virtual ~ThreadPoolTest() {};
       
-      virtual void onTaskComplete(Runnable* task ACTIVEMQ_ATTRIBUTE_UNUSED)
+      virtual void onTaskComplete(Runnable* task AMQCPP_UNUSED)
       {
         try{
              synchronized(&mutex)
@@ -74,8 +74,8 @@ namespace concurrent{
         }
       }
 
-      virtual void onTaskException(Runnable* task ACTIVEMQ_ATTRIBUTE_UNUSED, 
-        exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
+      virtual void onTaskException(Runnable* task AMQCPP_UNUSED, 
+        exceptions::ActiveMQException& ex AMQCPP_UNUSED)
       {
          caughtEx = true;
       }

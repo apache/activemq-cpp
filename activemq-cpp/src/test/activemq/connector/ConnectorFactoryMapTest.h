@@ -48,50 +48,50 @@ namespace connector{
 		      virtual SessionInfo* createSessionInfo(void) throw( ConnectorException )
 		      { return NULL; };
 		
-		      virtual cms::Topic* createTopic(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual cms::Topic* createTopic(const std::string& name AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		          throw ( ConnectorException )
 		      { return NULL; };
-		      virtual cms::Queue* createQueue(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual cms::Queue* createQueue(const std::string& name AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		         throw ( ConnectorException )
 		      { return NULL; };
 		          
-		      virtual cms::TemporaryTopic* createTemporaryTopic(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, 
-		                                                    SessionInfo*       session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual cms::TemporaryTopic* createTemporaryTopic(const std::string& name AMQCPP_UNUSED, 
+		                                                    SessionInfo*       session AMQCPP_UNUSED)
 		         throw ( ConnectorException )
 		     { return NULL; };
 		         
-		       virtual cms::TemporaryQueue* createTemporaryQueue(const std::string& name ACTIVEMQ_ATTRIBUTE_UNUSED, 
-		                                                    SessionInfo*       session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		       virtual cms::TemporaryQueue* createTemporaryQueue(const std::string& name AMQCPP_UNUSED, 
+		                                                    SessionInfo*       session AMQCPP_UNUSED)
 		          throw ( ConnectorException )
 		       { return NULL; };
 		          
-		      virtual void Send(cms::Message* message ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( ConnectorException ) {};
-		      virtual void Send(std::list<cms::Message*>& messages ACTIVEMQ_ATTRIBUTE_UNUSED) 
+		      virtual void Send(cms::Message* message AMQCPP_UNUSED) throw ( ConnectorException ) {};
+		      virtual void Send(std::list<cms::Message*>& messages AMQCPP_UNUSED) 
 		         throw ( ConnectorException ) {};
-            virtual void Acknowledge(cms::Message* message ACTIVEMQ_ATTRIBUTE_UNUSED) throw ( ConnectorException ) {};
-		      virtual TransactionInfo* startTransaction(SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED) 
+            virtual void Acknowledge(cms::Message* message AMQCPP_UNUSED) throw ( ConnectorException ) {};
+		      virtual TransactionInfo* startTransaction(SessionInfo* session AMQCPP_UNUSED) 
 		         throw ( ConnectorException ) { return NULL; };
-		      virtual void commit(TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual void commit(TransactionInfo* transaction AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void rollback(TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual void rollback(TransactionInfo* transaction AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		         throw ( ConnectorException ) {};
 		
-		      virtual cms::BytesMessage* createByteMessage(SessionInfo*     session ACTIVEMQ_ATTRIBUTE_UNUSED,
-		                                             TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual cms::BytesMessage* createByteMessage(SessionInfo*     session AMQCPP_UNUSED,
+		                                             TransactionInfo* transaction AMQCPP_UNUSED)
 		                                               throw ( ConnectorException )
 		      { return NULL; };
-		      virtual cms::TextMessage* createTextMessage(SessionInfo*     session ACTIVEMQ_ATTRIBUTE_UNUSED,
-		                                             TransactionInfo* transaction ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual cms::TextMessage* createTextMessage(SessionInfo*     session AMQCPP_UNUSED,
+		                                             TransactionInfo* transaction AMQCPP_UNUSED)
 		                                               throw ( ConnectorException )
 		      { return NULL; };
-		      virtual void subscribe(cms::Destination* destination ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual void subscribe(cms::Destination* destination AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void unsubscribe(cms::Destination* destination ACTIVEMQ_ATTRIBUTE_UNUSED, SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+		      virtual void unsubscribe(cms::Destination* destination AMQCPP_UNUSED, SessionInfo* session AMQCPP_UNUSED)
 		         throw ( ConnectorException ) {};
-		      virtual void addMessageListener(cms::MessageListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
-		      virtual void removeMessageListener(cms::MessageListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
-            virtual void addExceptionListener(cms::ExceptionListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
-            virtual void removeExceptionListener(cms::ExceptionListener* listener ACTIVEMQ_ATTRIBUTE_UNUSED) {};
+		      virtual void addMessageListener(cms::MessageListener* listener AMQCPP_UNUSED) {};
+		      virtual void removeMessageListener(cms::MessageListener* listener AMQCPP_UNUSED) {};
+            virtual void addExceptionListener(cms::ExceptionListener* listener AMQCPP_UNUSED) {};
+            virtual void removeExceptionListener(cms::ExceptionListener* listener AMQCPP_UNUSED) {};
 		
 		};
 		
@@ -104,8 +104,8 @@ namespace connector{
 		public:
 		
 		   virtual Connector* createConnector(
-		      const activemq::util::Properties& properties ACTIVEMQ_ATTRIBUTE_UNUSED,
-            activemq::transport::Transport*   transport ACTIVEMQ_ATTRIBUTE_UNUSED) { return NULL; };
+		      const activemq::util::Properties& properties AMQCPP_UNUSED,
+            activemq::transport::Transport*   transport AMQCPP_UNUSED) { return NULL; };
 		};
 		
 		void test(){

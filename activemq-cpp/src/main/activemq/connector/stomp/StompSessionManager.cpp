@@ -110,7 +110,7 @@ connector::SessionInfo* StompSessionManager::createSession(
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::removeSession( 
-    connector::SessionInfo* session ACTIVEMQ_ATTRIBUTE_UNUSED)
+    connector::SessionInfo* session AMQCPP_UNUSED)
         throw ( exceptions::ActiveMQException )
 {
     // NO-op

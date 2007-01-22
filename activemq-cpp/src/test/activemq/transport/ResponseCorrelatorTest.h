@@ -173,7 +173,7 @@ namespace transport{
                 }
             }
             
-            virtual Response* request( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED) 
+            virtual Response* request( Command* command AMQCPP_UNUSED) 
                 throw(CommandIOException, exceptions::UnsupportedOperationException)
             {
                 throw exceptions::UnsupportedOperationException( 
@@ -309,7 +309,7 @@ namespace transport{
             MyBrokenTransport(){}            
             virtual ~MyBrokenTransport(){}
             
-            virtual Response* createResponse( Command* command ACTIVEMQ_ATTRIBUTE_UNUSED){                
+            virtual Response* createResponse( Command* command AMQCPP_UNUSED){                
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "bad stuff" );
             }
@@ -342,8 +342,8 @@ namespace transport{
             }
             
             virtual void onTransportException( 
-                Transport* source ACTIVEMQ_ATTRIBUTE_UNUSED, 
-                const exceptions::ActiveMQException& ex ACTIVEMQ_ATTRIBUTE_UNUSED)
+                Transport* source AMQCPP_UNUSED, 
+                const exceptions::ActiveMQException& ex AMQCPP_UNUSED)
             {
                 synchronized( &mutex ){
                     exCount++;

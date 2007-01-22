@@ -23,7 +23,7 @@ using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportFilter::onTransportException( 
-    Transport* source ACTIVEMQ_ATTRIBUTE_UNUSED, 
+    Transport* source AMQCPP_UNUSED, 
     const exceptions::ActiveMQException& ex )
 {
     fire( ex );

@@ -22,10 +22,10 @@ using namespace activemq::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-Guid::Guid(void)
+Guid::Guid()
 {
     // Clear internal uuid, would pass isNull
-    #if (defined( HAVE_UUID_H ) || defined(HAVE_UUID_UUID_H)) 
+    #if !defined(HAVE_OBJBASE_H)
         memset(&uuid, 0, sizeof(uuid_t));
     #else
         ::UuidCreateNil(&uuid);
@@ -55,12 +55,12 @@ Guid::Guid( const std::string& source )
 }
    
 ////////////////////////////////////////////////////////////////////////////////
-Guid::~Guid(void)
+Guid::~Guid()
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Guid::isNull(void) const
+bool Guid::isNull() const
 {
     #if !defined(HAVE_OBJBASE_H) 
         // Check the uuid APIs is null method
@@ -75,7 +75,7 @@ bool Guid::isNull(void) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Guid::setNull(void)
+void Guid::setNull()
 {
     #if !defined(HAVE_OBJBASE_H) 
         // use the uuid function to clear
@@ -86,7 +86,7 @@ void Guid::setNull(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Guid& Guid::createGUID(void) throw( RuntimeException )
+Guid& Guid::createGUID() throw( RuntimeException )
 {
     #if !defined(HAVE_OBJBASE_H) 
         // Use the uuid_generate method to create a new GUID
@@ -107,7 +107,7 @@ Guid& Guid::createGUID(void) throw( RuntimeException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Guid::toString(void) const throw( RuntimeException )
+std::string Guid::toString() const throw( RuntimeException )
 {
     std::string uuid_str = "";
 
@@ -150,7 +150,7 @@ Guid::operator std::string() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* Guid::toBytes(void) const
+const unsigned char* Guid::toBytes() const
 {
     unsigned char* buffer = new unsigned char[getRawBytesSize()];
    
@@ -186,7 +186,7 @@ Guid& Guid::fromBytes( const unsigned char* bytes )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Guid::getRawBytesSize(void) const
+int Guid::getRawBytesSize() const
 {
     #if !defined(HAVE_OBJBASE_H) 
         return sizeof(uuid_t);
@@ -392,13 +392,13 @@ bool Guid::operator>=( const std::string& source ) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Guid::createGUIDString(void)
+std::string Guid::createGUIDString()
 {
     return Guid().createGUID().toString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* createGUIDBytes(void)
+const unsigned char* createGUIDBytes()
 {
     return Guid().createGUID().toBytes();
 }

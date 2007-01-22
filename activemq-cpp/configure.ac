@@ -41,7 +41,8 @@ PACKAGE=$ACTIVEMQ_LIBRARY_NAME
 VERSION=$ACTIVEMQ_VERSION
 
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
+# AM_CONFIG_HEADER(config.h)
 
 # Gives us access to the host_os environment variable
 AC_CANONICAL_HOST
@@ -70,8 +71,8 @@ AC_CHECK_SIZEOF(long long, 8)
 AC_CHECK_SIZEOF(float, 4)
 AC_CHECK_SIZEOF(double, 8)
 
-AC_CHECK_HEADERS([uuid.h])
-AC_CHECK_HEADERS([uuid/uuid.h])
+AC_CHECK_HEADERS([uuid.h uuid/uuid.h], [AC_DEFINE([HAVE_UUID_T], [1], [Define if uuid_t exists.])])
+# AC_CHECK_HEADERS([uuid/uuid.h])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
 AC_CHECK_HEADERS([sys/filio.h])
@@ -79,14 +80,17 @@ AC_CHECK_HEADERS([sys/ioctl.h])
 AC_CHECK_HEADERS([sys/select.h])
 AC_CHECK_HEADERS([sys/time.h])
 AC_CHECK_HEADERS([sys/timeb.h])
+AC_CHECK_HEADERS([pthread.h])
 
 AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
+
+# AC_CHECK_TYPES([uuid_t],[],[],['uuid/uuid.h'])
 
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled])) 
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 # Define globals for all platforms
-CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2 -W -Wall -D HAVE_ACTIVEMQ_CONFIG"
+CXXFLAGS="$CXXFLAGS -fstrict-aliasing -Wstrict-aliasing=2 -W -Wall"
 
 LIBS="$LIBS"
 

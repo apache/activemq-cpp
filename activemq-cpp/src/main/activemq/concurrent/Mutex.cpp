@@ -23,7 +23,7 @@ using namespace activemq::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::Mutex()
 {
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutex_init(&mutex, &attr);
@@ -42,7 +42,7 @@ Mutex::~Mutex()
     // Unlock the mutex.
     unlock();
   
-#ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
     pthread_mutex_destroy(&mutex);
 #else
     DeleteCriticalSection(&mutex);
@@ -58,7 +58,7 @@ void Mutex::lock() throw( exceptions::ActiveMQException )
     }
     else
     {
-#ifdef AMQCPP_USE_PTHREADS               
+#ifdef HAVE_PTHREAD_H               
         pthread_mutex_lock(&mutex);
 #else
         EnterCriticalSection(&mutex);
@@ -90,11 +90,11 @@ void Mutex::unlock() throw( exceptions::ActiveMQException )
     {         
         lock_owner = 0;
 
-        #ifdef AMQCPP_USE_PTHREADS
-            pthread_mutex_unlock(&mutex);
-        #else
-            LeaveCriticalSection(&mutex);
-        #endif            
+#ifdef HAVE_PTHREAD_H
+        pthread_mutex_unlock(&mutex);
+#else
+        LeaveCriticalSection(&mutex);
+#endif            
     }
 }
   
@@ -126,88 +126,88 @@ void Mutex::wait( unsigned long millisecs )
     this->lock_count = 0;
     this->lock_owner = 0;
  
-    #ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
 
-        // Create this threads wait event
-        pthread_cond_t waitEvent;
-        pthread_cond_init(&waitEvent, NULL);
-    
-        // Store the event in the queue so that a notify can
-        // call it and wake up the thread.
-        eventQ.push_back(&waitEvent);
+    // Create this threads wait event
+    pthread_cond_t waitEvent;
+    pthread_cond_init(&waitEvent, NULL);
 
-        int returnValue = 0;
-        if(millisecs != WAIT_INFINITE)
+    // Store the event in the queue so that a notify can
+    // call it and wake up the thread.
+    eventQ.push_back(&waitEvent);
+
+    int returnValue = 0;
+    if(millisecs != WAIT_INFINITE)
+    {
+        timeval now = {0,0};
+        gettimeofday(&now, NULL);
+   
+        timespec wait = {0,0};
+        wait.tv_sec = now.tv_sec + (millisecs / 1000);
+        wait.tv_nsec = (now.tv_usec * 1000) + ((millisecs % 1000) * 1000000);
+   
+        if(wait.tv_nsec > 1000000000)
         {
-            timeval now = {0,0};
-            gettimeofday(&now, NULL);
-       
-            timespec wait = {0,0};
-            wait.tv_sec = now.tv_sec + (millisecs / 1000);
-            wait.tv_nsec = (now.tv_usec * 1000) + ((millisecs % 1000) * 1000000);
-       
-            if(wait.tv_nsec > 1000000000)
-            {
-                wait.tv_sec++;
-                wait.tv_nsec -= 1000000000;
+            wait.tv_sec++;
+            wait.tv_nsec -= 1000000000;
+        }
+
+        returnValue =  pthread_cond_timedwait(&waitEvent, &mutex, &wait);
+    }
+    else
+    {
+        returnValue = pthread_cond_wait(&waitEvent, &mutex);
+    }
+
+    // If the wait did not succeed for any reason, remove it
+    // from the queue.
+    if( returnValue != 0 ){
+        std::list<pthread_cond_t*>::iterator iter = eventQ.begin();
+        for( ; iter != eventQ.end(); ++iter ){
+            if( *iter == &waitEvent ){
+                eventQ.erase(iter);
+                break;
             }
-
-            returnValue =  pthread_cond_timedwait(&waitEvent, &mutex, &wait);
         }
-        else
-        {
-            returnValue = pthread_cond_wait(&waitEvent, &mutex);
-        }
-
-        // If the wait did not succeed for any reason, remove it
-        // from the queue.
-        if( returnValue != 0 ){
-            std::list<pthread_cond_t*>::iterator iter = eventQ.begin();
-            for( ; iter != eventQ.end(); ++iter ){
-                if( *iter == &waitEvent ){
-                    eventQ.erase(iter);
-                    break;
-                }
-            }
-        }
-        
-        // Destroy our wait event now, the notify method will have removed it
-        // from the event queue.
-        pthread_cond_destroy(&waitEvent);
-
-    #else
-
-        // Create the event to wait on
-        HANDLE waitEvent = CreateEvent( NULL, false, false, NULL );
+    }
     
-        if(waitEvent == NULL)
-        {
-            throw exceptions::ActiveMQException( 
-                __FILE__, __LINE__,
-                "Mutex::Mutex - Failed Creating Event." );
-        }
+    // Destroy our wait event now, the notify method will have removed it
+    // from the event queue.
+    pthread_cond_destroy(&waitEvent);
 
-        eventQ.push_back( waitEvent );
+#else // !defined(HAVE_PTHREAD_H)
 
-        // Release the Lock
-        LeaveCriticalSection( &mutex );
+    // Create the event to wait on
+    HANDLE waitEvent = CreateEvent( NULL, false, false, NULL );
 
-        // Wait for a signal
-        WaitForSingleObject( waitEvent, millisecs );
+    if(waitEvent == NULL)
+    {
+        throw exceptions::ActiveMQException( 
+            __FILE__, __LINE__,
+            "Mutex::Mutex - Failed Creating Event." );
+    }
 
-        // Reaquire the Lock
-        EnterCriticalSection( &mutex );
+    eventQ.push_back( waitEvent );
 
-        // Clean up the event, the notif methods will have
-        // already poped it from the queue.
-        CloseHandle( waitEvent );
+    // Release the Lock
+    LeaveCriticalSection( &mutex );
+
+    // Wait for a signal
+    WaitForSingleObject( waitEvent, millisecs );
+
+    // Reaquire the Lock
+    EnterCriticalSection( &mutex );
+
+    // Clean up the event, the notif methods will have
+    // already poped it from the queue.
+    CloseHandle( waitEvent );
     
-    #endif
+#endif // !defined(HAVE_PTHREAD_H)
  
     // restore the owner
-        this->lock_owner = lock_owner;
-        this->lock_count = lock_count;
-    }
+    this->lock_owner = lock_owner;
+    this->lock_count = lock_count;
+}
   
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::notify() throw( exceptions::ActiveMQException )
@@ -221,13 +221,13 @@ void Mutex::notify() throw( exceptions::ActiveMQException )
 
     if( !eventQ.empty() )
     {
-        #ifdef AMQCPP_USE_PTHREADS
-            pthread_cond_signal( eventQ.front() );
-            eventQ.pop_front();
-        #else
-            SetEvent( eventQ.front() );
-            eventQ.pop_front();
-        #endif
+#ifdef HAVE_PTHREAD_H
+        pthread_cond_signal( eventQ.front() );
+        eventQ.pop_front();
+#else
+        SetEvent( eventQ.front() );
+        eventQ.pop_front();
+#endif
     }
 }
 
@@ -241,22 +241,22 @@ void Mutex::notifyAll() throw( exceptions::ActiveMQException )
             "Mutex::NotifyAll - Failed, not Lock Owner!" );
     }
  
-    #ifdef AMQCPP_USE_PTHREADS
+#ifdef HAVE_PTHREAD_H
 
-        while(!eventQ.empty())
-        {
-             pthread_cond_signal( eventQ.front() );
-             eventQ.pop_front();
-        }
+    while(!eventQ.empty())
+    {
+         pthread_cond_signal( eventQ.front() );
+         eventQ.pop_front();
+    }
 
-    #else
+#else
 
-        while(!eventQ.empty())
-        {
-             SetEvent( eventQ.front() );
-             eventQ.pop_front();
-        }
+    while(!eventQ.empty())
+    {
+         SetEvent( eventQ.front() );
+         eventQ.pop_front();
+    }
 
-    #endif
+#endif
 }
 
