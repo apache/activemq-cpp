@@ -16,16 +16,13 @@
  */
 
 #include "ServerSocket.h"
+#include "SocketError.h"
 
 #ifdef HAVE_WINSOCK2_H
     #include <Winsock2.h>
     #include <Ws2tcpip.h> 
     #include <sys/stat.h>
     #define stat _stat
-    #ifdef errno
-    #undef errno
-    #endif
-    int errno;
 #else
     #include <unistd.h>
     #include <netdb.h>
@@ -35,17 +32,14 @@
     #include <netinet/in.h>
     #include <arpa/inet.h>
     #include <string.h>
-    extern int errno;
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <errno.h>
 #include <sys/types.h>
 #include <assert.h>
-#include <errno.h>
 #include <string>
 
 using namespace activemq::network;
@@ -113,7 +107,7 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     socketHandle = ::socket(AF_INET, SOCK_STREAM, 0 );
     if( socketHandle < 0) {
         socketHandle = Socket::INVALID_SOCKET_HANDLE;
-            throw SocketException( __FILE__, __LINE__, ::strerror( errno ));
+            throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str());
     }
    
     // Verify the port value.
@@ -137,7 +131,7 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     struct addrinfo *res_ptr = NULL;
     status = ::getaddrinfo(host, NULL, &hints, &res_ptr);
     if( status != 0 || res_ptr == NULL) {
-        throw SocketException( __FILE__, __LINE__, ::strerror( errno ) );
+        throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
     }
     assert(res_ptr->ai_addr->sa_family == AF_INET);
     // Porting: On both 32bit and 64 bit systems that we compile to soo far, sin_addr is a 32 bit value, not an unsigned long.
@@ -163,12 +157,12 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
     if( status < 0 ){
         close();
         throw SocketException ( __FILE__, __LINE__, 
-            "ServerSocket::bind - %s", ::strerror( errno ) );
+            "ServerSocket::bind - %s", SocketError::getErrorString().c_str() );
     }
     status = ::listen( socketHandle, backlog );
     if( status < 0 ) {
         close();
-        throw SocketException( __FILE__, __LINE__, ::strerror( errno ) );
+        throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
     }
 }
 
@@ -207,7 +201,7 @@ Socket* ServerSocket::accept () throw (SocketException)
         ::accept( socketHandle, reinterpret_cast<struct sockaddr*>(&temp), &temp_len );
     if( ss_socket_handle < 0 ) {
         throw SocketException( __FILE__, __LINE__, 
-            "ServerSocket::accept- %s", ::strerror( errno ) );
+            "ServerSocket::accept- %s", SocketError::getErrorString().c_str() );
     }
     
     return new TcpSocket( ss_socket_handle );

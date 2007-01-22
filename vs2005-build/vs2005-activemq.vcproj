@@ -1036,6 +1036,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\network\SocketError.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\network\SocketError.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\network\SocketException.h"
 					>
 				</File>

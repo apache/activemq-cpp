@@ -30,7 +30,6 @@
     #include <netinet/in.h>
     #include <arpa/inet.h>
     #include <string.h>
-    extern int errno;
 #endif
 
 #ifndef SHUT_RDWR 
@@ -41,13 +40,12 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
-#include <errno.h>
 #include <sys/types.h>
 
 #include "TcpSocket.h"
 #include "SocketInputStream.h"
 #include "SocketOutputStream.h"
-#include <errno.h>
+#include "SocketError.h"
 
 using namespace activemq::network;
 using namespace activemq::io;
@@ -127,7 +125,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
     socketHandle = ::socket(AF_INET, SOCK_STREAM, 0);
     if( socketHandle < 0 ) {
         socketHandle = INVALID_SOCKET_HANDLE;
-            throw SocketException( __FILE__, __LINE__, ::strerror( errno ) );
+            throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
     }
    
     // Check port value.
@@ -155,7 +153,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
     status = ::getaddrinfo( host, NULL, &hints, &res_ptr );
     if( status != 0 || res_ptr == NULL){      
         throw SocketException( __FILE__, __LINE__, 
-            "Socket::connect - %s", ::strerror( errno ) );        
+            "Socket::connect - %s", SocketError::getErrorString().c_str() );        
     }
      
     assert(res_ptr->ai_addr->sa_family == AF_INET);
@@ -180,7 +178,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
     if( status < 0 ){
         close();
         throw SocketException( __FILE__, __LINE__, 
-            "Socket::connect - %s", ::strerror( errno ) );
+            "Socket::connect - %s", SocketError::getErrorString().c_str() );
     }
    
     // Create an input/output stream for this socket.
