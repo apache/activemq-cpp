@@ -33,7 +33,7 @@ namespace logger{
 
    private:
    
-      LOGCMS_DECLARE(testLogger);
+      LOGCMS_DECLARE(testLogger)
       
    public:
 
@@ -51,7 +51,7 @@ namespace logger{
       }
    };
 
-   LOGCMS_INITIALIZE(testLogger, LoggerTest, "com.activemq.logger.LoggerTest");
+   LOGCMS_INITIALIZE(testLogger, LoggerTest, "com.activemq.logger.LoggerTest")
 
 }}
 

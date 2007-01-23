@@ -47,7 +47,7 @@ namespace concurrent{
         ThreadPool* pool;
 
         // Logger Init
-        LOGCMS_DECLARE(logger);
+        LOGCMS_DECLARE(logger)
       
      public:
    
