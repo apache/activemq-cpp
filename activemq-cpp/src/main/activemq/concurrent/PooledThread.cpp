@@ -25,7 +25,7 @@ using namespace activemq;
 using namespace activemq::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-LOGCMS_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread");
+LOGCMS_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread")
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledThread::PooledThread(ThreadPool* pool)

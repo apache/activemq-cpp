@@ -31,8 +31,8 @@ using namespace activemq;
 using namespace activemq::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-LOGCMS_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool");
-LOGCMS_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker");
+LOGCMS_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
+LOGCMS_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
 
 ////////////////////////////////////////////////////////////////////////////////
 ThreadPool ThreadPool::instance;

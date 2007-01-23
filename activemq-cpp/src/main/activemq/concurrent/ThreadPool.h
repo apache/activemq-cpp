@@ -81,8 +81,8 @@ namespace concurrent{
         Mutex poolLock;
 
         // Logger Init 
-        LOGCMS_DECLARE(logger);
-        LOGCMS_DECLARE(marker);
+        LOGCMS_DECLARE(logger)
+        LOGCMS_DECLARE(marker)
       
     private:   // Statics
    
