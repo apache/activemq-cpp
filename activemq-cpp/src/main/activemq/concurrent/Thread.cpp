@@ -16,11 +16,9 @@
  */
  
 #include "Thread.h"
-#include <errno.h>
 
 #ifdef HAVE_PTHREAD_H
-    #include <errno.h> // EINTR
-    extern int errno;
+    #include <errno.h>
 #else
     #include <process.h> // _endthreadex
 #endif

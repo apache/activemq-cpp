@@ -4,8 +4,7 @@
 #if defined(HAVE_WINSOCK2_H)
     #include <Winsock2.h>
 #else
-    #include <errno.h>    
-    extern int errno;
+    #include <errno.h>
 #endif
 
 using namespace activemq;
