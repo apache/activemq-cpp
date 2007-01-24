@@ -53,7 +53,7 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {            
+        virtual void copyDataStructure( const DataStructure* src ) {        
             Message::copyDataStructure( src );
         }
 
@@ -150,13 +150,15 @@ namespace commands{
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */
-        virtual void clearBody();
+        virtual void clearBody() {
+            this->setContent( std::vector<unsigned char>() );
+        }
         
         /**
          * Clears the message properties.  Does not clear the body or
          * header values.
          */
-        virtual void clearProperties();
+        virtual void clearProperties() {}
         
         /**
          * Retrieves the propery names.
@@ -361,8 +363,8 @@ namespace commands{
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
-        virtual void setCMSDestination( const cms::Destination* destination AMQCPP_UNUSED) {
- //           this->setDestination( destination );
+        virtual void setCMSDestination( const cms::Destination* destination ) {
+            this->setDestination( destination );
         }
       
         /**
@@ -429,13 +431,17 @@ namespace commands{
          * Gets the CMS Reply To Address for this Message
          * @return Reply To Value
          */
-        virtual const cms::Destination* getCMSReplyTo(void) const;
+        virtual const cms::Destination* getCMSReplyTo(void) const {
+            return this->getReplyTo();
+        }
       
         /**
          * Sets the CMS Reply To Address for this message
          * @param id - Reply To value
          */
-        virtual void setCMSReplyTo( const cms::Destination* destination );
+        virtual void setCMSReplyTo( const cms::Destination* destination ) {
+            this->setRepyTo( destination );
+        }
 
         /**
          * Gets the Time Stamp for this Message
