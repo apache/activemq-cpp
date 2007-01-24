@@ -731,6 +731,14 @@
 					RelativePath="..\src\test\activemq\util\StringTokenizerTest.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\URISupportTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\URISupportTest.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

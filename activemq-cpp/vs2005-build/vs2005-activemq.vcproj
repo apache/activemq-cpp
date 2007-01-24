@@ -339,6 +339,14 @@
 					RelativePath="..\src\main\activemq\util\StringTokenizer.h"
 					>
 				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\URISupport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\URISupport.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="concurrent"
