@@ -67,18 +67,54 @@ void ActiveMQConsumer::close()
     try
     {
         if( !closed ) {
+            
+            closed = true;
+            
+            // Identifies any errors encountered during shutdown.
+            ActiveMQException* error = NULL; 
+            
             // Dispose of the Consumer Info, this should stop us from getting
-            // any more messages.
-            session->onDestroySessionResource( this );
+            // any more messages.  This may result in message traffic
+            // going to the connector.  If the socket is broken, this
+            // will result in an exception, in which case we catch it
+            // and continue to shutdown normally.
+            try{
+                session->onDestroySessionResource( this );
+            } catch( cms::CMSException& ex ){                 
+                error = new ActiveMQException( __FILE__, __LINE__, 
+                        ex.what() );
+            }
             
             // Stop the asynchronous message processin thread if it's
             // running.
-            stopThread();
+            try{
+                stopThread();
+            } catch ( ... ){
+                if( error != NULL ){
+                    error = new ActiveMQException( __FILE__, __LINE__, 
+                        "failed to stop the thread" );
+                }
+            }
             
             // Purge all the pending messages
-            purgeMessages();
+            try{
+                purgeMessages();
+            } catch ( ... ){
+                if( error != NULL ){
+                    error = new ActiveMQException( __FILE__, __LINE__, 
+                        "failed to purge messages from the queue" );
+                }
+            }
             
-            closed = true;
+            // If we encountered an error, propagate it.
+            if( error != NULL ){
+                ActiveMQException ex( *error );
+                delete error;
+                
+                ex.setMark( __FILE__, __LINE__ );
+                throw ex;
+            }
+                                  
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

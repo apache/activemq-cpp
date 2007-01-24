@@ -82,8 +82,11 @@ void ActiveMQSession::close(void) throw ( cms::CMSException )
 
     try
     {
-        // Destry the Transaction
-        delete transaction;
+        // Destroy the Transaction
+        if( transaction != NULL ){
+            delete transaction;
+            transaction = NULL;
+        }
 
         // Destroy this sessions resources
         connection->getConnectionData()->
