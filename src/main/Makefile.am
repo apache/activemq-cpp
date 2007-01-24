@@ -75,7 +75,8 @@ cc_sources = \
     activemq/util/Endian.cpp \
     activemq/util/Date.cpp \
     activemq/util/Math.cpp \
-    activemq/util/PrimitiveMap.cpp
+    activemq/util/PrimitiveMap.cpp \
+    activemq/util/URISupport.cpp
 
 h_sources = \
     activemq/core/ActiveMQSessionResource.h \
@@ -245,6 +246,7 @@ h_sources = \
     activemq/util/Map.h \
     activemq/util/Math.h \
     activemq/util/PrimitiveMap.h \
+    activemq/util/URISupport.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
