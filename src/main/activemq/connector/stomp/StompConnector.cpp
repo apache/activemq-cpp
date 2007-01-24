@@ -714,14 +714,32 @@ void StompConnector::destroyResource( ConnectorResource* resource )
 
         if( consumer != NULL)
         {
-            sessionManager->removeConsumer( consumer );
+            try{
+                sessionManager->removeConsumer( consumer );
+            } catch( ConnectorException& ex ){
+                
+                // Make sure we delete the resource
+                delete resource;
+                
+                ex.setMark( __FILE__, __LINE__ );
+                throw ex;
+            }
         }
         else if( session != NULL)
         {
-            sessionManager->removeSession( session );
+            try{
+                sessionManager->removeSession( session );
+            } catch( ConnectorException& ex ){
+                
+                // Make sure we delete the resource
+                delete resource;
+                
+                ex.setMark( __FILE__, __LINE__ );
+                throw ex;
+            }
         }
 
-        // No matter what we end it here.
+        // All went well - finish by deleting the resource.
         delete resource;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
