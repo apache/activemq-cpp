@@ -21,6 +21,8 @@
 #include <map>
 #include <vector>
 #include <activemq/exceptions/NoSuchElementException.h>
+#include <activemq/concurrent/Synchronizable.h>
+#include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
 namespace util{
@@ -30,16 +32,37 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V> class Map
+    template <typename K, typename V> class Map : public concurrent::Synchronizable 
     {
     private:
     
         std::map<K,V> valueMap;
+        concurrent::Mutex mutex;
         
     public:
     
+        /**
+         * Default constructor - does nothing.
+         */
     	Map(){};
+        
+        /**
+         * Copy constructor - copies the content of the given map into this
+         * one.
+         * @param source The source map.
+         */
+        Map( const Map& source ){
+            copy( source );
+        }
+        
     	virtual ~Map(){};
+        
+        /**
+         * Copies the content of the source map into this map.  Erases
+         * all existing data in this map.
+         * @param source The source object to copy from.
+         */
+        virtual void copy( const Map& source ); 
         
         /**
          * Removes all keys and values from this map.
@@ -105,7 +128,87 @@ namespace util{
          * @return the entire set of values in this map as a std::vector.
          */
         virtual std::vector<V> getValues() const;
+        
+    public:     // Methods from Synchronizable
+    
+        /**
+         * Locks the object.
+         * @throws ActiveMQException
+         */
+        virtual void lock() throw(exceptions::ActiveMQException) {
+            mutex.lock();
+        }
+
+        /**
+         * Unlocks the object.
+         * @throws ActiveMQException
+         */
+        virtual void unlock() throw(exceptions::ActiveMQException) {
+            mutex.unlock();
+        }
+    
+        /**
+         * Waits on a signal from this object, which is generated
+         * by a call to Notify.  Must have this object locked before
+         * calling.
+         * @throws ActiveMQException
+         */
+        virtual void wait() throw(exceptions::ActiveMQException) {
+            mutex.wait();
+        }
+    
+        /**
+         * Waits on a signal from this object, which is generated
+         * by a call to Notify.  Must have this object locked before
+         * calling.  This wait will timeout after the specified time
+         * interval.
+         * @param millisecs the time in millisecsonds to wait, or 
+         * WAIT_INIFINITE
+         * @throws ActiveMQException
+         */
+        virtual void wait(unsigned long millisecs) 
+            throw(exceptions::ActiveMQException) {
+            mutex.wait(millisecs);
+        }
+
+        /**
+         * Signals a waiter on this object that it can now wake
+         * up and continue.  Must have this object locked before
+         * calling.
+         * @throws ActiveMQException
+         */
+        virtual void notify() throw( exceptions::ActiveMQException ) {
+            mutex.notify();
+        }
+    
+        /**
+         * Signals the waiters on this object that it can now wake
+         * up and continue.  Must have this object locked before
+         * calling.
+         * @throws ActiveMQException
+         */
+        virtual void notifyAll() throw( exceptions::ActiveMQException ) {
+            mutex.notifyAll();
+        }
     };
+    
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename K, typename V>    
+    void Map<K,V>::copy( const Map<K,V>& source ) {
+        
+        // Get an iterator to the beginning of the source map.
+        typename std::map<K,V>::const_iterator iter;
+        iter = source.valueMap.begin();
+        
+        // Erase the content of this object.
+        clear();
+        
+        // Add all of the entries to this map.
+        for( ; iter != source.valueMap.end(); iter++ ){            
+            setValue( iter->first, iter->second );
+        } 
+        
+    }
     
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>
