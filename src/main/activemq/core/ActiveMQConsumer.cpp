@@ -150,17 +150,17 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
         {
             // Check for empty in case of spurious wakeup, or race to
             // queue lock.
-            while( !shutdown && msgQueue.empty() )
+            while( !shutdown && !closed && msgQueue.empty() )
             {
                 msgQueue.wait();
             }
             
             // This will only happen when this object is being
-            // destroyed in another thread context - kind of
+            // closed in another thread context - kind of
             // scary.
-            if( shutdown ){
+            if( shutdown || closed ){
                 throw ActiveMQException( __FILE__, __LINE__,
-                    "Consumer is being destroyed in another thread" );
+                    "Consumer is being closed in another thread" );
             }
             
             // Fetch the Message then copy it so it can be handed off
@@ -199,13 +199,22 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         synchronized( &msgQueue )
         {
             // Check for empty, and wait if its not
-            if( msgQueue.empty() ){
+            if( !shutdown && !closed && msgQueue.empty() ){
+                
                 msgQueue.wait(millisecs);
 
                 // if its still empty...bail
                 if( msgQueue.empty() ) {
                     return NULL;
                 }
+            }
+            
+            // This will only happen when this object is being
+            // closed in another thread context - kind of
+            // scary.
+            if( shutdown || closed ){
+                throw ActiveMQException( __FILE__, __LINE__,
+                    "Consumer is being closed in another thread" );
             }
 
             // Fetch the Message then copy it so it can be handed off
@@ -234,7 +243,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait(void)
 {
     try
     {
-        if( closed )
+        if( shutdown || closed )
         {
             throw InvalidStateException(
                 __FILE__, __LINE__,

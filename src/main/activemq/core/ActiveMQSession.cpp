@@ -75,13 +75,16 @@ ActiveMQSession::~ActiveMQSession(void)
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::close(void) throw ( cms::CMSException )
 {
-    if(closed)
-    {
+    // If we're already close, just get outta' here.
+    if( closed ) {
         return;
     }
 
     try
     {
+        // Mark as done.
+        closed = true;
+        
         // Destroy the Transaction
         if( transaction != NULL ){
             delete transaction;
@@ -91,9 +94,7 @@ void ActiveMQSession::close(void) throw ( cms::CMSException )
         // Destroy this sessions resources
         connection->getConnectionData()->
             getConnector()->destroyResource( sessionInfo );
-
-        // mark as done
-        closed = true;
+        sessionInfo = NULL;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
