@@ -15,28 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_UTIL_STRINGTOKENIZERTEST_H_
-#define _ACTIVEMQ_UTIL_STRINGTOKENIZERTEST_H_
+#ifndef _ACTIVEMQ_UTIL_URISUPPORTTEST_H_
+#define _ACTIVEMQ_UTIL_URISUPPORTTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace activemq{
 namespace util{
+    
+    class URISupportTest : public CppUnit::TestFixture { 
 
-   class StringTokenizerTest : public CppUnit::TestFixture 
-   {
-       CPPUNIT_TEST_SUITE( StringTokenizerTest );
+       CPPUNIT_TEST_SUITE( URISupportTest );
        CPPUNIT_TEST( test );
        CPPUNIT_TEST_SUITE_END();
-   public:
 
-        virtual ~StringTokenizerTest() {}
-
+    public:
+    
+        URISupportTest() {}
+        virtual ~URISupportTest() {}
+        
         void test();
         
-   };
+    };
 
 }}
 
-#endif /*_ACTIVEMQ_UTIL_STRINGTOKENIZERTEST_H_*/
+#endif /*_ACTIVEMQ_UTIL_URISUPPORTTEST_H_*/
