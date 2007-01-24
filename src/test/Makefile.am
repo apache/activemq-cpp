@@ -74,6 +74,7 @@ cc_sources = \
   activemq/util/PrimitiveMapTest.cpp \
   activemq/util/QueueTest.cpp \
   activemq/util/StringTokenizerTest.cpp \
+  activemq/util/URISupportTest.cpp \
   main.cpp
 
 ## Compile this as part of make check
