@@ -328,6 +328,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\Set.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\SimpleProperties.h"
 					>
 				</File>

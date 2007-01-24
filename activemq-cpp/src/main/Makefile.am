@@ -246,6 +246,7 @@ h_sources = \
     activemq/util/Map.h \
     activemq/util/Math.h \
     activemq/util/PrimitiveMap.h \
+    activemq/util/Set.h \
     activemq/util/URISupport.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \

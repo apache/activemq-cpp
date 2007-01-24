@@ -21,6 +21,8 @@
 #include <cms/ExceptionListener.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/core/ActiveMQSessionResource.h>
+#include <activemq/util/Set.h>
+#include <set>
 
 namespace activemq{
 namespace core{
@@ -36,17 +38,30 @@ namespace core{
     {
     private:
    
-        // SessionInfo for this Session
+        /**
+         * SessionInfo for this Session
+         */
         connector::SessionInfo* sessionInfo;
       
-        // Transaction Management object
+        /**
+         * Transaction Management object
+         */
         ActiveMQTransaction* transaction;
       
-        // Connection
+        /**
+         * Connection
+         */
         ActiveMQConnection* connection;
       
-        // Bool to indicate if this session was closed.
+        /**
+         * Bool to indicate if this session was closed.
+         */
         bool closed;
+        
+        /**
+         * The set of closable session resources (consumers and producers).
+         */
+        util::Set<cms::Closeable*> closableSessionResources;
       
     public:
    
@@ -54,7 +69,7 @@ namespace core{
                          const util::Properties& properties,
                          ActiveMQConnection* connection );
    
-        virtual ~ActiveMQSession(void);
+        virtual ~ActiveMQSession();
    
     public:   // Implements Mehtods
    
@@ -62,21 +77,21 @@ namespace core{
          * Closes the Session
          * @throw CMSException
          */
-        virtual void close(void) throw ( cms::CMSException );
+        virtual void close() throw ( cms::CMSException );
       
         /**
          * Commits all messages done in this transaction and releases any 
          * locks currently held.
          * @throws CMSException
          */
-        virtual void commit(void) throw ( cms::CMSException );
+        virtual void commit() throw ( cms::CMSException );
 
         /**
          * Rollsback all messages done in this transaction and releases any 
          * locks currently held.
          * @throws CMSException
          */
-        virtual void rollback(void) throw ( cms::CMSException );
+        virtual void rollback() throw ( cms::CMSException );
 
         /**
          * Creates a MessageConsumer for the specified destination.
@@ -160,28 +175,28 @@ namespace core{
          * Creates a TemporaryQueue object.
          * @throws CMSException
          */
-        virtual cms::TemporaryQueue* createTemporaryQueue(void)
+        virtual cms::TemporaryQueue* createTemporaryQueue()
             throw ( cms::CMSException );
 
         /**
          * Creates a TemporaryTopic object.
          * @throws CMSException
          */
-        virtual cms::TemporaryTopic* createTemporaryTopic(void)
+        virtual cms::TemporaryTopic* createTemporaryTopic()
             throw ( cms::CMSException );
          
         /**
          * Creates a new Message
          * @throws CMSException
          */
-        virtual cms::Message* createMessage(void) 
+        virtual cms::Message* createMessage() 
             throw ( cms::CMSException );
 
         /**
          * Creates a BytesMessage
          * @throws CMSException
          */
-        virtual cms::BytesMessage* createBytesMessage(void) 
+        virtual cms::BytesMessage* createBytesMessage() 
             throw ( cms::CMSException );
 
         /**
@@ -199,7 +214,7 @@ namespace core{
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual cms::TextMessage* createTextMessage(void) 
+        virtual cms::TextMessage* createTextMessage() 
             throw ( cms::CMSException );
       
         /**
@@ -214,20 +229,20 @@ namespace core{
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual cms::MapMessage* createMapMessage(void) 
+        virtual cms::MapMessage* createMapMessage() 
             throw ( cms::CMSException );
 
         /**
          * Returns the acknowledgement mode of the session.
          * @return the Sessions Acknowledge Mode
          */
-        virtual cms::Session::AcknowledgeMode getAcknowledgeMode(void) const;
+        virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const;
       
         /**
          * Gets if the Sessions is a Transacted Session
          * @return transacted true - false.
          */
-        virtual bool isTransacted(void) const;
+        virtual bool isTransacted() const;
           
    public:   // ActiveMQSession specific Methods
    
@@ -268,14 +283,14 @@ namespace core{
          * exceptions that occur in the context of another thread.
          * @returns cms::ExceptionListener pointer or NULL
          */
-        virtual cms::ExceptionListener* getExceptionListener(void);
+        virtual cms::ExceptionListener* getExceptionListener();
 
         /**
          * Gets the Session Information object for this session, if the
          * session is closed than this returns null
          * @return SessionInfo Pointer
          */
-        virtual connector::SessionInfo* getSessionInfo(void) {
+        virtual connector::SessionInfo* getSessionInfo() {
             return sessionInfo;
         }
       
