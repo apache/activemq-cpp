@@ -37,10 +37,18 @@ namespace cms
         virtual ~Connection(void) {}
 
         /**
+         * Closes this connection as well as any Sessions 
+         * created from it (and those Sessions' consumers and
+         * producers).
+         * @throws CMSException
+         */
+        virtual void close() throw( CMSException ) = 0;
+        
+        /**
          * Creates a new Session to work for this Connection
          * @throws CMSException
          */
-        virtual Session* createSession(void) throw ( CMSException ) = 0;
+        virtual Session* createSession() throw ( CMSException ) = 0;
 
         /**
          * Creates a new Session to work for this Connection using the
@@ -55,13 +63,13 @@ namespace cms
          * Get the Client Id for this session
          * @return Client Id String
          */
-        virtual std::string getClientId(void) const = 0;      
+        virtual std::string getClientId() const = 0;      
 
         /**
          * Gets the registered Exception Listener for this connection
          * @return pointer to an exception listnener or NULL
          */
-        virtual ExceptionListener* getExceptionListener(void) const = 0;
+        virtual ExceptionListener* getExceptionListener() const = 0;
 
         /**
          * Sets the registed Exception Listener for this connection
