@@ -74,8 +74,9 @@ namespace core{
     public:   // Implements Mehtods
    
         /**
-         * Closes the Session
-         * @throw CMSException
+         * Closes this session as well as any active child consumers or
+         * producers.
+         * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
       

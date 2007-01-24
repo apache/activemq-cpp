@@ -105,8 +105,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         }
                 
         // Destroy this sessions resources
-        connection->getConnectionData()->
-            getConnector()->destroyResource( sessionInfo );
+        connection->removeSession( this );
         sessionInfo = NULL;
         
         // Now indicate that this session is closed.

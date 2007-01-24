@@ -77,6 +77,13 @@ namespace cms
         virtual ~Session(void) {}
 
         /**
+         * Closes this session as well as any active child consumers or
+         * producers.
+         * @throws CMSException
+         */
+        virtual void close() throw( CMSException ) = 0;
+        
+        /**
          * Commits all messages done in this transaction and releases any 
          * locks currently held.
          * @throws CMSException

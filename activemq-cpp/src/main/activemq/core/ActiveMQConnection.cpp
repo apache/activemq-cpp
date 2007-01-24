@@ -73,10 +73,18 @@ cms::Session* ActiveMQConnection::createSession(
 {
     try
     {
-        return new ActiveMQSession(
+        // Create the session instance.
+        ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ), 
             connectionData->getProperties(),
             this );
+        
+        // Add the session to the set of active sessions.
+        synchronized( &activeSessions ) {
+            activeSessions.add( session );
+        } 
+            
+        return session;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -96,6 +104,22 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
         if( closed )
         {
             return;
+        }
+        
+        // Get the complete list of active sessions.
+        std::vector<cms::Session*> allSessions;
+        synchronized( &activeSessions ) {
+            allSessions = activeSessions.toArray();
+        }
+        
+        // Close all of the resources.
+        for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
+            cms::Session* session = allSessions[ix];
+            try{
+                session->close();
+            } catch( cms::CMSException& ex ){
+                /* Absorb */
+            }
         }
 
         // Once current deliveries are done this stops the delivery 
@@ -136,9 +160,9 @@ void ActiveMQConnection::addMessageListener( const unsigned int consumerId,
                                              ActiveMQMessageListener* listener )
 {
     // Place in Map
-    synchronized( &mutex )
+    synchronized( &consumers )
     {
-        consumers[consumerId] = listener;
+        consumers.setValue( consumerId, listener );
     }
 }
   
@@ -146,9 +170,9 @@ void ActiveMQConnection::addMessageListener( const unsigned int consumerId,
 void ActiveMQConnection::removeMessageListener( const unsigned int consumerId )
 {
     // Remove from Map
-    synchronized( &mutex )
+    synchronized( &consumers )
     {
-        consumers.erase( consumerId );
+        consumers.remove( consumerId );
     }
 }
 
@@ -187,12 +211,14 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
         }
         
         // Started, so lock map and dispatch the message.
-        synchronized( &mutex )
+        synchronized( &consumers )
         {
-            if(consumers.find( consumer->getConsumerId()) != consumers.end() )
+            if( consumers.containsKey(consumer->getConsumerId()) )
             {
-                consumers[consumer->getConsumerId()]->
-                    onActiveMQMessage( message );
+                ActiveMQMessageListener* listener = 
+                    consumers.getValue(consumer->getConsumerId());
+                    
+                listener->onActiveMQMessage( message );
             }
         }        
     }
@@ -217,5 +243,27 @@ void ActiveMQConnection::onException( const CMSException& ex ){
     if( exceptionListener != NULL ){
         exceptionListener->onException( ex );
     }
-}                                        
+}              
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeSession( ActiveMQSession* session ) 
+    throw ( cms::CMSException ) 
+{
+    try
+    {
+        // Remove this session from the set of active sessions.
+        synchronized( &activeSessions ) {
+            activeSessions.remove( session );
+        }
+        
+        // Destroy this sessions resources
+        getConnectionData()->
+            getConnector()->destroyResource( session->getSessionInfo() );
+            
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+                          
 

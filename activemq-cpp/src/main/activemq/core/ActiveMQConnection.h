@@ -14,27 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 
 #include <cms/Connection.h>
 #include <cms/ExceptionListener.h>
-#include <activemq/concurrent/Mutex.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/core/ActiveMQMessageListener.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/connector/ConsumerMessageListener.h>
 #include <activemq/util/Properties.h>
+#include <activemq/util/Map.h>
+#include <activemq/util/Set.h>
 
-#include <map>
 #include <string>
 
 namespace activemq{
 namespace core{
 
-    class cms::Session;   
+    class cms::Session;  
+    class ActiveMQSession; 
     class ActiveMQConsumer;
 
+    /**
+     * Concrete connection used for all connectors to the
+     * ActiveMQ broker.
+     */
     class ActiveMQConnection : 
         public cms::Connection,
         public connector::ConsumerMessageListener,
@@ -42,24 +48,36 @@ namespace core{
     {
     private:
    
-        // the registered exception listener
+        /**
+         * the registered exception listener
+         */
         cms::ExceptionListener* exceptionListener;
       
-        // All the data that is used to connect this Connection
+        /**
+         * All the data that is used to connect this Connection
+         */
         ActiveMQConnectionData* connectionData;
       
-        // Indicates if this Connection is started
+        /**
+         * Indicates if this Connection is started
+         */
         bool started;
 
-        // Indicates that this connection has been closed, it is no longer
-        // usable after this becomes true
+        /**
+         * Indicates that this connection has been closed, it is no longer
+         * usable after this becomes true
+         */
         bool closed;
       
-        // Map of Consumer Ids to ActiveMQMessageListeners
-        std::map< unsigned int, ActiveMQMessageListener* > consumers;
-      
-        // Mutex to lock the Consumers Map
-        concurrent::Mutex mutex;
+        /**
+         * Map of Consumer Ids to ActiveMQMessageListeners
+         */
+        util::Map< unsigned int, ActiveMQMessageListener* > consumers;
+        
+        /**
+         * Maintain the set of all active sessions.
+         */
+        util::Set<cms::Session*> activeSessions;
    
     public:
 
@@ -71,6 +89,13 @@ namespace core{
 
         virtual ~ActiveMQConnection();
    
+        /**
+         * Removes the session resources for the given session
+         * instance.
+         * @param session The session to be unregistered from this connection.
+         */
+        virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
+        
     public:   // Connection Interface Methods
    
         /**
@@ -118,7 +143,9 @@ namespace core{
         };
          
         /**
-         * Close the currently open connection
+         * Closes this connection as well as any Sessions 
+         * created from it (and those Sessions' consumers and
+         * producers).
          * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
