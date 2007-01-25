@@ -34,6 +34,7 @@ namespace util{
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testCount );
         CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testCopy );
         CPPUNIT_TEST( testContains );
         CPPUNIT_TEST( testGetKeys );
         CPPUNIT_TEST_SUITE_END();
@@ -47,6 +48,7 @@ namespace util{
         void testSetGet();
         void testRemove();
         void testCount();
+        void testCopy();
         void testClear();
         void testContains();
         void testGetKeys();

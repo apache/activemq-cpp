@@ -58,6 +58,14 @@ namespace util{
     	virtual ~Map(){};
         
         /**
+         * Comparison, equality is dependant on the method of determining
+         * if the element are equal.
+         * @param source - Map to compare to this one.
+         * @returns true if the Map passed is equal in value to this one.
+         */
+        virtual bool equals( const Map& source ) const;
+        
+        /**
          * Copies the content of the source map into this map.  Erases
          * all existing data in this map.
          * @param source The source object to copy from.
@@ -191,7 +199,13 @@ namespace util{
             mutex.notifyAll();
         }
     };
-    
+
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename K, typename V>    
+    bool Map<K,V>::equals( const Map& source ) const {
+        return this->valueMap == source.valueMap;        
+    }    
+
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>    
     void Map<K,V>::copy( const Map<K,V>& source ) {

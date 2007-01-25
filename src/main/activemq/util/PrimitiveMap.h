@@ -162,6 +162,9 @@ namespace util{
                 if( valueType == STRING_TYPE && value.stringValue != NULL ){
                     delete value.stringValue;
                 }
+                if( valueType == BYTE_ARRAY_TYPE && value.byteArrayValue != NULL ){
+                    delete value.byteArrayValue;
+                }
                 valueType = NULL_TYPE;  
                 memset( &value, 0, sizeof(value) );
             }
@@ -338,6 +341,26 @@ namespace util{
     
     	PrimitiveMap();
     	virtual ~PrimitiveMap();
+        
+        /**
+         * Copy Constructor
+         * @param map - the PrimitiveMap to copy
+         */
+        PrimitiveMap( const PrimitiveMap& src );
+        
+        /**
+         * Compares this PrimitiveMap to another
+         * @param source - Map to compare to
+         * @return true if the maps are equeal
+         */
+        bool equals( const PrimitiveMap& source ) const;
+                
+        /**
+         * Comparison Operator
+         * @param src - Map to compare to this one.
+         * @returns true if Maps are equal.
+         */
+        void copy( const PrimitiveMap& src );
         
         /**
          * Removes all keys and values from all maps.
