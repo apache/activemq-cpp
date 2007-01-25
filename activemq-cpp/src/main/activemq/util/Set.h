@@ -220,7 +220,7 @@ namespace util{
         typename std::set<E>::const_iterator iter;
         iter=values.begin();
         for( int ix=0; iter != values.end(); ++iter, ++ix ){
-            valueArray.push_back( *iter );
+            valueArray[ix] = *iter;
         }
         
         return valueArray;
