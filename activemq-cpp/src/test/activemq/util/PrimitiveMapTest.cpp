@@ -195,6 +195,21 @@ void PrimitiveMapTest::testCount(){
     CPPUNIT_ASSERT( pmap.size() == 2 );
 }
 
+void PrimitiveMapTest::testCopy(){
+
+    PrimitiveMap pmap;
+    pmap.setInt("int", 5 );
+    pmap.setFloat( "float", 5.5f );
+    pmap.setInt("int2", 6 );
+
+    PrimitiveMap copy;
+    copy.copy( pmap );
+    CPPUNIT_ASSERT( pmap.equals( copy ) );
+
+    PrimitiveMap copy1( pmap );
+    CPPUNIT_ASSERT( pmap.equals( copy1 ) );
+}
+
 void PrimitiveMapTest::testClear(){
     
     PrimitiveMap pmap;
