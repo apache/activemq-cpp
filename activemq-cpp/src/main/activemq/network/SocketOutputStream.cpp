@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 #if defined(SOCKET_NOSIGNAL)
     #define AMQ_SEND_OPTS SOCKET_NOSIGNAL
@@ -67,20 +68,20 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
     int sendOpts = AMQ_SEND_OPTS;
 
     if( debug ){
-        printf("SocketOutputStream:write(), numbytes:%d -", len);
+        cout << "SocketOutputStream:write(), numbytes: " << len << " - ";
         for( std::size_t ix=0; ix<len; ++ix ){
             char c = buffer[ix];
             if( c > 20 ){
-                printf("%c", c );
+                cout << c;
             }
-            else printf("[%d]", c );
+            else cout << "[" << c << "]";
         }
-        printf("\n" );
+        cout << endl;
     }
         
     while( remaining > 0 )
     {
-        std::size_t length = (size_t)::send( socket, (const char*)buffer, (int)remaining, sendOpts );      	
+        int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );      	
         if( length == -1 ){
             throw IOException( __FILE__, __LINE__, 
                 "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
