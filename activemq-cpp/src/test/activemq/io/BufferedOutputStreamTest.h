@@ -99,7 +99,7 @@ namespace io{
 		void testSmallerBuffer(){
 			
 			MyOutputStream myStream;
-			BufferedOutputStream bufStream( &myStream, (unsigned int)1 );
+			BufferedOutputStream bufStream( &myStream, (std::size_t)1 );
 			
 			const char* buffer = myStream.getBuffer();
 			
@@ -122,7 +122,7 @@ namespace io{
 		void testBiggerBuffer(){
 			
 			MyOutputStream myStream;
-			BufferedOutputStream bufStream( &myStream, (unsigned int)10 );
+			BufferedOutputStream bufStream( &myStream, (std::size_t)10 );
 			
 			const char* buffer = myStream.getBuffer();
 			
