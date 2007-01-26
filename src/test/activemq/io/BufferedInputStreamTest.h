@@ -103,7 +103,7 @@ namespace io{
 			
 			std::string testStr = "TEST12345678910";
 			MyInputStream myStream( testStr );
-			BufferedInputStream bufStream( &myStream, (unsigned int)1 );
+			BufferedInputStream bufStream( &myStream, (std::size_t)1 );
 			
 			std::size_t available = bufStream.available();
 			CPPUNIT_ASSERT( available == testStr.length() );
@@ -143,7 +143,7 @@ namespace io{
 			
 			std::string testStr = "TEST12345678910";
 			MyInputStream myStream( testStr );
-			BufferedInputStream bufStream( &myStream, (unsigned int)10 );
+			BufferedInputStream bufStream( &myStream, (std::size_t)10 );
 			
 			std::size_t available = bufStream.available();
 			CPPUNIT_ASSERT( available == testStr.length() );
