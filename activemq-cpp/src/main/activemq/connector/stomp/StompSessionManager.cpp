@@ -190,8 +190,14 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
                     cmd.setMessageSelector( selector );
                 }
         
-                // Fire the message        
-                transport->oneway( &cmd );
+                // Fire the message   
+                try{
+                    transport->oneway( &cmd );
+                } catch( CommandIOException& ex ){
+                    transport->close();
+                    throw StompConnectorException( __FILE__, __LINE__, 
+                        ex.what() );
+                }
             }
              
             // Initialize a new Consumer info Message
@@ -247,7 +253,13 @@ void StompSessionManager::removeConsumer(
                     consumer->getDestination().toProviderString() );
                 
                 // Send the message
-                transport->oneway( &cmd );
+                try{
+                    transport->oneway( &cmd );
+                } catch( CommandIOException& ex ){
+                    transport->close();
+                    throw StompConnectorException( __FILE__, __LINE__, 
+                        ex.what() );
+                }
             }    
         }
     }
