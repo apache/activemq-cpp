@@ -52,6 +52,11 @@ IOTransport::~IOTransport(){
 void IOTransport::oneway( Command* command ) 
     throw(CommandIOException, exceptions::UnsupportedOperationException)
 {
+    if( closed ){
+        throw CommandIOException( __FILE__, __LINE__, 
+            "IOTransport::oneway() - transport is closed!" );
+    }
+
     // Make sure the thread has been started.
     if( thread == NULL ){
         throw CommandIOException( 
@@ -114,6 +119,10 @@ void IOTransport::start() throw( cms::CMSException ){
 void IOTransport::close() throw( cms::CMSException ){
     
     try{
+        if( closed ){
+            return;
+        }
+
         // Mark this transport as closed.
         closed = true;
         
