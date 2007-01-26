@@ -98,12 +98,12 @@ void StompCommandReader::readStompCommandHeader( StompFrame& frame )
             readStompHeaderLine();
     
             // Ignore all white space before the command.
-            std::size_t offset = -1;
+            long long offset = -1;
             for( size_t ix = 0; ix < buffer.size()-1; ++ix )
             {
                 // Find the first non whitespace character
                 if( !Character::isWhitespace(buffer[ix]) ){
-                    offset = ix;
+                    offset = (long long)ix;
                     break;
                 }
             }
@@ -111,7 +111,7 @@ void StompCommandReader::readStompCommandHeader( StompFrame& frame )
             if( offset >= 0 )
             {
                 // Set the command in the frame - copy the memory.
-                frame.setCommand( reinterpret_cast<char*>(&buffer[offset]) );
+                frame.setCommand( reinterpret_cast<char*>(&buffer[(size_t)offset]) );
                 break;
             }
         

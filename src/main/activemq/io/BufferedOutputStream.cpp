@@ -89,7 +89,7 @@ void BufferedOutputStream::flush() throw ( IOException ){
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedOutputStream::write( const unsigned char c ) throw ( IOException ){
     
-    if( tail >= (int)bufferSize ){
+    if( tail >= bufferSize ){
         emptyBuffer();
     }
     
@@ -103,7 +103,7 @@ void BufferedOutputStream::write( const unsigned char* buffer, std::size_t len )
     // Iterate until all the data is written.
     for( std::size_t pos=0; pos < len; ){
         
-        if( tail >= (int)bufferSize ){
+        if( tail >= bufferSize ){
             emptyBuffer();
         }
     

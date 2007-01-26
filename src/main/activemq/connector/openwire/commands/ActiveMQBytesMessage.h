@@ -417,7 +417,7 @@ namespace commands{
          */
         virtual void setBodyBytes( 
             const unsigned char* buffer, 
-            const unsigned long long numBytes ) 
+            std::size_t numBytes ) 
                 throw( cms::CMSException );
             
         /**
@@ -433,7 +433,7 @@ namespace commands{
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual unsigned long long getBodyLength(void) const;
+        virtual std::size_t getBodyLength(void) const;
         
         /**
          * Puts the message body in read-only mode and repositions the stream 
@@ -492,7 +492,7 @@ namespace commands{
          *          been reached
          * @throws CMSException if an error occurs.
          */
-        virtual int readBytes( std::vector<unsigned char>& value ) 
+        virtual std::size_t readBytes( std::vector<unsigned char>& value ) 
             throw ( cms::CMSException );
 
         /**
@@ -528,7 +528,7 @@ namespace commands{
          *          been reached
          * @throws CMSException
          */
-        virtual int readBytes( unsigned char*& buffer, int length ) 
+        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) 
             throw ( cms::CMSException );
 
         /**
@@ -540,8 +540,8 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeBytes( const unsigned char* value,
-                                 int offset,
-                                 int length ) throw ( cms::CMSException );
+                                 std::size_t offset,
+                                 std::size_t length ) throw ( cms::CMSException );
 
         /**
          * Reads a Char from the Bytes message stream

@@ -302,7 +302,7 @@ void DataInputStream::readFully( unsigned char* buffer,
         std::size_t n = 0;
         while( n < length ) {
             std::size_t count = inputStream->read( &buffer[offset + n], (length - n) );
-            if( count == -1 ) {
+            if( count == (std::size_t)-1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readFully - Reached EOF" );
