@@ -61,7 +61,7 @@ bool PrimitiveMap::contains( const string& key ) const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int PrimitiveMap::size() const{
+std::size_t PrimitiveMap::size() const{
     
     return valueNodeMap.size();
 }

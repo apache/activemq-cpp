@@ -26,7 +26,7 @@ namespace cms{
     {
     public:
    
-        virtual ~ExceptionListener(void) {}
+        virtual ~ExceptionListener() {}
    
         /**
          * Called when an exception occurs.  Once notified of an exception

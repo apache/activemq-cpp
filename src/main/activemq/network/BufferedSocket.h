@@ -48,8 +48,8 @@ namespace network{
         io::BufferedOutputStream* outputStream;
       
         // Sizes for the Buffered Streams
-        unsigned int inputBufferSize;
-        unsigned int outputBufferSize;
+        int inputBufferSize;
+        int outputBufferSize;
 
     public:
 
@@ -61,11 +61,11 @@ namespace network{
          * @param own does this object own the passed socket
          */
         BufferedSocket( Socket* socket, 
-                        unsigned int inputBufferSize = 1000,
-                        unsigned int outputBufferSize = 1000,
+                        int inputBufferSize = 1000,
+                        int outputBufferSize = 1000,
                         bool own = true );
 
-        virtual ~BufferedSocket(void);
+        virtual ~BufferedSocket();
 
         /**
          * Connects to the specified destination. Closes this socket if 
@@ -74,7 +74,7 @@ namespace network{
          * @param port The port of the server to connect to.
          * @throws IOException Thrown if a failure occurred in the connect.
          */
-        virtual void connect( const char* host, const int port ) 
+        virtual void connect( const char* host, int port ) 
             throw( SocketException );
       
         /**
@@ -121,7 +121,7 @@ namespace network{
          * @param linger The linger time in seconds.  If 0, linger is off.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSoLinger( const int linger ) throw( SocketException ){
+        virtual void setSoLinger( int linger ) throw( SocketException ){
             socket->setSoLinger( linger );
         }
       
@@ -139,7 +139,7 @@ namespace network{
          * @param keepAlive If true, enables the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setKeepAlive( const bool keepAlive ) throw( SocketException ){
+        virtual void setKeepAlive( bool keepAlive ) throw( SocketException ){
             socket->setKeepAlive( keepAlive );
         }
       
@@ -157,7 +157,7 @@ namespace network{
          * @param size Number of bytes to set the receive buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReceiveBufferSize( const int size ) throw( SocketException ){
+        virtual void setReceiveBufferSize( int size ) throw( SocketException ){
             socket->setReceiveBufferSize( size );
         }
       
@@ -175,7 +175,7 @@ namespace network{
          * @param reuse If true, sets the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReuseAddress( const bool reuse ) throw( SocketException ){
+        virtual void setReuseAddress( bool reuse ) throw( SocketException ){
             socket->setReuseAddress( reuse );
         }
       
@@ -193,7 +193,7 @@ namespace network{
          * @param size The number of bytes to set the send buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSendBufferSize( const int size ) throw( SocketException ){
+        virtual void setSendBufferSize( int size ) throw( SocketException ){
             socket->setSendBufferSize( size );
         }
       
@@ -211,7 +211,7 @@ namespace network{
          * @param timeout The timeout in milliseconds for socket operations.<p>
          * @throws SocketException Thrown if unable to set the information.
          */
-        virtual void setSoTimeout( const int timeout ) throw( SocketException ){
+        virtual void setSoTimeout( int timeout ) throw( SocketException ){
             socket->setSoTimeout( timeout );
         }
 

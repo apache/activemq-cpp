@@ -33,7 +33,7 @@ namespace io{
     protected:
     
         // The number of bytes written to the data output stream so far.
-        unsigned int written;
+        std::size_t written;
         
     public:
     
@@ -53,7 +53,7 @@ namespace io{
          * overflows, it will be wrapped to Integer.MAX_VALUE.
          * @return the value of the written field.
          */
-        virtual unsigned int size() const {
+        virtual std::size_t size() const {
             return written;
         }
 
@@ -72,7 +72,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len )
+        virtual void write( const unsigned char* buffer, std::size_t len )
             throw ( IOException );
             
         /**
@@ -82,8 +82,9 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int offset, int len )
-            throw ( IOException );
+        virtual void write( const unsigned char* buffer, 
+                            std::size_t offset, 
+                            std::size_t len ) throw ( IOException );
             
         /**
          * Writes an array of bytes to the output stream.

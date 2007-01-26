@@ -129,8 +129,8 @@ namespace transport{
                 }
             }
 
-            virtual int read(unsigned char* buffer AMQCPP_UNUSED, 
-                             int count AMQCPP_UNUSED) 
+            virtual std::size_t read(unsigned char* buffer AMQCPP_UNUSED, 
+                             std::size_t count AMQCPP_UNUSED) 
                 throw( io::IOException ) {
                 return 0;
             }
@@ -177,7 +177,7 @@ namespace transport{
             }
 
             virtual void write( const unsigned char* buffer AMQCPP_UNUSED, 
-                                int count AMQCPP_UNUSED) 
+                                std::size_t count AMQCPP_UNUSED) 
                 throw(io::IOException) {}
            
             virtual void writeByte(unsigned char v AMQCPP_UNUSED) throw(io::IOException) {}
@@ -301,7 +301,7 @@ namespace transport{
             transport.oneway( &cmd );
             
             const unsigned char* bytes = os.getByteArray();
-            int size = os.getByteArraySize();
+            std::size_t size = os.getByteArraySize();
             CPPUNIT_ASSERT( size >= 5 );
             CPPUNIT_ASSERT( bytes[0] == '1' );
             CPPUNIT_ASSERT( bytes[1] == '2' );

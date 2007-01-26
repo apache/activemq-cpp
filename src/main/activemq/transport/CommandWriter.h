@@ -34,7 +34,7 @@ namespace transport{
     {
     public:
   
-        virtual ~CommandWriter(void) {}
+        virtual ~CommandWriter() {}
         
         /**
          * Writes a command to the given output stream.

@@ -30,7 +30,7 @@ namespace cms{
         
     public:
     
-        virtual ~Queue(void){}
+        virtual ~Queue(){}
         
         /**
          * Gets the name of this queue.

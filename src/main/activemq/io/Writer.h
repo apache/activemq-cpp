@@ -52,7 +52,8 @@ namespace io{
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int count ) throw( IOException ) = 0;
+        virtual void write( const unsigned char* buffer, 
+                            std::size_t count ) throw( IOException ) = 0;
        
          /**
           * Writes a byte to the output stream.

@@ -84,7 +84,7 @@ namespace util{
         /**
          * @return The number of elements in this set.
          */
-        virtual unsigned int size() const;
+        virtual std::size_t size() const;
             
         /**
          * Adds the given value to the set.
@@ -196,7 +196,7 @@ namespace util{
 
     ////////////////////////////////////////////////////////////////////////////
     template <typename E>
-    unsigned int Set<E>::size() const{
+    std::size_t Set<E>::size() const{
         return values.size();
     }
         

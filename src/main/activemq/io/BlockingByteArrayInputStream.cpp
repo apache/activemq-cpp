@@ -32,7 +32,7 @@ BlockingByteArrayInputStream::BlockingByteArrayInputStream(){
 ////////////////////////////////////////////////////////////////////////////////
 BlockingByteArrayInputStream::BlockingByteArrayInputStream( 
     const unsigned char* buffer,
-    int bufferSize ){
+    std::size_t bufferSize ){
         
     closing = false;
     setByteArray( buffer, bufferSize );
@@ -44,14 +44,14 @@ BlockingByteArrayInputStream::~BlockingByteArrayInputStream(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
-                                                 int lbufferSize ){
+                                                 std::size_t lbufferSize ){
     synchronized( this ){
         
         // Remove old data        
         this->buffer.clear();
        
         // Copy data to internal buffer.
-        for( int ix = 0; ix < lbufferSize; ++ix )
+        for( std::size_t ix = 0; ix < lbufferSize; ++ix )
         {
             this->buffer.push_back(lbuffer[ix]);
         }
@@ -102,12 +102,12 @@ unsigned char BlockingByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::read( unsigned char* buffer, 
-                                        int bufferSize ) 
+std::size_t BlockingByteArrayInputStream::read( unsigned char* buffer, 
+                                        std::size_t bufferSize ) 
                                         throw ( IOException ){
     synchronized( this ){
         
-        int ix = 0;
+        std::size_t ix = 0;
         
         for( ; ix < bufferSize && !closing; ++ix, ++pos)
         {
@@ -133,10 +133,10 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BlockingByteArrayInputStream::skip( int num ) 
+std::size_t BlockingByteArrayInputStream::skip( std::size_t num ) 
     throw ( io::IOException, exceptions::UnsupportedOperationException ){
     
-    int ix = 0;
+    std::size_t ix = 0;
     
     synchronized( this ){
         

@@ -29,14 +29,14 @@ namespace cms
     {
     public:
 
-        virtual ~MessageConsumer(void) {}
+        virtual ~MessageConsumer() {}
       
         /**
          * Synchronously Receive a Message
          * @return new message
          * @throws CMSException
          */
-        virtual Message* receive(void) throw ( CMSException ) = 0;
+        virtual Message* receive() throw ( CMSException ) = 0;
 
         /**
          * Synchronously Receive a Message, time out after defined interval.
@@ -52,7 +52,7 @@ namespace cms
          * @return new message
          * @throws CMSException
          */
-        virtual Message* receiveNoWait(void) throw ( CMSException ) = 0;
+        virtual Message* receiveNoWait() throw ( CMSException ) = 0;
 
         /**
          * Sets the MessageListener that this class will send notifs on
@@ -64,14 +64,14 @@ namespace cms
          * Gets the MessageListener that this class will send notifs on
          * @param MessageListener interface pointer
          */
-        virtual MessageListener* getMessageListener(void) const = 0;
+        virtual MessageListener* getMessageListener() const = 0;
       
         /**
          * Gets this message consumer's message selector expression.
          * @return This Consumer's selector expression or "".
          * @throws cms::CMSException
          */
-        virtual std::string getMessageSelector(void) const 
+        virtual std::string getMessageSelector() const 
             throw ( cms::CMSException ) = 0;
             
     };

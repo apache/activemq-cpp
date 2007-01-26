@@ -86,7 +86,7 @@ namespace io{
          *          more data because the stream is EOF.
          * @throws IOException 
          */   
-        virtual int read( std::vector< unsigned char >& buffer ) 
+        virtual std::size_t read( std::vector< unsigned char >& buffer ) 
             throw ( io::IOException );
 
         /**
@@ -130,8 +130,12 @@ namespace io{
          *          more data because the stream is EOF.
          * @throws IOException 
          */
-        virtual int read( unsigned char* buffer, int offset, int length ) 
-            throw ( io::IOException, exceptions::IndexOutOfBoundsException, exceptions::NullPointerException );
+        virtual std::size_t read( unsigned char* buffer, 
+                                  std::size_t offset, 
+                                  std::size_t length ) 
+            throw ( io::IOException, 
+                    exceptions::IndexOutOfBoundsException, 
+                    exceptions::NullPointerException );
         
         /**
          * Reads one input byte and returns true if that byte is nonzero, 
@@ -320,8 +324,13 @@ namespace io{
          * @throws IOException
          * @throws EOFException
          */
-        virtual void readFully( unsigned char* buffer, int offset, int length ) 
-            throw ( io::IOException, io::EOFException, exceptions::IndexOutOfBoundsException, exceptions::NullPointerException );
+        virtual void readFully( unsigned char* buffer, 
+                                std::size_t offset, 
+                                std::size_t length ) 
+            throw ( io::IOException, 
+                    io::EOFException, 
+                    exceptions::IndexOutOfBoundsException, 
+                    exceptions::NullPointerException );
 
         /**
          * Makes an attempt to skip over n bytes of data from the input 
@@ -334,7 +343,9 @@ namespace io{
          * @param num - number of bytes to skip
          * @return the total number of bytes skipped
          */
-        virtual int skip( int num ) throw( io::IOException, exceptions::UnsupportedOperationException );
+        virtual std::size_t skip( std::size_t num ) 
+            throw( io::IOException, 
+                   exceptions::UnsupportedOperationException );
 
     };
 

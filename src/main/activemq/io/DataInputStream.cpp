@@ -32,7 +32,7 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( std::vector<unsigned char>& buffer ) 
+std::size_t DataInputStream::read( std::vector<unsigned char>& buffer ) 
     throw ( io::IOException ) {
         
     try {
@@ -43,23 +43,21 @@ int DataInputStream::read( std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( unsigned char* buffer, int offset, int length ) 
-    throw ( io::IOException, exceptions::IndexOutOfBoundsException, exceptions::NullPointerException ) {
-
-    if( length < 0 || offset < 0 ) {
-        throw IndexOutOfBoundsException( 
-            __FILE__, __LINE__,
-            "DataInputStream::read - len or offset params invalid" );
-    }
-    
-    if( buffer == NULL ) {
-        throw NullPointerException( 
-            __FILE__, __LINE__,
-            "DataInputStream::read - Buffer is null" );
-    }
+std::size_t DataInputStream::read( unsigned char* buffer, 
+                          std::size_t offset, 
+                          std::size_t length ) 
+    throw ( io::IOException, exceptions::IndexOutOfBoundsException, 
+    exceptions::NullPointerException ) {
     
     try {
-        int read = 0;
+
+        if( buffer == NULL ) {
+            throw NullPointerException( 
+                __FILE__, __LINE__,
+                "DataInputStream::read - Buffer is null" );
+        }
+
+        std::size_t read = 0;
         
         try {
             read = inputStream->read( &buffer[offset], length );
@@ -76,6 +74,7 @@ int DataInputStream::read( unsigned char* buffer, int offset, int length )
         
         return read;
     }
+    AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -284,14 +283,15 @@ void DataInputStream::readFully( std::vector< unsigned char >& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, int offset, int length ) 
-    throw ( io::IOException, io::EOFException, exceptions::IndexOutOfBoundsException, exceptions::NullPointerException ) {
+void DataInputStream::readFully( unsigned char* buffer, 
+                                std::size_t offset, 
+                                std::size_t length ) 
+    throw ( io::IOException, 
+            io::EOFException, 
+            exceptions::IndexOutOfBoundsException, 
+            exceptions::NullPointerException )
+{
     try {
-        if( length < 0 || offset < 0 ) {
-            throw IndexOutOfBoundsException(
-                __FILE__, __LINE__,
-                "DataInputStream::readFully - Len or Offset were invalid" );
-        }
         
         if( buffer == NULL ) {
             throw NullPointerException( 
@@ -299,10 +299,10 @@ void DataInputStream::readFully( unsigned char* buffer, int offset, int length )
                 "DataInputStream::read - Buffer is null" );
         }
     
-        int n = 0;
+        std::size_t n = 0;
         while( n < length ) {
-            int count = inputStream->read( &buffer[offset + n], length - n );
-            if( count < 0 ) {
+            std::size_t count = inputStream->read( &buffer[offset + n], (length - n) );
+            if( count == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readFully - Reached EOF" );
@@ -310,19 +310,20 @@ void DataInputStream::readFully( unsigned char* buffer, int offset, int length )
             n += count;
         }
     }
+    AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::skip( int num ) 
+std::size_t DataInputStream::skip( std::size_t num ) 
 throw( io::IOException, exceptions::UnsupportedOperationException ) {
     try {
-        int total = 0;
-        int cur = 0;
+        std::size_t total = 0;
+        std::size_t cur = 0;
 
         while( ( total < num ) && 
-               ( ( cur = (int)inputStream->skip( num-total ) ) > 0 ) ) {
+               ( ( cur = inputStream->skip( num-total ) ) > 0 ) ) {
             total += cur;
         }
 

@@ -94,7 +94,7 @@ namespace stomp{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int count ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t count ) 
             throw( io::IOException );
        
         /**
@@ -127,7 +127,7 @@ namespace stomp{
          * @return number of bytes read, zero if there was a problem.
          * @throws StompConnectorException
          */
-        int readStompHeaderLine() throw ( transport::CommandIOException );
+        std::size_t readStompHeaderLine() throw ( transport::CommandIOException );
 
         /**
          * Reads the Stomp Body from the Wire and store it in the frame.

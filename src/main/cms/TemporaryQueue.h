@@ -30,13 +30,13 @@ namespace cms{
     {
     public:
 
-        virtual ~TemporaryQueue(void) {}
+        virtual ~TemporaryQueue() {}
 
         /**
          * Gets the name of this queue.
          * @return The queue name.
          */
-        virtual std::string getQueueName(void) const 
+        virtual std::string getQueueName() const 
             throw( CMSException ) = 0;
         
    };

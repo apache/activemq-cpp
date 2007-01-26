@@ -43,19 +43,19 @@ namespace cms{
         /**
          * Destructor
          */	
-        virtual ~Destination(void){}
+        virtual ~Destination(){}
       
         /**
          * Retrieve the Destination Type for this Destination
          * @return The Destination Type
          */
-        virtual DestinationType getDestinationType(void) const = 0;
+        virtual DestinationType getDestinationType() const = 0;
         
         /**
          * Converts the Destination Name into a String 
          * @return string name
          */
-        virtual std::string toString(void) const = 0;
+        virtual std::string toString() const = 0;
 
         /**
          * Converts the Destination to a String value representing the
@@ -63,14 +63,14 @@ namespace cms{
          * necessarily equal to the User Supplied name of the Destination
          * @return Provider specific Name
          */
-        virtual std::string toProviderString(void) const = 0;
+        virtual std::string toProviderString() const = 0;
         
         /**
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const = 0;
+        virtual cms::Destination* clone() const = 0;
       
         /**
          * Copies the contents of the given Destinastion object to this one.
@@ -84,7 +84,7 @@ namespace cms{
          * but necessary due to C++ restrictions.  
          * @return const reference to a properties object.
          */
-        virtual const activemq::util::Properties& getProperties(void) const = 0;
+        virtual const activemq::util::Properties& getProperties() const = 0;
         
     };
 }

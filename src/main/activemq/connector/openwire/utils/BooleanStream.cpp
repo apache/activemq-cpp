@@ -96,10 +96,10 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
     try {
         
         if( arrayLimit < 64 ) {
-            dataOut->writeByte( arrayLimit );
+            dataOut->writeByte( (unsigned char)arrayLimit );
         } else if( arrayLimit < 256 ) { // max value of unsigned char
             dataOut->writeByte( 0xC0 );
-            dataOut->writeByte( arrayLimit );            
+            dataOut->writeByte( (unsigned char)arrayLimit );            
         } else {
             dataOut->writeByte( 0x80 );
             dataOut->writeShort( arrayLimit );            

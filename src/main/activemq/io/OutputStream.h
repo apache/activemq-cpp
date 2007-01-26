@@ -50,7 +50,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len ) 
+        virtual void write( const unsigned char* buffer, std::size_t len ) 
             throw ( IOException ) = 0;
         
         /**

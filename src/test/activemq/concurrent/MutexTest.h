@@ -376,7 +376,7 @@ namespace concurrent{
             test.join();
             time_t endTime = time( NULL );
        
-            long delta = endTime - startTime;
+            time_t delta = endTime - startTime;
 
             CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
         }

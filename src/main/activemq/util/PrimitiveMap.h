@@ -378,7 +378,7 @@ namespace util{
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual unsigned int size() const;
+        virtual std::size_t size() const;
 
         /**
          * @returns if there are any entries in the map.

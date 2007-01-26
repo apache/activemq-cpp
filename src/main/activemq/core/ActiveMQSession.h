@@ -208,7 +208,7 @@ namespace core{
          */
         virtual cms::BytesMessage* createBytesMessage( 
             const unsigned char* bytes,
-            unsigned long long bytesSize ) 
+            std::size_t bytesSize ) 
                 throw ( cms::CMSException );
 
         /**

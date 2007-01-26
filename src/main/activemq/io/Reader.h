@@ -51,7 +51,7 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int count ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t count ) 
             throw( IOException ) = 0;
         
         /**

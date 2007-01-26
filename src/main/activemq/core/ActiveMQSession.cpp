@@ -27,6 +27,8 @@
 
 #include <activemq/connector/TransactionInfo.h>
 
+#include <activemq/util/Config.h>
+
 using namespace std;
 using namespace cms;
 using namespace activemq;
@@ -93,7 +95,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
             cms::Closeable* resource = allResources[ix];
             try{
                 resource->close();
-            } catch( cms::CMSException& ex ){
+            } catch( cms::CMSException& ex AMQCPP_UNUSED ){
                 /* Absorb */
             }
         }
@@ -426,7 +428,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* ActiveMQSession::createBytesMessage(
     const unsigned char* bytes,
-    unsigned long long bytesSize ) 
+    std::size_t bytesSize ) 
         throw ( cms::CMSException )
 {
     try

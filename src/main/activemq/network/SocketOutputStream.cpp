@@ -60,15 +60,15 @@ void SocketOutputStream::write( unsigned char c ) throw (IOException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char* buffer, int len ) 
+void SocketOutputStream::write( const unsigned char* buffer, std::size_t len ) 
     throw (IOException)
 {
-    int remaining = len;
+    std::size_t remaining = len;
     int sendOpts = AMQ_SEND_OPTS;
 
     if( debug ){
         printf("SocketOutputStream:write(), numbytes:%d -", len);
-        for( int ix=0; ix<len; ++ix ){
+        for( std::size_t ix=0; ix<len; ++ix ){
             char c = buffer[ix];
             if( c > 20 ){
                 printf("%c", c );
@@ -80,8 +80,8 @@ void SocketOutputStream::write( const unsigned char* buffer, int len )
         
     while( remaining > 0 )
     {
-        int length = ::send( socket, (const char*)buffer, remaining, sendOpts );      	
-        if( length < 0 ){
+        std::size_t length = (size_t)::send( socket, (const char*)buffer, (int)remaining, sendOpts );      	
+        if( length == -1 ){
             throw IOException( __FILE__, __LINE__, 
                 "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
         }

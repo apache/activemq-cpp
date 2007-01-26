@@ -30,13 +30,13 @@ namespace cms{
         
     public:
     
-        virtual ~Topic(void) {}
+        virtual ~Topic() {}
         
         /**
          * Gets the name of this topic.
          * @return The topic name.
          */
-        virtual std::string getTopicName(void) 
+        virtual std::string getTopicName() 
             const throw( CMSException ) = 0;
             
     };

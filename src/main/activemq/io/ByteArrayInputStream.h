@@ -74,7 +74,7 @@ namespace io{
          * @param bufferSize the size of the buffer
          */
         ByteArrayInputStream( const unsigned char* buffer,
-                              int bufferSize );
+                              std::size_t bufferSize );
 
         virtual ~ByteArrayInputStream();
 
@@ -96,7 +96,7 @@ namespace io{
          * @param bufferSize the size of the buffer
          */
         virtual void setByteArray( const unsigned char* buffer,
-                                   int bufferSize );
+                                   std::size_t bufferSize );
 
         /**
          * Waits on a signal from this object, which is generated
@@ -163,7 +163,7 @@ namespace io{
          * Indcates the number of bytes avaialable.
          * @return The number of bytes until the end of the internal buffer.
          */
-        virtual int available() const throw (IOException) {
+        virtual std::size_t available() const throw (IOException) {
             if( activeBuffer == NULL ){
                 throw IOException( __FILE__, __LINE__, "buffer has not been initialized");
             }
@@ -185,7 +185,7 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int bufferSize ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) 
             throw (IOException);
       
         /**
@@ -216,7 +216,8 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */ 
-        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException );
+        virtual std::size_t skip( std::size_t num ) 
+            throw ( io::IOException, exceptions::UnsupportedOperationException );
 
     };
 

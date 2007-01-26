@@ -131,7 +131,7 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
                     __LINE__,
                     ( std::string( "OpenwireStringSupport::writeString - Cannot marshall " ) + 
                     "string longer than: 65536 characters, supplied steing was: " +
-                    Integer::toString( str->size() ) + " characters long." ).c_str() );
+                    Integer::toString( (int)str->size() ) + " characters long." ).c_str() );
             }
             
             //short strlen = (short)str->size();
