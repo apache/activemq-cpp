@@ -118,10 +118,10 @@ namespace commands{
             CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationId() ) == 
                             "ID:1234567" );
             CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == 
-                            cms::DeliveryMode::PERSISTANT );
-            cmd.setCMSDeliveryMode( cms::DeliveryMode::NON_PERSISTANT );
+                            cms::DeliveryMode::PERSISTENT );
+            cmd.setCMSDeliveryMode( cms::DeliveryMode::NON_PERSISTENT );
             CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == 
-                            cms::DeliveryMode::NON_PERSISTANT );
+                            cms::DeliveryMode::NON_PERSISTENT );
             cmd.setCMSDestination( &topic );
             CPPUNIT_ASSERT( cmd.getCMSDestination()->toString() == 
                             "testTopic" );

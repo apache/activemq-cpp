@@ -134,7 +134,7 @@ public:
             destination = session->createTopic( "expirationTopic" );
 
             producer = session->createProducer( destination );
-            producer->setDeliveryMode( DeliveryMode::PERSISTANT );
+            producer->setDeliveryMode( DeliveryMode::PERSISTENT );
             producer->setDisableMessageTimeStamp( disableTimeStamps );
 
             //unsigned long ttt=getcurt();
