@@ -61,7 +61,7 @@ CommandConstants::StaticInitializer::StaticInitializer(){
     stompHeaders[HEADER_REQUESTID] = "request-id";
     stompHeaders[HEADER_RESPONSEID] = "response-id";
     stompHeaders[HEADER_EXPIRES] = "expires";
-    stompHeaders[HEADER_PERSISTANT] = "persistent";
+    stompHeaders[HEADER_PERSISTENT] = "persistent";
     stompHeaders[HEADER_JMSPRIORITY] = "priority";
     stompHeaders[HEADER_CONSUMERPRIORITY] = "activemq.priority";
     stompHeaders[HEADER_REPLYTO] = "reply-to";

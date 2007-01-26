@@ -34,8 +34,8 @@ namespace cms
         /**
          * Enumeration values for Message Delivery Mode   
          */
-        static const int PERSISTANT = 0;
-        static const int NON_PERSISTANT = 1;
+        static const int PERSISTENT = 0;
+        static const int NON_PERSISTENT = 1;
 
     };
 

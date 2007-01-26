@@ -297,17 +297,17 @@ namespace commands{
         virtual int getCMSDeliveryMode() const {
             if(!getFrame().getProperties().hasProperty( 
                    CommandConstants::toString( 
-                       CommandConstants::HEADER_PERSISTANT ) ) ) {
-                return cms::DeliveryMode::PERSISTANT;
+                       CommandConstants::HEADER_PERSISTENT ) ) ) {
+                return cms::DeliveryMode::PERSISTENT;
             }
             
             if( util::Boolean::parseBoolean( getPropertyValue( 
                        CommandConstants::toString( 
-                           CommandConstants::HEADER_PERSISTANT ) ) ) == true ) {
-                return (int)cms::DeliveryMode::PERSISTANT;
+                           CommandConstants::HEADER_PERSISTENT ) ) ) == true ) {
+                return (int)cms::DeliveryMode::PERSISTENT;
             }
             
-            return cms::DeliveryMode::NON_PERSISTANT;
+            return cms::DeliveryMode::NON_PERSISTENT;
         }
 
         /**
@@ -317,13 +317,13 @@ namespace commands{
         virtual void setCMSDeliveryMode( int mode ) {
             std::string persistant = "true"; 
             
-            if( mode == (int)cms::DeliveryMode::NON_PERSISTANT ) {
+            if( mode == (int)cms::DeliveryMode::NON_PERSISTENT ) {
                 persistant = "false";
             }
             
             setPropertyValue( 
                 CommandConstants::toString( 
-                    CommandConstants::HEADER_PERSISTANT ) ,
+                    CommandConstants::HEADER_PERSISTENT ) ,
                 persistant );            
         }
       

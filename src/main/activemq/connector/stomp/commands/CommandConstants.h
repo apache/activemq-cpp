@@ -65,7 +65,7 @@ namespace commands{
             HEADER_REQUESTID,
             HEADER_RESPONSEID,
             HEADER_EXPIRES,
-            HEADER_PERSISTANT,
+            HEADER_PERSISTENT,
             HEADER_REPLYTO,
             HEADER_TYPE,
             HEADER_AMQMSGTYPE,
