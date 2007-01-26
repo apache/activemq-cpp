@@ -47,14 +47,14 @@ namespace utils{
          * @returns string contianing the hex value if the index
          * @throws IndexOutOfBoundsException
          */
-        virtual const std::string& operator[]( int index ) throw ( exceptions::IndexOutOfBoundsException );
-        virtual const std::string& operator[]( int index ) const throw ( exceptions::IndexOutOfBoundsException );
+        virtual const std::string& operator[]( std::size_t index ) throw ( exceptions::IndexOutOfBoundsException );
+        virtual const std::string& operator[]( std::size_t index ) const throw ( exceptions::IndexOutOfBoundsException );
         
         /**
          * Returns the max size of this Table.
          * @returns int size value
          */
-        virtual int size() const{
+        virtual std::size_t size() const{
             return table.size();
         }
         

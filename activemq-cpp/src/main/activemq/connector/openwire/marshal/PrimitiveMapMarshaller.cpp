@@ -48,7 +48,7 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
         }
         else
         {
-            dataOut.writeInt( map->size() );
+            dataOut.writeInt( (int)map->size() );
             
             std::vector<std::string> keys = map->getKeys();
             std::vector<std::string>::const_iterator iter = keys.begin();
@@ -150,7 +150,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             
             std::vector<unsigned char> data = value.getByteArray();
             
-            dataOut.writeInt( data.size() );
+            dataOut.writeInt( (int)data.size() );
             dataOut.write( data );
         }
         else if( value.getValueType() == PrimitiveMap::STRING_TYPE )

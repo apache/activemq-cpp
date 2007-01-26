@@ -34,7 +34,7 @@ ByteArrayInputStream::ByteArrayInputStream( const vector<unsigned char>& buffer 
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream( const unsigned char* buffer,
-                                            int bufferSize ){
+                                            std::size_t bufferSize ){
     setByteArray( buffer, bufferSize );
 }
 
@@ -54,7 +54,7 @@ void ByteArrayInputStream::setBuffer( const vector<unsigned char>& buffer ){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
-                                         int lbufferSize ){
+                                         std::size_t lbufferSize ){
     // We're using the default buffer.
     activeBuffer = &defaultBuffer;
     
@@ -62,7 +62,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     defaultBuffer.clear();
    
     // Copy data to internal buffer.
-    for( int ix = 0; ix < lbufferSize; ++ix )
+    for( std::size_t ix = 0; ix < lbufferSize; ++ix )
     {
         defaultBuffer.push_back(lbuffer[ix]);
     }
@@ -91,10 +91,10 @@ unsigned char ByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::read( unsigned char* buffer, 
-                                int bufferSize ) 
+std::size_t ByteArrayInputStream::read( unsigned char* buffer, 
+                                std::size_t bufferSize ) 
                                    throw ( IOException ){
-    int ix = 0;
+    std::size_t ix = 0;
     
     for( ; ix < bufferSize; ++ix, ++pos)
     {
@@ -111,10 +111,10 @@ int ByteArrayInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ByteArrayInputStream::skip( int num ) 
+std::size_t ByteArrayInputStream::skip( std::size_t num ) 
     throw ( IOException, exceptions::UnsupportedOperationException ){
     
-    int ix = 0;
+    std::size_t ix = 0;
     
     // Increment the position until we've skipped the desired number
     // or we've hit the end of the buffer.

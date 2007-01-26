@@ -42,7 +42,7 @@ Socket* SocketFactory::createSocket(const Properties& properties)
         string dummy = uri;
       
         // Extract the port.
-        unsigned int portIx = dummy.find( ':' );
+        std::size_t portIx = dummy.find( ':' );
         if( portIx == string::npos )
         {
             throw SocketException( __FILE__, __LINE__, 

@@ -39,9 +39,9 @@ namespace util{
 
         virtual void test(void)
         {
-            long x = Long::parseLong("12");
-            long y = Long::parseLong("12.1");
-            long z = Long::parseLong("42 24");
+            long long x = Long::parseLong("12");
+            long long y = Long::parseLong("12.1");
+            long long z = Long::parseLong("42 24");
             
             CPPUNIT_ASSERT( x == 12 );
             CPPUNIT_ASSERT( y == 12 );

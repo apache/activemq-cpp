@@ -34,7 +34,7 @@ namespace cms
     {
     public:
 
-        virtual ~Connection(void) {}
+        virtual ~Connection() {}
 
         /**
          * Closes this connection as well as any Sessions 

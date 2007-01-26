@@ -66,16 +66,16 @@ namespace concurrent{
         util::Queue<Task> queue;
       
         // Max number of Threads this Pool can contian      
-        unsigned long maxThreads;
+        std::size_t maxThreads;
       
         // Max number of tasks that can be allocated at a time
-        unsigned long blockSize;
+        std::size_t blockSize;
       
         // boolean flag use to indocate that this object is shutting down.
         bool shutdown;
       
         // Count of threads that are currently free to perfom some work.
-        unsigned long freeThreads;
+        std::size_t freeThreads;
       
         // Mutex for locking operations that affect the pool.
         Mutex poolLock;
@@ -91,8 +91,8 @@ namespace concurrent{
             
     public:
          
-        ThreadPool(void);
-        virtual ~ThreadPool(void);
+        ThreadPool();
+        virtual ~ThreadPool();
 
         /**
          * Queue a task to be completed by one of the Pooled Threads.
@@ -114,7 +114,7 @@ namespace concurrent{
          * @return object that derives from Runnable
          * @throws ActiveMQException
          */
-        virtual Task deQueueTask(void)
+        virtual Task deQueueTask()
             throw ( exceptions::ActiveMQException );
 
         /**
@@ -123,14 +123,14 @@ namespace concurrent{
          * number that might exist.
          * @return integer number of threads in existance.
          */
-        virtual unsigned long getPoolSize(void) const { return pool.size(); }
+        virtual std::size_t getPoolSize() const { return pool.size(); }
       
         /**
          * Returns the current backlog of items in the tasks queue, this
          * is how much work is still waiting to get done.  
          * @return number of outstanding tasks.
          */
-        virtual unsigned long getBacklog(void) const { return queue.size(); }
+        virtual std::size_t getBacklog() const { return queue.size(); }
       
         /**
          * Ensures that there is at least the specified number of Threads
@@ -140,13 +140,13 @@ namespace concurrent{
          * currently in the pool, than nothing is done.
          * @param size the number of threads to reserve.
          */
-        virtual void reserve( unsigned long size );
+        virtual void reserve( std::size_t size );
       
         /**
          * Get the Max Number of Threads this Pool can contain
          * @return max size
          */
-        virtual unsigned long getMaxThreads(void) const { return maxThreads; }
+        virtual std::size_t getMaxThreads() const { return maxThreads; }
 
         /**
          * Sets the Max number of threads this pool can contian. 
@@ -154,21 +154,21 @@ namespace concurrent{
          * pool nothing is done.
          * @param maxThreads total number of threads that can be pooled
          */
-        virtual void setMaxThreads( unsigned long maxThreads );
+        virtual void setMaxThreads( std::size_t maxThreads );
       
         /**
          * Gets the Max number of threads that can be allocated at a time
          * when new threads are needed.
          * @return max Thread Block Size
          */
-        virtual unsigned long getBlockSize(void) const { return blockSize; }
+        virtual std::size_t getBlockSize() const { return blockSize; }
       
         /**
          * Sets the Max number of Threads that can be allocated at a time
          * when the Thread Pool determines that more Threads are needed.  
          * @param blockSize Max Thread Block Size
          */
-        virtual void setBlockSize( unsigned long blockSize );
+        virtual void setBlockSize( std::size_t blockSize );
       
         /**
          * Returns the current number of available threads in the pool, threads
@@ -177,7 +177,7 @@ namespace concurrent{
          * after and be available again.  This is informational only.
          * @return totoal free threads
          */
-        virtual unsigned long getFreeThreadCount(void) const { 
+        virtual std::size_t getFreeThreadCount() const { 
             return freeThreads; 
         }
 
@@ -217,7 +217,7 @@ namespace concurrent{
          * Return the one and only Thread Pool instance.
          * @return The Thread Pool Pointer
          */
-        static ThreadPool* getInstance(void) { 
+        static ThreadPool* getInstance() { 
             return &instance;
         }
 
@@ -228,7 +228,7 @@ namespace concurrent{
          * <code>maxThreads</code>.
          * @param count the number of threads to create
          */
-        void AllocateThreads( unsigned long count ); 
+        void AllocateThreads( std::size_t count ); 
 
     };
 

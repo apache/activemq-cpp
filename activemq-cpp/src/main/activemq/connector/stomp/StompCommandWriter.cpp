@@ -29,7 +29,7 @@ using namespace activemq::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandWriter::StompCommandWriter(void)
+StompCommandWriter::StompCommandWriter()
 {
     outputStream = NULL;
 }
@@ -63,7 +63,7 @@ void StompCommandWriter::writeCommand( Command* command )
 
         // Write all the headers.
         vector< pair<string,string> > headers = frame.getProperties().toArray();   
-        for( unsigned int ix=0; ix < headers.size(); ++ix )
+        for( std::size_t ix=0; ix < headers.size(); ++ix )
         {
             string& name = headers[ix].first;
             string& value = headers[ix].second;
@@ -103,7 +103,7 @@ void StompCommandWriter::writeCommand( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::write( const unsigned char* buffer, int count ) 
+void StompCommandWriter::write( const unsigned char* buffer, std::size_t count ) 
     throw( IOException )
 {
     if( outputStream == NULL )
@@ -130,7 +130,7 @@ void StompCommandWriter::writeByte( unsigned char v ) throw( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::write( const char* buffer, int count ) 
+void StompCommandWriter::write( const char* buffer, std::size_t count ) 
    throw( io::IOException )
 {
     write( reinterpret_cast<const unsigned char*>( buffer ), count );

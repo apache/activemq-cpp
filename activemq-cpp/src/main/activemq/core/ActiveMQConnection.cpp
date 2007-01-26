@@ -22,6 +22,8 @@
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/exceptions/NullPointerException.h>
 
+#include <activemq/util/Config.h>
+
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
@@ -117,7 +119,7 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
             cms::Session* session = allSessions[ix];
             try{
                 session->close();
-            } catch( cms::CMSException& ex ){
+            } catch( cms::CMSException& ex AMQCPP_UNUSED ){
                 /* Absorb */
             }
         }

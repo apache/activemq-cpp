@@ -125,7 +125,7 @@ namespace network{
 	     * @return The number of bytes currently available to
          * be read on the socket.
 	     */
-		virtual int available() const throw (activemq::io::IOException);
+		virtual std::size_t available() const throw (activemq::io::IOException);
 		
 		/**
 		 * Reads a single byte from the buffer.  If no data
@@ -143,7 +143,9 @@ namespace network{
 		 * @return The number of bytes read.
 		 * @throws IOException thrown if an error occurs.
 		 */
-		virtual int read( unsigned char* buffer, int bufferSize ) throw (io::IOException);
+		virtual std::size_t read( unsigned char* buffer, 
+                                  std::size_t bufferSize ) 
+            throw (io::IOException);
 		
 		/**
 		 * Close - does nothing.  It is the responsibility of the owner
@@ -156,7 +158,9 @@ namespace network{
          * Not supported.
          * @throws an UnsupportedOperationException.
          */ 
-        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException );
+        virtual std::size_t skip( std::size_t num ) 
+            throw ( io::IOException, 
+                    exceptions::UnsupportedOperationException );
         
 	};
 	

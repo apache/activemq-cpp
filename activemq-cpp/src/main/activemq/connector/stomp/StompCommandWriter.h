@@ -48,7 +48,7 @@ namespace stomp{
         /**
          * Default Constructor
          */
-        StompCommandWriter(void);
+        StompCommandWriter();
 
         /**
          * Constructor.
@@ -56,7 +56,7 @@ namespace stomp{
          */
         StompCommandWriter( io::OutputStream* os );
 
-        virtual ~StompCommandWriter(void) {}
+        virtual ~StompCommandWriter() {}
 
         /**
          * Sets the target output stream.
@@ -68,7 +68,7 @@ namespace stomp{
         /**
          * Gets the target output stream.
          */
-        virtual io::OutputStream* getOutputStream(void){
+        virtual io::OutputStream* getOutputStream(){
             return outputStream;
         }
 
@@ -87,7 +87,7 @@ namespace stomp{
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int count ) 
+        virtual void write( const unsigned char* buffer, std::size_t count ) 
             throw( io::IOException );
        
         /**
@@ -105,7 +105,7 @@ namespace stomp{
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const char* buffer, int count ) 
+        virtual void write( const char* buffer, std::size_t count ) 
             throw( io::IOException );
 
     };

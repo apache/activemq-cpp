@@ -100,20 +100,20 @@ namespace stomp{
          * Return the number of bytes contained in this frames body
          * @return Body bytes length.
          */
-        unsigned long long getBodyLength() const{ return (unsigned long long)body.size(); }
+        std::size_t getBodyLength() const{ return body.size(); }
         
         /**
          * Sets the body data of this frame as a byte sequence.
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
-        void setBody( const unsigned char* bytes, unsigned long long numBytes ){
+        void setBody( const unsigned char* bytes, std::size_t numBytes ){
             
             // Remove old data
             body.clear();
            
             // Copy data to internal buffer.
-            for( unsigned long long ix = 0; ix < numBytes; ++ix )
+            for( std::size_t ix = 0; ix < numBytes; ++ix )
             {
                 body.push_back(bytes[ix]);
             }

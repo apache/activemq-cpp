@@ -40,17 +40,17 @@ namespace io{
         /**
          * The size of the internal buffer.
          */
-        unsigned int bufferSize;
+        std::size_t bufferSize;
       
         /**
          * The current head of the buffer.
          */
-        int head;
+        std::size_t head;
       
         /**
          * The current tail of the buffer.
          */
-        int tail;
+        std::size_t tail;
       
     public:
    
@@ -66,7 +66,7 @@ namespace io{
          * @param bufSize the size for the internal buffer.
          */
         BufferedOutputStream( OutputStream* stream, 
-                              unsigned int bufSize, 
+                              std::size_t bufSize, 
                               bool own = false);
       
         virtual ~BufferedOutputStream();
@@ -84,7 +84,8 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len ) throw ( IOException );
+        virtual void write( const unsigned char* buffer, std::size_t len ) 
+            throw ( IOException );
       
         /**
          * Invokes flush on the target output stream.
@@ -103,7 +104,7 @@ namespace io{
         /**
          * Initializes the internal structures.
          */
-        void init( unsigned int bufSize );
+        void init( std::size_t bufSize );
       
         /**
          * Writes the contents of the buffer to the output stream.

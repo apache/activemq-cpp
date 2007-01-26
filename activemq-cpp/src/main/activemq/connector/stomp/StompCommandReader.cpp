@@ -43,7 +43,7 @@ StompCommandReader::StompCommandReader( InputStream* is )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* StompCommandReader::readCommand(void) 
+Command* StompCommandReader::readCommand() 
     throw ( CommandIOException )
 {
     StompFrame* frame = NULL;
@@ -98,7 +98,7 @@ void StompCommandReader::readStompCommandHeader( StompFrame& frame )
             readStompHeaderLine();
     
             // Ignore all white space before the command.
-            int offset = -1;
+            std::size_t offset = -1;
             for( size_t ix = 0; ix < buffer.size()-1; ++ix )
             {
                 // Find the first non whitespace character
@@ -133,7 +133,7 @@ void StompCommandReader::readStompHeaders( StompFrame& frame )
         while( !endOfHeaders )
         {        
             // Read in the next header line.
-            int numChars = readStompHeaderLine();
+            std::size_t numChars = readStompHeaderLine();
     
             if( numChars == 0 )
             {
@@ -179,14 +179,14 @@ void StompCommandReader::readStompHeaders( StompFrame& frame )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StompCommandReader::readStompHeaderLine(void) 
+std::size_t StompCommandReader::readStompHeaderLine() 
     throw ( CommandIOException )
 {
     try{
         // Clear any data from the buffer.
         buffer.clear();
             
-        int count = 0;
+        std::size_t count = 0;
       
         while( true )
         {
@@ -309,7 +309,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int StompCommandReader::read( unsigned char* buffer, int count ) 
+std::size_t StompCommandReader::read( unsigned char* buffer, std::size_t count ) 
    throw( io::IOException )
 {
     try{
@@ -328,7 +328,7 @@ int StompCommandReader::read( unsigned char* buffer, int count )
 }
  
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char StompCommandReader::readByte(void) throw( io::IOException )
+unsigned char StompCommandReader::readByte() throw( io::IOException )
 {
         try{
         if( inputStream == NULL )

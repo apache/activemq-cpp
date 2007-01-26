@@ -61,7 +61,7 @@ SocketInputStream::~SocketInputStream()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::available() const throw (activemq::io::IOException){
+std::size_t SocketInputStream::available() const throw (activemq::io::IOException){
 
 // The windows version
 #if defined(HAVE_WINSOCK2_H) 
@@ -72,7 +72,7 @@ int SocketInputStream::available() const throw (activemq::io::IOException){
         throw SocketException( __FILE__, __LINE__, "ioctlsocket failed" );
     }
 
-    return (int)numBytes;
+    return (std::size_t)numBytes;
 
 #else // !defined(HAVE_WINSOCK2_H)
 
@@ -80,7 +80,7 @@ int SocketInputStream::available() const throw (activemq::io::IOException){
     // are available.
 	#if defined(FIONREAD)
 
-        int numBytes = 0;
+        std::size_t numBytes = 0;
 	    if( ::ioctl (socket, FIONREAD, &numBytes) != -1 ){
             return numBytes;
         }
@@ -118,7 +118,7 @@ int SocketInputStream::available() const throw (activemq::io::IOException){
 unsigned char SocketInputStream::read() throw (IOException){
    
     unsigned char c;  
-    int len = read( &c, 1 );
+    std::size_t len = read( &c, 1 );
     if( len != sizeof(c) ){
         throw IOException( __FILE__, __LINE__, 
             "activemq::io::SocketInputStream::read - failed reading a byte");
@@ -128,9 +128,10 @@ unsigned char SocketInputStream::read() throw (IOException){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::read( unsigned char* buffer, int bufferSize ) throw (IOException){
-   
-    int len = ::recv(socket, (char*)buffer, bufferSize, 0);
+std::size_t SocketInputStream::read( unsigned char* buffer, 
+                                     std::size_t bufferSize ) throw (IOException)
+{
+    int len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
     
     // Check for a closed socket.
     if( len == 0 ){
@@ -161,7 +162,7 @@ int SocketInputStream::read( unsigned char* buffer, int bufferSize ) throw (IOEx
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int SocketInputStream::skip( int num AMQCPP_UNUSED ) 
+std::size_t SocketInputStream::skip( std::size_t num AMQCPP_UNUSED ) 
 throw ( io::IOException, exceptions::UnsupportedOperationException ) {
     throw exceptions::UnsupportedOperationException(__FILE__, __LINE__, 
         "skip() method is not supported"); 

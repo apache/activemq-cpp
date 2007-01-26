@@ -45,27 +45,27 @@ HexTable::HexTable(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( int index ) 
+const std::string& HexTable::operator[]( std::size_t index ) 
     throw ( exceptions::IndexOutOfBoundsException ) {
     if( size() < index ) {
         throw IndexOutOfBoundsException(
             __FILE__, __LINE__,
             ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
-              Integer::toString( index ) ).c_str() );
+              Integer::toString( (int)index ) ).c_str() );
     }
     
     return table[index];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( int index ) const 
+const std::string& HexTable::operator[]( std::size_t index ) const 
     throw ( exceptions::IndexOutOfBoundsException ) {
         
     if( size() < index ) {
         throw IndexOutOfBoundsException(
             __FILE__, __LINE__,
             ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
-              Integer::toString( index ) ).c_str() );
+              Integer::toString( (int)index ) ).c_str() );
     }
     
     return table[index];

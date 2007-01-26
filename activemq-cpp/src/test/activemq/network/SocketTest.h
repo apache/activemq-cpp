@@ -282,7 +282,7 @@ namespace network{
 				unsigned char buf[500];
 				memset( buf, 0, 500 );
 				io::InputStream* istream = client.getInputStream();
-				int numRead = istream->read( buf, 500 );
+				std::size_t numRead = istream->read( buf, 500 );
 				CPPUNIT_ASSERT( numRead == 5 );
 				CPPUNIT_ASSERT( strcmp( (char*)buf, "hello" ) == 0 );
 				

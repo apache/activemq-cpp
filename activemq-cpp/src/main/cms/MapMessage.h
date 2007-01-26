@@ -40,7 +40,7 @@ namespace cms
     {
     public:
 
-        virtual ~MapMessage(void) {}
+        virtual ~MapMessage() {}
         
         /**
          * Returns an Enumeration of all the names in the MapMessage 
@@ -49,7 +49,7 @@ namespace cms
          *         name of an item in the MapMessage
          * @throws CMSException
          */
-        virtual std::vector< std::string > getMapNames(void) const = 0;
+        virtual std::vector< std::string > getMapNames() const = 0;
 
         /**
          * Indicates whether an item exists in this MapMessage object.

@@ -31,7 +31,7 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream, bool own )
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedOutputStream::BufferedOutputStream( OutputStream* stream, 
-    unsigned int bufSize,
+    std::size_t bufSize,
     bool own )
 : FilterOutputStream( stream, own )
 {
@@ -49,7 +49,7 @@ BufferedOutputStream::~BufferedOutputStream()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::init( unsigned int bufSize ){
+void BufferedOutputStream::init( std::size_t bufSize ){
     
     this->bufferSize = bufSize;
     
@@ -97,18 +97,18 @@ void BufferedOutputStream::write( const unsigned char c ) throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////        
-void BufferedOutputStream::write( const unsigned char* buffer, const int len ) 
+void BufferedOutputStream::write( const unsigned char* buffer, std::size_t len ) 
     throw ( IOException )
 {       
     // Iterate until all the data is written.
-    for( int pos=0; pos < len; ){
+    for( std::size_t pos=0; pos < len; ){
         
         if( tail >= (int)bufferSize ){
             emptyBuffer();
         }
     
         // Get the number of bytes left to write.
-        int bytesToWrite = min( (int)bufferSize-tail, len-pos );
+        std::size_t bytesToWrite = min( (int)bufferSize-tail, len-pos );
         
         // Copy the data.
         memcpy( this->buffer+tail, buffer+pos, bytesToWrite );

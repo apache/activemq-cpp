@@ -40,7 +40,7 @@ namespace io{
 		class MyInputStream : public InputStream{
 		private:
 			std::string data;
-			unsigned int pos;
+			std::size_t pos;
 		public:
 		
 			MyInputStream( const std::string& data ){
@@ -49,9 +49,9 @@ namespace io{
 			}
 			virtual ~MyInputStream(){}
 			
-			virtual int available() const throw (IOException){
-				int len = data.length();
-				return len - (int)pos;
+			virtual std::size_t available() const throw (IOException){
+				std::size_t len = data.length();
+				return len - pos;
 			}
 			virtual unsigned char read() throw (IOException){
 				if( pos >= data.length() ){
@@ -60,11 +60,11 @@ namespace io{
 				
 				return data.c_str()[pos++];
 			}
-			virtual int read( unsigned char* buffer, int bufferSize ) throw (IOException){
-				unsigned int numToRead = std::min( bufferSize, available() );
+            virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) throw (IOException){
+				std::size_t numToRead = std::min( bufferSize, available() );
 				
 				const char* str = data.c_str();
-				for( unsigned int ix=0; ix<numToRead; ++ix ){
+				for( std::size_t ix=0; ix<numToRead; ++ix ){
 					buffer[ix] = str[pos+ix];
 				}
 				
@@ -76,7 +76,7 @@ namespace io{
 			virtual void close() throw(cms::CMSException){
 				// do nothing.
 			}
-            virtual int skip( int num AMQCPP_UNUSED) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+            virtual std::size_t skip( std::size_t num AMQCPP_UNUSED) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
                 return 0;
             }
 			
@@ -105,33 +105,33 @@ namespace io{
 			MyInputStream myStream( testStr );
 			BufferedInputStream bufStream( &myStream, (unsigned int)1 );
 			
-			int available = bufStream.available();
-			CPPUNIT_ASSERT( available == (int)testStr.length() );
+			std::size_t available = bufStream.available();
+			CPPUNIT_ASSERT( available == testStr.length() );
 			
 			unsigned char dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'T' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 1 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 1) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'E' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 2 ) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'S' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 3 ) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'T' );
 			
 			unsigned char dummyBuf[20];
 			memset( dummyBuf, 0, 20 );
-			int numRead = bufStream.read( dummyBuf, 10 );
+			std::size_t numRead = bufStream.read( dummyBuf, 10 );
 			CPPUNIT_ASSERT( numRead == 10 );
 			CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );			
 			
@@ -145,33 +145,33 @@ namespace io{
 			MyInputStream myStream( testStr );
 			BufferedInputStream bufStream( &myStream, (unsigned int)10 );
 			
-			int available = bufStream.available();
-			CPPUNIT_ASSERT( available == (int)testStr.length() );
+			std::size_t available = bufStream.available();
+			CPPUNIT_ASSERT( available == testStr.length() );
 			
 			unsigned char dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'T' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 1 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 1 ) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'E' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 2 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 2 ) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'S' );
 			
 			available = bufStream.available();
-			CPPUNIT_ASSERT( available == ((int)testStr.length() - 3 ) );
+			CPPUNIT_ASSERT( available == (testStr.length() - 3 ) );
 			
 			dummy = bufStream.read();
 			CPPUNIT_ASSERT( dummy == 'T' );
 			
 			unsigned char dummyBuf[20];
 			memset( dummyBuf, 0, 20 );
-			int numRead = bufStream.read( dummyBuf, 10 );
+			std::size_t numRead = bufStream.read( dummyBuf, 10 );
 			CPPUNIT_ASSERT( numRead == 10 );
 			CPPUNIT_ASSERT( strcmp( (char*)dummyBuf, "1234567891" ) == 0 );			
 			

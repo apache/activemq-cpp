@@ -33,7 +33,7 @@ BufferedInputStream::BufferedInputStream( InputStream* stream, bool own )
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedInputStream::BufferedInputStream( InputStream* stream, 
-    unsigned int bufferSize,
+    std::size_t bufferSize,
     bool own  )
 : FilterInputStream( stream, own )
 {
@@ -51,7 +51,7 @@ BufferedInputStream::~BufferedInputStream()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedInputStream::init( unsigned int bufferSize ){
+void BufferedInputStream::init( std::size_t bufferSize ){
     
     this->bufferSize = bufferSize;
     
@@ -85,8 +85,8 @@ unsigned char BufferedInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::read( unsigned char* targetBuffer, 
-    int targetBufferSize ) throw ( IOException ){
+std::size_t BufferedInputStream::read( unsigned char* targetBuffer, 
+    std::size_t targetBufferSize ) throw ( IOException ){
     
     try{
         // If there's no data left, reset to pointers to the beginning of the
@@ -96,11 +96,11 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
         // If we still haven't filled the output buffer AND there is data
         // on the input stream to be read, read a buffer's
         // worth from the stream.
-        int totalRead = 0;
+        std::size_t totalRead = 0;
         while( totalRead < targetBufferSize ){        
             
             // Get the remaining bytes to copy.
-            int bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
+            std::size_t bytesToCopy = min( tail-head, (targetBufferSize-totalRead) );
             
             // Copy the data to the output buffer.  
             memcpy( targetBuffer+totalRead, this->buffer+head, bytesToCopy );
@@ -132,7 +132,7 @@ int BufferedInputStream::read( unsigned char* targetBuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int BufferedInputStream::skip( int num ) 
+std::size_t BufferedInputStream::skip( std::size_t num ) 
     throw ( IOException, exceptions::UnsupportedOperationException ){
     
     try{
@@ -141,11 +141,11 @@ int BufferedInputStream::skip( int num )
         normalizeBuffer();
         
         // loop until we've skipped the desired number of bytes
-        int totalSkipped = 0;
+        std::size_t totalSkipped = 0;
         while( totalSkipped < num ){        
             
             // Get the remaining bytes to copy.
-            int bytesToSkip = min( tail-head, num-totalSkipped );
+            std::size_t bytesToSkip = min( tail-head, num-totalSkipped );
             
             // Increment the head position.
             head += bytesToSkip;
@@ -181,13 +181,13 @@ void BufferedInputStream::bufferData() throw ( IOException ){
         
         // Get the number of bytes currently available on the input stream
         // that could be read without blocking.
-        int available = inputStream->available();
+        std::size_t available = inputStream->available();
         
         // Calculate the number of bytes that we can read.  Always >= 1 byte!
-        int bytesToRead = max( 1, min( available, getUnusedBytes() ) );
+        std::size_t bytesToRead = max( (std::size_t)1, min( available, getUnusedBytes() ) );
         
         // Read the bytes from the input stream.    
-        int bytesRead = inputStream->read( getTail(), bytesToRead );
+        std::size_t bytesRead = inputStream->read( getTail(), bytesToRead );
         if( bytesRead == 0 ){
             throw IOException( __FILE__, __LINE__, 
                 "BufferedInputStream::read() - failed reading bytes from stream");

@@ -102,7 +102,7 @@ namespace util{
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual unsigned int size() const;
+        virtual std::size_t size() const;
         
         /**
          * Gets the value for the specified key.
@@ -264,7 +264,7 @@ namespace util{
 
     ////////////////////////////////////////////////////////////////////////////
     template <typename K, typename V>
-    unsigned int Map<K,V>::size() const{
+    std::size_t Map<K,V>::size() const{
         return valueMap.size();
     }
     

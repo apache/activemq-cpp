@@ -44,7 +44,7 @@ namespace io{
          * @return the number of bytes available on this input stream.
          * @throws IOException if an error occurs.
          */
-        virtual int available() const throw ( IOException ) = 0;
+        virtual std::size_t available() const throw ( IOException ) = 0;
         
         /**
          * Reads a single byte from the buffer.  Blocks until
@@ -62,7 +62,7 @@ namespace io{
          * @return The number of bytes read or -1 if EOF is detected
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int bufferSize ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) 
             throw ( IOException ) = 0;
 
         /**
@@ -81,7 +81,7 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */ 
-        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException ) = 0;
+        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, exceptions::UnsupportedOperationException ) = 0;
 
     };
     

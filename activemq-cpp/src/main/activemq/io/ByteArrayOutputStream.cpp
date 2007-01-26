@@ -55,11 +55,11 @@ void ByteArrayOutputStream::write( unsigned char c )
 
 ////////////////////////////////////////////////////////////////////////////////    
 void ByteArrayOutputStream::write( const unsigned char* buffer, 
-                                   const int len ) 
+                                   std::size_t len ) 
    throw ( IOException )
 {     
     // Iterate until all the data is written.
-    for( int ix = 0; ix < len; ++ix)
+    for( std::size_t ix = 0; ix < len; ++ix)
     {
         activeBuffer->push_back( buffer[ix] );
     }  

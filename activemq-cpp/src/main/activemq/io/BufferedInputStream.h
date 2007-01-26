@@ -42,17 +42,17 @@ namespace io{
         /**
          * The buffer size.
          */
-        unsigned int bufferSize;
+        std::size_t bufferSize;
       
         /**
          * The current head of the buffer.
          */
-        int head;
+        std::size_t head;
       
         /**
          * The current tail of the buffer.
          */
-        int tail;
+        std::size_t tail;
       
     public:
    
@@ -70,7 +70,7 @@ namespace io{
          * @param own indicates if we own the stream object, defaults to false.
          */
         BufferedInputStream( InputStream* stream, 
-                             unsigned int bufferSize, 
+                             std::size_t bufferSize, 
                              bool own = false);
       
         virtual ~BufferedInputStream();
@@ -81,7 +81,7 @@ namespace io{
          * in the buffer and the data available on the target
          * input stream.
          */
-        virtual int available() const throw ( IOException ) {   
+        virtual std::size_t available() const throw ( IOException ) {   
             return ( tail - head ) + inputStream->available();
         }
             
@@ -101,7 +101,7 @@ namespace io{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int bufferSize ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) 
             throw ( IOException );
             
         /**
@@ -120,7 +120,8 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */ 
-        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException );
+        virtual std::size_t skip( std::size_t num ) 
+            throw ( io::IOException, exceptions::UnsupportedOperationException );
       
     private:
    
@@ -128,7 +129,7 @@ namespace io{
          * Initializes the internal structures.
          * @param size of buffer to allocate
          */
-        void init( unsigned int bufferSize );
+        void init( std::size_t bufferSize );
       
         /**
          * Populates the buffer with as much data as possible
@@ -141,7 +142,7 @@ namespace io{
          * Returns the number of bytes that are currently unused
          * in the buffer.
          */
-        int getUnusedBytes() const{
+        std::size_t getUnusedBytes() const{
             return bufferSize - tail;
         }
         

@@ -26,10 +26,20 @@ using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedSocket::BufferedSocket( Socket* socket,
-                                unsigned int inputBufferSize,
-                                unsigned int outputBufferSize,
+                                int inputBufferSize,
+                                int outputBufferSize,
                                 bool own )
 {
+    if(inputBufferSize < 0 || outputBufferSize < 0 )
+    {
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "BufferedSocket::BufferedSocket - buffer sizes must be >=0! "
+            "Given input buffer size: %d, Given output buffer size: %d",
+            inputBufferSize,
+            outputBufferSize );
+    }
+
     if(socket == NULL)
     {
         throw IllegalArgumentException(
@@ -44,7 +54,7 @@ BufferedSocket::BufferedSocket( Socket* socket,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedSocket::~BufferedSocket(void)
+BufferedSocket::~BufferedSocket()
 {
     try
     {
@@ -72,7 +82,7 @@ BufferedSocket::~BufferedSocket(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedSocket::connect( const char* host, const int port ) 
+void BufferedSocket::connect( const char* host, int port ) 
     throw( SocketException )
 {
     try
@@ -88,9 +98,9 @@ void BufferedSocket::connect( const char* host, const int port )
 
         // Now create the buffered streams that wrap around the socket.
         inputStream = new BufferedInputStream( 
-            socket->getInputStream(), inputBufferSize );
+            socket->getInputStream(), (std::size_t)inputBufferSize );
         outputStream = new BufferedOutputStream( 
-            socket->getOutputStream(), outputBufferSize );
+            socket->getOutputStream(), (std::size_t)outputBufferSize );
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
@@ -98,7 +108,7 @@ void BufferedSocket::connect( const char* host, const int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedSocket::close(void) throw( cms::CMSException )
+void BufferedSocket::close() throw( cms::CMSException )
 {
     try
     {

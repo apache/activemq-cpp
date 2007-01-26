@@ -32,7 +32,7 @@ namespace cms
     {
     public:
 
-        virtual ~ConnectionFactory(void) {}
+        virtual ~ConnectionFactory() {}
 
         /**
          * Creates a connection with the default user identity. The 
@@ -42,7 +42,7 @@ namespace cms
          * @return Pointer to a connection object, caller owns the pointer
          * @throws CMSException
          */
-        virtual Connection* createConnection(void) throw ( CMSException ) = 0;
+        virtual Connection* createConnection() throw ( CMSException ) = 0;
 
         /**
          * Creates a connection with the specified user identity. The 

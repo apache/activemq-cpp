@@ -250,7 +250,7 @@ namespace commands{
          * Fetch the number of bytes in the Stomp Frame Body
          * @return number of bytes
          */
-        virtual unsigned long long getNumBytes() const{
+        virtual std::size_t getNumBytes() const{
             return getFrame().getBodyLength();
         }
 
@@ -276,7 +276,7 @@ namespace commands{
          * be set
          */
         virtual void setBytes( const unsigned char* bytes, 
-                               const unsigned long long numBytes )
+                               std::size_t numBytes )
         {
             getFrame().setBody( bytes, numBytes );
         }

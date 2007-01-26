@@ -128,7 +128,8 @@ namespace network{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len ) throw ( io::IOException );
+        virtual void write( const unsigned char* buffer, 
+                            std::size_t len ) throw ( io::IOException );
       
         /**
          * Flush - does nothing.

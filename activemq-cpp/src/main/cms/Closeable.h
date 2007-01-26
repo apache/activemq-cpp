@@ -29,7 +29,7 @@ namespace cms{
         
     public:
     
-        virtual ~Closeable(void){}
+        virtual ~Closeable(){}
         
         /**
          * Closes this object and deallocates the appropriate resources.

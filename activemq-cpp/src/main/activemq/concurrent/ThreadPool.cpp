@@ -38,7 +38,7 @@ LOGCMS_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker
 ThreadPool ThreadPool::instance;
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::ThreadPool(void)
+ThreadPool::ThreadPool()
 {
     maxThreads  = DEFAULT_MAX_POOL_SIZE;
     blockSize   = DEFAULT_MAX_BLOCK_SIZE;
@@ -48,7 +48,7 @@ ThreadPool::ThreadPool(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::~ThreadPool(void)
+ThreadPool::~ThreadPool()
 {
     try
     {
@@ -126,7 +126,7 @@ void ThreadPool::queueTask( ThreadPool::Task task )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ThreadPool::Task ThreadPool::deQueueTask(void)
+ThreadPool::Task ThreadPool::deQueueTask()
    throw ( exceptions::ActiveMQException )
 {
     try
@@ -176,7 +176,7 @@ ThreadPool::Task ThreadPool::deQueueTask(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::reserve( unsigned long size )
+void ThreadPool::reserve( std::size_t size )
 {
     try
     {
@@ -188,7 +188,7 @@ void ThreadPool::reserve( unsigned long size )
             }
          
             // How many do we reserve
-            unsigned long allocCount = size - pool.size();
+            std::size_t allocCount = size - pool.size();
           
             // Allocate the new Threads
             AllocateThreads(allocCount);
@@ -199,7 +199,7 @@ void ThreadPool::reserve( unsigned long size )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::setMaxThreads( unsigned long maxThreads )
+void ThreadPool::setMaxThreads( std::size_t maxThreads )
 {
     try
     {
@@ -219,7 +219,7 @@ void ThreadPool::setMaxThreads( unsigned long maxThreads )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::setBlockSize( unsigned long blockSize )
+void ThreadPool::setBlockSize( std::size_t blockSize )
 {
     try
     {
@@ -239,7 +239,7 @@ void ThreadPool::setBlockSize( unsigned long blockSize )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ThreadPool::AllocateThreads( unsigned long count )
+void ThreadPool::AllocateThreads( std::size_t count )
 {
     try
     {
@@ -257,7 +257,7 @@ void ThreadPool::AllocateThreads( unsigned long count )
             // Each time we create a thread we increment the free Threads 
             // counter, but before we call start so that the Thread doesn't 
             // get ahead of us.
-            for(unsigned long i = 0; i < count; ++i)
+            for(std::size_t i = 0; i < count; ++i)
             {
                 pool.push_back(new PooledThread(this));
                 pool.back()->setPooledThreadListener(this);

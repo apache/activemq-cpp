@@ -241,7 +241,7 @@ int TcpSocket::getSoLinger() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////    
-void TcpSocket::setSoLinger( const int dolinger ) throw( SocketException ){
+void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
    
     linger value;
     value.l_onoff = dolinger != 0;
@@ -269,15 +269,15 @@ void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
 int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
    
     int value;
-    socklen_t length = sizeof( int );
+    socklen_t length = sizeof( value );
     ::getsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&value, &length );
     return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReceiveBufferSize( const int size ) throw( SocketException ){
+void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
    
-    ::setsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&size, sizeof(int) );
+    ::setsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&size, sizeof(size) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +290,7 @@ bool TcpSocket::getReuseAddress() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReuseAddress( const bool reuse ) throw( SocketException ){
+void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
    
     int value = reuse? 1 : 0;
     ::setsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) );
@@ -300,15 +300,15 @@ void TcpSocket::setReuseAddress( const bool reuse ) throw( SocketException ){
 int TcpSocket::getSendBufferSize() const throw( SocketException ){
    
     int value;
-    socklen_t length = sizeof( int );
+    socklen_t length = sizeof( value );
     ::getsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&value, &length );
     return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSendBufferSize( const int size ) throw( SocketException ){
+void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
    
-    ::setsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, ( char* )&size, sizeof( int ) );
+    ::setsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, ( char* )&size, sizeof( size ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

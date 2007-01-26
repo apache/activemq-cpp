@@ -89,7 +89,7 @@ namespace network{
          * @param port The port of the server to connect to.
          * @throws IOException Thrown if a failure occurred in the connect.
          */
-        virtual void connect( const char* host, const int port ) throw( SocketException );
+        virtual void connect( const char* host, int port ) throw( SocketException );
       
         /**
          * Indicates whether or not this socket is connected to a destination.
@@ -123,7 +123,7 @@ namespace network{
          * @param linger The linger time in seconds.  If 0, linger is off.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSoLinger( const int linger ) throw( SocketException );
+        virtual void setSoLinger( int linger ) throw( SocketException );
       
         /**
          * Gets the keep alive flag.
@@ -137,7 +137,7 @@ namespace network{
          * @param keepAlive If true, enables the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setKeepAlive( const bool keepAlive ) throw( SocketException );
+        virtual void setKeepAlive( bool keepAlive ) throw( SocketException );
       
         /**
          * Gets the receive buffer size.
@@ -151,7 +151,7 @@ namespace network{
          * @param size Number of bytes to set the receive buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReceiveBufferSize( const int size ) throw( SocketException );
+        virtual void setReceiveBufferSize( int size ) throw( SocketException );
       
         /**
          * Gets the reuse address flag.
@@ -165,7 +165,7 @@ namespace network{
          * @param reuse If true, sets the flag.
          * @throws SocketException if the operation fails.
          */
-        virtual void setReuseAddress( const bool reuse ) throw( SocketException );
+        virtual void setReuseAddress( bool reuse ) throw( SocketException );
       
         /**
          * Gets the send buffer size.
@@ -179,7 +179,7 @@ namespace network{
          * @param size The number of bytes to set the send buffer to.
          * @throws SocketException if the operation fails.
          */
-        virtual void setSendBufferSize( const int size ) throw( SocketException );
+        virtual void setSendBufferSize( int size ) throw( SocketException );
       
         /**
          * Gets the timeout for socket operations.
@@ -193,7 +193,7 @@ namespace network{
          * @param timeout The timeout in milliseconds for socket operations.<p>
          * @throws SocketException Thrown if unable to set the information.
          */
-        virtual void setSoTimeout( const int timeout ) throw(SocketException);
+        virtual void setSoTimeout( int timeout ) throw(SocketException);
 
         /**
          * Closes this object and deallocates the appropriate resources.

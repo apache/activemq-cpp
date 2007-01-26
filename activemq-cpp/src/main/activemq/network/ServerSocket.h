@@ -66,7 +66,9 @@ namespace network{
          * @param port TCP port between 1..655535
          * @param backlog Size of listen backlog.
          */
-        virtual void bind( const char* host, int port, int backlog ) throw ( SocketException );
+        virtual void bind( const char* host, 
+                           int port, 
+                           int backlog ) throw ( SocketException );
     
         /**
          * Blocks until a client connects to the bound socket.

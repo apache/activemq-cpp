@@ -96,7 +96,9 @@ void ServerSocket::bind( const char* host, int port ) throw ( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const char* host, int port, int backlog ) throw ( SocketException )
+void ServerSocket::bind( const char* host, 
+                         int port, 
+                         int backlog ) throw ( SocketException )
 {
     if(isBound()) {
         throw SocketException ( __FILE__, __LINE__, 
@@ -159,7 +161,7 @@ void ServerSocket::bind( const char* host, int port, int backlog ) throw ( Socke
         throw SocketException ( __FILE__, __LINE__, 
             "ServerSocket::bind - %s", SocketError::getErrorString().c_str() );
     }
-    status = ::listen( socketHandle, backlog );
+    status = ::listen( socketHandle, (int)backlog );
     if( status < 0 ) {
         close();
         throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
@@ -187,7 +189,7 @@ bool ServerSocket::isBound() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* ServerSocket::accept () throw (SocketException)
+Socket* ServerSocket::accept() throw (SocketException)
 {
     struct sockaddr_in temp;
 

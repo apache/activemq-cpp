@@ -73,7 +73,7 @@ namespace io{
          * returns the result. 
          * @return the number of bytes available without blocking.
          */
-        virtual int available() const throw ( IOException ) {
+        virtual std::size_t available() const throw ( IOException ) {
             try {
                 return inputStream->available();
             }
@@ -108,7 +108,7 @@ namespace io{
          * @return The number of bytes read or -1 if EOS is detected
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int bufferSize ) 
+        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) 
             throw ( IOException )
         {
             try {

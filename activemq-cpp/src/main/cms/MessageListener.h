@@ -17,8 +17,6 @@
 
 #ifndef _CMS_MESSAGELISTENER_H_
 #define _CMS_MESSAGELISTENER_H_
-
-//#include <cms/Message.h>
  
 namespace cms{
     
@@ -27,7 +25,7 @@ namespace cms{
     class MessageListener{
     public:
     
-        virtual ~MessageListener(void){}
+        virtual ~MessageListener(){}
         
         /**
          * Called asynchronously when a new message is received, the message

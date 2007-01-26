@@ -67,7 +67,7 @@ namespace io{
          * @see setByteArray.
          */
         BlockingByteArrayInputStream( const unsigned char* buffer,
-                                      int bufferSize );
+                                      std::size_t bufferSize );
 
         /**
          * Destructor
@@ -83,7 +83,7 @@ namespace io{
          * @param bufferSize The size of the new buffer.
          */
         virtual void setByteArray( const unsigned char* buffer,
-            int bufferSize );
+            std::size_t bufferSize );
             
         /**
          * Waits on a signal from this object, which is generated
@@ -151,7 +151,7 @@ namespace io{
          * @return the data available in the internal buffer.
          * @throws IOException if an error occurs.
          */
-        virtual int available() const throw (IOException){
+        virtual std::size_t available() const throw (IOException){
             return std::distance( pos, buffer.end() );
         }
         
@@ -174,7 +174,7 @@ namespace io{
          * @return the number of bytes read.
          * @throws IOException f an error occurs.
          */
-        virtual int read( unsigned char* buffer, int bufferSize )
+        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize )
             throw (IOException);
             
         /**
@@ -199,7 +199,8 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */ 
-        virtual int skip( int num ) throw ( io::IOException, exceptions::UnsupportedOperationException );
+        virtual std::size_t skip( std::size_t num ) 
+            throw ( io::IOException, exceptions::UnsupportedOperationException );
 
    };
 

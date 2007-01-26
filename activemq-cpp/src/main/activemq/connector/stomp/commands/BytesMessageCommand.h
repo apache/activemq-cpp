@@ -121,7 +121,7 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal(void)
+        virtual const StompFrame& marshal()
             throw (marshal::MarshalException)
         {
             // Before we send out the frame tag it with the content length
@@ -163,7 +163,7 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBodyBytes( const unsigned char* buffer, 
-                                   const unsigned long long numBytes ) 
+                                   std::size_t numBytes ) 
             throw( cms::CMSException ) {
             
             checkWriteOnly();            
@@ -190,7 +190,7 @@ namespace commands{
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual unsigned long long getBodyLength() const {
+        virtual std::size_t getBodyLength() const {
             return this->getNumBytes();
         }
         
@@ -255,7 +255,7 @@ namespace commands{
          *          been reached
          * @throws CMSException if an error occurs.
          */
-        virtual int readBytes( std::vector<unsigned char>& value ) 
+        virtual std::size_t readBytes( std::vector<unsigned char>& value ) 
             throw ( cms::CMSException ){
             checkReadOnly();
             return dataInputStream.read( value );
@@ -298,8 +298,9 @@ namespace commands{
          *          been reached
          * @throws CMSException
          */
-        virtual int readBytes( unsigned char*& buffer, int length ) 
-            throw ( cms::CMSException ){
+        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) 
+            throw ( cms::CMSException )
+        {
             checkReadOnly();
             return dataInputStream.read( buffer, 0, length );
         }
@@ -313,8 +314,8 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeBytes( const unsigned char* value,
-                                 int offset,
-                                 int length ) throw ( cms::CMSException ){
+                                 std::size_t offset,
+                                 std::size_t length ) throw ( cms::CMSException ){
             checkWriteOnly();
             dataOutputStream.write( value, offset, length );
         }

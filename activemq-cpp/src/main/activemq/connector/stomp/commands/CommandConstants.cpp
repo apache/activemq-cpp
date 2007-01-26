@@ -123,8 +123,8 @@ CommandConstants::StaticInitializer::StaticInitializer(){
 cms::Destination* CommandConstants::toDestination( const std::string& dest )
     throw ( exceptions::IllegalArgumentException )
 {
-    int qpos = dest.find(queuePrefix);
-    int tpos = dest.find(topicPrefix);
+    std::size_t qpos = dest.find(queuePrefix);
+    std::size_t tpos = dest.find(topicPrefix);
     
     if(tpos == 0)
     {

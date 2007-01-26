@@ -64,7 +64,7 @@ void DataOutputStream::write( const std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char* buffer, int len )
+void DataOutputStream::write( const unsigned char* buffer, std::size_t len )
     throw ( IOException ) {
 
     try {
@@ -75,8 +75,10 @@ void DataOutputStream::write( const unsigned char* buffer, int len )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char* buffer, int offset, int len )
-    throw ( IOException ) {
+void DataOutputStream::write( const unsigned char* buffer, 
+                              std::size_t offset, 
+                              std::size_t len ) throw ( IOException ) 
+{
 
     try {
         outputStream->write( buffer+offset, len );
@@ -116,7 +118,9 @@ void DataOutputStream::writeShort( short value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUnsignedShort( unsigned short value ) throw ( IOException ) {
+void DataOutputStream::writeUnsignedShort( unsigned short value ) 
+    throw ( IOException ) 
+{
     try {
         write( (unsigned char)( (value & 0xFF00) >> 8 ) );
         write( (unsigned char)( (value & 0x00FF) >> 0 ) );
@@ -205,7 +209,7 @@ throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeUTF( const std::string& value ) throw ( IOException ) {
     try {
-        this->writeUnsignedShort( value.length() );
+        this->writeUnsignedShort( (unsigned short)value.length() );
         this->write( (const unsigned char*)value.c_str(), value.length() );
     }
     AMQ_CATCH_RETHROW( IOException )

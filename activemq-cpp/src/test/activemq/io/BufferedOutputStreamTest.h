@@ -40,7 +40,7 @@ namespace io{
 		class MyOutputStream : public OutputStream{
 		private:
 			char buffer[100];
-			unsigned int pos;
+			std::size_t pos;
 		public:
 		
 			MyOutputStream(){
@@ -59,7 +59,7 @@ namespace io{
 				buffer[pos++] = c;
 			}
 		
-			virtual void write( const unsigned char* buffer, int len ) throw (IOException){
+			virtual void write( const unsigned char* buffer, std::size_t len ) throw (IOException){
 				
 				if( (pos + len) > 100 ){
 					throw IOException();

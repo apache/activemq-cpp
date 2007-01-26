@@ -33,14 +33,14 @@ namespace transport{
     {
     public:
   
-        virtual ~CommandReader(void){}
+        virtual ~CommandReader(){}
         
         /**
          * Reads a command from the given input stream.
          * @return The next command available on the stream.
          * @throws CommandIOException if a problem occurs during the read.
          */
-        virtual Command* readCommand( void ) 
+        virtual Command* readCommand() 
             throw ( CommandIOException ) = 0;
 
     };

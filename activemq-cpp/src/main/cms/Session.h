@@ -74,7 +74,7 @@ namespace cms
 
     public:
 
-        virtual ~Session(void) {}
+        virtual ~Session() {}
 
         /**
          * Closes this session as well as any active child consumers or
@@ -88,14 +88,14 @@ namespace cms
          * locks currently held.
          * @throws CMSException
          */
-        virtual void commit(void) throw ( CMSException ) = 0;
+        virtual void commit() throw ( CMSException ) = 0;
 
         /**
          * Rollsback all messages done in this transaction and releases any 
          * locks currently held.
          * @throws CMSException
          */
-        virtual void rollback(void) throw ( CMSException ) = 0;
+        virtual void rollback() throw ( CMSException ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination.
@@ -190,28 +190,28 @@ namespace cms
          * @return new TemporaryQueue pointer that is owned by the caller.
          * @throws CMSException
          */
-        virtual TemporaryQueue* createTemporaryQueue(void)
+        virtual TemporaryQueue* createTemporaryQueue()
             throw ( CMSException ) = 0;
 
         /**
          * Creates a TemporaryTopic object.
          * @throws CMSException
          */
-        virtual TemporaryTopic* createTemporaryTopic(void)
+        virtual TemporaryTopic* createTemporaryTopic()
             throw ( CMSException ) = 0;
 
         /**
          * Creates a new Message
          * @throws CMSException
          */
-        virtual Message* createMessage(void) 
+        virtual Message* createMessage() 
             throw ( CMSException ) = 0;
 
         /**
          * Creates a BytesMessage
          * @throws CMSException
          */
-        virtual BytesMessage* createBytesMessage(void) 
+        virtual BytesMessage* createBytesMessage() 
             throw ( CMSException) = 0;
 
         /**
@@ -222,14 +222,14 @@ namespace cms
          */
         virtual BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            unsigned long long bytesSize ) 
+            std::size_t bytesSize ) 
                 throw ( CMSException) = 0;
 
         /**
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual TextMessage* createTextMessage(void) 
+        virtual TextMessage* createTextMessage() 
             throw ( CMSException ) = 0;
 
         /**
@@ -244,20 +244,20 @@ namespace cms
          * Creates a new MapMessage
          * @throws CMSException
          */
-        virtual MapMessage* createMapMessage(void) 
+        virtual MapMessage* createMapMessage() 
             throw ( CMSException ) = 0;
 
         /**
          * Returns the acknowledgement mode of the session.
          * @return the Sessions Acknowledge Mode
          */
-        virtual AcknowledgeMode getAcknowledgeMode(void) const = 0;
+        virtual AcknowledgeMode getAcknowledgeMode() const = 0;
 
         /**
          * Gets if the Sessions is a Transacted Session
          * @return transacted true - false.
          */
-        virtual bool isTransacted(void) const = 0;
+        virtual bool isTransacted() const = 0;
 
     };
 

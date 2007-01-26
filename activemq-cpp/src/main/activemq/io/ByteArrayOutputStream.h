@@ -87,7 +87,7 @@ namespace io{
          * Get the Size of the Internal Buffer
          * @return size of the internal buffer
          */
-        virtual int getByteArraySize() const {
+        virtual std::size_t getByteArraySize() const {
             return activeBuffer->size();
         }
 
@@ -165,7 +165,7 @@ namespace io{
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int len ) 
+        virtual void write( const unsigned char* buffer, std::size_t len ) 
             throw ( IOException );
       
         /**

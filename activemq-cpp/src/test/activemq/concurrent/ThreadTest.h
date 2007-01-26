@@ -136,7 +136,7 @@ namespace concurrent{
 		  	test.join();
 		  	time_t endTime = time( NULL );
 		  	
-		  	long delta = endTime - startTime;
+		  	time_t delta = endTime - startTime;
 		  	
 		  	// Should be about 5 seconds that elapsed.
 		  	CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
