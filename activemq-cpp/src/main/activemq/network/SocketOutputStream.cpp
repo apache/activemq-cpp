@@ -29,16 +29,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#if !defined(SOCKET_NOSIGNAL)
-
-    #if defined(SO_NOSIGPIPE)
-        #define SOCKET_NOSIGNAL SO_NOSIGPIPE
-    #elif defined(MSG_NOSIGNAL)
-        #define SOCKET_NOSIGNAL MSG_NOSIGNAL
-    #else
-        #define SOCKET_NOSIGNAL 0
-    #endif
-
+#if defined(SOCKET_NOSIGNAL)
+    #define AMQ_SEND_OPTS SOCKET_NOSIGNAL
+#elif defined(MSG_NOSIGNAL)
+    #define AMQ_SEND_OPTS MSG_NOSIGNAL
+#else
+    #define AMQ_SEND_OPTS 0
 #endif
 
 using namespace activemq::network;
@@ -68,7 +64,7 @@ void SocketOutputStream::write( const unsigned char* buffer, int len )
     throw (IOException)
 {
     int remaining = len;
-    int sendOpts = SOCKET_NOSIGNAL;
+    int sendOpts = AMQ_SEND_OPTS;
 
     if( debug ){
         printf("SocketOutputStream:write(), numbytes:%d -", len);

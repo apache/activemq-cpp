@@ -135,6 +135,21 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
             "Socket::connect- Port out of range: %d", port );
     }
     
+#ifdef SO_NOSIGPIPE
+    {
+        int optval = 1;
+        if( ::setsockopt( socketHandle, 
+                          SOL_SOCKET, SO_NOSIGPIPE, 
+                          (char*)&optval, 
+                          sizeof(optval)) < 0 )
+        {
+            close();
+            throw SocketException ( __FILE__, __LINE__, 
+                "Socket::connect- Failed setting SO_NOSIGPIPE: %s", SocketError::getErrorString().c_str() );
+        }
+    }
+#endif
+    
     sockaddr_in target_addr;
     target_addr.sin_family = AF_INET;
     target_addr.sin_port = htons( ( short ) port );
