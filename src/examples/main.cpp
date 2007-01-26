@@ -82,7 +82,7 @@ public:
 
             // Create a MessageProducer from the Session to the Topic or Queue
             producer = session->createProducer( destination );
-            producer->setDeliveryMode( DeliveryMode::NON_PERSISTANT );
+            producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
             
             // Create the Thread Id String
             string threadIdStr = Integer::toString( Thread::getId() );
