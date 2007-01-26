@@ -135,19 +135,19 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
             "Socket::connect- Port out of range: %d", port );
     }
     
-#ifdef SO_NOSIGPIPE
+#ifdef SO_NOSIGPIPE // Don't want to get a SIGPIPE on FreeBSD and Mac OS X
+
+    int optval = 1;
+    if( ::setsockopt( socketHandle, 
+                      SOL_SOCKET, SO_NOSIGPIPE, 
+                      (char*)&optval, 
+                      sizeof(optval)) < 0 )
     {
-        int optval = 1;
-        if( ::setsockopt( socketHandle, 
-                          SOL_SOCKET, SO_NOSIGPIPE, 
-                          (char*)&optval, 
-                          sizeof(optval)) < 0 )
-        {
-            close();
-            throw SocketException ( __FILE__, __LINE__, 
-                "Socket::connect- Failed setting SO_NOSIGPIPE: %s", SocketError::getErrorString().c_str() );
-        }
+        close();
+        throw SocketException ( __FILE__, __LINE__, 
+            "Socket::connect- Failed setting SO_NOSIGPIPE: %s", SocketError::getErrorString().c_str() );
     }
+    
 #endif
     
     sockaddr_in target_addr;
