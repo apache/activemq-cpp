@@ -50,9 +50,10 @@
 				ObjectFile="$(IntDir)\$(ProjectName)\"
 				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
 				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
-				WarningLevel="2"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4290, 4101"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
