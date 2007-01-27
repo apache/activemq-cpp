@@ -607,14 +607,14 @@ namespace transport{
                     CPPUNIT_ASSERT( requesters[ix].cmd.getCommandId() == requesters[ix].resp->getCorrelationId() );
                 }
 
-                concurrent::Thread::sleep( 40 );
+                concurrent::Thread::sleep( 60 );
                 synchronized( &listener.mutex )
                 {
                     unsigned int count = 0;
 
                     while( listener.commands.size() != numRequests )
                     {
-                        listener.mutex.wait( 55 );
+                        listener.mutex.wait( 75 );
 
                         ++count;
 
