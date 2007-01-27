@@ -60,14 +60,40 @@ TcpTransport::TcpTransport( const activemq::util::Properties& properties,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::~TcpTransport(void)
+TcpTransport::~TcpTransport()
 {
     try
     {
-        socket->close();
-        delete socket;
+        try{
+            close();
+        } catch( cms::CMSException& ex ){ /* Absorb */ }
+        
+        if( socket != NULL ) {
+            delete socket;
+            socket = NULL;
+        }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::close() throw( cms::CMSException ) {
+    
+    try
+    {
+        // Invoke the paren't close first.
+        TransportFilter::close();
+        
+        // Close the socket.
+        if( socket != NULL ) {
+            socket->close();
+        }
+    }
+    AMQ_CATCH_RETHROW( SocketException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
+    AMQ_CATCHALL_THROW( SocketException )
+}
+
+
 

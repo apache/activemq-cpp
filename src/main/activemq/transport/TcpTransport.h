@@ -52,7 +52,13 @@ namespace transport{
                       Transport* next, 
                       const bool own = true );
                       
-    	virtual ~TcpTransport(void);
+    	virtual ~TcpTransport();
+        
+        /**
+         * Delegates to the superclass and then closes the socket.
+         * @throws CMSException if errors occur.
+         */
+        virtual void close() throw( cms::CMSException );
 
     };
 
