@@ -40,6 +40,17 @@ namespace util{
         static SimpleProperties parseQuery( std::string query )
             throw ( exceptions::IllegalArgumentException );
          
+        /**
+         * Parse the Query portion of a URI String and return a Simple
+         * Properties object containing the parameter names as keys, and
+         * the parameter values and values of the Properties.
+         * @param query - the query string to parse.
+         * @param properties - object pointer to get the parsed output.
+         */
+        static void parseQuery( std::string query,
+                                util::Properties* properties )
+            throw ( exceptions::IllegalArgumentException );
+
     };
 
 }}

@@ -30,8 +30,29 @@ SimpleProperties URISupport::parseQuery( std::string query )
 {
     try {
         
-        SimpleProperties map;
+        SimpleProperties options;        
+        URISupport::parseQuery( query, &options );
+        return options;
+    }
+    AMQ_CATCH_RETHROW( IllegalArgumentException )
+    AMQ_CATCH_EXCEPTION_CONVERT( NoSuchElementException, IllegalArgumentException )
+    AMQ_CATCHALL_THROW( IllegalArgumentException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URISupport::parseQuery( std::string query,
+                             util::Properties* properties )
+    throw ( exceptions::IllegalArgumentException ) {
+
+    try {
         
+        if( properties == NULL ) {
+            throw IllegalArgumentException(
+                __FILE__,
+                __LINE__,
+                "URISupport::parseQuery - Can't pass in a null properties object" );
+        }
+
         // strip the initial "?"
         size_t pos = query.find_first_of( "?" );
         if( pos != std::string::npos ) {
@@ -70,13 +91,10 @@ SimpleProperties URISupport::parseQuery( std::string query )
             }
             
             // Store them.
-            map.setProperty( key, value );
+            properties->setProperty( key, value );
         }
-    
-        return map;
     }
     AMQ_CATCH_RETHROW( IllegalArgumentException )
     AMQ_CATCH_EXCEPTION_CONVERT( NoSuchElementException, IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )
 }
-
