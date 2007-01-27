@@ -145,7 +145,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
         }
         
         // Create the socket.
-        checkResult( socketHandle = ::socket(AF_INET, SOCK_STREAM, 0) );
+        checkResult( (int)(socketHandle = ::socket(AF_INET, SOCK_STREAM, 0)) );
        
         // Check port value.
         if (port <= 0 || port > 65535) {
