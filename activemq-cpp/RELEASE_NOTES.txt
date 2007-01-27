@@ -1,0 +1,58 @@
+=========================================================================
+==  Release Notes for ActiveMQ CPP 1.1                                 ==
+=========================================================================
+
+== Overview ==
+
+This version fixes several bugs and adds a few new features.
+
+    * Updated interface for cms::BytesMessage - more JMS-like.
+    * Updated the MessageProducer interface to add multiple versions of the send method
+    * Fixed several memory leaks
+    * Now run on linux, win32, OS X, and Solaris
+    * Persistence is fixed
+    * Fixed deadlocks when closing a connection
+    * Fixed message expiration
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-3] - Receiving a BytesMessage sent from Java using CMS listener causes exception thrown in class BufferedInputStream
+    * [AMQCPP-14] - CMSExpiration not handled properly in ActiveMQProducer
+    * [AMQCPP-18] - ActiveMQConnection.close() causes app to crash
+    * [AMQCPP-20] - Deadlock when in stomp connector close
+    * [AMQCPP-22] - Use common name for ActiveMQ C++ library on Windows and Linux
+    * [AMQCPP-23] - active-cpp persistent problem
+    * [AMQCPP-25] - Bus error on Solaris OS from DataInput and DataOutput streams
+    * [AMQCPP-26] - Memory leaks reported by Rational Purify when running unit tests
+    * [AMQCPP-27] - Issues reported by Valgrind when running unit tests
+    * [AMQCPP-28] - Purify and Valgrind warnings when running integration tests
+    * [AMQCPP-29] - Projects in MSVC build building on top of one another
+    * [AMQCPP-35] - Stomp content-length header not being set on BytesMessage
+    * [AMQCPP-39] - Some AMQCPP includes not installed when doing make install on Linux
+    * [AMQCPP-41] - Byte swap on float and double truncates values
+    * [AMQCPP-43] - Crash when getting string property that doesn't exist
+
+Improvement
+
+    * [AMQCPP-16] - CMS API needs updates to more closely follow JMS API
+    * [AMQCPP-33] - Integration tests crash if broker isn't running
+    * [AMQCPP-36] - Cleanup whitespace and member function definitions in header files
+    * [AMQCPP-42] - A few more strict aliasing warnings
+
+New Feature
+
+    * [AMQCPP-15] - Add other versions of send method to CMS MessageProducer
+    * [AMQCPP-37] - readUTF and writeUTF for BytesMessage
+
+Task
+
+    * [AMQCPP-45] - Update configure.ac with release version
+
+Wish
+
+    * [AMQCPP-31] - Consider giving the unix #define a more unique name
+    * [AMQCPP-32] - Stomp messages don't preserve property types: please document this behaviour
