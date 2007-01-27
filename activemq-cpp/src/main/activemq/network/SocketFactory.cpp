@@ -77,13 +77,13 @@ Socket* SocketFactory::createSocket(const Properties& properties)
             properties.getProperty( "soKeepAlive", "false" ) == "true";   
       
         // Get the socket receive buffer size.
-        int soReceiveBufferSize = 2000000;
-        dummy = properties.getProperty( "soReceiveBufferSize", "2000000" );  
+        int soReceiveBufferSize = -1;
+        dummy = properties.getProperty( "soReceiveBufferSize", "-1" );  
         sscanf( dummy.c_str(), "%d", &soReceiveBufferSize );
       
         // Get the socket send buffer size.
-        int soSendBufferSize = 2000000;
-        dummy = properties.getProperty( "soSendBufferSize", "2000000" );  
+        int soSendBufferSize = -1;
+        dummy = properties.getProperty( "soSendBufferSize", "-1" );  
         sscanf( dummy.c_str(), "%d", &soSendBufferSize );
       
         // Now that we have all the elements that we wanted - let's do it!
@@ -92,19 +92,37 @@ Socket* SocketFactory::createSocket(const Properties& properties)
         // The buffered socket will own the TcpSocket instance, and will
         // clean it up when it is cleaned up.
         TcpSocket* tcpSocket = new TcpSocket();
-        BufferedSocket* socket = 
+        BufferedSocket* bufferedSocket = 
             new BufferedSocket(tcpSocket, inputBufferSize, outputBufferSize);
-      
-        // Connect the socket.
-        socket->connect( host.c_str(), port );
-      
-        // Set the socket options.
-        socket->setSoLinger( soLinger );
-        socket->setKeepAlive( soKeepAlive );
-        socket->setReceiveBufferSize( soReceiveBufferSize );
-        socket->setSendBufferSize( soSendBufferSize );
 
-        return socket;
+        try
+        {
+            // Connect the socket.
+            bufferedSocket->connect( host.c_str(), port );
+
+            // Set the socket options.
+            bufferedSocket->setSoLinger( soLinger );
+            bufferedSocket->setKeepAlive( soKeepAlive );
+
+            if( soReceiveBufferSize > 0 ){
+                bufferedSocket->setReceiveBufferSize( soReceiveBufferSize );
+            }
+
+            if( soSendBufferSize > 0 ){
+                bufferedSocket->setSendBufferSize( soSendBufferSize );
+            }
+        }
+        catch ( SocketException& ex )
+        {
+            ex.setMark( __FILE__, __LINE__ );
+            try{
+                delete bufferedSocket;
+            } catch( SocketException& ex2 ){ /* Absorb */ }
+            
+            throw ex;
+        }
+
+        return bufferedSocket;
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )

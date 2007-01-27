@@ -28,7 +28,13 @@ using namespace activemq::exceptions;
 BufferedSocket::BufferedSocket( Socket* socket,
                                 int inputBufferSize,
                                 int outputBufferSize,
-                                bool own )
+                                bool own ) :
+    socket(NULL),
+    own(false),
+    inputStream(NULL),
+    outputStream(NULL),
+    inputBufferSize(0),
+    outputBufferSize(0)
 {
     if(inputBufferSize < 0 || outputBufferSize < 0 )
     {
@@ -58,27 +64,10 @@ BufferedSocket::~BufferedSocket()
 {
     try
     {
-        if( outputStream )
-        {
-            // Ensure all data is written
-            outputStream->flush();
-        }
-
-        // Close the socket      
-        socket->close();
-         
-        // if we own it, delete it.
-        if( own )
-        {
-            delete socket;
-        }
-      
-        // Clean up our streams.
-        delete inputStream;
-        delete outputStream;
+        close();       
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,18 +101,32 @@ void BufferedSocket::close() throw( cms::CMSException )
 {
     try
     {
-        // Ensure all data writen
-        outputStream->flush();
-      
-        // Close the Socket
-        socket->close();
-      
-        // Remove old stream, recreate if reconnected
-        delete inputStream;
-        delete outputStream;
-      
-        inputStream = NULL;
-        outputStream = NULL;
+        if( outputStream != NULL )
+        {
+            // Ensure all data is written
+            outputStream->flush();
+            
+            delete outputStream;
+            outputStream = NULL;
+        }
+        
+        if( inputStream != NULL ){
+            delete inputStream;
+            inputStream = NULL;
+        }
+
+        if( socket != NULL ){
+            // Close the socket
+            try{   
+                socket->close();
+            } catch( cms::CMSException& ex ){ /* Absorb */ }
+             
+            // if we own it, delete it.
+            if( own ) {
+                delete socket;                
+            }
+            socket = NULL;
+        }
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )

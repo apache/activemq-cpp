@@ -87,7 +87,11 @@ namespace network{
          * Indicates whether or not this socket is connected to a destination.
          * @return true if connected
          */
-        virtual bool isConnected() const{
+        virtual bool isConnected() const{            
+            if( socket == NULL ){
+                return false;
+            }
+            
             return socket->isConnected();
         }
 
@@ -113,6 +117,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual int getSoLinger() const throw( SocketException ){
+            checkSocket();
             return socket->getSoLinger();
         }
       
@@ -122,6 +127,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual void setSoLinger( int linger ) throw( SocketException ){
+            checkSocket();
             socket->setSoLinger( linger );
         }
       
@@ -131,6 +137,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual bool getKeepAlive() const throw( SocketException ){
+            checkSocket();
             return socket->getKeepAlive();
         }
       
@@ -140,6 +147,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual void setKeepAlive( bool keepAlive ) throw( SocketException ){
+            checkSocket();
             socket->setKeepAlive( keepAlive );
         }
       
@@ -149,6 +157,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual int getReceiveBufferSize() const throw( SocketException ){
+            checkSocket();
             return socket->getReceiveBufferSize();
         }
       
@@ -158,6 +167,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual void setReceiveBufferSize( int size ) throw( SocketException ){
+            checkSocket();
             socket->setReceiveBufferSize( size );
         }
       
@@ -167,6 +177,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual bool getReuseAddress() const throw( SocketException ){
+            checkSocket();
             return socket->getReuseAddress();
         }
       
@@ -176,6 +187,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual void setReuseAddress( bool reuse ) throw( SocketException ){
+            checkSocket();
             socket->setReuseAddress( reuse );
         }
       
@@ -185,6 +197,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual int getSendBufferSize() const throw( SocketException ){
+            checkSocket();
             return socket->getSendBufferSize();
         }
       
@@ -194,6 +207,7 @@ namespace network{
          * @throws SocketException if the operation fails.
          */
         virtual void setSendBufferSize( int size ) throw( SocketException ){
+            checkSocket();
             socket->setSendBufferSize( size );
         }
       
@@ -203,6 +217,7 @@ namespace network{
          * @throws SocketException Thrown if unable to retrieve the information.
          */
         virtual int getSoTimeout() const throw( SocketException ){
+            checkSocket();
             return socket->getSoTimeout();
         }
       
@@ -212,7 +227,16 @@ namespace network{
          * @throws SocketException Thrown if unable to set the information.
          */
         virtual void setSoTimeout( int timeout ) throw( SocketException ){
+            checkSocket();
             socket->setSoTimeout( timeout );
+        }
+        
+    private:
+    
+        void checkSocket() const throw ( SocketException ) {
+            if( socket == NULL ) {
+                throw SocketException( __FILE__, __LINE__, "socket is NULL" );
+            }
         }
 
     };

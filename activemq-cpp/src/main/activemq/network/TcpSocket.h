@@ -57,8 +57,10 @@ namespace network{
    
         /** 
          * Construct a non-connected socket.
+         * @throws SocketException thrown one windows if the static initialization
+         * call to WSAStartup was not successful.
          */
-        TcpSocket();
+        TcpSocket() throw (SocketException);
  
         /** 
          * Construct a connected or bound socket based on given
@@ -231,6 +233,8 @@ namespace network{
           
             static StaticSocketInitializer staticSocketInitializer;
         #endif
+        
+        void checkResult( int value ) const throw (SocketException);
    
     };
 
