@@ -46,6 +46,7 @@ cc_sources = \
   activemq/connector/openwire/utils/HexTableTest.cpp \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
+  activemq/connector/openwire/commands/ActiveMQDestinationTest2.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQDestinationTest.cpp \
