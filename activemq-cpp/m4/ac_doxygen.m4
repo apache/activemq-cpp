@@ -1,7 +1,19 @@
-# This file is part of Autoconf.                       -*- Autoconf -*-
+#
+# Copyright 2007 Oren Ben-Kiki
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.  See the License for the specific language governing
+# permissions and limitations under the License.
+#
 
-# Copyright (C) 2004 Oren Ben-Kiki
-# This file is distributed under the same terms as the Autoconf macro files.
 
 # Generate automatic documentation using Doxygen. Works in concert with the
 # aminclude.m4 file and a compatible doxygen configuration file. Defines the
