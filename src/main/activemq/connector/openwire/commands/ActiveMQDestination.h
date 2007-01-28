@@ -24,6 +24,8 @@
 #endif
 
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
+#include <activemq/util/SimpleProperties.h>
+#include <cms/Destination.h>
 
 #include <vector>
 #include <string>
@@ -43,6 +45,11 @@ namespace commands{
             ACTIVEMQ_TEMPORARY_TOPIC = 2,
             ACTIVEMQ_QUEUE = 3,
             ACTIVEMQ_TEMPORARY_QUEUE = 4
+        };
+
+        struct DestinationFilter{
+            static const std::string ANY_CHILD;
+            static const std::string ANY_DESCENDENT;
         };
         
         /**
@@ -81,7 +88,7 @@ namespace commands{
         std::string orderedTarget;
         
         std::string physicalName;
-        std::map<std::string, std::string> options;
+        util::SimpleProperties options;
 
     public:
 
@@ -90,7 +97,8 @@ namespace commands{
     public:
 
         ActiveMQDestination();
-        virtual ~ActiveMQDestination();
+        ActiveMQDestination( const std::string& physicalName );
+        virtual ~ActiveMQDestination() {}
 
         /**
          * Copy the contents of the passed object into this objects
@@ -116,28 +124,26 @@ namespace commands{
          * Set this destination's physical name
          * @returns const string containing the name
          */
-        virtual void setPhysicalName( const std::string& physicalName ){
-            this->physicalName = physicalName;
-        }
+        virtual void setPhysicalName( const std::string& physicalName );
 
         /**
          * @return Returns the advisory.
          */
-        virtual bool isAdvisory() {
+        virtual bool isAdvisory() const {
             return advisory;
         }
         
         /**
          * @param advisory The advisory to set.
          */
-        void setAdvisory( bool advisory ){
+        virtual void setAdvisory( bool advisory ){
             this->advisory = advisory;
         }
         
         /**
          * @return true if this is a destination for Consumer advisories
          */
-        bool isConsumerAdvisory() {
+        virtual bool isConsumerAdvisory() const {
             return isAdvisory() && 
                    physicalName.find(CONSUMER_ADVISORY_PREFIX) == 0;
         }
@@ -145,7 +151,7 @@ namespace commands{
         /**
          * @return true if this is a destination for Producer advisories
          */
-        bool isProducerAdvisory() {
+        virtual bool isProducerAdvisory() const {
             return isAdvisory() && 
                    physicalName.find(PRODUCER_ADVISORY_PREFIX) == 0;
         }
@@ -153,7 +159,7 @@ namespace commands{
         /**
          * @return true if this is a destination for Connection advisories
          */
-        bool isConnectionAdvisory() {
+        virtual bool isConnectionAdvisory() const {
             return isAdvisory() && 
                    physicalName.find(CONNECTION_ADVISORY_PREFIX) == 0;
         }
@@ -161,43 +167,120 @@ namespace commands{
         /**
          * @return Returns the exclusive.
          */
-        bool isExclusive() {
+        virtual bool isExclusive() const {
             return exclusive;
         }
         
         /**
          * @param exclusive The exclusive to set.
          */
-        void setExclusive( bool exclusive ) {
+        virtual void setExclusive( bool exclusive ) {
             this->exclusive = exclusive;
         }
         
         /**
          * @return Returns the ordered.
          */
-        bool isOrdered() {
+        virtual bool isOrdered() const {
             return ordered;
         }
 
         /**
          * @param ordered The ordered to set.
          */
-        void setOrdered( bool ordered ) {
+        virtual void setOrdered( bool ordered ) {
             this->ordered = ordered;
         }
 
         /**
          * @return Returns the orderedTarget.
          */
-        std::string getOrderedTarget() {
+        virtual std::string getOrderedTarget() const {
             return orderedTarget;
         }
 
         /**
          * @param orderedTarget The orderedTarget to set.
          */
-        void setOrderedTarget( const std::string& orderedTarget) {
+        virtual void setOrderedTarget( const std::string& orderedTarget) {
             this->orderedTarget = orderedTarget;
+        }
+
+    public:
+    
+        /**
+         * Returns the Type of Destination that this object represents
+         * @returns int type qualifier.
+         */
+        virtual cms::Destination::DestinationType getDestinationType() const = 0;
+    
+        /**
+         * Create a temporary name from the clientId
+         *
+         * @param clientId
+         * @return
+         */
+        static std::string CreateTemporaryName( 
+            const std::string& clientId ) {
+
+            return TEMP_PREFIX + clientId + TEMP_POSTFIX;
+        }
+        
+        /**
+         * From a temporary destination find the clientId of the Connection that created it
+         *
+         * @param destination
+         * @return the clientId or null if not a temporary destination
+         */
+        static std::string getClientId( const ActiveMQDestination* destination );
+
+        /**
+         * Returns true if a temporary Destination
+         * @return true/false
+         */        
+        virtual bool isTemporary() const {
+            return getDestinationType() == cms::Destination::TEMPORARY_TOPIC ||
+                   getDestinationType() == cms::Destination::TEMPORARY_QUEUE;
+        }
+        
+        /**
+         * Returns true if a Topic Destination
+         * @return true/false
+         */        
+        virtual bool isTopic() const {
+            return getDestinationType() == cms::Destination::TOPIC || 
+                   getDestinationType() == cms::Destination::TEMPORARY_TOPIC;
+        }
+        
+        /**
+         * Returns true if a Queue Destination
+         * @return true/false
+         */
+        virtual bool isQueue() const {
+            return !isTopic();
+        }
+        
+        /**
+         * Returns true if this destination represents a collection of
+         * destinations; allowing a set of destinations to be published to or 
+         * subscribed from in one CMS operation.
+         * <p/>
+         * If this destination is a composite then you can call 
+         * {@link #getChildDestinations()}
+         * to return the list of child destinations.
+         * @return true if this destination represents a collection of child 
+         *         destinations.
+         */
+        virtual bool isComposite() const {
+            return physicalName.find_first_of( COMPOSITE_SEPARATOR ) > 0;
+        }
+
+        /**
+         * @return true if the destination matches multiple possible destinations
+         */
+        virtual bool isWildcard() const {
+            return physicalName.find_first_of( DestinationFilter::ANY_CHILD ) != std::string::npos ||
+                   physicalName.find_first_of( DestinationFilter::ANY_DESCENDENT ) != std::string::npos;
         }
 
     };

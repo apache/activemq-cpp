@@ -88,6 +88,15 @@ namespace commands{
             return std::vector<unsigned char>(); 
         }
 
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src ) {
+            // Nothing to do here
+        }
+
     };
 
 }}}}
