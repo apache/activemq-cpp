@@ -284,6 +284,13 @@ namespace commands{
             return physicalName.find_first_of( DestinationFilter::ANY_CHILD ) != std::string::npos ||
                    physicalName.find_first_of( DestinationFilter::ANY_DESCENDENT ) != std::string::npos;
         }
+        
+        /**
+         * @returns a reference (const) to the options properties for this Dest.
+         */
+        const activemq::util::Properties& getOptions() const {
+            return options;
+        }
 
     };
 
