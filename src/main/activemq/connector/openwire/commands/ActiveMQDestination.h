@@ -206,21 +206,15 @@ namespace commands{
             this->orderedTarget = orderedTarget;
         }
 
-    public:
-    
-        /**
-         * Returns the Type of Destination that this object represents
-         * @returns int type qualifier.
-         */
-        virtual cms::Destination::DestinationType getDestinationType() const = 0;
-    
+    public:  // Statics
+        
         /**
          * Create a temporary name from the clientId
          *
          * @param clientId
          * @return
          */
-        static std::string CreateTemporaryName( 
+        static std::string createTemporaryName( 
             const std::string& clientId ) {
 
             return TEMP_PREFIX + clientId + TEMP_POSTFIX;
@@ -233,6 +227,14 @@ namespace commands{
          * @return the clientId or null if not a temporary destination
          */
         static std::string getClientId( const ActiveMQDestination* destination );
+
+    public:
+    
+        /**
+         * Returns the Type of Destination that this object represents
+         * @returns int type qualifier.
+         */
+        virtual cms::Destination::DestinationType getDestinationType() const = 0;
 
         /**
          * Returns true if a temporary Destination

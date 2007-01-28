@@ -66,6 +66,19 @@ namespace commands{
             }
         };
         
+        class MyTempDestination : public MyDestination {
+        public:
+
+            /**
+             * Returns the Type of Destination that this object represents
+             * @returns int type qualifier.
+             */
+            virtual cms::Destination::DestinationType getDestinationType() const {
+                return cms::Destination::TEMPORARY_TOPIC;
+            }
+
+        };
+
     public:
     
     	ActiveMQDestinationTest() {}

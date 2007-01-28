@@ -113,12 +113,12 @@ std::string ActiveMQDestination::getClientId(
     std::string answer = "";
     if( destination != NULL && destination->isTemporary() ) {
         std::string name = destination->getPhysicalName();
-        size_t start = name.find_first_of( TEMP_PREFIX );
+        size_t start = name.find( TEMP_PREFIX );
         if( start != std::string::npos ) {
             start += TEMP_PREFIX.length();
-            size_t stop = name.find_last_of( TEMP_POSTFIX );
+            size_t stop = name.rfind( TEMP_POSTFIX );
             if( stop > start && stop < name.length() ) {
-                answer = name.substr( start, stop );
+                answer = name.substr( start, stop-start );
             }
         }
     }
