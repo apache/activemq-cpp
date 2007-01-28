@@ -48,6 +48,10 @@ cc_sources = \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
   activemq/connector/openwire/commands/ActiveMQDestinationTest2.cpp \
+  activemq/connector/openwire/commands/ActiveMQTopicTest.cpp \
+  activemq/connector/openwire/commands/ActiveMQQueueTest.cpp \
+  activemq/connector/openwire/commands/ActiveMQTempTopicTest.cpp \
+  activemq/connector/openwire/commands/ActiveMQTempQueueTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQDestinationTest.cpp \
