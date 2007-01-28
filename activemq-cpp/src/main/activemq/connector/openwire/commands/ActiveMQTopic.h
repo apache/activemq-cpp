@@ -120,7 +120,9 @@ namespace commands{
          * but necessary due to C++ restrictions.  
          * @return const reference to a properties object.
          */
-        virtual const activemq::util::Properties& getProperties(void) const;
+        virtual const activemq::util::Properties& getProperties(void) const {
+            return this->getOptions();
+        }
 
     public:  // CMS Topic
 
