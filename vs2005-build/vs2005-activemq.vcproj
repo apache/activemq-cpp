@@ -699,6 +699,34 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="commands"
+						>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQDestination.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQDestination.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\BaseCommand.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\BaseCommand.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\BaseDataStructure.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\BooleanExpression.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter

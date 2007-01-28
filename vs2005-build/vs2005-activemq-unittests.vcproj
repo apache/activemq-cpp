@@ -434,10 +434,26 @@
 					<Filter
 						Name="commands"
 						>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQDestinationTest2.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQDestinationTest2.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="marshal"
 						>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\marshal\BaseDataStreamMarshallerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\marshal\BaseDataStreamMarshallerTest.h"
+							>
+						</File>
 						<File
 							RelativePath="..\src\test\activemq\connector\openwire\marshal\PrimitiveMapMarshallerTest.cpp"
 							>
