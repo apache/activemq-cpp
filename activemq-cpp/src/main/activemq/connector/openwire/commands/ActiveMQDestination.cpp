@@ -16,9 +16,11 @@
  */
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/util/URISupport.h>
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
@@ -36,17 +38,43 @@ const std::string ActiveMQDestination::DEFAULT_ORDERED_TARGET = "coordinator";
 const std::string ActiveMQDestination::TEMP_PREFIX = "{TD{";
 const std::string ActiveMQDestination::TEMP_POSTFIX = "}TD}";
 const std::string ActiveMQDestination::COMPOSITE_SEPARATOR = ",";
+const std::string ActiveMQDestination::DestinationFilter::ANY_CHILD = ">";
+const std::string ActiveMQDestination::DestinationFilter::ANY_DESCENDENT = "*";
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::ActiveMQDestination()
-{
+ActiveMQDestination::ActiveMQDestination() {
+    
     this->physicalName = "";
     this->orderedTarget = DEFAULT_ORDERED_TARGET;
+    this->exclusive = false;
+    this->ordered = false;
+    this->advisory = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination::~ActiveMQDestination()
-{
+ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) {
+
+    this->setPhysicalName( physicalName );
+    this->orderedTarget = DEFAULT_ORDERED_TARGET;
+    this->exclusive = false;
+    this->ordered = false;
+    this->advisory = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
+    
+    this->physicalName = physicalName;
+
+    size_t pos = physicalName.find_first_of('?');
+    if( pos != string::npos ) {
+
+        std::string optstring = physicalName.substr( pos + 1 );
+        this->physicalName = physicalName.substr( 0, pos );
+        URISupport::parseQuery( optstring, &options );
+    }
+
+    this->advisory = physicalName.find_first_of( ADVISORY_PREFIX ) == 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,10 +94,33 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
     }
     
     this->setPhysicalName( srcPtr->getPhysicalName() );
+    this->setAdvisory( srcPtr->isAdvisory() );
+    this->setOrdered( srcPtr->isOrdered() );
+    this->setExclusive( srcPtr->isExclusive() );
+    this->setOrderedTarget( srcPtr->getOrderedTarget() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQDestination::getDataStructureType() const
 {
     return ActiveMQDestination::ID_ACTIVEMQDESTINATION; 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQDestination::getClientId( 
+    const ActiveMQDestination* destination )
+{
+    std::string answer = "";
+    if( destination != NULL && destination->isTemporary() ) {
+        std::string name = destination->getPhysicalName();
+        size_t start = name.find_first_of( TEMP_PREFIX );
+        if( start != std::string::npos ) {
+            start += TEMP_PREFIX.length();
+            size_t stop = name.find_last_of( TEMP_POSTFIX );
+            if( stop > start && stop < name.length() ) {
+                answer = name.substr( start, stop );
+            }
+        }
+    }
+    return answer;
 }
