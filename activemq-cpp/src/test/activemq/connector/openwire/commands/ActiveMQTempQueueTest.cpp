@@ -20,6 +20,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTempQueueTest );
 
 #include <activemq/util/Guid.h>
+#include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
 
 using namespace std;
 using namespace activemq;
@@ -32,4 +33,7 @@ using namespace activemq::connector::openwire::commands;
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempQueueTest::test()
 {
+    ActiveMQTempQueue myQueue;
+    
+    CPPUNIT_ASSERT( myQueue.getDestinationType() == cms::Destination::TEMPORARY_QUEUE );
 }
