@@ -19,6 +19,8 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQDestinationTest );
 
+#include <activemq/util/Guid.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
@@ -42,5 +44,37 @@ void ActiveMQDestinationTest::test()
     CPPUNIT_ASSERT( dest.isExclusive() == true );
     CPPUNIT_ASSERT( dest.isAdvisory() == true );
     CPPUNIT_ASSERT( dest.isConsumerAdvisory() == false );
+    CPPUNIT_ASSERT( dest.isProducerAdvisory() == false );
+    CPPUNIT_ASSERT( dest.isConnectionAdvisory() == false );
+
+    MyDestination dest2;
+    dest2.copyDataStructure( &dest );
+
+    CPPUNIT_ASSERT( dest2.getPhysicalName().find( "test" ) != string::npos );
+    CPPUNIT_ASSERT( dest2.isAdvisory() == true );
+    CPPUNIT_ASSERT( dest2.isExclusive() == true );
+    CPPUNIT_ASSERT( dest2.isAdvisory() == true );
+    CPPUNIT_ASSERT( dest2.isConsumerAdvisory() == false );
+    CPPUNIT_ASSERT( dest2.isProducerAdvisory() == false );
+
+    MyDestination* dest3 = NULL;
+    dest3 = dynamic_cast<MyDestination*>( dest.cloneDataStructure() );
+
+    CPPUNIT_ASSERT( dest3 != NULL );
+    CPPUNIT_ASSERT( dest3->getPhysicalName().find( "test" ) != string::npos );
+    CPPUNIT_ASSERT( dest3->isAdvisory() == true );
+    CPPUNIT_ASSERT( dest3->isExclusive() == true );
+    CPPUNIT_ASSERT( dest3->isAdvisory() == true );
+    CPPUNIT_ASSERT( dest3->isConsumerAdvisory() == false );
+    CPPUNIT_ASSERT( dest3->isProducerAdvisory() == false );
+    
+    std::string clientId = Guid::createGUIDString();
+    std::string result = dest.createTemporaryName( clientId );
+    CPPUNIT_ASSERT( result.find( clientId ) != string::npos );
+    dest.setPhysicalName( result );
+    CPPUNIT_ASSERT( clientId != dest.getClientId( &dest ) );
+    MyTempDestination tmpDest;
+    tmpDest.setPhysicalName( result );
+    CPPUNIT_ASSERT( clientId == ActiveMQDestination::getClientId( &tmpDest ) );
 
 }
