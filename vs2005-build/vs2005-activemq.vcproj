@@ -711,6 +711,46 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQQueue.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQQueue.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempDestination.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempDestination.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempQueue.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempQueue.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempTopic.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTempTopic.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTopic.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\commands\ActiveMQTopic.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\activemq\connector\openwire\commands\BaseCommand.cpp"
 							>
 						</File>
