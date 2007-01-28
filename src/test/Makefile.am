@@ -43,6 +43,7 @@ cc_sources = \
   activemq/connector/stomp/StompFrameTest.cpp \
   activemq/connector/stomp/StompSessionManagerTest.cpp \
   activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
+  activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
   activemq/connector/openwire/utils/HexTableTest.cpp \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
