@@ -78,3 +78,19 @@ void ActiveMQDestinationTest::test()
     CPPUNIT_ASSERT( clientId == ActiveMQDestination::getClientId( &tmpDest ) );
 
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQDestinationTest::testOptions(){
+
+    MyDestination dest;
+
+    dest.setPhysicalName( "test?option1=test1&option2=test2" );
+
+    const util::Properties& properties = dest.getOptions();
+    
+    CPPUNIT_ASSERT( properties.hasProperty( "option1" ) == true );
+    CPPUNIT_ASSERT( properties.hasProperty( "option2" ) == true );
+
+    CPPUNIT_ASSERT( std::string( properties.getProperty( "option1" ) ) == "test1" );
+    CPPUNIT_ASSERT( std::string( properties.getProperty( "option2" ) ) == "test2" );
+}
