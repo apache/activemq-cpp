@@ -25,7 +25,9 @@ using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() : 
-    ActiveMQMessageBase< cms::BytesMessage >()
+    ActiveMQMessageBase< cms::BytesMessage >(),
+    dataInputStream( &inputStream ),
+    dataOutputStream( &outputStream )
 {
 }
 

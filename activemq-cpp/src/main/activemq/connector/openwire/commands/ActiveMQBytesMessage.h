@@ -25,6 +25,10 @@
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <activemq/util/Config.h>
+#include <activemq/io/ByteArrayInputStream.h>
+#include <activemq/io/ByteArrayOutputStream.h>
+#include <activemq/io/DataInputStream.h>
+#include <activemq/io/DataOutputStream.h>
 #include <cms/BytesMessage.h>
 #include <vector>
 #include <string>
@@ -341,6 +345,37 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException );
+
+    private:
+
+        /**
+         * Flag that indicates what state the stream is in.  If true, the
+         * message may only be read from.  If false, the message may only be
+         * written to.
+         */
+        bool readOnly;
+        
+        /**
+         * InputStream that wraps around the command's content when in 
+         * read-only mode.
+         */
+        io::ByteArrayInputStream inputStream;
+        
+        /**
+         * OutputStream that wraps around the command's content when in 
+         * write-only mode.
+         */
+        io::ByteArrayOutputStream outputStream;
+        
+        /**
+         * DataInputStream wrapper around the input stream.
+         */
+        io::DataInputStream dataInputStream;
+        
+        /**
+         * DataOutputStream wrapper around the output stream.
+         */
+        io::DataOutputStream dataOutputStream;
 
     };
 
