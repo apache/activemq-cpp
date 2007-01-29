@@ -32,6 +32,7 @@ namespace commands{
         
         CPPUNIT_TEST_SUITE( ActiveMQDestinationTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testOptions );
         CPPUNIT_TEST_SUITE_END();
 
         class MyDestination : public ActiveMQDestination {    
@@ -85,6 +86,7 @@ namespace commands{
     	virtual ~ActiveMQDestinationTest() {}
         
         virtual void test();
+        virtual void testOptions();
 
     };
 
