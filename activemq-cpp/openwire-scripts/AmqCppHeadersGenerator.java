@@ -158,8 +158,10 @@ out.println("");
                 !type.startsWith("std::vector") ) {
                     
                     type = type + "*";
-            } else if( property.getType().getSimpleName().equals("String") ) {
-                type = type + "&";
+            } else if( property.getType().getSimpleName().equals("String") ||
+            		   type.startsWith("std::vector") ) {
+
+            	type = type + "&";
                 constness = "const ";
             }
             
