@@ -45,14 +45,6 @@ namespace cms{
         virtual std::string getMessage() const = 0;
         
         /**
-         * Implement method from std::exception
-         * @return the const char* of <code>getMessage()</code>.
-         */
-        virtual const char * what () const throw (){
-            return getMessage().c_str();
-        }
-        
-        /**
          * Provides the stack trace for every point where
          * this exception was caught, marked, and rethrown.
          * @return vector containing stack trace strings

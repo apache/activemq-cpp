@@ -50,7 +50,7 @@ ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::~ActiveMQConsumer(void)
+ActiveMQConsumer::~ActiveMQConsumer()
 {
     try
     {
@@ -71,7 +71,8 @@ void ActiveMQConsumer::close()
             closed = true;
             
             // Identifies any errors encountered during shutdown.
-            ActiveMQException* error = NULL; 
+            bool haveException = false;
+            ActiveMQException error; 
             
             // Dispose of the Consumer Info, this should stop us from getting
             // any more messages.  This may result in message traffic
@@ -80,39 +81,41 @@ void ActiveMQConsumer::close()
             // and continue to shutdown normally.
             try{
                 session->onDestroySessionResource( this );
-            } catch( cms::CMSException& ex ){                 
-                error = new ActiveMQException( __FILE__, __LINE__, 
-                        ex.what() );
+            } catch( ActiveMQException& ex ){
+                if( !haveException ){ 
+                    ex.setMark( __FILE__, __LINE__ );                
+                    error = ex;
+                    haveException = true;
+                }
             }
             
             // Stop the asynchronous message processin thread if it's
             // running.
             try{
                 stopThread();
-            } catch ( ... ){
-                if( error != NULL ){
-                    error = new ActiveMQException( __FILE__, __LINE__, 
-                        "failed to stop the thread" );
+            } catch ( ActiveMQException& ex ){
+                if( !haveException ){ 
+                    ex.setMark( __FILE__, __LINE__ );                
+                    error = ex;
+                    haveException = true;
                 }
             }
             
             // Purge all the pending messages
             try{
                 purgeMessages();
-            } catch ( ... ){
-                if( error != NULL ){
-                    error = new ActiveMQException( __FILE__, __LINE__, 
-                        "failed to purge messages from the queue" );
+            } catch ( ActiveMQException& ex ){
+                if( !haveException ){ 
+                    ex.setMark( __FILE__, __LINE__ );                
+                    error = ex;
+                    haveException = true;
                 }
             }
             
             // If we encountered an error, propagate it.
-            if( error != NULL ){
-                ActiveMQException ex( *error );
-                delete error;
-                
-                ex.setMark( __FILE__, __LINE__ );
-                throw ex;
+            if( haveException ){
+                error.setMark( __FILE__, __LINE__ );
+                throw error;
             }
                                   
         }
@@ -122,7 +125,7 @@ void ActiveMQConsumer::close()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConsumer::getMessageSelector(void) const 
+std::string ActiveMQConsumer::getMessageSelector() const 
     throw ( cms::CMSException )
 {
     try
@@ -238,7 +241,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receiveNoWait(void) 
+cms::Message* ActiveMQConsumer::receiveNoWait() 
     throw ( cms::CMSException )
 {
     try
@@ -325,7 +328,7 @@ void ActiveMQConsumer::acknowledgeMessage( const ActiveMQMessage* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::run(void)
+void ActiveMQConsumer::run()
 {
     try
     {
@@ -423,7 +426,7 @@ void ActiveMQConsumer::dispatch( ActiveMQMessage* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::purgeMessages(void)
+void ActiveMQConsumer::purgeMessages() throw (ActiveMQException)
 {
     try
     {
@@ -462,7 +465,7 @@ void ActiveMQConsumer::onActiveMQMessage( ActiveMQMessage* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::notifyListener( Message* message ){
+void ActiveMQConsumer::notifyListener( Message* message ) throw (ActiveMQException){
     
     try
     {
@@ -481,7 +484,7 @@ void ActiveMQConsumer::notifyListener( Message* message ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::destroyMessage( Message* message ){
+void ActiveMQConsumer::destroyMessage( Message* message ) throw (ActiveMQException){
     
     try
     {
@@ -499,7 +502,7 @@ void ActiveMQConsumer::destroyMessage( Message* message ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::startThread(){
+void ActiveMQConsumer::startThread() throw (ActiveMQException) {
     
     try
     {
@@ -521,7 +524,7 @@ void ActiveMQConsumer::startThread(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::stopThread(){
+void ActiveMQConsumer::stopThread() throw (ActiveMQException) {
     
     try
     {
