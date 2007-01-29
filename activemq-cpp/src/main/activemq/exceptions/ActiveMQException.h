@@ -75,7 +75,15 @@ namespace exceptions{
         virtual std::string getMessage() const{ 
             return message; 
         }
-   
+
+        /**
+         * Implement method from std::exception
+         * @return the const char* of <code>getMessage()</code>.
+         */
+        virtual const char* what () const throw (){
+            return message.c_str();
+        }
+           
         /**
          * Sets the cause for this exception.
          * @param msg the format string for the msg.
