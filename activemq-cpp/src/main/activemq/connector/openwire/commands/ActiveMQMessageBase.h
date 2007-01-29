@@ -26,7 +26,7 @@
 #include <activemq/util/Date.h>
 #include <activemq/util/PrimitiveMap.h>
 
-namespace activenq{
+namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
@@ -40,7 +40,7 @@ namespace commands{
      */
     template< typename T>
     class ActiveMQMessageBase : public T,
-                                public Message, 
+                                public Message,
                                 public core::ActiveMQMessage {
     
     public:
@@ -72,13 +72,13 @@ namespace commands{
          * wire
          * @param wireFormat - the wireformatting controller
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat ) {
+        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
             try{
                     
                 marshalledProperties.clear();
                 if( !properties.isEmpty() )
                 {
-                    PrimitiveMapMarshaller::marshal( 
+                    marshal::PrimitiveMapMarshaller::marshal( 
                         &properties, marshalledProperties );
                 }
             }
@@ -129,6 +129,11 @@ namespace commands{
          * @returns true if message is expired.
          */
         virtual bool isExpired() const {
+            long long expireTime = this->getCMSExpiration();
+            long long currentTime = util::Date::getCurrentTimeMilliseconds();
+            if( expireTime > 0 && currentTime > expireTime ) {
+                return true;
+            }
             return false;
         }
 
@@ -158,21 +163,27 @@ namespace commands{
          * Clears the message properties.  Does not clear the body or
          * header values.
          */
-        virtual void clearProperties() {}
+        virtual void clearProperties() {
+            properties.clear();
+        }
         
         /**
          * Retrieves the propery names.
          * @return The complete set of property names currently in this
          * message.
          */
-        virtual std::vector<std::string> getPropertyNames() const ;
+        virtual std::vector<std::string> getPropertyNames() const {
+            return properties.getKeys();
+        }
         
         /**
          * Indicates whether or not a given property exists.
          * @param name The name of the property to look up.
          * @return True if the property exists in this message.
          */
-        virtual bool propertyExists( const std::string& name ) const;
+        virtual bool propertyExists( const std::string& name ) const {
+            return properties.contains( name );
+        }
         
         /**
          * Gets a boolean property.
@@ -181,7 +192,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual bool getBooleanProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getBool( name );
+        }
             
         /**
          * Gets a byte property.
@@ -190,7 +204,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual unsigned char getByteProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getByte( name );
+        }
             
         /**
          * Gets a double property.
@@ -199,7 +216,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual double getDoubleProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getDouble( name );
+        }
             
         /**
          * Gets a float property.
@@ -208,7 +228,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual float getFloatProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getFloat( name );
+        }
             
         /**
          * Gets a int property.
@@ -217,7 +240,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual int getIntProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getInt( name );
+        }
             
         /**
          * Gets a long property.
@@ -226,7 +252,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual long long getLongProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getLong( name );
+        }
             
         /**
          * Gets a short property.
@@ -235,7 +264,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual short getShortProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getShort( name );
+        }
             
         /**
          * Gets a string property.
@@ -244,7 +276,10 @@ namespace commands{
          * @throws CMSException if the property does not exist.
          */
         virtual std::string getStringProperty( const std::string& name ) const 
-            throw( cms::CMSException );
+            throw( cms::CMSException ) {
+
+            return properties.getString( name );
+        }
         
         /**
          * Sets a boolean property.
@@ -253,7 +288,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBooleanProperty( const std::string& name,
-            bool value ) throw( cms::CMSException );
+                                         bool value ) 
+                                            throw( cms::CMSException ) {
+                                                
+            properties.setBool( name, value );
+        }
             
         /**
          * Sets a byte property.
@@ -262,7 +301,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setByteProperty( const std::string& name,
-            unsigned char value ) throw( cms::CMSException );
+                                      unsigned char value ) 
+                                        throw( cms::CMSException ) {
+                                                
+            properties.setByte( name, value );
+        }
             
         /**
          * Sets a double property.
@@ -271,7 +314,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setDoubleProperty( const std::string& name,
-            double value ) throw( cms::CMSException );
+                                        double value ) 
+                                            throw( cms::CMSException ) {
+                                                
+            properties.setDouble( name, value );
+        }
             
         /**
          * Sets a float property.
@@ -280,8 +327,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setFloatProperty( const std::string& name,
-            float value ) throw( cms::CMSException );
-            
+                                       float value ) 
+                                        throw( cms::CMSException ) {
+                                                
+            properties.setFloat( name, value );
+        }
+
         /**
          * Sets a int property.
          * @param name The name of the property to retrieve.
@@ -289,7 +340,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setIntProperty( const std::string& name,
-            int value ) throw( cms::CMSException );
+                                     int value ) 
+                                        throw( cms::CMSException ) {
+                                                
+            properties.setInt( name, value );
+        }
             
         /**
          * Sets a long property.
@@ -298,7 +353,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setLongProperty( const std::string& name,
-            long long value ) throw( cms::CMSException );
+                                      long long value ) 
+                                        throw( cms::CMSException ) {
+                                                
+            properties.setLong( name, value );
+        }
             
         /**
          * Sets a short property.
@@ -307,7 +366,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setShortProperty( const std::string& name,
-            short value ) throw( cms::CMSException );
+                                       short value ) 
+                                        throw( cms::CMSException ) {
+                                                
+            properties.setShort( name, value );
+        }
             
         /**
          * Sets a string property.
@@ -316,7 +379,11 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setStringProperty( const std::string& name,
-            const std::string& value ) throw( cms::CMSException );
+                                        const std::string& value ) 
+                                            throw( cms::CMSException ) {
+                                                
+            properties.setString( name, value );
+        }
       
         /**
          * Get the Correlation Id for this message
@@ -364,7 +431,9 @@ namespace commands{
          * @param destination - Destination Object
          */
         virtual void setCMSDestination( const cms::Destination* destination ) {
-            this->setDestination( destination );
+            this->setDestination( 
+                dynamic_cast<ActiveMQDestination*>( 
+                    destination->clone() ) );
         }
       
         /**
@@ -432,7 +501,8 @@ namespace commands{
          * @return Reply To Value
          */
         virtual const cms::Destination* getCMSReplyTo(void) const {
-            return this->getReplyTo();
+            return dynamic_cast< const cms::Destination* >(
+                this->getReplyTo() );
         }
       
         /**
@@ -440,7 +510,9 @@ namespace commands{
          * @param id - Reply To value
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) {
-            this->setRepyTo( destination );
+            this->setReplyTo( 
+                dynamic_cast<ActiveMQDestination*>(
+                    destination->clone() ) );
         }
 
         /**
