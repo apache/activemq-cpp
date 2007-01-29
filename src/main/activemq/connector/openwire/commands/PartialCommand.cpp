@@ -94,17 +94,17 @@ void PartialCommand::setCommandId(int commandId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> PartialCommand::getData() const {
+const std::vector<unsigned char>& PartialCommand::getData() const {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PartialCommand::getData() {
+std::vector<unsigned char>& PartialCommand::getData() {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PartialCommand::setData(std::vector<unsigned char> data ) {
+void PartialCommand::setData(const std::vector<unsigned char>& data ) {
     this->data = data;
 }
 

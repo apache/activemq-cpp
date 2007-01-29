@@ -101,9 +101,9 @@ namespace commands{
         virtual long long getTimeout();
         virtual void setTimeout( long long timeout );
 
-        virtual const std::vector<BrokerId*> getBrokerPath() const;
-        virtual std::vector<BrokerId*> getBrokerPath();
-        virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
+        virtual const std::vector<BrokerId*>& getBrokerPath() const;
+        virtual std::vector<BrokerId*>& getBrokerPath();
+        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
     };
 

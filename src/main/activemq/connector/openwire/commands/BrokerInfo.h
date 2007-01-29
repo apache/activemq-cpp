@@ -97,9 +97,9 @@ namespace commands{
         virtual std::string& getBrokerURL();
         virtual void setBrokerURL( const std::string& brokerURL );
 
-        virtual const std::vector<BrokerInfo*> getPeerBrokerInfos() const;
-        virtual std::vector<BrokerInfo*> getPeerBrokerInfos();
-        virtual void setPeerBrokerInfos( std::vector<BrokerInfo*> peerBrokerInfos );
+        virtual const std::vector<BrokerInfo*>& getPeerBrokerInfos() const;
+        virtual std::vector<BrokerInfo*>& getPeerBrokerInfos();
+        virtual void setPeerBrokerInfos( const std::vector<BrokerInfo*>& peerBrokerInfos );
 
         virtual const std::string& getBrokerName() const;
         virtual std::string& getBrokerName();

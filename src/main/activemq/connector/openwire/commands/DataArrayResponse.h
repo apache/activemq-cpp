@@ -79,9 +79,9 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const std::vector<DataStructure*> getData() const;
-        virtual std::vector<DataStructure*> getData();
-        virtual void setData( std::vector<DataStructure*> data );
+        virtual const std::vector<DataStructure*>& getData() const;
+        virtual std::vector<DataStructure*>& getData();
+        virtual void setData( const std::vector<DataStructure*>& data );
 
     };
 

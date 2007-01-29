@@ -305,17 +305,17 @@ void ConsumerInfo::setPriority(unsigned char priority ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*> ConsumerInfo::getBrokerPath() const {
+const std::vector<BrokerId*>& ConsumerInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*> ConsumerInfo::getBrokerPath() {
+std::vector<BrokerId*>& ConsumerInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
+void ConsumerInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

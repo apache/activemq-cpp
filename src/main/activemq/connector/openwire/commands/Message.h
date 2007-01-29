@@ -173,13 +173,13 @@ namespace commands{
         virtual std::string& getType();
         virtual void setType( const std::string& type );
 
-        virtual const std::vector<unsigned char> getContent() const;
-        virtual std::vector<unsigned char> getContent();
-        virtual void setContent( std::vector<unsigned char> content );
+        virtual const std::vector<unsigned char>& getContent() const;
+        virtual std::vector<unsigned char>& getContent();
+        virtual void setContent( const std::vector<unsigned char>& content );
 
-        virtual const std::vector<unsigned char> getMarshalledProperties() const;
-        virtual std::vector<unsigned char> getMarshalledProperties();
-        virtual void setMarshalledProperties( std::vector<unsigned char> marshalledProperties );
+        virtual const std::vector<unsigned char>& getMarshalledProperties() const;
+        virtual std::vector<unsigned char>& getMarshalledProperties();
+        virtual void setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties );
 
         virtual const DataStructure* getDataStructure() const;
         virtual DataStructure* getDataStructure();
@@ -197,9 +197,9 @@ namespace commands{
         virtual int getRedeliveryCounter();
         virtual void setRedeliveryCounter( int redeliveryCounter );
 
-        virtual const std::vector<BrokerId*> getBrokerPath() const;
-        virtual std::vector<BrokerId*> getBrokerPath();
-        virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
+        virtual const std::vector<BrokerId*>& getBrokerPath() const;
+        virtual std::vector<BrokerId*>& getBrokerPath();
+        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
         virtual const long long getArrival() const;
         virtual long long getArrival();

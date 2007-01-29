@@ -126,17 +126,17 @@ void ProducerInfo::setDestination(ActiveMQDestination* destination ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*> ProducerInfo::getBrokerPath() const {
+const std::vector<BrokerId*>& ProducerInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*> ProducerInfo::getBrokerPath() {
+std::vector<BrokerId*>& ProducerInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
+void ProducerInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 
