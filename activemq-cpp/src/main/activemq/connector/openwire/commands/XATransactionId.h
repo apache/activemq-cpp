@@ -84,13 +84,13 @@ namespace commands{
         virtual int getFormatId();
         virtual void setFormatId( int formatId );
 
-        virtual const std::vector<unsigned char> getGlobalTransactionId() const;
-        virtual std::vector<unsigned char> getGlobalTransactionId();
-        virtual void setGlobalTransactionId( std::vector<unsigned char> globalTransactionId );
+        virtual const std::vector<unsigned char>& getGlobalTransactionId() const;
+        virtual std::vector<unsigned char>& getGlobalTransactionId();
+        virtual void setGlobalTransactionId( const std::vector<unsigned char>& globalTransactionId );
 
-        virtual const std::vector<unsigned char> getBranchQualifier() const;
-        virtual std::vector<unsigned char> getBranchQualifier();
-        virtual void setBranchQualifier( std::vector<unsigned char> branchQualifier );
+        virtual const std::vector<unsigned char>& getBranchQualifier() const;
+        virtual std::vector<unsigned char>& getBranchQualifier();
+        virtual void setBranchQualifier( const std::vector<unsigned char>& branchQualifier );
 
     };
 

@@ -158,17 +158,17 @@ void DestinationInfo::setTimeout(long long timeout ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*> DestinationInfo::getBrokerPath() const {
+const std::vector<BrokerId*>& DestinationInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*> DestinationInfo::getBrokerPath() {
+std::vector<BrokerId*>& DestinationInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DestinationInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
+void DestinationInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

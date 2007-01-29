@@ -161,17 +161,17 @@ void ConnectionInfo::setUserName(const std::string& userName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*> ConnectionInfo::getBrokerPath() const {
+const std::vector<BrokerId*>& ConnectionInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*> ConnectionInfo::getBrokerPath() {
+std::vector<BrokerId*>& ConnectionInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionInfo::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
+void ConnectionInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

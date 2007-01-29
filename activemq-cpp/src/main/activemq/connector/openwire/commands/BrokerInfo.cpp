@@ -135,17 +135,17 @@ void BrokerInfo::setBrokerURL(const std::string& brokerURL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerInfo*> BrokerInfo::getPeerBrokerInfos() const {
+const std::vector<BrokerInfo*>& BrokerInfo::getPeerBrokerInfos() const {
     return peerBrokerInfos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerInfo*> BrokerInfo::getPeerBrokerInfos() {
+std::vector<BrokerInfo*>& BrokerInfo::getPeerBrokerInfos() {
     return peerBrokerInfos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BrokerInfo::setPeerBrokerInfos(std::vector<BrokerInfo*> peerBrokerInfos ) {
+void BrokerInfo::setPeerBrokerInfos(const std::vector<BrokerInfo*>& peerBrokerInfos ) {
     this->peerBrokerInfos = peerBrokerInfos;
 }
 

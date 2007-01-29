@@ -384,32 +384,32 @@ void Message::setType(const std::string& type ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> Message::getContent() const {
+const std::vector<unsigned char>& Message::getContent() const {
     return content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> Message::getContent() {
+std::vector<unsigned char>& Message::getContent() {
     return content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setContent(std::vector<unsigned char> content ) {
+void Message::setContent(const std::vector<unsigned char>& content ) {
     this->content = content;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> Message::getMarshalledProperties() const {
+const std::vector<unsigned char>& Message::getMarshalledProperties() const {
     return marshalledProperties;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> Message::getMarshalledProperties() {
+std::vector<unsigned char>& Message::getMarshalledProperties() {
     return marshalledProperties;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setMarshalledProperties(std::vector<unsigned char> marshalledProperties ) {
+void Message::setMarshalledProperties(const std::vector<unsigned char>& marshalledProperties ) {
     this->marshalledProperties = marshalledProperties;
 }
 
@@ -474,17 +474,17 @@ void Message::setRedeliveryCounter(int redeliveryCounter ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*> Message::getBrokerPath() const {
+const std::vector<BrokerId*>& Message::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*> Message::getBrokerPath() {
+std::vector<BrokerId*>& Message::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setBrokerPath(std::vector<BrokerId*> brokerPath ) {
+void Message::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

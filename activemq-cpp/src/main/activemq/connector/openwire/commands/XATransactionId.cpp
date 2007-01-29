@@ -95,32 +95,32 @@ void XATransactionId::setFormatId(int formatId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> XATransactionId::getGlobalTransactionId() const {
+const std::vector<unsigned char>& XATransactionId::getGlobalTransactionId() const {
     return globalTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> XATransactionId::getGlobalTransactionId() {
+std::vector<unsigned char>& XATransactionId::getGlobalTransactionId() {
     return globalTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::setGlobalTransactionId(std::vector<unsigned char> globalTransactionId ) {
+void XATransactionId::setGlobalTransactionId(const std::vector<unsigned char>& globalTransactionId ) {
     this->globalTransactionId = globalTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<unsigned char> XATransactionId::getBranchQualifier() const {
+const std::vector<unsigned char>& XATransactionId::getBranchQualifier() const {
     return branchQualifier;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> XATransactionId::getBranchQualifier() {
+std::vector<unsigned char>& XATransactionId::getBranchQualifier() {
     return branchQualifier;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void XATransactionId::setBranchQualifier(std::vector<unsigned char> branchQualifier ) {
+void XATransactionId::setBranchQualifier(const std::vector<unsigned char>& branchQualifier ) {
     this->branchQualifier = branchQualifier;
 }
 

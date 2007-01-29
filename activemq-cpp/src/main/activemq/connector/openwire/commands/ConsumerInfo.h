@@ -146,9 +146,9 @@ namespace commands{
         virtual unsigned char getPriority();
         virtual void setPriority( unsigned char priority );
 
-        virtual const std::vector<BrokerId*> getBrokerPath() const;
-        virtual std::vector<BrokerId*> getBrokerPath();
-        virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
+        virtual const std::vector<BrokerId*>& getBrokerPath() const;
+        virtual std::vector<BrokerId*>& getBrokerPath();
+        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
         virtual const BooleanExpression* getAdditionalPredicate() const;
         virtual BooleanExpression* getAdditionalPredicate();

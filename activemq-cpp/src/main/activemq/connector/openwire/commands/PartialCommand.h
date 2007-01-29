@@ -83,9 +83,9 @@ namespace commands{
         virtual int getCommandId();
         virtual void setCommandId( int commandId );
 
-        virtual const std::vector<unsigned char> getData() const;
-        virtual std::vector<unsigned char> getData();
-        virtual void setData( std::vector<unsigned char> data );
+        virtual const std::vector<unsigned char>& getData() const;
+        virtual std::vector<unsigned char>& getData();
+        virtual void setData( const std::vector<unsigned char>& data );
 
     };
 

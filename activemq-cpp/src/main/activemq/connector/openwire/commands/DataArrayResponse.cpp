@@ -84,17 +84,17 @@ unsigned char DataArrayResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<DataStructure*> DataArrayResponse::getData() const {
+const std::vector<DataStructure*>& DataArrayResponse::getData() const {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<DataStructure*> DataArrayResponse::getData() {
+std::vector<DataStructure*>& DataArrayResponse::getData() {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataArrayResponse::setData(std::vector<DataStructure*> data ) {
+void DataArrayResponse::setData(const std::vector<DataStructure*>& data ) {
     this->data = data;
 }
 

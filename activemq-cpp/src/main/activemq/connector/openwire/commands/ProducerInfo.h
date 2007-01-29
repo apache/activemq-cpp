@@ -92,9 +92,9 @@ namespace commands{
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const std::vector<BrokerId*> getBrokerPath() const;
-        virtual std::vector<BrokerId*> getBrokerPath();
-        virtual void setBrokerPath( std::vector<BrokerId*> brokerPath );
+        virtual const std::vector<BrokerId*>& getBrokerPath() const;
+        virtual std::vector<BrokerId*>& getBrokerPath();
+        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
         virtual const bool isDispatchAsync() const;
         virtual bool isDispatchAsync();
