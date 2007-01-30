@@ -24,7 +24,6 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
-#include <activemq/util/Config.h>
 #include <activemq/io/ByteArrayInputStream.h>
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/io/DataInputStream.h>
@@ -83,7 +82,22 @@ namespace commands{
             return dynamic_cast<cms::BytesMessage*>( 
                 this->cloneDataStructure() );
         }
-      
+
+        /**
+         * Clears out the body of the message.  This does not clear the
+         * headers or properties.
+         */
+        virtual void clearBody(){
+            
+            // Invoke base class's version.
+            ActiveMQMessageBase<cms::BytesMessage>::clearBody();
+            
+            // Set the stream in write only mode.
+            readOnly = false;
+            
+            outputStream.setBuffer( getContent() );
+        }
+
     public:   // CMS BytesMessage
     
         /**
@@ -346,6 +360,30 @@ namespace commands{
          */
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException );
 
+    protected:
+    
+        /**
+         * Throws an exception if not in write-only mode.
+         * @throws CMSException.
+         */
+        void checkWriteOnly() throw (cms::CMSException){
+            if( readOnly ){
+                throw exceptions::IllegalStateException( __FILE__, __LINE__, 
+                    "message is in read-only mode and cannot be written to" );
+            }
+        }
+        
+        /**
+         * Throws an exception if not in read-only mode.
+         * @throws CMSException
+         */
+        void checkReadOnly() throw (cms::CMSException){
+            if( !readOnly ){
+                throw exceptions::IllegalStateException( __FILE__, __LINE__, 
+                    "message is in write-only mode and cannot be read from" );
+            }
+        }
+        
     private:
 
         /**

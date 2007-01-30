@@ -15,9 +15,6 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
-#include <activemq/util/Config.h>
-#include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -28,7 +25,8 @@ using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMessage::ActiveMQMessage()
+ActiveMQMessage::ActiveMQMessage() : 
+    ActiveMQMessageBase<cms::Message>()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,15 +36,4 @@ ActiveMQMessage::~ActiveMQMessage()
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQMessage::getDataStructureType() const {
     return ActiveMQMessage::ID_ACTIVEMQMESSAGE; 
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMessage::beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED )
-{
-    marshalledProperties.clear();
-    if( !properties.isEmpty() )
-    {
-        PrimitiveMapMarshaller::marshal( 
-            &properties, marshalledProperties );
-    }
 }

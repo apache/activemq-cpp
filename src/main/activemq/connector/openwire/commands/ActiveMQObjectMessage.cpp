@@ -23,7 +23,8 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQObjectMessage::ActiveMQObjectMessage()
+ActiveMQObjectMessage::ActiveMQObjectMessage() :
+    ActiveMQMessageBase<cms::ObjectMessage>()
 {
 }
 

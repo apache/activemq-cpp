@@ -18,12 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQMESSAGE_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQMESSAGE_H_
 
-#include <activemq/connector/openwire/commands/Message.h>
-#include <activemq/core/ActiveMQMessage.h>
-#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
-#include <activemq/core/ActiveMQAckHandler.h>
-#include <activemq/util/Date.h>
-#include <activemq/util/PrimitiveMap.h>
+#include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 
 namespace activemq{
 namespace connector{
@@ -31,8 +26,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQMessage : 
-        public Message, 
-        public core::ActiveMQMessage
+        public ActiveMQMessageBase<cms::Message>
     {
     public:
 
@@ -54,75 +48,18 @@ namespace commands{
             ActiveMQMessage::copyDataStructure( src );
         }
 
-        /**
-         * Indicates that this command is aware of Marshalling, and needs
-         * to have its Marshalling methods invoked.
-         * @returns boolean indicating desire to be in marshalling stages
-         */
-        virtual bool IsMarshallAware() {
-            return true;
-        }
-        
-        /**
-         * Handles the marshalling of the objects properties into the 
-         * internal byte array before the object is marshalled to the
-         * wire
-         * @param wireFormat - the wireformatting controller
-         */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat );
-
-    public:   // core::ActiveMQMessage
+    public:  // cms::Message
     
         /**
-         * Sets the Acknowledgement Handler that this Message will use
-         * when the Acknowledge method is called.
-         * @param handler ActiveMQAckHandler to call
+         * Clonse this message exactly, returns a new instance that the
+         * caller is required to delete.
+         * @return new copy of this message
          */
-        virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {
-            this->ackHandler = handler;
+        virtual cms::Message* clone(void) const {
+            return dynamic_cast<cms::Message*>( 
+                this->cloneDataStructure() );
         }
-        
-        /**
-         * Gets the Acknowledgement Handler that this Message will use
-         * when the Acknowledge method is called.
-         * @returns handler ActiveMQAckHandler to call or NULL if not set
-         */
-        virtual core::ActiveMQAckHandler* getAckHandler() const {
-            return this->ackHandler;
-        }
-
-        /**
-         * Gets the number of times this message has been redelivered.
-         * @return redelivery count
-         */
-        virtual int getRedeliveryCount(void) const {
-            return redeliveryCount;
-        }
-        
-        /**
-         * Sets the count of the number of times this message has been 
-         * redelivered
-         * @param count the redelivery count
-         */
-        virtual void setRedeliveryCount( int count ) {
-            this->redeliveryCount = count;
-        }
-
-        /**
-         * Returns if this message has expired, meaning that its
-         * Expiration time has elapsed.
-         * @returns true if message is expired.
-         */
-        virtual bool isExpired() const {
-            return false;
-        }
-      
-    private:
-   
-        core::ActiveMQAckHandler* ackHandler;
-        int redeliveryCount;
-        util::PrimitiveMap properties;
-
+    
     };
 
 }}}}
