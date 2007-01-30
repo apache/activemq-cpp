@@ -105,7 +105,7 @@ namespace commands{
          *         name of an item in the MapMessage
          * @throws CMSException
          */
-        virtual std::vector< std::string > getMapNames(void) const;
+        virtual std::vector<std::string> getMapNames(void) const;
 
         /**
          * Indicates whether an item exists in this MapMessage object.
@@ -119,7 +119,8 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual bool getBoolean( const std::string& name ) const;
+        virtual bool getBoolean( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a boolean value with the specified name into the Map.
@@ -128,14 +129,15 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBoolean( const std::string& name,
-                                 bool value );
+                                 bool value ) throw( cms::CMSException );
 
         /**
          * Returns the Byte value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual unsigned char getByte( const std::string& name ) const;
+        virtual unsigned char getByte( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Byte value with the specified name into the Map.
@@ -144,14 +146,16 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setByte( const std::string& name,
-                              unsigned char value );
+                              unsigned char value )
+                                 throw( cms::CMSException );
 
         /**
          * Returns the Bytes value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual const unsigned char* getBytes( const std::string& name ) const;
+        virtual const unsigned char* getBytes( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Bytes value with the specified name into the Map.
@@ -160,14 +164,16 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBytes( const std::string& name,
-                               unsigned char* value );
+                               const std::vector<unsigned char>& value ) 
+                                throw( cms::CMSException );
 
         /**
          * Returns the Char value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual char getChar( const std::string& name ) const;
+        virtual char getChar( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Char value with the specified name into the Map.
@@ -175,14 +181,16 @@ namespace commands{
          * @param value - the Char value to set in the Map
          * @throws CMSException
          */
-        virtual void setChar( const std::string& name, char value );
+        virtual void setChar( const std::string& name, char value ) 
+            throw( cms::CMSException );
 
         /**
          * Returns the Double value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual double getDouble( const std::string& name ) const;
+        virtual double getDouble( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Double value with the specified name into the Map.
@@ -191,14 +199,15 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setDouble( const std::string& name,
-                                double value );
+                                double value ) throw( cms::CMSException );
 
         /**
          * Returns the Float value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual float getFloat( const std::string& name ) const;
+        virtual float getFloat( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Float value with the specified name into the Map.
@@ -206,14 +215,16 @@ namespace commands{
          * @param value - the Float value to set in the Map
          * @throws CMSException
          */
-        virtual void setFloat( const std::string& name, float value );
+        virtual void setFloat( const std::string& name, float value )
+            throw( cms::CMSException );
 
         /**
          * Returns the Int value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual int getInt( const std::string& name ) const;
+        virtual int getInt( const std::string& name ) const 
+            throw( cms::CMSException );
         
         /** 
          * Sets a Int value with the specified name into the Map.
@@ -221,14 +232,16 @@ namespace commands{
          * @param value - the Int value to set in the Map
          * @throws CMSException
          */
-        virtual void setInt( const std::string& name, int value );
+        virtual void setInt( const std::string& name, int value )
+            throw( cms::CMSException );
 
         /**
          * Returns the Long value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual long long getLong( const std::string& name ) const;
+        virtual long long getLong( const std::string& name ) const
+            throw( cms::CMSException );
         
         /** 
          * Sets a Long value with the specified name into the Map.
@@ -236,14 +249,16 @@ namespace commands{
          * @param value - the Long value to set in the Map
          * @throws CMSException
          */
-        virtual void setLong( const std::string& name, long long value );
+        virtual void setLong( const std::string& name, long long value )
+            throw( cms::CMSException );
 
         /**
          * Returns the Short value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual short getShort( const std::string& name ) const;
+        virtual short getShort( const std::string& name ) const
+            throw( cms::CMSException );
         
         /** 
          * Sets a Short value with the specified name into the Map.
@@ -251,14 +266,16 @@ namespace commands{
          * @param value - the Short value to set in the Map
          * @throws CMSException
          */
-        virtual void setShort( const std::string& name, short value );
+        virtual void setShort( const std::string& name, short value )
+            throw( cms::CMSException );
 
         /**
          * Returns the String value of the Specified name
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual std::string getString( const std::string& name ) const;
+        virtual std::string getString( const std::string& name ) const
+            throw( cms::CMSException );
         
         /** 
          * Sets a String value with the specified name into the Map.
@@ -267,7 +284,8 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setString( const std::string& name, 
-                                const std::string& value );
+                                const std::string& value )
+                                    throw( cms::CMSException );
 
     protected:
     
@@ -277,11 +295,12 @@ namespace commands{
          * @returns reference to a PrimtiveMap.
          */
         util::PrimitiveMap& getMap() throw ( exceptions::NullPointerException );
+        const util::PrimitiveMap& getMap() const throw ( exceptions::NullPointerException );
 
     private:
     
         // Map Structure to hold unmarshalled Map Data
-        util::PrimitiveMap* map;
+        mutable util::PrimitiveMap* map;
         
     };
 
