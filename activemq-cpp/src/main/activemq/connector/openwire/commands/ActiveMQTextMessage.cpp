@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
-#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -24,7 +23,8 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTextMessage::ActiveMQTextMessage()
+ActiveMQTextMessage::ActiveMQTextMessage() :
+    ActiveMQMessageBase<cms::TextMessage>()
 {
 }
 
@@ -40,17 +40,34 @@ unsigned char ActiveMQTextMessage::getDataStructureType() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTextMessage::acknowledge(void) const throw( cms::CMSException ) {
+std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
-        this->getAckHandler()->acknowledgeMessage( this );
+        return std::string( getContent()[0], getContent().size() ); 
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) {
+    try{
+        int length = strlen( msg );
+        for( int i = 0; i < length; ++i ){
+            getContent().push_back( msg[i] );
+        }
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQTextMessage::getCMSMessageId(void) const {
-    return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
+void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSException ) {
+    try{
+        for( size_t i = 0; i < msg.length(); ++i ){
+            getContent().push_back( msg[i] );
+        }
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
-#include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -24,7 +23,8 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMapMessage::ActiveMQMapMessage()
+ActiveMQMapMessage::ActiveMQMapMessage() :
+    ActiveMQMessageBase<cms::MapMessage>()
 {
 }
 
@@ -37,19 +37,4 @@ ActiveMQMapMessage::~ActiveMQMapMessage()
 unsigned char ActiveMQMapMessage::getDataStructureType() const
 {
     return ActiveMQMapMessage::ID_ACTIVEMQMAPMESSAGE; 
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMapMessage::acknowledge(void) const throw( cms::CMSException ) {
-
-    try{
-        this->getAckHandler()->acknowledgeMessage( this );
-    }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQMapMessage::getCMSMessageId(void) const {
-    return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
 }

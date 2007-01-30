@@ -23,20 +23,17 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/connector/openwire/commands/ActiveMQMessage.h>
-#include <vector>
-#include <string>
+#include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
+#include <cms/ObjectMessage.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQObjectMessage : public ActiveMQMessage
+    class ActiveMQObjectMessage : 
+        public ActiveMQMessageBase<cms::ObjectMessage>
     {
-    protected:
-
-
     public:
 
         const static unsigned char ID_ACTIVEMQOBJECTMESSAGE = 26;
@@ -65,21 +62,21 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessage::copyDataStructure( src );
-        }
-
-
-    public:  // ActiveMQMessage
-
-        /**
-         * Returns if this message has expired, meaning that its
-         * Expiration time has elapsed.
-         * @returns true if message is expired.
-         */
-        virtual bool isExpired() const {
-            return false;
+            ActiveMQMessageBase<cms::ObjectMessage>::copyDataStructure( src );
         }
         
+    public:  // cms::Message
+    
+        /**
+         * Clonse this message exactly, returns a new instance that the
+         * caller is required to delete.
+         * @return new copy of this message
+         */
+        virtual cms::Message* clone(void) const {
+            return dynamic_cast<cms::Message*>( 
+                this->cloneDataStructure() );
+        }
+
     };
 
 }}}}
