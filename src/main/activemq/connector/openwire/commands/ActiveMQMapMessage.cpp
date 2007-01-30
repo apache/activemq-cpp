@@ -85,6 +85,261 @@ util::PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) 
         
         return *map;
     }
+    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
+    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const util::PrimitiveMap& ActiveMQMapMessage::getMap() const 
+    throw ( exceptions::NullPointerException ) {
+
+    try{
+        this->getMap();
+    }
+    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
+    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
+
+    try{
+        getMap().getKeys();
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQMapMessage::itemExists( const std::string& name ) const {
+
+    try{
+        getMap().contains( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQMapMessage::getBoolean( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getBool( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setBoolean( const std::string& name, bool value ) 
+                                         throw( cms::CMSException ) {
+
+    try{
+        getMap().setBool( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ActiveMQMapMessage::getByte( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getByte( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setByte( const std::string& name,
+                                  unsigned char value ) 
+                                      throw( cms::CMSException ) {
+
+    try{
+        getMap().setByte( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const unsigned char* ActiveMQMapMessage::getBytes( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getByteArray( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setBytes( const std::string& name,
+                                   const std::vector<unsigned char>& value ) 
+                                       throw( cms::CMSException ) {
+
+    try{
+        getMap().setByteArray( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+char ActiveMQMapMessage::getChar( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getChar( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setChar( const std::string& name, char value ) 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().setChar( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double ActiveMQMapMessage::getDouble( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getDouble( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setDouble( const std::string& name,
+                                    double value ) 
+                                        throw( cms::CMSException ) {
+
+    try{
+        getMap().setDouble( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float ActiveMQMapMessage::getFloat( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getFloat( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setFloat( const std::string& name, float value ) 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().setFloat( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQMapMessage::getInt( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getInt( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setInt( const std::string& name, int value ) 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().setInt( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long ActiveMQMapMessage::getLong( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getLong( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setLong( const std::string& name, long long value ) 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().setLong( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+short ActiveMQMapMessage::getShort( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getShort( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setShort( const std::string& name, short value ) 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().setShort( name, value );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQMapMessage::getString( const std::string& name ) const 
+    throw( cms::CMSException ) {
+
+    try{
+        getMap().getString( name );
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::setString( const std::string& name, 
+                                    const std::string& value ) 
+                                        throw( cms::CMSException ) {
+
+    try{
+        getMap().setString( name, value );
+    }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }
