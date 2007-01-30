@@ -262,6 +262,7 @@ h_sources = \
     cms/Startable.h \
     cms/Closeable.h \
     cms/MessageListener.h \
+    cms/ObjectMessage.h \
     cms/TextMessage.h \
     cms/ExceptionListener.h \
     cms/Queue.h \
