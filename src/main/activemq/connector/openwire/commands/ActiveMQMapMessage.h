@@ -24,6 +24,8 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
+#include <activemq/util/PrimitiveMap.h>
+#include <activemq/exceptions/NullPointerException.h>
 #include <cms/MapMessage.h>
 #include <vector>
 #include <string>
@@ -48,6 +50,15 @@ namespace commands{
         virtual unsigned char getDataStructureType() const;
 
         /**
+         * Determine if this object is aware of marshalling and should have
+         * its before and after marshalling methods called.  Defaults to false.
+         * @returns true if aware of marshalling
+         */
+        virtual bool isMarshallAware() const {
+            return true;
+        }
+
+        /**
          * Clone this object and return a new instance that the
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
@@ -67,6 +78,12 @@ namespace commands{
             ActiveMQMessageBase<cms::MapMessage>::copyDataStructure( src );
         }
         
+        /**
+         * Perform any processing needed before an marshal
+         * @param wireformat - the OpenWireFormat object in use.
+         */
+        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED );
+
     public:   // CMS Message
     
         /**
@@ -252,6 +269,20 @@ namespace commands{
         virtual void setString( const std::string& name, 
                                 const std::string& value );
 
+    protected:
+    
+        /**
+         * Fetches a reference to this objects PrimitiveMap, if one needs
+         * to be created or unmarshalled, this will perform the correct steps.
+         * @returns reference to a PrimtiveMap.
+         */
+        util::PrimitiveMap& getMap() throw ( exceptions::NullPointerException );
+
+    private:
+    
+        // Map Structure to hold unmarshalled Map Data
+        util::PrimitiveMap* map;
+        
     };
 
 }}}}
