@@ -287,6 +287,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="producer"
+					>
+					<File
+						RelativePath="..\src\test-integration\integration\producer\AsyncSender.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\integration\producer\AsyncSender.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>
