@@ -23,6 +23,7 @@
 #include <activemq/connector/openwire/commands/ProducerId.h>
 #include <activemq/connector/openwire/commands/TransactionId.h>
 #include <activemq/connector/openwire/utils/HexTable.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -51,10 +52,10 @@ namespace marshal{
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
-        virtual int tightMarshal1( OpenWireFormat* format, 
-                                   commands::DataStructure* command, 
-                                   utils::BooleanStream* bs ) 
-                                       throw ( io::IOException ) = 0;
+        virtual int tightMarshal1( OpenWireFormat* format AMQCPP_UNUSED, 
+                                   commands::DataStructure* command AMQCPP_UNUSED, 
+                                   utils::BooleanStream* bs AMQCPP_UNUSED ) 
+                                       throw ( io::IOException ) { return 0; }
 
         /**
          * Tight Marhsal to the given stream
@@ -64,11 +65,11 @@ namespace marshal{
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
-        virtual void tightMarshal2( OpenWireFormat* format, 
-                                    commands::DataStructure* command, 
-                                    io::DataOutputStream* ds, 
-                                    utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) = 0;
+        virtual void tightMarshal2( OpenWireFormat* format AMQCPP_UNUSED, 
+                                    commands::DataStructure* command AMQCPP_UNUSED, 
+                                    io::DataOutputStream* ds AMQCPP_UNUSED, 
+                                    utils::BooleanStream* bs AMQCPP_UNUSED ) 
+                                        throw ( io::IOException ) {}
 
         /**
          * Tight Un-marhsal to the given stream
@@ -78,11 +79,11 @@ namespace marshal{
          * @param bs - boolean stream to unmarshal from.
          * @throws IOException if an error occurs.
          */
-        virtual void tightUnmarshal( OpenWireFormat* format, 
-                                     commands::DataStructure* command, 
-                                     io::DataInputStream* dis, 
-                                     utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) = 0;
+        virtual void tightUnmarshal( OpenWireFormat* format AMQCPP_UNUSED, 
+                                     commands::DataStructure* command AMQCPP_UNUSED, 
+                                     io::DataInputStream* dis AMQCPP_UNUSED, 
+                                     utils::BooleanStream* bs AMQCPP_UNUSED ) 
+                                        throw ( io::IOException ) {}
     
         /**
          * Tight Marhsal to the given stream
@@ -91,10 +92,10 @@ namespace marshal{
          * @param ds - DataOutputStream to marshal to
          * @throws IOException if an error occurs.
          */
-        virtual void looseMarshal( OpenWireFormat* format, 
-                                   commands::DataStructure* command, 
-                                   io::DataOutputStream* ds ) 
-                                       throw ( io::IOException ) = 0;
+        virtual void looseMarshal( OpenWireFormat* format AMQCPP_UNUSED, 
+                                   commands::DataStructure* command AMQCPP_UNUSED, 
+                                   io::DataOutputStream* ds AMQCPP_UNUSED ) 
+                                       throw ( io::IOException ) {}
 
         /**
          * Loose Un-marhsal to the given stream
@@ -103,10 +104,10 @@ namespace marshal{
          * @param dis - the DataInputStream to Un-Marshal from
          * @throws IOException if an error occurs.
          */
-        virtual void looseUnmarshal( OpenWireFormat* format, 
-                                     commands::DataStructure* command, 
-                                     io::DataInputStream* dis ) 
-                                        throw ( io::IOException ) = 0;
+        virtual void looseUnmarshal( OpenWireFormat* format AMQCPP_UNUSED, 
+                                     commands::DataStructure* command AMQCPP_UNUSED, 
+                                     io::DataInputStream* dis AMQCPP_UNUSED ) 
+                                        throw ( io::IOException ) {}
 
     public:      // Statics
 
