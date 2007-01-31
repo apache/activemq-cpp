@@ -572,9 +572,11 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
 
         if( useAsyncSend == true ) {
 
-            // Put it in the send queue, thread will dispatch it.
+            // Put it in the send queue, thread will dispatch it.  We clone it
+            // in case the client deletes their copy before we get a chance to
+            // send it.
             synchronized( &msgQueue ) {
-                msgQueue.push( make_pair( message, producer ) );
+                msgQueue.push( make_pair( message->clone(), producer ) );
                 msgQueue.notifyAll();
             }
 
@@ -686,6 +688,8 @@ void ActiveMQSession::run()
                     messagePair.first, 
                     messagePair.second->getProducerInfo() );
 
+            // Destroy Our copy of the message
+            delete messagePair.first;
         }
     }
     catch(...)
