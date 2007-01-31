@@ -40,6 +40,9 @@ using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::utils;
 
 ////////////////////////////////////////////////////////////////////////////////
+utils::HexTable BaseDataStreamMarshaller::hexTable;
+
+////////////////////////////////////////////////////////////////////////////////
 commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalCachedObject(
     OpenWireFormat* wireFormat, 
     io::DataInputStream* dataIn,
