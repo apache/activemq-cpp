@@ -21,6 +21,7 @@ cc_sources = \
   integration/durable/DurableTester.cpp \
   integration/expiration/ExpirationTest.cpp \
   integration/simple/SimpleTester.cpp \
+  integration/producer/AsyncSender.cpp \
   integration/transactional/TransactionTester.cpp \
   integration/various/SimpleRollbackTest.cpp \
   main.cpp

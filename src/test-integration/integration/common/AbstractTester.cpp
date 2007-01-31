@@ -46,24 +46,7 @@ AbstractTester::AbstractTester( cms::Session::AcknowledgeMode ackMode )
  : connectionFactory( NULL ),
    connection( NULL )
 {
-    try
-    {
-        string url = IntegrationCommon::defaultURL;
-        numReceived = 0;
-    
-        // Now create the connection
-        connection = createDetachedConnection( 
-            "", "", Guid().createGUIDString() );
-    
-        // Set ourself as a recipient of Exceptions        
-        connection->setExceptionListener( this );
-        connection->start();
-        
-        // Create a Session
-        session = connection->createSession( ackMode );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    this->ackMode = ackMode;
 }
 
 AbstractTester::~AbstractTester()
@@ -81,6 +64,27 @@ AbstractTester::~AbstractTester()
     AMQ_CATCHALL_NOTHROW( )
 }
 
+void AbstractTester::initialize(){
+    try
+    {
+        string url = getBrokerURL();
+        numReceived = 0;
+    
+        // Now create the connection
+        connection = createDetachedConnection( 
+            "", "", Guid().createGUIDString() );
+    
+        // Set ourself as a recipient of Exceptions        
+        connection->setExceptionListener( this );
+        connection->start();
+        
+        // Create a Session
+        session = connection->createSession( ackMode );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
 cms::Connection* AbstractTester::createDetachedConnection(
     const std::string& username,
     const std::string& password,
@@ -88,7 +92,7 @@ cms::Connection* AbstractTester::createDetachedConnection(
 
     try
     {
-        string url = IntegrationCommon::defaultURL;
+        string url = getBrokerURL();
     
         if( connectionFactory == NULL ) {
             // Create a Factory

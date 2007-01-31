@@ -57,14 +57,10 @@ namespace core{
         concurrent::Mutex listenerLock;
         
         // Message Queue
-        util::Queue< cms::Message* > msgQueue;
+        util::Queue<cms::Message*> msgQueue;
         
         // Thread to notif a listener if one is added
         concurrent::Thread* listenerThread;
-        
-        // Boolean to indicate that the listener Thread is shutting
-        // down and the run method should return.
-        bool shutdown;
         
         // Boolean that indicates if the consumer has been closed
         bool closed;
@@ -134,7 +130,7 @@ namespace core{
          * @throws cms::CMSException
          */
         virtual std::string getMessageSelector() const 
-          throw ( cms::CMSException );
+            throw ( cms::CMSException );
           
         /**
          * Method called to acknowledge the message passed
