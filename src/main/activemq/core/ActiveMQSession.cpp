@@ -124,6 +124,9 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         
         // Stop the Async Thread if its running
         stopThread();
+
+        // Remove any unsent cloned messages.
+        purgeMessages();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -743,6 +746,26 @@ void ActiveMQSession::stopThread() throw ( ActiveMQException ) {
             asyncThread = NULL;
         }
     }        
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::purgeMessages() throw ( ActiveMQException )
+{
+    try
+    {
+        synchronized( &msgQueue )
+        {
+            while( !msgQueue.empty() )
+            {
+                // destroy these messages if this is not a transacted
+                // session, if it is then the tranasction will clean 
+                // the messages up.
+                delete msgQueue.pop().first;
+            }
+        }
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

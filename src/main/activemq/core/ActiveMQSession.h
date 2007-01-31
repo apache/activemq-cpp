@@ -331,12 +331,18 @@ namespace core{
          * is invoked, which means that the caller is choosing to use this
          * consumer asynchronously instead of synchronously (receive).
          */
-        void startThread() throw (exceptions::ActiveMQException);
+        void startThread() throw ( exceptions::ActiveMQException );
         
         /**
          * Stops the asynchronous message processing thread if it's started.
          */
-        void stopThread() throw (exceptions::ActiveMQException);
+        void stopThread() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Purges all messages currently in the queue.  This can be as a
+         * result of a rollback, or of the consumer being shutdown.
+         */
+        virtual void purgeMessages() throw ( exceptions::ActiveMQException );
 
     };
 
