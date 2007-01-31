@@ -45,7 +45,6 @@ ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
     this->consumerInfo   = consumerInfo;
     this->listenerThread = NULL;
     this->listener       = NULL;
-    this->shutdown       = false;
     this->closed         = false;
 }
 
@@ -153,7 +152,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
         {
             // Check for empty in case of spurious wakeup, or race to
             // queue lock.
-            while( !shutdown && !closed && msgQueue.empty() )
+            while( !closed && msgQueue.empty() )
             {
                 msgQueue.wait();
             }
@@ -161,7 +160,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
             // This will only happen when this object is being
             // closed in another thread context - kind of
             // scary.
-            if( shutdown || closed ){
+            if( closed ){
                 throw ActiveMQException( __FILE__, __LINE__,
                     "Consumer is being closed in another thread" );
             }
@@ -202,7 +201,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         synchronized( &msgQueue )
         {
             // Check for empty, and wait if its not
-            if( !shutdown && !closed && msgQueue.empty() ){
+            if( !closed && msgQueue.empty() ){
                 
                 msgQueue.wait(millisecs);
 
@@ -215,7 +214,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
             // This will only happen when this object is being
             // closed in another thread context - kind of
             // scary.
-            if( shutdown || closed ){
+            if( closed ){
                 throw ActiveMQException( __FILE__, __LINE__,
                     "Consumer is being closed in another thread" );
             }
@@ -246,7 +245,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
 {
     try
     {
-        if( shutdown || closed )
+        if( closed )
         {
             throw InvalidStateException(
                 __FILE__, __LINE__,
@@ -332,7 +331,7 @@ void ActiveMQConsumer::run()
 {
     try
     {
-        while( !shutdown )
+        while( !closed )
         {
             Message* message = NULL;
 
@@ -345,7 +344,7 @@ void ActiveMQConsumer::run()
                 // registered, and then we will deliver the backlog
                 while( msgQueue.empty() || listener == NULL )
                 {
-                    if( shutdown )
+                    if( closed )
                     {
                         break;
                     }
@@ -353,7 +352,7 @@ void ActiveMQConsumer::run()
                 }
                 
                 // don't want to process messages if we are shutting down.
-                if( shutdown )
+                if( closed )
                 {
                     return;
                 }
@@ -426,7 +425,7 @@ void ActiveMQConsumer::dispatch( ActiveMQMessage* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::purgeMessages() throw (ActiveMQException)
+void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
 {
     try
     {
@@ -465,7 +464,7 @@ void ActiveMQConsumer::onActiveMQMessage( ActiveMQMessage* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::notifyListener( Message* message ) throw (ActiveMQException){
+void ActiveMQConsumer::notifyListener( Message* message ) throw ( ActiveMQException ){
     
     try
     {
@@ -484,7 +483,7 @@ void ActiveMQConsumer::notifyListener( Message* message ) throw (ActiveMQExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::destroyMessage( Message* message ) throw (ActiveMQException){
+void ActiveMQConsumer::destroyMessage( Message* message ) throw ( ActiveMQException ){
     
     try
     {
@@ -502,7 +501,7 @@ void ActiveMQConsumer::destroyMessage( Message* message ) throw (ActiveMQExcepti
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::startThread() throw (ActiveMQException) {
+void ActiveMQConsumer::startThread() throw ( ActiveMQException ) {
     
     try
     {
@@ -524,12 +523,10 @@ void ActiveMQConsumer::startThread() throw (ActiveMQException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::stopThread() throw (ActiveMQException) {
+void ActiveMQConsumer::stopThread() throw ( ActiveMQException ) {
     
     try
     {
-        shutdown = true;
-        
         // if the thread is running signal it to quit and then
         // wait for run to return so thread can die
         if( listenerThread != NULL )

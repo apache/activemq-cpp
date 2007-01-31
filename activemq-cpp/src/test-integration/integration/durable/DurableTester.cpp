@@ -74,7 +74,9 @@ using namespace integration::durable;
 using namespace integration::common;
 
 DurableTester::DurableTester() : AbstractTester()
-{}
+{
+    this->initialize();
+}
 
 DurableTester::~DurableTester()
 {}

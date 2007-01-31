@@ -75,6 +75,7 @@ using namespace integration::common;
 
 SimpleTester::SimpleTester() : AbstractTester()
 {
+    this->initialize();
     numReceived = 0;
 }
 

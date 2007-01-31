@@ -26,6 +26,7 @@
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
+#include <integration/common/IntegrationCommon.h>
 
 namespace integration{
 namespace common{
@@ -38,7 +39,12 @@ namespace common{
                             cms::Session::AUTO_ACKNOWLEDGE );
     	virtual ~AbstractTester();
     
-        virtual void doSleep(void);
+        virtual void initialize();
+        virtual void doSleep();
+        
+        virtual std::string getBrokerURL() const {
+            return IntegrationCommon::defaultURL;
+        }
 
         virtual unsigned int produceTextMessages( 
             cms::MessageProducer& producer,
@@ -65,6 +71,7 @@ namespace common{
 
         unsigned int numReceived;
         activemq::concurrent::Mutex mutex;
+        cms::Session::AcknowledgeMode ackMode;
 
     };
 

@@ -19,9 +19,12 @@
 
 #include <cms/Session.h>
 #include <cms/ExceptionListener.h>
+#include <activemq/concurrent/Runnable.h>
+#include <activemq/concurrent/Mutex.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/core/ActiveMQSessionResource.h>
 #include <activemq/util/Set.h>
+#include <activemq/util/Queue.h>
 #include <set>
 
 namespace activemq{
@@ -34,35 +37,52 @@ namespace core{
     class ActiveMQProducer;
     class ActiveMQConsumer;
    
-    class ActiveMQSession : public cms::Session
+    class ActiveMQSession : 
+        public cms::Session,
+        public concurrent::Runnable
     {
     private:
-   
+
         /**
          * SessionInfo for this Session
          */
         connector::SessionInfo* sessionInfo;
-      
+
         /**
          * Transaction Management object
          */
         ActiveMQTransaction* transaction;
-      
+
         /**
          * Connection
          */
         ActiveMQConnection* connection;
-      
+
         /**
          * Bool to indicate if this session was closed.
          */
         bool closed;
-        
+
         /**
          * The set of closable session resources (consumers and producers).
          */
         util::Set<cms::Closeable*> closableSessionResources;
-      
+
+        /**
+         *  Thread to notif a listener if one is added
+         */
+        concurrent::Thread* asyncThread;
+
+        /**
+         * Is this Session using Async Sends.
+         */
+        bool useAsyncSend;
+
+        /**
+         * Outgoing Message Queue
+         */
+        util::Queue< std::pair<cms::Message*, ActiveMQProducer*> > msgQueue;        
+
     public:
    
         ActiveMQSession( connector::SessionInfo* sessionInfo,
@@ -70,7 +90,7 @@ namespace core{
                          ActiveMQConnection* connection );
    
         virtual ~ActiveMQSession();
-   
+
     public:   // Implements Mehtods
    
         /**
@@ -294,8 +314,31 @@ namespace core{
         virtual connector::SessionInfo* getSessionInfo() {
             return sessionInfo;
         }
-      
-   };
+
+    protected:
+
+        /**
+         * Run method that is called from the Thread class when this object
+         * is registered with a Thread and started.  This function reads from
+         * the outgoing message queue and dispatches calls to the connector that
+         * is registered with this class.
+         */            
+        virtual void run();
+        
+        /**
+         * Starts the message processing thread to receive messages
+         * asynchronously.  This thread is started when setMessageListener
+         * is invoked, which means that the caller is choosing to use this
+         * consumer asynchronously instead of synchronously (receive).
+         */
+        void startThread() throw (exceptions::ActiveMQException);
+        
+        /**
+         * Stops the asynchronous message processing thread if it's started.
+         */
+        void stopThread() throw (exceptions::ActiveMQException);
+
+    };
 
 }}
 

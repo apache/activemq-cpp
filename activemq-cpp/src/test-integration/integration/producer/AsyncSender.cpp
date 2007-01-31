@@ -14,11 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "TransactionTester.h"
-#include <integration/common/IntegrationCommon.h>
-
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::transactional::TransactionTester );
+ 
+#include "AsyncSender.h"
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -70,28 +67,35 @@ using namespace activemq::transport;
 using namespace activemq::concurrent;
 
 using namespace integration;
-using namespace integration::transactional;
 using namespace integration::common;
+using namespace integration::producer;
 
-TransactionTester::TransactionTester() : AbstractTester( cms::Session::SESSION_TRANSACTED )
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::producer::AsyncSender );
+
+////////////////////////////////////////////////////////////////////////////////
+AsyncSender::AsyncSender() : AbstractTester()
 {
     this->initialize();
+    numReceived = 0;
 }
 
-TransactionTester::~TransactionTester()
-{}
+////////////////////////////////////////////////////////////////////////////////
+AsyncSender::~AsyncSender()
+{
+}
 
-void TransactionTester::test()
+////////////////////////////////////////////////////////////////////////////////
+void AsyncSender::test()
 {
     try
     {
         if( IntegrationCommon::debug ) {
-            cout << "Starting activemqcms transactional test (sending "
+            cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
                  << IntegrationCommon::defaultDelay 
-                << " milli-seconds) ...\n"
-                << endl;
+                 << " milli-seconds) ...\n"
+                 << endl;
         }
         
         // Create CMS Object for Comms
@@ -105,16 +109,12 @@ void TransactionTester::test()
         // Send some text messages
         this->produceTextMessages( 
             *producer, IntegrationCommon::defaultMsgCount );
-            
-        session->commit();
         
         // Send some bytes messages.
         this->produceTextMessages( 
             *producer, IntegrationCommon::defaultMsgCount );
-        
-        session->commit();
 
-        // Wait till we get all the messages
+        // Wait for the messages to get here
         waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
         
         if( IntegrationCommon::debug ) {
@@ -122,23 +122,6 @@ void TransactionTester::test()
         }
         CPPUNIT_ASSERT( 
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
-
-        numReceived = 0;
-
-        // Send some text messages
-        this->produceTextMessages( 
-            *producer, IntegrationCommon::defaultMsgCount );
-
-        session->rollback();
-
-        // Wait till we get all the messages
-        waitForMessages( IntegrationCommon::defaultMsgCount );
-
-        if( IntegrationCommon::debug ) {
-            printf("received: %d\n", numReceived );
-        }
-        CPPUNIT_ASSERT( 
-            numReceived == IntegrationCommon::defaultMsgCount );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
@@ -150,4 +133,3 @@ void TransactionTester::test()
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-
