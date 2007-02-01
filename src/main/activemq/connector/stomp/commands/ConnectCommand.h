@@ -45,6 +45,17 @@ namespace commands{
         virtual ~ConnectCommand(void) {};
 
         /**
+         * Sets the Command Id of this Message
+         * @param id Command Id
+         */
+        virtual void setCommandId( const unsigned int id ){
+            setPropertyValue(
+                CommandConstants::toString( 
+                    CommandConstants::HEADER_REQUESTID),
+                 util::Integer::toString( id ) );
+        }
+        
+        /**
          * Get the login
          * @return char* to login, can be ""
          */      

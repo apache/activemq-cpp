@@ -49,10 +49,10 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             cmd.setResponseRequired( true );
             cmd.setCommandId( 123 );
-            CPPUNIT_ASSERT( cmd.isResponseRequired() == true );
-            CPPUNIT_ASSERT( cmd.getCommandId() == 123 );
+            CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
+            CPPUNIT_ASSERT( cmd.getCommandId() == 0 );
             cmd.setCorrelationId( 99 );
-            CPPUNIT_ASSERT( cmd.getCorrelationId() == 99 );
+            CPPUNIT_ASSERT( cmd.getCorrelationId() == 0 );
             CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
             CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 

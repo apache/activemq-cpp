@@ -46,6 +46,17 @@ namespace commands{
         virtual ~ConnectedCommand(void) {}
 
         /**
+         * Sets the Correlation Id if this Command
+         * @param corrId Id
+         */
+        virtual void setCorrelationId( const unsigned int corrId ) {
+            setPropertyValue(
+                CommandConstants::toString( 
+                    CommandConstants::HEADER_RESPONSEID),
+                 util::Integer::toString( corrId ) );
+        }
+        
+        /**
          * Get the Session Id
          * @return the mew Sessoin Id String
          */      
