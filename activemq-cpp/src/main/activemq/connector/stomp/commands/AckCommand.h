@@ -94,18 +94,13 @@ namespace commands{
             // Make sure the message is an ACK message.
             bool isAck = frame.getCommand() == 
                 CommandConstants::toString( CommandConstants::ACK );
-                
-            // Make sure it has a transaction ID header.
-            bool hasTransactionId = frame.getProperties().hasProperty(
-                   CommandConstants::toString( 
-                       CommandConstants::HEADER_TRANSACTIONID ) );
                        
             // Make sure it has a message ID header.
             bool hasMessageId = frame.getProperties().hasProperty(
                    CommandConstants::toString( 
                        CommandConstants::HEADER_MESSAGEID ) );
             
-            if( isAck && hasTransactionId && hasMessageId )
+            if( isAck && hasMessageId )
             {
                 return true;
             }
