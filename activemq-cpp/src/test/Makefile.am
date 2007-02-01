@@ -42,6 +42,7 @@ cc_sources = \
   activemq/connector/stomp/StompConnectorTest.cpp \
   activemq/connector/stomp/StompFrameTest.cpp \
   activemq/connector/stomp/StompSessionManagerTest.cpp \
+  activemq/connector/openwire/OpenWireFormatTest.cpp \
   activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
   activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
   activemq/connector/openwire/utils/HexTableTest.cpp \
@@ -53,6 +54,7 @@ cc_sources = \
   activemq/connector/openwire/commands/ActiveMQQueueTest.cpp \
   activemq/connector/openwire/commands/ActiveMQTempTopicTest.cpp \
   activemq/connector/openwire/commands/ActiveMQTempQueueTest.cpp \
+  activemq/connector/openwire/commands/ActiveMQTextMessageTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQDestinationTest.cpp \
