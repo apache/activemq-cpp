@@ -133,14 +133,14 @@ namespace commands{
         }   
 
         /**
-         * Sets the Command Id of this Message
+         * Default implementation - does nothing.
+         * Most stomp messages don't require a command ID - only
+         * ones that have a request/response handshake with the broker
+         * require it.
          * @param id Command Id
          */
-        virtual void setCommandId( const unsigned int id ){
-            setPropertyValue(
-                CommandConstants::toString( 
-                    CommandConstants::HEADER_REQUESTID),
-                 util::Integer::toString( id ) );
+        virtual void setCommandId( const unsigned int id AMQCPP_UNUSED){
+            /* do nothing */
         }
 
         /**
@@ -156,10 +156,11 @@ namespace commands{
         }
         
         /**
-         * Set if this Message requires a Response
+         * Not used by stomp.
          * @param required true if response is required
          */
         virtual void setResponseRequired( const bool required AMQCPP_UNUSED) {
+            /* does nothing */
         }
         
         /**
@@ -185,14 +186,11 @@ namespace commands{
         }
 
         /**
-         * Sets the Correlation Id if this Command
+         * Default implementation - does nothing.
          * @param corrId Id
          */
-        virtual void setCorrelationId( const unsigned int corrId ) {
-            setPropertyValue(
-                CommandConstants::toString( 
-                    CommandConstants::HEADER_RESPONSEID),
-                 util::Integer::toString( corrId ) );
+        virtual void setCorrelationId( const unsigned int corrId AMQCPP_UNUSED ) {
+            /* do nothing */
         }
         
         /**
