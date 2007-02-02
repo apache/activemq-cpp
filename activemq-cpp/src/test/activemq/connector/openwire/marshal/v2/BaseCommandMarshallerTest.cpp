@@ -35,5 +35,5 @@ using namespace activemq::connector::openwire::marshal::v2;
 ////////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshallerTest::test()
 {
-    BaseCommandMarshaller myMarshaller;
+    //BaseCommandMarshaller myMarshaller;
 }

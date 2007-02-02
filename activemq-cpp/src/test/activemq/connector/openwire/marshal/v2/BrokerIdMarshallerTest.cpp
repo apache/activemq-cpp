@@ -35,6 +35,6 @@ using namespace activemq::connector::openwire::marshal::v2;
 ////////////////////////////////////////////////////////////////////////////////
 void BrokerIdMarshallerTest::test()
 {
-    BrokerIdMarshaller myMarshaller;    
-    unsigned char type = myMarshaller.getDataStructureType();
+//    BrokerIdMarshaller myMarshaller;    
+//    unsigned char type = myMarshaller.getDataStructureType();
 }
