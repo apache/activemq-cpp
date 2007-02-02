@@ -45,6 +45,8 @@ cc_sources = \
   activemq/connector/openwire/OpenWireFormatTest.cpp \
   activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
   activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
+  activemq/connector/openwire/marshal/v2/BaseCommandMarshallerTest.cpp \
+  activemq/connector/openwire/marshal/v2/BrokerIdMarshallerTest.cpp \
   activemq/connector/openwire/utils/HexTableTest.cpp \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
