@@ -36,7 +36,6 @@ namespace openwire{
     {
     public:
     
-        DataStreamMarshaller() {}
         virtual ~DataStreamMarshaller() {}
     
         /**
