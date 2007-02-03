@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        BaseCommandMarshaller() {};
-        virtual ~BaseCommandMarshaller() {};
+        BaseCommandMarshaller() {}
+        virtual ~BaseCommandMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

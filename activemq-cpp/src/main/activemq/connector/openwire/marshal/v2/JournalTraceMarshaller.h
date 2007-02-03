@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        JournalTraceMarshaller() {};
-        virtual ~JournalTraceMarshaller() {};
+        JournalTraceMarshaller() {}
+        virtual ~JournalTraceMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

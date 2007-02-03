@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        MessageDispatchMarshaller() {};
-        virtual ~MessageDispatchMarshaller() {};
+        MessageDispatchMarshaller() {}
+        virtual ~MessageDispatchMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

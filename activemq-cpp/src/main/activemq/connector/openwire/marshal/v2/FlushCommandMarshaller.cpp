@@ -46,13 +46,14 @@ unsigned char FlushCommandMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void FlushCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void FlushCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int FlushCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int FlushCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 
@@ -60,19 +61,21 @@ int FlushCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void FlushCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void FlushCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void FlushCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void FlushCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void FlushCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void FlushCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
 }

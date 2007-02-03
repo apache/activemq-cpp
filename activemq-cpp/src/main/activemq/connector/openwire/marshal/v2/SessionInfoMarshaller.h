@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        SessionInfoMarshaller() {};
-        virtual ~SessionInfoMarshaller() {};
+        SessionInfoMarshaller() {}
+        virtual ~SessionInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

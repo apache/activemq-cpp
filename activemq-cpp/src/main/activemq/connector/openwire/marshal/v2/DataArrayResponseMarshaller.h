@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        DataArrayResponseMarshaller() {};
-        virtual ~DataArrayResponseMarshaller() {};
+        DataArrayResponseMarshaller() {}
+        virtual ~DataArrayResponseMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

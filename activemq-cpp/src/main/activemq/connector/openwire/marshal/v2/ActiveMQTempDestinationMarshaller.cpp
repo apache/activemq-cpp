@@ -36,13 +36,14 @@ using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   ActiveMQDestinationMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    ActiveMQDestinationMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     int rc = ActiveMQDestinationMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 
@@ -50,19 +51,21 @@ int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     ActiveMQDestinationMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     ActiveMQDestinationMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ActiveMQTempDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ActiveMQDestinationMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
 }

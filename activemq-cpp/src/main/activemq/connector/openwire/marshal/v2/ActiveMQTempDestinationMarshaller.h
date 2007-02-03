@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ActiveMQTempDestinationMarshaller() {};
-        virtual ~ActiveMQTempDestinationMarshaller() {};
+        ActiveMQTempDestinationMarshaller() {}
+        virtual ~ActiveMQTempDestinationMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

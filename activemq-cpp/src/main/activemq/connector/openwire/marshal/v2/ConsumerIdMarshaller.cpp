@@ -46,8 +46,9 @@ unsigned char ConsumerIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ConsumerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ConsumerId* info =
         dynamic_cast<ConsumerId*>( dataStructure );
@@ -57,7 +58,7 @@ void ConsumerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConsumerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ConsumerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     ConsumerId* info =
         dynamic_cast<ConsumerId*>( dataStructure );
@@ -71,7 +72,7 @@ int ConsumerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ConsumerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -83,7 +84,8 @@ void ConsumerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ConsumerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ConsumerId* info = 
         dynamic_cast<ConsumerId*>( dataStructure );
@@ -93,7 +95,8 @@ void ConsumerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ConsumerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ConsumerId* info =
         dynamic_cast<ConsumerId*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        SessionIdMarshaller() {};
-        virtual ~SessionIdMarshaller() {};
+        SessionIdMarshaller() {}
+        virtual ~SessionIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

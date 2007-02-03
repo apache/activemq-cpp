@@ -46,8 +46,9 @@ unsigned char XATransactionIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void XATransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     XATransactionId* info =
         dynamic_cast<XATransactionId*>( dataStructure );
@@ -57,7 +58,7 @@ void XATransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     XATransactionId* info =
         dynamic_cast<XATransactionId*>( dataStructure );
@@ -72,7 +73,7 @@ int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -90,7 +91,8 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void XATransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     XATransactionId* info = 
         dynamic_cast<XATransactionId*>( dataStructure );
@@ -100,7 +102,8 @@ void XATransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     XATransactionId* info =
         dynamic_cast<XATransactionId*>( dataStructure );
     TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

@@ -46,8 +46,9 @@ unsigned char BrokerIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void BrokerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
@@ -55,7 +56,7 @@ void BrokerIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int BrokerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int BrokerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
@@ -67,7 +68,7 @@ int BrokerIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void BrokerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -77,7 +78,8 @@ void BrokerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructur
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     BrokerId* info = 
         dynamic_cast<BrokerId*>( dataStructure );
@@ -85,7 +87,8 @@ void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void BrokerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void BrokerIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

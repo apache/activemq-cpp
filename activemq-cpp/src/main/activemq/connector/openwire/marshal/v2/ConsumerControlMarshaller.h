@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ConsumerControlMarshaller() {};
-        virtual ~ConsumerControlMarshaller() {};
+        ConsumerControlMarshaller() {}
+        virtual ~ConsumerControlMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

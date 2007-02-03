@@ -46,8 +46,9 @@ unsigned char MessageAckMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     MessageAck* info =
         dynamic_cast<MessageAck*>( dataStructure );
@@ -66,7 +67,7 @@ void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessageAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int MessageAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     MessageAck* info =
         dynamic_cast<MessageAck*>( dataStructure );
@@ -82,7 +83,7 @@ int MessageAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -98,7 +99,8 @@ void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     MessageAck* info = 
         dynamic_cast<MessageAck*>( dataStructure );
@@ -117,7 +119,8 @@ void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     MessageAck* info =
         dynamic_cast<MessageAck*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

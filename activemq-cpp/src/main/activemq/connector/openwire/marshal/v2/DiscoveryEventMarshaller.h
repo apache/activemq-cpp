@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        DiscoveryEventMarshaller() {};
-        virtual ~DiscoveryEventMarshaller() {};
+        DiscoveryEventMarshaller() {}
+        virtual ~DiscoveryEventMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

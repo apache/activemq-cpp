@@ -46,8 +46,9 @@ unsigned char ReplayCommandMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ReplayCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ReplayCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ReplayCommand* info =
         dynamic_cast<ReplayCommand*>( dataStructure );
@@ -56,7 +57,7 @@ void ReplayCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ReplayCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ReplayCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     ReplayCommand* info =
         dynamic_cast<ReplayCommand*>( dataStructure );
@@ -67,7 +68,7 @@ int ReplayCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStru
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ReplayCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ReplayCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -78,7 +79,8 @@ void ReplayCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ReplayCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ReplayCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ReplayCommand* info = 
         dynamic_cast<ReplayCommand*>( dataStructure );
@@ -87,7 +89,8 @@ void ReplayCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ReplayCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ReplayCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ReplayCommand* info =
         dynamic_cast<ReplayCommand*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

@@ -46,8 +46,9 @@ unsigned char ConsumerControlMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
@@ -61,7 +62,7 @@ void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
@@ -77,7 +78,7 @@ int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -92,7 +93,8 @@ void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ConsumerControl* info = 
         dynamic_cast<ConsumerControl*>( dataStructure );
@@ -106,7 +108,8 @@ void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ConsumerControl* info =
         dynamic_cast<ConsumerControl*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

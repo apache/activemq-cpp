@@ -46,8 +46,9 @@ unsigned char ControlCommandMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ControlCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ControlCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ControlCommand* info =
         dynamic_cast<ControlCommand*>( dataStructure );
@@ -55,7 +56,7 @@ void ControlCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ControlCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ControlCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     ControlCommand* info =
         dynamic_cast<ControlCommand*>( dataStructure );
@@ -67,7 +68,7 @@ int ControlCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ControlCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ControlCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -77,7 +78,8 @@ void ControlCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ControlCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ControlCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ControlCommand* info = 
         dynamic_cast<ControlCommand*>( dataStructure );
@@ -85,7 +87,8 @@ void ControlCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ControlCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ControlCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ControlCommand* info =
         dynamic_cast<ControlCommand*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

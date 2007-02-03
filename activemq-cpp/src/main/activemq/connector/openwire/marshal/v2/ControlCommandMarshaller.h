@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ControlCommandMarshaller() {};
-        virtual ~ControlCommandMarshaller() {};
+        ControlCommandMarshaller() {}
+        virtual ~ControlCommandMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

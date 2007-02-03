@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        BrokerInfoMarshaller() {};
-        virtual ~BrokerInfoMarshaller() {};
+        BrokerInfoMarshaller() {}
+        virtual ~BrokerInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

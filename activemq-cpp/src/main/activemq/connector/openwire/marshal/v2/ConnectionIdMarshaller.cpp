@@ -46,8 +46,9 @@ unsigned char ConnectionIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void ConnectionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     ConnectionId* info =
         dynamic_cast<ConnectionId*>( dataStructure );
@@ -55,7 +56,7 @@ void ConnectionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int ConnectionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int ConnectionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     ConnectionId* info =
         dynamic_cast<ConnectionId*>( dataStructure );
@@ -67,7 +68,7 @@ int ConnectionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void ConnectionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -77,7 +78,8 @@ void ConnectionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void ConnectionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ConnectionId* info = 
         dynamic_cast<ConnectionId*>( dataStructure );
@@ -85,7 +87,8 @@ void ConnectionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStr
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void ConnectionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void ConnectionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     ConnectionId* info =
         dynamic_cast<ConnectionId*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

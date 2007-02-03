@@ -46,8 +46,9 @@ unsigned char NetworkBridgeFilterMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void NetworkBridgeFilterMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     NetworkBridgeFilter* info =
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
@@ -57,7 +58,7 @@ void NetworkBridgeFilterMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int NetworkBridgeFilterMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int NetworkBridgeFilterMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     NetworkBridgeFilter* info =
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
@@ -69,7 +70,7 @@ int NetworkBridgeFilterMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Da
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -80,7 +81,8 @@ void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void NetworkBridgeFilterMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     NetworkBridgeFilter* info = 
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
@@ -90,7 +92,8 @@ void NetworkBridgeFilterMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilterMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void NetworkBridgeFilterMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     NetworkBridgeFilter* info =
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

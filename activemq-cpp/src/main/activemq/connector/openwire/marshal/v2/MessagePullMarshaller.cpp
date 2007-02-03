@@ -46,8 +46,9 @@ unsigned char MessagePullMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     MessagePull* info =
         dynamic_cast<MessagePull*>( dataStructure );
@@ -59,7 +60,7 @@ void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     MessagePull* info =
         dynamic_cast<MessagePull*>( dataStructure );
@@ -73,7 +74,7 @@ int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruct
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -85,7 +86,8 @@ void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     MessagePull* info = 
         dynamic_cast<MessagePull*>( dataStructure );
@@ -97,7 +99,8 @@ void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStru
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     MessagePull* info =
         dynamic_cast<MessagePull*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

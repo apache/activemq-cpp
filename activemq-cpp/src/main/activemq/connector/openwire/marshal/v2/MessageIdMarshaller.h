@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        MessageIdMarshaller() {};
-        virtual ~MessageIdMarshaller() {};
+        MessageIdMarshaller() {}
+        virtual ~MessageIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

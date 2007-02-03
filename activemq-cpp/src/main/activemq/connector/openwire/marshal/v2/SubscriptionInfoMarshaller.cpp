@@ -46,8 +46,9 @@ unsigned char SubscriptionInfoMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
@@ -59,7 +60,7 @@ void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Dat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
@@ -74,7 +75,7 @@ int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -87,7 +88,8 @@ void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Data
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     SubscriptionInfo* info = 
         dynamic_cast<SubscriptionInfo*>( dataStructure );
@@ -99,7 +101,8 @@ void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Dat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void SubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void SubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

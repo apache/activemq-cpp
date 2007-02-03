@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        KeepAliveInfoMarshaller() {};
-        virtual ~KeepAliveInfoMarshaller() {};
+        KeepAliveInfoMarshaller() {}
+        virtual ~KeepAliveInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

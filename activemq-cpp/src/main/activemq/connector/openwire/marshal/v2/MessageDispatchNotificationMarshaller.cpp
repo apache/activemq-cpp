@@ -46,8 +46,9 @@ unsigned char MessageDispatchNotificationMarshaller::getDataStructureType() cons
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
@@ -61,7 +62,7 @@ void MessageDispatchNotificationMarshaller::tightUnmarshal( OpenWireFormat* wire
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
@@ -76,7 +77,7 @@ int MessageDispatchNotificationMarshaller::tightMarshal1( OpenWireFormat* wireFo
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -89,7 +90,8 @@ void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireF
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     MessageDispatchNotification* info = 
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
@@ -103,7 +105,8 @@ void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wire
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void MessageDispatchNotificationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

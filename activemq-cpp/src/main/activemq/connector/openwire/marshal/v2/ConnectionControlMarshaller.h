@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ConnectionControlMarshaller() {};
-        virtual ~ConnectionControlMarshaller() {};
+        ConnectionControlMarshaller() {}
+        virtual ~ConnectionControlMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        NetworkBridgeFilterMarshaller() {};
-        virtual ~NetworkBridgeFilterMarshaller() {};
+        NetworkBridgeFilterMarshaller() {}
+        virtual ~NetworkBridgeFilterMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ConnectionIdMarshaller() {};
-        virtual ~ConnectionIdMarshaller() {};
+        ConnectionIdMarshaller() {}
+        virtual ~ConnectionIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

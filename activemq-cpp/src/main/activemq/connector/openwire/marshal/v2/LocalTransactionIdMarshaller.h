@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        LocalTransactionIdMarshaller() {};
-        virtual ~LocalTransactionIdMarshaller() {};
+        LocalTransactionIdMarshaller() {}
+        virtual ~LocalTransactionIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

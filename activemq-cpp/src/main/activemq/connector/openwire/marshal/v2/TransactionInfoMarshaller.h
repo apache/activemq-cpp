@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        TransactionInfoMarshaller() {};
-        virtual ~TransactionInfoMarshaller() {};
+        TransactionInfoMarshaller() {}
+        virtual ~TransactionInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

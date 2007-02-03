@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        IntegerResponseMarshaller() {};
-        virtual ~IntegerResponseMarshaller() {};
+        IntegerResponseMarshaller() {}
+        virtual ~IntegerResponseMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

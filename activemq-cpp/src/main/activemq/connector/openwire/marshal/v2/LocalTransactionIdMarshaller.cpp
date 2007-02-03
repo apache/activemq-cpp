@@ -46,8 +46,9 @@ unsigned char LocalTransactionIdMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void LocalTransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     LocalTransactionId* info =
         dynamic_cast<LocalTransactionId*>( dataStructure );
@@ -57,7 +58,7 @@ void LocalTransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, D
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int LocalTransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int LocalTransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     LocalTransactionId* info =
         dynamic_cast<LocalTransactionId*>( dataStructure );
@@ -70,7 +71,7 @@ int LocalTransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Dat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -81,7 +82,8 @@ void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Da
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     LocalTransactionId* info = 
         dynamic_cast<LocalTransactionId*>( dataStructure );
@@ -91,7 +93,8 @@ void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, D
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void LocalTransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void LocalTransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     LocalTransactionId* info =
         dynamic_cast<LocalTransactionId*>( dataStructure );
     TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
