@@ -448,8 +448,9 @@ out.println("");
     }
     
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){");
-out.println("   "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
+out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {");
+out.println("");
+out.println("    "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
 out.println("");
  
     List properties = getProperties();
@@ -475,7 +476,7 @@ out.println("    info->afterUnmarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){");
+out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {");
 out.println("");
 
     if( !properties.isEmpty()  || marshallerAware ) { 
@@ -497,7 +498,7 @@ out.println("    return rc + "+baseSize+";");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){");
+out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {");
 out.println("");
 out.println("    "+baseClass+"::tightMarshal2( wireFormat, dataStructure, dataOut, bs );");
 out.println("");
@@ -516,7 +517,8 @@ out.println("    info->afterMarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){");
+out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {");
+out.println("");
 out.println("    "+baseClass+"::looseUnmarshal( wireFormat, dataStructure, dataIn );");
  
     if( !properties.isEmpty() || marshallerAware ) {
@@ -537,7 +539,8 @@ out.println("    info->afterUnmarshall( wireFormat );");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){");
+out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {");
+out.println("");
 
     if( !properties.isEmpty() || marshallerAware ) {
 out.println("    "+jclass.getSimpleName()+"* info ="); 
@@ -599,10 +602,11 @@ out.println("using namespace activemq::connector::openwire::marshal::v"+getOpenw
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
 out.println("void MarshallerFactory::configure( OpenWireFormat* format ) {");
+out.println("");
 
     for (Iterator iter = list.iterator(); iter.hasNext();) {
         JClass jclass = (JClass) iter.next();
-out.println("    format->addMarshaller( new "+jclass.getSimpleName()+"Marshaller());");
+out.println("    format->addMarshaller( new "+jclass.getSimpleName()+"Marshaller() );");
 }        
 
 out.println("}");
