@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        RemoveInfoMarshaller() {};
-        virtual ~RemoveInfoMarshaller() {};
+        RemoveInfoMarshaller() {}
+        virtual ~RemoveInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

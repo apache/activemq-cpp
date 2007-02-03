@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ShutdownInfoMarshaller() {};
-        virtual ~ShutdownInfoMarshaller() {};
+        ShutdownInfoMarshaller() {}
+        virtual ~ShutdownInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

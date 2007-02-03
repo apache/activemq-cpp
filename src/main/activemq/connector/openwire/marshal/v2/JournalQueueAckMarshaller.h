@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        JournalQueueAckMarshaller() {};
-        virtual ~JournalQueueAckMarshaller() {};
+        JournalQueueAckMarshaller() {}
+        virtual ~JournalQueueAckMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

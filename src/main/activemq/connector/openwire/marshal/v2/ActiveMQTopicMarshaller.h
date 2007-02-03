@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ActiveMQTopicMarshaller() {};
-        virtual ~ActiveMQTopicMarshaller() {};
+        ActiveMQTopicMarshaller() {}
+        virtual ~ActiveMQTopicMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

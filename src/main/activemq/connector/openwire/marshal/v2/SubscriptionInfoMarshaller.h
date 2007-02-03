@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        SubscriptionInfoMarshaller() {};
-        virtual ~SubscriptionInfoMarshaller() {};
+        SubscriptionInfoMarshaller() {}
+        virtual ~SubscriptionInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

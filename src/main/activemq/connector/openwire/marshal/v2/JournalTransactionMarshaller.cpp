@@ -46,8 +46,9 @@ unsigned char JournalTransactionMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ){
-   BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+
+    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
@@ -58,7 +59,7 @@ void JournalTransactionMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, D
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ){
+int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
@@ -71,7 +72,7 @@ int JournalTransactionMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Dat
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ){
+void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
@@ -83,7 +84,8 @@ void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Da
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ){
+void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     JournalTransaction* info = 
         dynamic_cast<JournalTransaction*>( dataStructure );
@@ -94,7 +96,8 @@ void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, D
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTransactionMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ){
+void JournalTransactionMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+
     JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );

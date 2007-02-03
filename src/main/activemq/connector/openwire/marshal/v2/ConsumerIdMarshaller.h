@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ConsumerIdMarshaller() {};
-        virtual ~ConsumerIdMarshaller() {};
+        ConsumerIdMarshaller() {}
+        virtual ~ConsumerIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

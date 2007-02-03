@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        WireFormatInfoMarshaller() {};
-        virtual ~WireFormatInfoMarshaller() {};
+        WireFormatInfoMarshaller() {}
+        virtual ~WireFormatInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

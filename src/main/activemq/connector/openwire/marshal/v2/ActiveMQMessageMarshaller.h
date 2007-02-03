@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ActiveMQMessageMarshaller() {};
-        virtual ~ActiveMQMessageMarshaller() {};
+        ActiveMQMessageMarshaller() {}
+        virtual ~ActiveMQMessageMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ExceptionResponseMarshaller() {};
-        virtual ~ExceptionResponseMarshaller() {};
+        ExceptionResponseMarshaller() {}
+        virtual ~ExceptionResponseMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

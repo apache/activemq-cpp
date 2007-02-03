@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        LastPartialCommandMarshaller() {};
-        virtual ~LastPartialCommandMarshaller() {};
+        LastPartialCommandMarshaller() {}
+        virtual ~LastPartialCommandMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

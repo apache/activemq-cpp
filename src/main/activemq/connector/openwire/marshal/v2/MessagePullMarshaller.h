@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        MessagePullMarshaller() {};
-        virtual ~MessagePullMarshaller() {};
+        MessagePullMarshaller() {}
+        virtual ~MessagePullMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

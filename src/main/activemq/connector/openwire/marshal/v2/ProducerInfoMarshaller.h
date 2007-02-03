@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        ProducerInfoMarshaller() {};
-        virtual ~ProducerInfoMarshaller() {};
+        ProducerInfoMarshaller() {}
+        virtual ~ProducerInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

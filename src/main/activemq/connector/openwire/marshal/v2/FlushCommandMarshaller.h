@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        FlushCommandMarshaller() {};
-        virtual ~FlushCommandMarshaller() {};
+        FlushCommandMarshaller() {}
+        virtual ~FlushCommandMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

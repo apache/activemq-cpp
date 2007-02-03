@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        JournalTopicAckMarshaller() {};
-        virtual ~JournalTopicAckMarshaller() {};
+        JournalTopicAckMarshaller() {}
+        virtual ~JournalTopicAckMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

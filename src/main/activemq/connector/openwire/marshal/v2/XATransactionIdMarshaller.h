@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        XATransactionIdMarshaller() {};
-        virtual ~XATransactionIdMarshaller() {};
+        XATransactionIdMarshaller() {}
+        virtual ~XATransactionIdMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.

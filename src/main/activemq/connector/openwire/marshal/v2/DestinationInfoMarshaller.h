@@ -49,8 +49,8 @@ namespace v2{
     {
     public:
 
-        DestinationInfoMarshaller() {};
-        virtual ~DestinationInfoMarshaller() {};
+        DestinationInfoMarshaller() {}
+        virtual ~DestinationInfoMarshaller() {}
 
         /**
          * Creates a new instance of this marshalable type.
