@@ -37,58 +37,58 @@ namespace marshal{
         
         /**
          * Determine if the class implementing this interface is really
-         * wanting to be told about marshalling.  Normally if you didn't 
+         * wanting to be told about marshaling.  Normally if you didn't 
          * want to be marshal aware you just wouldn't implement this interface
          * but since this is C++ and we don't have true interfaces we need
          * a flat inheritance heirarchy, so we always implement this.
-         * @returns true if this class cares about marshalling.
+         * @returns true if this class cares about marshaling.
          */
-        virtual bool isMarshallAware() const = 0;
+        virtual bool isMarshalAware() const = 0;
         
         /**
-         * Called before marshalling is started to prepare the object to be
-         * marshalled.
+         * Called before marshaling is started to prepare the object to be
+         * marshaled.
          * @param wireFormat - the wireformat object to control marshaling
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat ) = 0;
+        virtual void beforeMarshal( OpenWireFormat* wireFormat ) = 0;
 
         /**
-         * Called after marshalling is started to cleanup the object being
-         * marshalled.
+         * Called after marshaling is started to cleanup the object being
+         * marshaled.
          * @param wireFormat - the wireformat object to control marshaling
          */
-        virtual void afterMarshall( OpenWireFormat* wireFormat ) = 0;
+        virtual void afterMarshal( OpenWireFormat* wireFormat ) = 0;
         
         /**
-         * Called before unmarshalling is started to prepare the object to be
-         * unmarshalled.
+         * Called before unmarshaling is started to prepare the object to be
+         * unmarshaled.
          * @param wireFormat - the wireformat object to control unmarshaling
          */
-        virtual void beforeUnmarshall( OpenWireFormat* wireFormat ) = 0;
+        virtual void beforeUnmarshal( OpenWireFormat* wireFormat ) = 0;
 
         /**
-         * Called after unmarshalling is started to cleanup the object being
-         * unmarshalled.
+         * Called after unmarshaling is started to cleanup the object being
+         * unmarshaled.
          * @param wireFormat - the wireformat object to control unmarshaling
          */
-        virtual void afterUnmarshall( OpenWireFormat* wireFormat ) = 0;
+        virtual void afterUnmarshal( OpenWireFormat* wireFormat ) = 0;
         
         /**
          * Called to set the data to this object that will contain the objects
-         * marshalled form.
+         * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @param data - vector of object binary data
          */ 
-        virtual void setMarshalledForm( OpenWireFormat* wireFormat, 
+        virtual void setMarshaledForm( OpenWireFormat* wireFormat, 
                                         const std::vector<char>& data ) = 0;
 
         /**
          * Called to get the data to this object that will contain the objects
-         * marshalled form.
+         * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @return buffer that holds the objects data.
          */ 
-        virtual std::vector<unsigned char> getMarshalledForm( OpenWireFormat* wireFormat ) = 0;
+        virtual std::vector<unsigned char> getMarshaledForm( OpenWireFormat* wireFormat ) = 0;
 
     };
 

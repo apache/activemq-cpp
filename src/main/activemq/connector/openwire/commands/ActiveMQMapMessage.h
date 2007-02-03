@@ -54,7 +54,7 @@ namespace commands{
          * its before and after marshalling methods called.  Defaults to false.
          * @returns true if aware of marshalling
          */
-        virtual bool isMarshallAware() const {
+        virtual bool isMarshalAware() const {
             return true;
         }
 
@@ -82,7 +82,7 @@ namespace commands{
          * Perform any processing needed before an marshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED );
 
     public:   // CMS Message
     

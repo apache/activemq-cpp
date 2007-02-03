@@ -52,10 +52,10 @@ void ActiveMQMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 
     ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
-    info->beforeUnmarshall( wireFormat );
+    info->beforeUnmarshal( wireFormat );
 
 
-    info->afterUnmarshall( wireFormat );
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ int ActiveMQMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
     ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
 
-    info->beforeMarshall( wireFormat );
+    info->beforeMarshal( wireFormat );
     int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 
     return rc + 0;
@@ -77,7 +77,7 @@ void ActiveMQMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 
     ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
-    info->afterMarshall( wireFormat );
+    info->afterMarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,8 +86,8 @@ void ActiveMQMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Data
     MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     ActiveMQMessage* info = 
         dynamic_cast<ActiveMQMessage*>( dataStructure );
-    info->beforeUnmarshall( wireFormat );
-    info->afterUnmarshall( wireFormat );
+    info->beforeUnmarshal( wireFormat );
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,9 +95,9 @@ void ActiveMQMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
 
     ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
-    info->beforeMarshall( wireFormat );
+    info->beforeMarshal( wireFormat );
     MessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    info->afterMarshall( wireFormat );
+    info->afterMarshal( wireFormat );
 }
 

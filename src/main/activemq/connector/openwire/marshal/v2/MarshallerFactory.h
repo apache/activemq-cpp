@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V2_MARSHALLERFACTORY_H_
-#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V2_MARSHALLERFACTORY_H_
+#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V2_MARSHALERFACTORY_H_
+#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V2_MARSHALERFACTORY_H_
 
 //       Turn off warning message for ignored exception specification
 #ifdef _MSC_VER

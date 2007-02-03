@@ -41,7 +41,7 @@ namespace commands{
          * its before and after marshalling methods called.  Defaults to false.
          * @returns true if aware of marshalling
          */
-        virtual bool isMarshallAware() const {
+        virtual bool isMarshalAware() const {
             return false;
         }
 
@@ -49,42 +49,42 @@ namespace commands{
          * Perform any processing needed before an marshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
+        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
         
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void afterMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
+        virtual void afterMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
         
         /**
          * Perform any processing needed before an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeUnmarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
+        virtual void beforeUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
         
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void afterUnmarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
+        virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
 
         /**
          * Called to set the data to this object that will contain the objects
-         * marshalled form.
+         * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @param data - vector of object binary data
          */ 
-        virtual void setMarshalledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED, 
+        virtual void setMarshaledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED, 
                                         const std::vector<char>& data AMQCPP_UNUSED) {}
 
         /**
          * Called to get the data to this object that will contain the objects
-         * marshalled form.
+         * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @return buffer that holds the objects data.
          */ 
-        virtual std::vector<unsigned char> getMarshalledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED) {
+        virtual std::vector<unsigned char> getMarshaledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED) {
             return std::vector<unsigned char>(); 
         }
 
@@ -93,7 +93,7 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
+        virtual void copyDataStructure( const DataStructure* src AMQCPP_UNUSED ) {
             // Nothing to do here
         }
 
