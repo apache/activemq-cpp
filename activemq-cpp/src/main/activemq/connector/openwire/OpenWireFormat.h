@@ -40,7 +40,7 @@ namespace openwire{
          * @param properties - can contain optional config params.
          */    
         OpenWireFormat( const activemq::util::Properties& properties );
-        
+
         virtual ~OpenWireFormat();
 
         /**
@@ -49,7 +49,7 @@ namespace openwire{
          * @param marshaller - the Marshaller to add to the collection.
          */
         void addMarshaller( DataStreamMarshaller* marshaller );
-        
+
         /**
          * Stream based marshaling
          * @param command - The Command to Marshal
@@ -78,7 +78,7 @@ namespace openwire{
         virtual int tightMarshalNestedObject1( commands::DataStructure* object, 
                                                utils::BooleanStream* bs )
             throw ( io::IOException );
-        
+
         /**
          * Utility method that will Tight marshall some internally nested object
          * that implements the DataStructure interface.  Writes the data to the
@@ -153,7 +153,7 @@ namespace openwire{
         bool isStackTraceEnabled() const {
             return stackTraceEnabled;
         }
-    
+
         /**
          * Sets if the stackTraceEnabled flag is on
          * @param stackTraceEnabled - ture to turn flag is on
@@ -161,7 +161,7 @@ namespace openwire{
         void setStackTraceEnabled( bool stackTraceEnabled ) {
             this->stackTraceEnabled = stackTraceEnabled;
         }
-    
+
         /**
          * Checks if the tcpNoDelayEnabled flag is on
          * @return true if the flag is on.
@@ -169,7 +169,7 @@ namespace openwire{
         bool isTcpNoDelayEnabled() const {
             return tcpNoDelayEnabled;
         }
-    
+
         /**
          * Sets if the tcpNoDelayEnabled flag is on
          * @param tcpNoDelayEnabled - ture to turn flag is on
@@ -177,7 +177,7 @@ namespace openwire{
         void setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
             this->tcpNoDelayEnabled = tcpNoDelayEnabled;
         }
-    
+
         /**
          * Get the current Wireformat Version
          * @return int that identifies the version
@@ -185,7 +185,7 @@ namespace openwire{
         int getVersion() const {
             return version;
         }
-    
+
         /**
          * Set the current Wireformat Version
          * @param version - int that identifies the version
@@ -193,7 +193,7 @@ namespace openwire{
         void setVersion( int version ) {
             this->version = version;
         }
-    
+
         /**
          * Checks if the cacheEnabled flag is on
          * @return true if the flag is on.
@@ -201,7 +201,7 @@ namespace openwire{
         bool isCacheEnabled() const {
             return cacheEnabled;
         }
-    
+
         /**
          * Sets if the cacheEnabled flag is on
          * @param cacheEnabled - ture to turn flag is on
@@ -209,7 +209,7 @@ namespace openwire{
         void setCacheEnabled( bool cacheEnabled ) {
             this->cacheEnabled = cacheEnabled;
         }
-    
+
         /**
          * Checks if the tightEncodingEnabled flag is on
          * @return true if the flag is on.
@@ -217,7 +217,7 @@ namespace openwire{
         bool isTightEncodingEnabled() const {
             return tightEncodingEnabled;
         }
-    
+
         /**
          * Sets if the tightEncodingEnabled flag is on
          * @param tightEncodingEnabled - ture to turn flag is on
@@ -225,7 +225,7 @@ namespace openwire{
         void setTightEncodingEnabled( bool tightEncodingEnabled ) {
             this->tightEncodingEnabled = tightEncodingEnabled;
         }
-    
+
         /**
          * Checks if the sizePrefixDisabled flag is on
          * @return true if the flag is on.
@@ -233,7 +233,7 @@ namespace openwire{
         bool isSizePrefixDisabled() const {
             return sizePrefixDisabled;
         }
-    
+
         /**
          * Sets if the sizePrefixDisabled flag is on
          * @param sizePrefixDisabled - ture to turn flag is on
@@ -241,7 +241,7 @@ namespace openwire{
         void setSizePrefixDisabled( bool sizePrefixDisabled ) {
             this->sizePrefixDisabled = sizePrefixDisabled;
         }
-    
+
         /**
          * Get the current value of the maxInactivityDuration feild
          * @return the value of the maxInactivityDuration
@@ -249,7 +249,7 @@ namespace openwire{
         long getMaxInactivityDuration() const {
             return maxInactivityDuration;
         }
-    
+
         /**
          * Set the current Wireformat Version
          * @param version - int that identifies the version
@@ -259,7 +259,7 @@ namespace openwire{
         }
 
     protected:
-    
+
         /**
          * Perform the actual unmarshal of data from the given DataInputStream
          * return the unmarshalled DataStrucutre object once done, caller takes 
@@ -278,19 +278,19 @@ namespace openwire{
         static const unsigned char NULL_TYPE; 
 
     private:
-    
+
         // This object config data
         activemq::util::SimpleProperties properties;
-        
+
         // Prefered WireFormatInfo
         commands::WireFormatInfo* preferedWireFormatInfo;
-        
+
         // Marshallers
         std::vector< DataStreamMarshaller* > dataMarshallers;
-        
+
         // Uniquely Generated ID, initialize in the Ctor
         std::string id;
-        
+
         // WireFormat Data
         int version;
         bool stackTraceEnabled;
@@ -299,7 +299,7 @@ namespace openwire{
         bool tightEncodingEnabled;
         bool sizePrefixDisabled;
         int maxInactivityDuration;
-    
+
     };
 
 }}}
