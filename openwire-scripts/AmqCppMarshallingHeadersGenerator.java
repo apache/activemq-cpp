@@ -228,8 +228,8 @@ out.println("");
  	
     public void generateFactory(PrintWriter out) {
 		generateLicence(out);
-out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_");
-out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_");
+out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
+out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
 out.println("");
 out.println("//       Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
