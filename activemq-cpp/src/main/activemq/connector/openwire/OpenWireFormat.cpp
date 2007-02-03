@@ -296,10 +296,10 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
             return 0;
         }
             
-        if( object->isMarshallAware() ) {
+        if( object->isMarshalAware() ) {
             
             std::vector<unsigned char> sequence = 
-                object->getMarshalledForm(this);
+                object->getMarshaledForm(this);
             bs->writeBoolean( !sequence.empty() );
             if( !sequence.empty() ) {
                 return 1 + sequence.size();
@@ -346,10 +346,10 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
         
         ds->writeByte(type);
     
-        if( o->isMarshallAware() && bs->readBoolean() ) {
+        if( o->isMarshalAware() && bs->readBoolean() ) {
     
             MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
-            vector<unsigned char> sequence = ma->getMarshalledForm( this );
+            vector<unsigned char> sequence = ma->getMarshaledForm( this );
             ds->write( &sequence[0], sequence.size() );
             
         } else {
@@ -397,7 +397,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
     
             DataStructure* data = dsm->createObject();
     
-            if( data->isMarshallAware() && bs->readBoolean() ) {
+            if( data->isMarshalAware() && bs->readBoolean() ) {
                 
                 dis->readInt();
                 dis->readByte();

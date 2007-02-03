@@ -46,7 +46,7 @@ unsigned char ActiveMQMapMessage::getDataStructureType() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQMapMessage::beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+void ActiveMQMapMessage::beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
 
     try{ 
   
@@ -133,7 +133,7 @@ bool ActiveMQMapMessage::getBoolean( const std::string& name ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMapMessage::setBoolean( const std::string& name, bool value ) 
-                                         throw( cms::CMSException ) {
+    throw( cms::CMSException ) {
 
     try{
         getMap().setBool( name, value );

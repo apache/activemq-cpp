@@ -52,13 +52,13 @@ void WireFormatInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataS
 
     WireFormatInfo* info =
         dynamic_cast<WireFormatInfo*>( dataStructure );
-    info->beforeUnmarshall( wireFormat );
+    info->beforeUnmarshal( wireFormat );
 
     info->setMagic( tightUnmarshalConstByteArray( dataIn, bs, 8 ) );
     info->setVersion( dataIn->readInt() );
     info->setMarshalledProperties( tightUnmarshalByteArray( dataIn, bs ) );
 
-    info->afterUnmarshall( wireFormat );
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ int WireFormatInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
     WireFormatInfo* info =
         dynamic_cast<WireFormatInfo*>( dataStructure );
 
-    info->beforeMarshall( wireFormat );
+    info->beforeMarshal( wireFormat );
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
     rc += info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4;
@@ -88,7 +88,7 @@ void WireFormatInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
         dataOut->write( info->getMarshalledProperties().size() );
         dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
-    info->afterMarshall( wireFormat );
+    info->afterMarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,11 +97,11 @@ void WireFormatInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataS
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
     WireFormatInfo* info = 
         dynamic_cast<WireFormatInfo*>( dataStructure );
-    info->beforeUnmarshall( wireFormat );
+    info->beforeUnmarshal( wireFormat );
     info->setMagic( looseUnmarshalConstByteArray( dataIn, 8 ) );
     info->setVersion( dataIn->readInt() );
     info->setMarshalledProperties( looseUnmarshalByteArray( dataIn ) );
-    info->afterUnmarshall( wireFormat );
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ void WireFormatInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
 
     WireFormatInfo* info =
         dynamic_cast<WireFormatInfo*>( dataStructure );
-    info->beforeMarshall( wireFormat );
+    info->beforeMarshal( wireFormat );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     dataOut->write( &info->getMagic()[0], 8 );
@@ -119,6 +119,6 @@ void WireFormatInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
         dataOut->write( info->getMarshalledProperties().size() );
         dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
-    info->afterMarshall( wireFormat );
+    info->afterMarshal( wireFormat );
 }
 
