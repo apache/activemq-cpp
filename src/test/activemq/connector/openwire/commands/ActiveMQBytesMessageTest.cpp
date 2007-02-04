@@ -34,4 +34,30 @@ using namespace activemq::connector::openwire::commands;
 void ActiveMQBytesMessageTest::test()
 {
     ActiveMQBytesMessage myMessage;
+
+    CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQBytesMessage::ID_ACTIVEMQBYTESMESSAGE );
+
+    // Write some data
+    myMessage.writeBoolean( false );
+    myMessage.writeByte( 127 );
+    myMessage.writeShort( 32767 );
+    myMessage.writeDouble( 0.5622154 );
+    myMessage.writeDouble( 1.012 );
+    myMessage.writeFloat( 10.000005f );
+    
+    CPPUNIT_ASSERT( myMessage.getBodyLength() != 0 );
+
+    // Get ready to read
+    myMessage.reset();
+    
+    CPPUNIT_ASSERT( myMessage.readBoolean() == false );
+    CPPUNIT_ASSERT( myMessage.readByte() == 127 );
+    CPPUNIT_ASSERT( myMessage.readShort() == 32767 );
+    CPPUNIT_ASSERT( myMessage.readDouble() == 0.5622154 );
+    CPPUNIT_ASSERT( myMessage.readDouble() == 1.012 );
+    CPPUNIT_ASSERT( myMessage.readFloat() == 10.000005f );
+    
+    myMessage.clearBody();
+    
+    CPPUNIT_ASSERT( myMessage.getBodyLength() == 0 );
 }
