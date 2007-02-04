@@ -297,6 +297,12 @@ namespace commands{
         util::PrimitiveMap& getMap() throw ( exceptions::NullPointerException );
         const util::PrimitiveMap& getMap() const throw ( exceptions::NullPointerException );
 
+        /**
+         * Performs the unmarshal on the Map if needed, otherwise just returns
+         */
+        virtual void checkMapIsUnmarshalled() const 
+            throw ( exceptions::NullPointerException );
+
     private:
     
         // Map Structure to hold unmarshalled Map Data
