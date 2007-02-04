@@ -34,9 +34,9 @@ public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
     protected String getFilePostFix() {
         return ".h";
     }
-    
+
 	protected void generateFile(PrintWriter out) {
-		generateLicence(out);		
+		generateLicence(out);
 
 out.println("");
 out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_");
@@ -89,7 +89,7 @@ out.println("     *         if you need to make a change, please see the Java Cl
 out.println("     *         in the activemq-openwire-generator module");
 out.println("     *");
 out.println("     */");
-out.println("    class "+className+" : public "+baseClass);
+out.println("    class "+className+" : public "+getProperBaseClassName( className, baseClass ) );
 out.println("    {");
 out.println("    protected:");
 out.println("");
@@ -164,11 +164,16 @@ out.println("");
             	type = type + "&";
                 constness = "const ";
             }
-            
-            out.println("        virtual const "+type+" "+property.getGetter().getSimpleName()+"() const;");
-            out.println("        virtual "+type+" "+property.getGetter().getSimpleName()+"();");
-            out.println("        virtual void "+property.getSetter().getSimpleName()+"( "+constness+type+" "+parameterName+" );");
-            out.println("");
+
+            if( property.getType().isPrimitiveType() ) {
+out.println("        virtual "+type+" "+property.getGetter().getSimpleName()+"() const;");
+            } else {
+out.println("        virtual const "+type+" "+property.getGetter().getSimpleName()+"() const;");
+out.println("        virtual "+type+" "+property.getGetter().getSimpleName()+"();");
+            }
+
+out.println("        virtual void "+property.getSetter().getSimpleName()+"( "+constness+type+" "+parameterName+" );");
+out.println("");
         }
 
 out.println("    };");

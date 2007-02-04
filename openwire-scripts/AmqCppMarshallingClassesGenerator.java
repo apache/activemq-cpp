@@ -39,6 +39,15 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         return ".cpp";
     }
 
+    protected String getProperClassName( String className ) {
+
+        if( className.equals( "BaseCommand") ) {
+            return "transport::Command";
+        }
+        
+        return className;
+    }
+    
     //////////////////////////////////////////////////////////////////////////////////////
     // This section is for the tight wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
@@ -457,8 +466,9 @@ out.println("");
     boolean marshallerAware = isMarshallerAware();
     if( !properties.isEmpty() || marshallerAware ) {
 
-out.println("    "+jclass.getSimpleName()+"* info ="); 
-out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
+        String properClassName = getProperClassName( jclass.getSimpleName() );
+out.println("    "+properClassName+"* info ="); 
+out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
     if( marshallerAware ) {
@@ -480,8 +490,9 @@ out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataS
 out.println("");
 
     if( !properties.isEmpty()  || marshallerAware ) { 
-out.println("    "+jclass.getSimpleName()+"* info ="); 
-out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
+        String properClassName = getProperClassName( jclass.getSimpleName() );
+out.println("    "+properClassName+"* info ="); 
+out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
 out.println("");
     }
         
@@ -504,8 +515,9 @@ out.println("    "+baseClass+"::tightMarshal2( wireFormat, dataStructure, dataOu
 out.println("");
 
     if( !properties.isEmpty() || marshallerAware ) {
-out.println("    "+jclass.getSimpleName()+"* info ="); 
-out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
+        String properClassName = getProperClassName( jclass.getSimpleName() );
+out.println("    "+properClassName+"* info ="); 
+out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
     generateTightMarshal2Body(out);
@@ -522,8 +534,9 @@ out.println("");
 out.println("    "+baseClass+"::looseUnmarshal( wireFormat, dataStructure, dataIn );");
  
     if( !properties.isEmpty() || marshallerAware ) {
-out.println("    "+jclass.getSimpleName()+"* info = ");
-out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
+        String properClassName = getProperClassName( jclass.getSimpleName() );
+out.println("    "+properClassName+"* info ="); 
+out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
     if( marshallerAware ) {
@@ -543,8 +556,9 @@ out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataS
 out.println("");
 
     if( !properties.isEmpty() || marshallerAware ) {
-out.println("    "+jclass.getSimpleName()+"* info ="); 
-out.println("        dynamic_cast<"+jclass.getSimpleName()+"*>( dataStructure );");
+        String properClassName = getProperClassName( jclass.getSimpleName() );
+out.println("    "+properClassName+"* info ="); 
+out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
     if( marshallerAware ) {
