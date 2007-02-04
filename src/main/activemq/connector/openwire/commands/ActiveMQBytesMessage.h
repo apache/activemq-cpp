@@ -58,7 +58,7 @@ namespace commands{
          */
         virtual DataStructure* cloneDataStructure() const { 
             ActiveMQBytesMessage* message = new ActiveMQBytesMessage();
-            message->copyDataStructure( this );            
+            message->copyDataStructure( this );
             return message;
         }
 
