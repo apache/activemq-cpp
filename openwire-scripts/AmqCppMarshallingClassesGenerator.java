@@ -48,6 +48,31 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         return className;
     }
     
+    protected boolean checkNeedsInfoPointer() {
+        
+        if( isMarshallerAware() ){
+            return true;
+        }
+        
+        List properties = getProperties();
+        for (Iterator iter = properties.iterator(); iter.hasNext();) {
+            JProperty property = (JProperty) iter.next();
+            JClass propertyType = property.getType();
+            String type = propertyType.getSimpleName();
+            
+            if( !( type.equals("byte") ) &&
+                !( type.equals("char") ) &&
+                !( type.equals("short") ) &&
+                !( type.equals("int") ) ) {
+                
+                return true;
+            }
+            
+        }
+        
+        return false;
+    }
+    
     //////////////////////////////////////////////////////////////////////////////////////
     // This section is for the tight wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
@@ -489,7 +514,8 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {");
 out.println("");
 
-    if( !properties.isEmpty()  || marshallerAware ) { 
+//    if( !properties.isEmpty()  || marshallerAware ) { 
+    if( checkNeedsInfoPointer() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("    "+properClassName+"* info ="); 
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
