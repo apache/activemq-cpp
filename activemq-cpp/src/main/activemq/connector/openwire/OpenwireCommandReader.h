@@ -82,7 +82,7 @@ namespace openwire{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual int read( unsigned char* buffer, int count ) 
+        virtual size_t read( unsigned char* buffer, size_t count ) 
             throw( io::IOException );
        
         /**

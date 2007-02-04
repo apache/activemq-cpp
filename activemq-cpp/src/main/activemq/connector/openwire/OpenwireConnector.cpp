@@ -23,6 +23,7 @@
 #include <activemq/transport/ExceptionResponse.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Integer.h>
+#include <activemq/connector/openwire/OpenwireConnectorException.h>
 
 using namespace std;
 using namespace activemq;
@@ -159,7 +160,7 @@ void OpenwireConnector::connect(void)
     try
     {
         // Mark this connector as started.
-        state = this->CONNECTING;
+        /*state = this->CONNECTING;
 
         // TODO - Create a Connect Command        
 
@@ -207,7 +208,7 @@ void OpenwireConnector::connect(void)
         state = CONNECTED;
         
         // Clean up
-        delete response;
+        delete response;*/
     }
     AMQ_CATCH_RETHROW( BrokerError )
     AMQ_CATCH_RETHROW( ActiveMQException )

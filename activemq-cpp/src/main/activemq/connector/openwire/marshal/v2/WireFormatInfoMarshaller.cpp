@@ -70,7 +70,7 @@ int WireFormatInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
     info->beforeMarshal( wireFormat );
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
-    rc += info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4;
+    rc += (int)(info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4);
 
     return rc + 12;
 }
@@ -85,7 +85,7 @@ void WireFormatInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
     dataOut->write( &info->getMagic()[0], 8 );
     dataOut->write( info->getVersion() );
     if( bs->readBoolean() ) {
-        dataOut->write( info->getMarshalledProperties().size() );
+        dataOut->write( (int)info->getMarshalledProperties().size() );
         dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
     info->afterMarshal( wireFormat );
@@ -116,7 +116,7 @@ void WireFormatInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
     dataOut->write( info->getVersion() );
     dataOut->write( info->getMarshalledProperties().size() != 0 );
     if( info->getMarshalledProperties().size() != 0 ) {
-        dataOut->write( info->getMarshalledProperties().size() );
+        dataOut->write( (int)info->getMarshalledProperties().size() );
         dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
     }
     info->afterMarshal( wireFormat );

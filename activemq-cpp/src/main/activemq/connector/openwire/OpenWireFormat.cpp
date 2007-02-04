@@ -79,9 +79,6 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     sizePrefixDisabled = Boolean::parseBoolean( 
         properties.getProperty( "wireFormat.sizePrefixDisabled", 
                                 "0" ) );
-    maxInactivityDuration = Long::parseLong( 
-        properties.getProperty( "wireFormat.maxInactivityDuration", 
-                                "30000" ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +116,6 @@ void OpenWireFormat::setPreferedWireFormatInfo(
         preferedWireFormatInfo->setTcpNoDelayEnabled( tcpNoDelayEnabled );
         preferedWireFormatInfo->setTightEncodingEnabled( tightEncodingEnabled );
         preferedWireFormatInfo->setSizePrefixDisabled( sizePrefixDisabled );
-        preferedWireFormatInfo->setMaxInactivityDuration( maxInactivityDuration );
     } catch( ActiveMQException& e ) {
         throw IllegalStateException(
             __FILE__, __LINE__,
@@ -180,7 +176,7 @@ void OpenWireFormat::marshal( transport::Command* command,
                 
                 if( !sizePrefixDisabled ) {
                     looseOut->close();
-                    dataOut->writeInt( baos->getByteArraySize() );
+                    dataOut->writeInt( (int)baos->getByteArraySize() );
                     dataOut->write( baos->getByteArray(), 
                                     baos->getByteArraySize() );
                                     
@@ -302,7 +298,7 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
                 object->getMarshaledForm(this);
             bs->writeBoolean( !sequence.empty() );
             if( !sequence.empty() ) {
-                return 1 + sequence.size();
+                return (int)(1 + sequence.size());
             }
         }
         

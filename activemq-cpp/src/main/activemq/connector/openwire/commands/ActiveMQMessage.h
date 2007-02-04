@@ -45,7 +45,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessage::copyDataStructure( src );
+            ActiveMQMessageBase<cms::Message>::copyDataStructure( src );
         }
 
     public:  // cms::Message

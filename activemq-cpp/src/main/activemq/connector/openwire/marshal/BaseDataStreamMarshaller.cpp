@@ -222,13 +222,13 @@ int BaseDataStreamMarshaller::tightMarshalString1( const std::string& value,
         bs->writeBoolean( value == "" );
         if( value != "" )
         {
-            int strlen = value.length();
+            size_t strlen = value.length();
             
             int utflen = 0;
             int c = 0;
             bool isOnlyAscii = true;
             
-            for( int i = 0; i < strlen; ++i ) {
+            for( size_t i = 0; i < strlen; ++i ) {
                 
                 c = value[i];
                 if( (c >= 0x0001) && (c <= 0x007F) )  // ASCII char
@@ -661,11 +661,11 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
             
             if( wireFormat->isStackTraceEnabled() ) {
                 
-                int length = error->getStackTraceElements().size();
+                size_t length = error->getStackTraceElements().size();
                 
                 dataOut->writeShort( (short)length );
                 
-                for( int i = 0; i < length; ++i ) {
+                for( size_t i = 0; i < length; ++i ) {
                     
                     BrokerError::StackTraceElement* element = 
                         error->getStackTraceElements()[i];
@@ -829,7 +829,7 @@ std::string BaseDataStreamMarshaller::readAsciiString(
         // Now build a string and copy data into it.
         std::string text;
         text.resize( size );
-        text.copy( (char*)data, size );
+        text.assign( (char*)data, (int)size );
         delete data;
         
         return text; 

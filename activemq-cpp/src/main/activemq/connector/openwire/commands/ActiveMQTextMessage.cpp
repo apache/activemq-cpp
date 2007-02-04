@@ -43,7 +43,7 @@ unsigned char ActiveMQTextMessage::getDataStructureType() const
 std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
-        return std::string( getContent()[0], getContent().size() ); 
+        return std::string( (const char*)&getContent()[0], getContent().size() ); 
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -52,8 +52,8 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) {
     try{
-        int length = strlen( msg );
-        for( int i = 0; i < length; ++i ){
+        size_t length = strlen( msg );
+        for( size_t i = 0; i < length; ++i ){
             getContent().push_back( msg[i] );
         }
     }

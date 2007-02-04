@@ -21,12 +21,11 @@
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/io/InputStream.h>
 #include <activemq/transport/CommandIOException.h>
-#include <activemq/connector/stomp/StompConnectorException.h>
 #include <activemq/transport/Command.h>
 
-using namespace activemq{
-using namespace connector{
-using namespace openwire{
+namespace activemq{
+namespace connector{
+namespace openwire{
 
     class OpenwireCommandWriter : public transport::CommandWriter
     {
@@ -40,7 +39,7 @@ using namespace openwire{
         /**
          * Marshaler of Stomp Commands
          */
-        marshal::Marshaler marshaler;
+        //marshal::Marshaler marshaler;
 
     public:
     
@@ -77,7 +76,7 @@ using namespace openwire{
          * @param os the target stream for the write.
          * @throws CommandIOException if a problem occurs during the write.
          */
-        virtual void writeCommand( const transport::Command* command ) 
+        virtual void writeCommand( transport::Command* command ) 
             throw ( transport::CommandIOException );
 
         /**
@@ -86,7 +85,7 @@ using namespace openwire{
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, int count ) 
+        virtual void write( const unsigned char* buffer, size_t count ) 
             throw( io::IOException );
        
         /**

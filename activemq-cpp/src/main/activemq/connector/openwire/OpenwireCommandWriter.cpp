@@ -38,7 +38,7 @@ OpenwireCommandWriter::OpenwireCommandWriter( OutputStream* os )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireCommandWriter::writeCommand( const Command* command ) 
+void OpenwireCommandWriter::writeCommand( Command* command ) 
     throw ( transport::CommandIOException )
 {
     try
@@ -59,7 +59,7 @@ void OpenwireCommandWriter::writeCommand( const Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireCommandWriter::write( const unsigned char* buffer, int count ) 
+void OpenwireCommandWriter::write( const unsigned char* buffer, size_t count ) 
     throw( IOException )
 {
     if( outputStream == NULL )
@@ -85,9 +85,4 @@ void OpenwireCommandWriter::writeByte( unsigned char v ) throw( IOException )
     outputStream->write( v );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-void OpenwireCommandWriter::write( const char* buffer, int count ) 
-   throw( io::IOException )
-{
-    write( reinterpret_cast<const unsigned char*>( buffer ), count );
-}
+

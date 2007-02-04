@@ -54,7 +54,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {        
-            Message::copyDataStructure( src );
+            openwire::commands::Message::copyDataStructure( src );
         }
 
         /**
