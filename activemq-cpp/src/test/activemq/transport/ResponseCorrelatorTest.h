@@ -52,10 +52,10 @@ namespace transport{
             
         public:
         
-            virtual void setCommandId( const unsigned int id ){
+            virtual void setCommandId( int id ){
                 commandId = id;
             }
-            virtual unsigned int getCommandId() const{
+            virtual int getCommandId() const{
                 return commandId;
             }
             
@@ -76,10 +76,10 @@ namespace transport{
             
         public:
         
-            virtual void setCommandId( const unsigned int id ){
+            virtual void setCommandId( int id ){
                 commandId = id;
             }
-            virtual unsigned int getCommandId() const{
+            virtual int getCommandId() const{
                 return commandId;
             }
             
@@ -90,10 +90,10 @@ namespace transport{
                 return responseRequired;
             }
         
-            virtual unsigned int getCorrelationId() const{
+            virtual int getCorrelationId() const{
                 return corrId;
             }
-            virtual void setCorrelationId( const unsigned int corrId ){
+            virtual void setCorrelationId( int corrId ){
                 this->corrId = corrId;
             }
         };
@@ -108,10 +108,10 @@ namespace transport{
             
         public:
         
-            virtual void setCommandId( const unsigned int id ){
+            virtual void setCommandId( int id ){
                 commandId = id;
             }
-            virtual unsigned int getCommandId() const{
+            virtual int getCommandId() const{
                 return commandId;
             }
             
@@ -122,10 +122,10 @@ namespace transport{
                 return responseRequired;
             }
         
-            virtual unsigned int getCorrelationId() const{
+            virtual int getCorrelationId() const{
                 return corrId;
             }
-            virtual void setCorrelationId( const unsigned int corrId ){
+            virtual void setCorrelationId( int corrId ){
                 this->corrId = corrId;
             }
             virtual const BrokerError* getException() const{

@@ -33,5 +33,5 @@ using namespace activemq::connector::openwire::commands;
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageTest::test()
 {
-    //ActiveMQBytesMessage myMessage;
+    ActiveMQBytesMessage myMessage;
 }

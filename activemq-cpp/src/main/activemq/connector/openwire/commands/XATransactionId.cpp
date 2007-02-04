@@ -80,12 +80,7 @@ unsigned char XATransactionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int XATransactionId::getFormatId() const {
-    return formatId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int XATransactionId::getFormatId() {
+int XATransactionId::getFormatId() const {
     return formatId;
 }
 

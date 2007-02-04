@@ -43,7 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class RemoveInfo : public BaseCommand
+    class RemoveInfo : public BaseCommand<transport::Command>
     {
     protected:
 

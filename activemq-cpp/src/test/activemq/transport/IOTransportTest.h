@@ -55,8 +55,8 @@ namespace transport{
             
             char c;
             
-            virtual void setCommandId( const unsigned int id AMQCPP_UNUSED){}
-            virtual unsigned int getCommandId() const{ return 0; }
+            virtual void setCommandId( int id AMQCPP_UNUSED){}
+            virtual int getCommandId() const{ return 0; }
             
             virtual void setResponseRequired( const bool required AMQCPP_UNUSED){}
             virtual bool isResponseRequired() const{ return false; }

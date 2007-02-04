@@ -52,7 +52,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class Message : public BaseCommand
+    class Message : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -141,32 +141,27 @@ namespace commands{
         virtual std::string& getGroupID();
         virtual void setGroupID( const std::string& groupID );
 
-        virtual const int getGroupSequence() const;
-        virtual int getGroupSequence();
+        virtual int getGroupSequence() const;
         virtual void setGroupSequence( int groupSequence );
 
         virtual const std::string& getCorrelationId() const;
         virtual std::string& getCorrelationId();
         virtual void setCorrelationId( const std::string& correlationId );
 
-        virtual const bool isPersistent() const;
-        virtual bool isPersistent();
+        virtual bool isPersistent() const;
         virtual void setPersistent( bool persistent );
 
-        virtual const long long getExpiration() const;
-        virtual long long getExpiration();
+        virtual long long getExpiration() const;
         virtual void setExpiration( long long expiration );
 
-        virtual const unsigned char getPriority() const;
-        virtual unsigned char getPriority();
+        virtual unsigned char getPriority() const;
         virtual void setPriority( unsigned char priority );
 
         virtual const ActiveMQDestination* getReplyTo() const;
         virtual ActiveMQDestination* getReplyTo();
         virtual void setReplyTo( ActiveMQDestination* replyTo );
 
-        virtual const long long getTimestamp() const;
-        virtual long long getTimestamp();
+        virtual long long getTimestamp() const;
         virtual void setTimestamp( long long timestamp );
 
         virtual const std::string& getType() const;
@@ -189,32 +184,27 @@ namespace commands{
         virtual ConsumerId* getTargetConsumerId();
         virtual void setTargetConsumerId( ConsumerId* targetConsumerId );
 
-        virtual const bool isCompressed() const;
-        virtual bool isCompressed();
+        virtual bool isCompressed() const;
         virtual void setCompressed( bool compressed );
 
-        virtual const int getRedeliveryCounter() const;
-        virtual int getRedeliveryCounter();
+        virtual int getRedeliveryCounter() const;
         virtual void setRedeliveryCounter( int redeliveryCounter );
 
         virtual const std::vector<BrokerId*>& getBrokerPath() const;
         virtual std::vector<BrokerId*>& getBrokerPath();
         virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
-        virtual const long long getArrival() const;
-        virtual long long getArrival();
+        virtual long long getArrival() const;
         virtual void setArrival( long long arrival );
 
         virtual const std::string& getUserID() const;
         virtual std::string& getUserID();
         virtual void setUserID( const std::string& userID );
 
-        virtual const bool isRecievedByDFBridge() const;
-        virtual bool isRecievedByDFBridge();
+        virtual bool isRecievedByDFBridge() const;
         virtual void setRecievedByDFBridge( bool recievedByDFBridge );
 
-        virtual const bool isDroppable() const;
-        virtual bool isDroppable();
+        virtual bool isDroppable() const;
         virtual void setDroppable( bool droppable );
 
     };

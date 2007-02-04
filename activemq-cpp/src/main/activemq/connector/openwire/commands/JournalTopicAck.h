@@ -94,8 +94,7 @@ namespace commands{
         virtual MessageId* getMessageId();
         virtual void setMessageId( MessageId* messageId );
 
-        virtual const long long getMessageSequenceId() const;
-        virtual long long getMessageSequenceId();
+        virtual long long getMessageSequenceId() const;
         virtual void setMessageSequenceId( long long messageSequenceId );
 
         virtual const std::string& getSubscritionName() const;

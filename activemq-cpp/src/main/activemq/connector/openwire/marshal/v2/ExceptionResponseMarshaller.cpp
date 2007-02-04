@@ -82,7 +82,7 @@ void ExceptionResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
 void ExceptionResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ExceptionResponse* info = 
+    ExceptionResponse* info =
         dynamic_cast<ExceptionResponse*>( dataStructure );
     info->setException( dynamic_cast< BrokerError* >(
         looseUnmarshalBrokerError( wireFormat, dataIn ) ) );

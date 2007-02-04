@@ -54,13 +54,13 @@ namespace commands{
          * Sets the Command Id of this Message
          * @param id Command Id
          */
-        virtual void setCommandId( const unsigned int id ) = 0;
+        virtual void setCommandId( int id ) = 0;
 
         /**
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual unsigned int getCommandId(void) const = 0;
+        virtual int getCommandId(void) const = 0;
         
         /**
          * Set if this Message requires a Response
@@ -78,13 +78,13 @@ namespace commands{
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
          */
-        virtual unsigned int getCorrelationId(void) const = 0;
+        virtual int getCorrelationId(void) const = 0;
         
         /**
          * Sets the Correlation Id if this Command
          * @param corrId Id
          */
-        virtual void setCorrelationId( const unsigned int corrId ) = 0;
+        virtual void setCorrelationId( int corrId ) = 0;
         
         /**
          * Get the Transaction Id of this Command

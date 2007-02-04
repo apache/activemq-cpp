@@ -44,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class TransactionInfo : public BaseCommand
+    class TransactionInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -90,8 +90,7 @@ namespace commands{
         virtual TransactionId* getTransactionId();
         virtual void setTransactionId( TransactionId* transactionId );
 
-        virtual const unsigned char getType() const;
-        virtual unsigned char getType();
+        virtual unsigned char getType() const;
         virtual void setType( unsigned char type );
 
     };

@@ -71,7 +71,7 @@ void ActiveMQDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 void ActiveMQDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ActiveMQDestination* info = 
+    ActiveMQDestination* info =
         dynamic_cast<ActiveMQDestination*>( dataStructure );
     info->setPhysicalName( looseUnmarshalString( dataIn ) );
 }

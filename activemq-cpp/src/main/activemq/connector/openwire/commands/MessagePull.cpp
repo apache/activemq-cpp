@@ -63,7 +63,7 @@ DataStructure* MessagePull::cloneDataStructure() const {
 void MessagePull::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const MessagePull* srcPtr = dynamic_cast<const MessagePull*>( src );
 
@@ -118,12 +118,7 @@ void MessagePull::setDestination(ActiveMQDestination* destination ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long MessagePull::getTimeout() const {
-    return timeout;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long MessagePull::getTimeout() {
+long long MessagePull::getTimeout() const {
     return timeout;
 }
 

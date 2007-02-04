@@ -88,7 +88,7 @@ void RemoveSubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat
 void RemoveSubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    RemoveSubscriptionInfo* info = 
+    RemoveSubscriptionInfo* info =
         dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
     info->setConnectionId( dynamic_cast< ConnectionId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

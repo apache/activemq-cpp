@@ -45,7 +45,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class MessageDispatch : public BaseCommand
+    class MessageDispatch : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -96,8 +96,7 @@ namespace commands{
         virtual Message* getMessage();
         virtual void setMessage( Message* message );
 
-        virtual const int getRedeliveryCounter() const;
-        virtual int getRedeliveryCounter();
+        virtual int getRedeliveryCounter() const;
         virtual void setRedeliveryCounter( int redeliveryCounter );
 
     };

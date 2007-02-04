@@ -63,7 +63,7 @@ DataStructure* TransactionInfo::cloneDataStructure() const {
 void TransactionInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const TransactionInfo* srcPtr = dynamic_cast<const TransactionInfo*>( src );
 
@@ -118,12 +118,7 @@ void TransactionInfo::setTransactionId(TransactionId* transactionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char TransactionInfo::getType() const {
-    return type;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char TransactionInfo::getType() {
+unsigned char TransactionInfo::getType() const {
     return type;
 }
 

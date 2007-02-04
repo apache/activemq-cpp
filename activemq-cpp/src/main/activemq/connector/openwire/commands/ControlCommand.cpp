@@ -59,7 +59,7 @@ DataStructure* ControlCommand::cloneDataStructure() const {
 void ControlCommand::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>( src );
 

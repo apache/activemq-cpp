@@ -84,7 +84,7 @@ void DiscoveryEventMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
 void DiscoveryEventMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DiscoveryEvent* info = 
+    DiscoveryEvent* info =
         dynamic_cast<DiscoveryEvent*>( dataStructure );
     info->setServiceName( looseUnmarshalString( dataIn ) );
     info->setBrokerName( looseUnmarshalString( dataIn ) );

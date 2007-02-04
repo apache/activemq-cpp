@@ -43,7 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class SessionInfo : public BaseCommand
+    class SessionInfo : public BaseCommand<transport::Command>
     {
     protected:
 

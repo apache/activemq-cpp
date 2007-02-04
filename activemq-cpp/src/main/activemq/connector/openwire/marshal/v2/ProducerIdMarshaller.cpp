@@ -87,7 +87,7 @@ void ProducerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 void ProducerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ProducerId* info = 
+    ProducerId* info =
         dynamic_cast<ProducerId*>( dataStructure );
     info->setConnectionId( looseUnmarshalString( dataIn ) );
     info->setValue( looseUnmarshalLong( wireFormat, dataIn ) );

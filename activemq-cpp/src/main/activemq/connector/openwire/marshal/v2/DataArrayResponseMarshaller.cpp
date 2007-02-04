@@ -92,7 +92,7 @@ void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
 void DataArrayResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DataArrayResponse* info = 
+    DataArrayResponse* info =
         dynamic_cast<DataArrayResponse*>( dataStructure );
 
     if( dataIn->readBoolean() ) {

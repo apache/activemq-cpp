@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ReplayCommand : public BaseCommand
+    class ReplayCommand : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -79,12 +79,10 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getFirstNakNumber() const;
-        virtual int getFirstNakNumber();
+        virtual int getFirstNakNumber() const;
         virtual void setFirstNakNumber( int firstNakNumber );
 
-        virtual const int getLastNakNumber() const;
-        virtual int getLastNakNumber();
+        virtual int getLastNakNumber() const;
         virtual void setLastNakNumber( int lastNakNumber );
 
     };

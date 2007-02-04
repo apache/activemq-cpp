@@ -58,9 +58,6 @@ void IntegerResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
 ///////////////////////////////////////////////////////////////////////////////
 int IntegerResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    IntegerResponse* info =
-        dynamic_cast<IntegerResponse*>( dataStructure );
-
     int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 
     return rc + 4;
@@ -80,7 +77,7 @@ void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void IntegerResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    IntegerResponse* info = 
+    IntegerResponse* info =
         dynamic_cast<IntegerResponse*>( dataStructure );
     info->setResult( dataIn->readInt() );
 }

@@ -99,7 +99,7 @@ void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    JournalTopicAck* info = 
+    JournalTopicAck* info =
         dynamic_cast<JournalTopicAck*>( dataStructure );
     info->setDestination( dynamic_cast< ActiveMQDestination* >( 
         looseUnmarshalNestedObject( wireFormat, dataIn ) ) );

@@ -93,7 +93,7 @@ DataStructure* Message::cloneDataStructure() const {
 void Message::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const Message* srcPtr = dynamic_cast<const Message*>( src );
 
@@ -264,12 +264,7 @@ void Message::setGroupID(const std::string& groupID ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Message::getGroupSequence() const {
-    return groupSequence;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int Message::getGroupSequence() {
+int Message::getGroupSequence() const {
     return groupSequence;
 }
 
@@ -294,12 +289,7 @@ void Message::setCorrelationId(const std::string& correlationId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::isPersistent() const {
-    return persistent;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Message::isPersistent() {
+bool Message::isPersistent() const {
     return persistent;
 }
 
@@ -309,12 +299,7 @@ void Message::setPersistent(bool persistent ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long Message::getExpiration() const {
-    return expiration;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long Message::getExpiration() {
+long long Message::getExpiration() const {
     return expiration;
 }
 
@@ -324,12 +309,7 @@ void Message::setExpiration(long long expiration ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char Message::getPriority() const {
-    return priority;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char Message::getPriority() {
+unsigned char Message::getPriority() const {
     return priority;
 }
 
@@ -354,12 +334,7 @@ void Message::setReplyTo(ActiveMQDestination* replyTo ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long Message::getTimestamp() const {
-    return timestamp;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long Message::getTimestamp() {
+long long Message::getTimestamp() const {
     return timestamp;
 }
 
@@ -444,12 +419,7 @@ void Message::setTargetConsumerId(ConsumerId* targetConsumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::isCompressed() const {
-    return compressed;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Message::isCompressed() {
+bool Message::isCompressed() const {
     return compressed;
 }
 
@@ -459,12 +429,7 @@ void Message::setCompressed(bool compressed ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Message::getRedeliveryCounter() const {
-    return redeliveryCounter;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int Message::getRedeliveryCounter() {
+int Message::getRedeliveryCounter() const {
     return redeliveryCounter;
 }
 
@@ -489,12 +454,7 @@ void Message::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long Message::getArrival() const {
-    return arrival;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long Message::getArrival() {
+long long Message::getArrival() const {
     return arrival;
 }
 
@@ -519,12 +479,7 @@ void Message::setUserID(const std::string& userID ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::isRecievedByDFBridge() const {
-    return recievedByDFBridge;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Message::isRecievedByDFBridge() {
+bool Message::isRecievedByDFBridge() const {
     return recievedByDFBridge;
 }
 
@@ -534,12 +489,7 @@ void Message::setRecievedByDFBridge(bool recievedByDFBridge ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool Message::isDroppable() const {
-    return droppable;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool Message::isDroppable() {
+bool Message::isDroppable() const {
     return droppable;
 }
 

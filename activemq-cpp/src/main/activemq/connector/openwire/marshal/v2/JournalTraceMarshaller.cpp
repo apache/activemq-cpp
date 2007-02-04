@@ -81,7 +81,7 @@ void JournalTraceMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
 void JournalTraceMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    JournalTrace* info = 
+    JournalTrace* info =
         dynamic_cast<JournalTrace*>( dataStructure );
     info->setMessage( looseUnmarshalString( dataIn ) );
 }

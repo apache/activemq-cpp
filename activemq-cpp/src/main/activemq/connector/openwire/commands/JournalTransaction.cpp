@@ -100,12 +100,7 @@ void JournalTransaction::setTransactionId(TransactionId* transactionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char JournalTransaction::getType() const {
-    return type;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char JournalTransaction::getType() {
+unsigned char JournalTransaction::getType() const {
     return type;
 }
 
@@ -115,12 +110,7 @@ void JournalTransaction::setType(unsigned char type ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool JournalTransaction::getWasPrepared() const {
-    return wasPrepared;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool JournalTransaction::getWasPrepared() {
+bool JournalTransaction::getWasPrepared() const {
     return wasPrepared;
 }
 

@@ -80,8 +80,6 @@ void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
 
     BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
-    ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );
     bs->readBoolean();
     bs->readBoolean();
     bs->readBoolean();
@@ -93,7 +91,7 @@ void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Dat
 void ConnectionControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionControl* info = 
+    ConnectionControl* info =
         dynamic_cast<ConnectionControl*>( dataStructure );
     info->setClose( dataIn->readBoolean() );
     info->setExit( dataIn->readBoolean() );

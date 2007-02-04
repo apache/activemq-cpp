@@ -83,12 +83,7 @@ unsigned char LocalTransactionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long LocalTransactionId::getValue() const {
-    return value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long LocalTransactionId::getValue() {
+long long LocalTransactionId::getValue() const {
     return value;
 }
 

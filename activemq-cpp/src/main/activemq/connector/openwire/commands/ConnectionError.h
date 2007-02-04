@@ -44,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConnectionError : public BaseCommand
+    class ConnectionError : public BaseCommand<transport::Command>
     {
     protected:
 

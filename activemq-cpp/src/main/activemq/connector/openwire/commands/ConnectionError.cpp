@@ -62,7 +62,7 @@ DataStructure* ConnectionError::cloneDataStructure() const {
 void ConnectionError::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ConnectionError* srcPtr = dynamic_cast<const ConnectionError*>( src );
 

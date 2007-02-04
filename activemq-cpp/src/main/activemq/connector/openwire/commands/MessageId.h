@@ -85,12 +85,10 @@ namespace commands{
         virtual ProducerId* getProducerId();
         virtual void setProducerId( ProducerId* producerId );
 
-        virtual const long long getProducerSequenceId() const;
-        virtual long long getProducerSequenceId();
+        virtual long long getProducerSequenceId() const;
         virtual void setProducerSequenceId( long long producerSequenceId );
 
-        virtual const long long getBrokerSequenceId() const;
-        virtual long long getBrokerSequenceId();
+        virtual long long getBrokerSequenceId() const;
         virtual void setBrokerSequenceId( long long brokerSequenceId );
 
     };

@@ -45,7 +45,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ProducerInfo : public BaseCommand
+    class ProducerInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -96,8 +96,7 @@ namespace commands{
         virtual std::vector<BrokerId*>& getBrokerPath();
         virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
-        virtual const bool isDispatchAsync() const;
-        virtual bool isDispatchAsync();
+        virtual bool isDispatchAsync() const;
         virtual void setDispatchAsync( bool dispatchAsync );
 
     };

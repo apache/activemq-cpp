@@ -58,7 +58,7 @@ DataStructure* KeepAliveInfo::cloneDataStructure() const {
 void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>( src );
 

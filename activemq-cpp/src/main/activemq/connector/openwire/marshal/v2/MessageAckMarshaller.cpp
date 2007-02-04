@@ -102,7 +102,7 @@ void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    MessageAck* info = 
+    MessageAck* info =
         dynamic_cast<MessageAck*>( dataStructure );
     info->setDestination( dynamic_cast< ActiveMQDestination* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

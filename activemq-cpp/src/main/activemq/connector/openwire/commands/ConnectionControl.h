@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConnectionControl : public BaseCommand
+    class ConnectionControl : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -82,24 +82,19 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const bool isClose() const;
-        virtual bool isClose();
+        virtual bool isClose() const;
         virtual void setClose( bool close );
 
-        virtual const bool isExit() const;
-        virtual bool isExit();
+        virtual bool isExit() const;
         virtual void setExit( bool exit );
 
-        virtual const bool isFaultTolerant() const;
-        virtual bool isFaultTolerant();
+        virtual bool isFaultTolerant() const;
         virtual void setFaultTolerant( bool faultTolerant );
 
-        virtual const bool isResume() const;
-        virtual bool isResume();
+        virtual bool isResume() const;
         virtual void setResume( bool resume );
 
-        virtual const bool isSuspend() const;
-        virtual bool isSuspend();
+        virtual bool isSuspend() const;
         virtual void setSuspend( bool suspend );
 
     };

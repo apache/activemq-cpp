@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BASECOMMAND_H_
 
 #include <activemq/transport/Command.h>
+#include <activemq/transport/Response.h>
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 
 namespace activemq{
@@ -26,19 +27,24 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class BaseCommand : public transport::Command,
+    template< typename T > 
+    class BaseCommand : public T,
                         public BaseDataStructure
     {
     public:
     
-        BaseCommand();
-        virtual ~BaseCommand();
+        BaseCommand() {
+            this->commandId = 0;
+            this->responseRequired = false;
+        }
+        
+        virtual ~BaseCommand() {}
         
         /**
          * Sets the Command Id of this Message
          * @param id Command Id
          */
-        virtual void setCommandId( const unsigned int id ) {
+        virtual void setCommandId( int id ) {
             this->commandId = id;
         }
 
@@ -46,7 +52,7 @@ namespace commands{
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual unsigned int getCommandId() const {
+        virtual int getCommandId() const {
             return commandId;
         }
         

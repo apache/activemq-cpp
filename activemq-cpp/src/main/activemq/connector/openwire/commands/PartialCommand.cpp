@@ -79,12 +79,7 @@ unsigned char PartialCommand::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int PartialCommand::getCommandId() const {
-    return commandId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int PartialCommand::getCommandId() {
+int PartialCommand::getCommandId() const {
     return commandId;
 }
 

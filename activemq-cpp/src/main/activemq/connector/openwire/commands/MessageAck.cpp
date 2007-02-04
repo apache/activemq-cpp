@@ -70,7 +70,7 @@ DataStructure* MessageAck::cloneDataStructure() const {
 void MessageAck::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const MessageAck* srcPtr = dynamic_cast<const MessageAck*>( src );
 
@@ -150,12 +150,7 @@ void MessageAck::setConsumerId(ConsumerId* consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char MessageAck::getAckType() const {
-    return ackType;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char MessageAck::getAckType() {
+unsigned char MessageAck::getAckType() const {
     return ackType;
 }
 
@@ -195,12 +190,7 @@ void MessageAck::setLastMessageId(MessageId* lastMessageId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int MessageAck::getMessageCount() const {
-    return messageCount;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int MessageAck::getMessageCount() {
+int MessageAck::getMessageCount() const {
     return messageCount;
 }
 

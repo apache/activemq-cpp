@@ -97,12 +97,7 @@ void ConsumerId::setConnectionId(const std::string& connectionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long ConsumerId::getSessionId() const {
-    return sessionId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ConsumerId::getSessionId() {
+long long ConsumerId::getSessionId() const {
     return sessionId;
 }
 
@@ -112,12 +107,7 @@ void ConsumerId::setSessionId(long long sessionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long ConsumerId::getValue() const {
-    return value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ConsumerId::getValue() {
+long long ConsumerId::getValue() const {
     return value;
 }
 

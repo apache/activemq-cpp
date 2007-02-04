@@ -100,12 +100,7 @@ void MessageId::setProducerId(ProducerId* producerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long MessageId::getProducerSequenceId() const {
-    return producerSequenceId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long MessageId::getProducerSequenceId() {
+long long MessageId::getProducerSequenceId() const {
     return producerSequenceId;
 }
 
@@ -115,12 +110,7 @@ void MessageId::setProducerSequenceId(long long producerSequenceId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long MessageId::getBrokerSequenceId() const {
-    return brokerSequenceId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long MessageId::getBrokerSequenceId() {
+long long MessageId::getBrokerSequenceId() const {
     return brokerSequenceId;
 }
 

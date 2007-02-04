@@ -82,7 +82,7 @@ void RemoveInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 void RemoveInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    RemoveInfo* info = 
+    RemoveInfo* info =
         dynamic_cast<RemoveInfo*>( dataStructure );
     info->setObjectId( dynamic_cast< DataStructure* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

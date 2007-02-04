@@ -65,9 +65,9 @@ int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
 
     int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getGlobalTransactionId().size() != 0 );
-    rc += (int)(info->getGlobalTransactionId().size() == 0 ? 0 : info->getGlobalTransactionId().size() + 4);
+    rc += info->getGlobalTransactionId().size() == 0 ? 0 : info->getGlobalTransactionId().size() + 4;
     bs->writeBoolean( info->getBranchQualifier().size() != 0 );
-    rc += (int)(info->getBranchQualifier().size() == 0 ? 0 : info->getBranchQualifier().size() + 4);
+    rc += info->getBranchQualifier().size() == 0 ? 0 : info->getBranchQualifier().size() + 4;
 
     return rc + 4;
 }
@@ -82,11 +82,11 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
     dataOut->write( info->getFormatId() );
     if( bs->readBoolean() ) {
         dataOut->write( (int)info->getGlobalTransactionId().size() );
-        dataOut->write( &info->getGlobalTransactionId()[0], info->getGlobalTransactionId().size() );
+        dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size() );
     }
     if( bs->readBoolean() ) {
         dataOut->write( (int)info->getBranchQualifier().size() );
-        dataOut->write( &info->getBranchQualifier()[0], info->getBranchQualifier().size() );
+        dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size() );
     }
 }
 
@@ -94,7 +94,7 @@ void XATransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void XATransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    XATransactionId* info = 
+    XATransactionId* info =
         dynamic_cast<XATransactionId*>( dataStructure );
     info->setFormatId( dataIn->readInt() );
     info->setGlobalTransactionId( looseUnmarshalByteArray( dataIn ) );
@@ -112,12 +112,12 @@ void XATransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
     dataOut->write( info->getGlobalTransactionId().size() != 0 );
     if( info->getGlobalTransactionId().size() != 0 ) {
         dataOut->write( (int)info->getGlobalTransactionId().size() );
-        dataOut->write( &info->getGlobalTransactionId()[0], info->getGlobalTransactionId().size() );
+        dataOut->write( (const unsigned char*)(&info->getGlobalTransactionId()[0]), (int)info->getGlobalTransactionId().size() );
     }
     dataOut->write( info->getBranchQualifier().size() != 0 );
     if( info->getBranchQualifier().size() != 0 ) {
         dataOut->write( (int)info->getBranchQualifier().size() );
-        dataOut->write( &info->getBranchQualifier()[0], info->getBranchQualifier().size() );
+        dataOut->write( (const unsigned char*)(&info->getBranchQualifier()[0]), (int)info->getBranchQualifier().size() );
     }
 }
 

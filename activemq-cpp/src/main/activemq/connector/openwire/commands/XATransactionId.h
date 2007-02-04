@@ -80,8 +80,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getFormatId() const;
-        virtual int getFormatId();
+        virtual int getFormatId() const;
         virtual void setFormatId( int formatId );
 
         virtual const std::vector<unsigned char>& getGlobalTransactionId() const;

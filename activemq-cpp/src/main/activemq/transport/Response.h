@@ -32,13 +32,13 @@ namespace transport{
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
          */
-        virtual unsigned int getCorrelationId() const = 0;
+        virtual int getCorrelationId() const = 0;
 
         /**
          * Sets the Correlation Id if this Command
          * @param corrId
          */
-        virtual void setCorrelationId( const unsigned int corrId ) = 0;
+        virtual void setCorrelationId( int corrId ) = 0;
         
     };
     

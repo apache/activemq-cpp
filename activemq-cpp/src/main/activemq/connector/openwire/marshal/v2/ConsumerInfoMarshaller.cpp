@@ -140,7 +140,7 @@ void ConsumerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
 void ConsumerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConsumerInfo* info = 
+    ConsumerInfo* info =
         dynamic_cast<ConsumerInfo*>( dataStructure );
     info->setConsumerId( dynamic_cast< ConsumerId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

@@ -81,7 +81,7 @@ void ControlCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
 void ControlCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ControlCommand* info = 
+    ControlCommand* info =
         dynamic_cast<ControlCommand*>( dataStructure );
     info->setCommand( looseUnmarshalString( dataIn ) );
 }

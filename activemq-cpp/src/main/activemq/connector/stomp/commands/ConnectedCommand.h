@@ -49,7 +49,7 @@ namespace commands{
          * Sets the Correlation Id if this Command
          * @param corrId Id
          */
-        virtual void setCorrelationId( const unsigned int corrId ) {
+        virtual void setCorrelationId( int corrId ) {
             setPropertyValue(
                 CommandConstants::toString( 
                     CommandConstants::HEADER_RESPONSEID),

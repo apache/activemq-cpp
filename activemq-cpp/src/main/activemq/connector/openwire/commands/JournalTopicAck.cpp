@@ -127,12 +127,7 @@ void JournalTopicAck::setMessageId(MessageId* messageId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long JournalTopicAck::getMessageSequenceId() const {
-    return messageSequenceId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long JournalTopicAck::getMessageSequenceId() {
+long long JournalTopicAck::getMessageSequenceId() const {
     return messageSequenceId;
 }
 
