@@ -47,7 +47,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class MessageAck : public BaseCommand
+    class MessageAck : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -101,8 +101,7 @@ namespace commands{
         virtual ConsumerId* getConsumerId();
         virtual void setConsumerId( ConsumerId* consumerId );
 
-        virtual const unsigned char getAckType() const;
-        virtual unsigned char getAckType();
+        virtual unsigned char getAckType() const;
         virtual void setAckType( unsigned char ackType );
 
         virtual const MessageId* getFirstMessageId() const;
@@ -113,8 +112,7 @@ namespace commands{
         virtual MessageId* getLastMessageId();
         virtual void setLastMessageId( MessageId* lastMessageId );
 
-        virtual const int getMessageCount() const;
-        virtual int getMessageCount();
+        virtual int getMessageCount() const;
         virtual void setMessageCount( int messageCount );
 
     };

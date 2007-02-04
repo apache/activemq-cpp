@@ -43,7 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConsumerControl : public BaseCommand
+    class ConsumerControl : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -84,28 +84,23 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const bool isClose() const;
-        virtual bool isClose();
+        virtual bool isClose() const;
         virtual void setClose( bool close );
 
         virtual const ConsumerId* getConsumerId() const;
         virtual ConsumerId* getConsumerId();
         virtual void setConsumerId( ConsumerId* consumerId );
 
-        virtual const int getPrefetch() const;
-        virtual int getPrefetch();
+        virtual int getPrefetch() const;
         virtual void setPrefetch( int prefetch );
 
-        virtual const bool isFlush() const;
-        virtual bool isFlush();
+        virtual bool isFlush() const;
         virtual void setFlush( bool flush );
 
-        virtual const bool isStart() const;
-        virtual bool isStart();
+        virtual bool isStart() const;
         virtual void setStart( bool start );
 
-        virtual const bool isStop() const;
-        virtual bool isStop();
+        virtual bool isStop() const;
         virtual void setStop( bool stop );
 
     };

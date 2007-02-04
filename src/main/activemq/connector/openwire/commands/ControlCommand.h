@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ControlCommand : public BaseCommand
+    class ControlCommand : public BaseCommand<transport::Command>
     {
     protected:
 

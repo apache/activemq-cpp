@@ -44,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConnectionInfo : public BaseCommand
+    class ConnectionInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -107,16 +107,13 @@ namespace commands{
         virtual std::vector<BrokerId*>& getBrokerPath();
         virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
 
-        virtual const bool isBrokerMasterConnector() const;
-        virtual bool isBrokerMasterConnector();
+        virtual bool isBrokerMasterConnector() const;
         virtual void setBrokerMasterConnector( bool brokerMasterConnector );
 
-        virtual const bool isManageable() const;
-        virtual bool isManageable();
+        virtual bool isManageable() const;
         virtual void setManageable( bool manageable );
 
-        virtual const bool isClientMaster() const;
-        virtual bool isClientMaster();
+        virtual bool isClientMaster() const;
         virtual void setClientMaster( bool clientMaster );
 
     };

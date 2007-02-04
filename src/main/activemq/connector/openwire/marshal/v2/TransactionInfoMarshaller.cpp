@@ -88,7 +88,7 @@ void TransactionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void TransactionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    TransactionInfo* info = 
+    TransactionInfo* info =
         dynamic_cast<TransactionInfo*>( dataStructure );
     info->setConnectionId( dynamic_cast< ConnectionId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

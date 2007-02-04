@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ShutdownInfo : public BaseCommand
+    class ShutdownInfo : public BaseCommand<transport::Command>
     {
     protected:
 

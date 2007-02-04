@@ -80,8 +80,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const long long getValue() const;
-        virtual long long getValue();
+        virtual long long getValue() const;
         virtual void setValue( long long value );
 
         virtual const ConnectionId* getConnectionId() const;

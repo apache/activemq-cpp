@@ -139,7 +139,7 @@ namespace commands{
          * require it.
          * @param id Command Id
          */
-        virtual void setCommandId( const unsigned int id AMQCPP_UNUSED){
+        virtual void setCommandId( int id AMQCPP_UNUSED){
             /* do nothing */
         }
 
@@ -147,7 +147,7 @@ namespace commands{
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual unsigned int getCommandId() const {
+        virtual int getCommandId() const {
             return util::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString( 
@@ -177,7 +177,7 @@ namespace commands{
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
          */
-        virtual unsigned int getCorrelationId() const {
+        virtual int getCorrelationId() const {
             return util::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString( 
@@ -189,7 +189,7 @@ namespace commands{
          * Default implementation - does nothing.
          * @param corrId Id
          */
-        virtual void setCorrelationId( const unsigned int corrId AMQCPP_UNUSED ) {
+        virtual void setCorrelationId( int corrId AMQCPP_UNUSED ) {
             /* do nothing */
         }
         

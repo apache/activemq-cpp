@@ -97,12 +97,7 @@ void ProducerId::setConnectionId(const std::string& connectionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long ProducerId::getValue() const {
-    return value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ProducerId::getValue() {
+long long ProducerId::getValue() const {
     return value;
 }
 
@@ -112,12 +107,7 @@ void ProducerId::setValue(long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long ProducerId::getSessionId() const {
-    return sessionId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long ProducerId::getSessionId() {
+long long ProducerId::getSessionId() const {
     return sessionId;
 }
 

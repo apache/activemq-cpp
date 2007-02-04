@@ -60,7 +60,7 @@ DataStructure* RemoveInfo::cloneDataStructure() const {
 void RemoveInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const RemoveInfo* srcPtr = dynamic_cast<const RemoveInfo*>( src );
 

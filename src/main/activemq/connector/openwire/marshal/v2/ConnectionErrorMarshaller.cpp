@@ -86,7 +86,7 @@ void ConnectionErrorMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void ConnectionErrorMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionError* info = 
+    ConnectionError* info =
         dynamic_cast<ConnectionError*>( dataStructure );
     info->setException( dynamic_cast< BrokerError* >(
         looseUnmarshalBrokerError( wireFormat, dataIn ) ) );

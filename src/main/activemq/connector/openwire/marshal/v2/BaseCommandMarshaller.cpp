@@ -40,8 +40,8 @@ void BaseCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
 
     BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    BaseCommand* info =
-        dynamic_cast<BaseCommand*>( dataStructure );
+    transport::Command* info =
+        dynamic_cast<transport::Command*>( dataStructure );
     info->setCommandId( dataIn->readInt() );
     info->setResponseRequired( bs->readBoolean() );
 }
@@ -49,8 +49,8 @@ void BaseCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
 ///////////////////////////////////////////////////////////////////////////////
 int BaseCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommand* info =
-        dynamic_cast<BaseCommand*>( dataStructure );
+    transport::Command* info =
+        dynamic_cast<transport::Command*>( dataStructure );
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->isResponseRequired() );
@@ -63,8 +63,8 @@ void BaseCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 
     BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
-    BaseCommand* info =
-        dynamic_cast<BaseCommand*>( dataStructure );
+    transport::Command* info =
+        dynamic_cast<transport::Command*>( dataStructure );
     dataOut->write( info->getCommandId() );
     bs->readBoolean();
 }
@@ -73,8 +73,8 @@ void BaseCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 void BaseCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    BaseCommand* info = 
-        dynamic_cast<BaseCommand*>( dataStructure );
+    transport::Command* info =
+        dynamic_cast<transport::Command*>( dataStructure );
     info->setCommandId( dataIn->readInt() );
     info->setResponseRequired( dataIn->readBoolean() );
 }
@@ -82,8 +82,8 @@ void BaseCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStru
 ///////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    BaseCommand* info =
-        dynamic_cast<BaseCommand*>( dataStructure );
+    transport::Command* info =
+        dynamic_cast<transport::Command*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     dataOut->write( info->getCommandId() );

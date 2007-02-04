@@ -36,16 +36,6 @@ using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ///////////////////////////////////////////////////////////////////////////////
-unsigned char TransactionIdMarshaller::getDataStructureType() const {
-    return TransactionId::ID_TRANSACTIONID;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-commands::DataStructure* TransactionIdMarshaller::createObject() const {
-    return new TransactionId();
-}
-
-///////////////////////////////////////////////////////////////////////////////
 void TransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );

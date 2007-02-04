@@ -46,7 +46,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConsumerInfo : public BaseCommand
+    class ConsumerInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -102,24 +102,20 @@ namespace commands{
         virtual ConsumerId* getConsumerId();
         virtual void setConsumerId( ConsumerId* consumerId );
 
-        virtual const bool isBrowser() const;
-        virtual bool isBrowser();
+        virtual bool isBrowser() const;
         virtual void setBrowser( bool browser );
 
         virtual const ActiveMQDestination* getDestination() const;
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const int getPrefetchSize() const;
-        virtual int getPrefetchSize();
+        virtual int getPrefetchSize() const;
         virtual void setPrefetchSize( int prefetchSize );
 
-        virtual const int getMaximumPendingMessageLimit() const;
-        virtual int getMaximumPendingMessageLimit();
+        virtual int getMaximumPendingMessageLimit() const;
         virtual void setMaximumPendingMessageLimit( int maximumPendingMessageLimit );
 
-        virtual const bool isDispatchAsync() const;
-        virtual bool isDispatchAsync();
+        virtual bool isDispatchAsync() const;
         virtual void setDispatchAsync( bool dispatchAsync );
 
         virtual const std::string& getSelector() const;
@@ -130,20 +126,16 @@ namespace commands{
         virtual std::string& getSubscriptionName();
         virtual void setSubscriptionName( const std::string& subscriptionName );
 
-        virtual const bool isNoLocal() const;
-        virtual bool isNoLocal();
+        virtual bool isNoLocal() const;
         virtual void setNoLocal( bool noLocal );
 
-        virtual const bool isExclusive() const;
-        virtual bool isExclusive();
+        virtual bool isExclusive() const;
         virtual void setExclusive( bool exclusive );
 
-        virtual const bool isRetroactive() const;
-        virtual bool isRetroactive();
+        virtual bool isRetroactive() const;
         virtual void setRetroactive( bool retroactive );
 
-        virtual const unsigned char getPriority() const;
-        virtual unsigned char getPriority();
+        virtual unsigned char getPriority() const;
         virtual void setPriority( unsigned char priority );
 
         virtual const std::vector<BrokerId*>& getBrokerPath() const;
@@ -154,16 +146,13 @@ namespace commands{
         virtual BooleanExpression* getAdditionalPredicate();
         virtual void setAdditionalPredicate( BooleanExpression* additionalPredicate );
 
-        virtual const bool isNetworkSubscription() const;
-        virtual bool isNetworkSubscription();
+        virtual bool isNetworkSubscription() const;
         virtual void setNetworkSubscription( bool networkSubscription );
 
-        virtual const bool isOptimizedAcknowledge() const;
-        virtual bool isOptimizedAcknowledge();
+        virtual bool isOptimizedAcknowledge() const;
         virtual void setOptimizedAcknowledge( bool optimizedAcknowledge );
 
-        virtual const bool isNoRangeAcks() const;
-        virtual bool isNoRangeAcks();
+        virtual bool isNoRangeAcks() const;
         virtual void setNoRangeAcks( bool noRangeAcks );
 
     };

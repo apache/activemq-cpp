@@ -21,6 +21,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::v2::Bro
 
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/connector/openwire/marshal/v2/BrokerIdMarshaller.h>
+#include <activemq/connector/openwire/commands/BrokerId.h>
 
 using namespace std;
 using namespace activemq;
@@ -29,12 +30,16 @@ using namespace activemq::io;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
+using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::marshal::v2;
 
 ////////////////////////////////////////////////////////////////////////////////
 void BrokerIdMarshallerTest::test()
 {
-//    BrokerIdMarshaller myMarshaller;    
-//    unsigned char type = myMarshaller.getDataStructureType();
+    BrokerIdMarshaller myMarshaller;
+    BrokerId myCommand;    
+    unsigned char type = myMarshaller.getDataStructureType();
+    
+    CPPUNIT_ASSERT( type == myCommand.getDataStructureType() );
 }

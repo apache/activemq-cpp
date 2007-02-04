@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class Response : public BaseCommand
+    class Response : public BaseCommand<transport::Response>
     {
     protected:
 
@@ -78,8 +78,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getCorrelationId() const;
-        virtual int getCorrelationId();
+        virtual int getCorrelationId() const;
         virtual void setCorrelationId( int correlationId );
 
     };

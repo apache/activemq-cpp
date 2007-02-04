@@ -44,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class MessagePull : public BaseCommand
+    class MessagePull : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -90,8 +90,7 @@ namespace commands{
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const long long getTimeout() const;
-        virtual long long getTimeout();
+        virtual long long getTimeout() const;
         virtual void setTimeout( long long timeout );
 
     };

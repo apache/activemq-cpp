@@ -91,7 +91,7 @@ void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Data
 void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    SubscriptionInfo* info = 
+    SubscriptionInfo* info =
         dynamic_cast<SubscriptionInfo*>( dataStructure );
     info->setClientId( looseUnmarshalString( dataIn ) );
     info->setDestination( dynamic_cast< ActiveMQDestination* >( 

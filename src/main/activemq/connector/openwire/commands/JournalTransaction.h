@@ -85,12 +85,10 @@ namespace commands{
         virtual TransactionId* getTransactionId();
         virtual void setTransactionId( TransactionId* transactionId );
 
-        virtual const unsigned char getType() const;
-        virtual unsigned char getType();
+        virtual unsigned char getType() const;
         virtual void setType( unsigned char type );
 
-        virtual const bool getWasPrepared() const;
-        virtual bool getWasPrepared();
+        virtual bool getWasPrepared() const;
         virtual void setWasPrepared( bool wasPrepared );
 
     };

@@ -78,12 +78,7 @@ unsigned char IntegerResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int IntegerResponse::getResult() const {
-    return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int IntegerResponse::getResult() {
+int IntegerResponse::getResult() const {
     return result;
 }
 

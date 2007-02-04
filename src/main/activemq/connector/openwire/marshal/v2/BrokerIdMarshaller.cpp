@@ -81,7 +81,7 @@ void BrokerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructur
 void BrokerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    BrokerId* info = 
+    BrokerId* info =
         dynamic_cast<BrokerId*>( dataStructure );
     info->setValue( looseUnmarshalString( dataIn ) );
 }

@@ -33,7 +33,7 @@ namespace commands{
      * This class represents an Exception sent from the Broker.  The Broker
      * sends java Throwables, so we must mimic its structure here.
      */
-    class BrokerError : public BaseCommand
+    class BrokerError : public BaseCommand<transport::Command>
     {
     public:
 

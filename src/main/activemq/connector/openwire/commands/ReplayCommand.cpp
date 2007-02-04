@@ -60,7 +60,7 @@ DataStructure* ReplayCommand::cloneDataStructure() const {
 void ReplayCommand::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ReplayCommand* srcPtr = dynamic_cast<const ReplayCommand*>( src );
 
@@ -80,12 +80,7 @@ unsigned char ReplayCommand::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int ReplayCommand::getFirstNakNumber() const {
-    return firstNakNumber;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ReplayCommand::getFirstNakNumber() {
+int ReplayCommand::getFirstNakNumber() const {
     return firstNakNumber;
 }
 
@@ -95,12 +90,7 @@ void ReplayCommand::setFirstNakNumber(int firstNakNumber ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int ReplayCommand::getLastNakNumber() const {
-    return lastNakNumber;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ReplayCommand::getLastNakNumber() {
+int ReplayCommand::getLastNakNumber() const {
     return lastNakNumber;
 }
 

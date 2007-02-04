@@ -80,7 +80,7 @@ DataStructure* ConsumerInfo::cloneDataStructure() const {
 void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>( src );
 
@@ -140,12 +140,7 @@ void ConsumerInfo::setConsumerId(ConsumerId* consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isBrowser() const {
-    return browser;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isBrowser() {
+bool ConsumerInfo::isBrowser() const {
     return browser;
 }
 
@@ -170,12 +165,7 @@ void ConsumerInfo::setDestination(ActiveMQDestination* destination ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int ConsumerInfo::getPrefetchSize() const {
-    return prefetchSize;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ConsumerInfo::getPrefetchSize() {
+int ConsumerInfo::getPrefetchSize() const {
     return prefetchSize;
 }
 
@@ -185,12 +175,7 @@ void ConsumerInfo::setPrefetchSize(int prefetchSize ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int ConsumerInfo::getMaximumPendingMessageLimit() const {
-    return maximumPendingMessageLimit;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int ConsumerInfo::getMaximumPendingMessageLimit() {
+int ConsumerInfo::getMaximumPendingMessageLimit() const {
     return maximumPendingMessageLimit;
 }
 
@@ -200,12 +185,7 @@ void ConsumerInfo::setMaximumPendingMessageLimit(int maximumPendingMessageLimit 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isDispatchAsync() const {
-    return dispatchAsync;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isDispatchAsync() {
+bool ConsumerInfo::isDispatchAsync() const {
     return dispatchAsync;
 }
 
@@ -245,12 +225,7 @@ void ConsumerInfo::setSubscriptionName(const std::string& subscriptionName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isNoLocal() const {
-    return noLocal;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isNoLocal() {
+bool ConsumerInfo::isNoLocal() const {
     return noLocal;
 }
 
@@ -260,12 +235,7 @@ void ConsumerInfo::setNoLocal(bool noLocal ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isExclusive() const {
-    return exclusive;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isExclusive() {
+bool ConsumerInfo::isExclusive() const {
     return exclusive;
 }
 
@@ -275,12 +245,7 @@ void ConsumerInfo::setExclusive(bool exclusive ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isRetroactive() const {
-    return retroactive;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isRetroactive() {
+bool ConsumerInfo::isRetroactive() const {
     return retroactive;
 }
 
@@ -290,12 +255,7 @@ void ConsumerInfo::setRetroactive(bool retroactive ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char ConsumerInfo::getPriority() const {
-    return priority;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char ConsumerInfo::getPriority() {
+unsigned char ConsumerInfo::getPriority() const {
     return priority;
 }
 
@@ -335,12 +295,7 @@ void ConsumerInfo::setAdditionalPredicate(BooleanExpression* additionalPredicate
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isNetworkSubscription() const {
-    return networkSubscription;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isNetworkSubscription() {
+bool ConsumerInfo::isNetworkSubscription() const {
     return networkSubscription;
 }
 
@@ -350,12 +305,7 @@ void ConsumerInfo::setNetworkSubscription(bool networkSubscription ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isOptimizedAcknowledge() const {
-    return optimizedAcknowledge;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isOptimizedAcknowledge() {
+bool ConsumerInfo::isOptimizedAcknowledge() const {
     return optimizedAcknowledge;
 }
 
@@ -365,12 +315,7 @@ void ConsumerInfo::setOptimizedAcknowledge(bool optimizedAcknowledge ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConsumerInfo::isNoRangeAcks() const {
-    return noRangeAcks;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConsumerInfo::isNoRangeAcks() {
+bool ConsumerInfo::isNoRangeAcks() const {
     return noRangeAcks;
 }
 

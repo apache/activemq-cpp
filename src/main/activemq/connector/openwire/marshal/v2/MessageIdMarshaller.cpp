@@ -88,7 +88,7 @@ void MessageIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructu
 void MessageIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    MessageId* info = 
+    MessageId* info =
         dynamic_cast<MessageId*>( dataStructure );
     info->setProducerId( dynamic_cast< ProducerId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

@@ -82,7 +82,7 @@ void SessionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 void SessionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    SessionInfo* info = 
+    SessionInfo* info =
         dynamic_cast<SessionInfo*>( dataStructure );
     info->setSessionId( dynamic_cast< SessionId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

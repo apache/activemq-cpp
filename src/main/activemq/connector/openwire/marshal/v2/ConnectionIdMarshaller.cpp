@@ -81,7 +81,7 @@ void ConnectionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
 void ConnectionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionId* info = 
+    ConnectionId* info =
         dynamic_cast<ConnectionId*>( dataStructure );
     info->setValue( looseUnmarshalString( dataIn ) );
 }

@@ -58,7 +58,7 @@ DataStructure* ShutdownInfo::cloneDataStructure() const {
 void ShutdownInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ShutdownInfo* srcPtr = dynamic_cast<const ShutdownInfo*>( src );
 

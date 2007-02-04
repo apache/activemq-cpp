@@ -59,7 +59,7 @@ DataStructure* Response::cloneDataStructure() const {
 void Response::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Response>::copyDataStructure( src );
 
     const Response* srcPtr = dynamic_cast<const Response*>( src );
 
@@ -78,12 +78,7 @@ unsigned char Response::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int Response::getCorrelationId() const {
-    return correlationId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int Response::getCorrelationId() {
+int Response::getCorrelationId() const {
     return correlationId;
 }
 

@@ -83,12 +83,7 @@ unsigned char NetworkBridgeFilter::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const int NetworkBridgeFilter::getNetworkTTL() const {
-    return networkTTL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-int NetworkBridgeFilter::getNetworkTTL() {
+int NetworkBridgeFilter::getNetworkTTL() const {
     return networkTTL;
 }
 

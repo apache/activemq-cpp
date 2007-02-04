@@ -82,7 +82,7 @@ void DataResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
 void DataResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DataResponse* info = 
+    DataResponse* info =
         dynamic_cast<DataResponse*>( dataStructure );
     info->setData( dynamic_cast< DataStructure* >( 
         looseUnmarshalNestedObject( wireFormat, dataIn ) ) );

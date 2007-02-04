@@ -79,8 +79,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getCommandId() const;
-        virtual int getCommandId();
+        virtual int getCommandId() const;
         virtual void setCommandId( int commandId );
 
         virtual const std::vector<unsigned char>& getData() const;

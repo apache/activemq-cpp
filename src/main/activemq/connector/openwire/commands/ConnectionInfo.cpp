@@ -69,7 +69,7 @@ DataStructure* ConnectionInfo::cloneDataStructure() const {
 void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ConnectionInfo* srcPtr = dynamic_cast<const ConnectionInfo*>( src );
 
@@ -176,12 +176,7 @@ void ConnectionInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::isBrokerMasterConnector() const {
-    return brokerMasterConnector;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::isBrokerMasterConnector() {
+bool ConnectionInfo::isBrokerMasterConnector() const {
     return brokerMasterConnector;
 }
 
@@ -191,12 +186,7 @@ void ConnectionInfo::setBrokerMasterConnector(bool brokerMasterConnector ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::isManageable() const {
-    return manageable;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::isManageable() {
+bool ConnectionInfo::isManageable() const {
     return manageable;
 }
 
@@ -206,12 +196,7 @@ void ConnectionInfo::setManageable(bool manageable ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionInfo::isClientMaster() const {
-    return clientMaster;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionInfo::isClientMaster() {
+bool ConnectionInfo::isClientMaster() const {
     return clientMaster;
 }
 

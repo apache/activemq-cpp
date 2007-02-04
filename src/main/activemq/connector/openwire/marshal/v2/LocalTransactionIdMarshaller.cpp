@@ -85,7 +85,7 @@ void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Da
 void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    LocalTransactionId* info = 
+    LocalTransactionId* info =
         dynamic_cast<LocalTransactionId*>( dataStructure );
     info->setValue( looseUnmarshalLong( wireFormat, dataIn ) );
     info->setConnectionId( dynamic_cast< ConnectionId* >( 

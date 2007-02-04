@@ -28,7 +28,6 @@ cc_sources += \
    activemq/connector/openwire/commands/ActiveMQTempTopic.cpp \
    activemq/connector/openwire/commands/ActiveMQTextMessage.cpp \
    activemq/connector/openwire/commands/ActiveMQTopic.cpp \
-   activemq/connector/openwire/commands/BaseCommand.cpp \
    activemq/connector/openwire/commands/BrokerId.cpp \
    activemq/connector/openwire/commands/BrokerInfo.cpp \
    activemq/connector/openwire/commands/ConnectionControl.cpp \

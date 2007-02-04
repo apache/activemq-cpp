@@ -87,7 +87,7 @@ void ConsumerIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 void ConsumerIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConsumerId* info = 
+    ConsumerId* info =
         dynamic_cast<ConsumerId*>( dataStructure );
     info->setConnectionId( looseUnmarshalString( dataIn ) );
     info->setSessionId( looseUnmarshalLong( wireFormat, dataIn ) );

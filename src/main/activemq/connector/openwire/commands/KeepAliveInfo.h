@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class KeepAliveInfo : public BaseCommand
+    class KeepAliveInfo : public BaseCommand<transport::Command>
     {
     protected:
 

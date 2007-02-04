@@ -120,7 +120,7 @@ void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
 void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    BrokerInfo* info = 
+    BrokerInfo* info =
         dynamic_cast<BrokerInfo*>( dataStructure );
     info->setBrokerId( dynamic_cast< BrokerId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

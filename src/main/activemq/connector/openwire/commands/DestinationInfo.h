@@ -45,7 +45,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class DestinationInfo : public BaseCommand
+    class DestinationInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -93,12 +93,10 @@ namespace commands{
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const unsigned char getOperationType() const;
-        virtual unsigned char getOperationType();
+        virtual unsigned char getOperationType() const;
         virtual void setOperationType( unsigned char operationType );
 
-        virtual const long long getTimeout() const;
-        virtual long long getTimeout();
+        virtual long long getTimeout() const;
         virtual void setTimeout( long long timeout );
 
         virtual const std::vector<BrokerId*>& getBrokerPath() const;

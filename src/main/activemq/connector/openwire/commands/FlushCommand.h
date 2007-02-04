@@ -42,7 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class FlushCommand : public BaseCommand
+    class FlushCommand : public BaseCommand<transport::Command>
     {
     protected:
 

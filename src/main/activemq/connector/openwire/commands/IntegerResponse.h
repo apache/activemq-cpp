@@ -78,8 +78,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getResult() const;
-        virtual int getResult();
+        virtual int getResult() const;
         virtual void setResult( int result );
 
     };

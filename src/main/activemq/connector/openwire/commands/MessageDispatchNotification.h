@@ -45,7 +45,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class MessageDispatchNotification : public BaseCommand
+    class MessageDispatchNotification : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -92,8 +92,7 @@ namespace commands{
         virtual ActiveMQDestination* getDestination();
         virtual void setDestination( ActiveMQDestination* destination );
 
-        virtual const long long getDeliverySequenceId() const;
-        virtual long long getDeliverySequenceId();
+        virtual long long getDeliverySequenceId() const;
         virtual void setDeliverySequenceId( long long deliverySequenceId );
 
         virtual const MessageId* getMessageId() const;

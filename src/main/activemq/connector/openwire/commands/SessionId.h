@@ -83,8 +83,7 @@ namespace commands{
         virtual std::string& getConnectionId();
         virtual void setConnectionId( const std::string& connectionId );
 
-        virtual const long long getValue() const;
-        virtual long long getValue();
+        virtual long long getValue() const;
         virtual void setValue( long long value );
 
     };

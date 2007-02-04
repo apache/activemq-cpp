@@ -95,12 +95,7 @@ void SessionId::setConnectionId(const std::string& connectionId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long SessionId::getValue() const {
-    return value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long SessionId::getValue() {
+long long SessionId::getValue() const {
     return value;
 }
 

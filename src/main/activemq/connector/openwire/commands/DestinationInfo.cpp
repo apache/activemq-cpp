@@ -67,7 +67,7 @@ DataStructure* DestinationInfo::cloneDataStructure() const {
 void DestinationInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>( src );
 
@@ -128,12 +128,7 @@ void DestinationInfo::setDestination(ActiveMQDestination* destination ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char DestinationInfo::getOperationType() const {
-    return operationType;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char DestinationInfo::getOperationType() {
+unsigned char DestinationInfo::getOperationType() const {
     return operationType;
 }
 
@@ -143,12 +138,7 @@ void DestinationInfo::setOperationType(unsigned char operationType ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long DestinationInfo::getTimeout() const {
-    return timeout;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long DestinationInfo::getTimeout() {
+long long DestinationInfo::getTimeout() const {
     return timeout;
 }
 

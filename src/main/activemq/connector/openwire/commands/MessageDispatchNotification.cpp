@@ -65,7 +65,7 @@ DataStructure* MessageDispatchNotification::cloneDataStructure() const {
 void MessageDispatchNotification::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const MessageDispatchNotification* srcPtr = dynamic_cast<const MessageDispatchNotification*>( src );
 
@@ -123,12 +123,7 @@ void MessageDispatchNotification::setDestination(ActiveMQDestination* destinatio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const long long MessageDispatchNotification::getDeliverySequenceId() const {
-    return deliverySequenceId;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long MessageDispatchNotification::getDeliverySequenceId() {
+long long MessageDispatchNotification::getDeliverySequenceId() const {
     return deliverySequenceId;
 }
 

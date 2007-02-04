@@ -44,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class BrokerInfo : public BaseCommand
+    class BrokerInfo : public BaseCommand<transport::Command>
     {
     protected:
 
@@ -105,28 +105,22 @@ namespace commands{
         virtual std::string& getBrokerName();
         virtual void setBrokerName( const std::string& brokerName );
 
-        virtual const bool isSlaveBroker() const;
-        virtual bool isSlaveBroker();
+        virtual bool isSlaveBroker() const;
         virtual void setSlaveBroker( bool slaveBroker );
 
-        virtual const bool isMasterBroker() const;
-        virtual bool isMasterBroker();
+        virtual bool isMasterBroker() const;
         virtual void setMasterBroker( bool masterBroker );
 
-        virtual const bool isFaultTolerantConfiguration() const;
-        virtual bool isFaultTolerantConfiguration();
+        virtual bool isFaultTolerantConfiguration() const;
         virtual void setFaultTolerantConfiguration( bool faultTolerantConfiguration );
 
-        virtual const bool isDuplexConnection() const;
-        virtual bool isDuplexConnection();
+        virtual bool isDuplexConnection() const;
         virtual void setDuplexConnection( bool duplexConnection );
 
-        virtual const bool isNetworkConnection() const;
-        virtual bool isNetworkConnection();
+        virtual bool isNetworkConnection() const;
         virtual void setNetworkConnection( bool networkConnection );
 
-        virtual const long long getConnectionId() const;
-        virtual long long getConnectionId();
+        virtual long long getConnectionId() const;
         virtual void setConnectionId( long long connectionId );
 
     };

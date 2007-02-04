@@ -84,7 +84,7 @@ void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 void NetworkBridgeFilterMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    NetworkBridgeFilter* info = 
+    NetworkBridgeFilter* info =
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
     info->setNetworkTTL( dataIn->readInt() );
     info->setNetworkBrokerId( dynamic_cast< BrokerId* >( 

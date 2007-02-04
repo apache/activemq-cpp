@@ -114,7 +114,7 @@ void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataSt
 void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionInfo* info = 
+    ConnectionInfo* info =
         dynamic_cast<ConnectionInfo*>( dataStructure );
     info->setConnectionId( dynamic_cast< ConnectionId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

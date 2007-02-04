@@ -80,8 +80,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
-        virtual const int getNetworkTTL() const;
-        virtual int getNetworkTTL();
+        virtual int getNetworkTTL() const;
         virtual void setNetworkTTL( int networkTTL );
 
         virtual const BrokerId* getNetworkBrokerId() const;

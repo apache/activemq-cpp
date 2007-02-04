@@ -111,9 +111,9 @@ int MessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure*
     rc += tightMarshalLong1( wireFormat, info->getTimestamp(), bs );
     rc += tightMarshalString1( info->getType(), bs );
     bs->writeBoolean( info->getContent().size() != 0 );
-    rc += (int)(info->getContent().size() == 0 ? 0 : info->getContent().size() + 4);
+    rc += info->getContent().size() == 0 ? 0 : info->getContent().size() + 4;
     bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
-    rc += (int)(info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4);
+    rc += info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4;
     rc += tightMarshalNestedObject1( wireFormat, info->getDataStructure(), bs );
     rc += tightMarshalCachedObject1( wireFormat, info->getTargetConsumerId(), bs );
     bs->writeBoolean( info->isCompressed() );
@@ -150,11 +150,11 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure
     tightMarshalString2( info->getType(), dataOut, bs );
     if( bs->readBoolean() ) {
         dataOut->write( (int)info->getContent().size() );
-        dataOut->write( &info->getContent()[0], info->getContent().size() );
+        dataOut->write( (const unsigned char*)(&info->getContent()[0]), (int)info->getContent().size() );
     }
     if( bs->readBoolean() ) {
         dataOut->write( (int)info->getMarshalledProperties().size() );
-        dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
+        dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size() );
     }
     tightMarshalNestedObject2( wireFormat, info->getDataStructure(), dataOut, bs );
     tightMarshalCachedObject2( wireFormat, info->getTargetConsumerId(), dataOut, bs );
@@ -171,7 +171,7 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure
 void MessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    Message* info = 
+    Message* info =
         dynamic_cast<Message*>( dataStructure );
     info->setProducerId( dynamic_cast< ProducerId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
@@ -246,12 +246,12 @@ void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure*
     dataOut->write( info->getContent().size() != 0 );
     if( info->getContent().size() != 0 ) {
         dataOut->write( (int)info->getContent().size() );
-        dataOut->write( &info->getContent()[0], info->getContent().size() );
+        dataOut->write( (const unsigned char*)(&info->getContent()[0]), (int)info->getContent().size() );
     }
     dataOut->write( info->getMarshalledProperties().size() != 0 );
     if( info->getMarshalledProperties().size() != 0 ) {
         dataOut->write( (int)info->getMarshalledProperties().size() );
-        dataOut->write( &info->getMarshalledProperties()[0], info->getMarshalledProperties().size() );
+        dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size() );
     }
     looseMarshalNestedObject( wireFormat, info->getDataStructure(), dataOut );
     looseMarshalCachedObject( wireFormat, info->getTargetConsumerId(), dataOut );

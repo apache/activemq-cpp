@@ -84,7 +84,7 @@ void ActiveMQMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 void ActiveMQMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ActiveMQMessage* info = 
+    ActiveMQMessage* info =
         dynamic_cast<ActiveMQMessage*>( dataStructure );
     info->beforeUnmarshal( wireFormat );
     info->afterUnmarshal( wireFormat );

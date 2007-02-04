@@ -66,7 +66,7 @@ DataStructure* ProducerInfo::cloneDataStructure() const {
 void ProducerInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ProducerInfo* srcPtr = dynamic_cast<const ProducerInfo*>( src );
 
@@ -141,12 +141,7 @@ void ProducerInfo::setBrokerPath(const std::vector<BrokerId*>& brokerPath ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ProducerInfo::isDispatchAsync() const {
-    return dispatchAsync;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ProducerInfo::isDispatchAsync() {
+bool ProducerInfo::isDispatchAsync() const {
     return dispatchAsync;
 }
 

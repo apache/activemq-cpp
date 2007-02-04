@@ -93,7 +93,7 @@ void MessageDispatchNotificationMarshaller::tightMarshal2( OpenWireFormat* wireF
 void MessageDispatchNotificationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    MessageDispatchNotification* info = 
+    MessageDispatchNotification* info =
         dynamic_cast<MessageDispatchNotification*>( dataStructure );
     info->setConsumerId( dynamic_cast< ConsumerId* >( 
         looseUnmarshalCachedObject( wireFormat, dataIn ) ) );

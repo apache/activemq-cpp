@@ -87,7 +87,7 @@ void JournalTransactionMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Da
 void JournalTransactionMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
     BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    JournalTransaction* info = 
+    JournalTransaction* info =
         dynamic_cast<JournalTransaction*>( dataStructure );
     info->setTransactionId( dynamic_cast< TransactionId* >( 
         looseUnmarshalNestedObject( wireFormat, dataIn ) ) );

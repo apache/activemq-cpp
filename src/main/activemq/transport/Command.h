@@ -30,13 +30,13 @@ namespace transport{
          * Sets the Command Id of this Message
          * @param id Command Id
          */
-        virtual void setCommandId( const unsigned int id ) = 0;
+        virtual void setCommandId( int id ) = 0;
 
         /**
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual unsigned int getCommandId() const = 0;
+        virtual int getCommandId() const = 0;
         
         /**
          * Set if this Message requires a Response

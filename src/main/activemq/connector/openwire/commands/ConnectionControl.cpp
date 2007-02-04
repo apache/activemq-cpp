@@ -63,7 +63,7 @@ DataStructure* ConnectionControl::cloneDataStructure() const {
 void ConnectionControl::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
+    BaseCommand<transport::Command>::copyDataStructure( src );
 
     const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
 
@@ -86,12 +86,7 @@ unsigned char ConnectionControl::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::isClose() const {
-    return close;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::isClose() {
+bool ConnectionControl::isClose() const {
     return close;
 }
 
@@ -101,12 +96,7 @@ void ConnectionControl::setClose(bool close ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::isExit() const {
-    return exit;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::isExit() {
+bool ConnectionControl::isExit() const {
     return exit;
 }
 
@@ -116,12 +106,7 @@ void ConnectionControl::setExit(bool exit ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::isFaultTolerant() const {
-    return faultTolerant;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::isFaultTolerant() {
+bool ConnectionControl::isFaultTolerant() const {
     return faultTolerant;
 }
 
@@ -131,12 +116,7 @@ void ConnectionControl::setFaultTolerant(bool faultTolerant ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::isResume() const {
-    return resume;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::isResume() {
+bool ConnectionControl::isResume() const {
     return resume;
 }
 
@@ -146,12 +126,7 @@ void ConnectionControl::setResume(bool resume ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const bool ConnectionControl::isSuspend() const {
-    return suspend;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool ConnectionControl::isSuspend() {
+bool ConnectionControl::isSuspend() const {
     return suspend;
 }
 
