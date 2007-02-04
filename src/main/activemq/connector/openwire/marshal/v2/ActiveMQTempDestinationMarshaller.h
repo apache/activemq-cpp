@@ -53,18 +53,6 @@ namespace v2{
         virtual ~ActiveMQTempDestinationMarshaller() {}
 
         /**
-         * Creates a new instance of this marshalable type.
-         * @return new DataStructure object pointer caller owns it.
-         */
-        virtual commands::DataStructure* createObject() const;
-
-        /**
-         * Get the Data Structure Type that identifies this Marshaller
-         * @return byte holding the data structure type value
-         */
-        virtual unsigned char getDataStructureType() const;
-
-        /**
          * Un-marshal an object instance from the data input stream
          * @param wireFormat - describs the wire format of the broker
          * @param o - Object to be un-marshaled

@@ -242,22 +242,6 @@ namespace openwire{
             this->sizePrefixDisabled = sizePrefixDisabled;
         }
 
-        /**
-         * Get the current value of the maxInactivityDuration feild
-         * @return the value of the maxInactivityDuration
-         */
-        long getMaxInactivityDuration() const {
-            return maxInactivityDuration;
-        }
-
-        /**
-         * Set the current Wireformat Version
-         * @param version - int that identifies the version
-         */
-        void setMaxInactivityDuration( long maxInactivityDuration ) {
-            this->maxInactivityDuration = maxInactivityDuration;
-        }
-
     protected:
 
         /**
@@ -298,7 +282,6 @@ namespace openwire{
         bool cacheEnabled;
         bool tightEncodingEnabled;
         bool sizePrefixDisabled;
-        int maxInactivityDuration;
 
     };
 

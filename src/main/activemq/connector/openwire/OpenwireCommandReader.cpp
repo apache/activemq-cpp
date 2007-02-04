@@ -54,7 +54,7 @@ Command* OpenwireCommandReader::readCommand(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int OpenwireCommandReader::read( unsigned char* buffer, int count ) 
+size_t OpenwireCommandReader::read( unsigned char* buffer, size_t count ) 
    throw( io::IOException )
 {
     try
@@ -66,7 +66,7 @@ int OpenwireCommandReader::read( unsigned char* buffer, int count )
                 "OpenwireCommandReader::read(char*,int) - input stream is NULL" );
         }
        
-        int head = 0;
+        size_t head = 0;
        
         // We call the read(buffer, size) version asking for one
         // byte, if this returns zero, then there wasn't anything 

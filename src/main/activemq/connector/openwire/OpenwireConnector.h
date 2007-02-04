@@ -46,7 +46,7 @@
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/concurrent/Mutex.h>
-#include <activemq/util/Properties.h>
+#include <activemq/util/SimpleProperties.h>
 #include <activemq/core/ActiveMQConstants.h>
 
 #include <activemq/connector/openwire/OpenwireCommandReader.h>
@@ -57,7 +57,7 @@ namespace connector{
 namespace openwire{
     
     class OpenwireConnector : 
-        public Connector
+        public Connector,
         public transport::CommandListener,
         public transport::TransportExceptionListener
     {
