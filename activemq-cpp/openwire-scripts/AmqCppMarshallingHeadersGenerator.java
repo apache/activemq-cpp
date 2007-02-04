@@ -151,6 +151,9 @@ out.println("");
 out.println("        "+className+"() {}");
 out.println("        virtual ~"+className+"() {}");
 out.println("");
+
+    if( !isAbstractClass() ) {
+
 out.println("        /**");
 out.println("         * Creates a new instance of this marshalable type.");
 out.println("         * @return new DataStructure object pointer caller owns it.");
@@ -163,6 +166,7 @@ out.println("         * @return byte holding the data structure type value");
 out.println("         */");
 out.println("        virtual unsigned char getDataStructureType() const;");
 out.println("");
+    }
 out.println("        /**"); 
 out.println("         * Un-marshal an object instance from the data input stream");
 out.println("         * @param wireFormat - describs the wire format of the broker");

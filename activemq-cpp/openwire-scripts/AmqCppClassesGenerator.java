@@ -46,6 +46,24 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         return ".cpp";
     }
 
+    protected String getProperBaseClassName( String className, String baseClass ) {
+
+        if( baseClass == null || className == null ) {
+            return null;
+        }
+        
+        // The C++ BaseCommand class is a template, which requires either
+        // transport::Command, or transport::Response.
+        if( className.equals( "Response" ) ) {
+            return "BaseCommand<transport::Response>"; 
+        } else if( baseClass.equals( "BaseCommand" ) ) {
+            return "BaseCommand<transport::Command>";
+        }
+        
+        // No change.
+        return baseClass;
+    }
+    
     public String toCppType(JClass type) {
         String name = type.getSimpleName();
         if (name.equals("String")) {
@@ -211,7 +229,7 @@ out.println("");
 
         if( baseClass != null ) {
 out.println("    // Copy the data of the base class or classes");
-out.println("    "+baseClass+"::copyDataStructure( src );");
+out.println("    "+getProperBaseClassName( className, baseClass )+"::copyDataStructure( src );");
 out.println("");
         }
         
@@ -289,6 +307,17 @@ out.println("}");
 
            
 out.println("");
+
+    if( property.getType().isPrimitiveType() ) {
+
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println(type+" "+className+"::"+getter+"() const {");
+out.println("    return "+parameterName+";");
+out.println("}");
+out.println("");
+
+    } else {
+        
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("const "+type+" "+className+"::"+getter+"() const {");
 out.println("    return "+parameterName+";");
@@ -299,6 +328,9 @@ out.println(""+type+" "+className+"::"+getter+"() {");
 out.println("    return "+parameterName+";");
 out.println("}");
 out.println("");
+
+    }
+
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("void " + className + "::" + setter+"(" + constNess + type+ " " + parameterName +" ) {");
 out.println("    this->"+parameterName+" = "+parameterName+";");
