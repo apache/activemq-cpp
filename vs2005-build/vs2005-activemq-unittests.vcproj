@@ -451,6 +451,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQMapMessageTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQMapMessageTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQQueueTest.cpp"
 							>
 						</File>

@@ -35,4 +35,25 @@ void ActiveMQMapMessageTest::test()
     ActiveMQMapMessage myMessage;
     
     CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQMapMessage::ID_ACTIVEMQMAPMESSAGE );
+
+    CPPUNIT_ASSERT( myMessage.getMapNames().size() == 0 );
+    CPPUNIT_ASSERT( myMessage.itemExists( "Something" ) == false );
+    
+    myMessage.setBoolean( "boolean", false );
+    myMessage.setByte( "byte", 127 );
+    myMessage.setChar( "char", 'a' );
+    myMessage.setShort( "short", 32000 );
+    myMessage.setInt( "int", 6789999 );
+    myMessage.setLong( "long", 0xFFFAAA33345LL );
+    myMessage.setFloat( "float", 0.000012f );
+    myMessage.setDouble( "double", 64.54654 );
+
+    CPPUNIT_ASSERT( myMessage.getBoolean( "boolean" ) == false );
+    CPPUNIT_ASSERT( myMessage.getByte( "byte" ) == 127 );
+    CPPUNIT_ASSERT( myMessage.getChar( "char" ) == 'a' );
+    CPPUNIT_ASSERT( myMessage.getShort( "short" ) == 32000 );
+    CPPUNIT_ASSERT( myMessage.getInt( "int" ) == 6789999 );
+    CPPUNIT_ASSERT( myMessage.getLong( "long" ) == 0xFFFAAA33345LL );
+    CPPUNIT_ASSERT( myMessage.getFloat( "float" ) == 0.000012f );
+    CPPUNIT_ASSERT( myMessage.getDouble( "double" ) == 64.54654 );
 }

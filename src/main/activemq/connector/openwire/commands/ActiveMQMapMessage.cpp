@@ -66,6 +66,32 @@ util::PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) 
 
     try{ 
         
+        this->checkMapIsUnmarshalled();
+        return *map;
+    }
+    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
+    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const util::PrimitiveMap& ActiveMQMapMessage::getMap() const 
+    throw ( exceptions::NullPointerException ) {
+
+    try{
+
+        this->checkMapIsUnmarshalled();
+        return *map;
+    }
+    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
+    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQMapMessage::checkMapIsUnmarshalled() const 
+    throw ( exceptions::NullPointerException ) {
+
+    try {
+
         if( map == NULL ) {
             
             if( getContent().size() == 0 ){
@@ -82,19 +108,6 @@ util::PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) 
                     "map have fialed." );
             }    
         }
-        
-        return *map;
-    }
-    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
-    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-const util::PrimitiveMap& ActiveMQMapMessage::getMap() const 
-    throw ( exceptions::NullPointerException ) {
-
-    try{
-        this->getMap();
     }
     AMQ_CATCH_RETHROW( exceptions::NullPointerException )
     AMQ_CATCHALL_THROW( exceptions::NullPointerException )
@@ -104,7 +117,7 @@ const util::PrimitiveMap& ActiveMQMapMessage::getMap() const
 std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
 
     try{
-        getMap().getKeys();
+        return getMap().getKeys();
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -114,7 +127,7 @@ std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
 bool ActiveMQMapMessage::itemExists( const std::string& name ) const {
 
     try{
-        getMap().contains( name );
+        return getMap().contains( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -125,7 +138,7 @@ bool ActiveMQMapMessage::getBoolean( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getBool( name );
+        return getMap().getBool( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -147,7 +160,7 @@ unsigned char ActiveMQMapMessage::getByte( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getByte( name );
+        return getMap().getByte( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -170,7 +183,7 @@ const unsigned char* ActiveMQMapMessage::getBytes( const std::string& name ) con
     throw( cms::CMSException ) {
 
     try{
-        getMap().getByteArray( name );
+        return NULL; // TODO getMap().getByteArray( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -193,7 +206,7 @@ char ActiveMQMapMessage::getChar( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getChar( name );
+        return getMap().getChar( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -215,7 +228,7 @@ double ActiveMQMapMessage::getDouble( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getDouble( name );
+        return getMap().getDouble( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -238,7 +251,7 @@ float ActiveMQMapMessage::getFloat( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getFloat( name );
+        return getMap().getFloat( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -260,7 +273,7 @@ int ActiveMQMapMessage::getInt( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getInt( name );
+        return getMap().getInt( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -282,7 +295,7 @@ long long ActiveMQMapMessage::getLong( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getLong( name );
+        return getMap().getLong( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -304,7 +317,7 @@ short ActiveMQMapMessage::getShort( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getShort( name );
+        return getMap().getShort( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -326,7 +339,7 @@ std::string ActiveMQMapMessage::getString( const std::string& name ) const
     throw( cms::CMSException ) {
 
     try{
-        getMap().getString( name );
+        return getMap().getString( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
