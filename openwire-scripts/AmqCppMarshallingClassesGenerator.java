@@ -48,7 +48,13 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         return className;
     }
     
-    protected boolean checkNeedsInfoPointer() {
+    /**
+     * Checks if the tightMarshal1 method needs an casted version of its
+     * dataStructure argument and then returns true or false to indicate this
+     * to the caller.  
+     * @returns true if the tightMarshal1 method needs an info pointer.
+     */
+    protected boolean checkNeedsInfoPointerTM1() {
         
         if( isMarshallerAware() ){
             return true;
@@ -73,6 +79,34 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         return false;
     }
     
+    /**
+     * Checks if the tightMarshal2 method needs an casted version of its
+     * dataStructure argument and then returns true or false to indicate this
+     * to the caller.  
+     * @returns true if the tightMarshal2 method needs an info pointer.
+     */
+    protected boolean checkNeedsInfoPointerTM2() {
+        
+        if( isMarshallerAware() ){
+            return true;
+        }
+        
+        List properties = getProperties();
+        for (Iterator iter = properties.iterator(); iter.hasNext();) {
+            JProperty property = (JProperty) iter.next();
+            JClass propertyType = property.getType();
+            String type = propertyType.getSimpleName();
+            
+            if( !type.equals("boolean") ) {
+                
+                return true;
+            }
+            
+        }
+        
+        return false;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////
     // This section is for the tight wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
@@ -514,8 +548,7 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {");
 out.println("");
 
-//    if( !properties.isEmpty()  || marshallerAware ) { 
-    if( checkNeedsInfoPointer() ) {
+    if( checkNeedsInfoPointerTM1() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("    "+properClassName+"* info ="); 
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
@@ -540,7 +573,7 @@ out.println("");
 out.println("    "+baseClass+"::tightMarshal2( wireFormat, dataStructure, dataOut, bs );");
 out.println("");
 
-    if( !properties.isEmpty() || marshallerAware ) {
+    if( checkNeedsInfoPointerTM2() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
 out.println("    "+properClassName+"* info ="); 
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
