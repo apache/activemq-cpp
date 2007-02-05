@@ -459,6 +459,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQMessageTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQMessageTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQQueueTest.cpp"
 							>
 						</File>
@@ -480,6 +488,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQTempTopicTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQTextMessageTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQTextMessageTest.h"
 							>
 						</File>
 						<File
