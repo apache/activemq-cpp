@@ -21,6 +21,8 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <activemq/core/ActiveMQAckHandler.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -31,6 +33,31 @@ namespace commands{
         CPPUNIT_TEST_SUITE( ActiveMQMessageTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
+
+        class MyAckHandler : public core::ActiveMQAckHandler {
+        public:
+        
+            MyAckHandler() {
+                this->wasAcked = false;
+            }
+            
+            /**
+             * Method called to acknowledge the message passed
+             * @param message Message to Acknowlegde
+             * @throw CMSException
+             */
+            virtual void acknowledgeMessage( const core::ActiveMQMessage* message )
+                throw ( cms::CMSException ) {
+                    
+                this->wasAcked = true;
+            }
+            
+            /**
+             * Public indicator that we have received an ack
+             */
+            bool wasAcked;
+            
+        };
 
     public:
     
