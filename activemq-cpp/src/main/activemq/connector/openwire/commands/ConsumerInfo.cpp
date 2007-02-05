@@ -90,13 +90,17 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConsumerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConsumerId( 
-        dynamic_cast<ConsumerId*>( 
-            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    if( srcPtr->getConsumerId() != NULL ) {
+        this->setConsumerId( 
+            dynamic_cast<ConsumerId*>( 
+                srcPtr->getConsumerId()->cloneDataStructure() ) );
+    }
     this->setBrowser( srcPtr->isBrowser() );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
     this->setPrefetchSize( srcPtr->getPrefetchSize() );
     this->setMaximumPendingMessageLimit( srcPtr->getMaximumPendingMessageLimit() );
     this->setDispatchAsync( srcPtr->isDispatchAsync() );
@@ -107,13 +111,19 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
     this->setRetroactive( srcPtr->isRetroactive() );
     this->setPriority( srcPtr->getPriority() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        this->getBrokerPath().push_back( 
-            dynamic_cast<BrokerId*>( 
-                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            this->getBrokerPath().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        } else {
+            this->getBrokerPath().push_back( NULL );
+        }
     }
-    this->setAdditionalPredicate( 
-        dynamic_cast<BooleanExpression*>( 
-            srcPtr->getAdditionalPredicate()->cloneDataStructure() ) );
+    if( srcPtr->getAdditionalPredicate() != NULL ) {
+        this->setAdditionalPredicate( 
+            dynamic_cast<BooleanExpression*>( 
+                srcPtr->getAdditionalPredicate()->cloneDataStructure() ) );
+    }
     this->setNetworkSubscription( srcPtr->isNetworkSubscription() );
     this->setOptimizedAcknowledge( srcPtr->isOptimizedAcknowledge() );
     this->setNoRangeAcks( srcPtr->isNoRangeAcks() );

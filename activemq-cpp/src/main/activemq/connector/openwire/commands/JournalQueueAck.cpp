@@ -72,12 +72,16 @@ void JournalQueueAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalQueueAck::copyDataStructure - src is NULL or invalid" );
     }
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
-    this->setMessageAck( 
-        dynamic_cast<MessageAck*>( 
-            srcPtr->getMessageAck()->cloneDataStructure() ) );
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getMessageAck() != NULL ) {
+        this->setMessageAck( 
+            dynamic_cast<MessageAck*>( 
+                srcPtr->getMessageAck()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -73,12 +73,16 @@ void TransactionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "TransactionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
-    this->setTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getTransactionId() != NULL ) {
+        this->setTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getTransactionId()->cloneDataStructure() ) );
+    }
     this->setType( srcPtr->getType() );
 }
 

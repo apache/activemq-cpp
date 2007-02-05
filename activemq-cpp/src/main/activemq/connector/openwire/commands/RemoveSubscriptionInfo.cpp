@@ -72,9 +72,11 @@ void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
     this->setClientId( srcPtr->getClientId() );
 }

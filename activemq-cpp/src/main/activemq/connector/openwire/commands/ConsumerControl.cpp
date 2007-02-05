@@ -76,9 +76,11 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
             "ConsumerControl::copyDataStructure - src is NULL or invalid" );
     }
     this->setClose( srcPtr->isClose() );
-    this->setConsumerId( 
-        dynamic_cast<ConsumerId*>( 
-            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    if( srcPtr->getConsumerId() != NULL ) {
+        this->setConsumerId( 
+            dynamic_cast<ConsumerId*>( 
+                srcPtr->getConsumerId()->cloneDataStructure() ) );
+    }
     this->setPrefetch( srcPtr->getPrefetch() );
     this->setFlush( srcPtr->isFlush() );
     this->setStart( srcPtr->isStart() );

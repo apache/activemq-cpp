@@ -103,49 +103,71 @@ void Message::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "Message::copyDataStructure - src is NULL or invalid" );
     }
-    this->setProducerId( 
-        dynamic_cast<ProducerId*>( 
-            srcPtr->getProducerId()->cloneDataStructure() ) );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
-    this->setTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getTransactionId()->cloneDataStructure() ) );
-    this->setOriginalDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getOriginalDestination()->cloneDataStructure() ) );
-    this->setMessageId( 
-        dynamic_cast<MessageId*>( 
-            srcPtr->getMessageId()->cloneDataStructure() ) );
-    this->setOriginalTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getOriginalTransactionId()->cloneDataStructure() ) );
+    if( srcPtr->getProducerId() != NULL ) {
+        this->setProducerId( 
+            dynamic_cast<ProducerId*>( 
+                srcPtr->getProducerId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getTransactionId() != NULL ) {
+        this->setTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getTransactionId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getOriginalDestination() != NULL ) {
+        this->setOriginalDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getOriginalDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getMessageId() != NULL ) {
+        this->setMessageId( 
+            dynamic_cast<MessageId*>( 
+                srcPtr->getMessageId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getOriginalTransactionId() != NULL ) {
+        this->setOriginalTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getOriginalTransactionId()->cloneDataStructure() ) );
+    }
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );
     this->setCorrelationId( srcPtr->getCorrelationId() );
     this->setPersistent( srcPtr->isPersistent() );
     this->setExpiration( srcPtr->getExpiration() );
     this->setPriority( srcPtr->getPriority() );
-    this->setReplyTo( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getReplyTo()->cloneDataStructure() ) );
+    if( srcPtr->getReplyTo() != NULL ) {
+        this->setReplyTo( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getReplyTo()->cloneDataStructure() ) );
+    }
     this->setTimestamp( srcPtr->getTimestamp() );
     this->setType( srcPtr->getType() );
     this->setContent( srcPtr->getContent() );
     this->setMarshalledProperties( srcPtr->getMarshalledProperties() );
-    this->setDataStructure( 
-        dynamic_cast<DataStructure*>( 
-            srcPtr->getDataStructure()->cloneDataStructure() ) );
-    this->setTargetConsumerId( 
-        dynamic_cast<ConsumerId*>( 
-            srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
+    if( srcPtr->getDataStructure() != NULL ) {
+        this->setDataStructure( 
+            dynamic_cast<DataStructure*>( 
+                srcPtr->getDataStructure()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getTargetConsumerId() != NULL ) {
+        this->setTargetConsumerId( 
+            dynamic_cast<ConsumerId*>( 
+                srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
+    }
     this->setCompressed( srcPtr->isCompressed() );
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        this->getBrokerPath().push_back( 
-            dynamic_cast<BrokerId*>( 
-                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            this->getBrokerPath().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        } else {
+            this->getBrokerPath().push_back( NULL );
+        }
     }
     this->setArrival( srcPtr->getArrival() );
     this->setUserID( srcPtr->getUserID() );

@@ -76,16 +76,24 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ProducerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setProducerId( 
-        dynamic_cast<ProducerId*>( 
-            srcPtr->getProducerId()->cloneDataStructure() ) );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
+    if( srcPtr->getProducerId() != NULL ) {
+        this->setProducerId( 
+            dynamic_cast<ProducerId*>( 
+                srcPtr->getProducerId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        this->getBrokerPath().push_back( 
-            dynamic_cast<BrokerId*>( 
-                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            this->getBrokerPath().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        } else {
+            this->getBrokerPath().push_back( NULL );
+        }
     }
     this->setDispatchAsync( srcPtr->isDispatchAsync() );
 }

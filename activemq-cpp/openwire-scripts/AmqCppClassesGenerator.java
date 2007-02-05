@@ -261,17 +261,23 @@ out.println("    }");
             String arrayType = property.getType().getArrayComponentType().getSimpleName();
             
     out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
-    out.println("        this->"+getter+"().push_back( ");
-    out.println("            dynamic_cast<"+arrayType+"*>( ");
-    out.println("                srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");            
+    out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
+    out.println("            this->"+getter+"().push_back( ");
+    out.println("                dynamic_cast<"+arrayType+"*>( ");
+    out.println("                    srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");
+    out.println("        } else {");
+    out.println("            this->"+getter+"().push_back( NULL );");
+    out.println("        }");
     out.println("    }");
         } else if( property.getType().isArrayType() &&
                    property.getType().getArrayComponentType().isPrimitiveType() ) {
     out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
         } else {
-    out.println("    this->"+setter+"( ");
-    out.println("        dynamic_cast<"+type+"*>( ");
-    out.println("            srcPtr->"+getter+"()->cloneDataStructure() ) );");
+    out.println("    if( srcPtr->"+getter+"() != NULL ) {");
+    out.println("        this->"+setter+"( ");
+    out.println("            dynamic_cast<"+type+"*>( ");
+    out.println("                srcPtr->"+getter+"()->cloneDataStructure() ) );");
+    out.println("    }");
         }
     }
 

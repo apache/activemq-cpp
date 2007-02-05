@@ -80,22 +80,32 @@ void MessageAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessageAck::copyDataStructure - src is NULL or invalid" );
     }
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
-    this->setTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getTransactionId()->cloneDataStructure() ) );
-    this->setConsumerId( 
-        dynamic_cast<ConsumerId*>( 
-            srcPtr->getConsumerId()->cloneDataStructure() ) );
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getTransactionId() != NULL ) {
+        this->setTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getTransactionId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getConsumerId() != NULL ) {
+        this->setConsumerId( 
+            dynamic_cast<ConsumerId*>( 
+                srcPtr->getConsumerId()->cloneDataStructure() ) );
+    }
     this->setAckType( srcPtr->getAckType() );
-    this->setFirstMessageId( 
-        dynamic_cast<MessageId*>( 
-            srcPtr->getFirstMessageId()->cloneDataStructure() ) );
-    this->setLastMessageId( 
-        dynamic_cast<MessageId*>( 
-            srcPtr->getLastMessageId()->cloneDataStructure() ) );
+    if( srcPtr->getFirstMessageId() != NULL ) {
+        this->setFirstMessageId( 
+            dynamic_cast<MessageId*>( 
+                srcPtr->getFirstMessageId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getLastMessageId() != NULL ) {
+        this->setLastMessageId( 
+            dynamic_cast<MessageId*>( 
+                srcPtr->getLastMessageId()->cloneDataStructure() ) );
+    }
     this->setMessageCount( srcPtr->getMessageCount() );
 }
 

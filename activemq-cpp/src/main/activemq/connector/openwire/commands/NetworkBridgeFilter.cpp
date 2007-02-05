@@ -72,9 +72,11 @@ void NetworkBridgeFilter::copyDataStructure( const DataStructure* src ) {
             "NetworkBridgeFilter::copyDataStructure - src is NULL or invalid" );
     }
     this->setNetworkTTL( srcPtr->getNetworkTTL() );
-    this->setNetworkBrokerId( 
-        dynamic_cast<BrokerId*>( 
-            srcPtr->getNetworkBrokerId()->cloneDataStructure() ) );
+    if( srcPtr->getNetworkBrokerId() != NULL ) {
+        this->setNetworkBrokerId( 
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getNetworkBrokerId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

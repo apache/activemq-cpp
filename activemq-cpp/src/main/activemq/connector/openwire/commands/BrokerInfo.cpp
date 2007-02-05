@@ -81,14 +81,20 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "BrokerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setBrokerId( 
-        dynamic_cast<BrokerId*>( 
-            srcPtr->getBrokerId()->cloneDataStructure() ) );
+    if( srcPtr->getBrokerId() != NULL ) {
+        this->setBrokerId( 
+            dynamic_cast<BrokerId*>( 
+                srcPtr->getBrokerId()->cloneDataStructure() ) );
+    }
     this->setBrokerURL( srcPtr->getBrokerURL() );
     for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < srcPtr->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
-        this->getPeerBrokerInfos().push_back( 
-            dynamic_cast<BrokerInfo*>( 
-                srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() ) );
+        if( srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
+            this->getPeerBrokerInfos().push_back( 
+                dynamic_cast<BrokerInfo*>( 
+                    srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() ) );
+        } else {
+            this->getPeerBrokerInfos().push_back( NULL );
+        }
     }
     this->setBrokerName( srcPtr->getBrokerName() );
     this->setSlaveBroker( srcPtr->isSlaveBroker() );

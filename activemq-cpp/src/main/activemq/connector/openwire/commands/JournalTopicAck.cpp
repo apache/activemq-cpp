@@ -77,18 +77,24 @@ void JournalTopicAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalTopicAck::copyDataStructure - src is NULL or invalid" );
     }
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
-    this->setMessageId( 
-        dynamic_cast<MessageId*>( 
-            srcPtr->getMessageId()->cloneDataStructure() ) );
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getMessageId() != NULL ) {
+        this->setMessageId( 
+            dynamic_cast<MessageId*>( 
+                srcPtr->getMessageId()->cloneDataStructure() ) );
+    }
     this->setMessageSequenceId( srcPtr->getMessageSequenceId() );
     this->setSubscritionName( srcPtr->getSubscritionName() );
     this->setClientId( srcPtr->getClientId() );
-    this->setTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    if( srcPtr->getTransactionId() != NULL ) {
+        this->setTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getTransactionId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

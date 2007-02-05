@@ -79,16 +79,22 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
     this->setClientId( srcPtr->getClientId() );
     this->setPassword( srcPtr->getPassword() );
     this->setUserName( srcPtr->getUserName() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        this->getBrokerPath().push_back( 
-            dynamic_cast<BrokerId*>( 
-                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            this->getBrokerPath().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        } else {
+            this->getBrokerPath().push_back( NULL );
+        }
     }
     this->setBrokerMasterConnector( srcPtr->isBrokerMasterConnector() );
     this->setManageable( srcPtr->isManageable() );

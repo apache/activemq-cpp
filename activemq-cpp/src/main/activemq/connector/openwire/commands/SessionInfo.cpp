@@ -70,9 +70,11 @@ void SessionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "SessionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setSessionId( 
-        dynamic_cast<SessionId*>( 
-            srcPtr->getSessionId()->cloneDataStructure() ) );
+    if( srcPtr->getSessionId() != NULL ) {
+        this->setSessionId( 
+            dynamic_cast<SessionId*>( 
+                srcPtr->getSessionId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
