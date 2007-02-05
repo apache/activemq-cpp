@@ -179,11 +179,11 @@ void ActiveMQMapMessage::setByte( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* ActiveMQMapMessage::getBytes( const std::string& name ) const 
+std::vector<unsigned char> ActiveMQMapMessage::getBytes( const std::string& name ) const 
     throw( cms::CMSException ) {
 
     try{
-        return NULL; // TODO getMap().getByteArray( name );
+        return getMap().getByteArray( name );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )

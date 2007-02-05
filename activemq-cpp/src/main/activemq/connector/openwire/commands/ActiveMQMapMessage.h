@@ -154,7 +154,7 @@ namespace commands{
          * @param name of the value to fetch from the map
          * @throws CMSException
          */
-        virtual const unsigned char* getBytes( const std::string& name ) const 
+        virtual std::vector<unsigned char> getBytes( const std::string& name ) const 
             throw( cms::CMSException );
         
         /** 

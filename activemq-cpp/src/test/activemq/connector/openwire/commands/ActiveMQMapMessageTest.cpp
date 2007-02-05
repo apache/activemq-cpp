@@ -39,6 +39,14 @@ void ActiveMQMapMessageTest::test()
     CPPUNIT_ASSERT( myMessage.getMapNames().size() == 0 );
     CPPUNIT_ASSERT( myMessage.itemExists( "Something" ) == false );
     
+    std::vector<unsigned char> data;
+    
+    data.push_back( 2 );
+    data.push_back( 4 );
+    data.push_back( 8 );
+    data.push_back( 16 );
+    data.push_back( 32 );
+    
     myMessage.setBoolean( "boolean", false );
     myMessage.setByte( "byte", 127 );
     myMessage.setChar( "char", 'a' );
@@ -47,6 +55,7 @@ void ActiveMQMapMessageTest::test()
     myMessage.setLong( "long", 0xFFFAAA33345LL );
     myMessage.setFloat( "float", 0.000012f );
     myMessage.setDouble( "double", 64.54654 );
+    myMessage.setBytes( "bytes", data );
 
     CPPUNIT_ASSERT( myMessage.getBoolean( "boolean" ) == false );
     CPPUNIT_ASSERT( myMessage.getByte( "byte" ) == 127 );
@@ -56,4 +65,5 @@ void ActiveMQMapMessageTest::test()
     CPPUNIT_ASSERT( myMessage.getLong( "long" ) == 0xFFFAAA33345LL );
     CPPUNIT_ASSERT( myMessage.getFloat( "float" ) == 0.000012f );
     CPPUNIT_ASSERT( myMessage.getDouble( "double" ) == 64.54654 );
+    CPPUNIT_ASSERT( myMessage.getBytes( "bytes" ) == data );
 }
