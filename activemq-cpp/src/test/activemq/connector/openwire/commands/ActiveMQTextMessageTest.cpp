@@ -32,5 +32,18 @@ using namespace activemq::connector::openwire::commands;
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTextMessageTest::test()
 {
-    //ActiveMQTextMessage myMessage;
+    ActiveMQTextMessage myMessage;
+
+    CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE );
+    
+    const char* testText = "This is some test Text";
+    
+    myMessage.setText( testText );
+    
+    CPPUNIT_ASSERT( myMessage.getText() == testText );
+
+    //cms::TextMessage* clonedMessage = myMessage.clone();
+    //CPPUNIT_ASSERT( clonedMessage != NULL );
+    //CPPUNIT_ASSERT( clonedMessage->getText() == testText );
+    //delete clonedMessage;
 }
