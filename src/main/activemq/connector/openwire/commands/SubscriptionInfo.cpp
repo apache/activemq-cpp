@@ -74,9 +74,11 @@ void SubscriptionInfo::copyDataStructure( const DataStructure* src ) {
             "SubscriptionInfo::copyDataStructure - src is NULL or invalid" );
     }
     this->setClientId( srcPtr->getClientId() );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
     this->setSelector( srcPtr->getSelector() );
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
 }

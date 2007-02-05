@@ -70,9 +70,11 @@ void DataResponse::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "DataResponse::copyDataStructure - src is NULL or invalid" );
     }
-    this->setData( 
-        dynamic_cast<DataStructure*>( 
-            srcPtr->getData()->cloneDataStructure() ) );
+    if( srcPtr->getData() != NULL ) {
+        this->setData( 
+            dynamic_cast<DataStructure*>( 
+                srcPtr->getData()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

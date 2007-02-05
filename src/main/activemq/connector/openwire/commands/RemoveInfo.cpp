@@ -70,9 +70,11 @@ void RemoveInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "RemoveInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setObjectId( 
-        dynamic_cast<DataStructure*>( 
-            srcPtr->getObjectId()->cloneDataStructure() ) );
+    if( srcPtr->getObjectId() != NULL ) {
+        this->setObjectId( 
+            dynamic_cast<DataStructure*>( 
+                srcPtr->getObjectId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

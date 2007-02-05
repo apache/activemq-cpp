@@ -72,9 +72,11 @@ void MessageId::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessageId::copyDataStructure - src is NULL or invalid" );
     }
-    this->setProducerId( 
-        dynamic_cast<ProducerId*>( 
-            srcPtr->getProducerId()->cloneDataStructure() ) );
+    if( srcPtr->getProducerId() != NULL ) {
+        this->setProducerId( 
+            dynamic_cast<ProducerId*>( 
+                srcPtr->getProducerId()->cloneDataStructure() ) );
+    }
     this->setProducerSequenceId( srcPtr->getProducerSequenceId() );
     this->setBrokerSequenceId( srcPtr->getBrokerSequenceId() );
 }

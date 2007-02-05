@@ -75,15 +75,21 @@ void MessageDispatch::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessageDispatch::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConsumerId( 
-        dynamic_cast<ConsumerId*>( 
-            srcPtr->getConsumerId()->cloneDataStructure() ) );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
-    this->setMessage( 
-        dynamic_cast<Message*>( 
-            srcPtr->getMessage()->cloneDataStructure() ) );
+    if( srcPtr->getConsumerId() != NULL ) {
+        this->setConsumerId( 
+            dynamic_cast<ConsumerId*>( 
+                srcPtr->getConsumerId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getMessage() != NULL ) {
+        this->setMessage( 
+            dynamic_cast<Message*>( 
+                srcPtr->getMessage()->cloneDataStructure() ) );
+    }
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
 }
 

@@ -77,18 +77,26 @@ void DestinationInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "DestinationInfo::copyDataStructure - src is NULL or invalid" );
     }
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
-    this->setDestination( 
-        dynamic_cast<ActiveMQDestination*>( 
-            srcPtr->getDestination()->cloneDataStructure() ) );
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getDestination() != NULL ) {
+        this->setDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getDestination()->cloneDataStructure() ) );
+    }
     this->setOperationType( srcPtr->getOperationType() );
     this->setTimeout( srcPtr->getTimeout() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        this->getBrokerPath().push_back( 
-            dynamic_cast<BrokerId*>( 
-                srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            this->getBrokerPath().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
+        } else {
+            this->getBrokerPath().push_back( NULL );
+        }
     }
 }
 

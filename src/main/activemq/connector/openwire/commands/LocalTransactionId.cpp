@@ -72,9 +72,11 @@ void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
             "LocalTransactionId::copyDataStructure - src is NULL or invalid" );
     }
     this->setValue( srcPtr->getValue() );
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

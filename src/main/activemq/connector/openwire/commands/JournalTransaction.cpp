@@ -72,9 +72,11 @@ void JournalTransaction::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalTransaction::copyDataStructure - src is NULL or invalid" );
     }
-    this->setTransactionId( 
-        dynamic_cast<TransactionId*>( 
-            srcPtr->getTransactionId()->cloneDataStructure() ) );
+    if( srcPtr->getTransactionId() != NULL ) {
+        this->setTransactionId( 
+            dynamic_cast<TransactionId*>( 
+                srcPtr->getTransactionId()->cloneDataStructure() ) );
+    }
     this->setType( srcPtr->getType() );
     this->setWasPrepared( srcPtr->getWasPrepared() );
 }

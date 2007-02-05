@@ -72,9 +72,13 @@ void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
             "DataArrayResponse::copyDataStructure - src is NULL or invalid" );
     }
     for( size_t idata = 0; idata < srcPtr->getData().size(); ++idata ) {
-        this->getData().push_back( 
-            dynamic_cast<DataStructure*>( 
-                srcPtr->getData()[idata]->cloneDataStructure() ) );
+        if( srcPtr->getData()[idata] != NULL ) {
+            this->getData().push_back( 
+                dynamic_cast<DataStructure*>( 
+                    srcPtr->getData()[idata]->cloneDataStructure() ) );
+        } else {
+            this->getData().push_back( NULL );
+        }
     }
 }
 

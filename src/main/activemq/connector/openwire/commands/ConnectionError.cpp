@@ -72,12 +72,16 @@ void ConnectionError::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionError::copyDataStructure - src is NULL or invalid" );
     }
-    this->setException( 
-        dynamic_cast<BrokerError*>( 
-            srcPtr->getException()->cloneDataStructure() ) );
-    this->setConnectionId( 
-        dynamic_cast<ConnectionId*>( 
-            srcPtr->getConnectionId()->cloneDataStructure() ) );
+    if( srcPtr->getException() != NULL ) {
+        this->setException( 
+            dynamic_cast<BrokerError*>( 
+                srcPtr->getException()->cloneDataStructure() ) );
+    }
+    if( srcPtr->getConnectionId() != NULL ) {
+        this->setConnectionId( 
+            dynamic_cast<ConnectionId*>( 
+                srcPtr->getConnectionId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

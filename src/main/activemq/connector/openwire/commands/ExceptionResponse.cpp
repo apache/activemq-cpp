@@ -70,9 +70,11 @@ void ExceptionResponse::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ExceptionResponse::copyDataStructure - src is NULL or invalid" );
     }
-    this->setException( 
-        dynamic_cast<BrokerError*>( 
-            srcPtr->getException()->cloneDataStructure() ) );
+    if( srcPtr->getException() != NULL ) {
+        this->setException( 
+            dynamic_cast<BrokerError*>( 
+                srcPtr->getException()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
