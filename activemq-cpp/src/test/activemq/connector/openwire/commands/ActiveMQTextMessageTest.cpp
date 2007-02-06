@@ -42,8 +42,8 @@ void ActiveMQTextMessageTest::test()
     
     CPPUNIT_ASSERT( myMessage.getText() == testText );
 
-    //cms::TextMessage* clonedMessage = myMessage.clone();
-    //CPPUNIT_ASSERT( clonedMessage != NULL );
-    //CPPUNIT_ASSERT( clonedMessage->getText() == testText );
-    //delete clonedMessage;
+    cms::TextMessage* clonedMessage = myMessage.clone();
+    CPPUNIT_ASSERT( clonedMessage != NULL );
+    CPPUNIT_ASSERT( clonedMessage->getText() == testText );
+    delete clonedMessage;
 }
