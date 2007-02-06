@@ -59,6 +59,7 @@ cc_sources = \
   activemq/connector/openwire/commands/ActiveMQTempTopicTest.cpp \
   activemq/connector/openwire/commands/ActiveMQTempQueueTest.cpp \
   activemq/connector/openwire/commands/ActiveMQTextMessageTest.cpp \
+  activemq/connector/openwire/commands/BrokerIdTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQDestinationTest.cpp \
