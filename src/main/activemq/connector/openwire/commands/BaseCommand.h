@@ -71,6 +71,20 @@ namespace commands{
         virtual bool isResponseRequired() const {
             return responseRequired;
         }
+        
+        /**
+         * Copy the contents of the passed object into this objects
+         * members, overwriting any existing data.
+         * @return src - Source Object
+         */
+        virtual void copyDataStructure( const DataStructure* src ) {
+            
+            const BaseCommand<T>* command = 
+                dynamic_cast< const BaseCommand<T>* >( src );
+            
+            this->setResponseRequired( command->isResponseRequired() );
+            this->setCommandId( command->getCommandId() );
+        }
 
     private:
     
