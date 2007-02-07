@@ -34,4 +34,20 @@ void BrokerInfoTest::test()
     BrokerInfo myCommand;
     
     CPPUNIT_ASSERT( myCommand.getDataStructureType() == BrokerInfo::ID_BROKERINFO );
+    
+    myCommand.setBrokerName( "BrokerName" );
+    myCommand.setBrokerURL( "http://www.example.com" );
+    myCommand.setCommandId( 37 );
+    myCommand.setMasterBroker( true );
+
+    BrokerInfo* copy = 
+        dynamic_cast<BrokerInfo*>( myCommand.cloneDataStructure() );
+    
+    CPPUNIT_ASSERT( copy != NULL );
+    CPPUNIT_ASSERT( copy->getBrokerName() == myCommand.getBrokerName() );
+    CPPUNIT_ASSERT( copy->getBrokerURL() == myCommand.getBrokerURL() );
+    CPPUNIT_ASSERT( copy->getCommandId() == myCommand.getCommandId() );
+    CPPUNIT_ASSERT( copy->isMasterBroker() == myCommand.isMasterBroker() );
+    
+    delete copy;
 }
