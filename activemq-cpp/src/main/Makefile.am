@@ -50,6 +50,8 @@ cc_sources = \
     activemq/connector/stomp/StompConnector.cpp \
     activemq/connector/stomp/StompSelector.cpp \
     activemq/connector/openwire/OpenWireFormat.cpp \
+    activemq/connector/openwire/OpenWireCommandReader.cpp \
+    activemq/connector/openwire/OpenWireCommandWriter.cpp \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
@@ -192,6 +194,8 @@ h_sources = \
     activemq/connector/stomp/StompDestination.h \
     activemq/connector/stomp/StompTopic.h \
     activemq/connector/openwire/OpenWireFormat.h \
+    activemq/connector/openwire/OpenWireCommandReader.h \
+    activemq/connector/openwire/OpenWireCommandWriter.h \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
