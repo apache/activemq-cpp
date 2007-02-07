@@ -27,11 +27,23 @@ namespace openwire{
 namespace utils{
 
     /**
-     * class to manage the writing and reading of boolean data streams
+     * Manages the writing and reading of boolean data streams
      * to and from a data source such as a DataInputStream or 
      * DataOutputStream.  The booleans are stored as single bits in the
      * stream, with the stream size pre-pended to the stream when the
      * data is marshalled.
+     * 
+     * The serialized form of the size field can be between 1 and 3 bytes.
+     * If the number of used bytes < 64, size=1 byte
+     * If the number of used bytes >=64 and < 256 (size of an unsigned byte), size=2 bytes
+     * If the number of used bytes >=256, size=3 bytes
+     * 
+     * The high-order 2 bits (128 and 64) of the first byte of the size field are
+     * used to encode the information about the number of bytes in the size field.  The
+     * only time the first byte will contain a value >=64 is if there are more bytes in
+     * the size field.  If the first byte < 64, the value of the byte is simply the size
+     * value.  If the first byte = 0xC0, the following unsigned byte is the size field.  
+     * If the first byte = 0x80, the following short (two bytes) are the size field.
      */
     class BooleanStream
     {
