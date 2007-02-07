@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "OpenwireCommandReader.h"
+#include "OpenWireCommandReader.h"
 
 #include <activemq/concurrent/Thread.h>
 
@@ -29,7 +29,7 @@ using namespace activemq::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireCommandReader::OpenwireCommandReader(void)
+OpenWireCommandReader::OpenWireCommandReader(void)
 {
     this->inputStream = NULL;
     this->openWireFormat = NULL;
@@ -37,7 +37,7 @@ OpenwireCommandReader::OpenwireCommandReader(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenwireCommandReader::OpenwireCommandReader( InputStream* inputStream,
+OpenWireCommandReader::OpenWireCommandReader( InputStream* inputStream,
                                               OpenWireFormat* openWireFormat )
 {
     this->setInputStream( inputStream );
@@ -45,7 +45,7 @@ OpenwireCommandReader::OpenwireCommandReader( InputStream* inputStream,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* OpenwireCommandReader::readCommand(void)
+Command* OpenWireCommandReader::readCommand(void)
     throw ( CommandIOException )
 {
     try
@@ -67,7 +67,7 @@ Command* OpenwireCommandReader::readCommand(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-size_t OpenwireCommandReader::read( unsigned char* buffer, size_t count )
+size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
    throw( io::IOException )
 {
     try
@@ -79,7 +79,7 @@ size_t OpenwireCommandReader::read( unsigned char* buffer, size_t count )
                 "OpenwireCommandReader::read(char*,int) - input stream is NULL" );
         }
 
-        return inputStream->read( &buffer[head], count );
+        return inputStream->read( &buffer[0], count );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
@@ -87,7 +87,7 @@ size_t OpenwireCommandReader::read( unsigned char* buffer, size_t count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char OpenwireCommandReader::readByte(void) throw( io::IOException )
+unsigned char OpenWireCommandReader::readByte(void) throw( io::IOException )
 {
     try
     {

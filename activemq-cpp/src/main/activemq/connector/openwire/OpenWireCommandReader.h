@@ -29,7 +29,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenwireCommandReader : public transport::CommandReader
+    class OpenWireCommandReader : public transport::CommandReader
     {
     private:
 
@@ -54,17 +54,17 @@ namespace openwire{
         /**
          * Constructor.
          */
-        OpenwireCommandReader();
+        OpenWireCommandReader();
 
         /**
          * Constructor.
          * @param inputStream the target input stream.
          * @param owFormat the OpenWireFormat object that handles unmarshaling
          */
-        OpenwireCommandReader( io::InputStream* inputStream,
+        OpenWireCommandReader( io::InputStream* inputStream,
                                OpenWireFormat* openWireFormat );
 
-        virtual ~OpenwireCommandReader() {}
+        virtual ~OpenWireCommandReader() {}
 
         /**
          * Reads a command from the given input stream.
@@ -81,7 +81,7 @@ namespace openwire{
         virtual void setInputStream( io::InputStream* inputStream ){
             this->inputStream = inputStream;
             delete dataInputStream;
-            dataInputStream = new io::DataInputStram( inputStream );
+            dataInputStream = new io::DataInputStream( inputStream );
         }
 
         /**
@@ -104,7 +104,7 @@ namespace openwire{
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual io::InputStream* getOpenWireFormat(void){
+        virtual OpenWireFormat* getOpenWireFormat(void){
             return this->openWireFormat;
         }
 
