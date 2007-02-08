@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include <activemq/connector/stomp/StompConnectorFactory.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/Connector.h>
@@ -25,8 +25,6 @@ using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
-
-////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 Connector* StompConnectorFactory::createConnector(
