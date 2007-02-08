@@ -40,31 +40,36 @@ using namespace activemq::connector::openwire::marshal;
 ////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshallerTest::testLooseMarshal()
 {   
-    SimpleProperties props;
+    SimpleDataStructureMarshaller simpleMarshaller;
+    ComplexDataStructureMarshaller complexMarshaller;
+    SimpleProperties props;    
     OpenWireFormat openWireFormat(props);
-    SimpleDataStructureMarshaller dsm;
+    openWireFormat.addMarshaller( &simpleMarshaller );
+    openWireFormat.addMarshaller( &complexMarshaller );
 
     // Marshal the dataStructure to a byte array.
     ByteArrayOutputStream baos;
     DataOutputStream looseOut( &baos );
-    looseOut.writeByte( dataStructure.getDataStructureType() );    
-    dsm.looseMarshal( &openWireFormat, &dataStructure, &looseOut );
+    looseOut.writeByte( dataStructure->getDataStructureType() );    
+    complexMarshaller.looseMarshal( &openWireFormat, dataStructure, &looseOut );
     
     // Now read it back in and make sure it's all right.
-    SimpleDataStructure ds;
     ByteArrayInputStream bais( baos.getByteArray(), baos.getByteArraySize() );
     DataInputStream looseIn( &bais );
     
     unsigned char dataType = looseIn.readByte();
-    CPPUNIT_ASSERT( dataType == dataStructure.getDataStructureType() );
+    CPPUNIT_ASSERT( dataType == dataStructure->getDataStructureType() );
 
-    dsm.looseUnmarshal( &openWireFormat, &ds, &looseIn );
+    ComplexDataStructure ds;
+    complexMarshaller.looseUnmarshal( &openWireFormat, &ds, &looseIn );
     
-    CPPUNIT_ASSERT( ds.boolValue == dataStructure.boolValue );
-    CPPUNIT_ASSERT( ds.charValue == dataStructure.charValue );
-    CPPUNIT_ASSERT( ds.shortValue == dataStructure.shortValue );
-    CPPUNIT_ASSERT( ds.intValue == dataStructure.intValue );
-    CPPUNIT_ASSERT( ds.floatValue == dataStructure.floatValue );
-    CPPUNIT_ASSERT( ds.doubleValue == dataStructure.doubleValue );
-    CPPUNIT_ASSERT( ds.stringValue == dataStructure.stringValue );
+    CPPUNIT_ASSERT( ds.boolValue == dataStructure->boolValue );
+    CPPUNIT_ASSERT( ds.cachedChild != NULL );
+    CPPUNIT_ASSERT( ds.cachedChild->boolValue == dataStructure->cachedChild->boolValue );
+    CPPUNIT_ASSERT( ds.cachedChild->charValue == dataStructure->cachedChild->charValue );
+    CPPUNIT_ASSERT( ds.cachedChild->shortValue == dataStructure->cachedChild->shortValue );
+    CPPUNIT_ASSERT( ds.cachedChild->intValue == dataStructure->cachedChild->intValue );
+    CPPUNIT_ASSERT( ds.cachedChild->floatValue == dataStructure->cachedChild->floatValue );
+    CPPUNIT_ASSERT( ds.cachedChild->doubleValue == dataStructure->cachedChild->doubleValue );
+    CPPUNIT_ASSERT( ds.cachedChild->stringValue == dataStructure->cachedChild->stringValue );
 }
