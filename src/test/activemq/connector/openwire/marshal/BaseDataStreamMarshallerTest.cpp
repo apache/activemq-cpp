@@ -21,6 +21,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::BaseDat
 
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
+#include <activemq/connector/openwire/OpenWireFormatFactory.h>
+#include <activemq/util/SimpleProperties.h>
+#include <activemq/io/ByteArrayOutputStream.h>
+#include <activemq/io/DataOutputStream.h>
+#include <activemq/io/ByteArrayInputStream.h>
+#include <activemq/io/DataInputStream.h>
 
 using namespace std;
 using namespace activemq;
@@ -32,6 +38,33 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
-void BaseDataStreamMarshallerTest::test()
-{
+void BaseDataStreamMarshallerTest::testLooseMarshal()
+{   
+    SimpleProperties props;
+    OpenWireFormat openWireFormat(props);
+    SimpleDataStructureMarshaller dsm;
+
+    // Marshal the dataStructure to a byte array.
+    ByteArrayOutputStream baos;
+    DataOutputStream looseOut( &baos );
+    looseOut.writeByte( dataStructure.getDataStructureType() );    
+    dsm.looseMarshal( &openWireFormat, &dataStructure, &looseOut );
+    
+    // Now read it back in and make sure it's all right.
+    SimpleDataStructure ds;
+    ByteArrayInputStream bais( baos.getByteArray(), baos.getByteArraySize() );
+    DataInputStream looseIn( &bais );
+    
+    unsigned char dataType = looseIn.readByte();
+    CPPUNIT_ASSERT( dataType == dataStructure.getDataStructureType() );
+
+    dsm.looseUnmarshal( &openWireFormat, &ds, &looseIn );
+    
+    CPPUNIT_ASSERT( ds.boolValue == dataStructure.boolValue );
+    CPPUNIT_ASSERT( ds.charValue == dataStructure.charValue );
+    CPPUNIT_ASSERT( ds.shortValue == dataStructure.shortValue );
+    CPPUNIT_ASSERT( ds.intValue == dataStructure.intValue );
+    CPPUNIT_ASSERT( ds.floatValue == dataStructure.floatValue );
+    CPPUNIT_ASSERT( ds.doubleValue == dataStructure.doubleValue );
+    CPPUNIT_ASSERT( ds.stringValue == dataStructure.stringValue );
 }

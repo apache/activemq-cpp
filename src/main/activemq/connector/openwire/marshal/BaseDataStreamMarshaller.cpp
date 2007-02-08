@@ -303,7 +303,7 @@ void BaseDataStreamMarshaller::looseMarshalString(
         dataOut->writeBoolean( value != "" );
         if( value != "" )
         {
-            dataOut->writeBytes( value );
+            dataOut->writeUTF( value );
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -317,7 +317,7 @@ std::string BaseDataStreamMarshaller::looseUnmarshalString(
         
     try{
         if( dataIn->readBoolean() ) {
-            return dataIn->readUTF();   // TODO
+            return dataIn->readUTF();
         } else {
             return "";
         }
