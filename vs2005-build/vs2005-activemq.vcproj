@@ -361,6 +361,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\concurrent\CountDownLatch.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\concurrent\CountDownLatch.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\concurrent\Lock.h"
 					>
 				</File>

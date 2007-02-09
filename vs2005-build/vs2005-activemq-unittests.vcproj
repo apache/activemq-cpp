@@ -506,6 +506,22 @@
 							RelativePath="..\src\test\activemq\connector\openwire\commands\ActiveMQTopicTest.h"
 							>
 						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\BrokerIdTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\BrokerIdTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\BrokerInfoTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\commands\BrokerInfoTest.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="marshal"
@@ -526,6 +542,26 @@
 							RelativePath="..\src\test\activemq\connector\openwire\marshal\PrimitiveMapMarshallerTest.h"
 							>
 						</File>
+						<Filter
+							Name="v2"
+							>
+							<File
+								RelativePath="..\src\test\activemq\connector\openwire\marshal\v2\BaseCommandMarshallerTest.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\test\activemq\connector\openwire\marshal\v2\BaseCommandMarshallerTest.h"
+								>
+							</File>
+							<File
+								RelativePath="..\src\test\activemq\connector\openwire\marshal\v2\BrokerIdMarshallerTest.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\src\test\activemq\connector\openwire\marshal\v2\BrokerIdMarshallerTest.h"
+								>
+							</File>
+						</Filter>
 					</Filter>
 					<Filter
 						Name="utils"
