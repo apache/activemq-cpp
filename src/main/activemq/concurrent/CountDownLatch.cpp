@@ -29,6 +29,13 @@ CountDownLatch::CountDownLatch( int count )
 ////////////////////////////////////////////////////////////////////////////////
 CountDownLatch::~CountDownLatch()
 {
+    try {
+
+        synchronized( &mutex ) {
+            mutex.notifyAll();
+        }
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,6 +74,10 @@ void CountDownLatch::await( long long timeOut ) throw ( cms::CMSException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void CountDownLatch::countDown() {
     try {
+
+        if( count == 0 ) {
+            return;
+        }
 
         synchronized( &mutex ) {
             count--;
