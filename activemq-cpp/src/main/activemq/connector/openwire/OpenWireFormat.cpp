@@ -57,7 +57,7 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     this->properties.copy( &properties );
 
     // Fill in that DataStreamMarshallers collection
-    dataMarshallers.resize( 255 );
+    dataMarshallers.resize( 256 );
     MarshallerFactory().configure( this );
 
     // Generate an ID
