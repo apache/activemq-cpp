@@ -219,7 +219,7 @@ int BaseDataStreamMarshaller::tightMarshalString1( const std::string& value,
                                                     throw ( io::IOException ) {
     try{
         
-        bs->writeBoolean( value == "" );
+        bs->writeBoolean( value != "" );
         if( value != "" )
         {
             size_t strlen = value.length();
@@ -255,6 +255,7 @@ int BaseDataStreamMarshaller::tightMarshalString1( const std::string& value,
             }
             
             bs->writeBoolean( isOnlyAscii );
+            
             return utflen + 2;
         }
         else
@@ -279,10 +280,8 @@ void BaseDataStreamMarshaller::tightMarshalString2(
 
             // If we verified it only holds ascii values
             if( bs->readBoolean() ) {
-
                 dataOut->writeShort( (short)value.length() );
                 dataOut->writeBytes( value );
-
             } else {
                 dataOut->writeChars( value );
             }
@@ -829,7 +828,7 @@ std::string BaseDataStreamMarshaller::readAsciiString(
         // Now build a string and copy data into it.
         std::string text;
         text.resize( size );
-        text.assign( (char*)data, (int)size );
+        text.assign( (char*)data, (int)size-1 );
         delete data;
         
         return text; 

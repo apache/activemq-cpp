@@ -33,6 +33,7 @@ namespace marshal{
         
         CPPUNIT_TEST_SUITE( BaseDataStreamMarshallerTest );
         CPPUNIT_TEST( testLooseMarshal );
+        CPPUNIT_TEST( testTightMarshal );
         CPPUNIT_TEST_SUITE_END();                 
         
     public:
@@ -360,6 +361,7 @@ namespace marshal{
         }
     
         void testLooseMarshal();
+        void testTightMarshal();
         
     };
 
