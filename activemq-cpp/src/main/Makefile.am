@@ -40,6 +40,7 @@ cc_sources = \
     activemq/concurrent/ThreadPool.cpp \
     activemq/concurrent/Mutex.cpp \
     activemq/concurrent/Thread.cpp \
+    activemq/concurrent/CountDownLatch.cpp \
     activemq/exceptions/ActiveMQException.cpp \
     activemq/connector/stomp/StompSessionManager.cpp \
     activemq/connector/stomp/commands/CommandConstants.cpp \
@@ -139,6 +140,7 @@ h_sources = \
     activemq/concurrent/PooledThread.h \
     activemq/concurrent/Concurrent.h \
     activemq/concurrent/PooledThreadListener.h \
+    activemq/concurrent/CountDownLatch.h \
     activemq/exceptions/InvalidStateException.h \
     activemq/exceptions/RuntimeException.h \
     activemq/exceptions/InterruptedException.h \
