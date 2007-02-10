@@ -50,11 +50,9 @@ const unsigned char OpenWireFormat::NULL_TYPE = 0;
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
 
-    // init
-    this->preferedWireFormatInfo = NULL;
-
     // Copy config data
     this->properties.copy( &properties );
+    this->preferedWireFormatInfo = NULL;
 
     // Fill in that DataStreamMarshallers collection
     dataMarshallers.resize( 256 );
@@ -62,6 +60,9 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
 
     // Generate an ID
     this->id = Guid::createGUIDString();
+
+    // Mark this as Versions 2 as we don't support version 1 at the moment.
+    this->version = 2;
 
     // parse params out of the properties
     stackTraceEnabled = Boolean::parseBoolean(
@@ -79,6 +80,10 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     sizePrefixDisabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.sizePrefixDisabled",
                                 "0" ) );
+
+    // Now that we've parsed the properties, lets setup the prefered
+    // WireFormatInfo object.
+    this->setPreferedWireFormatInfo( new WireFormatInfo() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +113,7 @@ void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller )
 void OpenWireFormat::setPreferedWireFormatInfo(
     commands::WireFormatInfo* info ) throw ( IllegalStateException ) {
 
+    delete preferedWireFormatInfo;
     this->preferedWireFormatInfo = info;
 
     try {
