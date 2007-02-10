@@ -56,7 +56,7 @@ void CountDownLatch::await() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CountDownLatch::await( long long timeOut ) throw ( cms::CMSException ) {
+void CountDownLatch::await( unsigned long timeOut ) throw ( cms::CMSException ) {
     try {
 
         synchronized( &mutex ) {
