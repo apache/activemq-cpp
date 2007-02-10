@@ -19,6 +19,7 @@ cc_sources = \
   activemq/concurrent/MutexTest.cpp \
   activemq/concurrent/ThreadPoolTest.cpp \
   activemq/concurrent/ThreadTest.cpp \
+  activemq/concurrent/CountDownLatchTest.cpp \
   activemq/connector/ConnectorFactoryMapRegistrarTest.cpp \
   activemq/connector/ConnectorFactoryMapTest.cpp \
   activemq/connector/stomp/commands/AbortCommandTest.cpp \
