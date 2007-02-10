@@ -78,9 +78,9 @@ namespace commands{
         virtual DataStructure* cloneDataStructure() const;
 
         /**
-         * Copy the contents of the passed object into this objects
+         * Copy the contents of the passed object into this object's
          * members, overwriting any existing data.
-         * @return src - Source Object
+         * @param src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src );
 
