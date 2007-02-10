@@ -34,9 +34,9 @@ namespace commands{
         const static unsigned char ID_WIREFORMATINFO = 1;
 
     public:
-    
+
         WireFormatInfo();
-    
+
         virtual ~WireFormatInfo();
 
         /**
@@ -67,7 +67,7 @@ namespace commands{
         bool isStackTraceEnabled() const {
             return stackTraceEnabled;
         }
-    
+
         /**
          * Sets if the stackTraceEnabled flag is on
          * @param stackTraceEnabled - ture to turn flag is on
@@ -75,7 +75,7 @@ namespace commands{
         void setStackTraceEnabled( bool stackTraceEnabled ) {
             this->stackTraceEnabled = stackTraceEnabled;
         }
-    
+
         /**
          * Checks if the tcpNoDelayEnabled flag is on
          * @return true if the flag is on.
@@ -83,7 +83,7 @@ namespace commands{
         bool isTcpNoDelayEnabled() const {
             return tcpNoDelayEnabled;
         }
-    
+
         /**
          * Sets if the tcpNoDelayEnabled flag is on
          * @param tcpNoDelayEnabled - ture to turn flag is on
@@ -91,7 +91,7 @@ namespace commands{
         void setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
             this->tcpNoDelayEnabled = tcpNoDelayEnabled;
         }
-    
+
         /**
          * Get the current Wireformat Version
          * @return int that identifies the version
@@ -99,7 +99,7 @@ namespace commands{
         int getVersion() const {
             return version;
         }
-    
+
         /**
          * Set the current Wireformat Version
          * @param version - int that identifies the version
@@ -107,7 +107,7 @@ namespace commands{
         void setVersion( int version ) {
             this->version = version;
         }
-    
+
         /**
          * Checks if the cacheEnabled flag is on
          * @return true if the flag is on.
@@ -115,7 +115,7 @@ namespace commands{
         bool isCacheEnabled() const {
             return cacheEnabled;
         }
-    
+
         /**
          * Sets if the cacheEnabled flag is on
          * @param cacheEnabled - ture to turn flag is on
@@ -123,7 +123,7 @@ namespace commands{
         void setCacheEnabled( bool cacheEnabled ) {
             this->cacheEnabled = cacheEnabled;
         }
-    
+
         /**
          * Checks if the tightEncodingEnabled flag is on
          * @return true if the flag is on.
@@ -131,7 +131,7 @@ namespace commands{
         bool isTightEncodingEnabled() const {
             return tightEncodingEnabled;
         }
-    
+
         /**
          * Sets if the tightEncodingEnabled flag is on
          * @param tightEncodingEnabled - ture to turn flag is on
@@ -139,7 +139,7 @@ namespace commands{
         void setTightEncodingEnabled( bool tightEncodingEnabled ) {
             this->tightEncodingEnabled = tightEncodingEnabled;
         }
-    
+
         /**
          * Checks if the sizePrefixDisabled flag is on
          * @return true if the flag is on.
@@ -147,7 +147,7 @@ namespace commands{
         bool isSizePrefixDisabled() const {
             return sizePrefixDisabled;
         }
-    
+
         /**
          * Sets if the sizePrefixDisabled flag is on
          * @param sizePrefixDisabled - ture to turn flag is on
@@ -155,7 +155,7 @@ namespace commands{
         void setSizePrefixDisabled( bool sizePrefixDisabled ) {
             this->sizePrefixDisabled = sizePrefixDisabled;
         }
-    
+
         /**
          * Get the current value of the maxInactivityDuration feild
          * @return the value of the maxInactivityDuration
@@ -163,7 +163,7 @@ namespace commands{
         long getMaxInactivityDuration() const {
             return maxInactivityDuration;
         }
-    
+
         /**
          * Set the current Wireformat Version
          * @param version - int that identifies the version
@@ -171,7 +171,7 @@ namespace commands{
         void setMaxInactivityDuration( long maxInactivityDuration ) {
             this->maxInactivityDuration = maxInactivityDuration;
         }
-        
+
         /**
          * Get the Magic field
          * @return const reference to a std::vector<char>
@@ -179,7 +179,7 @@ namespace commands{
         const std::vector<unsigned char>& getMagic() const {
             return magic;
         }
-        
+
         /**
          * Sets the value of the magic field
          * @param magic - const std::vector<char>
@@ -195,7 +195,7 @@ namespace commands{
         const std::vector<unsigned char>& getMarshalledProperties() const {
             return magic;
         }
-        
+
         /**
          * Sets the value of the marshalledProperties field
          * @param magic - const std::vector<char>
@@ -204,22 +204,19 @@ namespace commands{
             this->magic = magic;
         }
 
+        /**
+         * Determines if we think this is a Valid WireFormatInfo command
+         * @returns true if its valid.
+         */
+        bool isValid() const;
+
     private:
 
         static std::vector<char> MAGIC;
-//         = new byte[] {
-//            'A'&0xFF,
-//            'c'&0xFF,
-//            't'&0xFF,
-//            'i'&0xFF,
-//            'v'&0xFF,
-//            'e'&0xFF,
-//            'M'&0xFF,
-//            'Q'&0xFF };
-        
+
         std::vector<unsigned char> magic;
         std::vector<unsigned char> marshalledProperties;
-    
+
         int version;
         bool stackTraceEnabled;
         bool tcpNoDelayEnabled;

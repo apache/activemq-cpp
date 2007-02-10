@@ -26,8 +26,21 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
+std::vector<char> WireFormatInfo::MAGIC;
+
+////////////////////////////////////////////////////////////////////////////////
 WireFormatInfo::WireFormatInfo()
 {
+    if( MAGIC.empty() ) {
+        MAGIC.push_back( 'A' );
+        MAGIC.push_back( 'c' );
+        MAGIC.push_back( 't' );
+        MAGIC.push_back( 'i' );
+        MAGIC.push_back( 'v' );
+        MAGIC.push_back( 'e' );
+        MAGIC.push_back( 'M' );
+        MAGIC.push_back( 'Q' );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +67,7 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
     const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw exceptions::NullPointerException(
             __FILE__, __LINE__,
             "WireFormatInfo::copyDataStructure - src is NULL or invalid" );
@@ -63,5 +76,21 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char WireFormatInfo::getDataStructureType() const {
-    return WireFormatInfo::ID_WIREFORMATINFO; 
+    return WireFormatInfo::ID_WIREFORMATINFO;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isValid() const {
+
+    if( magic.size() != MAGIC.size() ) {
+        return false;
+    }
+
+    for( int i = 0; i < magic.size(); i++ ) {
+        if( magic[i] != MAGIC[i] ) {
+            return false;
+        }
+    }
+
+    return true;
 }
