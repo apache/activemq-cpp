@@ -38,7 +38,7 @@ namespace openwire{
         /**
          * Constructs a new OpenWireFormat object
          * @param properties - can contain optional config params.
-         */    
+         */
         OpenWireFormat( const activemq::util::Properties& properties );
 
         virtual ~OpenWireFormat();
@@ -54,17 +54,17 @@ namespace openwire{
          * Stream based marshaling
          * @param command - The Command to Marshal
          * @param out - the output stream to write the command to.
-         * @throws IOException 
+         * @throws IOException
          */
-        virtual void marshal( transport::Command* command, 
-                              io::DataOutputStream* dataOut ) 
+        virtual void marshal( transport::Command* command,
+                              io::DataOutputStream* dataOut )
             throw ( io::IOException );
 
         /**
-         * Packet based un-marshaling 
+         * Packet based un-marshaling
          * @param dis - the input stream to read the command from.
          * @returns the newly marshaled Command, caller owns the pointer
-         * @throws IOException 
+         * @throws IOException
          */
         virtual transport::Command* unmarshal( io::DataInputStream* dis ) throw ( io::IOException );
 
@@ -75,7 +75,7 @@ namespace openwire{
          * @param bs - the BooleanStream to write to
          * @returns size of the data returned.
          */
-        virtual int tightMarshalNestedObject1( commands::DataStructure* object, 
+        virtual int tightMarshalNestedObject1( commands::DataStructure* object,
                                                utils::BooleanStream* bs )
             throw ( io::IOException );
 
@@ -88,8 +88,8 @@ namespace openwire{
          * @param bs - BooleanStream
          * @throws IOException if an error occurs.
          */
-        void tightMarshalNestedObject2( commands::DataStructure* o, 
-                                        io::DataOutputStream* ds, 
+        void tightMarshalNestedObject2( commands::DataStructure* o,
+                                        io::DataOutputStream* ds,
                                         utils::BooleanStream* bs ) throw ( io::IOException );
 
         /**
@@ -101,12 +101,12 @@ namespace openwire{
          * @returns Newly allocated DataStructure Object
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* tightUnmarshalNestedObject( io::DataInputStream* dis, 
-                                                             utils::BooleanStream* bs ) 
+        commands::DataStructure* tightUnmarshalNestedObject( io::DataInputStream* dis,
+                                                             utils::BooleanStream* bs )
             throw ( io::IOException );
 
         /**
-         * Utility method to unmarshal an DataStructure object from an 
+         * Utility method to unmarshal an DataStructure object from an
          * DataInputStream using the Loose Unmarshalling format.  Will read
          * the Data and construct a new DataStructure based Object, the
          * pointer to the Object returned is now owned by the caller.
@@ -114,20 +114,20 @@ namespace openwire{
          * @returns a new DataStructure derived Object pointer
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* looseUnmarshalNestedObject( 
-            io::DataInputStream* dis) 
+        commands::DataStructure* looseUnmarshalNestedObject(
+            io::DataInputStream* dis)
                 throw ( io::IOException );
 
         /**
          * Utility method to loosely Marshal an object that is derived from the
-         * DataStrucutre interface.  The marshalled data is written to the 
+         * DataStrucutre interface.  The marshalled data is written to the
          * passed in DataOutputStream.
          * @param o - DataStructure derived Object to Marshal
          * @param dataOut - DataOutputStream to write the data to
          * @throw IOException if an error occurs.
          */
-        void looseMarshalNestedObject( commands::DataStructure* o, 
-                                       io::DataOutputStream* dataOut ) 
+        void looseMarshalNestedObject( commands::DataStructure* o,
+                                       io::DataOutputStream* dataOut )
                                            throw ( io::IOException );
 
         /**
@@ -136,7 +136,7 @@ namespace openwire{
          * @param info - The new Wireformat Info settings
          * @throws IllegalStateException is the params can't be negotiated.
          */
-        void renegotiateWireFormat( commands::WireFormatInfo* info ) 
+        void renegotiateWireFormat( commands::WireFormatInfo* info )
             throw ( exceptions::IllegalStateException );
 
         /**
@@ -145,6 +145,14 @@ namespace openwire{
          */
         virtual void setPreferedWireFormatInfo( commands::WireFormatInfo* info )
             throw ( exceptions::IllegalStateException );
+
+        /**
+         * Gets the Preferend WireFormatInfo object that this class holds
+         * @return pointer to a prefered WireFormatInfo object
+         */
+        virtual commands::WireFormatInfo* getPreferedWireFormatInfo() const {
+            return this->preferedWireFormatInfo;
+        }
 
         /**
          * Checks if the stackTraceEnabled flag is on
@@ -246,20 +254,20 @@ namespace openwire{
 
         /**
          * Perform the actual unmarshal of data from the given DataInputStream
-         * return the unmarshalled DataStrucutre object once done, caller takes 
-         * ownership of this object.  This method can return null if the type 
+         * return the unmarshalled DataStrucutre object once done, caller takes
+         * ownership of this object.  This method can return null if the type
          * of the object to unmarshal is NULL, empty data.
          * @param dis - DataInputStream to read from
          * @returns new DataStructure* that the caller owns
          * @throws IOException if an error occurs during the unmarshal
          */
-        commands::DataStructure* doUnmarshal( io::DataInputStream* dis ) 
+        commands::DataStructure* doUnmarshal( io::DataInputStream* dis )
             throw ( io::IOException );
 
     protected:
 
-        // Declared here to make life easier.    
-        static const unsigned char NULL_TYPE; 
+        // Declared here to make life easier.
+        static const unsigned char NULL_TYPE;
 
     private:
 

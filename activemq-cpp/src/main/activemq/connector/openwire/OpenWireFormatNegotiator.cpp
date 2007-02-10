@@ -17,12 +17,16 @@
 
 #include "OpenWireFormatNegotiator.h"
 
+#include <activemq/connector/openwire/commands/DataStructure.h>
+#include <activemq/connector/openwire/commands/WireFormatInfo.h>
+
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace activemq::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
+using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
@@ -52,8 +56,18 @@ void OpenWireFormatNegotiator::oneway( Command* command )
     try{
 
         if( closed || next == NULL ){
-            throw CommandIOException( __FILE__, __LINE__,
-                "transport already closed" );
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "OpenWireFormatNegotiator::oneway - transport already closed" );
+        }
+
+        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
+            throw CommandIOException(
+                __FILE__,
+                __LINE__,
+                "OpenWireFormatNegotiator::oneway"
+                "Wire format negociation timeout: peer did not "
+                "send his wire format." );
         }
 
         next->oneway( command );
@@ -65,9 +79,49 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onCommand( Command* command ){
+void OpenWireFormatNegotiator::onCommand( Command* command ) {
 
+    DataStructure* dataStructure =
+        dynamic_cast<DataStructure*>( command );
 
+    if( dataStructure != NULL &&
+        dataStructure->getDataStructureType() == WireFormatInfo::ID_WIREFORMATINFO ) {
+
+        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( dataStructure );
+
+        try {
+
+            if( !info->isValid() ) {
+                throw CommandIOException(
+                    __FILE__,
+                    __LINE__,
+                    "OpenWireFormatNegotiator::onCommand"
+                    "Remote wire format magic is invalid" );
+            }
+
+            wireInfoSentDownLatch.await( negotiationTimeout );
+            openWireFormat->renegotiateWireFormat( info );
+
+            readyCountDownLatch.countDown();
+
+        } catch( exceptions::ActiveMQException& ex ) {
+
+            readyCountDownLatch.countDown();
+            fire( ex );
+        }
+    }
+
+    // Send along to the next interested party.
+    fire( command );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireFormatNegotiator::onTransportException(
+    Transport* source,
+    const exceptions::ActiveMQException& ex ) {
+
+    readyCountDownLatch.countDown();
+    fire( ex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,11 +160,15 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
             firstTime = false;
 
             // We first send the WireFormat that we'd prefer.
-            //next.Oneway( wireFormat->getPreferedWireFormatInfo() );
+            next->oneway( openWireFormat->getPreferedWireFormatInfo() );
+
+            // Mark the latch
+            wireInfoSentDownLatch.countDown();
 
         } catch( ActiveMQException& ex ) {
 
-            //wireInfoSentDownLatch.countDown();
+            // Mark the latch
+            wireInfoSentDownLatch.countDown();
             ex.setMark( __FILE__, __LINE__ );
             throw ex;
         }

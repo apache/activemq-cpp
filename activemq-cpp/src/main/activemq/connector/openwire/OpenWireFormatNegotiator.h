@@ -44,7 +44,7 @@ namespace openwire{
         bool firstTime;
 
         /**
-         * Latch to count down till we receive the wireFormat info
+         * Latch objects to count down till we receive the wireFormat info
          */
         concurrent::CountDownLatch wireInfoSentDownLatch;
         concurrent::CountDownLatch readyCountDownLatch;
@@ -94,6 +94,15 @@ namespace openwire{
          * @param command the received from the nested transport.
          */
         virtual void onCommand( transport::Command* command );
+
+        /**
+         * Event handler for an exception from a command transport.
+         * @param source The source of the exception
+         * @param ex The exception.
+         */
+        virtual void onTransportException(
+            transport::Transport* source,
+            const exceptions::ActiveMQException& ex );
 
         /**
          * Starts this transport object and creates the thread for
