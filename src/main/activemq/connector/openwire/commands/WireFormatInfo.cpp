@@ -86,7 +86,7 @@ bool WireFormatInfo::isValid() const {
         return false;
     }
 
-    for( int i = 0; i < magic.size(); i++ ) {
+    for( size_t i = 0; i < magic.size(); i++ ) {
         if( magic[i] != MAGIC[i] ) {
             return false;
         }

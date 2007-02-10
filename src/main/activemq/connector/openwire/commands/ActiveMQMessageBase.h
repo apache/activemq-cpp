@@ -30,11 +30,11 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
-    
+
     /**
-     * Base class for all Messages tagged with the ActiveMQXXXMessage 
+     * Base class for all Messages tagged with the ActiveMQXXXMessage
      * type.  The class implements the basic wrapper around the generated
-     * Message class as well as satisfying the contract of the 
+     * Message class as well as satisfying the contract of the
      * core::ActiveMQMessage interface and the cms::Message method of which
      * T must be a derviation of.
      */
@@ -42,18 +42,18 @@ namespace commands{
     class ActiveMQMessageBase : public T,
                                 public Message,
                                 public core::ActiveMQMessage {
-    
+
     public:
-    
+
         ActiveMQMessageBase() {}
         virtual ~ActiveMQMessageBase() {}
-        
+
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {        
+        virtual void copyDataStructure( const DataStructure* src ) {
             openwire::commands::Message::copyDataStructure( src );
         }
 
@@ -65,20 +65,20 @@ namespace commands{
         virtual bool IsMarshallAware() {
             return true;
         }
-        
+
         /**
-         * Handles the marshalling of the objects properties into the 
+         * Handles the marshalling of the objects properties into the
          * internal byte array before the object is marshalled to the
          * wire
          * @param wireFormat - the wireformatting controller
          */
         virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
             try{
-                    
+
                 marshalledProperties.clear();
                 if( !properties.isEmpty() )
                 {
-                    marshal::PrimitiveMapMarshaller::marshal( 
+                    marshal::PrimitiveMapMarshaller::marshal(
                         &properties, marshalledProperties );
                 }
             }
@@ -86,8 +86,23 @@ namespace commands{
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
+        /**
+         * Called after unmarshaling is started to cleanup the object being
+         * unmarshaled.
+         * @param wireFormat - the wireformat object to control unmarshaling
+         */
+        virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+            try{
+
+                marshal::PrimitiveMapMarshaller::unmarshal(
+                    &properties, marshalledProperties );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        }
+
     public:   // core::ActiveMQMessage
-    
+
         /**
          * Sets the Acknowledgement Handler that this Message will use
          * when the Acknowledge method is called.
@@ -96,7 +111,7 @@ namespace commands{
         virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {
             this->ackHandler = handler;
         }
-        
+
         /**
          * Gets the Acknowledgement Handler that this Message will use
          * when the Acknowledge method is called.
@@ -113,9 +128,9 @@ namespace commands{
         virtual int getRedeliveryCount(void) const {
             return redeliveryCount;
         }
-        
+
         /**
-         * Sets the count of the number of times this message has been 
+         * Sets the count of the number of times this message has been
          * redelivered
          * @param count the redelivery count
          */
@@ -137,10 +152,10 @@ namespace commands{
             return false;
         }
 
-    public:   // CMS Message          
+    public:   // CMS Message
 
         /**
-         * Acknowledges all consumed messages of the session 
+         * Acknowledges all consumed messages of the session
          * of this consumed message.
          */
         virtual void acknowledge(void) const throw( cms::CMSException ) {
@@ -158,7 +173,7 @@ namespace commands{
         virtual void clearBody() {
             this->setContent( std::vector<unsigned char>() );
         }
-        
+
         /**
          * Clears the message properties.  Does not clear the body or
          * header values.
@@ -166,7 +181,7 @@ namespace commands{
         virtual void clearProperties() {
             properties.clear();
         }
-        
+
         /**
          * Retrieves the propery names.
          * @return The complete set of property names currently in this
@@ -175,7 +190,7 @@ namespace commands{
         virtual std::vector<std::string> getPropertyNames() const {
             return properties.getKeys();
         }
-        
+
         /**
          * Indicates whether or not a given property exists.
          * @param name The name of the property to look up.
@@ -184,103 +199,103 @@ namespace commands{
         virtual bool propertyExists( const std::string& name ) const {
             return properties.contains( name );
         }
-        
+
         /**
          * Gets a boolean property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual bool getBooleanProperty( const std::string& name ) const 
+        virtual bool getBooleanProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getBool( name );
         }
-            
+
         /**
          * Gets a byte property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual unsigned char getByteProperty( const std::string& name ) const 
+        virtual unsigned char getByteProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getByte( name );
         }
-            
+
         /**
          * Gets a double property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual double getDoubleProperty( const std::string& name ) const 
+        virtual double getDoubleProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getDouble( name );
         }
-            
+
         /**
          * Gets a float property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual float getFloatProperty( const std::string& name ) const 
+        virtual float getFloatProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getFloat( name );
         }
-            
+
         /**
          * Gets a int property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual int getIntProperty( const std::string& name ) const 
+        virtual int getIntProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getInt( name );
         }
-            
+
         /**
          * Gets a long property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual long long getLongProperty( const std::string& name ) const 
+        virtual long long getLongProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getLong( name );
         }
-            
+
         /**
          * Gets a short property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual short getShortProperty( const std::string& name ) const 
+        virtual short getShortProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getShort( name );
         }
-            
+
         /**
          * Gets a string property.
          * @param name The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
-        virtual std::string getStringProperty( const std::string& name ) const 
+        virtual std::string getStringProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
             return properties.getString( name );
         }
-        
+
         /**
          * Sets a boolean property.
          * @param name The name of the property to retrieve.
@@ -288,12 +303,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setBooleanProperty( const std::string& name,
-                                         bool value ) 
+                                         bool value )
                                             throw( cms::CMSException ) {
-                                                
+
             properties.setBool( name, value );
         }
-            
+
         /**
          * Sets a byte property.
          * @param name The name of the property to retrieve.
@@ -301,12 +316,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setByteProperty( const std::string& name,
-                                      unsigned char value ) 
+                                      unsigned char value )
                                         throw( cms::CMSException ) {
-                                                
+
             properties.setByte( name, value );
         }
-            
+
         /**
          * Sets a double property.
          * @param name The name of the property to retrieve.
@@ -314,12 +329,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setDoubleProperty( const std::string& name,
-                                        double value ) 
+                                        double value )
                                             throw( cms::CMSException ) {
-                                                
+
             properties.setDouble( name, value );
         }
-            
+
         /**
          * Sets a float property.
          * @param name The name of the property to retrieve.
@@ -327,9 +342,9 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setFloatProperty( const std::string& name,
-                                       float value ) 
+                                       float value )
                                         throw( cms::CMSException ) {
-                                                
+
             properties.setFloat( name, value );
         }
 
@@ -340,12 +355,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setIntProperty( const std::string& name,
-                                     int value ) 
+                                     int value )
                                         throw( cms::CMSException ) {
-                                                
+
             properties.setInt( name, value );
         }
-            
+
         /**
          * Sets a long property.
          * @param name The name of the property to retrieve.
@@ -353,12 +368,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setLongProperty( const std::string& name,
-                                      long long value ) 
+                                      long long value )
                                         throw( cms::CMSException ) {
-                                                
+
             properties.setLong( name, value );
         }
-            
+
         /**
          * Sets a short property.
          * @param name The name of the property to retrieve.
@@ -366,12 +381,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setShortProperty( const std::string& name,
-                                       short value ) 
+                                       short value )
                                         throw( cms::CMSException ) {
-                                                
+
             properties.setShort( name, value );
         }
-            
+
         /**
          * Sets a string property.
          * @param name The name of the property to retrieve.
@@ -379,12 +394,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void setStringProperty( const std::string& name,
-                                        const std::string& value ) 
+                                        const std::string& value )
                                             throw( cms::CMSException ) {
-                                                
+
             properties.setString( name, value );
         }
-      
+
         /**
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
@@ -416,7 +431,7 @@ namespace commands{
         virtual void setCMSDeliveryMode( int mode ) {
             this->setPersistent( mode != 0 );
         }
-      
+
         /**
          * Gets the Destination for this Message, returns a
          * @return Destination object
@@ -425,17 +440,17 @@ namespace commands{
             return dynamic_cast<const cms::Destination*>(
                 this->getDestination() );
         }
-      
+
         /**
          * Sets the Destination for this message
          * @param destination - Destination Object
          */
         virtual void setCMSDestination( const cms::Destination* destination ) {
-            this->setDestination( 
-                dynamic_cast<ActiveMQDestination*>( 
+            this->setDestination(
+                dynamic_cast<ActiveMQDestination*>(
                     destination->clone() ) );
         }
-      
+
         /**
          * Gets the Expiration Time for this Message
          * @return time value
@@ -443,7 +458,7 @@ namespace commands{
         virtual long long getCMSExpiration(void) const {
             return this->getExpiration();
         }
-      
+
         /**
          * Sets the Expiration Time for this message
          * @param expireTime - time value
@@ -451,7 +466,7 @@ namespace commands{
         virtual void setCMSExpiration( long long expireTime ) {
             this->setExpiration( expireTime );
         }
-      
+
         /**
          * Gets the CMS Message Id for this Message
          * @return time value
@@ -459,13 +474,13 @@ namespace commands{
         virtual std::string getCMSMessageId(void) const {
             return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
         }
-      
+
         /**
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
         virtual void setCMSMessageId( const std::string& id AMQCPP_UNUSED) {}
-      
+
         /**
          * Gets the Priority Value for this Message
          * @return priority value
@@ -473,7 +488,7 @@ namespace commands{
         virtual int getCMSPriority(void) const {
             return this->getPriority();
         }
-      
+
         /**
          * Sets the Priority Value for this message
          * @param priority - priority value for this message
@@ -489,7 +504,7 @@ namespace commands{
         virtual bool getCMSRedelivered(void) const {
             return this->getRedeliveryCounter() != 0;
         }
-      
+
         /**
          * Sets the Redelivered Flag for this message
          * @param redelivered - boolean redelivered value
@@ -504,13 +519,13 @@ namespace commands{
             return dynamic_cast< const cms::Destination* >(
                 this->getReplyTo() );
         }
-      
+
         /**
          * Sets the CMS Reply To Address for this message
          * @param id - Reply To value
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) {
-            this->setReplyTo( 
+            this->setReplyTo(
                 dynamic_cast<ActiveMQDestination*>(
                     destination->clone() ) );
         }
@@ -522,7 +537,7 @@ namespace commands{
         virtual long long getCMSTimeStamp(void) const {
             return this->getTimestamp();
         }
-      
+
         /**
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
@@ -538,7 +553,7 @@ namespace commands{
         virtual std::string getCMSMessageType(void) const {
             return this->getType();
         }
-      
+
         /**
          * Sets the CMS Message Type for this message
          * @param type - message type value string
@@ -548,7 +563,7 @@ namespace commands{
         }
 
     private:
-   
+
         core::ActiveMQAckHandler* ackHandler;
         int redeliveryCount;
         util::PrimitiveMap properties;

@@ -35,32 +35,41 @@ namespace marshal{
     class PrimitiveMapMarshaller
     {
     public:
-    
+
         PrimitiveMapMarshaller() {}
         virtual ~PrimitiveMapMarshaller() {}
-        
+
         /**
          * Static Marshal of a primitive map object
          * @param Map to Marshal
          * @param Reference to a byte array to house the data
          * @throws CMSException
          */
-        static void marshal( const util::PrimitiveMap* map, 
-                             std::vector<unsigned char>& dest ) throw ( cms::CMSException );        
+        static void marshal( const util::PrimitiveMap* map,
+                             std::vector<unsigned char>& dest ) throw ( cms::CMSException );
 
         /**
-         * Static Map Unmarshaler, takes an array of bytes and returns a 
+         * Static Map Unmarshaler, takes an array of bytes and returns a
          * new instance of a PrimitiveMap object.  Caller owns the pointer.
          * @param reference to a byte array to read data from.
          * @return newly create PrimitiveMap with unmarshaled data.
          */
-        static util::PrimitiveMap* unmarshal( const std::vector<unsigned char>& src ) 
+        static util::PrimitiveMap* unmarshal( const std::vector<unsigned char>& src )
             throw ( cms::CMSException );
-    
-    protected:
-    
+
         /**
-         * Used to Marshal the Primitive types that are contianed in the 
+         * Static Map Unmarshaler, takes an array of bytes and returns a
+         * new instance of a PrimitiveMap object.  Caller owns the pointer.
+         * @param Map to Unmarshal into
+         * @param reference to a byte array to read data from.
+         */
+        static void unmarshal( util::PrimitiveMap* map,
+                               const std::vector<unsigned char>& src ) throw ( cms::CMSException );
+
+    protected:
+
+        /**
+         * Used to Marshal the Primitive types that are contianed in the
          * map, out on the Wire.
          * @param dataOut - the DataOutputStream to write to
          * @param value - the ValueNode to write.
@@ -77,7 +86,7 @@ namespace marshal{
          * @param key - key where the element should be inserted
          * @param map - Map to insert data into.
          * @throws CMSException
-         */        
+         */
         static void unmarshalPrimitive( io::DataInputStream& dataIn,
                                         const std::string& key,
                                         util::PrimitiveMap& map )
