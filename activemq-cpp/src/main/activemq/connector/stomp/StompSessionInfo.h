@@ -28,26 +28,27 @@ namespace stomp{
     class StompSessionInfo : public connector::SessionInfo
     {
     private:
-    
+
         // Acknowledge Mode of this Session
         cms::Session::AcknowledgeMode ackMode;
-        
-        // The id of the connection to the broker 
+
+        // The id of the connection to the broker
         // (given to us by the broker)
         std::string connectionId;
-        
+
         // The unique session id
         unsigned int sessionId;
-        
+
         // Info for this sessions current transaction
         const TransactionInfo* transaction;
-        
+
     public:
 
         StompSessionInfo(void)
         {
             sessionId = 0;
             ackMode = cms::Session::AUTO_ACKNOWLEDGE;
+            transaction = NULL;
         }
 
         virtual ~StompSessionInfo(void) {}
@@ -60,7 +61,7 @@ namespace stomp{
         virtual const std::string& getConnectionId(void) const{
             return connectionId;
         }
-   
+
         /**
          * Sets the Connection Id of the Connection that this consumer is
          * using to receive its messages.
@@ -69,7 +70,7 @@ namespace stomp{
         virtual void setConnectionId( const std::string& id ){
             connectionId = id;
         }
-        
+
         /**
          * Gets the Sessions Id value
          * @return id for this session
@@ -93,7 +94,7 @@ namespace stomp{
         virtual void setAckMode(cms::Session::AcknowledgeMode ackMode) {
             this->ackMode = ackMode;
         }
-        
+
         /**
          * Gets the Ack Mode of this Session
          * @return Ack Mode
@@ -101,7 +102,7 @@ namespace stomp{
         virtual cms::Session::AcknowledgeMode getAckMode(void) const {
             return ackMode;
         }
-        
+
         /**
          * Gets the currently active transaction info, if this session is
          * transacted, returns NULL when not transacted.  You must call
@@ -111,12 +112,12 @@ namespace stomp{
         virtual const TransactionInfo* getTransactionInfo(void) const {
             return transaction;
         }
-        
+
         /**
          * Sets the current transaction info for this session, this is nit
          * used when the session is not transacted.
          * @param transaction Transaction Id
-         */        
+         */
         virtual void setTransactionInfo( const TransactionInfo* transaction ) {
             this->transaction = transaction;
         }
