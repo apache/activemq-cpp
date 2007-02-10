@@ -21,6 +21,7 @@
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/concurrent/CountDownLatch.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
@@ -41,6 +42,12 @@ namespace openwire{
          * Have we started already?
          */
         bool firstTime;
+
+        /**
+         * Latch to count down till we receive the wireFormat info
+         */
+        concurrent::CountDownLatch wireInfoSentDownLatch;
+        concurrent::CountDownLatch readyCountDownLatch;
 
         /**
          * The OpenWireFormat object that we use in negotiation.

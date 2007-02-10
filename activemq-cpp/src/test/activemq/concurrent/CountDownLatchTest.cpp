@@ -41,3 +41,25 @@ void CountDownLatchTest::test()
 
     CPPUNIT_ASSERT( true );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void CountDownLatchTest::test2()
+{
+    CountDownLatch latch( 75 );
+
+    CPPUNIT_ASSERT( latch.getCount() == 75 );
+
+    MyThread thread;
+    thread.latch = &latch;
+    thread.start();
+
+    CPPUNIT_ASSERT( latch.await( 2 ) == false );
+
+    latch.await();
+
+    CPPUNIT_ASSERT( latch.getCount() == 0 );
+
+    thread.join();
+
+    CPPUNIT_ASSERT( true );
+}

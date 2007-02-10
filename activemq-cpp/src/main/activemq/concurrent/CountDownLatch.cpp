@@ -56,16 +56,20 @@ void CountDownLatch::await() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CountDownLatch::await( unsigned long timeOut ) throw ( cms::CMSException ) {
+bool CountDownLatch::await( unsigned long timeOut ) throw ( cms::CMSException ) {
     try {
 
         synchronized( &mutex ) {
             if( count == 0 ){
-                return;
+                return true;
             }
 
             mutex.wait( timeOut );
+
+            return count == 0;
         }
+
+        return true;
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )

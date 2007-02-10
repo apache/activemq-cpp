@@ -31,6 +31,7 @@ namespace concurrent{
 
         CPPUNIT_TEST_SUITE( CountDownLatchTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     protected:
@@ -51,7 +52,7 @@ namespace concurrent{
                 while( latch->getCount() > 0 ) {
                     latch->countDown();
 
-                    Thread::sleep( 10 );
+                    Thread::sleep( 20 );
                 }
             }
 
@@ -63,6 +64,7 @@ namespace concurrent{
         virtual ~CountDownLatchTest() {}
 
         virtual void test();
+        virtual void test2();
     };
 
 }}
