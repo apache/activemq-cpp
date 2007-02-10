@@ -201,6 +201,14 @@
 				Name="concurrent"
 				>
 				<File
+					RelativePath="..\src\test\activemq\concurrent\CountDownLatchTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\concurrent\CountDownLatchTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\concurrent\MutexTest.cpp"
 					>
 				</File>
