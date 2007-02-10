@@ -823,13 +823,13 @@ std::string BaseDataStreamMarshaller::readAsciiString(
         int size = dataIn->readShort() + 1; // add space c++ NULL
         unsigned char* data = new unsigned char[size];        
         dataIn->readFully( data, 0, size-1 );
-        data[size] = 0;  // enforce NULL
+        data[size-1] = 0;  // enforce NULL
         
         // Now build a string and copy data into it.
         std::string text;
         text.resize( size );
         text.assign( (char*)data, (int)size-1 );
-        delete data;
+        delete [] data;
         
         return text; 
     }
