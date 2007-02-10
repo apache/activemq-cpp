@@ -70,7 +70,7 @@ int WireFormatInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
     info->beforeMarshal( wireFormat );
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
-    rc += info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4;
+    rc += info->getMarshalledProperties().size() == 0 ? 0 : (int)info->getMarshalledProperties().size() + 4;
 
     return rc + 12;
 }
