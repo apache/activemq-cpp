@@ -18,7 +18,8 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 
-#include <activemq/connector/openwire/commands/BaseDataStructure.h>
+#include <activemq/connector/openwire/commands/BaseCommand.h>
+#include <activemq/transport/Command.h>
 
 #include <vector>
 
@@ -27,7 +28,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class WireFormatInfo : public BaseDataStructure
+    class WireFormatInfo : public BaseCommand<transport::Command>
     {
     public:
 
