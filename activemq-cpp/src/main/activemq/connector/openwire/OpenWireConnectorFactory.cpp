@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include <activemq/connector/stomp/OpenWireConnectorFactory.h>
-#include <activemq/connector/stomp/OpenWireConnector.h>
+#include <activemq/connector/openwire/OpenWireConnectorFactory.h>
+#include <activemq/connector/openwire/OpenWireConnector.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/transport/Transport.h>
 

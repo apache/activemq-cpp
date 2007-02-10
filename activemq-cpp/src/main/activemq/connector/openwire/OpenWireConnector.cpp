@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include <activemq/connector/OpenWire/OpenWireConnector.h>
+#include <activemq/connector/openwire/OpenWireConnector.h>
 
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/transport/BrokerError.h>
@@ -23,7 +23,8 @@
 #include <activemq/transport/ExceptionResponse.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Integer.h>
-#include <activemq/connector/OpenWire/OpenWireConnectorException.h>
+#include <activemq/connector/openwire/OpenWireConnectorException.h>
+#include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
 using namespace std;
 using namespace activemq;
@@ -45,17 +46,26 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
             "OpenWireConnector::OpenWireConnector - Transport cannot be NULL");
     }
 
-    this->transport = transport;
+    // Create our WireFormatFactory on the stack, only need it once.
+    OpenWireFormatFactory wireFormatFactory;
+
     this->state = DISCONNECTED;
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
     this->properties.copy( &properties );
+    this->wireFormat = dynamic_cast<OpenWireFormat*>(
+        wireFormatFactory.createWireFormat( properties ) );
+    this->transport = new OpenWireFormatNegotiator( wireFormat, transport, false );
 
     // Observe the transport for events.
     this->transport->setCommandListener( this );
     this->transport->setTransportExceptionListener( this );
+
+    // Setup the Reader and Writer with a Wire Format pointer.
+    this->reader.setOpenWireFormat( wireFormat );
+    this->writer.setOpenWireFormat( wireFormat );
 
     // Setup the reader and writer in the transport.
     this->transport->setCommandReader( &reader );
@@ -69,7 +79,8 @@ OpenWireConnector::~OpenWireConnector()
     {
         close();
 
-        // TODO - Add any cleanup code here
+        delete transport;
+        delete wireFormat;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
