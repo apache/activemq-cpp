@@ -19,7 +19,9 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 
 #include <activemq/connector/openwire/commands/BaseCommand.h>
+#include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 #include <activemq/transport/Command.h>
+#include <activemq/util/PrimitiveMap.h>
 
 #include <vector>
 
@@ -60,6 +62,15 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src );
+
+        /**
+         * Indicates that this command is aware of Marshalling, and needs
+         * to have its Marshalling methods invoked.
+         * @returns boolean indicating desire to be in marshalling stages
+         */
+        virtual bool IsMarshallAware() {
+            return true;
+        }
 
         /**
          * Checks if the stackTraceEnabled flag is on
@@ -194,15 +205,35 @@ namespace commands{
          * @return const reference to a std::vector<char>
          */
         const std::vector<unsigned char>& getMarshalledProperties() const {
-            return magic;
+            return marshalledProperties;
         }
 
         /**
          * Sets the value of the marshalledProperties field
          * @param magic - const std::vector<char>
          */
-        void setMarshalledProperties( const std::vector<unsigned char>& magic ) {
-            this->magic = magic;
+        void setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties ) {
+            this->marshalledProperties = marshalledProperties;
+        }
+
+        /**
+         * Gets the Properties for this Command
+         * @param reference to a PrimitiveMap
+         * @throws cms::CMSException
+         */
+        virtual const util::PrimitiveMap& getProperties() const {
+            return properties;
+        }
+        virtual util::PrimitiveMap& getProperties() {
+            return properties;
+        }
+
+        /**
+         * Sets the Properties for this Command
+         * @param map - PrimtiveMap to copy
+         */
+        virtual void setProperties( const util::PrimitiveMap& map ) {
+            this->properties.copy( map );
         }
 
         /**
@@ -211,12 +242,55 @@ namespace commands{
          */
         bool isValid() const;
 
+    public:
+
+        /**
+         * Handles the marshalling of the objects properties into the
+         * internal byte array before the object is marshalled to the
+         * wire
+         * @param wireFormat - the wireformatting controller
+         */
+        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+            try{
+
+                marshalledProperties.clear();
+                if( !properties.isEmpty() )
+                {
+                    marshal::PrimitiveMapMarshaller::marshal(
+                        &properties, marshalledProperties );
+                }
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        }
+
+        /**
+         * Called after unmarshaling is started to cleanup the object being
+         * unmarshaled.
+         * @param wireFormat - the wireformat object to control unmarshaling
+         */
+        virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+            try{
+
+                marshal::PrimitiveMapMarshaller::unmarshal(
+                    &properties, marshalledProperties );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        }
+
     private:
 
         static std::vector<char> MAGIC;
 
         std::vector<unsigned char> magic;
         std::vector<unsigned char> marshalledProperties;
+
+        /**
+         * WireFormatInfo Properties, unmarshalled from the marshalled
+         * properties on use.
+         */
+        util::PrimitiveMap properties;
 
         int version;
         bool stackTraceEnabled;

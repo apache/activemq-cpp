@@ -33,15 +33,15 @@ using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map, 
-                                      std::vector<unsigned char>& dest ) 
-                                        throw ( cms::CMSException ) 
+void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
+                                      std::vector<unsigned char>& dest )
+                                        throw ( cms::CMSException )
 {
     try {
 
         ByteArrayOutputStream bytesOut( dest );
         DataOutputStream dataOut( &bytesOut );
-    
+
         if( map == NULL )
         {
             dataOut.writeInt( -1 );
@@ -49,10 +49,10 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
         else
         {
             dataOut.writeInt( (int)map->size() );
-            
+
             std::vector<std::string> keys = map->getKeys();
             std::vector<std::string>::const_iterator iter = keys.begin();
-            
+
             for(; iter != keys.end(); ++iter ) {
 
                 OpenwireStringSupport::writeString( dataOut, &(*iter) );
@@ -62,36 +62,68 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )        
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-PrimitiveMap* PrimitiveMapMarshaller::unmarshal( 
-    const std::vector<unsigned char>& src ) 
-        throw ( cms::CMSException ) 
+PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
+    const std::vector<unsigned char>& src )
+        throw ( cms::CMSException )
 {
     try{
-        
+
         ByteArrayInputStream bytesIn( src );
         DataInputStream dataIn( &bytesIn );
-    
+
         int size = dataIn.readInt();
-        
+
         if( size > 0 )
         {
             PrimitiveMap* map = new PrimitiveMap;
-    
+
             for( int i=0; i < size; i++ )
             {
                 std::string key = OpenwireStringSupport::readString( dataIn );
                 unmarshalPrimitive( dataIn, key, *map );
             }
-    
+
             return map;
         }
-    
+
         return NULL;
-    
+
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::unmarshal(
+    util::PrimitiveMap* map,
+    const std::vector<unsigned char>& src ) throw ( cms::CMSException ) {
+
+    try {
+
+        if( map == NULL ) {
+            return;
+        }
+
+        // Clear old data
+        map->clear();
+
+        ByteArrayInputStream bytesIn( src );
+        DataInputStream dataIn( &bytesIn );
+
+        int size = dataIn.readInt();
+
+        if( size > 0 )
+        {
+            for( int i=0; i < size; i++ )
+            {
+                std::string key = OpenwireStringSupport::readString( dataIn );
+                unmarshalPrimitive( dataIn, key, *map );
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -103,7 +135,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                                                     throw ( cms::CMSException ) {
 
     try {
-        
+
         if( value.getValueType() == PrimitiveMap::BOOLEAN_TYPE )
         {
             dataOut.writeByte( PrimitiveMap::BOOLEAN_TYPE );
@@ -147,16 +179,16 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
         else if( value.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE )
         {
             dataOut.writeByte( PrimitiveMap::BYTE_ARRAY_TYPE );
-            
+
             std::vector<unsigned char> data = value.getByteArray();
-            
+
             dataOut.writeInt( (int)data.size() );
             dataOut.write( data );
         }
         else if( value.getValueType() == PrimitiveMap::STRING_TYPE )
         {
             std::string data = value.getString();
-            
+
             // is the string big??
             if( data.size() > 8191 ) {
                 dataOut.writeByte( PrimitiveMap::BIG_STRING_TYPE );
@@ -185,9 +217,9 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )        
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
-                                                    
+
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                                                  const std::string& key,
@@ -235,8 +267,8 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
             }
             case PrimitiveMap::STRING_TYPE:
             case PrimitiveMap::BIG_STRING_TYPE:
-                map.setString( 
-                    key, 
+                map.setString(
+                    key,
                     OpenwireStringSupport::readString( dataIn ) );
                 break;
 //            case PrimitiveMap::MAP_TYPE:
@@ -254,7 +286,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )        
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 /*
@@ -277,6 +309,6 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
             }
             return answer;
         }
-        
+
 
 */
