@@ -28,20 +28,24 @@ namespace stomp{
     class StompProducerInfo : public ProducerInfo
     {
     private:
-    
+
         // Producer Id
         unsigned int producerId;
 
         // Default Destination
         cms::Destination* destination;
-        
+
         // Session that this producer is attached to - we do not own this
         const SessionInfo* session;
-        
+
     public:
 
-    	StompProducerInfo(void) { destination = NULL; }
-    	virtual ~StompProducerInfo(void) { delete destination; }
+        StompProducerInfo(void) {
+            producerId = 0;
+            session = NULL;
+            destination = NULL;
+        }
+        virtual ~StompProducerInfo(void) { delete destination; }
 
         /**
          * Retrieves the default destination that this producer
@@ -67,7 +71,7 @@ namespace stomp{
         virtual unsigned int getProducerId(void) const {
             return producerId;
         }
-        
+
         /**
          * Sets the ID that is assigned to this Producer
          * @return id string value of the Producer Id.
