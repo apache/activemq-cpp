@@ -28,24 +28,25 @@ namespace stomp{
 
         // Message Selector for this Consumer
         std::string selector;
-        
+
         // Consumer Id
         unsigned int consumerId;
-        
+
         // Destination
         cms::Destination* destination;
-        
+
         // Session Info - We do not own this
         const SessionInfo* session;
-    
+
     public:
 
-    	StompConsumerInfo(void) {
+        StompConsumerInfo(void) {
             selector = "";
             consumerId = 0;
             destination = NULL;
+            session = NULL;
         }
-        
+
         virtual ~StompConsumerInfo(void) { delete destination; }
 
         /**
@@ -55,7 +56,7 @@ namespace stomp{
         virtual const std::string& getMessageSelector(void) const {
             return selector;
         }
-        
+
         /**
          * Sets this message consumer's message selector expression.
          * @param selector This Consumer's selector expression or "".
@@ -71,7 +72,7 @@ namespace stomp{
         virtual unsigned int getConsumerId(void) const {
             return consumerId;
         }
-        
+
         /**
          * Sets the ID that is assigned to this consumer
          * @param id value of the Consumer Id.
@@ -79,7 +80,7 @@ namespace stomp{
         virtual void setConsumerId( const unsigned int id ) {
             this->consumerId = id;
         }
-        
+
         /**
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination this consumer is attached to
@@ -87,7 +88,7 @@ namespace stomp{
         virtual const cms::Destination& getDestination(void) const {
             return *destination;
         }
-        
+
         /**
          * Sets the destination that this Consumer is listening on
          * @param destination Destination this consumer is attached to
@@ -95,7 +96,7 @@ namespace stomp{
         virtual void setDestination( const cms::Destination& destination ) {
             this->destination = destination.clone();
         }
-        
+
         /**
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
@@ -103,7 +104,7 @@ namespace stomp{
         virtual const SessionInfo* getSessionInfo(void) const {
             return session;
         }
-        
+
         /**
          * Gets the Session Info that this consumer is attached too
          * @param session SessionnInfo for this consumer
