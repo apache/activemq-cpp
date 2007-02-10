@@ -51,6 +51,8 @@
 
 #include <activemq/connector/openwire/OpenWireCommandReader.h>
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
+#include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 
 namespace activemq{
 namespace connector{
@@ -77,6 +79,12 @@ namespace openwire{
          * The transport for sending/receiving commands on the wire.
          */
         transport::Transport* transport;
+
+        /**
+         * The OpenWireFormat class that controls Protocal versions and
+         * marshalling details.
+         */
+        OpenWireFormat* wireFormat;
 
         /**
          * Flag to indicate the start state of the connector.
