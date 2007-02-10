@@ -35,8 +35,8 @@ public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
         return ".h";
     }
 
-	protected void generateFile(PrintWriter out) {
-		generateLicence(out);
+    protected void generateFile(PrintWriter out) {
+        generateLicence(out);
 
 out.println("");
 out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_");
@@ -100,47 +100,47 @@ out.println("");
             String name = decapitalize(property.getSimpleName());
 
             if( !property.getType().isPrimitiveType() &&
-                !property.getType().getSimpleName().equals("ByteSequence") && 
+                !property.getType().getSimpleName().equals("ByteSequence") &&
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
-                   
+
                 type = type + "*";
             }
-            
+
             out.println("        "+type+" "+name+";");
 
        }
-    
+
         String typeName = className.toUpperCase();
-    
+
 out.println("");
 out.println("    public:");
-out.println("");    
+out.println("");
 out.println("        const static unsigned char ID_"+typeName+" = "+getOpenWireOpCode(jclass)+";");
-out.println("");    
+out.println("");
 out.println("    public:");
-out.println("");    
+out.println("");
 out.println("        "+className+"();");
 out.println("        virtual ~"+className+"();");
-out.println("");    
+out.println("");
 out.println("        /**");
-out.println("         * Get the unique identifier that this object and its own");      
+out.println("         * Get the unique identifier that this object and its own");
 out.println("         * Marshaller share.");
 out.println("         * @returns new DataStructure type copy.");
 out.println("         */");
 out.println("        virtual unsigned char getDataStructureType() const;");
 out.println("");
 out.println("        /**");
-out.println("         * Clone this object and return a new instance that the");      
+out.println("         * Clone this object and return a new instance that the");
 out.println("         * caller now owns, this will be an exact copy of this one");
 out.println("         * @returns new copy of this object.");
 out.println("         */");
 out.println("        virtual DataStructure* cloneDataStructure() const;");
 out.println("");
 out.println("        /**");
-out.println("         * Copy the contents of the passed object into this objects");
+out.println("         * Copy the contents of the passed object into this object's");
 out.println("         * members, overwriting any existing data.");
-out.println("         * @return src - Source Object");
+out.println("         * @param src - Source Object");
 out.println("         */");
 out.println("        virtual void copyDataStructure( const DataStructure* src );");
 out.println("");
@@ -153,15 +153,15 @@ out.println("");
             String constness = "";
 
             if( !property.getType().isPrimitiveType() &&
-                !property.getType().getSimpleName().equals("ByteSequence") && 
+                !property.getType().getSimpleName().equals("ByteSequence") &&
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
-                    
+
                     type = type + "*";
             } else if( property.getType().getSimpleName().equals("String") ||
-            		   type.startsWith("std::vector") ) {
+                       type.startsWith("std::vector") ) {
 
-            	type = type + "&";
+                type = type + "&";
                 constness = "const ";
             }
 
@@ -183,6 +183,6 @@ out.println("");
 out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_*/");
 out.println("");
 
-    }    
+    }
 
 }

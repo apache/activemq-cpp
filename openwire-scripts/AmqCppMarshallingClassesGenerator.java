@@ -44,66 +44,66 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         if( className.equals( "BaseCommand") ) {
             return "transport::Command";
         }
-        
+
         return className;
     }
-    
+
     /**
      * Checks if the tightMarshal1 method needs an casted version of its
      * dataStructure argument and then returns true or false to indicate this
-     * to the caller.  
+     * to the caller.
      * @returns true if the tightMarshal1 method needs an info pointer.
      */
     protected boolean checkNeedsInfoPointerTM1() {
-        
+
         if( isMarshallerAware() ){
             return true;
         }
-        
+
         List properties = getProperties();
         for (Iterator iter = properties.iterator(); iter.hasNext();) {
             JProperty property = (JProperty) iter.next();
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
-            
+
             if( !( type.equals("byte") ) &&
                 !( type.equals("char") ) &&
                 !( type.equals("short") ) &&
                 !( type.equals("int") ) ) {
-                
+
                 return true;
             }
-            
+
         }
-        
+
         return false;
     }
-    
+
     /**
      * Checks if the tightMarshal2 method needs an casted version of its
      * dataStructure argument and then returns true or false to indicate this
-     * to the caller.  
+     * to the caller.
      * @returns true if the tightMarshal2 method needs an info pointer.
      */
     protected boolean checkNeedsInfoPointerTM2() {
-        
+
         if( isMarshallerAware() ){
             return true;
         }
-        
+
         List properties = getProperties();
         for (Iterator iter = properties.iterator(); iter.hasNext();) {
             JProperty property = (JProperty) iter.next();
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
-            
+
             if( !type.equals("boolean") ) {
-                
+
                 return true;
             }
-            
+
         }
-        
+
         return false;
     }
 
@@ -190,7 +190,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             out.println("    }");
         }
     }
-    
+
     protected int generateTightMarshal1Body(PrintWriter out) {
         List properties = getProperties();
         int baseSize = 0;
@@ -201,7 +201,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             JClass propertyType = property.getType();
             String type = propertyType.getSimpleName();
             String getter = "info->" + property.getGetter().getSimpleName() + "()";
-            
+
             if (type.equals("boolean")) {
                 out.println("    bs->writeBoolean( " + getter + " );");
             }
@@ -227,7 +227,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             else if (type.equals("byte[]") || type.equals("ByteSequence")) {
                 if (size == null) {
                     out.println("    bs->writeBoolean( " + getter + ".size() != 0 );" );
-                    out.println("    rc += " + getter + ".size() == 0 ? 0 : " + getter + ".size() + 4;");
+                    out.println("    rc += " + getter + ".size() == 0 ? 0 : (int)" + getter + ".size() + 4;");
                 }
                 else {
                     baseSize += size.asInt();
@@ -321,11 +321,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////////////////////////
     // This section is for the loose wire format encoding generator
     //////////////////////////////////////////////////////////////////////////////////////
-    
+
     protected void generateLooseUnmarshalBodyForProperty(PrintWriter out, JProperty property, JAnnotationValue size) {
 
         String propertyName = property.getSimpleName();
@@ -382,7 +382,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
         String propertyName = property.getSimpleName();
         String setter = property.getSetter().getSimpleName();
         String getter = property.getGetter().getSimpleName();
-        
+
         out.println();
         if (size != null) {
             out.println("    {");
@@ -473,11 +473,11 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
     }
-    
-    
-	protected void generateFile(PrintWriter out) throws Exception {
-		generateLicence(out);
-		
+
+
+    protected void generateFile(PrintWriter out) throws Exception {
+        generateLicence(out);
+
 out.println("");
 out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+className+".h>");
 out.println("");
@@ -509,29 +509,29 @@ out.println("    return new "+jclass.getSimpleName()+"();");
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("unsigned char "+className+"::getDataStructureType() const {"); 
+out.println("unsigned char "+className+"::getDataStructureType() const {");
 out.println("    return "+jclass.getSimpleName()+"::ID_"+typeName+";");
 out.println("}");
 out.println("");
     }
-    
+
 out.println("///////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {");
 out.println("");
 out.println("    "+baseClass+"::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );");
 out.println("");
- 
+
     List properties = getProperties();
     boolean marshallerAware = isMarshallerAware();
     if( !properties.isEmpty() || marshallerAware ) {
 
         String properClassName = getProperClassName( jclass.getSimpleName() );
-out.println("    "+properClassName+"* info ="); 
+out.println("    "+properClassName+"* info =");
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
     if( marshallerAware ) {
-out.println("    info->beforeUnmarshal( wireFormat );");     
+out.println("    info->beforeUnmarshal( wireFormat );");
 out.println("");
     }
 
@@ -541,7 +541,7 @@ out.println("");
 out.println("");
 out.println("    info->afterUnmarshal( wireFormat );");
     }
-    
+
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
@@ -550,11 +550,11 @@ out.println("");
 
     if( checkNeedsInfoPointerTM1() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
-out.println("    "+properClassName+"* info ="); 
+out.println("    "+properClassName+"* info =");
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
 out.println("");
     }
-        
+
     if( marshallerAware ) {
 out.println("    info->beforeMarshal( wireFormat );");
     }
@@ -562,7 +562,7 @@ out.println("    info->beforeMarshal( wireFormat );");
 out.println("    int rc = "+baseClass+"::tightMarshal1( wireFormat, dataStructure, bs );");
 
     int baseSize = generateTightMarshal1Body(out);
-    
+
 out.println("");
 out.println("    return rc + "+baseSize+";");
 out.println("}");
@@ -575,7 +575,7 @@ out.println("");
 
     if( checkNeedsInfoPointerTM2() ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
-out.println("    "+properClassName+"* info ="); 
+out.println("    "+properClassName+"* info =");
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
@@ -591,10 +591,10 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {");
 out.println("");
 out.println("    "+baseClass+"::looseUnmarshal( wireFormat, dataStructure, dataIn );");
- 
+
     if( !properties.isEmpty() || marshallerAware ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
-out.println("    "+properClassName+"* info ="); 
+out.println("    "+properClassName+"* info =");
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
@@ -616,7 +616,7 @@ out.println("");
 
     if( !properties.isEmpty() || marshallerAware ) {
         String properClassName = getProperClassName( jclass.getSimpleName() );
-out.println("    "+properClassName+"* info ="); 
+out.println("    "+properClassName+"* info =");
 out.println("        dynamic_cast<"+properClassName+"*>( dataStructure );");
     }
 
@@ -636,10 +636,10 @@ out.println("    info->afterMarshal( wireFormat );");
 out.println("}");
 out.println("");
 }
-    
+
     public void generateFactory(PrintWriter out) {
-		generateLicence(out);
-        
+        generateLicence(out);
+
 out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/MarshallerFactory.h>");
 
     List list = new ArrayList(getConcreteClasses());
@@ -649,11 +649,11 @@ out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion
             JClass c2 = (JClass) o2;
             return c1.getSimpleName().compareTo(c2.getSimpleName());
     }});
-    
+
     for (Iterator iter = list.iterator(); iter.hasNext();) {
         JClass jclass = (JClass) iter.next();
 out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+jclass.getSimpleName()+"Marshaller.h>");
-    }        
+    }
 
 out.println("");
 out.println("/*");
@@ -680,7 +680,7 @@ out.println("");
     for (Iterator iter = list.iterator(); iter.hasNext();) {
         JClass jclass = (JClass) iter.next();
 out.println("    format->addMarshaller( new "+jclass.getSimpleName()+"Marshaller() );");
-}        
+}
 
 out.println("}");
 out.println("");
