@@ -200,6 +200,10 @@ h_sources = \
     activemq/connector/openwire/OpenWireCommandReader.h \
     activemq/connector/openwire/OpenWireCommandWriter.h \
     activemq/connector/openwire/OpenWireFormatNegotiator.h \
+    activemq/connector/openwire/OpenWireConsumerInfo.h \
+    activemq/connector/openwire/OpenWireProducerInfo.h \
+    activemq/connector/openwire/OpenWireSessionInfo.h \
+    activemq/connector/openwire/OpenWireTransactionInfo.h \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
