@@ -65,9 +65,9 @@ int XATransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
 
     int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getGlobalTransactionId().size() != 0 );
-    rc += info->getGlobalTransactionId().size() == 0 ? 0 : info->getGlobalTransactionId().size() + 4;
+    rc += info->getGlobalTransactionId().size() == 0 ? 0 : (int)info->getGlobalTransactionId().size() + 4;
     bs->writeBoolean( info->getBranchQualifier().size() != 0 );
-    rc += info->getBranchQualifier().size() == 0 ? 0 : info->getBranchQualifier().size() + 4;
+    rc += info->getBranchQualifier().size() == 0 ? 0 : (int)info->getBranchQualifier().size() + 4;
 
     return rc + 4;
 }

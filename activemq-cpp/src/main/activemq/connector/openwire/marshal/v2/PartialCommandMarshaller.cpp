@@ -64,7 +64,7 @@ int PartialCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStr
 
     int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
     bs->writeBoolean( info->getData().size() != 0 );
-    rc += info->getData().size() == 0 ? 0 : info->getData().size() + 4;
+    rc += info->getData().size() == 0 ? 0 : (int)info->getData().size() + 4;
 
     return rc + 4;
 }

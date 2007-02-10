@@ -111,9 +111,9 @@ int MessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure*
     rc += tightMarshalLong1( wireFormat, info->getTimestamp(), bs );
     rc += tightMarshalString1( info->getType(), bs );
     bs->writeBoolean( info->getContent().size() != 0 );
-    rc += info->getContent().size() == 0 ? 0 : info->getContent().size() + 4;
+    rc += info->getContent().size() == 0 ? 0 : (int)info->getContent().size() + 4;
     bs->writeBoolean( info->getMarshalledProperties().size() != 0 );
-    rc += info->getMarshalledProperties().size() == 0 ? 0 : info->getMarshalledProperties().size() + 4;
+    rc += info->getMarshalledProperties().size() == 0 ? 0 : (int)info->getMarshalledProperties().size() + 4;
     rc += tightMarshalNestedObject1( wireFormat, info->getDataStructure(), bs );
     rc += tightMarshalCachedObject1( wireFormat, info->getTargetConsumerId(), bs );
     bs->writeBoolean( info->isCompressed() );
