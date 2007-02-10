@@ -20,6 +20,7 @@
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
+using namespace activemq::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 
@@ -27,7 +28,9 @@ using namespace activemq::connector::openwire;
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
                                                     Transport* next,
                                                     const bool own ) :
-    TransportFilter( next, own )
+    TransportFilter( next, own ),
+    wireInfoSentDownLatch(1),
+    readyCountDownLatch(1)
 {
     this->firstTime = true;
     this->openWireFormat = openWireFormat;

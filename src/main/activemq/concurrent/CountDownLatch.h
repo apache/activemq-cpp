@@ -56,8 +56,9 @@ namespace concurrent{
         /**
          * Waits for the Count to hit zero, or a timeout.
          * @param timeOut - time in milliseconds to wait.
+         * @returns true if the wait made it to count zero, otherwise false
          */
-        virtual void await( unsigned long timeOut )  throw ( cms::CMSException );
+        virtual bool await( unsigned long timeOut )  throw ( cms::CMSException );
 
         /**
          * Counts down the latch, releasing all waiting threads when
