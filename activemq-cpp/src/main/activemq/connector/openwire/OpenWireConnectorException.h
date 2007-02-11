@@ -32,15 +32,18 @@ namespace openwire{
     public:
 
         OpenWireConnectorException() throw(){}
-        OpenWireConnectorException( const exceptions::ActiveMQException& ex ) throw(){
+        OpenWireConnectorException( const exceptions::ActiveMQException& ex ) throw()
+            : connector::ConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
-        OpenWireConnectorException( const OpenWireConnectorException& ex ) throw(){
+        OpenWireConnectorException( const OpenWireConnectorException& ex ) throw()
+            : connector::ConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
         OpenWireConnectorException( const char* file,
                                     const int lineNumber,
                                     const char* msg, ... ) throw()
+            : connector::ConnectorException()
         {
             va_list vargs;
             va_start( vargs, msg );
