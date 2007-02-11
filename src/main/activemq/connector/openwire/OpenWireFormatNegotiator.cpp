@@ -165,7 +165,7 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
     // Start the delegate transport object.
     next->start();
 
-    if( firstTime = true ) {
+    if( firstTime == true ) {
 
         try {
 
