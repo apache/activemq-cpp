@@ -31,6 +31,7 @@ std::vector<char> WireFormatInfo::MAGIC;
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatInfo::WireFormatInfo()
 {
+    // Initialize the static MAGIC buffer.
     if( MAGIC.empty() ) {
         MAGIC.push_back( 'A' );
         MAGIC.push_back( 'c' );
@@ -40,6 +41,12 @@ WireFormatInfo::WireFormatInfo()
         MAGIC.push_back( 'e' );
         MAGIC.push_back( 'M' );
         MAGIC.push_back( 'Q' );
+    }
+    
+    // Initialize member magic buffer to the static buffer.
+    magic.resize( MAGIC.size() );
+    for( int ix=0; ix<MAGIC.size(); ++ix ){
+        magic[ix] = MAGIC[ix];
     }
 }
 
