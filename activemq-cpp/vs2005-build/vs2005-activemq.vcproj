@@ -700,6 +700,18 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireConnectorFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireConnectorFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireConsumerInfo.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\connector\openwire\OpenWireFormat.cpp"
 						>
 					</File>
@@ -713,6 +725,26 @@
 					</File>
 					<File
 						RelativePath="..\src\main\activemq\connector\openwire\OpenWireFormatFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireFormatNegotiator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireFormatNegotiator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireProducerInfo.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireSessionInfo.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireTransactionInfo.h"
 						>
 					</File>
 					<Filter
