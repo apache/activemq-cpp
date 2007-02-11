@@ -697,6 +697,8 @@ void OpenWireConnector::onCommand( transport::Command* command )
 //                consumer.Dispatch(message);
 //            }
 
+            delete command;
+
         } else if( brokerWireFormatInfo != NULL ) {
             this->brokerWireFormatInfo = brokerWireFormatInfo;
         } else if( brokerInfo != NULL ) {
@@ -710,13 +712,14 @@ void OpenWireConnector::onCommand( transport::Command* command )
                     "OpenWireConnector::onCommand - "
                     "Broker closed this connection."));
             }
+
+            delete command;
         }
         else
         {
             //LOGCMS_WARN( logger, "Received an unknown command" );
+            delete command;
         }
-
-        delete command;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
