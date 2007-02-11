@@ -263,6 +263,7 @@ connector::SessionInfo* OpenWireConnector::createSession(
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -281,6 +282,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -300,6 +302,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -316,6 +319,7 @@ ProducerInfo* OpenWireConnector::createProducer(
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -331,6 +335,7 @@ cms::Topic* OpenWireConnector::createTopic( const std::string& name,
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -346,6 +351,7 @@ cms::Queue* OpenWireConnector::createQueue( const std::string& name,
         enforceConnected();
 
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -358,7 +364,10 @@ cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
 {
     try
     {
+        enforceConnected();
+
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -371,7 +380,10 @@ cms::TemporaryQueue* OpenWireConnector::createTemporaryQueue(
 {
     try
     {
+        enforceConnected();
+
         // TODO
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -516,6 +528,8 @@ TransactionInfo* OpenWireConnector::startTransaction(
 //        transport->oneway( &cmd );
 //
 //        return transaction;
+
+        return NULL;
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -588,6 +602,8 @@ cms::Message* OpenWireConnector::createMessage(
         enforceConnected();
 
         // TODO
+
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -604,6 +620,8 @@ cms::BytesMessage* OpenWireConnector::createBytesMessage(
         enforceConnected();
 
         // TODO
+
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -620,6 +638,8 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
         enforceConnected();
 
         // TODO
+
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -633,6 +653,11 @@ cms::MapMessage* OpenWireConnector::createMapMessage(
 {
     try
     {
+        enforceConnected();
+
+        // TODO
+
+        return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
