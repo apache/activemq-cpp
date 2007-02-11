@@ -54,6 +54,10 @@
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 
+#include <activemq/connector/openwire/commands/ConnectionInfo.h>
+#include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/connector/openwire/commands/WireFormatInfo.h>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
@@ -85,6 +89,21 @@ namespace openwire{
          * marshalling details.
          */
         OpenWireFormat* wireFormat;
+
+        /**
+         * Connection Information for this connection to the Broker
+         */
+        commands::ConnectionInfo connectionInfo;
+
+        /**
+         * Command sent from the Broker with its BrokerInfo
+         */
+        commands::BrokerInfo* brokerInfo;
+
+        /**
+         * Command sent from the Broker with its WireFormatInfo
+         */
+        commands::WireFormatInfo* brokerWireFormatInfo;
 
         /**
          * Flag to indicate the start state of the connector.

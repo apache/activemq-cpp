@@ -29,7 +29,7 @@ namespace openwire{
     {
     public:
 
-        virtual ~OpenWireConnectorFactory();
+        virtual ~OpenWireConnectorFactory() {}
 
         /**
          * Creates a StompConnector
