@@ -272,7 +272,7 @@ connector::SessionInfo* OpenWireConnector::createSession(
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo* OpenWireConnector::createConsumer(
     const cms::Destination* destination,
-    SessionInfo* session,
+    connector::SessionInfo* session,
     const std::string& selector,
     bool noLocal )
         throw ( ConnectorException )
@@ -291,7 +291,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo* OpenWireConnector::createDurableConsumer(
     const cms::Topic* topic,
-    SessionInfo* session,
+    connector::SessionInfo* session,
     const std::string& name,
     const std::string& selector,
     bool noLocal )
@@ -311,7 +311,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo* OpenWireConnector::createProducer(
     const cms::Destination* destination,
-    SessionInfo* session )
+    connector::SessionInfo* session )
         throw ( ConnectorException )
 {
     try
@@ -327,7 +327,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* OpenWireConnector::createTopic( const std::string& name,
-                                            SessionInfo* session )
+                                            connector::SessionInfo* session )
     throw ( ConnectorException )
 {
     try
@@ -343,7 +343,7 @@ cms::Topic* OpenWireConnector::createTopic( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* OpenWireConnector::createQueue( const std::string& name,
-                                            SessionInfo* session )
+                                            connector::SessionInfo* session )
     throw ( ConnectorException )
 {
     try
@@ -359,7 +359,7 @@ cms::Queue* OpenWireConnector::createQueue( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
-    SessionInfo* session )
+    connector::SessionInfo* session )
         throw ( ConnectorException )
 {
     try
@@ -375,7 +375,7 @@ cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* OpenWireConnector::createTemporaryQueue(
-    SessionInfo* session )
+    connector::SessionInfo* session )
         throw ( ConnectorException )
 {
     try
@@ -462,7 +462,7 @@ void OpenWireConnector::send( std::list<cms::Message*>& messages,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::acknowledge( const SessionInfo* session,
+void OpenWireConnector::acknowledge( const connector::SessionInfo* session,
                                      const cms::Message* message,
                                      AckType ackType = ConsumedAck )
     throw ( ConnectorException )
@@ -507,7 +507,7 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* OpenWireConnector::startTransaction(
-    SessionInfo* session )
+    connector::SessionInfo* session )
         throw ( ConnectorException )
 {
     try {
@@ -543,7 +543,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::commit( TransactionInfo* transaction,
-                                SessionInfo* session )
+                                connector::SessionInfo* session )
     throw ( ConnectorException )
 {
     try
@@ -568,7 +568,7 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::rollback( TransactionInfo* transaction,
-                                  SessionInfo* session )
+                                  connector::SessionInfo* session )
     throw ( ConnectorException )
 {
     try
@@ -593,7 +593,7 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* OpenWireConnector::createMessage(
-    SessionInfo* session,
+    connector::SessionInfo* session,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -611,7 +611,7 @@ cms::Message* OpenWireConnector::createMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* OpenWireConnector::createBytesMessage(
-    SessionInfo* session,
+    connector::SessionInfo* session,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -629,7 +629,7 @@ cms::BytesMessage* OpenWireConnector::createBytesMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* OpenWireConnector::createTextMessage(
-    SessionInfo* session,
+    connector::SessionInfo* session,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -647,7 +647,7 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MapMessage* OpenWireConnector::createMapMessage(
-    SessionInfo* session,
+    connector::SessionInfo* session,
     TransactionInfo* transaction )
         throw ( ConnectorException )
 {
@@ -680,10 +680,10 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
 {
     try
     {
-        ConsumerInfo* consumer =
-            dynamic_cast<ConsumerInfo*>(resource);
-        SessionInfo* session =
-            dynamic_cast<SessionInfo*>(resource);
+        connector::ConsumerInfo* consumer =
+            dynamic_cast<connector::ConsumerInfo*>(resource);
+        connector::SessionInfo* session =
+            dynamic_cast<connector::SessionInfo*>(resource);
 
         // TODO
 
