@@ -117,7 +117,7 @@ void OpenWireFormatNegotiator::onCommand( Command* command ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onTransportException(
-    Transport* source,
+    Transport* source AMQCPP_UNUSED,
     const exceptions::ActiveMQException& ex ) {
 
     readyCountDownLatch.countDown();
@@ -135,18 +135,31 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
     }
 
     if( commandlistener == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "OpenWireFormatNegotiator::start - "
             "commandListener is invalid" );
     }
 
     if( exceptionListener == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "OpenWireFormatNegotiator::start - "
             "exceptionListener is invalid" );
     }
 
     if( next == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "OpenWireFormatNegotiator::start - "
             "next transport is NULL" );
+    }
+
+    if( openWireFormat == NULL ){
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "OpenWireFormatNegotiator::start - "
+            "openWireFormat is NULL" );
     }
 
     // Start the delegate transport object.
