@@ -23,8 +23,17 @@
 #include <activemq/transport/ExceptionResponse.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Integer.h>
+#include <activemq/util/Guid.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
+
+#include <activemq/connector/openwire/commands/ConnectionId.h>
+#include <activemq/connector/openwire/commands/RemoveInfo.h>
+#include <activemq/connector/openwire/commands/ShutdownInfo.h>
+#include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/connector/openwire/commands/MessageDispatch.h>
+#include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/connector/openwire/commands/BrokerInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -33,6 +42,7 @@ using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
+using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireConnector::OpenWireConnector( Transport* transport,
@@ -52,6 +62,8 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->state = DISCONNECTED;
     this->exceptionListener = NULL;
     this->messageListener = NULL;
+    this->brokerInfo = NULL;
+    this->brokerWireFormatInfo = NULL;
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
     this->properties.copy( &properties );
@@ -81,6 +93,8 @@ OpenWireConnector::~OpenWireConnector()
 
         delete transport;
         delete wireFormat;
+        delete brokerInfo;
+        delete brokerWireFormatInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -171,55 +185,43 @@ void OpenWireConnector::connect()
     try
     {
         // Mark this connector as started.
-        /*state = this->CONNECTING;
+        state = this->CONNECTING;
 
-        // TODO - Create a Connect Command
+        // Fill in our connection info.
+        connectionInfo.setUserName( getUsername() );
+        connectionInfo.setPassword( getPassword() );
 
-        // Encode User Name and Password and Client ID
-        string login = getUsername();
-        if( login.length() > 0 ){
-            cmd.setLogin( login );
-        }
-        string password = getPassword();
-        if( password.length() > 0 ){
-            cmd.setPassword( password );
-        }
+        // Get or Create a Client Id
         string clientId = getClientId();
         if( clientId.length() > 0 ){
-            cmd.setClientId( clientId );
+            connectionInfo.setClientId( clientId );
+        } else {
+            connectionInfo.setClientId( Guid::createGUIDString() );
         }
 
-//        Response* response = transport->request( &cmd );
-//
-//        if( dynamic_cast< ExceptionResponse* >( response ) != NULL )
-//        {
-//            delete response;
-//
-//            throw OpenWireConnectorException(
-//                __FILE__, __LINE__,
-//                "OpenWireConnector::connect - Failed on Connect Request" );
-//        }
+        // Generate a connectionId
+        ConnectionId* connectionId = new ConnectionId();
+        connectionId->setValue( Guid::createGUIDString() );
+        connectionInfo.setConnectionId( connectionId );
 
-//        ConnectedCommand* connected =
-//            dynamic_cast< ConnectedCommand* >( response );
-//
-//        if( connected == NULL )
-//        {
-//            delete response;
-//
-//            throw OpenWireConnectorException(
-//                __FILE__, __LINE__,
-//                "OpenWireConnector::connect - "
-//                "Response not a connected response" );
-//        }
+        // Now we ping the broker and see if we get an ack / nack
+        Response* response = transport->request( &connectionInfo );
 
-        // TODO
+        if( dynamic_cast<ExceptionResponse*>( response ) != NULL )
+        {
+            delete response;
+
+            throw OpenWireConnectorException(
+                __FILE__,
+                __LINE__,
+                "OpenWireConnector::connect - Failed on Connect Request" );
+        }
 
         // Tag us in the Connected State now.
         state = CONNECTED;
 
-        // Clean up
-        delete response;*/
+        // Clean up the ack
+        delete response;
     }
     AMQ_CATCH_RETHROW( BrokerError )
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -232,16 +234,27 @@ void OpenWireConnector::disconnect()
     try
     {
         // Mark state as no longer connected.
-        state = this->DISCONNECTED;
+        state = DISCONNECTED;
 
-        // TODO
+        // Remove our ConnectionId from the Broker
+        RemoveInfo remove;
+        remove.setObjectId( connectionInfo.getConnectionId() );
+        transport->oneway( &remove );
+
+        // Send the disconnect command to the broker.
+        ShutdownInfo shutdown;
+        transport->oneway( &shutdown );
+
+    } catch( CommandIOException& ex ){
+        transport->close();
+        throw ex;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionInfo* OpenWireConnector::createSession(
+connector::SessionInfo* OpenWireConnector::createSession(
     cms::Session::AcknowledgeMode ackMode )
         throw( ConnectorException )
 {
@@ -374,6 +387,43 @@ void OpenWireConnector::send( cms::Message* message,
         enforceConnected();
 
         // TODO
+
+//        const SessionInfo* session = producerInfo->getSessionInfo();
+//        Command* command = dynamic_cast< transport::Command* >( message );
+//
+//        if( command == NULL )
+//        {
+//            throw StompConnectorException(
+//                __FILE__, __LINE__,
+//                "StompConnector::send - "
+//                "Message is not a valid stomp type.");
+//        }
+//
+//        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
+//        {
+//            StompCommand* stompCommand =
+//                dynamic_cast< StompCommand* >( message );
+//
+//            if( stompCommand == NULL )
+//            {
+//                throw StompConnectorException(
+//                    __FILE__, __LINE__,
+//                    "StompConnector::send - "
+//                    "Message is not a valid stomp type.");
+//            }
+//
+//            stompCommand->setTransactionId(
+//                Integer::toString(
+//                    session->getTransactionInfo()->getTransactionId() ) );
+//        }
+//
+//        // Send it
+//        transport->oneway( command );
+    }
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -405,11 +455,39 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
                                      AckType ackType = ConsumedAck )
     throw ( ConnectorException )
 {
-    try
-    {
-        enforceConnected();
+    try {
 
-        // TODO
+//        // Auto to Stomp means don't do anything, so we drop it here
+//        // for client acknowledge we have to send and ack.
+//        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ||
+//            session->getAckMode() == cms::Session::SESSION_TRANSACTED )
+//        {
+//            AckCommand cmd;
+//
+//            if( message->getCMSMessageId() == "" )
+//            {
+//                throw StompConnectorException(
+//                    __FILE__, __LINE__,
+//                    "StompConnector::send - "
+//                    "Message has no Message Id, cannot ack.");
+//            }
+//
+//            cmd.setMessageId( message->getCMSMessageId() );
+//
+//            if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
+//            {
+//                cmd.setTransactionId(
+//                    Integer::toString(
+//                        session->getTransactionInfo()->getTransactionId() ) );
+//            }
+//
+//            transport->oneway( &cmd );
+//        }
+    }
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -420,14 +498,33 @@ TransactionInfo* OpenWireConnector::startTransaction(
     SessionInfo* session )
         throw ( ConnectorException )
 {
-    try
-    {
+    try {
+
         enforceConnected();
 
-        // TODO
+//        TransactionInfo* transaction = new StompTransactionInfo();
+//
+//        transaction->setTransactionId( getNextTransactionId() );
+//
+//        session->setTransactionInfo( transaction );
+//
+//        BeginCommand cmd;
+//
+//        cmd.setTransactionId(
+//                Integer::toString( transaction->getTransactionId() ) );
+//
+//        transport->oneway( &cmd );
+//
+//        return transaction;
+    }
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
+    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -439,7 +536,17 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
     {
         enforceConnected();
 
-        // TODO
+//        CommitCommand cmd;
+//
+//        cmd.setTransactionId(
+//                Integer::toString( transaction->getTransactionId() ) );
+//
+//        transport->oneway( &cmd );
+    }
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -454,7 +561,17 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
     {
         enforceConnected();
 
-        // TODO
+//        AbortCommand cmd;
+//
+//        cmd.setTransactionId(
+//                Integer::toString( transaction->getTransactionId() ) );
+//
+//        transport->oneway( &cmd );
+    }
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -557,6 +674,49 @@ void OpenWireConnector::onCommand( transport::Command* command )
 {
     try
     {
+        MessageDispatch* dispatch =
+            dynamic_cast<MessageDispatch*>( command );
+        WireFormatInfo* brokerWireFormatInfo =
+            dynamic_cast<WireFormatInfo*>( command );
+        BrokerInfo* brokerInfo =
+            dynamic_cast<BrokerInfo*>( command );
+        ShutdownInfo* shutdownInfo =
+            dynamic_cast<ShutdownInfo*>( command );
+
+        if( dispatch != NULL ) {
+
+//            ConsumerId* consumerId = dispatch->getConsumerId();
+//            MessageConsumer consumer = (MessageConsumer) consumers[consumerId];
+//            if (consumer == null)
+//            {
+//                Tracer.Error("No such consumer active: " + consumerId);
+//            }
+//            else
+//            {
+//                ActiveMQMessage message = (ActiveMQMessage) dispatch.Message;
+//                consumer.Dispatch(message);
+//            }
+
+        } else if( brokerWireFormatInfo != NULL ) {
+            this->brokerWireFormatInfo = brokerWireFormatInfo;
+        } else if( brokerInfo != NULL ) {
+            this->brokerInfo = brokerInfo;
+        } else if( shutdownInfo != NULL ) {
+
+            if( state != DISCONNECTED ) {
+                fire( CommandIOException(
+                    __FILE__,
+                    __LINE__,
+                    "OpenWireConnector::onCommand - "
+                    "Broker closed this connection."));
+            }
+        }
+        else
+        {
+            //LOGCMS_WARN( logger, "Received an unknown command" );
+        }
+
+        delete command;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
@@ -569,11 +729,16 @@ void OpenWireConnector::onTransportException(
 {
     try
     {
-        // Inform the user.
-        fire( ex );
+        // We're disconnected - the asynchronous error is expected.
+        if( state == DISCONNECTED ){
+            return;
+        }
 
-        // Close down.
-        close();
+        // We were not closing - log the stack trace.
+        //LOGCMS_WARN( logger, ex.getStackTraceString() );
+
+        // Inform the user of the error.
+        fire( ex );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );

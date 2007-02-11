@@ -20,6 +20,7 @@
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/transport/TcpTransportFactory.h>
 #include <activemq/connector/stomp/StompConnectorFactory.h>
+#include <activemq/connector/openwire/OpenWireConnectorFactory.h>
 
 using namespace activemq;
 using namespace activemq::support;
@@ -33,10 +34,11 @@ InitDirector::InitDirector(void)
     {
         logger::LogWriter::getInstance();
         connector::stomp::StompConnectorFactory::getInstance();
+        connector::openwire::OpenWireConnectorFactory::getInstance();
         transport::TcpTransportFactory::getInstance();
         transport::IOTransportFactory::getInstance();
     }
-    
+
     refCount++;
 }
 
@@ -44,7 +46,7 @@ InitDirector::InitDirector(void)
 InitDirector::~InitDirector(void)
 {
     refCount--;
-    
+
     if( refCount == 0 )
     {
     }

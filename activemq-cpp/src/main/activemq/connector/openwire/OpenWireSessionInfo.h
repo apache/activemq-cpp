@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRESESSIONINFO_H_
 
 #include <activemq/connector/SessionInfo.h>
+#include <activemq/connector/openwire/commands/SessionInfo.h>
 #include <cms/Session.h>
 #include <string>
 
@@ -29,6 +30,9 @@ namespace openwire{
     class OpenWireSessionInfo : public SessionInfo {
 
     private:
+
+        // The OpenWire Session Info DataStructure for this Session
+        commands::SessionInfo* sessionInfo;
 
         // Acknowledge Mode of this Session
         cms::Session::AcknowledgeMode ackMode;
@@ -49,6 +53,7 @@ namespace openwire{
             sessionId = 0;
             ackMode = cms::Session::AUTO_ACKNOWLEDGE;
             transaction = NULL;
+            sessionInfo = NULL;
         }
         virtual ~OpenWireSessionInfo() {}
 
@@ -119,6 +124,27 @@ namespace openwire{
          */
         virtual void setTransactionInfo( const TransactionInfo* transaction ) {
             this->transaction = transaction;
+        }
+
+        /**
+         * Gets the OpenWire Session Info object that was used to create
+         * this session.
+         * @returns The SessionInfo for this Session or NULL if not set.
+         */
+        virtual const commands::SessionInfo* getSessionInfo() const {
+            return this->sessionInfo;
+        }
+        virtual commands::SessionInfo* getSessionInfo() {
+            return this->sessionInfo;
+        }
+
+        /**
+         * Sets the SessionInfo from OpenWire that was used to create this
+         * Session
+         * @param sessionInfo - the SessionInfo for this Session.
+         */
+        virtual void setSessionInfo( SessionInfo* sessionInfo ) {
+            this->sessionInfo = sessionInfo;
         }
 
     };
