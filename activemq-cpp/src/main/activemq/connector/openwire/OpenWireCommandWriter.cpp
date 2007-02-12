@@ -58,6 +58,9 @@ void OpenWireCommandWriter::writeCommand( Command* command )
         }
 
         openWireFormat->marshal( command, dataOutputStream );
+
+        // Now ensure that it gets sent.
+        dataOutputStream->flush();
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
