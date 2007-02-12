@@ -29,7 +29,6 @@
 #include <activemq/connector/openwire/marshal/MarshalAware.h>
 #include <activemq/connector/openwire/marshal/DataStreamMarshaller.h>
 #include <activemq/connector/openwire/marshal/v2/MarshallerFactory.h>
-#include <iostream>
 
 using namespace std;
 using namespace activemq;
@@ -200,9 +199,6 @@ transport::Command* OpenWireFormat::unmarshal( io::DataInputStream* dis )
     throw ( io::IOException ) {
 
     try{
-        
-        cout << "OpenWireFormat::unmarshal()" << endl;
-        cout.flush();
 
         if( !sizePrefixDisabled ) {
             dis->readInt();
