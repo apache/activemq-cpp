@@ -19,7 +19,9 @@
 
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <iostream>
 
+using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
@@ -81,6 +83,9 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onCommand( Command* command ) {
 
+    cout << "OpenWireFormatNegotiator::onCommand" << endl;
+    cout.flush();
+    
     DataStructure* dataStructure =
         dynamic_cast<DataStructure*>( command );
 
@@ -177,6 +182,9 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
 
             // Mark the latch
             wireInfoSentDownLatch.countDown();
+            
+            cout << "leaving OpenWireFormatNegotiator::start first time logic" << endl;
+            cout.flush();
 
         } catch( ActiveMQException& ex ) {
 

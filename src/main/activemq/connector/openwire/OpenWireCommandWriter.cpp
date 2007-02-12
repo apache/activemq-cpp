@@ -16,6 +16,7 @@
  */
 
 #include "OpenWireCommandWriter.h"
+#include <iostream>
 
 using namespace std;
 using namespace activemq;
@@ -26,7 +27,7 @@ using namespace activemq::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireCommandWriter::OpenWireCommandWriter(void)
+OpenWireCommandWriter::OpenWireCommandWriter()
 {
     this->outputStream = NULL;
     this->openWireFormat = NULL;
@@ -39,6 +40,14 @@ OpenWireCommandWriter::OpenWireCommandWriter( OutputStream* outputStream,
 {
     this->setOutputStream( outputStream );
     this->openWireFormat = openWireFormat;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+OpenWireCommandWriter::~OpenWireCommandWriter() {
+    
+    if( dataOutputStream != NULL ) {
+        delete dataOutputStream;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

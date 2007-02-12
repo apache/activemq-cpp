@@ -18,6 +18,7 @@
 #include "OpenWireCommandReader.h"
 
 #include <activemq/concurrent/Thread.h>
+#include <iostream>
 
 using namespace std;
 using namespace activemq;
@@ -29,7 +30,7 @@ using namespace activemq::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireCommandReader::OpenWireCommandReader(void)
+OpenWireCommandReader::OpenWireCommandReader()
 {
     this->inputStream = NULL;
     this->openWireFormat = NULL;
@@ -45,7 +46,15 @@ OpenWireCommandReader::OpenWireCommandReader( InputStream* inputStream,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* OpenWireCommandReader::readCommand(void)
+OpenWireCommandReader::~OpenWireCommandReader() {
+    
+    if( dataInputStream != NULL ) {
+        delete dataInputStream;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Command* OpenWireCommandReader::readCommand()
     throw ( CommandIOException )
 {
     try
@@ -87,7 +96,7 @@ size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char OpenWireCommandReader::readByte(void) throw( io::IOException )
+unsigned char OpenWireCommandReader::readByte() throw( io::IOException )
 {
     try
     {
