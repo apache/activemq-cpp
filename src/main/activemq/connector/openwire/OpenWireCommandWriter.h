@@ -62,7 +62,7 @@ namespace openwire{
         OpenWireCommandWriter( io::OutputStream* outputStream,
                                OpenWireFormat* openWireFormat );
 
-        virtual ~OpenWireCommandWriter(void) {}
+        virtual ~OpenWireCommandWriter();
 
         /**
          * Sets the target output stream.
@@ -70,14 +70,18 @@ namespace openwire{
          */
         virtual void setOutputStream( io::OutputStream* outputStream ){
             this->outputStream = outputStream;
-            delete dataOutputStream;
+            
+            if( dataOutputStream != NULL ) {
+                delete dataOutputStream;
+            }
+            
             dataOutputStream = new io::DataOutputStream( outputStream );
         }
 
         /**
          * Gets the target output stream.
          */
-        virtual io::OutputStream* getOutputStream(void){
+        virtual io::OutputStream* getOutputStream(){
             return outputStream;
         }
 
@@ -93,7 +97,7 @@ namespace openwire{
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual OpenWireFormat* getOpenWireFormat(void){
+        virtual OpenWireFormat* getOpenWireFormat(){
             return this->openWireFormat;
         }
 

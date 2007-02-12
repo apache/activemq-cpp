@@ -64,7 +64,7 @@ namespace openwire{
         OpenWireCommandReader( io::InputStream* inputStream,
                                OpenWireFormat* openWireFormat );
 
-        virtual ~OpenWireCommandReader() {}
+        virtual ~OpenWireCommandReader();
 
         /**
          * Reads a command from the given input stream.
@@ -80,7 +80,11 @@ namespace openwire{
          */
         virtual void setInputStream( io::InputStream* inputStream ){
             this->inputStream = inputStream;
-            delete dataInputStream;
+            
+            if( dataInputStream != NULL ) {
+                delete dataInputStream;
+            }
+            
             dataInputStream = new io::DataInputStream( inputStream );
         }
 
