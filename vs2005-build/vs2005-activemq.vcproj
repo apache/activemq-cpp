@@ -1997,6 +1997,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\io\LoggingInputStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\io\LoggingInputStream.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\io\LoggingOutputStream.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\io\LoggingOutputStream.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\io\OutputStream.h"
 					>
 				</File>
