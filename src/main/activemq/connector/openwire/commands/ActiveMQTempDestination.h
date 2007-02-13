@@ -57,6 +57,31 @@ namespace commands{
             ActiveMQDestination::copyDataStructure( src );
         }
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const {
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQTempDestination" << std::endl;
+            stream << ActiveMQDestination::toString();
+            stream << "Begin Class = ActiveMQTempDestination" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            return ActiveMQDestination::equals( value );
+        }
+
     };
 
 }}}}

@@ -42,7 +42,7 @@ WireFormatInfo::WireFormatInfo()
         MAGIC.push_back( 'M' );
         MAGIC.push_back( 'Q' );
     }
-    
+
     // Initialize member magic buffer to the static buffer.
     magic.resize( MAGIC.size() );
     for( std::size_t ix=0; ix<MAGIC.size(); ++ix ){
@@ -84,6 +84,86 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char WireFormatInfo::getDataStructureType() const {
     return WireFormatInfo::ID_WIREFORMATINFO;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string WireFormatInfo::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = WireFormatInfo" << std::endl;
+
+    std::vector<unsigned char> magic;
+    std::vector<unsigned char> marshalledProperties;
+
+    for( size_t imagic = 0; imagic < magic.size(); ++imagic ) {
+        stream << " Value of magic[" << imagic << "] = " << magic[imagic] << std::endl;
+    }
+
+    for( size_t imarshalledProperties = 0; imarshalledProperties < marshalledProperties.size(); ++imarshalledProperties ) {
+        stream << " Value of marshalledProperties[" << imarshalledProperties << "] = "
+               << marshalledProperties[imarshalledProperties] << std::endl;
+    }
+
+    stream << " Value of properties = " << properties.toString() << std::endl;
+    stream << " Value of version = " << version << std::endl;
+    stream << " Value of stackTraceEnabled = " << stackTraceEnabled << std::endl;
+    stream << " Value of tcpNoDelayEnabled = " << tcpNoDelayEnabled << std::endl;
+    stream << " Value of cacheEnabled = " << cacheEnabled << std::endl;
+    stream << " Value of tightEncodingEnabled = " << tightEncodingEnabled << std::endl;
+    stream << " Value of sizePrefixDisabled = " << sizePrefixDisabled << std::endl;
+    stream << " Value of maxInactivityDuration = " << maxInactivityDuration << std::endl;
+
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = WireFormatInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::equals( const DataStructure* value ) const {
+
+    const WireFormatInfo* wireFormatInfo =
+        dynamic_cast<const WireFormatInfo*>( value );
+
+    if( value == NULL || wireFormatInfo == NULL ) {
+        return false;
+    }
+
+    if( magic != wireFormatInfo->getMagic() ) {
+        return false;
+    }
+    if( marshalledProperties != wireFormatInfo->getMarshalledProperties() ) {
+        return false;
+    }
+    if( !properties.equals( wireFormatInfo->properties ) ) {
+        return false;
+    }
+    if( version != wireFormatInfo->getVersion() ) {
+        return false;
+    }
+    if( stackTraceEnabled != wireFormatInfo->isStackTraceEnabled() ) {
+        return false;
+    }
+    if( tcpNoDelayEnabled != wireFormatInfo->isTcpNoDelayEnabled() ) {
+        return false;
+    }
+    if( cacheEnabled != wireFormatInfo->isCacheEnabled() ) {
+        return false;
+    }
+    if( tightEncodingEnabled != wireFormatInfo->isTightEncodingEnabled() ) {
+        return false;
+    }
+    if( sizePrefixDisabled != wireFormatInfo->isSizePrefixDisabled() ) {
+        return false;
+    }
+    if( maxInactivityDuration != wireFormatInfo->getMaxInactivityDuration() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

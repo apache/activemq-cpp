@@ -101,6 +101,58 @@ namespace commands{
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const {
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQMessageBase" << std::endl;
+            stream << " Value of ackHandler = " << ackHandler << std::endl;
+            stream << " Value of redeliveryCount = " << this->redeliveryCount << std::endl;
+            stream << " Value of properties = " << this->properties.toString() << std::endl;
+            stream << commands::Message::toString();
+            stream << "End Class = ActiveMQMessageBase" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+
+            const ActiveMQMessageBase<T>* valuePtr =
+                dynamic_cast< const ActiveMQMessageBase<T>* >( value );
+
+            if( value == NULL || valuePtr == NULL ) {
+                return false;
+            }
+
+            // Check this class's fields
+            if( ackHandler != valuePtr->getAckHandler() ){
+                return false;
+            }
+            if( redeliveryCount != valuePtr->getRedeliveryCount() ) {
+                return false;
+            }
+            if( !properties.equals( valuePtr->properties ) ) {
+                return false;
+            }
+
+            // Now check the base class
+            if( !commands::Message::equals( value ) ) {
+                return false;
+            }
+
+            return true;
+        }
+
     public:   // core::ActiveMQMessage
 
         /**

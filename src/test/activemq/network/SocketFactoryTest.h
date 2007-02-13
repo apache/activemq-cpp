@@ -161,9 +161,9 @@ namespace network{
 
             Socket* client = SocketFactory::createSocket(properties);
 
-            BufferedSocket* buffSocket = dynamic_cast<BufferedSocket*>(client);
+            //BufferedSocket* buffSocket = dynamic_cast<BufferedSocket*>(client);
 
-            CPPUNIT_ASSERT( buffSocket != NULL );
+            //CPPUNIT_ASSERT( buffSocket != NULL );
 
             synchronized(&serverThread.mutex)
             {

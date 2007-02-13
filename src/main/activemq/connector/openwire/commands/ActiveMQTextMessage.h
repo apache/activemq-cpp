@@ -33,7 +33,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQTextMessage : 
+    class ActiveMQTextMessage :
         public ActiveMQMessageBase<cms::TextMessage>
     {
     public:
@@ -52,9 +52,9 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const { 
+        virtual DataStructure* cloneDataStructure() const {
             ActiveMQTextMessage* message = new ActiveMQTextMessage();
-            message->copyDataStructure( this );            
+            message->copyDataStructure( this );
             return message;
         }
 
@@ -67,20 +67,45 @@ namespace commands{
             ActiveMQMessageBase<cms::TextMessage>::copyDataStructure( src );
         }
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const{
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQTextMessage" << std::endl;
+            stream << ActiveMQMessageBase<cms::TextMessage>::toString();
+            stream << "Begin Class = ActiveMQTextMessage" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            return ActiveMQMessageBase<cms::TextMessage>::equals( value );
+        }
+
     public:   // CMS Message
-    
+
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
         virtual cms::TextMessage* clone(void) const {
-            return dynamic_cast<cms::TextMessage*>( 
+            return dynamic_cast<cms::TextMessage*>(
                 this->cloneDataStructure() );
         }
-        
+
     public:   // cms::TextMessage
-    
+
         /**
          * Gets the message character buffer.
          * @return The message character buffer.
@@ -89,7 +114,7 @@ namespace commands{
 
         /**
          * Sets the message contents, does not take ownership of the passed
-         * char*, but copies it instead.  
+         * char*, but copies it instead.
          * @param msg The message buffer.
          */
         virtual void setText( const char* msg ) throw( cms::CMSException );

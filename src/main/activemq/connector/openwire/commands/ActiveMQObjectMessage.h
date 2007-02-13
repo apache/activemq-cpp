@@ -31,7 +31,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQObjectMessage : 
+    class ActiveMQObjectMessage :
         public ActiveMQMessageBase<cms::ObjectMessage>
     {
     public:
@@ -50,9 +50,9 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const { 
+        virtual DataStructure* cloneDataStructure() const {
             ActiveMQObjectMessage* message = new ActiveMQObjectMessage();
-            message->copyDataStructure( this );            
+            message->copyDataStructure( this );
             return message;
         }
 
@@ -64,16 +64,41 @@ namespace commands{
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQMessageBase<cms::ObjectMessage>::copyDataStructure( src );
         }
-        
+
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const{
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQObjectMessage" << std::endl;
+            stream << ActiveMQMessageBase<cms::ObjectMessage>::toString();
+            stream << "Begin Class = ActiveMQObjectMessage" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            return ActiveMQMessageBase<cms::ObjectMessage>::equals( value );
+        }
+
     public:  // cms::Message
-    
+
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
         virtual cms::Message* clone(void) const {
-            return dynamic_cast<cms::Message*>( 
+            return dynamic_cast<cms::Message*>(
                 this->cloneDataStructure() );
         }
 
