@@ -95,7 +95,6 @@ std::string SessionInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = SessionInfo" << std::endl;
 
@@ -109,7 +108,17 @@ bool SessionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getSessionId() != NULL ) {
+        if( !this->getSessionId()->equals( valuePtr->getSessionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getSessionId() != NULL ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

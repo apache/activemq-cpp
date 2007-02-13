@@ -85,7 +85,6 @@ std::string Response::toString() const {
     stream << "Begin Class = Response" << std::endl;
     stream << " Value of Response::ID_RESPONSE = 30" << std::endl; 
     stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Response>::toString();
     stream << "End Class = Response" << std::endl;
 
@@ -99,7 +98,13 @@ bool Response::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Response>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

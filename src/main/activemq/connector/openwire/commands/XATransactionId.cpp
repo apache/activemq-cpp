@@ -93,7 +93,6 @@ std::string XATransactionId::toString() const {
     for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
         stream << " Value of BranchQualifier[" << ibranchQualifier << "] = " << this->getBranchQualifier()[ibranchQualifier] << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << TransactionId::toString();
     stream << "End Class = XATransactionId" << std::endl;
 
@@ -107,7 +106,23 @@ bool XATransactionId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getFormatId() != valuePtr->getFormatId() ) {
+        return false;
+    }
+    for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
+        if( this->getGlobalTransactionId()[iglobalTransactionId] != valuePtr->getGlobalTransactionId()[iglobalTransactionId] ) {
+            return false;
+        }
+    }
+    for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
+        if( this->getBranchQualifier()[ibranchQualifier] != valuePtr->getBranchQualifier()[ibranchQualifier] ) {
+            return false;
+        }
+    }
+    if( !TransactionId::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

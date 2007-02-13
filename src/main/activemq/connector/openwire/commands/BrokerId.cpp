@@ -85,7 +85,6 @@ std::string BrokerId::toString() const {
     stream << "Begin Class = BrokerId" << std::endl;
     stream << " Value of BrokerId::ID_BROKERID = 124" << std::endl; 
     stream << " Value of Value = " << this->getValue() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = BrokerId" << std::endl;
 
@@ -99,7 +98,13 @@ bool BrokerId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getValue() != valuePtr->getValue() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -88,7 +88,6 @@ std::string DiscoveryEvent::toString() const {
     stream << " Value of DiscoveryEvent::ID_DISCOVERYEVENT = 40" << std::endl; 
     stream << " Value of ServiceName = " << this->getServiceName() << std::endl;
     stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = DiscoveryEvent" << std::endl;
 
@@ -102,7 +101,16 @@ bool DiscoveryEvent::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getServiceName() != valuePtr->getServiceName() ) {
+        return false;
+    }
+    if( this->getBrokerName() != valuePtr->getBrokerName() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

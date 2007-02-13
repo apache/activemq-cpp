@@ -95,7 +95,6 @@ std::string ExceptionResponse::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << Response::toString();
     stream << "End Class = ExceptionResponse" << std::endl;
 
@@ -109,7 +108,17 @@ bool ExceptionResponse::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getException() != NULL ) {
+        if( !this->getException()->equals( valuePtr->getException() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getException() != NULL ) {
+        return false;
+    }
+    if( !Response::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -108,7 +108,6 @@ std::string JournalQueueAck::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalQueueAck" << std::endl;
 
@@ -122,7 +121,24 @@ bool JournalQueueAck::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getMessageAck() != NULL ) {
+        if( !this->getMessageAck()->equals( valuePtr->getMessageAck() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getMessageAck() != NULL ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

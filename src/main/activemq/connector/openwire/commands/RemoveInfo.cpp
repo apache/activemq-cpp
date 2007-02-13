@@ -95,7 +95,6 @@ std::string RemoveInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = RemoveInfo" << std::endl;
 
@@ -109,7 +108,17 @@ bool RemoveInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getObjectId() != NULL ) {
+        if( !this->getObjectId()->equals( valuePtr->getObjectId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getObjectId() != NULL ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

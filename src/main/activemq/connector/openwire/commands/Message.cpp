@@ -269,7 +269,6 @@ std::string Message::toString() const {
     stream << " Value of UserID = " << this->getUserID() << std::endl;
     stream << " Value of RecievedByDFBridge = " << this->isRecievedByDFBridge() << std::endl;
     stream << " Value of Droppable = " << this->isDroppable() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = Message" << std::endl;
 
@@ -283,7 +282,134 @@ bool Message::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getProducerId() != NULL ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getProducerId() != NULL ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getTransactionId() != NULL ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getTransactionId() != NULL ) {
+        return false;
+    }
+    if( this->getOriginalDestination() != NULL ) {
+        if( !this->getOriginalDestination()->equals( valuePtr->getOriginalDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getOriginalDestination() != NULL ) {
+        return false;
+    }
+    if( this->getMessageId() != NULL ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getMessageId() != NULL ) {
+        return false;
+    }
+    if( this->getOriginalTransactionId() != NULL ) {
+        if( !this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getOriginalTransactionId() != NULL ) {
+        return false;
+    }
+    if( this->getGroupID() != valuePtr->getGroupID() ) {
+        return false;
+    }
+    if( this->getGroupSequence() != valuePtr->getGroupSequence() ) {
+        return false;
+    }
+    if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
+        return false;
+    }
+    if( this->isPersistent() != valuePtr->isPersistent() ) {
+        return false;
+    }
+    if( this->getExpiration() != valuePtr->getExpiration() ) {
+        return false;
+    }
+    if( this->getPriority() != valuePtr->getPriority() ) {
+        return false;
+    }
+    if( this->getReplyTo() != NULL ) {
+        if( !this->getReplyTo()->equals( valuePtr->getReplyTo() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getReplyTo() != NULL ) {
+        return false;
+    }
+    if( this->getTimestamp() != valuePtr->getTimestamp() ) {
+        return false;
+    }
+    if( this->getType() != valuePtr->getType() ) {
+        return false;
+    }
+    for( size_t icontent = 0; icontent < this->getContent().size(); ++icontent ) {
+        if( this->getContent()[icontent] != valuePtr->getContent()[icontent] ) {
+            return false;
+        }
+    }
+    for( size_t imarshalledProperties = 0; imarshalledProperties < this->getMarshalledProperties().size(); ++imarshalledProperties ) {
+        if( this->getMarshalledProperties()[imarshalledProperties] != valuePtr->getMarshalledProperties()[imarshalledProperties] ) {
+            return false;
+        }
+    }
+    if( this->getDataStructure() != NULL ) {
+        if( !this->getDataStructure()->equals( valuePtr->getDataStructure() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDataStructure() != NULL ) {
+        return false;
+    }
+    if( this->getTargetConsumerId() != NULL ) {
+        if( !this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getTargetConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->isCompressed() != valuePtr->isCompressed() ) {
+        return false;
+    }
+    if( this->getRedeliveryCounter() != valuePtr->getRedeliveryCounter() ) {
+        return false;
+    }
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            return false;
+        }
+    }
+    if( this->getArrival() != valuePtr->getArrival() ) {
+        return false;
+    }
+    if( this->getUserID() != valuePtr->getUserID() ) {
+        return false;
+    }
+    if( this->isRecievedByDFBridge() != valuePtr->isRecievedByDFBridge() ) {
+        return false;
+    }
+    if( this->isDroppable() != valuePtr->isDroppable() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

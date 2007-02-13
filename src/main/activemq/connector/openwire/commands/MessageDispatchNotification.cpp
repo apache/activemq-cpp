@@ -124,7 +124,6 @@ std::string MessageDispatchNotification::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = MessageDispatchNotification" << std::endl;
 
@@ -138,7 +137,34 @@ bool MessageDispatchNotification::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConsumerId() != NULL ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getDeliverySequenceId() != valuePtr->getDeliverySequenceId() ) {
+        return false;
+    }
+    if( this->getMessageId() != NULL ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getMessageId() != NULL ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

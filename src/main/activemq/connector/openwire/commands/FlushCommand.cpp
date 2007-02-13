@@ -82,7 +82,6 @@ std::string FlushCommand::toString() const {
 
     stream << "Begin Class = FlushCommand" << std::endl;
     stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl; 
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = FlushCommand" << std::endl;
 
@@ -96,6 +95,9 @@ bool FlushCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 

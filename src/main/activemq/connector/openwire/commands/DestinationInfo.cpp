@@ -134,7 +134,6 @@ std::string DestinationInfo::toString() const {
             stream << "   Object is NULL" << std::endl;
         }
     }
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = DestinationInfo" << std::endl;
 
@@ -148,7 +147,39 @@ bool DestinationInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConnectionId() != NULL ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConnectionId() != NULL ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getOperationType() != valuePtr->getOperationType() ) {
+        return false;
+    }
+    if( this->getTimeout() != valuePtr->getTimeout() ) {
+        return false;
+    }
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            return false;
+        }
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

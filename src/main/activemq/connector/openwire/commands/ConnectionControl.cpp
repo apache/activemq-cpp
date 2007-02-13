@@ -97,7 +97,6 @@ std::string ConnectionControl::toString() const {
     stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;
     stream << " Value of Resume = " << this->isResume() << std::endl;
     stream << " Value of Suspend = " << this->isSuspend() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ConnectionControl" << std::endl;
 
@@ -111,7 +110,25 @@ bool ConnectionControl::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->isClose() != valuePtr->isClose() ) {
+        return false;
+    }
+    if( this->isExit() != valuePtr->isExit() ) {
+        return false;
+    }
+    if( this->isFaultTolerant() != valuePtr->isFaultTolerant() ) {
+        return false;
+    }
+    if( this->isResume() != valuePtr->isResume() ) {
+        return false;
+    }
+    if( this->isSuspend() != valuePtr->isSuspend() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

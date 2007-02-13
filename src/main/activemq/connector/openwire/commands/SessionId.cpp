@@ -88,7 +88,6 @@ std::string SessionId::toString() const {
     stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl; 
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = SessionId" << std::endl;
 
@@ -102,7 +101,16 @@ bool SessionId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConnectionId() != valuePtr->getConnectionId() ) {
+        return false;
+    }
+    if( this->getValue() != valuePtr->getValue() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

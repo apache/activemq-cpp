@@ -82,7 +82,6 @@ std::string KeepAliveInfo::toString() const {
 
     stream << "Begin Class = KeepAliveInfo" << std::endl;
     stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl; 
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = KeepAliveInfo" << std::endl;
 
@@ -96,6 +95,9 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 

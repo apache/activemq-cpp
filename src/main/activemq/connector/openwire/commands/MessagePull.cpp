@@ -111,7 +111,6 @@ std::string MessagePull::toString() const {
         stream << "   Object is NULL" << std::endl;
     }
     stream << " Value of Timeout = " << this->getTimeout() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = MessagePull" << std::endl;
 
@@ -125,7 +124,27 @@ bool MessagePull::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConsumerId() != NULL ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getTimeout() != valuePtr->getTimeout() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

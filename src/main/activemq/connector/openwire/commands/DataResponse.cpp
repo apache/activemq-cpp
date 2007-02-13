@@ -95,7 +95,6 @@ std::string DataResponse::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << Response::toString();
     stream << "End Class = DataResponse" << std::endl;
 
@@ -109,7 +108,17 @@ bool DataResponse::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getData() != NULL ) {
+        if( !this->getData()->equals( valuePtr->getData() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getData() != NULL ) {
+        return false;
+    }
+    if( !Response::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

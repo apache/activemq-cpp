@@ -101,7 +101,6 @@ std::string JournalTransaction::toString() const {
     }
     stream << " Value of Type = " << this->getType() << std::endl;
     stream << " Value of WasPrepared = " << this->getWasPrepared() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalTransaction" << std::endl;
 
@@ -115,7 +114,23 @@ bool JournalTransaction::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getTransactionId() != NULL ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getTransactionId() != NULL ) {
+        return false;
+    }
+    if( this->getType() != valuePtr->getType() ) {
+        return false;
+    }
+    if( this->getWasPrepared() != valuePtr->getWasPrepared() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
