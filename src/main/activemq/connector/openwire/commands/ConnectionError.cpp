@@ -90,6 +90,42 @@ unsigned char ConnectionError::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConnectionError::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConnectionError" << std::endl;
+    stream << " Value of ConnectionError::ID_CONNECTIONERROR = 16" << std::endl; 
+    stream << " Value of Exception is Below:" << std::endl;
+    if( this->getException() != NULL ) {
+        stream << this->getException()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of ConnectionId is Below:" << std::endl;
+    if( this->getConnectionId() != NULL ) {
+        stream << this->getConnectionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ConnectionError" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionError::equals( const DataStructure* value ) const {
+    const ConnectionError* valuePtr = dynamic_cast<const ConnectionError*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const BrokerError* ConnectionError::getException() const {
     return exception;
 }

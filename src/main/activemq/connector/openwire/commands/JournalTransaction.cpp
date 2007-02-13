@@ -87,6 +87,38 @@ unsigned char JournalTransaction::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string JournalTransaction::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = JournalTransaction" << std::endl;
+    stream << " Value of JournalTransaction::ID_JOURNALTRANSACTION = 54" << std::endl; 
+    stream << " Value of TransactionId is Below:" << std::endl;
+    if( this->getTransactionId() != NULL ) {
+        stream << this->getTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Type = " << this->getType() << std::endl;
+    stream << " Value of WasPrepared = " << this->getWasPrepared() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = JournalTransaction" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool JournalTransaction::equals( const DataStructure* value ) const {
+    const JournalTransaction* valuePtr = dynamic_cast<const JournalTransaction*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const TransactionId* JournalTransaction::getTransactionId() const {
     return transactionId;
 }

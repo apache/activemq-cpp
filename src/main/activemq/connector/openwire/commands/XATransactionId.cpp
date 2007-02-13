@@ -80,6 +80,37 @@ unsigned char XATransactionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string XATransactionId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = XATransactionId" << std::endl;
+    stream << " Value of XATransactionId::ID_XATRANSACTIONID = 112" << std::endl; 
+    stream << " Value of FormatId = " << this->getFormatId() << std::endl;
+    for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
+        stream << " Value of GlobalTransactionId[" << iglobalTransactionId << "] = " << this->getGlobalTransactionId()[iglobalTransactionId] << std::endl;
+    }
+    for( size_t ibranchQualifier = 0; ibranchQualifier < this->getBranchQualifier().size(); ++ibranchQualifier ) {
+        stream << " Value of BranchQualifier[" << ibranchQualifier << "] = " << this->getBranchQualifier()[ibranchQualifier] << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << TransactionId::toString();
+    stream << "End Class = XATransactionId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool XATransactionId::equals( const DataStructure* value ) const {
+    const XATransactionId* valuePtr = dynamic_cast<const XATransactionId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int XATransactionId::getFormatId() const {
     return formatId;
 }

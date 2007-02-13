@@ -85,6 +85,37 @@ unsigned char LocalTransactionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string LocalTransactionId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = LocalTransactionId" << std::endl;
+    stream << " Value of LocalTransactionId::ID_LOCALTRANSACTIONID = 111" << std::endl; 
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    stream << " Value of ConnectionId is Below:" << std::endl;
+    if( this->getConnectionId() != NULL ) {
+        stream << this->getConnectionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << TransactionId::toString();
+    stream << "End Class = LocalTransactionId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool LocalTransactionId::equals( const DataStructure* value ) const {
+    const LocalTransactionId* valuePtr = dynamic_cast<const LocalTransactionId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 long long LocalTransactionId::getValue() const {
     return value;
 }

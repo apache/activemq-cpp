@@ -92,6 +92,43 @@ unsigned char MessagePull::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string MessagePull::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = MessagePull" << std::endl;
+    stream << " Value of MessagePull::ID_MESSAGEPULL = 20" << std::endl; 
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Timeout = " << this->getTimeout() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = MessagePull" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessagePull::equals( const DataStructure* value ) const {
+    const MessagePull* valuePtr = dynamic_cast<const MessagePull*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConsumerId* MessagePull::getConsumerId() const {
     return consumerId;
 }

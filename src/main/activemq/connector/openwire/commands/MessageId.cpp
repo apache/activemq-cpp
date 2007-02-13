@@ -87,6 +87,38 @@ unsigned char MessageId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string MessageId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = MessageId" << std::endl;
+    stream << " Value of MessageId::ID_MESSAGEID = 110" << std::endl; 
+    stream << " Value of ProducerId is Below:" << std::endl;
+    if( this->getProducerId() != NULL ) {
+        stream << this->getProducerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of ProducerSequenceId = " << this->getProducerSequenceId() << std::endl;
+    stream << " Value of BrokerSequenceId = " << this->getBrokerSequenceId() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = MessageId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageId::equals( const DataStructure* value ) const {
+    const MessageId* valuePtr = dynamic_cast<const MessageId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ProducerId* MessageId::getProducerId() const {
     return producerId;
 }

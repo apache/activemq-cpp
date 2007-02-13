@@ -78,6 +78,31 @@ unsigned char ConnectionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConnectionId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConnectionId" << std::endl;
+    stream << " Value of ConnectionId::ID_CONNECTIONID = 120" << std::endl; 
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = ConnectionId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionId::equals( const DataStructure* value ) const {
+    const ConnectionId* valuePtr = dynamic_cast<const ConnectionId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& ConnectionId::getValue() const {
     return value;
 }

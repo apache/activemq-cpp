@@ -83,6 +83,36 @@ unsigned char ExceptionResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ExceptionResponse::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ExceptionResponse" << std::endl;
+    stream << " Value of ExceptionResponse::ID_EXCEPTIONRESPONSE = 31" << std::endl; 
+    stream << " Value of Exception is Below:" << std::endl;
+    if( this->getException() != NULL ) {
+        stream << this->getException()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << Response::toString();
+    stream << "End Class = ExceptionResponse" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ExceptionResponse::equals( const DataStructure* value ) const {
+    const ExceptionResponse* valuePtr = dynamic_cast<const ExceptionResponse*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const BrokerError* ExceptionResponse::getException() const {
     return exception;
 }

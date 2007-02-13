@@ -85,6 +85,21 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const;
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const;
+
         virtual const ConnectionId* getConnectionId() const;
         virtual ConnectionId* getConnectionId();
         virtual void setConnectionId( ConnectionId* connectionId );

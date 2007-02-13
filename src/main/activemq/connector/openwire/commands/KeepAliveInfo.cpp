@@ -75,3 +75,27 @@ unsigned char KeepAliveInfo::getDataStructureType() const {
     return KeepAliveInfo::ID_KEEPALIVEINFO; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::string KeepAliveInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = KeepAliveInfo" << std::endl;
+    stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl; 
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = KeepAliveInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool KeepAliveInfo::equals( const DataStructure* value ) const {
+    const KeepAliveInfo* valuePtr = dynamic_cast<const KeepAliveInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+

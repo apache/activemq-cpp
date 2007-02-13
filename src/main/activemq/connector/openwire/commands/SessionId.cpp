@@ -80,6 +80,32 @@ unsigned char SessionId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string SessionId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = SessionId" << std::endl;
+    stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl; 
+    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = SessionId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool SessionId::equals( const DataStructure* value ) const {
+    const SessionId* valuePtr = dynamic_cast<const SessionId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& SessionId::getConnectionId() const {
     return connectionId;
 }

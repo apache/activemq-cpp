@@ -78,6 +78,31 @@ unsigned char BrokerId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string BrokerId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = BrokerId" << std::endl;
+    stream << " Value of BrokerId::ID_BROKERID = 124" << std::endl; 
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = BrokerId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool BrokerId::equals( const DataStructure* value ) const {
+    const BrokerId* valuePtr = dynamic_cast<const BrokerId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& BrokerId::getValue() const {
     return value;
 }

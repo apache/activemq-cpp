@@ -82,6 +82,33 @@ unsigned char ConsumerId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConsumerId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConsumerId" << std::endl;
+    stream << " Value of ConsumerId::ID_CONSUMERID = 122" << std::endl; 
+    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
+    stream << " Value of SessionId = " << this->getSessionId() << std::endl;
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = ConsumerId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerId::equals( const DataStructure* value ) const {
+    const ConsumerId* valuePtr = dynamic_cast<const ConsumerId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& ConsumerId::getConnectionId() const {
     return connectionId;
 }

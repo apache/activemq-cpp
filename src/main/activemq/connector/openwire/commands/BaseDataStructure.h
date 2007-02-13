@@ -21,13 +21,15 @@
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/util/Config.h>
 
+#include <string>
+
 namespace activemq{
 namespace connector{
 namespace openwire{
 
     // Forward Declare for now
     class OpenWireFormat;
-    
+
 namespace commands{
 
     class BaseDataStructure : public DataStructure
@@ -50,19 +52,19 @@ namespace commands{
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
-        
+
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void afterMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
-        
+
         /**
          * Perform any processing needed before an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void beforeUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED) {}
-        
+
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
@@ -74,8 +76,8 @@ namespace commands{
          * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @param data - vector of object binary data
-         */ 
-        virtual void setMarshaledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED, 
+         */
+        virtual void setMarshaledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED,
                                         const std::vector<char>& data AMQCPP_UNUSED) {}
 
         /**
@@ -83,9 +85,9 @@ namespace commands{
          * marshaled form.
          * @param wireFormat - the wireformat object to control unmarshaling
          * @return buffer that holds the objects data.
-         */ 
+         */
         virtual std::vector<unsigned char> getMarshaledForm( OpenWireFormat* wireFormat AMQCPP_UNUSED) {
-            return std::vector<unsigned char>(); 
+            return std::vector<unsigned char>();
         }
 
         /**
@@ -95,6 +97,25 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src AMQCPP_UNUSED ) {
             // Nothing to do here
+        }
+
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const {
+            return std::string("activemq::connector::openwire::commands::BaseDataStructure");
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value AMQCPP_UNUSED ) const {
+            return true;
         }
 
     };

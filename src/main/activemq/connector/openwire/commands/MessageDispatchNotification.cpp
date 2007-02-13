@@ -99,6 +99,49 @@ unsigned char MessageDispatchNotification::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string MessageDispatchNotification::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = MessageDispatchNotification" << std::endl;
+    stream << " Value of MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION = 90" << std::endl; 
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of DeliverySequenceId = " << this->getDeliverySequenceId() << std::endl;
+    stream << " Value of MessageId is Below:" << std::endl;
+    if( this->getMessageId() != NULL ) {
+        stream << this->getMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = MessageDispatchNotification" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageDispatchNotification::equals( const DataStructure* value ) const {
+    const MessageDispatchNotification* valuePtr = dynamic_cast<const MessageDispatchNotification*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConsumerId* MessageDispatchNotification::getConsumerId() const {
     return consumerId;
 }

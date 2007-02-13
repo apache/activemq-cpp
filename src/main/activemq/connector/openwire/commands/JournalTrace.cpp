@@ -78,6 +78,31 @@ unsigned char JournalTrace::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string JournalTrace::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = JournalTrace" << std::endl;
+    stream << " Value of JournalTrace::ID_JOURNALTRACE = 53" << std::endl; 
+    stream << " Value of Message = " << this->getMessage() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = JournalTrace" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool JournalTrace::equals( const DataStructure* value ) const {
+    const JournalTrace* valuePtr = dynamic_cast<const JournalTrace*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& JournalTrace::getMessage() const {
     return message;
 }

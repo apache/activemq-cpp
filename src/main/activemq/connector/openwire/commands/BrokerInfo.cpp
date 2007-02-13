@@ -111,6 +111,52 @@ unsigned char BrokerInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string BrokerInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = BrokerInfo" << std::endl;
+    stream << " Value of BrokerInfo::ID_BROKERINFO = 2" << std::endl; 
+    stream << " Value of BrokerId is Below:" << std::endl;
+    if( this->getBrokerId() != NULL ) {
+        stream << this->getBrokerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of BrokerURL = " << this->getBrokerURL() << std::endl;
+    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
+        stream << " Value of PeerBrokerInfos[" << ipeerBrokerInfos << "] is Below:" << std::endl;
+        if( this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
+            stream << this->getPeerBrokerInfos()[ipeerBrokerInfos]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
+    stream << " Value of SlaveBroker = " << this->isSlaveBroker() << std::endl;
+    stream << " Value of MasterBroker = " << this->isMasterBroker() << std::endl;
+    stream << " Value of FaultTolerantConfiguration = " << this->isFaultTolerantConfiguration() << std::endl;
+    stream << " Value of DuplexConnection = " << this->isDuplexConnection() << std::endl;
+    stream << " Value of NetworkConnection = " << this->isNetworkConnection() << std::endl;
+    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = BrokerInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool BrokerInfo::equals( const DataStructure* value ) const {
+    const BrokerInfo* valuePtr = dynamic_cast<const BrokerInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const BrokerId* BrokerInfo::getBrokerId() const {
     return brokerId;
 }

@@ -86,6 +86,35 @@ unsigned char ConnectionControl::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConnectionControl::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConnectionControl" << std::endl;
+    stream << " Value of ConnectionControl::ID_CONNECTIONCONTROL = 18" << std::endl; 
+    stream << " Value of Close = " << this->isClose() << std::endl;
+    stream << " Value of Exit = " << this->isExit() << std::endl;
+    stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;
+    stream << " Value of Resume = " << this->isResume() << std::endl;
+    stream << " Value of Suspend = " << this->isSuspend() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ConnectionControl" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConnectionControl::equals( const DataStructure* value ) const {
+    const ConnectionControl* valuePtr = dynamic_cast<const ConnectionControl*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ConnectionControl::isClose() const {
     return close;
 }

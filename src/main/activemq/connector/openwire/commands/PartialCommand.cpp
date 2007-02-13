@@ -79,6 +79,34 @@ unsigned char PartialCommand::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string PartialCommand::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = PartialCommand" << std::endl;
+    stream << " Value of PartialCommand::ID_PARTIALCOMMAND = 60" << std::endl; 
+    stream << " Value of CommandId = " << this->getCommandId() << std::endl;
+    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
+        stream << " Value of Data[" << idata << "] = " << this->getData()[idata] << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = PartialCommand" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool PartialCommand::equals( const DataStructure* value ) const {
+    const PartialCommand* valuePtr = dynamic_cast<const PartialCommand*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int PartialCommand::getCommandId() const {
     return commandId;
 }

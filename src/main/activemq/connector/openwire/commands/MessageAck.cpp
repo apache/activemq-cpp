@@ -115,6 +115,62 @@ unsigned char MessageAck::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string MessageAck::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = MessageAck" << std::endl;
+    stream << " Value of MessageAck::ID_MESSAGEACK = 22" << std::endl; 
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of TransactionId is Below:" << std::endl;
+    if( this->getTransactionId() != NULL ) {
+        stream << this->getTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of AckType = " << this->getAckType() << std::endl;
+    stream << " Value of FirstMessageId is Below:" << std::endl;
+    if( this->getFirstMessageId() != NULL ) {
+        stream << this->getFirstMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of LastMessageId is Below:" << std::endl;
+    if( this->getLastMessageId() != NULL ) {
+        stream << this->getLastMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of MessageCount = " << this->getMessageCount() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = MessageAck" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageAck::equals( const DataStructure* value ) const {
+    const MessageAck* valuePtr = dynamic_cast<const MessageAck*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ActiveMQDestination* MessageAck::getDestination() const {
     return destination;
 }

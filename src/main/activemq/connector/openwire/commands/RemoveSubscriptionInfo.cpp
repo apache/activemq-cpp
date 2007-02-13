@@ -87,6 +87,38 @@ unsigned char RemoveSubscriptionInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string RemoveSubscriptionInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = RemoveSubscriptionInfo" << std::endl;
+    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 0" << std::endl; 
+    stream << " Value of ConnectionId is Below:" << std::endl;
+    if( this->getConnectionId() != NULL ) {
+        stream << this->getConnectionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
+    stream << " Value of ClientId = " << this->getClientId() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = RemoveSubscriptionInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
+    const RemoveSubscriptionInfo* valuePtr = dynamic_cast<const RemoveSubscriptionInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConnectionId* RemoveSubscriptionInfo::getConnectionId() const {
     return connectionId;
 }

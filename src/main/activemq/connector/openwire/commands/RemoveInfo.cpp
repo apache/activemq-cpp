@@ -83,6 +83,36 @@ unsigned char RemoveInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string RemoveInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = RemoveInfo" << std::endl;
+    stream << " Value of RemoveInfo::ID_REMOVEINFO = 12" << std::endl; 
+    stream << " Value of ObjectId is Below:" << std::endl;
+    if( this->getObjectId() != NULL ) {
+        stream << this->getObjectId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = RemoveInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool RemoveInfo::equals( const DataStructure* value ) const {
+    const RemoveInfo* valuePtr = dynamic_cast<const RemoveInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const DataStructure* RemoveInfo::getObjectId() const {
     return objectId;
 }

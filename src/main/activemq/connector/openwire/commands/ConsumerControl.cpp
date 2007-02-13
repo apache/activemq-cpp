@@ -93,6 +93,41 @@ unsigned char ConsumerControl::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConsumerControl::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConsumerControl" << std::endl;
+    stream << " Value of ConsumerControl::ID_CONSUMERCONTROL = 17" << std::endl; 
+    stream << " Value of Close = " << this->isClose() << std::endl;
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Prefetch = " << this->getPrefetch() << std::endl;
+    stream << " Value of Flush = " << this->isFlush() << std::endl;
+    stream << " Value of Start = " << this->isStart() << std::endl;
+    stream << " Value of Stop = " << this->isStop() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ConsumerControl" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerControl::equals( const DataStructure* value ) const {
+    const ConsumerControl* valuePtr = dynamic_cast<const ConsumerControl*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 bool ConsumerControl::isClose() const {
     return close;
 }
