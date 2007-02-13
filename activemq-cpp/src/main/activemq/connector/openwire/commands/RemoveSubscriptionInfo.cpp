@@ -101,7 +101,6 @@ std::string RemoveSubscriptionInfo::toString() const {
     }
     stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
     stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = RemoveSubscriptionInfo" << std::endl;
 
@@ -115,7 +114,23 @@ bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConnectionId() != NULL ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConnectionId() != NULL ) {
+        return false;
+    }
+    if( this->getSubcriptionName() != valuePtr->getSubcriptionName() ) {
+        return false;
+    }
+    if( this->getClientId() != valuePtr->getClientId() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

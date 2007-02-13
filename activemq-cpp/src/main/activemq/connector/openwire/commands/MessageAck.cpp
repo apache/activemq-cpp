@@ -153,7 +153,6 @@ std::string MessageAck::toString() const {
         stream << "   Object is NULL" << std::endl;
     }
     stream << " Value of MessageCount = " << this->getMessageCount() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = MessageAck" << std::endl;
 
@@ -167,7 +166,51 @@ bool MessageAck::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getTransactionId() != NULL ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getTransactionId() != NULL ) {
+        return false;
+    }
+    if( this->getConsumerId() != NULL ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->getAckType() != valuePtr->getAckType() ) {
+        return false;
+    }
+    if( this->getFirstMessageId() != NULL ) {
+        if( !this->getFirstMessageId()->equals( valuePtr->getFirstMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getFirstMessageId() != NULL ) {
+        return false;
+    }
+    if( this->getLastMessageId() != NULL ) {
+        if( !this->getLastMessageId()->equals( valuePtr->getLastMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getLastMessageId() != NULL ) {
+        return false;
+    }
+    if( this->getMessageCount() != valuePtr->getMessageCount() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

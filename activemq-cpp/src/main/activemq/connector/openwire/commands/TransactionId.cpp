@@ -82,7 +82,6 @@ std::string TransactionId::toString() const {
 
     stream << "Begin Class = TransactionId" << std::endl;
     stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl; 
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = TransactionId" << std::endl;
 
@@ -96,6 +95,9 @@ bool TransactionId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 

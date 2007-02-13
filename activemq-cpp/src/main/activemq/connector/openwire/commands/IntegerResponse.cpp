@@ -85,7 +85,6 @@ std::string IntegerResponse::toString() const {
     stream << "Begin Class = IntegerResponse" << std::endl;
     stream << " Value of IntegerResponse::ID_INTEGERRESPONSE = 34" << std::endl; 
     stream << " Value of Result = " << this->getResult() << std::endl;
-    // Copy the data of the base class or classes
     stream << Response::toString();
     stream << "End Class = IntegerResponse" << std::endl;
 
@@ -99,7 +98,13 @@ bool IntegerResponse::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getResult() != valuePtr->getResult() ) {
+        return false;
+    }
+    if( !Response::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

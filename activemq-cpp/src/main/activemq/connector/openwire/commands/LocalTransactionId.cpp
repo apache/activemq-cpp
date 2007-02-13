@@ -98,7 +98,6 @@ std::string LocalTransactionId::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << TransactionId::toString();
     stream << "End Class = LocalTransactionId" << std::endl;
 
@@ -112,7 +111,20 @@ bool LocalTransactionId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getValue() != valuePtr->getValue() ) {
+        return false;
+    }
+    if( this->getConnectionId() != NULL ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConnectionId() != NULL ) {
+        return false;
+    }
+    if( !TransactionId::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

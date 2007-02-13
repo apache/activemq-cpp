@@ -139,7 +139,6 @@ std::string BrokerInfo::toString() const {
     stream << " Value of DuplexConnection = " << this->isDuplexConnection() << std::endl;
     stream << " Value of NetworkConnection = " << this->isNetworkConnection() << std::endl;
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = BrokerInfo" << std::endl;
 
@@ -153,7 +152,50 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getBrokerId() != NULL ) {
+        if( !this->getBrokerId()->equals( valuePtr->getBrokerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getBrokerId() != NULL ) {
+        return false;
+    }
+    if( this->getBrokerURL() != valuePtr->getBrokerURL() ) {
+        return false;
+    }
+    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
+        if( this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
+            if( !this->getPeerBrokerInfos()[ipeerBrokerInfos]->equals( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
+            return false;
+        }
+    }
+    if( this->getBrokerName() != valuePtr->getBrokerName() ) {
+        return false;
+    }
+    if( this->isSlaveBroker() != valuePtr->isSlaveBroker() ) {
+        return false;
+    }
+    if( this->isMasterBroker() != valuePtr->isMasterBroker() ) {
+        return false;
+    }
+    if( this->isFaultTolerantConfiguration() != valuePtr->isFaultTolerantConfiguration() ) {
+        return false;
+    }
+    if( this->isDuplexConnection() != valuePtr->isDuplexConnection() ) {
+        return false;
+    }
+    if( this->isNetworkConnection() != valuePtr->isNetworkConnection() ) {
+        return false;
+    }
+    if( this->getConnectionId() != valuePtr->getConnectionId() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -108,7 +108,6 @@ std::string ConnectionError::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ConnectionError" << std::endl;
 
@@ -122,7 +121,24 @@ bool ConnectionError::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getException() != NULL ) {
+        if( !this->getException()->equals( valuePtr->getException() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getException() != NULL ) {
+        return false;
+    }
+    if( this->getConnectionId() != NULL ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConnectionId() != NULL ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

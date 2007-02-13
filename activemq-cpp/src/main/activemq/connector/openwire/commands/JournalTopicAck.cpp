@@ -130,7 +130,6 @@ std::string JournalTopicAck::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalTopicAck" << std::endl;
 
@@ -144,7 +143,40 @@ bool JournalTopicAck::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getMessageId() != NULL ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getMessageId() != NULL ) {
+        return false;
+    }
+    if( this->getMessageSequenceId() != valuePtr->getMessageSequenceId() ) {
+        return false;
+    }
+    if( this->getSubscritionName() != valuePtr->getSubscritionName() ) {
+        return false;
+    }
+    if( this->getClientId() != valuePtr->getClientId() ) {
+        return false;
+    }
+    if( this->getTransactionId() != NULL ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getTransactionId() != NULL ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

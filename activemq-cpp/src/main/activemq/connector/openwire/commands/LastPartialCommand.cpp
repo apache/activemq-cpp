@@ -82,7 +82,6 @@ std::string LastPartialCommand::toString() const {
 
     stream << "Begin Class = LastPartialCommand" << std::endl;
     stream << " Value of LastPartialCommand::ID_LASTPARTIALCOMMAND = 61" << std::endl; 
-    // Copy the data of the base class or classes
     stream << PartialCommand::toString();
     stream << "End Class = LastPartialCommand" << std::endl;
 
@@ -96,6 +95,9 @@ bool LastPartialCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( !PartialCommand::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 

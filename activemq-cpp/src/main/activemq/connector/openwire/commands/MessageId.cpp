@@ -101,7 +101,6 @@ std::string MessageId::toString() const {
     }
     stream << " Value of ProducerSequenceId = " << this->getProducerSequenceId() << std::endl;
     stream << " Value of BrokerSequenceId = " << this->getBrokerSequenceId() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = MessageId" << std::endl;
 
@@ -115,7 +114,23 @@ bool MessageId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getProducerId() != NULL ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getProducerId() != NULL ) {
+        return false;
+    }
+    if( this->getProducerSequenceId() != valuePtr->getProducerSequenceId() ) {
+        return false;
+    }
+    if( this->getBrokerSequenceId() != valuePtr->getBrokerSequenceId() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

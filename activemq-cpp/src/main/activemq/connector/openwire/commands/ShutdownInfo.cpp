@@ -82,7 +82,6 @@ std::string ShutdownInfo::toString() const {
 
     stream << "Begin Class = ShutdownInfo" << std::endl;
     stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl; 
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ShutdownInfo" << std::endl;
 
@@ -96,6 +95,9 @@ bool ShutdownInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 

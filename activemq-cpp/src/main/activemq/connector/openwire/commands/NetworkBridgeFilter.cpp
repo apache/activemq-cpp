@@ -98,7 +98,6 @@ std::string NetworkBridgeFilter::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = NetworkBridgeFilter" << std::endl;
 
@@ -112,7 +111,20 @@ bool NetworkBridgeFilter::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getNetworkTTL() != valuePtr->getNetworkTTL() ) {
+        return false;
+    }
+    if( this->getNetworkBrokerId() != NULL ) {
+        if( !this->getNetworkBrokerId()->equals( valuePtr->getNetworkBrokerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getNetworkBrokerId() != NULL ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

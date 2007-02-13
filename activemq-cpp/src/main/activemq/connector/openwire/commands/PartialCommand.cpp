@@ -89,7 +89,6 @@ std::string PartialCommand::toString() const {
     for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
         stream << " Value of Data[" << idata << "] = " << this->getData()[idata] << std::endl;
     }
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = PartialCommand" << std::endl;
 
@@ -103,7 +102,18 @@ bool PartialCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getCommandId() != valuePtr->getCommandId() ) {
+        return false;
+    }
+    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
+        if( this->getData()[idata] != valuePtr->getData()[idata] ) {
+            return false;
+        }
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

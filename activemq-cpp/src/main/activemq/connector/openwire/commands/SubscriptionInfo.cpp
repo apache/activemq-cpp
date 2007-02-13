@@ -104,7 +104,6 @@ std::string SubscriptionInfo::toString() const {
     }
     stream << " Value of Selector = " << this->getSelector() << std::endl;
     stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = SubscriptionInfo" << std::endl;
 
@@ -118,7 +117,26 @@ bool SubscriptionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getClientId() != valuePtr->getClientId() ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getSelector() != valuePtr->getSelector() ) {
+        return false;
+    }
+    if( this->getSubcriptionName() != valuePtr->getSubcriptionName() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

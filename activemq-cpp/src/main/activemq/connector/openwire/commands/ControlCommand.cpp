@@ -85,7 +85,6 @@ std::string ControlCommand::toString() const {
     stream << "Begin Class = ControlCommand" << std::endl;
     stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl; 
     stream << " Value of Command = " << this->getCommand() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ControlCommand" << std::endl;
 
@@ -99,7 +98,13 @@ bool ControlCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getCommand() != valuePtr->getCommand() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

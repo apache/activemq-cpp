@@ -85,7 +85,6 @@ std::string JournalTrace::toString() const {
     stream << "Begin Class = JournalTrace" << std::endl;
     stream << " Value of JournalTrace::ID_JOURNALTRACE = 53" << std::endl; 
     stream << " Value of Message = " << this->getMessage() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalTrace" << std::endl;
 
@@ -99,7 +98,13 @@ bool JournalTrace::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getMessage() != valuePtr->getMessage() ) {
+        return false;
+    }
+    if( !BaseDataStructure::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

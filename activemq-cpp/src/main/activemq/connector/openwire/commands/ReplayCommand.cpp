@@ -88,7 +88,6 @@ std::string ReplayCommand::toString() const {
     stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl; 
     stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
     stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ReplayCommand" << std::endl;
 
@@ -102,7 +101,16 @@ bool ReplayCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getFirstNakNumber() != valuePtr->getFirstNakNumber() ) {
+        return false;
+    }
+    if( this->getLastNakNumber() != valuePtr->getLastNakNumber() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

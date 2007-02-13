@@ -180,7 +180,6 @@ std::string ConsumerInfo::toString() const {
     stream << " Value of NetworkSubscription = " << this->isNetworkSubscription() << std::endl;
     stream << " Value of OptimizedAcknowledge = " << this->isOptimizedAcknowledge() << std::endl;
     stream << " Value of NoRangeAcks = " << this->isNoRangeAcks() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ConsumerInfo" << std::endl;
 
@@ -194,7 +193,79 @@ bool ConsumerInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getConsumerId() != NULL ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->isBrowser() != valuePtr->isBrowser() ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    if( this->getPrefetchSize() != valuePtr->getPrefetchSize() ) {
+        return false;
+    }
+    if( this->getMaximumPendingMessageLimit() != valuePtr->getMaximumPendingMessageLimit() ) {
+        return false;
+    }
+    if( this->isDispatchAsync() != valuePtr->isDispatchAsync() ) {
+        return false;
+    }
+    if( this->getSelector() != valuePtr->getSelector() ) {
+        return false;
+    }
+    if( this->getSubscriptionName() != valuePtr->getSubscriptionName() ) {
+        return false;
+    }
+    if( this->isNoLocal() != valuePtr->isNoLocal() ) {
+        return false;
+    }
+    if( this->isExclusive() != valuePtr->isExclusive() ) {
+        return false;
+    }
+    if( this->isRetroactive() != valuePtr->isRetroactive() ) {
+        return false;
+    }
+    if( this->getPriority() != valuePtr->getPriority() ) {
+        return false;
+    }
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            return false;
+        }
+    }
+    if( this->getAdditionalPredicate() != NULL ) {
+        if( !this->getAdditionalPredicate()->equals( valuePtr->getAdditionalPredicate() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getAdditionalPredicate() != NULL ) {
+        return false;
+    }
+    if( this->isNetworkSubscription() != valuePtr->isNetworkSubscription() ) {
+        return false;
+    }
+    if( this->isOptimizedAcknowledge() != valuePtr->isOptimizedAcknowledge() ) {
+        return false;
+    }
+    if( this->isNoRangeAcks() != valuePtr->isNoRangeAcks() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

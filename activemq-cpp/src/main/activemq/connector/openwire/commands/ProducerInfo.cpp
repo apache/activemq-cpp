@@ -131,7 +131,6 @@ std::string ProducerInfo::toString() const {
         }
     }
     stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ProducerInfo" << std::endl;
 
@@ -145,7 +144,36 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->getProducerId() != NULL ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getProducerId() != NULL ) {
+        return false;
+    }
+    if( this->getDestination() != NULL ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getDestination() != NULL ) {
+        return false;
+    }
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
+            return false;
+        }
+    }
+    if( this->isDispatchAsync() != valuePtr->isDispatchAsync() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

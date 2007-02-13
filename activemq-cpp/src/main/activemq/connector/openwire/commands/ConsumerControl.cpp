@@ -110,7 +110,6 @@ std::string ConsumerControl::toString() const {
     stream << " Value of Flush = " << this->isFlush() << std::endl;
     stream << " Value of Start = " << this->isStart() << std::endl;
     stream << " Value of Stop = " << this->isStop() << std::endl;
-    // Copy the data of the base class or classes
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ConsumerControl" << std::endl;
 
@@ -124,7 +123,32 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    return false;
+    if( this->isClose() != valuePtr->isClose() ) {
+        return false;
+    }
+    if( this->getConsumerId() != NULL ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getConsumerId() != NULL ) {
+        return false;
+    }
+    if( this->getPrefetch() != valuePtr->getPrefetch() ) {
+        return false;
+    }
+    if( this->isFlush() != valuePtr->isFlush() ) {
+        return false;
+    }
+    if( this->isStart() != valuePtr->isStart() ) {
+        return false;
+    }
+    if( this->isStop() != valuePtr->isStop() ) {
+        return false;
+    }
+    if( !BaseCommand<transport::Command>::equals( value ) ) {
+        return false;
+    }
+    return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
