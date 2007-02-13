@@ -63,6 +63,8 @@ namespace io{
         /**
          * Constructor, creates a wrapped output stream
          * @param outputStream the OutputStream to wrap
+         * @param own If true, this object will control the lifetime of the
+         * output stream that it encapsulates.
          */
     	FilterOutputStream( OutputStream* outputStream, bool own = false ){
             this->outputStream = outputStream;

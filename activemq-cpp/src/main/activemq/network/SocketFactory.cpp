@@ -92,37 +92,37 @@ Socket* SocketFactory::createSocket(const Properties& properties)
         // The buffered socket will own the TcpSocket instance, and will
         // clean it up when it is cleaned up.
         TcpSocket* tcpSocket = new TcpSocket();
-        BufferedSocket* bufferedSocket = 
-            new BufferedSocket(tcpSocket, inputBufferSize, outputBufferSize);
+        /*BufferedSocket* bufferedSocket = 
+            new BufferedSocket(tcpSocket, inputBufferSize, outputBufferSize);*/
 
         try
         {
             // Connect the socket.
-            bufferedSocket->connect( host.c_str(), port );
+            tcpSocket->connect( host.c_str(), port );
 
             // Set the socket options.
-            bufferedSocket->setSoLinger( soLinger );
-            bufferedSocket->setKeepAlive( soKeepAlive );
+            tcpSocket->setSoLinger( soLinger );
+            tcpSocket->setKeepAlive( soKeepAlive );
 
             if( soReceiveBufferSize > 0 ){
-                bufferedSocket->setReceiveBufferSize( soReceiveBufferSize );
+                tcpSocket->setReceiveBufferSize( soReceiveBufferSize );
             }
 
             if( soSendBufferSize > 0 ){
-                bufferedSocket->setSendBufferSize( soSendBufferSize );
+                tcpSocket->setSendBufferSize( soSendBufferSize );
             }
         }
         catch ( SocketException& ex )
         {
             ex.setMark( __FILE__, __LINE__ );
             try{
-                delete bufferedSocket;
+                delete tcpSocket;
             } catch( SocketException& ex2 ){ /* Absorb */ }
             
             throw ex;
         }
 
-        return bufferedSocket;
+        return tcpSocket;
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )

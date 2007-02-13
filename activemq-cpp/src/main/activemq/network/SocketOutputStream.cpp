@@ -17,6 +17,7 @@
  
 #include "SocketOutputStream.h"
 #include <activemq/util/Config.h>
+#include <activemq/util/Character.h>
 #include "SocketError.h"
 
 #ifdef HAVE_WINSOCK2_H
@@ -40,13 +41,14 @@
 
 using namespace activemq::network;
 using namespace activemq::io;
+using namespace activemq::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket )
 {
     this->socket = socket;
-    this->debug = false;
+    //this->debug = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,17 +69,18 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
     std::size_t remaining = len;
     int sendOpts = AMQ_SEND_OPTS;
 
-    if( debug ){
+    /*if( debug ){
         cout << "SocketOutputStream:write(), numbytes: " << len << " - ";
         for( std::size_t ix=0; ix<len; ++ix ){
             char c = buffer[ix];
-            if( c > 20 ){
-                cout << c;
+            if( Character::isLetterOrDigit(c) || Character::isWhitespace(c) ){
+                cout << (char)c;
             }
-            else cout << "[" << c << "]";
+            else cout << "[" << (int)(unsigned char)c << "]";
         }
         cout << endl;
-    }
+        cout.flush();
+    }*/
         
     while( remaining > 0 )
     {

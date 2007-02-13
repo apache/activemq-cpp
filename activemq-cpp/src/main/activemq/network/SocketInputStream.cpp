@@ -37,14 +37,17 @@
 #include <activemq/network/SocketInputStream.h>
 #include <activemq/network/SocketError.h>
 #include <activemq/io/IOException.h>
+#include <activemq/util/Character.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
+#include <iostream>
 
 using namespace activemq;
 using namespace activemq::network;
 using namespace activemq::io;
+using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace std;
 
@@ -52,7 +55,7 @@ using namespace std;
 SocketInputStream::SocketInputStream( network::Socket::SocketHandle socket )
 {
     this->socket = socket;
-    debug = false;
+    //debug = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,16 +150,18 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
                 "activemq::io::SocketInputStream::read - %s", SocketError::getErrorString().c_str() );
     }
     
-    if( debug ){
+    /*if( debug ){
         printf("SocketInputStream:read(), numbytes:%d -", len);
         for( int ix=0; ix<len; ++ix ){
-            if( buffer[ix] > 20 )
-                printf("%c", buffer[ix] );
+            char c = buffer[ix];
+            if( Character::isLetterOrDigit(c) || Character::isWhitespace(c) )
+                cout << c;
             else
-                printf("[%d]", buffer[ix] );
+                cout << '[' << (int)(unsigned char)c << ']';
         }
-        printf("\n");
-    }
+        cout << endl;
+        cout.flush();
+    }*/
     
     return len;
 }

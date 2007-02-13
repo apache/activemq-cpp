@@ -21,6 +21,10 @@
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/network/Socket.h>
 #include <activemq/util/Properties.h>
+#include <activemq/io/LoggingInputStream.h>
+#include <activemq/io/LoggingOutputStream.h>
+#include <activemq/io/BufferedInputStream.h>
+#include <activemq/io/BufferedOutputStream.h>
 
 namespace activemq{
 namespace transport{
@@ -39,6 +43,12 @@ namespace transport{
          * Socket that this Transport Communicates with
          */
         network::Socket* socket;
+        
+        io::LoggingInputStream* loggingInputStream;
+        io::LoggingOutputStream* loggingOutputStream;
+        
+        io::BufferedInputStream* bufferedInputStream;
+        io::BufferedOutputStream* bufferedOutputStream;
 
     public:
 

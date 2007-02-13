@@ -24,6 +24,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::io;
 using namespace activemq::transport;
 using namespace activemq::network;
 using namespace activemq::exceptions;
@@ -32,7 +33,13 @@ using namespace activemq::exceptions;
 TcpTransport::TcpTransport( const activemq::util::Properties& properties,
                             Transport* next, 
                             const bool own )
- : TransportFilter( next, own )
+: 
+    TransportFilter( next, own ),
+    socket( NULL ),
+    loggingInputStream( NULL ),
+    loggingOutputStream( NULL ),
+    bufferedInputStream( NULL ),
+    bufferedOutputStream( NULL )
 {
     try
     {
@@ -50,10 +57,26 @@ TcpTransport::TcpTransport( const activemq::util::Properties& properties,
                 "TcpTransport::TcpTransport - "
                 "transport must be of type IOTransport");
         }
+        
+        InputStream* inputStream = socket->getInputStream();
+        OutputStream* outputStream = socket->getOutputStream();
+        
+        // If tcp tracing was enabled, wrap the iostreams with logging streams
+        if( properties.getProperty( "tcpTracingEnabled", "false" ) == "true" ) {
+            loggingInputStream = new LoggingInputStream( inputStream );
+            loggingOutputStream = new LoggingOutputStream( outputStream );
+            
+            inputStream = loggingInputStream;
+            outputStream = loggingOutputStream;
+        }
+        
+        // Now wrap the input/output streams with buffered streams
+        bufferedInputStream = new BufferedInputStream(inputStream);
+        bufferedOutputStream = new BufferedOutputStream(outputStream);
 
-        // Give the IOTransport the streams from out TCP socket.        
-        ioTransport->setInputStream( socket->getInputStream() );
-        ioTransport->setOutputStream( socket->getOutputStream() );
+        // Give the IOTransport the streams.        
+        ioTransport->setInputStream( bufferedInputStream );
+        ioTransport->setOutputStream( bufferedOutputStream );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -65,12 +88,32 @@ TcpTransport::~TcpTransport()
     try
     {
         try{
-            close();
+            close();                        
         } catch( cms::CMSException& ex ){ /* Absorb */ }
         
         if( socket != NULL ) {
             delete socket;
             socket = NULL;
+        }
+        
+        if( loggingInputStream != NULL ) {
+            delete loggingInputStream;
+            loggingInputStream = NULL;
+        }
+        
+        if( loggingOutputStream != NULL ) {
+            delete loggingOutputStream;
+            loggingOutputStream = NULL;
+        }
+        
+        if( bufferedInputStream != NULL ) {
+            delete bufferedInputStream;
+            bufferedInputStream = NULL;
+        }
+        
+        if( bufferedOutputStream != NULL ) {
+            delete bufferedOutputStream;
+            bufferedOutputStream = NULL;
         }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )

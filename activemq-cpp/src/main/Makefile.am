@@ -36,6 +36,8 @@ cc_sources = \
     activemq/io/DataOutputStream.cpp \
     activemq/io/BufferedOutputStream.cpp \
     activemq/io/ByteArrayOutputStream.cpp \
+    activemq/io/LoggingInputStream.cpp \
+    activemq/io/LoggingOutputStream.cpp \
     activemq/concurrent/PooledThread.cpp \
     activemq/concurrent/ThreadPool.cpp \
     activemq/concurrent/Mutex.cpp \
@@ -128,6 +130,8 @@ h_sources = \
     activemq/io/DataInputStream.h \
     activemq/io/Writer.h \
     activemq/io/ByteArrayOutputStream.h \
+    activemq/io/LoggingInputStream.h \
+    activemq/io/LoggingOutputStream.h \
     activemq/io/OutputStream.h \
     activemq/io/IOException.h \
     activemq/io/FilterInputStream.h \
