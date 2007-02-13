@@ -89,6 +89,39 @@ unsigned char SubscriptionInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string SubscriptionInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = SubscriptionInfo" << std::endl;
+    stream << " Value of SubscriptionInfo::ID_SUBSCRIPTIONINFO = 55" << std::endl; 
+    stream << " Value of ClientId = " << this->getClientId() << std::endl;
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Selector = " << this->getSelector() << std::endl;
+    stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = SubscriptionInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool SubscriptionInfo::equals( const DataStructure* value ) const {
+    const SubscriptionInfo* valuePtr = dynamic_cast<const SubscriptionInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& SubscriptionInfo::getClientId() const {
     return clientId;
 }

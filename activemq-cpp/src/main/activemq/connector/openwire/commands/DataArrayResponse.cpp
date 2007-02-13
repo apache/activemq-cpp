@@ -88,6 +88,38 @@ unsigned char DataArrayResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string DataArrayResponse::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = DataArrayResponse" << std::endl;
+    stream << " Value of DataArrayResponse::ID_DATAARRAYRESPONSE = 33" << std::endl; 
+    for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
+        stream << " Value of Data[" << idata << "] is Below:" << std::endl;
+        if( this->getData()[idata] != NULL ) {
+            stream << this->getData()[idata]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    // Copy the data of the base class or classes
+    stream << Response::toString();
+    stream << "End Class = DataArrayResponse" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DataArrayResponse::equals( const DataStructure* value ) const {
+    const DataArrayResponse* valuePtr = dynamic_cast<const DataArrayResponse*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::vector<DataStructure*>& DataArrayResponse::getData() const {
     return data;
 }

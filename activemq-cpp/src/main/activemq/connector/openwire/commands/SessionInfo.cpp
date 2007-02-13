@@ -83,6 +83,36 @@ unsigned char SessionInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string SessionInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = SessionInfo" << std::endl;
+    stream << " Value of SessionInfo::ID_SESSIONINFO = 4" << std::endl; 
+    stream << " Value of SessionId is Below:" << std::endl;
+    if( this->getSessionId() != NULL ) {
+        stream << this->getSessionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = SessionInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool SessionInfo::equals( const DataStructure* value ) const {
+    const SessionInfo* valuePtr = dynamic_cast<const SessionInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const SessionId* SessionInfo::getSessionId() const {
     return sessionId;
 }

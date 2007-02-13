@@ -75,3 +75,27 @@ unsigned char ShutdownInfo::getDataStructureType() const {
     return ShutdownInfo::ID_SHUTDOWNINFO; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::string ShutdownInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ShutdownInfo" << std::endl;
+    stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl; 
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ShutdownInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ShutdownInfo::equals( const DataStructure* value ) const {
+    const ShutdownInfo* valuePtr = dynamic_cast<const ShutdownInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+

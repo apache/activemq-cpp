@@ -181,6 +181,112 @@ unsigned char Message::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string Message::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = Message" << std::endl;
+    stream << " Value of Message::ID_MESSAGE = 0" << std::endl; 
+    stream << " Value of ProducerId is Below:" << std::endl;
+    if( this->getProducerId() != NULL ) {
+        stream << this->getProducerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of TransactionId is Below:" << std::endl;
+    if( this->getTransactionId() != NULL ) {
+        stream << this->getTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of OriginalDestination is Below:" << std::endl;
+    if( this->getOriginalDestination() != NULL ) {
+        stream << this->getOriginalDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of MessageId is Below:" << std::endl;
+    if( this->getMessageId() != NULL ) {
+        stream << this->getMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of OriginalTransactionId is Below:" << std::endl;
+    if( this->getOriginalTransactionId() != NULL ) {
+        stream << this->getOriginalTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of GroupID = " << this->getGroupID() << std::endl;
+    stream << " Value of GroupSequence = " << this->getGroupSequence() << std::endl;
+    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
+    stream << " Value of Persistent = " << this->isPersistent() << std::endl;
+    stream << " Value of Expiration = " << this->getExpiration() << std::endl;
+    stream << " Value of Priority = " << this->getPriority() << std::endl;
+    stream << " Value of ReplyTo is Below:" << std::endl;
+    if( this->getReplyTo() != NULL ) {
+        stream << this->getReplyTo()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Timestamp = " << this->getTimestamp() << std::endl;
+    stream << " Value of Type = " << this->getType() << std::endl;
+    for( size_t icontent = 0; icontent < this->getContent().size(); ++icontent ) {
+        stream << " Value of Content[" << icontent << "] = " << this->getContent()[icontent] << std::endl;
+    }
+    for( size_t imarshalledProperties = 0; imarshalledProperties < this->getMarshalledProperties().size(); ++imarshalledProperties ) {
+        stream << " Value of MarshalledProperties[" << imarshalledProperties << "] = " << this->getMarshalledProperties()[imarshalledProperties] << std::endl;
+    }
+    stream << " Value of DataStructure is Below:" << std::endl;
+    if( this->getDataStructure() != NULL ) {
+        stream << this->getDataStructure()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of TargetConsumerId is Below:" << std::endl;
+    if( this->getTargetConsumerId() != NULL ) {
+        stream << this->getTargetConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Compressed = " << this->isCompressed() << std::endl;
+    stream << " Value of RedeliveryCounter = " << this->getRedeliveryCounter() << std::endl;
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    stream << " Value of Arrival = " << this->getArrival() << std::endl;
+    stream << " Value of UserID = " << this->getUserID() << std::endl;
+    stream << " Value of RecievedByDFBridge = " << this->isRecievedByDFBridge() << std::endl;
+    stream << " Value of Droppable = " << this->isDroppable() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = Message" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Message::equals( const DataStructure* value ) const {
+    const Message* valuePtr = dynamic_cast<const Message*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ProducerId* Message::getProducerId() const {
     return producerId;
 }

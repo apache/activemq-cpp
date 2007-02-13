@@ -104,6 +104,51 @@ unsigned char ProducerInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ProducerInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ProducerInfo" << std::endl;
+    stream << " Value of ProducerInfo::ID_PRODUCERINFO = 6" << std::endl; 
+    stream << " Value of ProducerId is Below:" << std::endl;
+    if( this->getProducerId() != NULL ) {
+        stream << this->getProducerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ProducerInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ProducerInfo::equals( const DataStructure* value ) const {
+    const ProducerInfo* valuePtr = dynamic_cast<const ProducerInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ProducerId* ProducerInfo::getProducerId() const {
     return producerId;
 }

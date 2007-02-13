@@ -85,6 +85,37 @@ unsigned char NetworkBridgeFilter::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string NetworkBridgeFilter::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = NetworkBridgeFilter" << std::endl;
+    stream << " Value of NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER = 91" << std::endl; 
+    stream << " Value of NetworkTTL = " << this->getNetworkTTL() << std::endl;
+    stream << " Value of NetworkBrokerId is Below:" << std::endl;
+    if( this->getNetworkBrokerId() != NULL ) {
+        stream << this->getNetworkBrokerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = NetworkBridgeFilter" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool NetworkBridgeFilter::equals( const DataStructure* value ) const {
+    const NetworkBridgeFilter* valuePtr = dynamic_cast<const NetworkBridgeFilter*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int NetworkBridgeFilter::getNetworkTTL() const {
     return networkTTL;
 }

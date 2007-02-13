@@ -78,6 +78,31 @@ unsigned char Response::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string Response::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = Response" << std::endl;
+    stream << " Value of Response::ID_RESPONSE = 30" << std::endl; 
+    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Response>::toString();
+    stream << "End Class = Response" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Response::equals( const DataStructure* value ) const {
+    const Response* valuePtr = dynamic_cast<const Response*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int Response::getCorrelationId() const {
     return correlationId;
 }

@@ -80,6 +80,32 @@ unsigned char DiscoveryEvent::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string DiscoveryEvent::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = DiscoveryEvent" << std::endl;
+    stream << " Value of DiscoveryEvent::ID_DISCOVERYEVENT = 40" << std::endl; 
+    stream << " Value of ServiceName = " << this->getServiceName() << std::endl;
+    stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = DiscoveryEvent" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DiscoveryEvent::equals( const DataStructure* value ) const {
+    const DiscoveryEvent* valuePtr = dynamic_cast<const DiscoveryEvent*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& DiscoveryEvent::getServiceName() const {
     return serviceName;
 }

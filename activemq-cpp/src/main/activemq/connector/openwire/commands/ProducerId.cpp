@@ -82,6 +82,33 @@ unsigned char ProducerId::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ProducerId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ProducerId" << std::endl;
+    stream << " Value of ProducerId::ID_PRODUCERID = 123" << std::endl; 
+    stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
+    stream << " Value of Value = " << this->getValue() << std::endl;
+    stream << " Value of SessionId = " << this->getSessionId() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = ProducerId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ProducerId::equals( const DataStructure* value ) const {
+    const ProducerId* valuePtr = dynamic_cast<const ProducerId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& ProducerId::getConnectionId() const {
     return connectionId;
 }

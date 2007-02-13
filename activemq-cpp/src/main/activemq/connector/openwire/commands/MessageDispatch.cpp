@@ -99,6 +99,49 @@ unsigned char MessageDispatch::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string MessageDispatch::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = MessageDispatch" << std::endl;
+    stream << " Value of MessageDispatch::ID_MESSAGEDISPATCH = 21" << std::endl; 
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Message is Below:" << std::endl;
+    if( this->getMessage() != NULL ) {
+        stream << this->getMessage()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of RedeliveryCounter = " << this->getRedeliveryCounter() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = MessageDispatch" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool MessageDispatch::equals( const DataStructure* value ) const {
+    const MessageDispatch* valuePtr = dynamic_cast<const MessageDispatch*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConsumerId* MessageDispatch::getConsumerId() const {
     return consumerId;
 }

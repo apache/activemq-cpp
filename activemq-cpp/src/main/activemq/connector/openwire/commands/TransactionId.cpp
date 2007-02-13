@@ -75,3 +75,27 @@ unsigned char TransactionId::getDataStructureType() const {
     return TransactionId::ID_TRANSACTIONID; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::string TransactionId::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = TransactionId" << std::endl;
+    stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl; 
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = TransactionId" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TransactionId::equals( const DataStructure* value ) const {
+    const TransactionId* valuePtr = dynamic_cast<const TransactionId*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+

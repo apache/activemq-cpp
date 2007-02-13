@@ -92,6 +92,43 @@ unsigned char TransactionInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string TransactionInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = TransactionInfo" << std::endl;
+    stream << " Value of TransactionInfo::ID_TRANSACTIONINFO = 7" << std::endl; 
+    stream << " Value of ConnectionId is Below:" << std::endl;
+    if( this->getConnectionId() != NULL ) {
+        stream << this->getConnectionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of TransactionId is Below:" << std::endl;
+    if( this->getTransactionId() != NULL ) {
+        stream << this->getTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Type = " << this->getType() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = TransactionInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool TransactionInfo::equals( const DataStructure* value ) const {
+    const TransactionInfo* valuePtr = dynamic_cast<const TransactionInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConnectionId* TransactionInfo::getConnectionId() const {
     return connectionId;
 }

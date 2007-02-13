@@ -78,6 +78,31 @@ unsigned char IntegerResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string IntegerResponse::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = IntegerResponse" << std::endl;
+    stream << " Value of IntegerResponse::ID_INTEGERRESPONSE = 34" << std::endl; 
+    stream << " Value of Result = " << this->getResult() << std::endl;
+    // Copy the data of the base class or classes
+    stream << Response::toString();
+    stream << "End Class = IntegerResponse" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool IntegerResponse::equals( const DataStructure* value ) const {
+    const IntegerResponse* valuePtr = dynamic_cast<const IntegerResponse*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int IntegerResponse::getResult() const {
     return result;
 }

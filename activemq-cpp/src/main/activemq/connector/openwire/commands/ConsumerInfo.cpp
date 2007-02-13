@@ -135,6 +135,69 @@ unsigned char ConsumerInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ConsumerInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ConsumerInfo" << std::endl;
+    stream << " Value of ConsumerInfo::ID_CONSUMERINFO = 5" << std::endl; 
+    stream << " Value of ConsumerId is Below:" << std::endl;
+    if( this->getConsumerId() != NULL ) {
+        stream << this->getConsumerId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Browser = " << this->isBrowser() << std::endl;
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of PrefetchSize = " << this->getPrefetchSize() << std::endl;
+    stream << " Value of MaximumPendingMessageLimit = " << this->getMaximumPendingMessageLimit() << std::endl;
+    stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
+    stream << " Value of Selector = " << this->getSelector() << std::endl;
+    stream << " Value of SubscriptionName = " << this->getSubscriptionName() << std::endl;
+    stream << " Value of NoLocal = " << this->isNoLocal() << std::endl;
+    stream << " Value of Exclusive = " << this->isExclusive() << std::endl;
+    stream << " Value of Retroactive = " << this->isRetroactive() << std::endl;
+    stream << " Value of Priority = " << this->getPriority() << std::endl;
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    stream << " Value of AdditionalPredicate is Below:" << std::endl;
+    if( this->getAdditionalPredicate() != NULL ) {
+        stream << this->getAdditionalPredicate()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of NetworkSubscription = " << this->isNetworkSubscription() << std::endl;
+    stream << " Value of OptimizedAcknowledge = " << this->isOptimizedAcknowledge() << std::endl;
+    stream << " Value of NoRangeAcks = " << this->isNoRangeAcks() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ConsumerInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ConsumerInfo::equals( const DataStructure* value ) const {
+    const ConsumerInfo* valuePtr = dynamic_cast<const ConsumerInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConsumerId* ConsumerInfo::getConsumerId() const {
     return consumerId;
 }

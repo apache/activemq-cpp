@@ -75,3 +75,27 @@ unsigned char LastPartialCommand::getDataStructureType() const {
     return LastPartialCommand::ID_LASTPARTIALCOMMAND; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::string LastPartialCommand::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = LastPartialCommand" << std::endl;
+    stream << " Value of LastPartialCommand::ID_LASTPARTIALCOMMAND = 61" << std::endl; 
+    // Copy the data of the base class or classes
+    stream << PartialCommand::toString();
+    stream << "End Class = LastPartialCommand" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool LastPartialCommand::equals( const DataStructure* value ) const {
+    const LastPartialCommand* valuePtr = dynamic_cast<const LastPartialCommand*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+

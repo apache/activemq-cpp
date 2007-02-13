@@ -75,3 +75,27 @@ unsigned char FlushCommand::getDataStructureType() const {
     return FlushCommand::ID_FLUSHCOMMAND; 
 }
 
+////////////////////////////////////////////////////////////////////////////////
+std::string FlushCommand::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = FlushCommand" << std::endl;
+    stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl; 
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = FlushCommand" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FlushCommand::equals( const DataStructure* value ) const {
+    const FlushCommand* valuePtr = dynamic_cast<const FlushCommand*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+

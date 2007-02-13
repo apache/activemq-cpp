@@ -106,6 +106,52 @@ unsigned char DestinationInfo::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string DestinationInfo::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = DestinationInfo" << std::endl;
+    stream << " Value of DestinationInfo::ID_DESTINATIONINFO = 8" << std::endl; 
+    stream << " Value of ConnectionId is Below:" << std::endl;
+    if( this->getConnectionId() != NULL ) {
+        stream << this->getConnectionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of OperationType = " << this->getOperationType() << std::endl;
+    stream << " Value of Timeout = " << this->getTimeout() << std::endl;
+    for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
+        stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
+        if( this->getBrokerPath()[ibrokerPath] != NULL ) {
+            stream << this->getBrokerPath()[ibrokerPath]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = DestinationInfo" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DestinationInfo::equals( const DataStructure* value ) const {
+    const DestinationInfo* valuePtr = dynamic_cast<const DestinationInfo*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ConnectionId* DestinationInfo::getConnectionId() const {
     return connectionId;
 }

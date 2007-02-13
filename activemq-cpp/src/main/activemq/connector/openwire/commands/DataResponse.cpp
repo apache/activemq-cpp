@@ -83,6 +83,36 @@ unsigned char DataResponse::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string DataResponse::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = DataResponse" << std::endl;
+    stream << " Value of DataResponse::ID_DATARESPONSE = 32" << std::endl; 
+    stream << " Value of Data is Below:" << std::endl;
+    if( this->getData() != NULL ) {
+        stream << this->getData()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << Response::toString();
+    stream << "End Class = DataResponse" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DataResponse::equals( const DataStructure* value ) const {
+    const DataResponse* valuePtr = dynamic_cast<const DataResponse*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const DataStructure* DataResponse::getData() const {
     return data;
 }

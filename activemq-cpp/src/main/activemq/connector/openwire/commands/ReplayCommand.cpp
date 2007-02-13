@@ -80,6 +80,32 @@ unsigned char ReplayCommand::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ReplayCommand::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ReplayCommand" << std::endl;
+    stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl; 
+    stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
+    stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ReplayCommand" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ReplayCommand::equals( const DataStructure* value ) const {
+    const ReplayCommand* valuePtr = dynamic_cast<const ReplayCommand*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 int ReplayCommand::getFirstNakNumber() const {
     return firstNakNumber;
 }

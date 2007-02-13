@@ -90,6 +90,42 @@ unsigned char JournalQueueAck::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string JournalQueueAck::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = JournalQueueAck" << std::endl;
+    stream << " Value of JournalQueueAck::ID_JOURNALQUEUEACK = 52" << std::endl; 
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of MessageAck is Below:" << std::endl;
+    if( this->getMessageAck() != NULL ) {
+        stream << this->getMessageAck()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = JournalQueueAck" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool JournalQueueAck::equals( const DataStructure* value ) const {
+    const JournalQueueAck* valuePtr = dynamic_cast<const JournalQueueAck*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ActiveMQDestination* JournalQueueAck::getDestination() const {
     return destination;
 }

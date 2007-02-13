@@ -103,6 +103,51 @@ unsigned char JournalTopicAck::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string JournalTopicAck::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = JournalTopicAck" << std::endl;
+    stream << " Value of JournalTopicAck::ID_JOURNALTOPICACK = 50" << std::endl; 
+    stream << " Value of Destination is Below:" << std::endl;
+    if( this->getDestination() != NULL ) {
+        stream << this->getDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of MessageId is Below:" << std::endl;
+    if( this->getMessageId() != NULL ) {
+        stream << this->getMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    stream << " Value of MessageSequenceId = " << this->getMessageSequenceId() << std::endl;
+    stream << " Value of SubscritionName = " << this->getSubscritionName() << std::endl;
+    stream << " Value of ClientId = " << this->getClientId() << std::endl;
+    stream << " Value of TransactionId is Below:" << std::endl;
+    if( this->getTransactionId() != NULL ) {
+        stream << this->getTransactionId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
+    // Copy the data of the base class or classes
+    stream << BaseDataStructure::toString();
+    stream << "End Class = JournalTopicAck" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool JournalTopicAck::equals( const DataStructure* value ) const {
+    const JournalTopicAck* valuePtr = dynamic_cast<const JournalTopicAck*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const ActiveMQDestination* JournalTopicAck::getDestination() const {
     return destination;
 }

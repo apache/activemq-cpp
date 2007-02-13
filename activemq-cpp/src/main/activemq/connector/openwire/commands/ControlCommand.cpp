@@ -78,6 +78,31 @@ unsigned char ControlCommand::getDataStructureType() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string ControlCommand::toString() const {
+
+    ostringstream stream;
+
+    stream << "Begin Class = ControlCommand" << std::endl;
+    stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl; 
+    stream << " Value of Command = " << this->getCommand() << std::endl;
+    // Copy the data of the base class or classes
+    stream << BaseCommand<transport::Command>::toString();
+    stream << "End Class = ControlCommand" << std::endl;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ControlCommand::equals( const DataStructure* value ) const {
+    const ControlCommand* valuePtr = dynamic_cast<const ControlCommand*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 const std::string& ControlCommand::getCommand() const {
     return command;
 }
