@@ -385,7 +385,7 @@ for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
     if( property.getType().getSimpleName().equals("ByteSequence") ) {
 
 out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-out.println("        if( "+propertyName+"[i" + parameterName+"] != this->"+getter+"()[i"+parameterName+"] ) {" );
+out.println("        if( this->"+getter+"()[i" + parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"] ) {" );
 out.println("            return false;" );
 out.println("        }" );
 out.println("    }" );
@@ -393,7 +393,7 @@ out.println("    }" );
     } else if( property.getType().isPrimitiveType() ||
                type.equals("std::string") ){
 
-out.println("    if( "+propertyName+" != valuePtr->"+getter+"() ) {");
+out.println("    if( this->"+getter+"() != valuePtr->"+getter+"() ) {");
 out.println("        return false;" );
 out.println("    }" );
 
@@ -403,8 +403,8 @@ out.println("    }" );
         String arrayType = property.getType().getArrayComponentType().getSimpleName();
 
 out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL )" );
-out.println("            if( !( this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"] ) ) {" );
+out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL ) {" );
+out.println("            if( !this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"] ) ) {" );
 out.println("                return false;");
 out.println("            }");
 out.println("        } else if( valuePtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
@@ -414,16 +414,16 @@ out.println("    }");
     } else if( property.getType().isArrayType() &&
                property.getType().getArrayComponentType().isPrimitiveType() ) {
 out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
-out.println("        if( "+propertyName+"[i"+parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"] ) {");
+out.println("        if( this->"+getter+"()[i"+parameterName+"] != valuePtr->"+getter+"()[i"+parameterName+"] ) {");
 out.println("            return false;");
 out.println("        }");
 out.println("    }");
     } else {
 out.println("    if( this->"+getter+"() != NULL ) {");
-out.println("        if( !( this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"] ) ) {" );
+out.println("        if( !this->"+getter+"()->equals( valuePtr->"+getter+"() ) ) {" );
 out.println("            return false;");
 out.println("        }");
-out.println("    } else if( valuePtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
+out.println("    } else if( valuePtr->"+getter+"() != NULL ) {");
 out.println("        return false;");
 out.println("    }");
     }
