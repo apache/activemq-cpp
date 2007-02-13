@@ -37,7 +37,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQBytesMessage : 
+    class ActiveMQBytesMessage :
         public ActiveMQMessageBase< cms::BytesMessage >
     {
     public:
@@ -56,7 +56,7 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const { 
+        virtual DataStructure* cloneDataStructure() const {
             ActiveMQBytesMessage* message = new ActiveMQBytesMessage();
             message->copyDataStructure( this );
             return message;
@@ -70,16 +70,41 @@ namespace commands{
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQMessageBase<cms::BytesMessage>::copyDataStructure( src );
         }
-        
+
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const{
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
+            stream << ActiveMQMessageBase<cms::BytesMessage>::toString();
+            stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            return ActiveMQMessageBase<cms::BytesMessage>::equals( value );
+        }
+
     public:   // CMS Message
-    
+
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
         virtual cms::BytesMessage* clone(void) const {
-            return dynamic_cast<cms::BytesMessage*>( 
+            return dynamic_cast<cms::BytesMessage*>(
                 this->cloneDataStructure() );
         }
 
@@ -88,61 +113,61 @@ namespace commands{
          * headers or properties.
          */
         virtual void clearBody(){
-            
+
             // Invoke base class's version.
             ActiveMQMessageBase<cms::BytesMessage>::clearBody();
-            
+
             // Set the stream in write only mode.
             readOnly = false;
-            
+
             outputStream.setBuffer( getContent() );
         }
 
     public:   // CMS BytesMessage
-    
+
         /**
-         * sets the bytes given to the message body.  
+         * sets the bytes given to the message body.
          * @param Byte Buffer to copy
          * @param Number of bytes in Buffer to copy
          * @throws CMSException
          */
-        virtual void setBodyBytes( 
-            const unsigned char* buffer, 
-            std::size_t numBytes ) 
+        virtual void setBodyBytes(
+            const unsigned char* buffer,
+            std::size_t numBytes )
                 throw( cms::CMSException );
-            
+
         /**
          * Gets the bytes that are contained in this message, user should
-         * copy this data into a user allocated buffer.  Call 
+         * copy this data into a user allocated buffer.  Call
          * <code>getBodyLength</code> to determine the number of bytes
          * to expect.
          * @return const pointer to a byte buffer
          */
         virtual const unsigned char* getBodyBytes(void) const;
-      
+
         /**
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
         virtual std::size_t getBodyLength(void) const;
-        
+
         /**
-         * Puts the message body in read-only mode and repositions the stream 
+         * Puts the message body in read-only mode and repositions the stream
          * of bytes to the beginning.
          * @throws CMSException
          */
         virtual void reset() throw ( cms::CMSException );
-        
+
         /**
          * Reads a Boolean from the Bytes message stream
          * @returns boolean value from stream
          * @throws CMSException
          */
         virtual bool readBoolean() throw ( cms::CMSException );
-        
+
         /**
-         * Writes a boolean to the bytes message stream as a 1-byte value. 
-         * The value true is written as the value (byte)1; the value false 
+         * Writes a boolean to the bytes message stream as a 1-byte value.
+         * The value true is written as the value (byte)1; the value false
          * is written as the value (byte)0.
          * @param value - boolean to write to the stream
          * @throws CMSException
@@ -168,22 +193,22 @@ namespace commands{
          * Reads a byte array from the bytes message stream.
          *
          * If the length of vector value is less than the number of bytes
-         * remaining to be read from the stream, the vector should be filled. A 
+         * remaining to be read from the stream, the vector should be filled. A
          * subsequent call reads the next increment, and so on.
          *
-         * If the number of bytes remaining in the stream is less than the 
-         * length of vector value, the bytes should be read into the vector. The 
+         * If the number of bytes remaining in the stream is less than the
+         * length of vector value, the bytes should be read into the vector. The
          * return value of the total number of bytes read will be less than the
-         * length of the vector, indicating that there are no more bytes left to 
+         * length of the vector, indicating that there are no more bytes left to
          * be read from the stream. The next read of the stream returns -1.
-         * 
+         *
          * @param value - buffer to place data in
-         * @returns the total number of bytes read into the buffer, or -1 if 
-         *          there is no more data because the end of the stream has 
+         * @returns the total number of bytes read into the buffer, or -1 if
+         *          there is no more data because the end of the stream has
          *          been reached
          * @throws CMSException if an error occurs.
          */
-        virtual std::size_t readBytes( std::vector<unsigned char>& value ) 
+        virtual std::size_t readBytes( std::vector<unsigned char>& value )
             throw ( cms::CMSException );
 
         /**
@@ -196,30 +221,30 @@ namespace commands{
 
         /**
          * Reads a portion of the bytes message stream.
-         * 
-         * If the length of array value is less than the number of bytes 
-         * remaining to be read from the stream, the array should be filled. A 
+         *
+         * If the length of array value is less than the number of bytes
+         * remaining to be read from the stream, the array should be filled. A
          * subsequent call reads the next increment, and so on.
-         * 
-         * If the number of bytes remaining in the stream is less than the 
-         * length of array value, the bytes should be read into the array. The 
-         * return value of the total number of bytes read will be less than the 
-         * length of the array, indicating that there are no more bytes left to 
+         *
+         * If the number of bytes remaining in the stream is less than the
+         * length of array value, the bytes should be read into the array. The
+         * return value of the total number of bytes read will be less than the
+         * length of the array, indicating that there are no more bytes left to
          * be read from the stream. The next read of the stream returns -1.
-         * 
-         * If length is negative, or length is greater than the length of the 
-         * array value, then an IndexOutOfBoundsException is thrown. No bytes 
+         *
+         * If length is negative, or length is greater than the length of the
+         * array value, then an IndexOutOfBoundsException is thrown. No bytes
          * will be read from the stream for this exception case.
-         * 
+         *
          * @param value - the buffer into which the data is read
-         * @param length - the number of bytes to read; must be less than or 
+         * @param length - the number of bytes to read; must be less than or
          *                 equal to value.length
-         * @returns the total number of bytes read into the buffer, or -1 if 
-         *          there is no more data because the end of the stream has 
+         * @returns the total number of bytes read into the buffer, or -1 if
+         *          there is no more data because the end of the stream has
          *          been reached
          * @throws CMSException
          */
-        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) 
+        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length )
             throw ( cms::CMSException );
 
         /**
@@ -361,29 +386,29 @@ namespace commands{
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException );
 
     protected:
-    
+
         /**
          * Throws an exception if not in write-only mode.
          * @throws CMSException.
          */
         void checkWriteOnly() throw (cms::CMSException){
             if( readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__, 
+                throw exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
             }
         }
-        
+
         /**
          * Throws an exception if not in read-only mode.
          * @throws CMSException
          */
         void checkReadOnly() throw (cms::CMSException){
             if( !readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__, 
+                throw exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }
         }
-        
+
     private:
 
         /**
@@ -392,24 +417,24 @@ namespace commands{
          * written to.
          */
         bool readOnly;
-        
+
         /**
-         * InputStream that wraps around the command's content when in 
+         * InputStream that wraps around the command's content when in
          * read-only mode.
          */
         io::ByteArrayInputStream inputStream;
-        
+
         /**
-         * OutputStream that wraps around the command's content when in 
+         * OutputStream that wraps around the command's content when in
          * write-only mode.
          */
         io::ByteArrayOutputStream outputStream;
-        
+
         /**
          * DataInputStream wrapper around the input stream.
          */
         io::DataInputStream dataInputStream;
-        
+
         /**
          * DataOutputStream wrapper around the output stream.
          */

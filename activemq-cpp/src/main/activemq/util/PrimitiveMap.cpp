@@ -17,6 +17,8 @@
 
 #include "PrimitiveMap.h"
 
+#include <sstream>
+
 using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace std;
@@ -43,6 +45,14 @@ bool PrimitiveMap::equals( const PrimitiveMap& src ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+std::string PrimitiveMap::toString() const {
+
+    ostringstream stream;
+
+    return stream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::copy( const PrimitiveMap& src ) {
 
     return this->valueNodeMap.copy( src.valueNodeMap );
@@ -50,49 +60,49 @@ void PrimitiveMap::copy( const PrimitiveMap& src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::clear() {
-    
+
     valueNodeMap.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::contains( const string& key ) const{
-    
+
     return valueNodeMap.containsKey( key );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t PrimitiveMap::size() const{
-    
+
     return valueNodeMap.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::isEmpty() const{
-    
+
     return valueNodeMap.isEmpty();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool PrimitiveMap::getBool( const string& key ) const 
+bool PrimitiveMap::getBool( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getBool();
 }
-    
+
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::setBool( const string& key, bool value ){
-    
+
     ValueNode node;
     node.setBool( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char PrimitiveMap::getByte( const string& key ) const 
+unsigned char PrimitiveMap::getByte( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getByte();
 }
@@ -101,14 +111,14 @@ unsigned char PrimitiveMap::getByte( const string& key ) const
 void PrimitiveMap::setByte( const string& key, unsigned char value ){
     ValueNode node;
     node.setByte( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char PrimitiveMap::getChar( const string& key ) const 
+char PrimitiveMap::getChar( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getChar();
 }
@@ -117,14 +127,14 @@ char PrimitiveMap::getChar( const string& key ) const
 void PrimitiveMap::setChar( const string& key, char value ){
     ValueNode node;
     node.setChar( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short PrimitiveMap::getShort( const string& key ) const 
+short PrimitiveMap::getShort( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getShort();
 }
@@ -133,14 +143,14 @@ short PrimitiveMap::getShort( const string& key ) const
 void PrimitiveMap::setShort( const string& key, short value ){
     ValueNode node;
     node.setShort( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int PrimitiveMap::getInt( const string& key ) const 
+int PrimitiveMap::getInt( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getInt();
 }
@@ -149,14 +159,14 @@ int PrimitiveMap::getInt( const string& key ) const
 void PrimitiveMap::setInt( const string& key, int value ){
     ValueNode node;
     node.setInt( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long PrimitiveMap::getLong( const string& key ) const 
+long long PrimitiveMap::getLong( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getLong();
 }
@@ -165,14 +175,14 @@ long long PrimitiveMap::getLong( const string& key ) const
 void PrimitiveMap::setLong( const string& key, long long value ){
     ValueNode node;
     node.setLong( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double PrimitiveMap::getDouble( const string& key ) const 
+double PrimitiveMap::getDouble( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getDouble();
 }
@@ -181,14 +191,14 @@ double PrimitiveMap::getDouble( const string& key ) const
 void PrimitiveMap::setDouble( const string& key, double value ){
     ValueNode node;
     node.setDouble( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float PrimitiveMap::getFloat( const string& key ) const 
+float PrimitiveMap::getFloat( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
     return node.getFloat();
 }
@@ -197,38 +207,38 @@ float PrimitiveMap::getFloat( const string& key ) const
 void PrimitiveMap::setFloat( const string& key, float value ){
     ValueNode node;
     node.setFloat( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-string PrimitiveMap::getString( const string& key ) const 
+string PrimitiveMap::getString( const string& key ) const
     throw(NoSuchElementException){
-        
+
     ValueNode node = valueNodeMap.getValue( key );
-    return node.getString();        
+    return node.getString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::setString( const string& key, const string& value ){
     ValueNode node;
     node.setString( value );
-    
+
     valueNodeMap.setValue( key, node );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<unsigned char> PrimitiveMap::getByteArray( const std::string& key ) const 
+std::vector<unsigned char> PrimitiveMap::getByteArray( const std::string& key ) const
     throw( activemq::exceptions::NoSuchElementException ) {
 
     ValueNode node = valueNodeMap.getValue( key );
-    return node.getByteArray();        
+    return node.getByteArray();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMap::setByteArray( const std::string& key, 
+void PrimitiveMap::setByteArray( const std::string& key,
                                  const std::vector<unsigned char>& value ) {
-                                    
+
     ValueNode node;
     node.setByteArray( value );
 
@@ -242,13 +252,13 @@ void PrimitiveMap::remove( const string& key ){
 
 ////////////////////////////////////////////////////////////////////////////////
 vector<string> PrimitiveMap::getKeys() const{
-    
+
     return valueNodeMap.getKeys();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 vector<PrimitiveMap::ValueNode> PrimitiveMap::getValues() const{
-    
+
     return valueNodeMap.getValues();
 }
 

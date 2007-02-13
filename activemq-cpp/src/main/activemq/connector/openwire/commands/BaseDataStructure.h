@@ -22,6 +22,7 @@
 #include <activemq/util/Config.h>
 
 #include <string>
+#include <sstream>
 
 namespace activemq{
 namespace connector{

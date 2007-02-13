@@ -27,19 +27,19 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    template< typename T > 
+    template< typename T >
     class BaseCommand : public T,
                         public BaseDataStructure
     {
     public:
-    
+
         BaseCommand() {
             this->commandId = 0;
             this->responseRequired = false;
         }
-        
+
         virtual ~BaseCommand() {}
-        
+
         /**
          * Sets the Command Id of this Message
          * @param id Command Id
@@ -55,7 +55,7 @@ namespace commands{
         virtual int getCommandId() const {
             return commandId;
         }
-        
+
         /**
          * Set if this Message requires a Response
          * @param required true if response is required
@@ -71,23 +71,48 @@ namespace commands{
         virtual bool isResponseRequired() const {
             return responseRequired;
         }
-        
+
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            
-            const BaseCommand<T>* command = 
+
+            const BaseCommand<T>* command =
                 dynamic_cast< const BaseCommand<T>* >( src );
-            
+
             this->setResponseRequired( command->isResponseRequired() );
             this->setCommandId( command->getCommandId() );
         }
 
+        /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const {
+            std::ostringstream stream;
+
+            stream << "Begin Class = BaseCommand" << std::endl;
+            stream << BaseDataStructure::toString();
+            stream << "Begin Class = BaseCommand" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const {
+            return BaseDataStructure::equals( value );
+        }
+
     private:
-    
+
         bool responseRequired;
         int commandId;
 
