@@ -36,7 +36,7 @@ namespace network{
 		// The socket handle.
 		Socket::SocketHandle socket;
 		concurrent::Mutex mutex;
-        bool debug;
+        //bool debug;
 		
 	public:
 	
@@ -55,9 +55,9 @@ namespace network{
          * Enables socket level output of the recieved data
          * @param debug true to turn on debugging
          */
-        virtual void setDebug( bool debug ){
+        /*virtual void setDebug( bool debug ){
             this->debug = debug;
-        }
+        }*/
         
         /**
          * Locks the object.
