@@ -353,7 +353,6 @@ out.println("    }");
 }
 
     if( baseClass != null ) {
-out.println("    // Copy the data of the base class or classes");
 out.println("    stream << "+getProperBaseClassName( className, baseClass )+"::toString();");
     }
 
@@ -431,7 +430,6 @@ out.println("    }");
 }
 
     if( baseClass != null ) {
-out.println("    // Copy the data of the base class or classes");
 out.println("    if( !"+getProperBaseClassName( className, baseClass )+"::equals( value ) ) {");
 out.println("        return false;");
 out.println("    }");
