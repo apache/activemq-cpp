@@ -45,7 +45,7 @@ WireFormatInfo::WireFormatInfo()
     
     // Initialize member magic buffer to the static buffer.
     magic.resize( MAGIC.size() );
-    for( int ix=0; ix<MAGIC.size(); ++ix ){
+    for( std::size_t ix=0; ix<MAGIC.size(); ++ix ){
         magic[ix] = MAGIC[ix];
     }
 }
