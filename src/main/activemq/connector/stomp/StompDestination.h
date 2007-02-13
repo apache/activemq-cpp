@@ -52,24 +52,15 @@ namespace stomp{
                           cms::Destination::DestinationType type ) :
             core::ActiveMQDestination<T>( name, type ){}
 
-        virtual ~StompDestination(void) {}
+        virtual ~StompDestination() {}
 
         /**
          * Retrieves the name of this destination, plus the stomp
          * destination decorator
          * @return name in a format that is used by the broker
          */
-        virtual std::string toProviderString(void) const {
+        virtual std::string toProviderString() const {
             return getPrefix() + core::ActiveMQDestination<T>::getName();
-        }
-        
-        /**
-         * Converts the Destination Name into a String minus the 
-         * stomp decorator
-         * @return string name of the desintation
-         */
-        virtual std::string toString(void) const {
-            return core::ActiveMQDestination<T>::getName();
         }
 
     protected:
@@ -79,7 +70,7 @@ namespace stomp{
          * of Destination
          * @return string prefix
          */
-        virtual std::string getPrefix(void) const = 0;
+        virtual std::string getPrefix() const = 0;
 
     };
 

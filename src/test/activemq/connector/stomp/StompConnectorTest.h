@@ -156,7 +156,7 @@ namespace stomp{
             StompTopic dest1( "dummy.topic.1" );
             ConsumerInfo* cinfo1 = connector->createConsumer( &dest1, info1, sel1 );
             CPPUNIT_ASSERT( cinfo1->getSessionInfo() == info1 );
-            CPPUNIT_ASSERT( cinfo1->getDestination().toString() == dest1.toString() );
+            CPPUNIT_ASSERT( cinfo1->getDestination().toProviderString() == dest1.toProviderString() );
             CPPUNIT_ASSERT( cinfo1->getMessageSelector() == sel1 );
             
             SessionInfo* info2 = connector->createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
@@ -164,7 +164,7 @@ namespace stomp{
             StompTopic dest2( "dummy.topic.2" );
             ConsumerInfo* cinfo2 = connector->createConsumer( &dest2, info2, sel2 );
             CPPUNIT_ASSERT( cinfo2->getSessionInfo() == info2 );
-            CPPUNIT_ASSERT( cinfo2->getDestination().toString() == dest2.toString() );
+            CPPUNIT_ASSERT( cinfo2->getDestination().toProviderString() == dest2.toProviderString() );
             CPPUNIT_ASSERT( cinfo2->getMessageSelector() == sel2 );
             
             SessionInfo* info3 = connector->createSession( cms::Session::CLIENT_ACKNOWLEDGE );
@@ -172,7 +172,7 @@ namespace stomp{
             StompQueue dest3( "dummy.queue.1" );
             ConsumerInfo* cinfo3 = connector->createConsumer( &dest3, info3, sel3 );
             CPPUNIT_ASSERT( cinfo3->getSessionInfo() == info3 );
-            CPPUNIT_ASSERT( cinfo3->getDestination().toString() == dest3.toString() );
+            CPPUNIT_ASSERT( cinfo3->getDestination().toProviderString() == dest3.toProviderString() );
             CPPUNIT_ASSERT( cinfo3->getMessageSelector() == sel3 );
             
             SessionInfo* info4 = connector->createSession( cms::Session::SESSION_TRANSACTED );
@@ -180,7 +180,7 @@ namespace stomp{
             StompTopic dest4( "dummy.queue.2" );
             ConsumerInfo* cinfo4 = connector->createConsumer( &dest4, info4, sel4 );
             CPPUNIT_ASSERT( cinfo4->getSessionInfo() == info4 );
-            CPPUNIT_ASSERT( cinfo4->getDestination().toString() == dest4.toString() );
+            CPPUNIT_ASSERT( cinfo4->getDestination().toProviderString() == dest4.toProviderString() );
             CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
             
             connector->destroyResource( cinfo1 );
@@ -215,25 +215,25 @@ namespace stomp{
             StompTopic dest1( "dummy.topic.1" );
             ProducerInfo* pinfo1 = connector->createProducer( &dest1, info1 );
             CPPUNIT_ASSERT( pinfo1->getSessionInfo() == info1 );
-            CPPUNIT_ASSERT( pinfo1->getDestination().toString() == dest1.toString() );
+            CPPUNIT_ASSERT( pinfo1->getDestination().toProviderString() == dest1.toProviderString() );
             
             SessionInfo* info2 = connector->createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
             StompTopic dest2( "dummy.topic.2" );
             ProducerInfo* pinfo2 = connector->createProducer( &dest2, info2 );
             CPPUNIT_ASSERT( pinfo2->getSessionInfo() == info2 );
-            CPPUNIT_ASSERT( pinfo2->getDestination().toString() == dest2.toString() );
+            CPPUNIT_ASSERT( pinfo2->getDestination().toProviderString() == dest2.toProviderString() );
             
             SessionInfo* info3 = connector->createSession( cms::Session::CLIENT_ACKNOWLEDGE );
             StompQueue dest3( "dummy.queue.1" );
             ProducerInfo* pinfo3 = connector->createProducer( &dest3, info3 );
             CPPUNIT_ASSERT( pinfo3->getSessionInfo() == info3 );
-            CPPUNIT_ASSERT( pinfo3->getDestination().toString() == dest3.toString() );
+            CPPUNIT_ASSERT( pinfo3->getDestination().toProviderString() == dest3.toProviderString() );
             
             SessionInfo* info4 = connector->createSession( cms::Session::SESSION_TRANSACTED );
             StompTopic dest4( "dummy.queue.2" );
             ProducerInfo* pinfo4 = connector->createProducer( &dest4, info4 );
             CPPUNIT_ASSERT( pinfo4->getSessionInfo() == info4 );
-            CPPUNIT_ASSERT( pinfo4->getDestination().toString() == dest4.toString() );
+            CPPUNIT_ASSERT( pinfo4->getDestination().toProviderString() == dest4.toProviderString() );
             
             connector->destroyResource( pinfo1 );
             connector->destroyResource( pinfo2 );
