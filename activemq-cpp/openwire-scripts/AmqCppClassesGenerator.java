@@ -26,12 +26,12 @@ import org.codehaus.jam.JClass;
 import org.codehaus.jam.JProperty;
 
 /**
- * 
+ *
  * @version $Revision: 409828 $
  */
 public class AmqCppClassesGenerator extends MultiSourceGenerator {
 
-	protected String targetDir="./src/main";
+    protected String targetDir="./src/main";
 
     public Object run() {
         filePostFix = getFilePostFix();
@@ -51,19 +51,19 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         if( baseClass == null || className == null ) {
             return null;
         }
-        
+
         // The C++ BaseCommand class is a template, which requires either
         // transport::Command, or transport::Response.
         if( className.equals( "Response" ) ) {
-            return "BaseCommand<transport::Response>"; 
+            return "BaseCommand<transport::Response>";
         } else if( baseClass.equals( "BaseCommand" ) ) {
             return "BaseCommand<transport::Command>";
         }
-        
+
         // No change.
         return baseClass;
     }
-    
+
     public String toCppType(JClass type) {
         String name = type.getSimpleName();
         if (name.equals("String")) {
@@ -72,13 +72,13 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         else if( type.isArrayType() ) {
             if( name.equals( "byte[]" ) )
                 name = "unsigned char[]";
-            
+
             JClass arrayClass = type.getArrayComponentType();
-            
+
             if( arrayClass.isPrimitiveType() ) {
                 return "std::vector<" + name.substring(0, name.length()-2) + ">";
             } else {
-                return "std::vector<" + name.substring(0, name.length()-2) + "*>";                
+                return "std::vector<" + name.substring(0, name.length()-2) + "*>";
             }
         }
         else if( name.equals( "Throwable" ) || name.equals( "Exception" ) ) {
@@ -124,7 +124,7 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         }
     }
 
-	protected void generateLicence(PrintWriter out) {
+    protected void generateLicence(PrintWriter out) {
 out.println("/*");
 out.println(" * Licensed to the Apache Software Foundation (ASF) under one or more");
 out.println(" * contributor license agreements.  See the NOTICE file distributed with");
@@ -141,10 +141,10 @@ out.println(" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
 out.println(" * See the License for the specific language governing permissions and");
 out.println(" * limitations under the License.");
 out.println(" */");
-	}
+    }
 
-	protected void generateFile(PrintWriter out) throws Exception {
-		generateLicence(out);		
+    protected void generateFile(PrintWriter out) throws Exception {
+        generateLicence(out);
 out.println("#include <activemq/connector/openwire/commands/"+className+".h>");
 out.println("#include <activemq/exceptions/NullPointerException.h>");
 out.println("");
@@ -169,18 +169,18 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println(""+className+"::"+className+"()");
 out.println("{");
 
-		List properties = getProperties();
-		for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			JProperty property = (JProperty) iter.next();
+        List properties = getProperties();
+        for (Iterator iter = properties.iterator(); iter.hasNext();) {
+            JProperty property = (JProperty) iter.next();
             String type = toCppType(property.getType());
-	        String value = toCppDefaultValue(property.getType());
-	        String propertyName = property.getSimpleName();
-	        String parameterName = decapitalize(propertyName);
-            
+            String value = toCppDefaultValue(property.getType());
+            String propertyName = property.getSimpleName();
+            String parameterName = decapitalize(propertyName);
+
             if( !type.startsWith("std::vector") ) {
 out.println("    this->"+parameterName+" = "+value+";");
             }
-		}
+        }
 out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
@@ -192,12 +192,12 @@ out.println("{");
         String type = toCppType(property.getType());
         String propertyName = property.getSimpleName();
         String parameterName = decapitalize(propertyName);
-    
+
         if( property.getType().isPrimitiveType() ||
             property.getType().getSimpleName().equals("String") ) {
             continue;
         }
-        
+
         if( !type.startsWith("std::vector" ) ) {
 out.println("    delete this->" + parameterName + ";");
         } else if( type.contains( "*" ) ) {
@@ -232,7 +232,7 @@ out.println("    // Copy the data of the base class or classes");
 out.println("    "+getProperBaseClassName( className, baseClass )+"::copyDataStructure( src );");
 out.println("");
         }
-        
+
 out.println("    const "+className+"* srcPtr = dynamic_cast<const "+className+"*>( src );");
 out.println("");
 out.println("    if( srcPtr == NULL || src == NULL ) {");
@@ -250,7 +250,7 @@ out.println("    }");
         String constNess = "";
         String getter = property.getGetter().getSimpleName();
         String setter = property.getSetter().getSimpleName();
-        
+
         if( property.getType().isPrimitiveType() ||
             type.equals("std::string") ||
             property.getType().getSimpleName().equals("ByteSequence") ){
@@ -259,7 +259,7 @@ out.println("    }");
                    !property.getType().getArrayComponentType().isPrimitiveType() ) {
 
             String arrayType = property.getType().getArrayComponentType().getSimpleName();
-            
+
     out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
     out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
     out.println("            this->"+getter+"().push_back( ");
@@ -284,34 +284,121 @@ out.println("    }");
 out.println("}");
 
 
+// getDataStructureType
+
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("unsigned char "+className+"::getDataStructureType() const {");
 out.println("    return "+className+"::ID_" + className.toUpperCase() + "; ");
 out.println("}");
 
+// toString
+
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("std::string "+className+"::toString() const {");
+out.println("");
+
+out.println("    ostringstream stream;" );
+out.println("");
+out.println("    stream << \"Begin Class = "+className+"\" << std::endl;" );
+out.println("    stream << \" Value of "+className+"::ID_" + className.toUpperCase() + " = "+getOpenWireOpCode(jclass)+"\" << std::endl; ");
+
+for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
+    JProperty property = (JProperty) iter.next();
+    String type = toCppType(property.getType());
+    String propertyName = property.getSimpleName();
+    String parameterName = decapitalize(propertyName);
+    String constNess = "";
+    String getter = property.getGetter().getSimpleName();
+    String setter = property.getSetter().getSimpleName();
+
+    if( property.getType().getSimpleName().equals("ByteSequence") ) {
+
+out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+out.println("        stream << \" Value of "+propertyName+"[\" << i" + parameterName+" << \"] = \" << this->"+getter+"()[i"+parameterName+"] << std::endl;" );
+out.println("    }" );
+
+    } else if( property.getType().isPrimitiveType() ||
+               type.equals("std::string") ){
+
+out.println("    stream << \" Value of "+propertyName+" = \" << this->"+getter+"() << std::endl;");
+
+    } else if( property.getType().isArrayType() &&
+               !property.getType().getArrayComponentType().isPrimitiveType() ) {
+
+        String arrayType = property.getType().getArrayComponentType().getSimpleName();
+
+out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+out.println("        stream << \" Value of "+propertyName+"[\" << i" + parameterName+" << \"] is Below:\" << std::endl;" );
+out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL ) {");
+out.println("            stream << this->"+getter+"()[i"+parameterName+"]->toString() << std::endl;");
+out.println("        } else {");
+out.println("            stream << \"   Object is NULL\" << std::endl;");
+out.println("        }");
+out.println("    }");
+    } else if( property.getType().isArrayType() &&
+               property.getType().getArrayComponentType().isPrimitiveType() ) {
+out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
+out.println("        stream << \" Value of "+propertyName+"[\" << i"+parameterName+" << \"] = \" << this->"+getter+"()[i"+parameterName+"] << std::endl;");
+out.println("    }");
+    } else {
+out.println("    stream << \" Value of "+propertyName+" is Below:\" << std::endl;" );
+out.println("    if( this->"+getter+"() != NULL ) {");
+out.println("        stream << this->"+getter+"()->toString() << std::endl;");
+out.println("    } else {");
+out.println("        stream << \"   Object is NULL\" << std::endl;");
+out.println("    }");
+    }
+}
+
+    if( baseClass != null ) {
+out.println("    // Copy the data of the base class or classes");
+out.println("    stream << "+getProperBaseClassName( className, baseClass )+"::toString();");
+    }
+
+out.println("    stream << \"End Class = "+className+"\" << std::endl;" );
+out.println("");
+out.println("    return stream.str();");
+out.println("}");
+
+// equals
+
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("bool "+className+"::equals( const DataStructure* value ) const {");
+
+out.println("    const "+className+"* valuePtr = dynamic_cast<const "+className+"*>( value );");
+out.println("");
+out.println("    if( valuePtr == NULL || value == NULL ) {");
+out.println("        return false;");
+out.println("    }");
+
+out.println("    return false;" );
+out.println("}");
+
        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
-			JProperty property = (JProperty) iter.next();
-	        String type = toCppType(property.getType());
-	        String propertyName = property.getSimpleName();
-	        String parameterName = decapitalize(propertyName);
+            JProperty property = (JProperty) iter.next();
+            String type = toCppType(property.getType());
+            String propertyName = property.getSimpleName();
+            String parameterName = decapitalize(propertyName);
             String getter = property.getGetter().getSimpleName();
             String setter = property.getSetter().getSimpleName();
             String constNess = "";
 
             if( !property.getType().isPrimitiveType() &&
-                !property.getType().getSimpleName().equals("ByteSequence") && 
+                !property.getType().getSimpleName().equals("ByteSequence") &&
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
-                   
+
                 type = type + "*";
             } else if( property.getType().getSimpleName().equals("String") ||
-            		   type.startsWith( "std::vector") ) {
+                       type.startsWith( "std::vector") ) {
                 type = type + "&";
                 constNess = "const ";
             }
 
-           
+
 out.println("");
 
     if( property.getType().isPrimitiveType() ) {
@@ -323,7 +410,7 @@ out.println("}");
 out.println("");
 
     } else {
-        
+
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("const "+type+" "+className+"::"+getter+"() const {");
 out.println("    return "+parameterName+";");
@@ -341,16 +428,16 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("void " + className + "::" + setter+"(" + constNess + type+ " " + parameterName +" ) {");
 out.println("    this->"+parameterName+" = "+parameterName+";");
 out.println("}");
-	    }
+        }
 out.println("");
-	}
+    }
 
-	public String getTargetDir() {
-		return targetDir;
-	}
+    public String getTargetDir() {
+        return targetDir;
+    }
 
-	public void setTargetDir(String targetDir) {
-		this.targetDir = targetDir;
-	}
-	
+    public void setTargetDir(String targetDir) {
+        this.targetDir = targetDir;
+    }
+
 }

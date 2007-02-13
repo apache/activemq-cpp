@@ -144,6 +144,21 @@ out.println("         * @param src - Source Object");
 out.println("         */");
 out.println("        virtual void copyDataStructure( const DataStructure* src );");
 out.println("");
+out.println("        /**");
+out.println("         * Returns a string containing the information for this DataStructure");
+out.println("         * such as its type and value of its elements.");
+out.println("         * @return formatted string useful for debugging.");
+out.println("         */");
+out.println("        virtual std::string toString() const;");
+out.println("");
+out.println("        /**" );
+out.println("         * Compares the DataStructure passed in to this one, and returns if" );
+out.println("         * they are equivalent.  Equivalent here means that they are of the" );
+out.println("         * same type, and that each element of the objects are the same." );
+out.println("         * @returns true if DataStructure's are Equal." );
+out.println("         */" );
+out.println("        virtual bool equals( const DataStructure* value ) const;" );
+out.println("");
 
         for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
             JProperty property = (JProperty) iter.next();
