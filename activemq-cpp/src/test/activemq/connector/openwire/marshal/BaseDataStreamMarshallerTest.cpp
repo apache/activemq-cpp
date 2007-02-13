@@ -122,7 +122,7 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     CPPUNIT_ASSERT( ds.cachedChild->intValue == dataStructure->cachedChild->intValue );
     CPPUNIT_ASSERT( ds.cachedChild->floatValue == dataStructure->cachedChild->floatValue );
     CPPUNIT_ASSERT( ds.cachedChild->doubleValue == dataStructure->cachedChild->doubleValue );
-    printf("string1[%s,%d] string2[%s,%d]\n",ds.cachedChild->stringValue.c_str(), (int)ds.cachedChild->stringValue.size(), dataStructure->cachedChild->stringValue.c_str(), dataStructure->cachedChild->stringValue.size() );
+    printf("string1[%s,%d] string2[%s,%d]\n",ds.cachedChild->stringValue.c_str(), (int)ds.cachedChild->stringValue.size(), dataStructure->cachedChild->stringValue.c_str(), (int)dataStructure->cachedChild->stringValue.size() );
     CPPUNIT_ASSERT( ds.cachedChild->stringValue == dataStructure->cachedChild->stringValue );
 }
 

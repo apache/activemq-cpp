@@ -151,7 +151,7 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
         {
             // Find the right mapping to consumers        
             ConsumerMap& consumerMap = 
-                destinationMap[ destination->toString() ];
+                destinationMap[ destination->toProviderString() ];
 
             // We only need to send a sub request if there are no active 
             // consumers on this destination.  
@@ -231,7 +231,7 @@ void StompSessionManager::removeConsumer(
         synchronized( &mutex )
         {
             DestinationMap::iterator itr = 
-                destinationMap.find( consumer->getDestination().toString() );
+                destinationMap.find( consumer->getDestination().toProviderString() );
                 
             if( itr == destinationMap.end() )
             {
@@ -293,7 +293,7 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
         synchronized( &mutex )
         {
             DestinationMap::iterator itr = 
-                destinationMap.find( message->getCMSDestination()->toString() );
+                destinationMap.find( message->getCMSDestination()->toProviderString() );
 
             if( itr == destinationMap.end() )
             {

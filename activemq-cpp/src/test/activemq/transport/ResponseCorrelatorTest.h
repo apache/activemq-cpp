@@ -65,6 +65,8 @@ namespace transport{
             virtual bool isResponseRequired() const{
                 return responseRequired;
             }
+            
+            virtual std::string toString() const{ return ""; }
         };
         
         class MyResponse : public Response{
@@ -96,6 +98,8 @@ namespace transport{
             virtual void setCorrelationId( int corrId ){
                 this->corrId = corrId;
             }
+            
+            virtual std::string toString() const{ return ""; }
         };
         
         class MyExceptionResponse : public ExceptionResponse{
@@ -131,6 +135,8 @@ namespace transport{
             virtual const BrokerError* getException() const{
                 return &error;
             }
+            
+            virtual std::string toString() const{ return ""; }
         };
         
         class MyTransport 

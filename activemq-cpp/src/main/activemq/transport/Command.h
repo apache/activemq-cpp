@@ -18,13 +18,15 @@
 #ifndef ACTIVEMQ_TRANSPORT_COMMAND_H_
 #define ACTIVEMQ_TRANSPORT_COMMAND_H_
 
+#include <string>
+
 namespace activemq{
 namespace transport{
   
     class Command{
     public:
   
-        virtual ~Command(void){}
+        virtual ~Command(){}
         
         /**
          * Sets the Command Id of this Message
@@ -49,6 +51,12 @@ namespace transport{
          * @return true if a response is required.
          */
         virtual bool isResponseRequired() const = 0;
+        
+        /**
+         * Returns a provider-specific string that provides information
+         * about the contents of the command.
+         */
+        virtual std::string toString() const = 0;
         
     };
     

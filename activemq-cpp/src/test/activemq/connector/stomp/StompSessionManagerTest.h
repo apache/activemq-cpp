@@ -148,7 +148,7 @@ namespace stomp{
             StompTopic dest1( "dummy.topic.1" );
             ConsumerInfo* cinfo1 = manager.createConsumer( &dest1, info1, sel1 );
             CPPUNIT_ASSERT( cinfo1->getSessionInfo() == info1 );
-            CPPUNIT_ASSERT( cinfo1->getDestination().toString() == dest1.toString() );
+            CPPUNIT_ASSERT( cinfo1->getDestination().toProviderString() == dest1.toProviderString() );
             CPPUNIT_ASSERT( cinfo1->getMessageSelector() == sel1 );
             
             SessionInfo* info2 = manager.createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
@@ -156,7 +156,7 @@ namespace stomp{
             StompTopic dest2( "dummy.topic.2" );
             ConsumerInfo* cinfo2 = manager.createConsumer( &dest2, info2, sel2 );
             CPPUNIT_ASSERT( cinfo2->getSessionInfo() == info2 );
-            CPPUNIT_ASSERT( cinfo2->getDestination().toString() == dest2.toString() );
+            CPPUNIT_ASSERT( cinfo2->getDestination().toProviderString() == dest2.toProviderString() );
             CPPUNIT_ASSERT( cinfo2->getMessageSelector() == sel2 );
             
             SessionInfo* info3 = manager.createSession( cms::Session::CLIENT_ACKNOWLEDGE );
@@ -164,7 +164,7 @@ namespace stomp{
             StompQueue dest3( "dummy.queue.1" );
             ConsumerInfo* cinfo3 = manager.createConsumer( &dest3, info3, sel3 );
             CPPUNIT_ASSERT( cinfo3->getSessionInfo() == info3 );
-            CPPUNIT_ASSERT( cinfo3->getDestination().toString() == dest3.toString() );
+            CPPUNIT_ASSERT( cinfo3->getDestination().toProviderString() == dest3.toProviderString() );
             CPPUNIT_ASSERT( cinfo3->getMessageSelector() == sel3 );
             
             SessionInfo* info4 = manager.createSession( cms::Session::SESSION_TRANSACTED );
@@ -172,7 +172,7 @@ namespace stomp{
             StompTopic dest4( "dummy.queue.2" );
             ConsumerInfo* cinfo4 = manager.createConsumer( &dest4, info4, sel4 );
             CPPUNIT_ASSERT( cinfo4->getSessionInfo() == info4 );
-            CPPUNIT_ASSERT( cinfo4->getDestination().toString() == dest4.toString() );
+            CPPUNIT_ASSERT( cinfo4->getDestination().toProviderString() == dest4.toProviderString() );
             CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
             
             delete info1;

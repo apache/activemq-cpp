@@ -45,15 +45,14 @@ namespace stomp{
             StompDestination< cms::Queue >( name, cms::Destination::QUEUE )
         {}
 
-        virtual ~StompQueue(void) {}
+        virtual ~StompQueue() {}
 
         /**
          * Gets the name of this queue.
          * @return The queue name.
          */
-        virtual std::string getQueueName(void) const 
-            throw( cms::CMSException ) {
-                return toString();
+        virtual std::string getQueueName() const throw( cms::CMSException ) {
+            return getName();
         }
 
         /**
@@ -61,8 +60,8 @@ namespace stomp{
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const {
-            return new StompQueue( toString() );
+        virtual cms::Destination* clone() const {
+            return new StompQueue( getQueueName() );
         }
 
     protected:
@@ -72,7 +71,7 @@ namespace stomp{
          * of Destination
          * @return string prefix
          */
-        virtual std::string getPrefix(void) const {
+        virtual std::string getPrefix() const {
             return commands::CommandConstants::queuePrefix;
         }
         

@@ -60,6 +60,7 @@ namespace transport{
             
             virtual void setResponseRequired( const bool required AMQCPP_UNUSED){}
             virtual bool isResponseRequired() const{ return false; }
+            virtual std::string toString() const{ return ""; }
         };
         
         class MyCommandListener : public CommandListener{

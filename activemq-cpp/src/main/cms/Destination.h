@@ -50,17 +50,13 @@ namespace cms{
          * @return The Destination Type
          */
         virtual DestinationType getDestinationType() const = 0;
-        
-        /**
-         * Converts the Destination Name into a String 
-         * @return string name
-         */
-        virtual std::string toString() const = 0;
 
         /**
          * Converts the Destination to a String value representing the
-         * Provider specific name fot this destination, which is not
-         * necessarily equal to the User Supplied name of the Destination
+         * Provider specific name for this destination.  This name must
+         * uniquely identify a particular destination.  For example, a topic
+         * and a queue both named "FOO" must not have equivalent provider
+         * strings.
          * @return Provider specific Name
          */
         virtual std::string toProviderString() const = 0;

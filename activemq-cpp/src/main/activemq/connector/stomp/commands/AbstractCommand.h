@@ -24,6 +24,9 @@
 #include <activemq/util/Integer.h>
 #include <activemq/util/Long.h>
 #include <activemq/util/Config.h>
+#include <activemq/util/Character.h>
+#include <typeinfo>
+#include <sstream>
 
 namespace activemq{
 namespace connector{
@@ -108,6 +111,34 @@ namespace commands{
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const = 0;
+        
+        /**
+         * Returns a provider-specific string that provides information
+         * about the contents of the command.
+         */
+        virtual std::string toString() const {
+            
+            std::ostringstream ostream;
+            ostream << "Class: " << typeid(*this).name() << std::endl;
+            
+            std::string propertyString = getProperties().toString();
+            ostream << "Properties: " << propertyString << std::endl;
+            
+            ostream << "Body: " << std::endl;
+            
+            const std::vector<unsigned char>& bytes = getBytes();
+            
+            for( std::size_t ix=0; ix<bytes.size(); ++ix ){
+                char c = (char)bytes[ix];
+                if( util::Character::isLetterOrDigit(c) || util::Character::isWhitespace(c) ){
+                    ostream << c;
+                }
+                else 
+                    ostream << "[" << (int)(unsigned char)c << "]";
+            }
+            
+            return ostream.str();
+        }
         
     public:
     
