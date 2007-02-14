@@ -19,6 +19,7 @@
 
 #include <activemq/transport/TcpTransport.h>
 #include <activemq/transport/ResponseCorrelator.h>
+#include <activemq/transport/LoggingTransport.h>
 
 using namespace activemq;
 using namespace activemq::transport;
@@ -53,11 +54,16 @@ Transport* TcpTransportFactory::createTransport(
     
         Transport* transport = new TcpTransport( 
             properties, factory->createTransport( properties ) );
-
+        
         // Create a response correlator.  This will wrap around our 
         // transport and manage its lifecycle - we don't need the 
         // internal transport anymore, so we can reuse its pointer.
         transport = new ResponseCorrelator( transport );
+        
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "commandTracingEnabled", "false" ) == "true" ) {
+            transport = new LoggingTransport( transport );
+        }
         
         return transport;
     }
