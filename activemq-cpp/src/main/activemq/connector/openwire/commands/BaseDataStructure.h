@@ -106,7 +106,7 @@ namespace commands{
          * @return formatted string useful for debugging.
          */
         virtual std::string toString() const {
-            return std::string("BaseDataStructure\n");
+            return std::string("No Data for Class BaseDataStructure\n");
         }
 
         /**
