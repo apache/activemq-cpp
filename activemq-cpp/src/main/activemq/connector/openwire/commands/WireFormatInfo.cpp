@@ -31,6 +31,9 @@ std::vector<char> WireFormatInfo::MAGIC;
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatInfo::WireFormatInfo()
 {
+    // Init to our prefered version
+    this->version = 2;
+
     // Initialize the static MAGIC buffer.
     if( MAGIC.empty() ) {
         MAGIC.push_back( 'A' );
@@ -106,12 +109,11 @@ std::string WireFormatInfo::toString() const {
 
     stream << " Value of properties = " << properties.toString() << std::endl;
     stream << " Value of version = " << version << std::endl;
-    stream << " Value of stackTraceEnabled = " << stackTraceEnabled << std::endl;
-    stream << " Value of tcpNoDelayEnabled = " << tcpNoDelayEnabled << std::endl;
-    stream << " Value of cacheEnabled = " << cacheEnabled << std::endl;
-    stream << " Value of tightEncodingEnabled = " << tightEncodingEnabled << std::endl;
-    stream << " Value of sizePrefixDisabled = " << sizePrefixDisabled << std::endl;
-    stream << " Value of maxInactivityDuration = " << maxInactivityDuration << std::endl;
+    stream << " Value of stackTraceEnabled = " << isStackTraceEnabled() << std::endl;
+    stream << " Value of tcpNoDelayEnabled = " << isTcpNoDelayEnabled() << std::endl;
+    stream << " Value of cacheEnabled = " << isCacheEnabled() << std::endl;
+    stream << " Value of tightEncodingEnabled = " << isTightEncodingEnabled() << std::endl;
+    stream << " Value of sizePrefixDisabled = " << isSizePrefixDisabled() << std::endl;
 
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = WireFormatInfo" << std::endl;
@@ -141,22 +143,19 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
     if( version != wireFormatInfo->getVersion() ) {
         return false;
     }
-    if( stackTraceEnabled != wireFormatInfo->isStackTraceEnabled() ) {
+    if( isStackTraceEnabled() != wireFormatInfo->isStackTraceEnabled() ) {
         return false;
     }
-    if( tcpNoDelayEnabled != wireFormatInfo->isTcpNoDelayEnabled() ) {
+    if( isTcpNoDelayEnabled() != wireFormatInfo->isTcpNoDelayEnabled() ) {
         return false;
     }
-    if( cacheEnabled != wireFormatInfo->isCacheEnabled() ) {
+    if( isCacheEnabled() != wireFormatInfo->isCacheEnabled() ) {
         return false;
     }
-    if( tightEncodingEnabled != wireFormatInfo->isTightEncodingEnabled() ) {
+    if( isTightEncodingEnabled() != wireFormatInfo->isTightEncodingEnabled() ) {
         return false;
     }
-    if( sizePrefixDisabled != wireFormatInfo->isSizePrefixDisabled() ) {
-        return false;
-    }
-    if( maxInactivityDuration != wireFormatInfo->getMaxInactivityDuration() ) {
+    if( isSizePrefixDisabled() != wireFormatInfo->isSizePrefixDisabled() ) {
         return false;
     }
     if( !BaseCommand<transport::Command>::equals( value ) ) {
@@ -180,4 +179,114 @@ bool WireFormatInfo::isValid() const {
     }
 
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isStackTraceEnabled() const {
+
+    try {
+        return properties.getBool( "StackTraceEnabled" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setStackTraceEnabled( bool stackTraceEnabled ) {
+
+    try {
+        properties.setBool( "StackTraceEnabled", stackTraceEnabled );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isTcpNoDelayEnabled() const {
+
+    try {
+        return properties.getBool( "TcpNoDelayEnabled" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
+
+    try {
+        properties.setBool( "TcpNoDelayEnabled", tcpNoDelayEnabled );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isCacheEnabled() const {
+
+    try {
+        return properties.getBool( "CacheEnabled" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setCacheEnabled( bool cacheEnabled ) {
+
+    try {
+        properties.setBool( "CacheEnabled", cacheEnabled );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isTightEncodingEnabled() const {
+
+    try {
+        return properties.getBool( "TightEncodingEnabled" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setTightEncodingEnabled( bool tightEncodingEnabled ) {
+
+    try {
+        properties.setBool( "TightEncodingEnabled", tightEncodingEnabled );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool WireFormatInfo::isSizePrefixDisabled() const {
+
+    try {
+        return properties.getBool( "SizePrefixDisabled" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
+
+    try {
+        properties.setBool( "SizePrefixDisabled", sizePrefixDisabled );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
 }
