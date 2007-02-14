@@ -79,6 +79,7 @@ cc_sources = \
     activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TcpTransportFactory.cpp \
     activemq/transport/TransportFilter.cpp \
+    activemq/transport/LoggingTransport.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
     activemq/util/Endian.cpp \
@@ -250,6 +251,7 @@ h_sources = \
     activemq/transport/Response.h \
     activemq/transport/CommandIOException.h \
     activemq/transport/TransportFilter.h \
+    activemq/transport/LoggingTransport.h \
     activemq/util/Endian.h \
     activemq/util/Number.h \
     activemq/util/Config.h \

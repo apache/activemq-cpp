@@ -119,14 +119,13 @@ namespace commands{
         virtual std::string toString() const {
             
             std::ostringstream ostream;
-            ostream << "Class: " << typeid(*this).name() << std::endl;
+            ostream << "<STOMP-COMMAND class=" << typeid(*this).name() << ">" << std::endl;
             
             std::string propertyString = getProperties().toString();
-            ostream << "Properties: " << propertyString << std::endl;
-            
-            ostream << "Body: " << std::endl;
+            ostream << propertyString;
             
             const std::vector<unsigned char>& bytes = getBytes();
+            ostream << "<STOMP-BODY numBytes=" << (int)bytes.size() << ">";
             
             for( std::size_t ix=0; ix<bytes.size(); ++ix ){
                 char c = (char)bytes[ix];
@@ -136,6 +135,9 @@ namespace commands{
                 else 
                     ostream << "[" << (int)(unsigned char)c << "]";
             }
+            
+            ostream << "</STOMP-BODY>";
+            ostream << std::endl << "</STOMP-COMMAND>";
             
             return ostream.str();
         }
