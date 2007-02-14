@@ -106,7 +106,7 @@ namespace commands{
          * @return formatted string useful for debugging.
          */
         virtual std::string toString() const {
-            return std::string("activemq::connector::openwire::commands::BaseDataStructure");
+            return std::string("BaseDataStructure\n");
         }
 
         /**
