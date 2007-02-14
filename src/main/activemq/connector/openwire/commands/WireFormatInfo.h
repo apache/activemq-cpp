@@ -87,38 +87,6 @@ namespace commands{
         }
 
         /**
-         * Checks if the stackTraceEnabled flag is on
-         * @return true if the flag is on.
-         */
-        bool isStackTraceEnabled() const {
-            return stackTraceEnabled;
-        }
-
-        /**
-         * Sets if the stackTraceEnabled flag is on
-         * @param stackTraceEnabled - ture to turn flag is on
-         */
-        void setStackTraceEnabled( bool stackTraceEnabled ) {
-            this->stackTraceEnabled = stackTraceEnabled;
-        }
-
-        /**
-         * Checks if the tcpNoDelayEnabled flag is on
-         * @return true if the flag is on.
-         */
-        bool isTcpNoDelayEnabled() const {
-            return tcpNoDelayEnabled;
-        }
-
-        /**
-         * Sets if the tcpNoDelayEnabled flag is on
-         * @param tcpNoDelayEnabled - ture to turn flag is on
-         */
-        void setTcpNoDelayEnabled( bool tcpNoDelayEnabled ) {
-            this->tcpNoDelayEnabled = tcpNoDelayEnabled;
-        }
-
-        /**
          * Get the current Wireformat Version
          * @return int that identifies the version
          */
@@ -135,68 +103,64 @@ namespace commands{
         }
 
         /**
+         * Checks if the stackTraceEnabled flag is on
+         * @return true if the flag is on.
+         */
+        bool isStackTraceEnabled() const;
+
+        /**
+         * Sets if the stackTraceEnabled flag is on
+         * @param stackTraceEnabled - ture to turn flag is on
+         */
+        void setStackTraceEnabled( bool stackTraceEnabled );
+
+        /**
+         * Checks if the tcpNoDelayEnabled flag is on
+         * @return true if the flag is on.
+         */
+        bool isTcpNoDelayEnabled() const;
+
+        /**
+         * Sets if the tcpNoDelayEnabled flag is on
+         * @param tcpNoDelayEnabled - ture to turn flag is on
+         */
+        void setTcpNoDelayEnabled( bool tcpNoDelayEnabled );
+
+        /**
          * Checks if the cacheEnabled flag is on
          * @return true if the flag is on.
          */
-        bool isCacheEnabled() const {
-            return cacheEnabled;
-        }
+        bool isCacheEnabled() const;
 
         /**
          * Sets if the cacheEnabled flag is on
          * @param cacheEnabled - ture to turn flag is on
          */
-        void setCacheEnabled( bool cacheEnabled ) {
-            this->cacheEnabled = cacheEnabled;
-        }
+        void setCacheEnabled( bool cacheEnabled );
 
         /**
          * Checks if the tightEncodingEnabled flag is on
          * @return true if the flag is on.
          */
-        bool isTightEncodingEnabled() const {
-            return tightEncodingEnabled;
-        }
+        bool isTightEncodingEnabled() const;
 
         /**
          * Sets if the tightEncodingEnabled flag is on
          * @param tightEncodingEnabled - ture to turn flag is on
          */
-        void setTightEncodingEnabled( bool tightEncodingEnabled ) {
-            this->tightEncodingEnabled = tightEncodingEnabled;
-        }
+        void setTightEncodingEnabled( bool tightEncodingEnabled );
 
         /**
          * Checks if the sizePrefixDisabled flag is on
          * @return true if the flag is on.
          */
-        bool isSizePrefixDisabled() const {
-            return sizePrefixDisabled;
-        }
+        bool isSizePrefixDisabled() const;
 
         /**
          * Sets if the sizePrefixDisabled flag is on
          * @param sizePrefixDisabled - ture to turn flag is on
          */
-        void setSizePrefixDisabled( bool sizePrefixDisabled ) {
-            this->sizePrefixDisabled = sizePrefixDisabled;
-        }
-
-        /**
-         * Get the current value of the maxInactivityDuration feild
-         * @return the value of the maxInactivityDuration
-         */
-        long getMaxInactivityDuration() const {
-            return maxInactivityDuration;
-        }
-
-        /**
-         * Set the current Wireformat Version
-         * @param version - int that identifies the version
-         */
-        void setMaxInactivityDuration( long maxInactivityDuration ) {
-            this->maxInactivityDuration = maxInactivityDuration;
-        }
+        void setSizePrefixDisabled( bool sizePrefixDisabled );
 
         /**
          * Get the Magic field
@@ -306,13 +270,10 @@ namespace commands{
          */
         util::PrimitiveMap properties;
 
+        /**
+         * OpenWire Protocal Version
+         */
         int version;
-        bool stackTraceEnabled;
-        bool tcpNoDelayEnabled;
-        bool cacheEnabled;
-        bool tightEncodingEnabled;
-        bool sizePrefixDisabled;
-        long maxInactivityDuration;
 
     };
 
