@@ -264,7 +264,7 @@ namespace commands{
          * wire
          * @param wireFormat - the wireformatting controller
          */
-        virtual void beforeMarshall( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
             try{
 
                 marshalledProperties.clear();
