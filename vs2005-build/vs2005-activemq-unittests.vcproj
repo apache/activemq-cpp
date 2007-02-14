@@ -439,6 +439,14 @@
 				<Filter
 					Name="openwire"
 					>
+					<File
+						RelativePath="..\src\test\activemq\connector\openwire\OpenWireFormatTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\connector\openwire\OpenWireFormatTest.h"
+						>
+					</File>
 					<Filter
 						Name="commands"
 						>
