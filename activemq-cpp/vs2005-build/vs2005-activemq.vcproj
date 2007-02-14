@@ -2253,6 +2253,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\transport\LoggingTransport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\LoggingTransport.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\transport\Response.h"
 					>
 				</File>
