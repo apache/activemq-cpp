@@ -47,7 +47,17 @@ bool PrimitiveMap::equals( const PrimitiveMap& src ) const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string PrimitiveMap::toString() const {
 
+    std::vector<std::string> keys = this->valueNodeMap.getKeys();
     ostringstream stream;
+
+    stream << "Begin Class PrimitiveMap:" << std::endl;
+
+    for( std::size_t i = 0; i < keys.size(); ++i ) {
+        stream << "map[" << keys[i] << "] = "
+               << valueNodeMap.getValue( keys[i] ).toString() << std::endl;
+    }
+
+    stream << "Begin Class PrimitiveMap:" << std::endl;
 
     return stream.str();
 }

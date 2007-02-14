@@ -330,6 +330,38 @@ namespace util{
                 return *value.byteArrayValue;
             }
 
+            std::string toString() const {
+                std::ostringstream stream;
+
+                if( valueType == BOOLEAN_TYPE ) {
+                    stream << value.boolValue;
+                } else if( valueType == BYTE_TYPE ) {
+                    stream << value.byteValue;
+                } else if( valueType == CHAR_TYPE ) {
+                    stream << value.charValue;
+                } else if( valueType == SHORT_TYPE ) {
+                    stream << value.shortValue;
+                } else if(  valueType == INTEGER_TYPE ) {
+                    stream << value.intValue;
+                } else if( valueType == LONG_TYPE ) {
+                    stream << value.longValue;
+                } else if( valueType == DOUBLE_TYPE ) {
+                    stream << value.doubleValue;
+                } else if( valueType == FLOAT_TYPE ) {
+                    stream << value.floatValue;
+                } else if( valueType == STRING_TYPE ) {
+                    stream << *value.stringValue;
+                } else if( valueType == BYTE_ARRAY_TYPE ) {
+                    std::vector<unsigned char>::const_iterator iter =
+                        value.byteArrayValue->begin();
+                    for( ; iter != value.byteArrayValue->end(); ++iter ) {
+                        stream << '[' << (int)(*iter) << ']';
+                    }
+                }
+
+                return stream.str();
+            }
+
         };
 
 
@@ -339,8 +371,8 @@ namespace util{
 
     public:
 
-    	PrimitiveMap();
-    	virtual ~PrimitiveMap();
+        PrimitiveMap();
+        virtual ~PrimitiveMap();
 
         /**
          * Copy Constructor
