@@ -68,6 +68,21 @@ namespace commands{
         }
 
         /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const {
+            std::ostringstream stream;
+
+            stream << "Begin Class = ActiveMQQueue" << std::endl;
+            stream << ActiveMQDestination::toString();
+            stream << "Begin Class = ActiveMQQueue" << std::endl;
+
+            return stream.str();
+        }
+
+        /**
          * Compares the DataStructure passed in to this one, and returns if
          * they are equivalent.  Equivalent here means that they are of the
          * same type, and that each element of the objects are the same.
@@ -85,14 +100,6 @@ namespace commands{
          */
         virtual cms::Destination::DestinationType getDestinationType(void) const {
             return cms::Destination::QUEUE;
-        }
-
-        /**
-         * Converts the Destination Name into a String
-         * @return string name
-         */
-        virtual std::string toString(void) const {
-            return this->getPhysicalName();
         }
 
         /**
