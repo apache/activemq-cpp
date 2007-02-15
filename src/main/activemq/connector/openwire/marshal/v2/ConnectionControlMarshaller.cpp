@@ -107,10 +107,10 @@ void ConnectionControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, Data
         dynamic_cast<ConnectionControl*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->isClose() );
-    dataOut->write( info->isExit() );
-    dataOut->write( info->isFaultTolerant() );
-    dataOut->write( info->isResume() );
-    dataOut->write( info->isSuspend() );
+    dataOut->writeBoolean( info->isClose() );
+    dataOut->writeBoolean( info->isExit() );
+    dataOut->writeBoolean( info->isFaultTolerant() );
+    dataOut->writeBoolean( info->isResume() );
+    dataOut->writeBoolean( info->isSuspend() );
 }
 

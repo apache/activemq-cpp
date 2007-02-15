@@ -69,19 +69,6 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
     std::size_t remaining = len;
     int sendOpts = AMQ_SEND_OPTS;
 
-    /*if( debug ){
-        cout << "SocketOutputStream:write(), numbytes: " << len << " - ";
-        for( std::size_t ix=0; ix<len; ++ix ){
-            char c = buffer[ix];
-            if( Character::isLetterOrDigit(c) || Character::isWhitespace(c) ){
-                cout << (char)c;
-            }
-            else cout << "[" << (int)(unsigned char)c << "]";
-        }
-        cout << endl;
-        cout.flush();
-    }*/
-        
     while( remaining > 0 )
     {
         int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );      	

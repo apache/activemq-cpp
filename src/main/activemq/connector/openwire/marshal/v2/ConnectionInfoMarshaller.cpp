@@ -150,8 +150,8 @@ void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStr
     looseMarshalString( info->getPassword(), dataOut );
     looseMarshalString( info->getUserName(), dataOut );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-    dataOut->write( info->isBrokerMasterConnector() );
-    dataOut->write( info->isManageable() );
-    dataOut->write( info->isClientMaster() );
+    dataOut->writeBoolean( info->isBrokerMasterConnector() );
+    dataOut->writeBoolean( info->isManageable() );
+    dataOut->writeBoolean( info->isClientMaster() );
 }
 

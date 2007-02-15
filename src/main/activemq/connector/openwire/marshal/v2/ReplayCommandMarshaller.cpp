@@ -71,8 +71,8 @@ void ReplayCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStr
 
     ReplayCommand* info =
         dynamic_cast<ReplayCommand*>( dataStructure );
-    dataOut->write( info->getFirstNakNumber() );
-    dataOut->write( info->getLastNakNumber() );
+    dataOut->writeInt( info->getFirstNakNumber() );
+    dataOut->writeInt( info->getLastNakNumber() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ void ReplayCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStru
         dynamic_cast<ReplayCommand*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->getFirstNakNumber() );
-    dataOut->write( info->getLastNakNumber() );
+    dataOut->writeInt( info->getFirstNakNumber() );
+    dataOut->writeInt( info->getLastNakNumber() );
 }
 

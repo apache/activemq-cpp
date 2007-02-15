@@ -85,7 +85,7 @@ void MessageDispatchMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
     tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
     tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
     tightMarshalNestedObject2( wireFormat, info->getMessage(), dataOut, bs );
-    dataOut->write( info->getRedeliveryCounter() );
+    dataOut->writeInt( info->getRedeliveryCounter() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,6 +113,6 @@ void MessageDispatchMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
     looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
     looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
     looseMarshalNestedObject( wireFormat, info->getMessage(), dataOut );
-    dataOut->write( info->getRedeliveryCounter() );
+    dataOut->writeInt( info->getRedeliveryCounter() );
 }
 

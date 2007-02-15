@@ -65,7 +65,7 @@ void BaseCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
 
     transport::Command* info =
         dynamic_cast<transport::Command*>( dataStructure );
-    dataOut->write( info->getCommandId() );
+    dataOut->writeInt( info->getCommandId() );
     bs->readBoolean();
 }
 
@@ -86,7 +86,7 @@ void BaseCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruct
         dynamic_cast<transport::Command*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->getCommandId() );
-    dataOut->write( info->isResponseRequired() );
+    dataOut->writeInt( info->getCommandId() );
+    dataOut->writeBoolean( info->isResponseRequired() );
 }
 

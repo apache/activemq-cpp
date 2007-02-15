@@ -157,11 +157,11 @@ void BrokerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructu
     looseMarshalString( info->getBrokerURL(), dataOut );
     looseMarshalObjectArray( wireFormat, info->getPeerBrokerInfos(), dataOut );
     looseMarshalString( info->getBrokerName(), dataOut );
-    dataOut->write( info->isSlaveBroker() );
-    dataOut->write( info->isMasterBroker() );
-    dataOut->write( info->isFaultTolerantConfiguration() );
-    dataOut->write( info->isDuplexConnection() );
-    dataOut->write( info->isNetworkConnection() );
+    dataOut->writeBoolean( info->isSlaveBroker() );
+    dataOut->writeBoolean( info->isMasterBroker() );
+    dataOut->writeBoolean( info->isFaultTolerantConfiguration() );
+    dataOut->writeBoolean( info->isDuplexConnection() );
+    dataOut->writeBoolean( info->isNetworkConnection() );
     looseMarshalLong( wireFormat, info->getConnectionId(), dataOut );
 }
 

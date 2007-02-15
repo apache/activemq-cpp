@@ -70,7 +70,7 @@ void ResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructur
 
     Response* info =
         dynamic_cast<Response*>( dataStructure );
-    dataOut->write( info->getCorrelationId() );
+    dataOut->writeInt( info->getCorrelationId() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,6 @@ void ResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure
         dynamic_cast<Response*>( dataStructure );
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->getCorrelationId() );
+    dataOut->writeInt( info->getCorrelationId() );
 }
 
