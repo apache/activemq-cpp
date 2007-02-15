@@ -33,24 +33,12 @@ namespace openwire{
         // OpenWire's Consumer Info Command
         commands::ConsumerInfo* consumerInfo;
 
-        // Message Selector for this Consumer
-        std::string selector;
-
-        // Consumer Id
-        unsigned int consumerId;
-
-        // Destination
-        cms::Destination* destination;
-
         // Session Info - We do not own this
         const SessionInfo* session;
 
     public:
 
         OpenWireConsumerInfo() {
-            selector = "";
-            consumerId = 0;
-            destination = NULL;
             session = NULL;
         }
 
@@ -61,6 +49,12 @@ namespace openwire{
          * @return This Consumer's selector expression or "".
          */
         virtual const std::string& getMessageSelector(void) const {
+            static std::string selector = "";
+
+            if( consumerInfo != NULL ) {
+                selector = consumerInfo->getSelector();
+            }
+
             return selector;
         }
 
@@ -69,7 +63,9 @@ namespace openwire{
          * @param selector This Consumer's selector expression or "".
          */
         virtual void setMessageSelector( const std::string& selector ) {
-            this->selector = selector;
+            if( consumerInfo != NULL ){
+                this->consumerInfo->setSelector( selector );
+            }
         }
 
         /**
@@ -77,7 +73,12 @@ namespace openwire{
          * @return value of the Consumer Id.
          */
         virtual unsigned int getConsumerId(void) const {
-            return consumerId;
+            if( consumerInfo != NULL ) {
+                return (unsigned int)
+                    this->consumerInfo->getConsumerId()->getValue();
+            }
+
+            return 0;
         }
 
         /**
@@ -85,7 +86,9 @@ namespace openwire{
          * @param id value of the Consumer Id.
          */
         virtual void setConsumerId( const unsigned int id ) {
-            this->consumerId = id;
+            if( this->consumerInfo != NULL ) {
+                this->consumerInfo->getConsumerId()->setValue( id );
+            }
         }
 
         /**
@@ -93,7 +96,7 @@ namespace openwire{
          * @return Destination this consumer is attached to
          */
         virtual const cms::Destination& getDestination(void) const {
-            return *destination;
+            //return *(this->consumerInfo->getDestination());
         }
 
         /**
@@ -101,7 +104,12 @@ namespace openwire{
          * @param destination Destination this consumer is attached to
          */
         virtual void setDestination( const cms::Destination& destination ) {
-            this->destination = destination.clone();
+            if( consumerInfo != NULL ) {
+
+                this->consumerInfo->setDestination(
+                    dynamic_cast<commands::ActiveMQDestination*>(
+                        destination.clone() ) );
+            }
         }
 
         /**
