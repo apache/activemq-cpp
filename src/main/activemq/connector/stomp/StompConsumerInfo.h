@@ -85,16 +85,16 @@ namespace stomp{
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination this consumer is attached to
          */
-        virtual const cms::Destination& getDestination(void) const {
-            return *destination;
+        virtual const cms::Destination* getDestination(void) const {
+            return destination;
         }
 
         /**
          * Sets the destination that this Consumer is listening on
          * @param destination Destination this consumer is attached to
          */
-        virtual void setDestination( const cms::Destination& destination ) {
-            this->destination = destination.clone();
+        virtual void setDestination( const cms::Destination* destination ) {
+            this->destination = destination->clone();
         }
 
         /**

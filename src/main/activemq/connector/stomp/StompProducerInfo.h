@@ -52,16 +52,16 @@ namespace stomp{
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination& getDestination(void) const {
-            return *destination;
+        virtual const cms::Destination* getDestination(void) const {
+            return destination;
         }
 
         /**
          * Sets the Default Destination for this Producer
          * @param destination reference to a destination, copied internally
          */
-        virtual void setDestination( const cms::Destination& destination ) {
-            this->destination = destination.clone();
+        virtual void setDestination( const cms::Destination* destination ) {
+            this->destination = destination->clone();
         }
 
         /**

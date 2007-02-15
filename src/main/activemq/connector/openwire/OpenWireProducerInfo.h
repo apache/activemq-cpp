@@ -49,20 +49,24 @@ namespace openwire{
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination& getDestination(void) const {
-            //return *destination;
+        virtual const cms::Destination* getDestination(void) const {
+            if( this->producerInfo != NULL ) {
+                return this->producerInfo->getDestination()->getCMSDestination();
+            }
+
+            return NULL;
         }
 
         /**
          * Sets the Default Destination for this Producer
          * @param destination reference to a destination, copied internally
          */
-        virtual void setDestination( const cms::Destination& destination ) {
+        virtual void setDestination( const cms::Destination* destination ) {
             if( this->producerInfo != NULL ) {
 
                 this->producerInfo->setDestination(
                     dynamic_cast<commands::ActiveMQDestination*>(
-                        destination.clone() ) );
+                        destination->clone() ) );
             }
         }
 
