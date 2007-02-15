@@ -212,6 +212,7 @@ h_sources = \
     activemq/connector/openwire/OpenWireProducerInfo.h \
     activemq/connector/openwire/OpenWireSessionInfo.h \
     activemq/connector/openwire/OpenWireTransactionInfo.h \
+    activemq/connector/openwire/BrokerException.h \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \

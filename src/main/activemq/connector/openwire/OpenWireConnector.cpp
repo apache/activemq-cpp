@@ -25,6 +25,7 @@
 #include <activemq/util/Integer.h>
 #include <activemq/util/Guid.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
+#include <activemq/connector/openwire/BrokerException.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/connector/openwire/commands/ConnectionId.h>
@@ -34,6 +35,7 @@
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/connector/openwire/commands/BrokerError.h>
 
 using namespace std;
 using namespace activemq;
@@ -66,6 +68,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->brokerWireFormatInfo = NULL;
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
+    this->nextSessionId = 1;
     this->properties.copy( &properties );
     this->wireFormat = dynamic_cast<OpenWireFormat*>(
         wireFormatFactory.createWireFormat( properties ) );
@@ -101,7 +104,7 @@ OpenWireConnector::~OpenWireConnector()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int OpenWireConnector::getNextProducerId()
+long long OpenWireConnector::getNextProducerId()
 {
     synchronized( &mutex )
     {
@@ -112,11 +115,22 @@ unsigned int OpenWireConnector::getNextProducerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int OpenWireConnector::getNextTransactionId()
+long long OpenWireConnector::getNextTransactionId()
 {
     synchronized( &mutex )
     {
         return nextTransactionId++;
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long OpenWireConnector::getNextSessionId()
+{
+    synchronized( &mutex )
+    {
+        return nextSessionId++;
     }
 
     return 0;
@@ -155,7 +169,7 @@ void OpenWireConnector::start() throw( cms::CMSException )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException );
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +190,7 @@ void OpenWireConnector::close() throw( cms::CMSException ){
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException );
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,17 +219,7 @@ void OpenWireConnector::connect()
         connectionInfo.setConnectionId( connectionId );
 
         // Now we ping the broker and see if we get an ack / nack
-        Response* response = transport->request( &connectionInfo );
-
-        if( dynamic_cast<ExceptionResponse*>( response ) != NULL )
-        {
-            delete response;
-
-            throw OpenWireConnectorException(
-                __FILE__,
-                __LINE__,
-                "OpenWireConnector::connect - Failed on Connect Request" );
-        }
+        Response* response = syncRequest( &connectionInfo );
 
         // Tag us in the Connected State now.
         state = CONNECTED;
@@ -223,7 +227,7 @@ void OpenWireConnector::connect()
         // Clean up the ack
         delete response;
     }
-    AMQ_CATCH_RETHROW( BrokerError )
+    AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
@@ -237,20 +241,18 @@ void OpenWireConnector::disconnect()
         state = DISCONNECTED;
 
         // Remove our ConnectionId from the Broker
-        RemoveInfo remove;
-        remove.setObjectId( connectionInfo.getConnectionId()->cloneDataStructure() );
-        transport->oneway( &remove );
+        disposeOf( connectionInfo.getConnectionId() );
 
         // Send the disconnect command to the broker.
         ShutdownInfo shutdown;
-        transport->oneway( &shutdown );
+        oneway( &shutdown );
 
-    } catch( CommandIOException& ex ){
+    } catch( ConnectorException& ex ){
         transport->close();
         throw ex;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException );
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,11 +264,36 @@ connector::SessionInfo* OpenWireConnector::createSession(
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        // Create and initialize a new SessionInfo object
+        commands::SessionInfo* info = new commands::SessionInfo();
+        SessionId* sessionId = new SessionId();
+        sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
+        sessionId->setValue( getNextSessionId() );
+        info->setSessionId( sessionId );
+            
+        try{
+            
+            // Send the subscription message to the broker.
+            Response* response = syncRequest(info);
+            
+            // The broker did not return an error - this is good.
+            // Just discard the response.
+            delete response;
+            
+            // Return the session info.
+            return NULL; /* TODO: Find a way to bridge between commands::SessionInfo and connector::SessionInfo */
+            
+        } catch( ConnectorException& ex ) {
+            
+            // Something bad happened - free the session info object.
+            delete info;
+            
+            ex.setMark(__FILE__, __LINE__);
+            throw ex;
+        }        
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -285,7 +312,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +332,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -322,7 +349,7 @@ ProducerInfo* OpenWireConnector::createProducer(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -338,7 +365,7 @@ cms::Topic* OpenWireConnector::createTopic( const std::string& name,
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -354,7 +381,7 @@ cms::Queue* OpenWireConnector::createQueue( const std::string& name,
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -370,7 +397,7 @@ cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -386,7 +413,7 @@ cms::TemporaryQueue* OpenWireConnector::createTemporaryQueue(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -438,7 +465,7 @@ void OpenWireConnector::send( cms::Message* message,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -458,7 +485,7 @@ void OpenWireConnector::send( std::list<cms::Message*>& messages,
         }
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -502,7 +529,7 @@ void OpenWireConnector::acknowledge( const connector::SessionInfo* session,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -537,7 +564,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
     return NULL;
 }
 
@@ -563,7 +590,7 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -588,7 +615,7 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -606,7 +633,7 @@ cms::Message* OpenWireConnector::createMessage(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -624,7 +651,7 @@ cms::BytesMessage* OpenWireConnector::createBytesMessage(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -642,7 +669,7 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -660,7 +687,7 @@ cms::MapMessage* OpenWireConnector::createMapMessage(
         return NULL;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -671,7 +698,7 @@ void OpenWireConnector::unsubscribe( const std::string& name )
     {
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -691,7 +718,7 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
         delete resource;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -747,7 +774,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
         }
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -769,5 +796,65 @@ void OpenWireConnector::onTransportException(
         fire( ex );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( ConnectorException );
+    AMQ_CATCHALL_THROW( ConnectorException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::oneway(Command* command) throw (ConnectorException)
+{
+    try
+    {
+        enforceConnected();
+        transport->oneway(command);
+    }
+    AMQ_CATCH_EXCEPTION_CONVERT( CommandIOException, OpenWireConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, OpenWireConnectorException )
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* OpenWireConnector::syncRequest(Command* command) throw (ConnectorException)
+{
+    try
+    {
+        enforceConnected();
+        Response* response = transport->request(command);
+        ExceptionResponse* exceptionResponse = dynamic_cast<ExceptionResponse*>(response);
+        if( exceptionResponse != NULL )
+        {   
+            // Create an exception to hold the error information.
+            /*commands::BrokerError* brokerError = dynamic_cast<commands::BrokerError*>(exceptionResponse->getException());
+            BrokerException exception( __FILE__, __LINE__, brokerError );*/
+            /* TODO: Bridge between transport::BrokerError and openwire::commands::BrokerError */
+            OpenWireConnectorException exception( __FILE__, __LINE__, "An error occurred at the broker" );
+            
+            // Free the response command.
+            delete response;
+            
+            // Throw the exception.
+            throw exception;
+        }
+        
+        // Nothing bad happened - just return the response.
+        return response;
+    }
+    AMQ_CATCH_EXCEPTION_CONVERT( CommandIOException, OpenWireConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, OpenWireConnectorException )
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::disposeOf(DataStructure* objectId) throw (ConnectorException)
+{
+    try
+    {
+        RemoveInfo command;
+        command.setObjectId( objectId->cloneDataStructure() );
+        oneway(&command);
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
