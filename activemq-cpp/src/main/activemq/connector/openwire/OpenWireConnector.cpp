@@ -40,6 +40,8 @@
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
 #include <activemq/connector/openwire/commands/BrokerError.h>
+#include <activemq/connector/openwire/commands/ActiveMQTopic.h>
+#include <activemq/connector/openwire/commands/ActiveMQQueue.h>
 
 using namespace std;
 using namespace activemq;
@@ -435,15 +437,14 @@ ProducerInfo* OpenWireConnector::createProducer(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* OpenWireConnector::createTopic( const std::string& name,
-                                            connector::SessionInfo* session )
+                                            connector::SessionInfo* session AMQCPP_UNUSED )
     throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        return new commands::ActiveMQTopic( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
@@ -451,15 +452,14 @@ cms::Topic* OpenWireConnector::createTopic( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* OpenWireConnector::createQueue( const std::string& name,
-                                            connector::SessionInfo* session )
+                                            connector::SessionInfo* session AMQCPP_UNUSED )
     throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        return new commands::ActiveMQQueue( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
