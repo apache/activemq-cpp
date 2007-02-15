@@ -139,12 +139,17 @@ namespace openwire{
         /**
          * Next avaliable Producer Id
          */
-        unsigned int nextProducerId;
+        long long nextProducerId;
 
         /**
          * Next avaliable Transaction Id
          */
-        unsigned int nextTransactionId;
+        long long nextTransactionId;
+        
+        /**
+         * Next available Session Id.
+         */
+        long long nextSessionId;
 
         /**
          * Properties for the connector.
@@ -529,11 +534,38 @@ namespace openwire{
 
     private:
 
-        unsigned int getNextProducerId(void);
-        unsigned int getNextTransactionId(void);
+        long long getNextProducerId();
+        long long getNextTransactionId();
+        long long getNextSessionId();
 
         // Check for Connected State and Throw an exception if not.
-        void enforceConnected( void ) throw ( ConnectorException );
+        void enforceConnected() throw ( ConnectorException );
+        
+        /**
+         * Sends a oneway message.
+         * @param command The message to send.
+         * @throws ConnectorException if not currently connected, or
+         * if the operation fails for any reason.
+         */
+        void oneway( transport::Command* command ) throw (ConnectorException);
+        
+        /**
+         * Sends a synchronous request and returns the response from the broker.
+         * Converts any error responses into an exception.
+         * @param command The request command.
+         * @returns The response sent from the broker.
+         * @throws ConnectorException thrown if an error response was received
+         * from the broker, or if any other error occurred.
+         */         
+        transport::Response* syncRequest(transport::Command* command) throw (ConnectorException);
+        
+        /**
+         * Sends a message to the broker to dispose of the given resource.
+         * @param objectId The ID of the resource to be released.
+         * @throw ConnectorException if any problems occur from sending
+         * the message.
+         */
+        void disposeOf(commands::DataStructure* objectId) throw (ConnectorException);
 
     };
 
