@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONSUMERINFO_H_
 
 #include <activemq/connector/ConsumerInfo.h>
+#include <activemq/connector/openwire/commands/ConsumerInfo.h>
 #include <cms/Destination.h>
 
 namespace activemq{
@@ -28,6 +29,9 @@ namespace openwire{
     class OpenWireConsumerInfo : public ConsumerInfo {
 
     private:
+
+        // OpenWire's Consumer Info Command
+        commands::ConsumerInfo* consumerInfo;
 
         // Message Selector for this Consumer
         std::string selector;
@@ -114,6 +118,27 @@ namespace openwire{
          */
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
+        }
+
+        /**
+         * Gets the OpenWire Consumer Info object that was used to create
+         * this Consumer.
+         * @returns The ConsumerInfo for this Session or NULL if not set.
+         */
+        virtual const commands::ConsumerInfo* getConsumerInfo() const {
+            return this->consumerInfo;
+        }
+        virtual commands::ConsumerInfo* getConsumerInfo() {
+            return this->consumerInfo;
+        }
+
+        /**
+         * Sets the ConsumerInfo from OpenWire that was used to create this
+         * Consumer
+         * @param consumerInfo - the ConsumerInfo for this Session.
+         */
+        virtual void setConsumerInfo( commands::ConsumerInfo* consumerInfo ) {
+            this->consumerInfo = consumerInfo;
         }
 
     };
