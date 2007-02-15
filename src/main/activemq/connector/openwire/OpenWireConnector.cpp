@@ -44,7 +44,6 @@ using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
-using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireConnector::OpenWireConnector( Transport* transport,
@@ -214,7 +213,7 @@ void OpenWireConnector::connect()
         }
 
         // Generate a connectionId
-        ConnectionId* connectionId = new ConnectionId();
+        commands::ConnectionId* connectionId = new commands::ConnectionId();
         connectionId->setValue( Guid::createGUIDString() );
         connectionInfo.setConnectionId( connectionId );
 
@@ -244,7 +243,7 @@ void OpenWireConnector::disconnect()
         disposeOf( connectionInfo.getConnectionId() );
 
         // Send the disconnect command to the broker.
-        ShutdownInfo shutdown;
+        commands::ShutdownInfo shutdown;
         oneway( &shutdown );
 
     } catch( ConnectorException& ex ){
@@ -266,31 +265,31 @@ connector::SessionInfo* OpenWireConnector::createSession(
 
         // Create and initialize a new SessionInfo object
         commands::SessionInfo* info = new commands::SessionInfo();
-        SessionId* sessionId = new SessionId();
+        commands::SessionId* sessionId = new commands::SessionId();
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
         sessionId->setValue( getNextSessionId() );
         info->setSessionId( sessionId );
-            
+
         try{
-            
+
             // Send the subscription message to the broker.
             Response* response = syncRequest(info);
-            
+
             // The broker did not return an error - this is good.
             // Just discard the response.
             delete response;
-            
+
             // Return the session info.
             return NULL; /* TODO: Find a way to bridge between commands::SessionInfo and connector::SessionInfo */
-            
+
         } catch( ConnectorException& ex ) {
-            
+
             // Something bad happened - free the session info object.
             delete info;
-            
+
             ex.setMark(__FILE__, __LINE__);
             throw ex;
-        }        
+        }
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
@@ -726,14 +725,14 @@ void OpenWireConnector::onCommand( transport::Command* command )
 {
     try
     {
-        MessageDispatch* dispatch =
-            dynamic_cast<MessageDispatch*>( command );
-        WireFormatInfo* brokerWireFormatInfo =
-            dynamic_cast<WireFormatInfo*>( command );
-        BrokerInfo* brokerInfo =
-            dynamic_cast<BrokerInfo*>( command );
-        ShutdownInfo* shutdownInfo =
-            dynamic_cast<ShutdownInfo*>( command );
+        commands::MessageDispatch* dispatch =
+            dynamic_cast<commands::MessageDispatch*>( command );
+        commands::WireFormatInfo* brokerWireFormatInfo =
+            dynamic_cast<commands::WireFormatInfo*>( command );
+        commands::BrokerInfo* brokerInfo =
+            dynamic_cast<commands::BrokerInfo*>( command );
+        commands::ShutdownInfo* shutdownInfo =
+            dynamic_cast<commands::ShutdownInfo*>( command );
 
         if( dispatch != NULL ) {
 
@@ -822,20 +821,20 @@ Response* OpenWireConnector::syncRequest(Command* command) throw (ConnectorExcep
         Response* response = transport->request(command);
         ExceptionResponse* exceptionResponse = dynamic_cast<ExceptionResponse*>(response);
         if( exceptionResponse != NULL )
-        {   
+        {
             // Create an exception to hold the error information.
             /*commands::BrokerError* brokerError = dynamic_cast<commands::BrokerError*>(exceptionResponse->getException());
             BrokerException exception( __FILE__, __LINE__, brokerError );*/
             /* TODO: Bridge between transport::BrokerError and openwire::commands::BrokerError */
             OpenWireConnectorException exception( __FILE__, __LINE__, "An error occurred at the broker" );
-            
+
             // Free the response command.
             delete response;
-            
+
             // Throw the exception.
             throw exception;
         }
-        
+
         // Nothing bad happened - just return the response.
         return response;
     }
@@ -846,13 +845,14 @@ Response* OpenWireConnector::syncRequest(Command* command) throw (ConnectorExcep
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::disposeOf(DataStructure* objectId) throw (ConnectorException)
+void OpenWireConnector::disposeOf(
+    commands::DataStructure* objectId ) throw ( ConnectorException )
 {
     try
     {
-        RemoveInfo command;
+        commands::RemoveInfo command;
         command.setObjectId( objectId->cloneDataStructure() );
-        oneway(&command);
+        oneway( &command );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
