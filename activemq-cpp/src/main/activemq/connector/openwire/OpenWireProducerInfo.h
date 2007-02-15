@@ -33,26 +33,16 @@ namespace openwire{
         // OpenWire ProducerInfo Command
         commands::ProducerInfo* producerInfo;
 
-        // Producer Id
-        unsigned int producerId;
-
-        // Default Destination
-        cms::Destination* destination;
-
         // Session that this producer is attached to - we do not own this
         const SessionInfo* session;
 
     public:
 
         OpenWireProducerInfo() {
-            destination = NULL;
-            producerId = 0;
             session = NULL;
         }
 
-        virtual ~OpenWireProducerInfo() {
-            delete destination;
-        }
+        virtual ~OpenWireProducerInfo() {}
 
         /**
          * Retrieves the default destination that this producer
@@ -60,7 +50,7 @@ namespace openwire{
          * @return Destionation, owned by this object
          */
         virtual const cms::Destination& getDestination(void) const {
-            return *destination;
+            //return *destination;
         }
 
         /**
@@ -68,7 +58,12 @@ namespace openwire{
          * @param destination reference to a destination, copied internally
          */
         virtual void setDestination( const cms::Destination& destination ) {
-            this->destination = destination.clone();
+            if( this->producerInfo != NULL ) {
+
+                this->producerInfo->setDestination(
+                    dynamic_cast<commands::ActiveMQDestination*>(
+                        destination.clone() ) );
+            }
         }
 
         /**
@@ -76,7 +71,12 @@ namespace openwire{
          * @return value of the Producer Id.
          */
         virtual unsigned int getProducerId(void) const {
-            return producerId;
+            if( this->producerInfo != NULL ) {
+                return (unsigned int)
+                    this->producerInfo->getProducerId()->getValue();
+            }
+
+            return 0;
         }
 
         /**
@@ -84,7 +84,9 @@ namespace openwire{
          * @return id string value of the Producer Id.
          */
         virtual void setProducerId( const unsigned int id ) {
-            this->producerId = id;
+            if( this->producerInfo != NULL ) {
+                this->producerInfo->getProducerId()->setValue( id );
+            }
         }
 
         /**
