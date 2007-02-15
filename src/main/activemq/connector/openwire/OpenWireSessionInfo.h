@@ -37,12 +37,8 @@ namespace openwire{
         // Acknowledge Mode of this Session
         cms::Session::AcknowledgeMode ackMode;
 
-        // The id of the connection to the broker
-        // (given to us by the broker)
-        std::string connectionId;
-
-        // The unique session id
-        unsigned int sessionId;
+        // Internal String used to buffer the ConnectionId
+        mutable std::string connectionId;
 
         // Info for this sessions current transaction
         const TransactionInfo* transaction;
@@ -50,7 +46,6 @@ namespace openwire{
     public:
 
         OpenWireSessionInfo() {
-            sessionId = 0;
             ackMode = cms::Session::AUTO_ACKNOWLEDGE;
             transaction = NULL;
             sessionInfo = NULL;
@@ -63,6 +58,10 @@ namespace openwire{
          * @return string value of the connection id
          */
         virtual const std::string& getConnectionId(void) const{
+            if( sessionInfo != NULL ) {
+                connectionId = sessionInfo->getSessionId()->getConnectionId();
+            }
+
             return connectionId;
         }
 
@@ -71,8 +70,8 @@ namespace openwire{
          * using to receive its messages.
          * @param id string value of the connection id
          */
-        virtual void setConnectionId( const std::string& id ){
-            connectionId = id;
+        virtual void setConnectionId( const std::string& id AMQCPP_UNUSED ){
+            // Do Nothing here.
         }
 
         /**
@@ -80,15 +79,19 @@ namespace openwire{
          * @return id for this session
          */
         virtual unsigned int getSessionId(void) const {
-            return sessionId;
+            if( sessionInfo != NULL ) {
+                return (unsigned int)sessionInfo->getSessionId()->getValue();
+            }
+
+            return 0;
         }
 
         /**
          * Sets the Session Id for this Session
          * @param id integral id value for this session
          */
-        virtual void setSessionId( const unsigned int id ) {
-            this->sessionId = id;
+        virtual void setSessionId( const unsigned int id AMQCPP_UNUSED ) {
+            // Do nothing here
         }
 
         /**
