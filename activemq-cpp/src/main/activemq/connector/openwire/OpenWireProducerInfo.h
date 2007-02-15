@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREPRODUCERINFO_H_
 
 #include <activemq/connector/ProducerInfo.h>
+#include <activemq/connector/openwire/commands/ProducerInfo.h>
 #include <cms/Destination.h>
 
 namespace activemq{
@@ -28,6 +29,9 @@ namespace openwire{
     class OpenWireProducerInfo : public ProducerInfo {
 
     private:
+
+        // OpenWire ProducerInfo Command
+        commands::ProducerInfo* producerInfo;
 
         // Producer Id
         unsigned int producerId;
@@ -97,6 +101,27 @@ namespace openwire{
          */
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
+        }
+
+        /**
+         * Gets the OpenWire ProducerInfo object that was used to create
+         * this session.
+         * @returns The ProducerInfo for this Session or NULL if not set.
+         */
+        virtual const commands::ProducerInfo* getProducerInfo() const {
+            return this->producerInfo;
+        }
+        virtual commands::ProducerInfo* getProducerInfo() {
+            return this->producerInfo;
+        }
+
+        /**
+         * Sets the ProducerInfo from OpenWire that was used to create this
+         * Session
+         * @param producerInfo - the ProducerInfo for this Session.
+         */
+        virtual void setProducerInfo( commands::ProducerInfo* producerInfo ) {
+            this->producerInfo = producerInfo;
         }
 
     };

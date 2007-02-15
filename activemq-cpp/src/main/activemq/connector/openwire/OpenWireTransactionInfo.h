@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRETRANSACTIONINFO_H_
 
 #include <activemq/connector/TransactionInfo.h>
+#include <activemq/connector/openwire/commands/TransactionInfo.h>
 #include <activemq/connector/SessionInfo.h>
 
 namespace activemq{
@@ -28,6 +29,9 @@ namespace openwire{
     class OpenWireTransactionInfo : public TransactionInfo {
 
     private:
+
+        // OpenWire Tramsaction Info Command
+        commands::TransactionInfo* transactionInfo;
 
         // Transaction Id
         unsigned int transactionId;
@@ -74,6 +78,27 @@ namespace openwire{
          */
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
+        }
+
+        /**
+         * Gets the OpenWire TransactionInfo object that was used to create
+         * this session.
+         * @returns The TransactionInfo for this Session or NULL if not set.
+         */
+        virtual const commands::TransactionInfo* getTransactionInfo() const {
+            return this->transactionInfo;
+        }
+        virtual commands::TransactionInfo* getTransactionInfo() {
+            return this->transactionInfo;
+        }
+
+        /**
+         * Sets the TransactionInfo from OpenWire that was used to create this
+         * Session
+         * @param transactionInfo - the TransactionInfo for this Session.
+         */
+        virtual void setTransactionInfo( commands::TransactionInfo* transactionInfo ) {
+            this->transactionInfo = transactionInfo;
         }
 
     };
