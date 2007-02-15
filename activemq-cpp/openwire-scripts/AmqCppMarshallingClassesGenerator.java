@@ -278,10 +278,10 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    dataOut->write( " + getter + " );");
             }
             else if (type.equals("short")) {
-                out.println("    dataOut->write( " + getter + " );");
+                out.println("    dataOut->writeShort( " + getter + " );");
             }
             else if (type.equals("int")) {
-                out.println("    dataOut->write( " + getter + " );");
+                out.println("    dataOut->writeInt( " + getter + " );");
             }
             else if (type.equals("long")) {
                 out.println("    tightMarshalLong2( wireFormat, " + getter + ", dataOut, bs );");
@@ -295,7 +295,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 }
                 else {
                     out.println("    if( bs->readBoolean() ) {");
-                    out.println("        dataOut->write( (int)" + getter + ".size() );");
+                    out.println("        dataOut->writeInt( (int)" + getter + ".size() );");
                     out.println("        dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size() );");
                     out.println("    }");
                 }
@@ -420,7 +420,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             String getter = "info->" + property.getGetter().getSimpleName() + "()";
 
             if( type.equals( "boolean" ) ) {
-                out.println("    dataOut->write( " + getter + " );");
+                out.println("    dataOut->writeBoolean( " + getter + " );");
             }
             else if( type.equals("byte") ) {
                 out.println("    dataOut->write( " + getter + " );");
@@ -429,10 +429,10 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 out.println("    dataOut->write( " + getter + " );");
             }
             else if( type.equals("short") ) {
-                out.println("    dataOut->write( " + getter + " );");
+                out.println("    dataOut->writeShort( " + getter + " );");
             }
             else if( type.equals("int")) {
-                out.println("    dataOut->write( " + getter + " );");
+                out.println("    dataOut->writeInt( " + getter + " );");
             }
             else if( type.equals("long") ) {
                 out.println("    looseMarshalLong( wireFormat, " + getter + ", dataOut );");
@@ -447,7 +447,7 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 else {
                     out.println("    dataOut->write( " + getter + ".size() != 0 );");
                     out.println("    if( " + getter + ".size() != 0 ) {");
-                    out.println("        dataOut->write( (int)" + getter + ".size() );");
+                    out.println("        dataOut->writeInt( (int)" + getter + ".size() );");
                     out.println("        dataOut->write( (const unsigned char*)(&" + getter + "[0]), (int)" + getter + ".size() );");
                     out.println("    }");
                 }
