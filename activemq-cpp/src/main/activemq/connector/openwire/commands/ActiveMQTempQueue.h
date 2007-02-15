@@ -95,6 +95,14 @@ namespace commands{
             return ActiveMQDestination::equals( value );
         }
 
+        /**
+         * @returns the cms::Destination interface pointer that the
+         *          objects that derive from this class implement.
+         */
+        virtual const cms::Destination* getCMSDestination() const {
+            return this;
+        }
+
     public:   // CMS Destination
 
         /**

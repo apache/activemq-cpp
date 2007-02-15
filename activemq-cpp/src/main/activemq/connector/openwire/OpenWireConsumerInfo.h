@@ -95,20 +95,24 @@ namespace openwire{
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination this consumer is attached to
          */
-        virtual const cms::Destination& getDestination(void) const {
-            //return *(this->consumerInfo->getDestination());
+        virtual const cms::Destination* getDestination(void) const {
+            if( this->consumerInfo != NULL ) {
+                return this->consumerInfo->getDestination()->getCMSDestination();
+            }
+
+            return NULL;
         }
 
         /**
          * Sets the destination that this Consumer is listening on
          * @param destination Destination this consumer is attached to
          */
-        virtual void setDestination( const cms::Destination& destination ) {
+        virtual void setDestination( const cms::Destination* destination ) {
             if( consumerInfo != NULL ) {
 
                 this->consumerInfo->setDestination(
                     dynamic_cast<commands::ActiveMQDestination*>(
-                        destination.clone() ) );
+                        destination->clone() ) );
             }
         }
 

@@ -30,42 +30,42 @@ namespace connector{
     public:
 
         virtual ~ConsumerInfo(void) {}
-      
+
         /**
          * Gets this message consumer's message selector expression.
          * @return This Consumer's selector expression or "".
          */
         virtual const std::string& getMessageSelector(void) const = 0;
-        
+
         /**
          * Sets this message consumer's message selector expression.
          * @param selector This Consumer's selector expression or "".
          */
-        virtual void setMessageSelector( const std::string& selector ) = 0;        
+        virtual void setMessageSelector( const std::string& selector ) = 0;
 
         /**
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
         virtual unsigned int getConsumerId(void) const = 0;
-        
+
         /**
          * Sets the ID that is assigned to this consumer
          * @return id string value of the Consumer Id.
          */
         virtual void setConsumerId( const unsigned int id ) = 0;
-        
+
         /**
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination
          */
-        virtual const cms::Destination& getDestination(void) const = 0;
-        
+        virtual const cms::Destination* getDestination(void) const = 0;
+
         /**
          * Sets the destination that this Consumer is listening on
          * @param destination Destination
          */
-        virtual void setDestination( const cms::Destination& destination ) = 0;
+        virtual void setDestination( const cms::Destination* destination ) = 0;
 
         /**
          * Gets the Session Info that this consumer is attached too

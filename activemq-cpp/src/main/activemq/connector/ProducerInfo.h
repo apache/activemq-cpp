@@ -30,26 +30,26 @@ namespace connector{
     public:
 
    	    virtual ~ProducerInfo(void) {}
-        
+
         /**
          * Retrieves the default destination that this producer
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination& getDestination(void) const = 0;
-    
+        virtual const cms::Destination* getDestination(void) const = 0;
+
         /**
          * Sets the Default Destination for this Producer
          * @param destination reference to a destination, copied internally
          */
-        virtual void setDestination( const cms::Destination& destination ) = 0;
+        virtual void setDestination( const cms::Destination* destination ) = 0;
 
         /**
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
         virtual unsigned int getProducerId(void) const = 0;
-        
+
         /**
          * Sets the ID that is assigned to this Producer
          * @return id string value of the Producer Id.

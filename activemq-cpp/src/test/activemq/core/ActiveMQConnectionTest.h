@@ -62,32 +62,32 @@ namespace core{
 
         class MyCommandListener : public transport::CommandListener{
         public:
-        
+
             transport::Command* cmd;
-            
+
         public:
-        
+
             MyCommandListener(){
                 cmd = NULL;
             }
             virtual ~MyCommandListener(){}
-            
+
             virtual void onCommand( transport::Command* command ){
                 cmd = command;
             }
         };
-        
-        class MyMessageListener : 
+
+        class MyMessageListener :
             public connector::ConsumerMessageListener
         {
         public:
-        
+
             std::vector<connector::ConsumerInfo*> consumers;
-            
+
         public:
             virtual ~MyMessageListener(){}
-            
-            virtual void onConsumerMessage( 
+
+            virtual void onConsumerMessage(
                 connector::ConsumerInfo* consumer,
                 core::ActiveMQMessage* msg AMQCPP_UNUSED )
             {
@@ -97,28 +97,28 @@ namespace core{
 
         class MyExceptionListener : public cms::ExceptionListener{
         public:
-        
+
             bool caughtOne;
 
         public:
-        
+
             MyExceptionListener(){ caughtOne = false; }
             virtual ~MyExceptionListener(){}
-            
+
             virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
                 caughtOne = true;
             }
         };
-        
+
         class MyActiveMQMessageListener : public ActiveMQMessageListener
         {
         public:
-        
+
             std::vector<ActiveMQMessage*> messages;
-            
+
         public:
             virtual ~MyActiveMQMessageListener(){}
-            
+
             virtual void onActiveMQMessage( ActiveMQMessage* message )
                 throw ( exceptions::ActiveMQException )
             {
@@ -138,37 +138,37 @@ namespace core{
                 MyCommandListener cmdListener;
                 MyActiveMQMessageListener msgListener;
                 std::string connectionId = "testConnectionId";
-                util::SimpleProperties* properties = 
+                util::SimpleProperties* properties =
                     new util::SimpleProperties();
                 transport::Transport* transport = NULL;
-    
-                transport::TransportFactory* factory = 
-                    transport::TransportFactoryMap::getInstance().lookup( 
+
+                transport::TransportFactory* factory =
+                    transport::TransportFactoryMap::getInstance().lookup(
                         "dummy" );
                 if( factory == NULL ){
                     CPPUNIT_ASSERT( false );
                 }
-                
+
                 // Create the transport.
                 transport = factory->createTransport( *properties );
                 if( transport == NULL ){
                     CPPUNIT_ASSERT( false );
                 }
-                
-                transport::DummyTransport* dTransport = 
+
+                transport::DummyTransport* dTransport =
                     dynamic_cast< transport::DummyTransport*>( transport );
-                    
+
                 CPPUNIT_ASSERT( dTransport != NULL );
-                
+
                 dTransport->setCommandListener( &cmdListener );
 
-                connector::stomp::StompConnector* connector = 
-                    new connector::stomp::StompConnector( 
+                connector::stomp::StompConnector* connector =
+                    new connector::stomp::StompConnector(
                         transport, *properties );
 
-                connector->start();                
-                
-                ActiveMQConnection connection( 
+                connector->start();
+
+                ActiveMQConnection connection(
                     new ActiveMQConnectionData(
                         connector, transport, properties) );
 
@@ -176,52 +176,52 @@ namespace core{
                 connection.setExceptionListener( &exListener );
                 CPPUNIT_ASSERT( exListener.caughtOne == false );
                 dTransport->fireException( exceptions::ActiveMQException( __FILE__, __LINE__, "test" ) );
-                CPPUNIT_ASSERT( exListener.caughtOne == true );                                
-                        
+                CPPUNIT_ASSERT( exListener.caughtOne == true );
+
                 cms::Session* session1 = connection.createSession();
                 cms::Session* session2 = connection.createSession();
                 cms::Session* session3 = connection.createSession();
-                
+
                 CPPUNIT_ASSERT( session1 != NULL );
                 CPPUNIT_ASSERT( session2 != NULL );
                 CPPUNIT_ASSERT( session3 != NULL );
-                
+
                 connector::stomp::StompSessionInfo session;
                 connector::stomp::StompConsumerInfo consumer;
-                
+
                 session.setSessionId( 1 );
                 session.setConnectionId( "TEST:123" );
                 session.setAckMode( cms::Session::AUTO_ACKNOWLEDGE );
-                
+
+                connector::stomp::StompTopic myTopic( "test" );
                 consumer.setConsumerId( 1 );
                 consumer.setSessionInfo( &session );
-                consumer.setDestination( 
-                    connector::stomp::StompTopic( "test" ) );
-                    
+                consumer.setDestination( &myTopic );
+
                 connection.addMessageListener( 1, &msgListener );
 
-                connector::stomp::commands::TextMessageCommand* cmd = 
+                connector::stomp::commands::TextMessageCommand* cmd =
                     new connector::stomp::commands::TextMessageCommand;
                 connector::stomp::StompTopic topic1( "test" );
                 cmd->setCMSDestination( &topic1 );
-                
-                connector::ConsumerMessageListener* consumerListener = 
-                    dynamic_cast< connector::ConsumerMessageListener* >( 
+
+                connector::ConsumerMessageListener* consumerListener =
+                    dynamic_cast< connector::ConsumerMessageListener* >(
                         &connection );
 
                 connection.start();
 
                 CPPUNIT_ASSERT( consumerListener != NULL );
-                
+
                 consumerListener->onConsumerMessage( &consumer, cmd );
 
                 CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
 
                 connection.removeMessageListener( 1 );
-                
+
                 msgListener.messages.clear();
                 consumerListener->onConsumerMessage( &consumer, cmd );
-                
+
                 CPPUNIT_ASSERT( msgListener.messages.size() == 0 );
 
                 connection.addMessageListener( 1, &msgListener );
@@ -239,7 +239,7 @@ namespace core{
                 consumerListener->onConsumerMessage( &consumer, cmd );
                 CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
 
-                connection.removeMessageListener( 1 );                
+                connection.removeMessageListener( 1 );
                 msgListener.messages.clear();
 
                 session1->close();
@@ -252,16 +252,16 @@ namespace core{
                 CPPUNIT_ASSERT( exListener.caughtOne == true );
 
                 delete cmd;
-                
+
                 delete session1;
                 delete session2;
                 delete session3;
-                
+
             }
             catch(...)
             {
                 bool exceptionThrown = false;
-                
+
                 CPPUNIT_ASSERT( exceptionThrown );
             }
         }
