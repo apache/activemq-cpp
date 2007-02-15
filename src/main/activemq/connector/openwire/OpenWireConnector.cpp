@@ -238,7 +238,7 @@ void OpenWireConnector::disconnect()
 
         // Remove our ConnectionId from the Broker
         RemoveInfo remove;
-        remove.setObjectId( connectionInfo.getConnectionId() );
+        remove.setObjectId( connectionInfo.getConnectionId()->cloneDataStructure() );
         transport->oneway( &remove );
 
         // Send the disconnect command to the broker.
