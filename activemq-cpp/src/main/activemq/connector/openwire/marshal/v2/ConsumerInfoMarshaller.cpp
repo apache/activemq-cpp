@@ -120,8 +120,8 @@ void ConsumerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStru
     tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
     bs->readBoolean();
     tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    dataOut->write( info->getPrefetchSize() );
-    dataOut->write( info->getMaximumPendingMessageLimit() );
+    dataOut->writeInt( info->getPrefetchSize() );
+    dataOut->writeInt( info->getMaximumPendingMessageLimit() );
     bs->readBoolean();
     tightMarshalString2( info->getSelector(), dataOut, bs );
     tightMarshalString2( info->getSubscriptionName(), dataOut, bs );
@@ -183,21 +183,21 @@ void ConsumerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruc
     BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
     looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
-    dataOut->write( info->isBrowser() );
+    dataOut->writeBoolean( info->isBrowser() );
     looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
-    dataOut->write( info->getPrefetchSize() );
-    dataOut->write( info->getMaximumPendingMessageLimit() );
-    dataOut->write( info->isDispatchAsync() );
+    dataOut->writeInt( info->getPrefetchSize() );
+    dataOut->writeInt( info->getMaximumPendingMessageLimit() );
+    dataOut->writeBoolean( info->isDispatchAsync() );
     looseMarshalString( info->getSelector(), dataOut );
     looseMarshalString( info->getSubscriptionName(), dataOut );
-    dataOut->write( info->isNoLocal() );
-    dataOut->write( info->isExclusive() );
-    dataOut->write( info->isRetroactive() );
+    dataOut->writeBoolean( info->isNoLocal() );
+    dataOut->writeBoolean( info->isExclusive() );
+    dataOut->writeBoolean( info->isRetroactive() );
     dataOut->write( info->getPriority() );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
     looseMarshalNestedObject( wireFormat, info->getAdditionalPredicate(), dataOut );
-    dataOut->write( info->isNetworkSubscription() );
-    dataOut->write( info->isOptimizedAcknowledge() );
-    dataOut->write( info->isNoRangeAcks() );
+    dataOut->writeBoolean( info->isNetworkSubscription() );
+    dataOut->writeBoolean( info->isOptimizedAcknowledge() );
+    dataOut->writeBoolean( info->isNoRangeAcks() );
 }
 

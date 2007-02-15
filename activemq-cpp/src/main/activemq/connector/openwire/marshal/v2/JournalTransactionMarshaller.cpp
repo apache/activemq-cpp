@@ -104,6 +104,6 @@ void JournalTransactionMarshaller::looseMarshal( OpenWireFormat* wireFormat, Dat
 
     looseMarshalNestedObject( wireFormat, info->getTransactionId(), dataOut );
     dataOut->write( info->getType() );
-    dataOut->write( info->getWasPrepared() );
+    dataOut->writeBoolean( info->getWasPrepared() );
 }
 

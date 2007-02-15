@@ -149,20 +149,7 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
         throw IOException( __FILE__, __LINE__, 
                 "activemq::io::SocketInputStream::read - %s", SocketError::getErrorString().c_str() );
     }
-    
-    /*if( debug ){
-        printf("SocketInputStream:read(), numbytes:%d -", len);
-        for( int ix=0; ix<len; ++ix ){
-            char c = buffer[ix];
-            if( Character::isLetterOrDigit(c) || Character::isWhitespace(c) )
-                cout << c;
-            else
-                cout << '[' << (int)(unsigned char)c << ']';
-        }
-        cout << endl;
-        cout.flush();
-    }*/
-    
+
     return len;
 }
 

@@ -95,7 +95,7 @@ void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruct
     dataOut->write( info->getAckType() );
     tightMarshalNestedObject2( wireFormat, info->getFirstMessageId(), dataOut, bs );
     tightMarshalNestedObject2( wireFormat, info->getLastMessageId(), dataOut, bs );
-    dataOut->write( info->getMessageCount() );
+    dataOut->writeInt( info->getMessageCount() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,6 +131,6 @@ void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructu
     dataOut->write( info->getAckType() );
     looseMarshalNestedObject( wireFormat, info->getFirstMessageId(), dataOut );
     looseMarshalNestedObject( wireFormat, info->getLastMessageId(), dataOut );
-    dataOut->write( info->getMessageCount() );
+    dataOut->writeInt( info->getMessageCount() );
 }
 

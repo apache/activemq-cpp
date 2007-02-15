@@ -134,6 +134,6 @@ void ProducerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruc
     looseMarshalCachedObject( wireFormat, info->getProducerId(), dataOut );
     looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-    dataOut->write( info->isDispatchAsync() );
+    dataOut->writeBoolean( info->isDispatchAsync() );
 }
 

@@ -140,7 +140,7 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure
     tightMarshalNestedObject2( wireFormat, info->getMessageId(), dataOut, bs );
     tightMarshalCachedObject2( wireFormat, info->getOriginalTransactionId(), dataOut, bs );
     tightMarshalString2( info->getGroupID(), dataOut, bs );
-    dataOut->write( info->getGroupSequence() );
+    dataOut->writeInt( info->getGroupSequence() );
     tightMarshalString2( info->getCorrelationId(), dataOut, bs );
     bs->readBoolean();
     tightMarshalLong2( wireFormat, info->getExpiration(), dataOut, bs );
@@ -149,17 +149,17 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure
     tightMarshalLong2( wireFormat, info->getTimestamp(), dataOut, bs );
     tightMarshalString2( info->getType(), dataOut, bs );
     if( bs->readBoolean() ) {
-        dataOut->write( (int)info->getContent().size() );
+        dataOut->writeInt( (int)info->getContent().size() );
         dataOut->write( (const unsigned char*)(&info->getContent()[0]), (int)info->getContent().size() );
     }
     if( bs->readBoolean() ) {
-        dataOut->write( (int)info->getMarshalledProperties().size() );
+        dataOut->writeInt( (int)info->getMarshalledProperties().size() );
         dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size() );
     }
     tightMarshalNestedObject2( wireFormat, info->getDataStructure(), dataOut, bs );
     tightMarshalCachedObject2( wireFormat, info->getTargetConsumerId(), dataOut, bs );
     bs->readBoolean();
-    dataOut->write( info->getRedeliveryCounter() );
+    dataOut->writeInt( info->getRedeliveryCounter() );
     tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
     tightMarshalLong2( wireFormat, info->getArrival(), dataOut, bs );
     tightMarshalString2( info->getUserID(), dataOut, bs );
@@ -235,9 +235,9 @@ void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure*
     looseMarshalNestedObject( wireFormat, info->getMessageId(), dataOut );
     looseMarshalCachedObject( wireFormat, info->getOriginalTransactionId(), dataOut );
     looseMarshalString( info->getGroupID(), dataOut );
-    dataOut->write( info->getGroupSequence() );
+    dataOut->writeInt( info->getGroupSequence() );
     looseMarshalString( info->getCorrelationId(), dataOut );
-    dataOut->write( info->isPersistent() );
+    dataOut->writeBoolean( info->isPersistent() );
     looseMarshalLong( wireFormat, info->getExpiration(), dataOut );
     dataOut->write( info->getPriority() );
     looseMarshalNestedObject( wireFormat, info->getReplyTo(), dataOut );
@@ -245,22 +245,22 @@ void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure*
     looseMarshalString( info->getType(), dataOut );
     dataOut->write( info->getContent().size() != 0 );
     if( info->getContent().size() != 0 ) {
-        dataOut->write( (int)info->getContent().size() );
+        dataOut->writeInt( (int)info->getContent().size() );
         dataOut->write( (const unsigned char*)(&info->getContent()[0]), (int)info->getContent().size() );
     }
     dataOut->write( info->getMarshalledProperties().size() != 0 );
     if( info->getMarshalledProperties().size() != 0 ) {
-        dataOut->write( (int)info->getMarshalledProperties().size() );
+        dataOut->writeInt( (int)info->getMarshalledProperties().size() );
         dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size() );
     }
     looseMarshalNestedObject( wireFormat, info->getDataStructure(), dataOut );
     looseMarshalCachedObject( wireFormat, info->getTargetConsumerId(), dataOut );
-    dataOut->write( info->isCompressed() );
-    dataOut->write( info->getRedeliveryCounter() );
+    dataOut->writeBoolean( info->isCompressed() );
+    dataOut->writeInt( info->getRedeliveryCounter() );
     looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
     looseMarshalLong( wireFormat, info->getArrival(), dataOut );
     looseMarshalString( info->getUserID(), dataOut );
-    dataOut->write( info->isRecievedByDFBridge() );
-    dataOut->write( info->isDroppable() );
+    dataOut->writeBoolean( info->isRecievedByDFBridge() );
+    dataOut->writeBoolean( info->isDroppable() );
 }
 

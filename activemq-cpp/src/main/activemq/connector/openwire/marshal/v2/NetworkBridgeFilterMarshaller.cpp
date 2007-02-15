@@ -76,7 +76,7 @@ void NetworkBridgeFilterMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 
     NetworkBridgeFilter* info =
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
-    dataOut->write( info->getNetworkTTL() );
+    dataOut->writeInt( info->getNetworkTTL() );
     tightMarshalCachedObject2( wireFormat, info->getNetworkBrokerId(), dataOut, bs );
 }
 
@@ -98,7 +98,7 @@ void NetworkBridgeFilterMarshaller::looseMarshal( OpenWireFormat* wireFormat, Da
         dynamic_cast<NetworkBridgeFilter*>( dataStructure );
     BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->getNetworkTTL() );
+    dataOut->writeInt( info->getNetworkTTL() );
     looseMarshalCachedObject( wireFormat, info->getNetworkBrokerId(), dataOut );
 }
 

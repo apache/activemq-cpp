@@ -70,7 +70,7 @@ void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
 
     IntegerResponse* info =
         dynamic_cast<IntegerResponse*>( dataStructure );
-    dataOut->write( info->getResult() );
+    dataOut->writeInt( info->getResult() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,6 @@ void IntegerResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
         dynamic_cast<IntegerResponse*>( dataStructure );
     ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
-    dataOut->write( info->getResult() );
+    dataOut->writeInt( info->getResult() );
 }
 
