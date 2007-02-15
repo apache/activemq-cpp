@@ -69,6 +69,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->messageListener = NULL;
     this->brokerInfo = NULL;
     this->brokerWireFormatInfo = NULL;
+    this->nextConsumerId = 1;
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
     this->nextSessionId = 1;
@@ -104,6 +105,17 @@ OpenWireConnector::~OpenWireConnector()
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long OpenWireConnector::getNextConsumerId()
+{
+    synchronized( &mutex )
+    {
+        return nextConsumerId++;
+    }
+
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -318,8 +330,40 @@ ConsumerInfo* OpenWireConnector::createConsumer(
     {
         enforceConnected();
 
+        OpenWireConsumerInfo* consumer = new OpenWireConsumerInfo();
+
+        commands::ConsumerInfo* consumerInfo = new commands::ConsumerInfo();
+        commands::ConsumerId* consumerId = new commands::ConsumerId();
+
+        consumerId->setConnectionId( session->getConnectionId() );
+        consumerId->setSessionId( session->getSessionId() );
+        consumerId->setValue( getNextConsumerId() );
+
+        consumerInfo->setConsumerId( consumerId );
+        consumerInfo->setSelector( selector );
+
         // TODO
-        return NULL;
+//        answer.Destination = ActiveMQDestination.Transform(destination);
+//        answer.PrefetchSize = prefetchSize;
+//        answer.Priority = priority;
+//        answer.Exclusive = exclusive;
+//        answer.DispatchAsync = dispatchAsync;
+//        answer.Retroactive = retroactive;
+//
+//        // If the destination contained a URI query, then use it to set public properties
+//        // on the ConsumerInfo
+//        ActiveMQDestination amqDestination = destination as ActiveMQDestination;
+//        if (amqDestination != null && amqDestination.Options != null)
+//        {
+//                Util.URISupport.SetProperties(answer, amqDestination.Options, "consumer.");
+//        }
+//
+//        return answer;
+
+        // Store off the ConsumerInfo command
+        consumer->setConsumerInfo( consumerInfo );
+
+        return consumer;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
@@ -355,8 +399,35 @@ ProducerInfo* OpenWireConnector::createProducer(
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        OpenWireProducerInfo* producer = new OpenWireProducerInfo();
+
+        commands::ProducerInfo* producerInfo = new commands::ProducerInfo();
+        commands::ProducerId* producerId = new commands::ProducerId();
+
+        producerId->setConnectionId( session->getConnectionId() );
+        producerId->setSessionId( session->getSessionId() );
+        producerId->setValue( getNextProducerId() );
+
+        producerInfo->setProducerId( producerId );
+
+// TODO
+//        answer.Destination = ActiveMQDestination.Transform(destination);
+//
+//        answer.Destination = ActiveMQDestination.Transform(destination);
+//
+//        // If the destination contained a URI query, then use it to set public
+//        // properties on the ProducerInfo
+//        ActiveMQDestination amqDestination = destination as ActiveMQDestination;
+//        if (amqDestination != null && amqDestination.Options != null)
+//        {
+//                Util.URISupport.SetProperties(answer, amqDestination.Options, "producer.");
+//        }
+//
+//        return answer;
+
+        producer->setProducerInfo( producerInfo );
+
+        return producer;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
