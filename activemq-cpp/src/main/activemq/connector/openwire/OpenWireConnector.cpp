@@ -25,6 +25,10 @@
 #include <activemq/util/Integer.h>
 #include <activemq/util/Guid.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
+#include <activemq/connector/openwire/OpenWireSessionInfo.h>
+#include <activemq/connector/openwire/OpenWireProducerInfo.h>
+#include <activemq/connector/openwire/OpenWireConsumerInfo.h>
+#include <activemq/connector/openwire/OpenWireTransactionInfo.h>
 #include <activemq/connector/openwire/BrokerException.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
@@ -269,6 +273,7 @@ connector::SessionInfo* OpenWireConnector::createSession(
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
         sessionId->setValue( getNextSessionId() );
         info->setSessionId( sessionId );
+        OpenWireSessionInfo* session = new OpenWireSessionInfo();
 
         try{
 
@@ -279,13 +284,19 @@ connector::SessionInfo* OpenWireConnector::createSession(
             // Just discard the response.
             delete response;
 
+            // Create the Connector Session Wrapper Object and fill in its
+            // data
+            session->setSessionInfo( info );
+            session->setAckMode( ackMode );
+
             // Return the session info.
-            return NULL; /* TODO: Find a way to bridge between commands::SessionInfo and connector::SessionInfo */
+            return session;
 
         } catch( ConnectorException& ex ) {
 
             // Something bad happened - free the session info object.
             delete info;
+            delete session;
 
             ex.setMark(__FILE__, __LINE__);
             throw ex;

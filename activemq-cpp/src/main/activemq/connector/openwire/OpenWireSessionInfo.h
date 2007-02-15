@@ -143,7 +143,7 @@ namespace openwire{
          * Session
          * @param sessionInfo - the SessionInfo for this Session.
          */
-        virtual void setSessionInfo( SessionInfo* sessionInfo ) {
+        virtual void setSessionInfo( commands::SessionInfo* sessionInfo ) {
             this->sessionInfo = sessionInfo;
         }
 
