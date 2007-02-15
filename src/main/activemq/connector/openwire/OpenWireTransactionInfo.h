@@ -33,11 +33,11 @@ namespace openwire{
         // OpenWire Tramsaction Info Command
         commands::TransactionInfo* transactionInfo;
 
-        // Transaction Id
-        unsigned int transactionId;
-
         // Session Info - We do not own this
         const SessionInfo* session;
+
+        // Locally generated Transaction Id
+        unsigned int transactionId;
 
     public:
 
@@ -53,7 +53,7 @@ namespace openwire{
          * @return unsigned int Id
          */
         virtual unsigned int getTransactionId(void) const {
-            return transactionId;
+            return this->transactionId;
         }
 
         /**
