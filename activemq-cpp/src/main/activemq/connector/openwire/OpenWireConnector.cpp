@@ -706,6 +706,9 @@ void OpenWireConnector::unsubscribe( const std::string& name )
 {
     try
     {
+        enforceConnected();
+
+        // TODO
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException )
@@ -810,7 +813,8 @@ void OpenWireConnector::onTransportException(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::oneway(Command* command) throw (ConnectorException)
+void OpenWireConnector::oneway( Command* command )
+    throw ( ConnectorException )
 {
     try
     {
@@ -824,7 +828,8 @@ void OpenWireConnector::oneway(Command* command) throw (ConnectorException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireConnector::syncRequest(Command* command) throw (ConnectorException)
+Response* OpenWireConnector::syncRequest( Command* command )
+    throw ( ConnectorException )
 {
     try
     {
