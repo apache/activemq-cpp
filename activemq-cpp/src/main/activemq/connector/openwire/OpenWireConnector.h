@@ -142,10 +142,15 @@ namespace openwire{
         long long nextProducerId;
 
         /**
+         * Next avaliable Consumer Id
+         */
+        long long nextConsumerId;
+
+        /**
          * Next avaliable Transaction Id
          */
         long long nextTransactionId;
-        
+
         /**
          * Next available Session Id.
          */
@@ -534,13 +539,14 @@ namespace openwire{
 
     private:
 
+        long long getNextConsumerId();
         long long getNextProducerId();
         long long getNextTransactionId();
         long long getNextSessionId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );
-        
+
         /**
          * Sends a oneway message.
          * @param command The message to send.
@@ -548,7 +554,7 @@ namespace openwire{
          * if the operation fails for any reason.
          */
         void oneway( transport::Command* command ) throw (ConnectorException);
-        
+
         /**
          * Sends a synchronous request and returns the response from the broker.
          * Converts any error responses into an exception.
@@ -556,9 +562,9 @@ namespace openwire{
          * @returns The response sent from the broker.
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
-         */         
+         */
         transport::Response* syncRequest(transport::Command* command) throw (ConnectorException);
-        
+
         /**
          * Sends a message to the broker to dispose of the given resource.
          * @param objectId The ID of the resource to be released.
