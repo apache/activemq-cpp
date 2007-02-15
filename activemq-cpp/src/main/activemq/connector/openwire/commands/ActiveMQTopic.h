@@ -43,6 +43,7 @@ namespace commands{
     public:
 
         ActiveMQTopic();
+        ActiveMQTopic( const std::string& name );
         virtual ~ActiveMQTopic();
 
         virtual unsigned char getDataStructureType() const;

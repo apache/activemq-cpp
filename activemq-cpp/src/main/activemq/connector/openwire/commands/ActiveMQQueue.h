@@ -43,6 +43,7 @@ namespace commands{
     public:
 
         ActiveMQQueue();
+        ActiveMQQueue( const std::string& name );
         virtual ~ActiveMQQueue();
 
         virtual unsigned char getDataStructureType() const;
