@@ -23,7 +23,12 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::ActiveMQQueue()
+ActiveMQQueue::ActiveMQQueue() : ActiveMQDestination()
+{}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
+    ActiveMQDestination( name )
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +38,6 @@ ActiveMQQueue::~ActiveMQQueue()
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQQueue::getDataStructureType() const
 {
-    return ActiveMQQueue::ID_ACTIVEMQQUEUE; 
+    return ActiveMQQueue::ID_ACTIVEMQQUEUE;
 }
 

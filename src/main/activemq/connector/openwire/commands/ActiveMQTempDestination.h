@@ -44,6 +44,7 @@ namespace commands{
     public:
 
         ActiveMQTempDestination();
+        ActiveMQTempDestination( const std::string& name );
         virtual ~ActiveMQTempDestination();
 
         virtual unsigned char getDataStructureType() const;

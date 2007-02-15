@@ -28,6 +28,11 @@ ActiveMQTempDestination::ActiveMQTempDestination()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
+    ActiveMQDestination( name )
+{}
+
+////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::~ActiveMQTempDestination()
 {
 }
@@ -35,6 +40,6 @@ ActiveMQTempDestination::~ActiveMQTempDestination()
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQTempDestination::getDataStructureType() const
 {
-    return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION; 
+    return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION;
 }
 

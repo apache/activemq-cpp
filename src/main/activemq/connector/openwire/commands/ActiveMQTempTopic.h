@@ -43,6 +43,7 @@ namespace commands{
     public:
 
         ActiveMQTempTopic();
+        ActiveMQTempTopic( const std::string& name );
         virtual ~ActiveMQTempTopic();
 
         virtual unsigned char getDataStructureType() const;
