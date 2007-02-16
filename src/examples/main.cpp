@@ -38,7 +38,7 @@ using namespace std;
 
 class HelloWorldProducer : public Runnable {
 private:
-    
+
     Connection* connection;
     Session* session;
     Destination* destination;
@@ -47,7 +47,7 @@ private:
     bool useTopic;
 
 public:
-    
+
     HelloWorldProducer( int numMessages, bool useTopic = false ){
         connection = NULL;
         session = NULL;
@@ -56,11 +56,11 @@ public:
         this->numMessages = numMessages;
         this->useTopic = useTopic;
     }
-    
+
     virtual ~HelloWorldProducer(){
         cleanup();
     }
-    
+
     virtual void run() {
         try {
             // Create a ConnectionFactory
@@ -83,75 +83,75 @@ public:
             // Create a MessageProducer from the Session to the Topic or Queue
             producer = session->createProducer( destination );
             producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
-            
+
             // Create the Thread Id String
             string threadIdStr = Integer::toString( Thread::getId() );
-            
+
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
-            
+
             for( int ix=0; ix<numMessages; ++ix ){
                 TextMessage* message = session->createTextMessage( text );
 
                 // Tell the producer to send the message
                 printf( "Sent message from thread %s\n", threadIdStr.c_str() );
                 producer->send( message );
-                
+
                 delete message;
             }
-            
+
         }catch ( CMSException& e ) {
             e.printStackTrace();
         }
     }
-    
+
 private:
 
     void cleanup(){
-                    
+
             // Destroy resources.
-            try{                        
+            try{
                 if( destination != NULL ) delete destination;
-            }catch ( CMSException& e ) {}
+            }catch ( CMSException& e ) { e.printStackTrace(); }
             destination = NULL;
-            
+
             try{
                 if( producer != NULL ) delete producer;
-            }catch ( CMSException& e ) {}
+            }catch ( CMSException& e ) { e.printStackTrace(); }
             producer = NULL;
-            
+
             // Close open resources.
             try{
                 if( session != NULL ) session->close();
                 if( connection != NULL ) connection->close();
-            }catch ( CMSException& e ) {}
+            }catch ( CMSException& e ) { e.printStackTrace(); }
 
             try{
                 if( session != NULL ) delete session;
-            }catch ( CMSException& e ) {}
+            }catch ( CMSException& e ) { e.printStackTrace(); }
             session = NULL;
-            
+
             try{
                 if( connection != NULL ) delete connection;
-            }catch ( CMSException& e ) {}
+            }catch ( CMSException& e ) { e.printStackTrace(); }
             connection = NULL;
     }
 };
 
-class HelloWorldConsumer : public ExceptionListener, 
+class HelloWorldConsumer : public ExceptionListener,
                            public MessageListener,
                            public Runnable {
-    
+
 private:
-    
+
     Connection* connection;
     Session* session;
     Destination* destination;
     MessageConsumer* consumer;
     long waitMillis;
     bool useTopic;
-        
-public: 
+
+public:
 
     HelloWorldConsumer( long waitMillis, bool useTopic = false ){
         connection = NULL;
@@ -161,23 +161,23 @@ public:
         this->waitMillis = waitMillis;
         this->useTopic = useTopic;
     }
-    virtual ~HelloWorldConsumer(){      
+    virtual ~HelloWorldConsumer(){
         cleanup();
     }
-    
+
     virtual void run() {
-                
+
         try {
 
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory = 
+            ActiveMQConnectionFactory* connectionFactory =
                 new ActiveMQConnectionFactory( "tcp://127.0.0.1:61613" );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
             delete connectionFactory;
             connection->start();
-            
+
             connection->setExceptionListener(this);
 
             // Create a Session
@@ -192,26 +192,26 @@ public:
 
             // Create a MessageConsumer from the Session to the Topic or Queue
             consumer = session->createConsumer( destination );
-            
+
             consumer->setMessageListener( this );
-            
+
             // Sleep while asynchronous messages come in.
-            Thread::sleep( waitMillis );        
-            
+            Thread::sleep( waitMillis );
+
         } catch (CMSException& e) {
             e.printStackTrace();
         }
     }
-    
+
     // Called from the consumer since this class is a registered MessageListener.
     virtual void onMessage( const Message* message ){
-        
+
         static int count = 0;
-        
+
         try
         {
             count++;
-            const TextMessage* textMessage = 
+            const TextMessage* textMessage =
                 dynamic_cast< const TextMessage* >( message );
             string text = textMessage->getText();
             printf( "Message #%d Received: %s\n", count, text.c_str() );
@@ -225,49 +225,49 @@ public:
     virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
         printf("JMS Exception occured.  Shutting down client.\n");
     }
-    
+
 private:
 
     void cleanup(){
-        
+
         //*************************************************
         // Always close destination, consumers and producers before
         // you destroy their sessions and connection.
         //*************************************************
-        
+
         // Destroy resources.
-        try{                        
+        try{
             if( destination != NULL ) delete destination;
-        }catch (CMSException& e) {}
+        }catch (CMSException& e) { e.printStackTrace(); }
         destination = NULL;
-        
+
         try{
             if( consumer != NULL ) delete consumer;
-        }catch (CMSException& e) {}
+        }catch (CMSException& e) { e.printStackTrace(); }
         consumer = NULL;
-        
+
         // Close open resources.
         try{
             if( session != NULL ) session->close();
             if( connection != NULL ) connection->close();
-        }catch (CMSException& e) {}
-        
+        }catch (CMSException& e) { e.printStackTrace(); }
+
         // Now Destroy them
         try{
             if( session != NULL ) delete session;
-        }catch (CMSException& e) {}
+        }catch (CMSException& e) { e.printStackTrace(); }
         session = NULL;
-        
+
         try{
             if( connection != NULL ) delete connection;
-        }catch (CMSException& e) {}
+        }catch (CMSException& e) { e.printStackTrace(); }
         connection = NULL;
     }
 };
-    
+
 int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
-    std::cout << "=====================================================\n";    
+    std::cout << "=====================================================\n";
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
 
@@ -275,16 +275,16 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // set to true to use topics instead of queues
     // Note in the code above that this causes createTopic or
     // createQueue to be used in both consumer an producer.
-    //============================================================    
-    bool useTopics = false;  
+    //============================================================
+    bool useTopics = false;
 
     HelloWorldProducer producer( 1000, useTopics );
     HelloWorldConsumer consumer( 8000, useTopics );
-    
+
     // Start the consumer thread.
     Thread consumerThread( &consumer );
     consumerThread.start();
-    
+
     // Start the producer thread.
     Thread producerThread( &producer );
     producerThread.start();
@@ -293,12 +293,12 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     producerThread.join();
     consumerThread.join();
 
-    std::cout << "-----------------------------------------------------\n";    
-    std::cout << "Finished with the example, ignore errors from this" 
+    std::cout << "-----------------------------------------------------\n";
+    std::cout << "Finished with the example, ignore errors from this"
               << std::endl
               << "point on as the sockets breaks when we shutdown."
               << std::endl;
-    std::cout << "=====================================================\n";    
+    std::cout << "=====================================================\n";
 }
-    
+
 // END SNIPPET: demo
