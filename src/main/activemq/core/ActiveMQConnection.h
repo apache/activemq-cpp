@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 
@@ -33,31 +33,31 @@
 namespace activemq{
 namespace core{
 
-    class cms::Session;  
-    class ActiveMQSession; 
+    class cms::Session;
+    class ActiveMQSession;
     class ActiveMQConsumer;
 
     /**
      * Concrete connection used for all connectors to the
      * ActiveMQ broker.
      */
-    class ActiveMQConnection : 
+    class ActiveMQConnection :
         public cms::Connection,
         public connector::ConsumerMessageListener,
         public cms::ExceptionListener
     {
     private:
-   
+
         /**
          * the registered exception listener
          */
         cms::ExceptionListener* exceptionListener;
-      
+
         /**
          * All the data that is used to connect this Connection
          */
         ActiveMQConnectionData* connectionData;
-      
+
         /**
          * Indicates if this Connection is started
          */
@@ -68,94 +68,94 @@ namespace core{
          * usable after this becomes true
          */
         bool closed;
-      
+
         /**
          * Map of Consumer Ids to ActiveMQMessageListeners
          */
-        util::Map< unsigned int, ActiveMQMessageListener* > consumers;
-        
+        util::Map< long long, ActiveMQMessageListener* > consumers;
+
         /**
          * Maintain the set of all active sessions.
          */
         util::Set<cms::Session*> activeSessions;
-   
+
     public:
 
         /**
          * Constructor
          * @param Pointer to an ActiveMQConnectionData object, owned here
-         */       
+         */
         ActiveMQConnection( ActiveMQConnectionData* connectionData );
 
         virtual ~ActiveMQConnection();
-   
+
         /**
          * Removes the session resources for the given session
          * instance.
          * @param session The session to be unregistered from this connection.
          */
         virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
-        
+
     public:   // Connection Interface Methods
-   
+
         /**
          * Creates a new Session to work for this Connection
          * @throws CMSException
          */
         virtual cms::Session* createSession() throw ( cms::CMSException );
-      
+
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
          * @param ackMode the Acknowledgement Mode to use.
          * @throws CMSException
          */
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode ) 
+        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
             throw ( cms::CMSException );
-         
+
         /**
          * Get the Client Id for this session
          * @return string version of Client Id
          */
         virtual std::string getClientId() const;
-      
+
         /**
          * Retrieves the Connection Data object for this object.
          * @return pointer to a connection data object.
          */
         virtual ActiveMQConnectionData* getConnectionData(){
             return connectionData;
-        } 
-         
+        }
+
         /**
          * Gets the registered Exception Listener for this connection
          * @return pointer to an exception listnener or NULL
          */
         virtual cms::ExceptionListener* getExceptionListener() const{
             return exceptionListener; };
-      
+
         /**
          * Sets the registed Exception Listener for this connection
          * @param listener pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener( cms::ExceptionListener* listener ){
-            exceptionListener = listener; 
+            exceptionListener = listener;
         };
-         
+
         /**
-         * Closes this connection as well as any Sessions 
+         * Closes this connection as well as any Sessions
          * created from it (and those Sessions' consumers and
          * producers).
          * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
-      
+
         /**
          * Starts or (restarts) a connections delivery of incoming messages
          * @throws CMSException
          */
         virtual void start() throw ( cms::CMSException );
-      
+
         /**
          * Stop the flow of incoming messages
          * @throws CMSException
@@ -163,7 +163,7 @@ namespace core{
         virtual void stop() throw ( cms::CMSException );
 
     public:   // ActiveMQConnection Methods
-   
+
         /**
          * Adds the ActiveMQMessageListener to the Mapping of Consumer Id's
          * to listeners, all message to that id will be routed to the given
@@ -171,17 +171,17 @@ namespace core{
          * @param consumerId Consumer Id String
          * @param listener ActiveMQMessageListener Pointer
          */
-        virtual void addMessageListener( const unsigned int consumerId,
-                                         ActiveMQMessageListener* listener ); 
-      
+        virtual void addMessageListener( long long consumerId,
+                                         ActiveMQMessageListener* listener );
+
         /**
          * Remove the Listener for the specified Consumer Id
          * @param consumerId Consumer Id string
          */
-        virtual void removeMessageListener( const unsigned int consumerId );
+        virtual void removeMessageListener( long long consumerId );
 
     public:     // ExceptionListener interface methods
-    
+
         /**
          * Called when an exception occurs.  Once notified of an exception
          * the caller should no longer use the resource that generated the
@@ -189,9 +189,9 @@ namespace core{
          * @param Exception Object that occurred.
          */
         virtual void onException( const cms::CMSException& ex );
-        
+
     public:     // ConsumerMessageListener interface methods
-    
+
         /**
          * Called to dispatch a message to a particular consumer.
          * @param consumer the target consumer of the dispatch.
@@ -199,9 +199,9 @@ namespace core{
          */
         virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
                                         core::ActiveMQMessage* message );
-                                                                                
+
     private:
-   
+
         /**
          * Notify the excpetion listener
          * @param ex the exception to fire
@@ -216,8 +216,8 @@ namespace core{
                 }
                 catch(...){}
             }
-        }        
-   
+        }
+
     };
 
 }}

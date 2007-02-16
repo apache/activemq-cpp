@@ -55,7 +55,7 @@ ActiveMQConnection::~ActiveMQConnection()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession() 
+cms::Session* ActiveMQConnection::createSession()
     throw ( cms::CMSException )
 {
     try
@@ -68,28 +68,28 @@ cms::Session* ActiveMQConnection::createSession()
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session* ActiveMQConnection::createSession(
-   cms::Session::AcknowledgeMode ackMode ) 
+   cms::Session::AcknowledgeMode ackMode )
       throw ( cms::CMSException )
 {
     try
     {
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
-            connectionData->getConnector()->createSession( ackMode ), 
+            connectionData->getConnector()->createSession( ackMode ),
             connectionData->getProperties(),
             this );
-        
+
         // Add the session to the set of active sessions.
         synchronized( &activeSessions ) {
             activeSessions.add( session );
-        } 
-            
+        }
+
         return session;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-   
+
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnection::getClientId() const
 {
@@ -105,13 +105,13 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
         {
             return;
         }
-        
+
         // Get the complete list of active sessions.
         std::vector<cms::Session*> allSessions;
         synchronized( &activeSessions ) {
             allSessions = activeSessions.toArray();
         }
-        
+
         // Close all of the resources.
         for( unsigned int ix=0; ix<allSessions.size(); ++ix ){
             cms::Session* session = allSessions[ix];
@@ -122,7 +122,7 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
             }
         }
 
-        // Once current deliveries are done this stops the delivery 
+        // Once current deliveries are done this stops the delivery
         // of any new messages.
         started = false;
         closed = true;
@@ -154,9 +154,9 @@ void ActiveMQConnection::stop() throw ( cms::CMSException )
     // new messages.
     started = false;
 }
-   
+
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addMessageListener( const unsigned int consumerId,
+void ActiveMQConnection::addMessageListener( long long consumerId,
                                              ActiveMQMessageListener* listener )
 {
     // Place in Map
@@ -165,9 +165,9 @@ void ActiveMQConnection::addMessageListener( const unsigned int consumerId,
         consumers.setValue( consumerId, listener );
     }
 }
-  
+
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeMessageListener( const unsigned int consumerId )
+void ActiveMQConnection::removeMessageListener( long long consumerId )
 {
     // Remove from Map
     synchronized( &consumers )
@@ -200,27 +200,27 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             // Indicate to Broker that we received the message, but it
             // was not consumed.
             connectionData->getConnector()->acknowledge(
-                consumer->getSessionInfo(), 
-                (Message*)message, 
+                consumer->getSessionInfo(),
+                (Message*)message,
                 Connector::DeliveredAck );
-                
+
             // Delete the message here
             delete message;
-            
+
             return;
         }
-        
+
         // Started, so lock map and dispatch the message.
         synchronized( &consumers )
         {
             if( consumers.containsKey(consumer->getConsumerId()) )
             {
-                ActiveMQMessageListener* listener = 
+                ActiveMQMessageListener* listener =
                     consumers.getValue(consumer->getConsumerId());
-                    
+
                 listener->onActiveMQMessage( message );
             }
-        }        
+        }
     }
     catch( exceptions::ActiveMQException& ex )
     {
@@ -229,25 +229,25 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
     }
     catch( ... )
     {
-        exceptions::ActiveMQException ex( 
-           __FILE__, __LINE__, 
+        exceptions::ActiveMQException ex(
+           __FILE__, __LINE__,
            "IOTransport::run - caught unknown exception" );
-        fire( ex );            
+        fire( ex );
     }
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::onException( const CMSException& ex ){
-    
+
     if( exceptionListener != NULL ){
         exceptionListener->onException( ex );
     }
-}              
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeSession( ActiveMQSession* session ) 
-    throw ( cms::CMSException ) 
+void ActiveMQConnection::removeSession( ActiveMQSession* session )
+    throw ( cms::CMSException )
 {
     try
     {
@@ -255,15 +255,15 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
         synchronized( &activeSessions ) {
             activeSessions.remove( session );
         }
-        
+
         // Destroy this sessions resources
         getConnectionData()->
             getConnector()->destroyResource( session->getSessionInfo() );
-            
+
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-                          
+
 
