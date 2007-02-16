@@ -209,7 +209,6 @@ void OpenWireConnector::close() throw( cms::CMSException ){
 
     try
     {
-
         synchronized( &mutex )
         {
             if( state == CONNECTED )
@@ -275,17 +274,23 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
         // Remove our ConnectionId from the Broker
         disposeOf( connectionInfo.getConnectionId() );
 
-
         // Send the disconnect command to the broker.
         commands::ShutdownInfo shutdown;
         oneway( &shutdown );
 
-
     } catch( ConnectorException& ex ){
-        transport->close();
+        try{
+            transport->close();
+        } catch( cms::CMSException& e ){}
         throw ex;
+    } catch( ... ) {
+        try{
+            transport->close();
+        } catch( cms::CMSException& e ){}
+        
+        throw OpenWireConnectorException(__FILE__, __LINE__, "Caught unknown exception" );
     }
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -927,12 +932,10 @@ void OpenWireConnector::oneway( Command* command )
 {
     try
     {
-        enforceConnected();
         transport->oneway(command);
     }
     AMQ_CATCH_EXCEPTION_CONVERT( CommandIOException, OpenWireConnectorException )
     AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, OpenWireConnectorException )
-    AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
