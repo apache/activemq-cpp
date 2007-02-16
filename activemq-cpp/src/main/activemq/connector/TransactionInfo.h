@@ -27,20 +27,20 @@ namespace connector{
     class TransactionInfo : public ConnectorResource
     {
     public:
-   
+
    	    virtual ~TransactionInfo(void) {}
-        
+
         /**
          * Gets the Transction Id
          * @return unsigned int Id
          */
-        virtual unsigned int getTransactionId(void) const = 0;
+        virtual long long getTransactionId(void) const = 0;
 
         /**
          * Sets the Transction Id
          * @param id unsigned int Id
          */
-        virtual void setTransactionId( const unsigned int id ) = 0;
+        virtual void setTransactionId( long long id ) = 0;
 
         /**
          * Gets the Session Info that this transaction is attached too

@@ -100,25 +100,10 @@ OpenWireConnector::~OpenWireConnector()
     {
         close();
 
-        if( transport != NULL ) {
-            delete transport;
-            transport = NULL;
-        }
-        
-        if( wireFormat != NULL ) {
-            delete wireFormat;
-            wireFormat = NULL; 
-        }
-        
-        if( brokerInfo != NULL ) {            
-            delete brokerInfo;
-            brokerInfo = NULL;
-        }
-        
-        if( brokerWireFormatInfo != NULL ) {
-            delete brokerWireFormatInfo;
-            brokerWireFormatInfo = NULL;
-        }
+        delete transport;
+        delete wireFormat;
+        delete brokerInfo;
+        delete brokerWireFormatInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -287,10 +272,10 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
         try{
             transport->close();
         } catch( cms::CMSException& e ){}
-        
+
         throw OpenWireConnectorException(__FILE__, __LINE__, "Caught unknown exception" );
     }
-    
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -815,25 +800,25 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
         if( resource == NULL ) {
             return;
         }
-        
+
         commands::DataStructure* dataStructure = NULL;
-        
+
         OpenWireConsumerInfo* consumer =
             dynamic_cast<OpenWireConsumerInfo*>(resource);
         OpenWireSessionInfo* session =
             dynamic_cast<OpenWireSessionInfo*>(resource);
-            
+
         if( consumer != NULL ) {
             dataStructure = consumer->getConsumerInfo();
         } else if( session != NULL ) {
             dataStructure = session->getSessionInfo();
         }
-        
+
         if( dataStructure == NULL ) {
-            throw OpenWireConnectorException(__FILE__,__LINE__, 
+            throw OpenWireConnectorException(__FILE__,__LINE__,
                 "attempting to destroy an invalid resource");
         }
-        
+
         // Dispose of this data structure at the broker.
         disposeOf( dataStructure );
 
@@ -906,7 +891,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::onTransportException(
-    transport::Transport* source,
+    transport::Transport* source AMQCPP_UNUSED,
     const exceptions::ActiveMQException& ex )
 {
     try
@@ -946,8 +931,8 @@ Response* OpenWireConnector::syncRequest( Command* command )
     try
     {
         Response* response = transport->request(command);
-        
-        commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);        
+
+        commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);
         if( exceptionResponse != NULL )
         {
             // Create an exception to hold the error information.

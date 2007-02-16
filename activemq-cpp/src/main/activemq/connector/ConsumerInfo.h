@@ -47,13 +47,13 @@ namespace connector{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual unsigned int getConsumerId(void) const = 0;
+        virtual long long getConsumerId(void) const = 0;
 
         /**
          * Sets the ID that is assigned to this consumer
          * @return id string value of the Consumer Id.
          */
-        virtual void setConsumerId( const unsigned int id ) = 0;
+        virtual void setConsumerId( long long id ) = 0;
 
         /**
          * Gets the Destination that this Consumer is subscribed on

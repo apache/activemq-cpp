@@ -30,7 +30,7 @@ namespace stomp{
     private:
 
         // Producer Id
-        unsigned int producerId;
+        long long producerId;
 
         // Default Destination
         cms::Destination* destination;
@@ -68,7 +68,7 @@ namespace stomp{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual unsigned int getProducerId(void) const {
+        virtual long long getProducerId(void) const {
             return producerId;
         }
 
@@ -76,7 +76,7 @@ namespace stomp{
          * Sets the ID that is assigned to this Producer
          * @return id string value of the Producer Id.
          */
-        virtual void setProducerId( const unsigned int id ) {
+        virtual void setProducerId( long long id ) {
             this->producerId = id;
         }
 
