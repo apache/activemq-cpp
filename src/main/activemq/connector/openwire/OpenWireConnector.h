@@ -167,12 +167,12 @@ namespace openwire{
          * Sends the connect message to the broker and
          * waits for the response.
          */
-        void connect(void);
+        void connect() throw (ConnectorException);
 
         /**
          * Sends a oneway disconnect message to the broker.
          */
-        void disconnect(void);
+        void disconnect() throw (ConnectorException);
 
         /**
          * Fires a consumer message to the observer.
