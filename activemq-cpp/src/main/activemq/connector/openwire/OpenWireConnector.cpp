@@ -209,9 +209,10 @@ void OpenWireConnector::close() throw( cms::CMSException ){
 
     try
     {
+
         synchronized( &mutex )
         {
-            if( state == this->CONNECTED )
+            if( state == CONNECTED )
             {
                 // Send the disconnect message to the broker.
                 disconnect();
@@ -226,12 +227,12 @@ void OpenWireConnector::close() throw( cms::CMSException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::connect()
+void OpenWireConnector::connect() throw (ConnectorException)
 {
     try
     {
         // Mark this connector as started.
-        state = this->CONNECTING;
+        state = CONNECTING;
 
         // Fill in our connection info.
         connectionInfo.setUserName( getUsername() );
@@ -260,12 +261,11 @@ void OpenWireConnector::connect()
         delete response;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::disconnect()
+void OpenWireConnector::disconnect() throw (ConnectorException)
 {
     try
     {
@@ -275,16 +275,17 @@ void OpenWireConnector::disconnect()
         // Remove our ConnectionId from the Broker
         disposeOf( connectionInfo.getConnectionId() );
 
+
         // Send the disconnect command to the broker.
         commands::ShutdownInfo shutdown;
         oneway( &shutdown );
+
 
     } catch( ConnectorException& ex ){
         transport->close();
         throw ex;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
