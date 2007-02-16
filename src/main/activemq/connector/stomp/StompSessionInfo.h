@@ -37,7 +37,7 @@ namespace stomp{
         std::string connectionId;
 
         // The unique session id
-        unsigned int sessionId;
+        long long sessionId;
 
         // Info for this sessions current transaction
         const TransactionInfo* transaction;
@@ -75,7 +75,7 @@ namespace stomp{
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual unsigned int getSessionId(void) const {
+        virtual long long getSessionId(void) const {
             return sessionId;
         }
 
@@ -83,7 +83,7 @@ namespace stomp{
          * Sets the Session Id for this Session
          * @param id integral id value for this session
          */
-        virtual void setSessionId( const unsigned int id ) {
+        virtual void setSessionId( long long id ) {
             this->sessionId = id;
         }
 

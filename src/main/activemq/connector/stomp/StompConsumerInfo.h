@@ -30,7 +30,7 @@ namespace stomp{
         std::string selector;
 
         // Consumer Id
-        unsigned int consumerId;
+        long long consumerId;
 
         // Destination
         cms::Destination* destination;
@@ -69,7 +69,7 @@ namespace stomp{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual unsigned int getConsumerId(void) const {
+        virtual long long getConsumerId(void) const {
             return consumerId;
         }
 
@@ -77,7 +77,7 @@ namespace stomp{
          * Sets the ID that is assigned to this consumer
          * @param id value of the Consumer Id.
          */
-        virtual void setConsumerId( const unsigned int id ) {
+        virtual void setConsumerId( long long id ) {
             this->consumerId = id;
         }
 

@@ -27,13 +27,13 @@ namespace stomp{
     class StompTransactionInfo : public connector::TransactionInfo
     {
     private:
-    
+
         // Transaction Id
-        unsigned int transactionId;
-        
+        long long transactionId;
+
         // Session Info - We do not own this
         const SessionInfo* session;
-        
+
     public:
 
         /**
@@ -48,19 +48,19 @@ namespace stomp{
 
         /**
          * Gets the Transction Id
-         * @return unsigned int Id
+         * @return long long Id
          */
-        virtual unsigned int getTransactionId(void) const {
+        virtual long long getTransactionId(void) const {
             return transactionId;
         }
 
         /**
          * Sets the Transction Id
-         * @param id unsigned int Id
+         * @param id long long Id
          */
-        virtual void setTransactionId( const unsigned int id ) {
+        virtual void setTransactionId( long long id ) {
             this->transactionId = id;
-        } 
+        }
 
         /**
          * Gets the Session Info that this Transction is attached too
@@ -69,7 +69,7 @@ namespace stomp{
         virtual const SessionInfo* getSessionInfo(void) const {
             return session;
         }
-        
+
         /**
          * Gets the Session Info that this Transction is attached too
          * @return session SessionnInfo pointer

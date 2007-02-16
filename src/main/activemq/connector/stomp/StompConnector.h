@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOR_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOR_H_
 
@@ -36,7 +36,7 @@
 namespace activemq{
 namespace connector{
 namespace stomp{
-   
+
     /**
      * The connector implementation for the STOMP protocol.
      */
@@ -47,11 +47,11 @@ namespace stomp{
         public transport::TransportExceptionListener,
         public StompCommandListener
     {
-        
+
         LOGCMS_DECLARE( logger )
-        
+
     private:
-    
+
         // Flags the state we are in for connection to broker.
         enum connectionState
         {
@@ -60,86 +60,86 @@ namespace stomp{
             CONNECTED
         };
 
-        // Maps Command Ids to listener that are interested        
-        typedef std::map< commands::CommandConstants::CommandId, 
+        // Maps Command Ids to listener that are interested
+        typedef std::map< commands::CommandConstants::CommandId,
                           StompCommandListener* > CmdListenerMap;
-        
+
     private:
-    
+
         /**
          * The transport for sending/receiving commands on the wire.
          */
         transport::Transport* transport;
-        
+
         /**
          * Flag to indicate the start state of the connector.
          */
         connectionState state;
-        
+
         /**
          * Sync object.
          */
         concurrent::Mutex mutex;
-        
+
         /**
          * Observer of messages directed at a particular
          * consumer.
          */
         ConsumerMessageListener* messageListener;
-        
+
         /**
          * Observer of connector exceptions.
          */
         cms::ExceptionListener* exceptionListener;
-        
+
         /**
          * This Connector's Command Reader
          */
         StompCommandReader reader;
-        
+
         /**
          * This Connector's Command Writer
          */
         StompCommandWriter writer;
-        
+
         /**
          * Map to hold StompCommandListeners
          */
         CmdListenerMap cmdListenerMap;
-        
+
         /**
          * Session Manager object that will  be allocated when we connect
          */
         StompSessionManager* sessionManager;
-        
+
         /**
          * Next avaliable Producer Id
          */
-        unsigned int nextProducerId;
-        
+        long long nextProducerId;
+
         /**
          * Next avaliable Transaction Id
          */
-        unsigned int nextTransactionId;
-        
+        long long nextTransactionId;
+
         /**
          * Properties for the connector.
          */
         util::SimpleProperties properties;
 
     private:
-    
+
         /**
          * Sends the connect message to the broker and
          * waits for the response.
          */
         void connect();
-        
+
         /**
          * Sends a oneway disconnect message to the broker.
          */
         void disconnect();
-        
+
         /**
          * Fires a consumer message to the observer.
          * @param consumer the consumerinfo to use to fire with
@@ -148,13 +148,13 @@ namespace stomp{
         void fire( ConsumerInfo* consumer, core::ActiveMQMessage* msg ){
             try{
                 if( messageListener != NULL ){
-                    messageListener->onConsumerMessage( 
+                    messageListener->onConsumerMessage(
                         consumer,
                         msg );
                 }
             }catch( ... ){/* do nothing*/}
         }
-        
+
         /**
          * Fires an exception event to the observing object.
          * @param ex the exception to fire
@@ -166,27 +166,27 @@ namespace stomp{
                 }
             }catch( ... ){/* do nothing*/}
         }
-        
+
     public:
-    
+
         /**
          * Constructor for the stomp connector.
          * @param transport the transport object for sending/receiving
          * commands on the wire.
          * @param properties properties for configuring the connector.
          */
-        StompConnector( transport::Transport* transport, 
+        StompConnector( transport::Transport* transport,
                         const util::Properties& properties )
             throw ( exceptions::IllegalArgumentException );
 
         virtual ~StompConnector();
-        
+
         /**
          * Starts the service.
          * @throws CMSException
          */
         virtual void start() throw( cms::CMSException );
-        
+
         /**
          * Closes this object and deallocates the appropriate resources.
          * @throws CMSException
@@ -199,30 +199,30 @@ namespace stomp{
          * @return Client Id String
          */
         virtual std::string getClientId() const {
-            return properties.getProperty( 
-                core::ActiveMQConstants::toString( 
+            return properties.getProperty(
+                core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_CLIENTID ), "" );
         }
-        
+
         /**
          * Gets the Username for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Username String
          */
         virtual std::string getUsername() const {
-            return properties.getProperty( 
-                core::ActiveMQConstants::toString( 
+            return properties.getProperty(
+                core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_USERNAME ), "" );
         }
-        
+
         /**
          * Gets the Password for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Password String
          */
         virtual std::string getPassword() const {
-            return properties.getProperty( 
-                core::ActiveMQConstants::toString( 
+            return properties.getProperty(
+                core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_PASSWORD ), "" );
         }
 
@@ -232,7 +232,7 @@ namespace stomp{
          * @return reference to a transport
          * @throws InvalidStateException if the Transport is not set
          */
-        virtual transport::Transport& getTransport() const 
+        virtual transport::Transport& getTransport() const
             throw ( exceptions::InvalidStateException ) {
 
             if( transport == NULL ) {
@@ -241,7 +241,7 @@ namespace stomp{
                     "StompConnector::getTransport - "
                     "Invalid State, No Transport.");
             }
-            
+
             return *transport;
         }
 
@@ -252,10 +252,10 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual SessionInfo* createSession(
-            cms::Session::AcknowledgeMode ackMode ) 
+            cms::Session::AcknowledgeMode ackMode )
                 throw( ConnectorException );
-      
-        /** 
+
+        /**
          * Create a Consumer for the given Session
          * @param destination Destination to Subscribe to.
          * @param session the session this consumer is attached to
@@ -265,32 +265,32 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual ConsumerInfo* createConsumer(
-            const cms::Destination* destination, 
+            const cms::Destination* destination,
             SessionInfo* session,
             const std::string& selector = "",
             bool noLocal = false )
                 throw ( ConnectorException );
-         
-        /** 
+
+        /**
          * Create a Durable Consumer for the given Session
          * @param topic Topic to Subscribe to.
          * @param session Session Information.
          * @param name name of the Durable Topic
          * @param selector Selector String
-         * @param noLocal if set, inhibits the delivery of messages 
-         *        published by its own connection 
+         * @param noLocal if set, inhibits the delivery of messages
+         *        published by its own connection
          * @return Consumer Information
          * @throws ConnectorException
          */
         virtual ConsumerInfo* createDurableConsumer(
-            const cms::Topic* topic, 
+            const cms::Topic* topic,
             SessionInfo* session,
             const std::string& name,
             const std::string& selector = "",
             bool noLocal = false )
                 throw ( ConnectorException );
 
-        /** 
+        /**
          * Create a Consumer for the given Session
          * @param destination Destination to Subscribe to.
          * @param session Session Information.
@@ -298,7 +298,7 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual ProducerInfo* createProducer(
-            const cms::Destination* destination, 
+            const cms::Destination* destination,
             SessionInfo* session )
                 throw ( ConnectorException );
 
@@ -309,10 +309,10 @@ namespace stomp{
          * @return a newly created Topic Object
          * @throws ConnectorException
          */
-        virtual cms::Topic* createTopic( const std::string& name, 
+        virtual cms::Topic* createTopic( const std::string& name,
                                          SessionInfo* session )
             throw ( ConnectorException );
-          
+
         /**
          * Creates a Queue given a name and session info
          * @param name Queue Name
@@ -320,7 +320,7 @@ namespace stomp{
          * @return a newly created Queue Object
          * @throws ConnectorException
          */
-        virtual cms::Queue* createQueue( const std::string& name, 
+        virtual cms::Queue* createQueue( const std::string& name,
                                          SessionInfo* session )
             throw ( ConnectorException );
 
@@ -333,7 +333,7 @@ namespace stomp{
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
                 throw ( ConnectorException );
-          
+
         /**
          * Creates a Temporary Queue given a name and session info
          * @param session Session Information
@@ -350,9 +350,9 @@ namespace stomp{
          * @param producerInfo Producer Info for the sender of this message
          * @throws ConnectorException
          */
-        virtual void send( cms::Message* message, ProducerInfo* producerInfo ) 
+        virtual void send( cms::Message* message, ProducerInfo* producerInfo )
             throw ( ConnectorException );
-      
+
         /**
          * Sends a set of Messages
          * @param messages List of Messages to send.
@@ -360,9 +360,9 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual void send( std::list<cms::Message*>& messages,
-                           ProducerInfo* producerInfo ) 
+                           ProducerInfo* producerInfo )
             throw ( ConnectorException );
-         
+
         /**
          * Acknowledges a Message
          * @param session An ActiveMQMessage to Ack.
@@ -381,16 +381,16 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual TransactionInfo* startTransaction(
-            SessionInfo* session ) 
+            SessionInfo* session )
                 throw ( ConnectorException );
-         
+
         /**
          * Commits a Transaction.
          * @param transaction The Transaction information
          * @param session Session Information
          * @throws ConnectorException
          */
-        virtual void commit( TransactionInfo* transaction, 
+        virtual void commit( TransactionInfo* transaction,
                              SessionInfo* session )
             throw ( ConnectorException );
 
@@ -400,7 +400,7 @@ namespace stomp{
          * @param session Session Information
          * @throws ConnectorException
          */
-        virtual void rollback( TransactionInfo* transaction, 
+        virtual void rollback( TransactionInfo* transaction,
                                SessionInfo* session )
             throw ( ConnectorException );
 
@@ -448,7 +448,7 @@ namespace stomp{
             TransactionInfo* transaction )
                 throw ( ConnectorException );
 
-        /** 
+        /**
          * Unsubscribe from a givenDurable Subscription
          * @param name name of the Subscription
          * @throws ConnectorException
@@ -463,8 +463,8 @@ namespace stomp{
          */
         virtual void destroyResource( ConnectorResource* resource )
             throw ( ConnectorException );
-            
-        /** 
+
+        /**
          * Sets the listener of consumer messages.
          * @param listener listener the observer.
          */
@@ -472,14 +472,14 @@ namespace stomp{
             ConsumerMessageListener* listener )
         {
             this->messageListener = listener;
-            
+
             if(sessionManager != NULL)
             {
                 sessionManager->setConsumerMessageListener( listener );
             }
         }
 
-        /** 
+        /**
          * Sets the Listner of exceptions for this connector
          * @param listener ExceptionListener the observer.
          */
@@ -488,16 +488,16 @@ namespace stomp{
         {
             this->exceptionListener = listener;
         }
-        
+
     public: // transport::CommandListener
-    
+
         /**
-         * Event handler for the receipt of a non-response command from the 
+         * Event handler for the receipt of a non-response command from the
          * transport.
          * @param command command the received command object.
          */
         virtual void onCommand( transport::Command* command );
-        
+
     public: // TransportExceptionListener
 
         /**
@@ -505,8 +505,8 @@ namespace stomp{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( 
-            transport::Transport* source, 
+        virtual void onTransportException(
+            transport::Transport* source,
             const exceptions::ActiveMQException& ex );
 
     public: // StompCommandListener
@@ -516,11 +516,11 @@ namespace stomp{
          * @param command command to process
          * @throw ConnterException
          */
-        virtual void onStompCommand( commands::StompCommand* command ) 
-            throw ( StompConnectorException );    
+        virtual void onStompCommand( commands::StompCommand* command )
+            throw ( StompConnectorException );
 
     public:
-    
+
         /**
          * Registers a Command Listener using the CommandId specified
          * if there is already a listener for that command it will be
@@ -528,25 +528,25 @@ namespace stomp{
          * @param commandId CommandId to process
          * @param listener pointer to the listener to call
          */
-        virtual void addCmdListener( 
+        virtual void addCmdListener(
             commands::CommandConstants::CommandId commandId,
             StompCommandListener* listener );
-        
+
         /**
          * UnRegisters a Command Listener using the CommandId specified
          * @param commandId CommandId of the listener to remove.
          */
-        virtual void removeCmdListener( 
+        virtual void removeCmdListener(
             commands::CommandConstants::CommandId commandId );
-        
+
     private:
-    
-        unsigned int getNextProducerId();
-        unsigned int getNextTransactionId();
+
+        long long getNextProducerId();
+        long long getNextTransactionId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );
-        
+
     };
 
 }}}

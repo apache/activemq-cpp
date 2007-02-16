@@ -74,7 +74,7 @@ namespace openwire{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual unsigned int getProducerId(void) const {
+        virtual long long getProducerId(void) const {
             if( this->producerInfo != NULL ) {
                 return (unsigned int)
                     this->producerInfo->getProducerId()->getValue();
@@ -87,7 +87,7 @@ namespace openwire{
          * Sets the ID that is assigned to this Producer
          * @return id string value of the Producer Id.
          */
-        virtual void setProducerId( const unsigned int id ) {
+        virtual void setProducerId( long long id ) {
             if( this->producerInfo != NULL ) {
                 this->producerInfo->getProducerId()->setValue( id );
             }

@@ -48,13 +48,13 @@ namespace connector{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual unsigned int getProducerId(void) const = 0;
+        virtual long long getProducerId(void) const = 0;
 
         /**
          * Sets the ID that is assigned to this Producer
          * @return id string value of the Producer Id.
          */
-        virtual void setProducerId( const unsigned int id ) = 0;
+        virtual void setProducerId( long long id ) = 0;
 
         /**
          * Gets the Session Info that this consumer is attached too

@@ -29,45 +29,45 @@ namespace connector{
     public:
 
    	    virtual ~SessionInfo(void) {}
-        
+
         /**
          * Gets the Connection Id of the Connection that this consumer is
          * using to receive its messages.
          * @return string value of the connection id
          */
         virtual const std::string& getConnectionId(void) const = 0;
-   
+
         /**
          * Sets the Connection Id of the Connection that this consumer is
          * using to receive its messages.
          * @param id string value of the connection id
          */
         virtual void setConnectionId( const std::string& id ) = 0;
-        
+
         /**
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual unsigned int getSessionId(void) const = 0;
+        virtual long long getSessionId(void) const = 0;
 
         /**
          * Sets the Session Id for this Session
          * @param id integral id value for this session
          */
-        virtual void setSessionId( const unsigned int id ) = 0;
+        virtual void setSessionId( long long id ) = 0;
 
         /**
          * Sets the Ack Mode of this Session Info object
          * @param ackMode Ack Mode
          */
         virtual void setAckMode(cms::Session::AcknowledgeMode ackMode) = 0;
-        
+
         /**
          * Gets the Ack Mode of this Session
          * @return Ack Mode
          */
         virtual cms::Session::AcknowledgeMode getAckMode(void) const = 0;
-        
+
         /**
          * Gets the currently active transaction info, if this session is
          * transacted, returns NULL when not transacted.  You must call
@@ -75,14 +75,14 @@ namespace connector{
          * @return Transaction Id of current Transaction
          */
         virtual const TransactionInfo* getTransactionInfo(void) const = 0;
-        
+
         /**
          * Sets the current transaction info for this session, this is nit
          * used when the session is not transacted.
          * @param transaction Transaction Id
-         */        
+         */
         virtual void setTransactionInfo( const TransactionInfo* transaction ) = 0;
-        
+
     };
 
 }}

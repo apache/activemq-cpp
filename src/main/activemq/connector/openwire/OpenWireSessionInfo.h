@@ -78,7 +78,7 @@ namespace openwire{
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual unsigned int getSessionId(void) const {
+        virtual long long getSessionId(void) const {
             if( sessionInfo != NULL ) {
                 return (unsigned int)sessionInfo->getSessionId()->getValue();
             }
@@ -90,8 +90,10 @@ namespace openwire{
          * Sets the Session Id for this Session
          * @param id integral id value for this session
          */
-        virtual void setSessionId( const unsigned int id AMQCPP_UNUSED ) {
-            // Do nothing here
+        virtual void setSessionId( long long id ) {
+            if( sessionInfo != NULL ) {
+                sessionInfo->getSessionId()->setValue( id );
+            }
         }
 
         /**

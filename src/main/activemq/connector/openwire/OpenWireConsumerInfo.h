@@ -72,7 +72,7 @@ namespace openwire{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual unsigned int getConsumerId(void) const {
+        virtual long long getConsumerId(void) const {
             if( consumerInfo != NULL ) {
                 return (unsigned int)
                     this->consumerInfo->getConsumerId()->getValue();
@@ -85,7 +85,7 @@ namespace openwire{
          * Sets the ID that is assigned to this consumer
          * @param id value of the Consumer Id.
          */
-        virtual void setConsumerId( const unsigned int id ) {
+        virtual void setConsumerId( long long int id ) {
             if( this->consumerInfo != NULL ) {
                 this->consumerInfo->getConsumerId()->setValue( id );
             }

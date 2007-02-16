@@ -46,60 +46,60 @@ namespace core{
      * running transaction, when it is committed or rolled back it silently
      * creates a new transaction for the next set of messages.  The only
      * way to permanently end this tranaction is to delete it.
-     * 
+     *
      * Configuration options
-     * 
+     *
      * transaction.redeliveryDelay
      *   Wait time between the redelivery of each message
-     * 
+     *
      * transaction.maxRedeliveryCount
-     *   Max number of times a message can be redelivered, if the session is 
+     *   Max number of times a message can be redelivered, if the session is
      *   rolled back more than this many time, the message is dropped.
-     */                        
+     */
     class ActiveMQTransaction : public concurrent::TaskListener,
                                 public connector::TransactionInfo,
                                 public ActiveMQSessionResource
     {
     private:
-    
+
         // List type for holding messages
         typedef std::list< ActiveMQMessage* > MessageList;
-                
+
         // Mapping of MessageListener Ids to Lists of Messages that are
         // redelivered on a Rollback
         typedef std::map< ActiveMQMessageListener*, MessageList > RollbackMap;
-       
+
     private:
-    
+
         // Connection this Transaction is associated with
         ActiveMQConnection* connection;
-        
+
         // Session this Transaction is associated with
-        ActiveMQSession* session;        
-        
+        ActiveMQSession* session;
+
         // Transaction Info for the current Transaction
         connector::TransactionInfo* transactionInfo;
-        
+
         // Map of ActiveMQMessageListener to Messages to Rollback
         RollbackMap rollbackMap;
-        
+
         // Lock object to protect the rollback Map
         concurrent::Mutex rollbackLock;
-        
+
         // Max number of redeliveries before we quit
         int maxRedeliveries;
-        
+
         // Wait time between sends of message on a rollback
         int redeliveryDelay;
-        
+
         // Mutex that is signaled when all tasks complete.
         concurrent::Mutex tasksDone;
-        
+
         // Count of Tasks that are outstanding
         int taskCount;
 
     public:
-    
+
         /**
          * Constructor
          * @param connection - Connection to the Broker
@@ -109,9 +109,9 @@ namespace core{
     	ActiveMQTransaction( ActiveMQConnection* connection,
                              ActiveMQSession* session,
                              const util::Properties& properties );
-    
+
         virtual ~ActiveMQTransaction(void);
-                                  
+
         /**
          * Adds the Message as a part of the Transaction for the specified
          * ActiveMQConsumer.
@@ -120,29 +120,29 @@ namespace core{
          */
         virtual void addToTransaction( ActiveMQMessage* message,
                                        ActiveMQMessageListener* listener );
-                                      
+
         /**
-         * Removes the ActiveMQMessageListener and all of its transacted 
-         * messages from the Transaction, this is usually only done when 
+         * Removes the ActiveMQMessageListener and all of its transacted
+         * messages from the Transaction, this is usually only done when
          * a ActiveMQMessageListener is destroyed.
          * @param listener - consumer who is to be removed.
          */
         virtual void removeFromTransaction( ActiveMQMessageListener* listener );
-        
+
         /**
          * Commit the current Transaction
          * @throw CMSException
          */
         virtual void commit(void) throw ( exceptions::ActiveMQException );
-        
+
         /**
          * Rollback the current Transaction
          * @throw CMSException
          */
         virtual void rollback(void) throw ( exceptions::ActiveMQException );
-        
+
         /**
-         * Get the Transaction Information object for the current 
+         * Get the Transaction Information object for the current
          * Transaction, returns NULL if no transaction is running
          * @return TransactionInfo
          */
@@ -154,17 +154,17 @@ namespace core{
 
         /**
          * Gets the Transction Id
-         * @return unsigned int Id
+         * @return integral value of Id
          */
-        virtual unsigned int getTransactionId(void) const {
+        virtual long long getTransactionId(void) const {
             return transactionInfo->getTransactionId();
         }
 
         /**
          * Sets the Transction Id
-         * @param id - unsigned int Id
+         * @param id - integral value of Id
          */
-        virtual void setTransactionId( const unsigned int id ) {
+        virtual void setTransactionId( long long id ) {
             transactionInfo->setTransactionId( id );
         }
 
@@ -185,7 +185,7 @@ namespace core{
         }
 
     protected:   // Task Listener Interface
-    
+
         /**
          * Called when a queued task has completed, the task that
          * finished is passed along for user consumption.  The task is
@@ -193,21 +193,21 @@ namespace core{
          * @param task - Runnable Pointer to the task that finished
          */
         virtual void onTaskComplete( concurrent::Runnable* task );
-           
+
          /**
           * Called when a queued task has thrown an exception while
-          * being run.  The Callee should assume that this was an 
+          * being run.  The Callee should assume that this was an
           * unrecoverable exeption and that this task is now defunct.
           * Deletes the Task and notifies the connection that the
           * exception has occurred.  Reduce the outstanding task count.
           * @param task - Runnable Pointer to the task
           * @param ex - The ActiveMQException that was thrown.
           */
-         virtual void onTaskException( concurrent::Runnable* task, 
+         virtual void onTaskException( concurrent::Runnable* task,
                                        exceptions::ActiveMQException& ex );
 
     public:  // ActiveMQSessionResource
-    
+
         /**
          * Retrieve the Connector resource that is associated with
          * this Session resource.
@@ -218,26 +218,26 @@ namespace core{
         }
 
     protected:
-    
+
         /**
-         * Clean out all Messages from the Rollback Map, deleting the 
-         * messages as it goes.  Destroys the Transaction Info object as 
+         * Clean out all Messages from the Rollback Map, deleting the
+         * messages as it goes.  Destroys the Transaction Info object as
          * well.
          * @throw ActiveMQException
          */
         virtual void clearTransaction(void);
 
     private:
-    
+
         // Internal class that is used to redeliver one consumers worth
         // of messages from this transaction.
         class RollbackTask : public concurrent::Runnable
         {
         private:
-        
+
             // Wait time before redelivery in millisecs
             int redeliveryDelay;
-            
+
             // Max number of time to redeliver this message
             int maxRedeliveries;
 
@@ -246,10 +246,10 @@ namespace core{
 
             // Consumer we are redelivering to
             ActiveMQMessageListener* listener;
-            
+
             // Connection to use for sending message acks
             ActiveMQConnection* connection;
-            
+
             // Session for this Transaction
             ActiveMQSession* session;
 
@@ -261,7 +261,7 @@ namespace core{
                           MessageList& messages,
                           int maxRedeliveries,
                           int redeliveryDelay ){
-                            
+
                 // Store State Data.
                 this->messages        = messages;
                 this->listener        = listener;

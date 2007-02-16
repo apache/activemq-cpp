@@ -37,7 +37,7 @@ namespace openwire{
         const SessionInfo* session;
 
         // Locally generated Transaction Id
-        unsigned int transactionId;
+        long long transactionId;
 
     public:
 
@@ -50,17 +50,17 @@ namespace openwire{
 
         /**
          * Gets the Transction Id
-         * @return unsigned int Id
+         * @return integral vlaue of the Id
          */
-        virtual unsigned int getTransactionId(void) const {
+        virtual long long getTransactionId(void) const {
             return this->transactionId;
         }
 
         /**
          * Sets the Transction Id
-         * @param id unsigned int Id
+         * @param id integral value of the Id
          */
-        virtual void setTransactionId( const unsigned int id ) {
+        virtual void setTransactionId( long long id ) {
             this->transactionId = id;
         }
 

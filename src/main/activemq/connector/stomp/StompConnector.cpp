@@ -95,7 +95,7 @@ StompConnector::~StompConnector()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompConnector::getNextProducerId()
+long long StompConnector::getNextProducerId()
 {
     synchronized( &mutex )
     {
@@ -106,7 +106,7 @@ unsigned int StompConnector::getNextProducerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompConnector::getNextTransactionId()
+long long StompConnector::getNextTransactionId()
 {
     synchronized( &mutex )
     {
