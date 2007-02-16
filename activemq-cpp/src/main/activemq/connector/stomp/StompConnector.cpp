@@ -17,9 +17,7 @@
 
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/concurrent/Concurrent.h>
-#include <activemq/transport/BrokerError.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/ExceptionResponse.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
 #include <activemq/connector/stomp/commands/ConnectCommand.h>
@@ -217,15 +215,6 @@ void StompConnector::connect()
 
         Response* response = transport->request( &cmd );
 
-        if( dynamic_cast< ExceptionResponse* >( response ) != NULL )
-        {
-            delete response;
-
-            throw StompConnectorException(
-                __FILE__, __LINE__,
-                "StompConnector::connect - Failed on Connect Request" );
-        }
-
         ConnectedCommand* connected =
             dynamic_cast< ConnectedCommand* >( response );
 
@@ -265,7 +254,6 @@ void StompConnector::connect()
         // Clean up
         delete response;
     }
-    AMQ_CATCH_RETHROW( BrokerError )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

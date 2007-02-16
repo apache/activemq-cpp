@@ -186,14 +186,6 @@ void ResponseCorrelator::onCommand( Command* command ){
         FutureResponse* futureResponse = NULL;
         futureResponse = iter->second;
 
-        // If it's an exception response, notify the exception listener.
-        ExceptionResponse* exResp =
-            dynamic_cast<ExceptionResponse*>( response );
-        if( exResp != NULL ){
-            const BrokerError* error = exResp->getException();
-            fire( *error );
-        }
-
         synchronized( futureResponse ){
 
             // Set the response property in the future response.

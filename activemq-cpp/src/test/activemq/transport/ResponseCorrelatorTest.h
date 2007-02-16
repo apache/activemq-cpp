@@ -22,7 +22,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/transport/ResponseCorrelator.h>
-#include <activemq/transport/ExceptionResponse.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
@@ -37,7 +36,6 @@ namespace transport{
         CPPUNIT_TEST_SUITE( ResponseCorrelatorTest );
         CPPUNIT_TEST( testBasics );
         CPPUNIT_TEST( testOneway );
-        CPPUNIT_TEST( testExceptionResponse );
         CPPUNIT_TEST( testTransportException );
         CPPUNIT_TEST( testMultiRequests );
         CPPUNIT_TEST_SUITE_END();    
@@ -97,43 +95,6 @@ namespace transport{
             }
             virtual void setCorrelationId( int corrId ){
                 this->corrId = corrId;
-            }
-            
-            virtual std::string toString() const{ return ""; }
-        };
-        
-        class MyExceptionResponse : public ExceptionResponse{
-        public:
-        
-            unsigned int commandId;
-            bool responseRequired;
-            unsigned int corrId;
-            BrokerError error;
-            
-        public:
-        
-            virtual void setCommandId( int id ){
-                commandId = id;
-            }
-            virtual int getCommandId() const{
-                return commandId;
-            }
-            
-            virtual void setResponseRequired( const bool required ){
-                responseRequired = required;
-            }
-            virtual bool isResponseRequired() const{
-                return responseRequired;
-            }
-        
-            virtual int getCorrelationId() const{
-                return corrId;
-            }
-            virtual void setCorrelationId( int corrId ){
-                this->corrId = corrId;
-            }
-            virtual const BrokerError* getException() const{
-                return &error;
             }
             
             virtual std::string toString() const{ return ""; }
@@ -292,23 +253,6 @@ namespace transport{
             }
         };
         
-        class MyExceptionResponseTransport : public MyTransport{
-        public:
-        
-            MyExceptionResponseTransport(){}            
-            virtual ~MyExceptionResponseTransport(){}
-            
-            virtual Response* createResponse( Command* command ){
-                
-                MyExceptionResponse* resp = new MyExceptionResponse();
-                resp->setCorrelationId( command->getCommandId() );
-                resp->setResponseRequired( false );
-                resp->error = BrokerError( __FILE__, __LINE__, 
-                    "some bad broker stuff" );
-                return resp;
-            }
-        };
-        
         class MyBrokenTransport : public MyTransport{
         public:
         
@@ -420,7 +364,6 @@ namespace transport{
                 MyCommand cmd;
                 Response* resp = correlator.request( &cmd );
                 CPPUNIT_ASSERT( resp != NULL );
-                CPPUNIT_ASSERT( dynamic_cast<ExceptionResponse*>(resp) == NULL );
                 CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
                 
                 // Wait to get the message back asynchronously.
@@ -477,52 +420,6 @@ namespace transport{
                 CPPUNIT_ASSERT( listener.exCount == 0 );
                 
                 correlator.close();
-            }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
-        }
-        
-        void testExceptionResponse(){
-            
-            try{
-                
-                MyListener listener;
-                MyExceptionResponseTransport transport;
-                ResponseCorrelator correlator( &transport, false );
-                correlator.setCommandListener( &listener );
-                correlator.setTransportExceptionListener( &listener );
-                CPPUNIT_ASSERT( transport.listener == &correlator );
-                CPPUNIT_ASSERT( transport.exListener == &correlator );
-                                                               
-                // Give the thread a little time to get up and running.
-                synchronized(&transport.startedMutex)
-                {
-                    // Start the transport.
-                    correlator.start();
-                    
-                    transport.startedMutex.wait();
-                }
-                
-                // Send one request.
-                MyCommand cmd;
-                Response* resp = correlator.request( &cmd );
-                CPPUNIT_ASSERT( resp != NULL );
-                CPPUNIT_ASSERT( dynamic_cast<ExceptionResponse*>(resp) != NULL );
-                CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
-                
-                // Wait to make sure we get the exception.
-                concurrent::Thread::sleep( 100 );
-                
-                // Since our transport relays our original command back at us as a
-                // non-response message, check to make sure we received it and that
-                // it is the original command.
-                CPPUNIT_ASSERT( listener.commands.size() == 1 );                
-                CPPUNIT_ASSERT( listener.exCount == 1 );
-                
-                correlator.close();
-                
-                // Destroy the response.
-                delete resp;                              
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )

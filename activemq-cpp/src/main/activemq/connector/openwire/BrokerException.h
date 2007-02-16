@@ -27,7 +27,8 @@ namespace connector{
 namespace openwire{
     
     class BrokerException : public OpenWireConnectorException {
-        
+    public:
+    
         BrokerException() throw(){}
         BrokerException( const exceptions::ActiveMQException& ex ) throw()
             : OpenWireConnectorException(){

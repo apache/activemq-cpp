@@ -21,7 +21,6 @@
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/FutureResponse.h>
 #include <activemq/transport/Command.h>
-#include <activemq/transport/ExceptionResponse.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <map>
@@ -115,8 +114,7 @@ namespace transport{
         /**
          * Sends the given request to the server and waits for the response.
          * @param command The request to send.
-         * @return the response from the server.  This may be of type ExceptionResponse
-         * in the case of a distributed error that occurs at the broker.
+         * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual Response* request( Command* command ) 

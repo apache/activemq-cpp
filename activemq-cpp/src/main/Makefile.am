@@ -236,12 +236,10 @@ h_sources = \
     activemq/transport/Transport.h \
     activemq/transport/TransportFactory.h \
     activemq/transport/CommandListener.h \
-    activemq/transport/ExceptionResponse.h \
     activemq/transport/ResponseCorrelator.h \
     activemq/transport/IOTransport.h \
     activemq/transport/TcpTransport.h \
     activemq/transport/TransportExceptionListener.h \
-    activemq/transport/BrokerError.h \
     activemq/transport/CommandReader.h \
     activemq/transport/TcpTransportFactory.h \
     activemq/transport/Command.h \
