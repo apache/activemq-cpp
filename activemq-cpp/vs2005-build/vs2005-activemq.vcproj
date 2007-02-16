@@ -668,7 +668,7 @@
 					Name="openwire"
 					>
 					<File
-						RelativePath="..\src\main\activemq\connector\openwire\DataStreamMarshaller.h"
+						RelativePath="..\src\main\activemq\connector\openwire\BrokerException.h"
 						>
 					</File>
 					<File
@@ -784,6 +784,10 @@
 						</File>
 						<File
 							RelativePath="..\src\main\activemq\connector\openwire\marshal\BaseDataStreamMarshaller.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\marshal\DataStreamMarshaller.h"
 							>
 						</File>
 						<File
@@ -2226,10 +2230,6 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\transport\CommandWriter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\ExceptionResponse.h"
 					>
 				</File>
 				<File
