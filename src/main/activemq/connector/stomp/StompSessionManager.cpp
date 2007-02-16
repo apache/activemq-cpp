@@ -67,7 +67,7 @@ StompSessionManager::~StompSessionManager(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompSessionManager::getNextSessionId(void)
+long long StompSessionManager::getNextSessionId(void)
 {
     synchronized( &mutex )
     {
@@ -78,7 +78,7 @@ unsigned int StompSessionManager::getNextSessionId(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int StompSessionManager::getNextConsumerId(void)
+long long StompSessionManager::getNextConsumerId(void)
 {
     synchronized( &mutex )
     {

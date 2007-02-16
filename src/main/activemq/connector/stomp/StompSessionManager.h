@@ -30,10 +30,10 @@
 namespace activemq{
 namespace connector{
 namespace stomp{
-    
+
     /**
      * The Stomp Session Manager is responsible for managing multiple
-     * Client Sessions.  The management involves routing messages to 
+     * Client Sessions.  The management involves routing messages to
      * sessions.  If more than one ActiveMQConsumer is created that is
      * listening to the same Topic or Queue, then the messages that are
      * received must be delivered to each of those sessions, and copied
@@ -43,39 +43,39 @@ namespace stomp{
     class StompSessionManager : public StompCommandListener
     {
     private:
-    
+
         // Map Types
-        typedef std::map< unsigned int, ConsumerInfo* > ConsumerMap;
-        typedef std::map< std::string, ConsumerMap >    DestinationMap;        
+        typedef std::map< long long, ConsumerInfo* > ConsumerMap;
+        typedef std::map< std::string, ConsumerMap > DestinationMap;
 
     private:
-    
+
         // Next id to be used for a Session Id
-        unsigned int nextSessionId;
-        
+        long long nextSessionId;
+
         // Next id to be used for a Consumer Id
-        unsigned int nextConsumerId;
-        
+        long long nextConsumerId;
+
         // Mutex to protect ids.
         concurrent::Mutex mutex;
-        
+
         // Mapping of a Session to all the consumer's
         DestinationMap destinationMap;
-        
+
         // Transport that we use to find a transport for sending
         // commands
         transport::Transport* transport;
-        
-        // Consumer Message listener, we notify this whenever we receive 
+
+        // Consumer Message listener, we notify this whenever we receive
         // a new StompMessage type command.
         ConsumerMessageListener* messageListener;
-        
+
         // The global connection id
         std::string connectionId;
-        
+
     public:
 
-    	StompSessionManager( const std::string& connectionId, 
+    	StompSessionManager( const std::string& connectionId,
                              transport::Transport* transport );
     	virtual ~StompSessionManager(void);
 
@@ -97,11 +97,11 @@ namespace stomp{
          */
         virtual void removeSession( connector::SessionInfo* session )
             throw ( exceptions::ActiveMQException );
-        
+
         /**
          * Creates a new consumer to the specified session, will subscribe
-         * to the destination if another consumer hasn't already been 
-         * subbed to that destination.  The returned consumer is the 
+         * to the destination if another consumer hasn't already been
+         * subbed to that destination.  The returned consumer is the
          * owned by the caller and not deleted by this class.
          * @param destination to subscribe to
          * @param session to associate with
@@ -109,16 +109,16 @@ namespace stomp{
          * @return new ConsumerInfo object.
          */
         virtual connector::ConsumerInfo* createConsumer(
-            const cms::Destination* destination, 
+            const cms::Destination* destination,
             SessionInfo* session,
             const std::string& selector = "",
             bool noLocal = false )
                 throw( StompConnectorException );
 
         /**
-         * Creates a new durable consumer to the specified session, will 
-         * subscribe to the destination if another consumer hasn't already 
-         * been subbed to that destination.  The returned consumer is the 
+         * Creates a new durable consumer to the specified session, will
+         * subscribe to the destination if another consumer hasn't already
+         * been subbed to that destination.  The returned consumer is the
          * owned by the caller and not deleted by this class.
          * @param destination Topic to subscribe to
          * @param session to associate with
@@ -128,7 +128,7 @@ namespace stomp{
          * @return new ConsumerInfo object.
          */
         virtual connector::ConsumerInfo* createDurableConsumer(
-            const cms::Destination* destination, 
+            const cms::Destination* destination,
             SessionInfo* session,
             const std::string& name,
             const std::string& selector = "",
@@ -142,11 +142,11 @@ namespace stomp{
          * caller is responsible for managing the lifetime.
          * @param consumer the ConsumerInfo for the consumer to remove
          * @throws ConnectorException
-         */            
+         */
         virtual void removeConsumer( connector::ConsumerInfo* consumer )
             throw( StompConnectorException );
 
-        /** 
+        /**
          * Sets the listener of consumer messages.
          * @param listener the observer.
          */
@@ -157,19 +157,19 @@ namespace stomp{
         }
 
     public:   // StompCommand Listener
-    
+
         /**
          * Process the Stomp Command
          * @param command to process
          * @throw ConnterException
          */
-        virtual void onStompCommand( commands::StompCommand* command ) 
+        virtual void onStompCommand( commands::StompCommand* command )
             throw ( StompConnectorException );
-            
-    protected: 
-    
+
+    protected:
+
         /**
-         * Sets Subscribe Command options from the properties of a 
+         * Sets Subscribe Command options from the properties of a
          * destination object.
          * @param destination The destination that we are subscribing to.
          * @param command The pending Subscribe command
@@ -177,20 +177,20 @@ namespace stomp{
         virtual void setSubscribeOptions( const cms::Destination* destination,
                                           commands::SubscribeCommand& command )
             throw ( StompConnectorException );
-            
+
     protected:
-    
+
         /**
          * Gets the Next Session Id
          * @return unique session id
          */
-        virtual unsigned int getNextSessionId(void);
-        
+        virtual long long getNextSessionId(void);
+
         /**
          * Gets the Next Session Id
          * @return unique session id
          */
-        virtual unsigned int getNextConsumerId(void);
+        virtual long long getNextConsumerId(void);
 
     };
 
