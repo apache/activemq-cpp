@@ -941,7 +941,6 @@ Response* OpenWireConnector::syncRequest( Command* command )
 {
     try
     {
-        enforceConnected();
         Response* response = transport->request(command);
         
         commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);        
