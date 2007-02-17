@@ -36,13 +36,10 @@ namespace openwire{
         // Session Info - We do not own this
         const SessionInfo* session;
 
-        // Locally generated Transaction Id
-        long long transactionId;
-
     public:
 
         OpenWireTransactionInfo() {
-            transactionId = 0;
+            transactionInfo = NULL;
             session = NULL;
         }
 
@@ -53,7 +50,11 @@ namespace openwire{
          * @return integral vlaue of the Id
          */
         virtual long long getTransactionId(void) const {
-            return this->transactionId;
+            if( transactionInfo != NULL ) {
+                return ( dynamic_cast<commands::LocalTransactionId*>(
+                    transactionInfo->getTransactionId() ) )->getValue();
+            }
+            return 0;
         }
 
         /**
@@ -61,7 +62,10 @@ namespace openwire{
          * @param id integral value of the Id
          */
         virtual void setTransactionId( long long id ) {
-            this->transactionId = id;
+            if( transactionInfo != NULL ) {
+                ( dynamic_cast<commands::LocalTransactionId*>(
+                    this->transactionInfo->getTransactionId() ) )->setValue( id );
+            }
         }
 
         /**
