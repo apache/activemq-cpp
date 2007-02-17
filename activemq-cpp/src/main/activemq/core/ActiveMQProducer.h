@@ -34,28 +34,25 @@ namespace core{
                              public ActiveMQSessionResource
     {
     private:
-   
-        // Disable the Message Id
-        bool disableMsgId;
-      
+
         // Disable sending timestamps
         bool disableTimestamps;
-        
+
         // The default delivery Mode of this Producer
         int defaultDeliveryMode;
-      
+
         // The default priority Level to send at
         int defaultPriority;
 
         // The default time to live value for messages in milliseconds
         long long defaultTimeToLive;
-      
+
         // Session that this producer sends to.
         ActiveMQSession* session;
-      
+
         // This Producers protocal specific info object
         connector::ProducerInfo* producerInfo;
-        
+
         // Boolean that indicates if the consumer has been closed
         bool closed;
 
@@ -84,7 +81,7 @@ namespace core{
          * @throws CMSException
          */
         virtual void send( cms::Message* message ) throw ( cms::CMSException );
-      
+
         /**
          * Sends the message to the default producer destination, but does
          * not take ownership of the message, caller must still destroy it.
@@ -95,9 +92,9 @@ namespace core{
          * milliseconds.
          * @throws CMSException
          */
-        virtual void send( cms::Message* message, int deliveryMode, int priority, 
+        virtual void send( cms::Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( cms::CMSException );
-            
+
         /**
          * Sends the message to the designated destination.
          * @param a Message Object Pointer
@@ -116,41 +113,47 @@ namespace core{
          * @param timeToLive The time to live value for this message in
          * milliseconds.
          * @throws CMSException
-         */     
+         */
         virtual void send( const cms::Destination* destination,
-            cms::Message* message, int deliveryMode, int priority, 
+            cms::Message* message, int deliveryMode, int priority,
             long long timeToLive) throw ( cms::CMSException );
-            
-        /** 
+
+        /**
          * Sets the delivery mode for this Producer
          * @param The DeliveryMode
          */
         virtual void setDeliveryMode( int mode ) {
-            defaultDeliveryMode = mode; 
+            defaultDeliveryMode = mode;
         }
-      
-        /** 
+
+        /**
          * Gets the delivery mode for this Producer
          * @return The DeliveryMode
          */
         virtual int getDeliveryMode() const {
-            return defaultDeliveryMode; 
+            return defaultDeliveryMode;
         }
-      
+
         /**
          * Sets if Message Ids are disbled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageId( bool value ) {
-            disableMsgId = value; 
+            if( producerInfo != NULL ){
+                producerInfo->setDisableMessageId( value );
+            }
         }
-      
+
         /**
          * Sets if Message Ids are disbled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual bool getDisableMessageId() const {
-            return disableMsgId;
+            if( this->producerInfo != NULL ) {
+                return this->producerInfo->isDisableMessageId();
+            }
+
+            return false;
         }
 
         /**
@@ -160,7 +163,7 @@ namespace core{
         virtual void setDisableMessageTimeStamp( bool value ) {
             disableTimestamps = value;
         }
-      
+
         /**
          * Sets if Message Time Stamps are disbled for this Producer
          * @param boolean indicating enable / disable (true / false)
@@ -168,15 +171,15 @@ namespace core{
         virtual bool getDisableMessageTimeStamp() const {
             return disableTimestamps;
         }
-      
+
         /**
          * Sets the Priority that this Producers sends messages at
          * @param int value for Priority level
          */
         virtual void setPriority( int priority ) {
-            defaultPriority = priority; 
+            defaultPriority = priority;
         }
-      
+
         /**
          * Gets the Priority level that this producer sends messages at
          * @return int based priority level
@@ -184,7 +187,7 @@ namespace core{
         virtual int getPriority() const {
             return defaultPriority;
         }
-      
+
         /**
          * Sets the Time to Live that this Producers sends messages with
          * @param time The new default time to live value in milliseconds.
@@ -192,7 +195,7 @@ namespace core{
         virtual void setTimeToLive( long long time ) {
             defaultTimeToLive = time;
         }
-  
+
         /**
          * Gets the Time to Live that this producer sends messages with
          * @return The default time to live value in milliseconds.
@@ -200,9 +203,9 @@ namespace core{
         virtual long long getTimeToLive() const {
             return defaultTimeToLive;
         }
-      
+
     public:  // ActiveMQSessionResource
-    
+
         /**
          * Retrieve the Connector resource that is associated with
          * this Session resource.
@@ -213,7 +216,7 @@ namespace core{
         }
 
     public:
-   
+
         /**
          * Retrives this object ProducerInfo pointer
          * @return ProducerInfo pointer

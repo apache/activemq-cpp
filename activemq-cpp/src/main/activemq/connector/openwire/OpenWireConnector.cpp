@@ -86,6 +86,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->brokerWireFormatInfo = NULL;
     this->nextConsumerId = 1;
     this->nextProducerId = 1;
+    this->nextProducerSequenceId = 1;
     this->nextTransactionId = 1;
     this->nextSessionId = 1;
     this->nextTempDestinationId = 1;
@@ -140,6 +141,17 @@ long long OpenWireConnector::getNextProducerId()
     synchronized( &mutex )
     {
         return nextProducerId++;
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long OpenWireConnector::getNextProducerSequenceId()
+{
+    synchronized( &mutex )
+    {
+        return nextProducerSequenceId++;
     }
 
     return 0;
@@ -682,39 +694,69 @@ void OpenWireConnector::send( cms::Message* message,
     {
         enforceConnected();
 
-        // TODO
+        OpenWireProducerInfo* producer =
+            dynamic_cast<OpenWireProducerInfo*>( producerInfo );
 
-//        const SessionInfo* session = producerInfo->getSessionInfo();
-//        Command* command = dynamic_cast< transport::Command* >( message );
-//
-//        if( command == NULL )
-//        {
-//            throw StompConnectorException(
-//                __FILE__, __LINE__,
-//                "StompConnector::send - "
-//                "Message is not a valid stomp type.");
-//        }
-//
-//        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
-//        {
-//            StompCommand* stompCommand =
-//                dynamic_cast< StompCommand* >( message );
-//
-//            if( stompCommand == NULL )
-//            {
-//                throw StompConnectorException(
-//                    __FILE__, __LINE__,
-//                    "StompConnector::send - "
-//                    "Message is not a valid stomp type.");
-//            }
-//
-//            stompCommand->setTransactionId(
-//                Integer::toString(
-//                    session->getTransactionInfo()->getTransactionId() ) );
-//        }
-//
-//        // Send it
-//        transport->oneway( command );
+        if( producer == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::send - "
+                "Producer was not of the OpenWire flavor.");
+        }
+
+        const SessionInfo* session = producerInfo->getSessionInfo();
+        commands::Message* amqMessage =
+            dynamic_cast< commands::Message* >( message );
+
+        if( amqMessage == NULL )
+        {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::send - "
+                "Message is not a valid Open Wire type.");
+        }
+
+        if( !producer->isDisableMessageId() )
+        {
+            commands::MessageId* id = new commands::MessageId();
+            id->setProducerId(
+                dynamic_cast<commands::ProducerId*>(
+                    producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
+
+            id->setProducerSequenceId( getNextProducerSequenceId() );
+
+            amqMessage->setMessageId( id );
+        }
+
+        amqMessage->setProducerId(
+            dynamic_cast<commands::ProducerId*>(
+                producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
+
+        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            const OpenWireTransactionInfo* transactionInfo =
+                dynamic_cast<const OpenWireTransactionInfo*>(
+                    producer->getSessionInfo()->getTransactionInfo() );
+
+            if( transactionInfo == NULL ) {
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::acknowledge - "
+                    "Transacted Session, has no Transaction Info.");
+            }
+
+            amqMessage->setTransactionId(
+                dynamic_cast<commands::TransactionId*>(
+                    transactionInfo->getTransactionInfo()->
+                        getTransactionId()->cloneDataStructure() ) );
+        }
+
+        // Send the message to the broker.
+        Response* response = syncRequest( amqMessage );
+
+        // The broker did not return an error - this is good.
+        // Just discard the response.
+        delete response;
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -999,24 +1041,24 @@ void OpenWireConnector::unsubscribe( const std::string& name )
     throw ( ConnectorException, UnsupportedOperationException )
 {
     commands::RemoveSubscriptionInfo* rsi = NULL;
-    
+
     try
     {
         enforceConnected();
-        
+
         rsi = new commands::RemoveSubscriptionInfo();
         rsi->setConnectionId( dynamic_cast<commands::ConnectionId*>(
             connectionInfo.getConnectionId()->cloneDataStructure()) );
         rsi->setSubcriptionName(name);
         rsi->setClientId(connectionInfo.getClientId());
-                
+
         // Send the message to the broker.
         Response* response = syncRequest(rsi);
 
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
-        
+
     } catch( ConnectorException& ex ) {
         delete rsi;
 

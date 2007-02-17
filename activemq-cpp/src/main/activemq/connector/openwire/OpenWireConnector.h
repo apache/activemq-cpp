@@ -158,6 +158,11 @@ namespace openwire{
         long long nextProducerId;
 
         /**
+         * Next avaliable Producer Sequence Id
+         */
+        long long nextProducerSequenceId;
+
+        /**
          * Next avaliable Consumer Id
          */
         long long nextConsumerId;
@@ -569,6 +574,7 @@ namespace openwire{
         long long getNextTransactionId();
         long long getNextSessionId();
         long long getNextTempDestinationId();
+        long long getNextProducerSequenceId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );

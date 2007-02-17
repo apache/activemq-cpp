@@ -46,7 +46,6 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
 
     // Default the Delivery options
     this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
-    this->disableMsgId        = false;
     this->disableTimestamps   = false;
     this->defaultPriority     = 4;
     this->defaultTimeToLive   = 0;

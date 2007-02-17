@@ -29,7 +29,7 @@ namespace connector{
     {
     public:
 
-   	    virtual ~ProducerInfo(void) {}
+        virtual ~ProducerInfo(void) {}
 
         /**
          * Retrieves the default destination that this producer
@@ -67,6 +67,20 @@ namespace connector{
          * @param session SessionnInfo pointer
          */
         virtual void setSessionInfo( const SessionInfo* session ) = 0;
+
+        /**
+         * Sets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @param value - true if message ids are disabled
+         */
+        virtual void setDisableMessageId( bool value ) = 0;
+
+        /**
+         * Gets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @returns true if message ids are disabled
+         */
+        virtual bool isDisableMessageId() const = 0;
 
     };
 
