@@ -55,6 +55,7 @@
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 
 #include <activemq/connector/openwire/commands/ConnectionInfo.h>
+#include <activemq/connector/openwire/commands/ConsumerInfo.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
@@ -611,6 +612,16 @@ namespace openwire{
          */
         std::string createTemporaryDestinationName()
             throw ( ConnectorException );
+            
+        /**
+         * Creates a commands::ConsumerInfo object.  Used for both standard
+         * and durable consumers.
+         * @param destination The destination on which to create the consumer
+         * @param session the parent session context.
+         */
+        commands::ConsumerInfo* createConsumerInfo(
+            const cms::Destination* destination,
+            connector::SessionInfo* session ) throw ( ConnectorException );
 
     };
 
