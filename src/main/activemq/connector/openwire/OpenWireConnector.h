@@ -53,6 +53,7 @@
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
+#include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
@@ -186,6 +187,12 @@ namespace openwire{
          * Properties for the connector.
          */
         util::SimpleProperties properties;
+        
+        /**
+         * Mapping of consumer IDs to their respective
+         * consumer info object.
+         */
+        util::Map< long long, OpenWireConsumerInfo* > consumerInfoMap;
 
     private:
 

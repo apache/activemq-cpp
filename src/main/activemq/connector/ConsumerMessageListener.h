@@ -36,10 +36,14 @@ namespace connector{
          * Called to dispatch a message to a particular consumer.
          * @param consumer the target consumer of the dispatch.
          * @param msg the message to be dispatched.
+         * @param own If true, it is the responsibility of the callee
+         * to destroy the message object.  Otherwise, the callee must NOT
+         * destroy it.
          */
         virtual void onConsumerMessage( 
             ConsumerInfo* consumer,
-            core::ActiveMQMessage* msg ) = 0;
+            core::ActiveMQMessage* msg,
+            bool own = true ) = 0;
             
     };
         

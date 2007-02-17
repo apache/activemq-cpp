@@ -391,6 +391,14 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
+        
+        // Since we've successfully registered - add this consumer to the
+        // consumer info map.
+        synchronized( &consumerInfoMap ) {
+            consumerInfoMap.setValue( 
+                consumerInfo->getConsumerId()->getValue(),
+                consumer );
+        }
 
         return consumer;
 
@@ -1094,6 +1102,13 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
             dynamic_cast<commands::ActiveMQTempDestination*>(resource);
 
         if( consumer != NULL ) {
+            
+            // Remove this consumer from the consumer info map
+            synchronized( &consumerInfoMap ) {
+                consumerInfoMap.remove( 
+                    consumer->getConsumerInfo()->getConsumerId()->getValue() );
+            }
+            
             dataStructure = consumer->getConsumerInfo();
         } else if( producer != NULL ) {
             dataStructure = producer->getProducerInfo();
@@ -1140,17 +1155,48 @@ void OpenWireConnector::onCommand( transport::Command* command )
 
         if( dispatch != NULL ) {
 
-//            ConsumerId* consumerId = dispatch->getConsumerId();
-//            MessageConsumer consumer = (MessageConsumer) consumers[consumerId];
-//            if (consumer == null)
-//            {
-//                Tracer.Error("No such consumer active: " + consumerId);
-//            }
-//            else
-//            {
-//                ActiveMQMessage message = (ActiveMQMessage) dispatch.Message;
-//                consumer.Dispatch(message);
-//            }
+            // Due to the severe suckiness of C++, in order to cast to
+            // a type that is in a different branch of the inheritence hierarchy
+            // we have to cast to the type at the "crotch" of the branch and then
+            // we can implicitly cast up the other branch.
+            core::ActiveMQMessage* message = dynamic_cast<commands::ActiveMQMessage*>(dispatch->getMessage());
+            if( message == NULL ) {
+                message = dynamic_cast<commands::ActiveMQTextMessage*>(dispatch->getMessage());
+            }
+            if( message == NULL ) {
+                message = dynamic_cast<commands::ActiveMQBytesMessage*>(dispatch->getMessage());
+            }
+            if( message == NULL ) {
+                message = dynamic_cast<commands::ActiveMQMapMessage*>(dispatch->getMessage());
+            }
+            if( message == NULL ) {
+                delete command;
+                throw OpenWireConnectorException( __FILE__, __LINE__, 
+                    "Received unsupported dispatch message" );
+            }
+            
+            // Get the consumer info object for this consumer.
+            OpenWireConsumerInfo* info = NULL;
+            synchronized( &consumerInfoMap ) {
+                info = consumerInfoMap.getValue( dispatch->getConsumerId()->getValue() );
+                if( info == NULL ){
+                    delete command;
+                    throw OpenWireConnectorException( __FILE__, __LINE__,
+                        "Received dispatch message for unregistered consumer" );
+                }
+            }
+                
+            try{                                
+                
+                // Callback the listener (the connection object).
+                if( messageListener != NULL ){
+                    messageListener->onConsumerMessage(
+                        info,
+                        message,
+                        false );
+                }
+                
+            }catch( ... ){/* do nothing*/}
 
             delete command;
 
@@ -1160,13 +1206,15 @@ void OpenWireConnector::onCommand( transport::Command* command )
             this->brokerInfo = brokerInfo;
         } else if( shutdownInfo != NULL ) {
 
-            if( state != DISCONNECTED ) {
-                fire( CommandIOException(
-                    __FILE__,
-                    __LINE__,
-                    "OpenWireConnector::onCommand - "
-                    "Broker closed this connection."));
-            }
+            try {
+                if( state != DISCONNECTED ) {
+                    fire( CommandIOException(
+                        __FILE__,
+                        __LINE__,
+                        "OpenWireConnector::onCommand - "
+                        "Broker closed this connection."));
+                }
+            } catch( ... ) { /* do nothing */ }
 
             delete command;
         }

@@ -315,7 +315,7 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
                 {
                     ActiveMQMessage* msg =
                         dynamic_cast< ActiveMQMessage* >( message );
-                    messageListener->onConsumerMessage( consumerInfo, msg );
+                    messageListener->onConsumerMessage( consumerInfo, msg, true );
                 }
 
                 return;
@@ -336,7 +336,7 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
                 {
                     ActiveMQMessage* msg =
                         dynamic_cast< ActiveMQMessage* >( message->clone() );
-                    messageListener->onConsumerMessage( consumerInfo, msg );
+                    messageListener->onConsumerMessage( consumerInfo, msg, true );
                 }
             }
 
