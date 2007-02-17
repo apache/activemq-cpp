@@ -21,6 +21,7 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Integer.h>
+#include <activemq/util/Long.h>
 #include <activemq/util/Guid.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
 #include <activemq/connector/openwire/OpenWireSessionInfo.h>
@@ -30,7 +31,10 @@
 #include <activemq/connector/openwire/BrokerException.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
+#include <activemq/connector/openwire/commands/ActiveMQTempTopic.h>
+#include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
 #include <activemq/connector/openwire/commands/ConnectionId.h>
+#include <activemq/connector/openwire/commands/DestinationInfo.h>
 #include <activemq/connector/openwire/commands/RemoveInfo.h>
 #include <activemq/connector/openwire/commands/ShutdownInfo.h>
 #include <activemq/connector/openwire/commands/SessionInfo.h>
@@ -75,6 +79,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
     this->nextSessionId = 1;
+    this->nextTempDestinationId = 1;
     this->properties.copy( &properties );
     this->wireFormat = dynamic_cast<OpenWireFormat*>(
         wireFormatFactory.createWireFormat( properties ) );
@@ -148,6 +153,17 @@ long long OpenWireConnector::getNextSessionId()
     synchronized( &mutex )
     {
         return nextSessionId++;
+    }
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long OpenWireConnector::getNextTempDestinationId()
+{
+    synchronized( &mutex )
+    {
+        return nextTempDestinationId++;
     }
 
     return 0;
@@ -473,15 +489,20 @@ cms::Queue* OpenWireConnector::createQueue( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
-    connector::SessionInfo* session )
+    connector::SessionInfo* session AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        commands::ActiveMQTempTopic* topic = new
+            commands::ActiveMQTempTopic( createTemporaryDestinationName() );
+
+        // Register it with the Broker
+        this->createTemporaryDestination( topic );
+
+        return topic;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -489,15 +510,20 @@ cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* OpenWireConnector::createTemporaryQueue(
-    connector::SessionInfo* session )
+    connector::SessionInfo* session AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-        // TODO
-        return NULL;
+        commands::ActiveMQTempQueue* queue = new
+            commands::ActiveMQTempQueue( createTemporaryDestinationName() );
+
+        // Register it with the Broker
+        this->createTemporaryDestination( queue );
+
+        return queue;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -807,11 +833,17 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
             dynamic_cast<OpenWireConsumerInfo*>(resource);
         OpenWireSessionInfo* session =
             dynamic_cast<OpenWireSessionInfo*>(resource);
+        commands::ActiveMQTempDestination* tempDestination =
+            dynamic_cast<commands::ActiveMQTempDestination*>(resource);
 
         if( consumer != NULL ) {
             dataStructure = consumer->getConsumerInfo();
         } else if( session != NULL ) {
             dataStructure = session->getSessionInfo();
+        } else if( tempDestination != NULL ) {
+            // User deletes these
+            destroyTemporaryDestination( tempDestination );
+            return;
         }
 
         if( dataStructure == NULL ) {
@@ -969,3 +1001,56 @@ void OpenWireConnector::disposeOf(
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::createTemporaryDestination(
+    commands::ActiveMQTempDestination* tempDestination ) throw ( ConnectorException ) {
+
+    try {
+
+        commands::DestinationInfo command;
+        command.setConnectionId(
+            dynamic_cast<commands::ConnectionId*>(
+                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+        command.setOperationType( 0 ); // 0 is add
+        command.setDestination(
+            dynamic_cast<commands::ActiveMQDestination*>(
+                tempDestination->cloneDataStructure() ) );
+
+        this->syncRequest( &command );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::destroyTemporaryDestination(
+    commands::ActiveMQTempDestination* tempDestination ) throw ( ConnectorException ) {
+
+    try {
+
+        commands::DestinationInfo command;
+        command.setConnectionId(
+            dynamic_cast<commands::ConnectionId*>(
+                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+        command.setOperationType( 1 ); // 1 is remove
+        command.setDestination(
+            dynamic_cast<commands::ActiveMQDestination*>(
+                tempDestination->cloneDataStructure() ) );
+
+        this->syncRequest( &command );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string OpenWireConnector::createTemporaryDestinationName()
+    throw ( ConnectorException )
+{
+    try {
+        return connectionInfo.getConnectionId()->getValue() + ":" +
+               util::Long::toString( getNextTempDestinationId() );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}

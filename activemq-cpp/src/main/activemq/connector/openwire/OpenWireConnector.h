@@ -57,6 +57,7 @@
 #include <activemq/connector/openwire/commands/ConnectionInfo.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 
 namespace activemq{
 namespace connector{
@@ -155,6 +156,11 @@ namespace openwire{
          * Next available Session Id.
          */
         long long nextSessionId;
+
+        /**
+         * Next Temporary Destination Id
+         */
+        long long nextTempDestinationId;
 
         /**
          * Properties for the connector.
@@ -543,6 +549,7 @@ namespace openwire{
         long long getNextProducerId();
         long long getNextTransactionId();
         long long getNextSessionId();
+        long long getNextTempDestinationId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );
@@ -563,7 +570,8 @@ namespace openwire{
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        transport::Response* syncRequest(transport::Command* command) throw (ConnectorException);
+        transport::Response* syncRequest( transport::Command* command )
+            throw (ConnectorException);
 
         /**
          * Sends a message to the broker to dispose of the given resource.
@@ -571,7 +579,34 @@ namespace openwire{
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
-        void disposeOf(commands::DataStructure* objectId) throw (ConnectorException);
+        void disposeOf( commands::DataStructure* objectId )
+            throw ( ConnectorException );
+
+        /**
+         * Send the Destination Creation Request to the Broker, alerting it
+         * that we've created a new Temporary Destination.
+         * @param tempDestination - The new Temporary Destination
+         */
+        void createTemporaryDestination(
+            commands::ActiveMQTempDestination* tempDestination )
+                throw ( ConnectorException );
+
+        /**
+         * Send the Destination Destruction Request to the Broker, alerting
+         * it that we've removed an existing Temporary Destination.
+         * @param tempDestination - The Temporary Destination to remove
+         */
+        void destroyTemporaryDestination(
+            commands::ActiveMQTempDestination* tempDestination )
+                throw ( ConnectorException );
+
+        /**
+         * Creates a new Temporary Destination name using the connection id
+         * and a rolling count.
+         * @returns a unique Temporary Destination name
+         */
+        std::string createTemporaryDestinationName()
+            throw ( ConnectorException );
 
     };
 
