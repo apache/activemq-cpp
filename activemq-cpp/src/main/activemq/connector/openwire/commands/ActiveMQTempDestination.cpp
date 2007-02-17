@@ -16,25 +16,36 @@
  */
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 
+#include <activemq/exceptions/ActiveMQException.h>
+
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempDestination::ActiveMQTempDestination()
+ActiveMQTempDestination::ActiveMQTempDestination() :
+    ActiveMQDestination(),
+    connector( NULL )
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
-    ActiveMQDestination( name )
+    ActiveMQDestination( name ),
+    connector( NULL )
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::~ActiveMQTempDestination()
 {
+    try{
+        close();
+    }
+    AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,3 +54,17 @@ unsigned char ActiveMQTempDestination::getDataStructureType() const
     return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempDestination::close() throw ( cms::CMSException ) {
+
+    try {
+
+        // Give the Connector a chance to clean up this temp Destination
+        if( connector != NULL ) {
+            connector->destroyResource( this );
+        }
+
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
