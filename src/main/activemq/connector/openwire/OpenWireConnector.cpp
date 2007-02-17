@@ -350,13 +350,12 @@ ConsumerInfo* OpenWireConnector::createConsumer(
     const cms::Destination* destination,
     connector::SessionInfo* session,
     const std::string& selector,
-    bool noLocal )
+    bool noLocal AMQCPP_UNUSED )
         throw ( ConnectorException )
-{   
+{
     OpenWireConsumerInfo* consumer = NULL;
     commands::ConsumerInfo* consumerInfo = NULL;
-    
-    
+
     try
     {
         enforceConnected();
@@ -364,7 +363,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         consumer = new OpenWireConsumerInfo();
         consumerInfo = new commands::ConsumerInfo();
         consumer->setConsumerInfo( consumerInfo );
-        
+
         commands::ConsumerId* consumerId = new commands::ConsumerId();
         consumerInfo->setConsumerId( consumerId );
 
@@ -375,70 +374,70 @@ ConsumerInfo* OpenWireConnector::createConsumer(
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
-        const commands::ActiveMQDestination* amqDestination = 
+        const commands::ActiveMQDestination* amqDestination =
             dynamic_cast<const commands::ActiveMQDestination*>(destination);
         if( amqDestination == NULL ) {
-            throw ConnectorException( __FILE__, __LINE__, 
+            throw ConnectorException( __FILE__, __LINE__,
                 "Destination was either NULL or not created by this OpenWireConnector" );
         }
-        
-        
+
+
         consumerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
             amqDestination->cloneDataStructure()) );
-            
-        // Get any options specified in the destination and apply them to the 
+
+        // Get any options specified in the destination and apply them to the
         // ConsumerInfo object.
-        const Properties& options = amqDestination->getOptions();        
-        consumerInfo->setBrowser( Boolean::parseBoolean( 
+        const Properties& options = amqDestination->getOptions();
+        consumerInfo->setBrowser( Boolean::parseBoolean(
             options.getProperty( "consumer.browser", "false" )) );
-        consumerInfo->setPrefetchSize( Integer::parseInt( 
+        consumerInfo->setPrefetchSize( Integer::parseInt(
             options.getProperty( "consumer.prefetchSize", "0" )) );
-        consumerInfo->setMaximumPendingMessageLimit( Integer::parseInt( 
+        consumerInfo->setMaximumPendingMessageLimit( Integer::parseInt(
             options.getProperty( "consumer.maximumPendingMessageLimit", "0" )) );
-        consumerInfo->setDispatchAsync( Boolean::parseBoolean( 
+        consumerInfo->setDispatchAsync( Boolean::parseBoolean(
             options.getProperty( "consumer.dispatchAsync", "false" )) );
-        consumerInfo->setNoLocal( Boolean::parseBoolean( 
+        consumerInfo->setNoLocal( Boolean::parseBoolean(
             options.getProperty( "consumer.noLocal", "false" )) );
-        consumerInfo->setExclusive( Boolean::parseBoolean( 
+        consumerInfo->setExclusive( Boolean::parseBoolean(
             options.getProperty( "consumer.exclusive", "false" )) );
-        consumerInfo->setRetroactive( Boolean::parseBoolean( 
+        consumerInfo->setRetroactive( Boolean::parseBoolean(
             options.getProperty( "consumer.retroactive", "false" )) );
-        consumerInfo->setPriority( Integer::parseInt( 
+        consumerInfo->setPriority( Integer::parseInt(
             options.getProperty( "consumer.priority", "0" )) );
-        consumerInfo->setNetworkSubscription( Boolean::parseBoolean( 
+        consumerInfo->setNetworkSubscription( Boolean::parseBoolean(
             options.getProperty( "consumer.networkSubscription", "false" )) );
-        consumerInfo->setOptimizedAcknowledge( Boolean::parseBoolean( 
+        consumerInfo->setOptimizedAcknowledge( Boolean::parseBoolean(
             options.getProperty( "consumer.optimizedAcknowledge", "false" )) );
-        consumerInfo->setNoRangeAcks( Boolean::parseBoolean( 
+        consumerInfo->setNoRangeAcks( Boolean::parseBoolean(
             options.getProperty( "consumer.noRangeAcks", "false" )) );
-        
+
         // Send the message to the broker.
         Response* response = syncRequest(consumerInfo);
-        
+
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
 
         return consumer;
-        
+
     } catch( ConnectorException& ex ) {
         delete consumer;
         delete consumerInfo;
-        
+
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( std::exception& ex ) {
         delete consumer;
         delete consumerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             ex.what() );
-            
+
     } catch( ... ) {
         delete consumer;
         delete consumerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
 }
