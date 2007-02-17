@@ -30,6 +30,9 @@ namespace openwire{
 
     private:
 
+        // Are Message Ids Disabled
+        bool disableMessageIds;
+
         // OpenWire ProducerInfo Command
         commands::ProducerInfo* producerInfo;
 
@@ -39,7 +42,9 @@ namespace openwire{
     public:
 
         OpenWireProducerInfo() {
-            session = NULL;
+            this->disableMessageIds = false;
+            this->producerInfo = NULL;
+            this->session = NULL;
         }
 
         virtual ~OpenWireProducerInfo() {}
@@ -128,6 +133,24 @@ namespace openwire{
          */
         virtual void setProducerInfo( commands::ProducerInfo* producerInfo ) {
             this->producerInfo = producerInfo;
+        }
+
+        /**
+         * Sets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @param value - true if message ids are disabled
+         */
+        virtual void setDisableMessageId( bool value ) {
+            this->disableMessageIds = value;
+        }
+
+        /**
+         * Gets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @returns true if message ids are disabled
+         */
+        virtual bool isDisableMessageId() const {
+            return this->disableMessageIds;
         }
 
     };

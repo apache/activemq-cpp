@@ -29,6 +29,9 @@ namespace stomp{
     {
     private:
 
+        // Are Message Ids Disabled
+        bool disableMessageIds;
+
         // Producer Id
         long long producerId;
 
@@ -41,9 +44,10 @@ namespace stomp{
     public:
 
         StompProducerInfo(void) {
-            producerId = 0;
-            session = NULL;
-            destination = NULL;
+            this->producerId = 0;
+            this->disableMessageIds = false;
+            this->session = NULL;
+            this->destination = NULL;
         }
         virtual ~StompProducerInfo(void) { delete destination; }
 
@@ -94,6 +98,24 @@ namespace stomp{
          */
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
+        }
+
+        /**
+         * Sets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @param value - true if message ids are disabled
+         */
+        virtual void setDisableMessageId( bool value ) {
+            this->disableMessageIds = value;
+        }
+
+        /**
+         * Gets if Message's Produced by this Producer should disable the
+         * use of the MessageId field.
+         * @returns true if message ids are disabled
+         */
+        virtual bool isDisableMessageId() const {
+            return this->disableMessageIds;
         }
 
     };
