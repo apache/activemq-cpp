@@ -49,6 +49,10 @@
 #include <activemq/connector/openwire/commands/ActiveMQQueue.h>
 #include <activemq/connector/openwire/commands/ExceptionResponse.h>
 #include <activemq/connector/openwire/commands/BrokerError.h>
+#include <activemq/connector/openwire/commands/ActiveMQMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
 
 using namespace std;
 using namespace activemq;
@@ -907,17 +911,13 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* OpenWireConnector::createMessage(
-    connector::SessionInfo* session,
-    TransactionInfo* transaction )
+    connector::SessionInfo* session AMQCPP_UNUSED,
+    TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
-        enforceConnected();
-
-        // TODO
-
-        return NULL;
+        return new commands::ActiveMQMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -925,17 +925,13 @@ cms::Message* OpenWireConnector::createMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* OpenWireConnector::createBytesMessage(
-    connector::SessionInfo* session,
-    TransactionInfo* transaction )
+    connector::SessionInfo* session AMQCPP_UNUSED,
+    TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
-        enforceConnected();
-
-        // TODO
-
-        return NULL;
+        return new commands::ActiveMQBytesMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -943,17 +939,13 @@ cms::BytesMessage* OpenWireConnector::createBytesMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* OpenWireConnector::createTextMessage(
-    connector::SessionInfo* session,
-    TransactionInfo* transaction )
+    connector::SessionInfo* session AMQCPP_UNUSED,
+    TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
-        enforceConnected();
-
-        // TODO
-
-        return NULL;
+        return new commands::ActiveMQTextMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -961,17 +953,13 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MapMessage* OpenWireConnector::createMapMessage(
-    connector::SessionInfo* session,
-    TransactionInfo* transaction )
+    connector::SessionInfo* session AMQCPP_UNUSED,
+    TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
     try
     {
-        enforceConnected();
-
-        // TODO
-
-        return NULL;
+        return new commands::ActiveMQMapMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
