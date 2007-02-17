@@ -141,21 +141,6 @@ namespace stomp{
         void disconnect();
 
         /**
-         * Fires a consumer message to the observer.
-         * @param consumer the consumerinfo to use to fire with
-         * @param msg the Message object to send
-         */
-        void fire( ConsumerInfo* consumer, core::ActiveMQMessage* msg ){
-            try{
-                if( messageListener != NULL ){
-                    messageListener->onConsumerMessage(
-                        consumer,
-                        msg );
-                }
-            }catch( ... ){/* do nothing*/}
-        }
-
-        /**
          * Fires an exception event to the observing object.
          * @param ex the exception to fire
          */
