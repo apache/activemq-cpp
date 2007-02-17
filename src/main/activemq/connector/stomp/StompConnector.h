@@ -365,14 +365,16 @@ namespace stomp{
 
         /**
          * Acknowledges a Message
-         * @param session An ActiveMQMessage to Ack.
-         * @param message a message to acknowledge
-         * @param ackType the type of acknowledgement mode to use
+         * @param session the Session that the message is linked to
+         * @param consumer the Consumer that the message was linked to
+         * @param message An ActiveMQMessage to Ack.
+         * @param ackType the type of ack to perform
          * @throws ConnectorException
          */
         virtual void acknowledge( const SessionInfo* session,
+                                  const ConsumerInfo* consumer,
                                   const cms::Message* message,
-                                  AckType ackType )
+                                  AckType ackType = ConsumedAck)
             throw ( ConnectorException );
 
         /**

@@ -39,6 +39,8 @@
 #include <activemq/connector/openwire/commands/RemoveInfo.h>
 #include <activemq/connector/openwire/commands/ShutdownInfo.h>
 #include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/connector/openwire/commands/Message.h>
+#include <activemq/connector/openwire/commands/MessageAck.h>
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
@@ -469,7 +471,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 {
     OpenWireProducerInfo* producer = NULL;
     commands::ProducerInfo* producerInfo = NULL;
-    
+
     try
     {
         enforceConnected();
@@ -477,7 +479,7 @@ ProducerInfo* OpenWireConnector::createProducer(
         producer = new OpenWireProducerInfo();
         producerInfo = new commands::ProducerInfo();
         producer->setProducerInfo( producerInfo );
-        
+
         commands::ProducerId* producerId = new commands::ProducerId();
         producerInfo->setProducerId( producerId );
 
@@ -487,49 +489,48 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
-        const commands::ActiveMQDestination* amqDestination = 
+        const commands::ActiveMQDestination* amqDestination =
             dynamic_cast<const commands::ActiveMQDestination*>(destination);
         if( amqDestination == NULL ) {
-            throw ConnectorException( __FILE__, __LINE__, 
+            throw ConnectorException( __FILE__, __LINE__,
                 "Destination was either NULL or not created by this OpenWireConnector" );
         }
-                
+
+        // Get any options specified in the destination and apply them to the
+        // ProducerInfo object.
         producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
             amqDestination->cloneDataStructure()) );
-        
-        // Get any options specified in the destination and apply them to the 
-        // ProducerInfo object.
         const Properties& options = amqDestination->getOptions();
-        producerInfo->setDispatchAsync( Boolean::parseBoolean( 
+        producerInfo->setDispatchAsync( Boolean::parseBoolean(
             options.getProperty( "producer.dispatchAsync", "false" )) );
-            
+
         // Send the message to the broker.
         Response* response = syncRequest(producerInfo);
 
         // The broker did not return an error - this is good.
         // Just discard the response.
-        delete response;    
+        delete response;
 
         return producer;
-        
+
     } catch( ConnectorException& ex ) {
         delete producer;
         delete producerInfo;
-        
+
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( std::exception& ex ) {
         delete producer;
         delete producerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             ex.what() );
-            
+
     } catch( ... ) {
         delete producer;
         delete producerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
 }
@@ -679,39 +680,75 @@ void OpenWireConnector::send( std::list<cms::Message*>& messages,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::acknowledge( const connector::SessionInfo* session,
+void OpenWireConnector::acknowledge( const SessionInfo* session,
+                                     const ConsumerInfo* consumer,
                                      const cms::Message* message,
                                      AckType ackType = ConsumedAck )
     throw ( ConnectorException )
 {
     try {
 
-//        // Auto to Stomp means don't do anything, so we drop it here
-//        // for client acknowledge we have to send and ack.
-//        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ||
-//            session->getAckMode() == cms::Session::SESSION_TRANSACTED )
-//        {
-//            AckCommand cmd;
-//
-//            if( message->getCMSMessageId() == "" )
-//            {
-//                throw StompConnectorException(
-//                    __FILE__, __LINE__,
-//                    "StompConnector::send - "
-//                    "Message has no Message Id, cannot ack.");
-//            }
-//
-//            cmd.setMessageId( message->getCMSMessageId() );
-//
-//            if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
-//            {
-//                cmd.setTransactionId(
-//                    Integer::toString(
-//                        session->getTransactionInfo()->getTransactionId() ) );
-//            }
-//
-//            transport->oneway( &cmd );
-//        }
+        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ||
+            session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            const commands::Message* amqMessage =
+                dynamic_cast<const commands::Message*>( message );
+
+            if( amqMessage == NULL ) {
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::acknowledge - "
+                    "Message was not a commands::Message derivation.");
+            }
+
+            const OpenWireConsumerInfo* consumerInfo =
+                dynamic_cast<const OpenWireConsumerInfo*>( consumer );
+
+            if( consumerInfo == NULL ) {
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::acknowledge - "
+                    "Consumer was not of the OpenWire flavor.");
+            }
+
+            commands::MessageAck ack;
+            ack.setAckType( (int)ackType );
+            ack.setConsumerId(
+                dynamic_cast<commands::ConsumerId*>(
+                    consumerInfo->getConsumerInfo()->
+                        getConsumerId()->cloneDataStructure() ) );
+            ack.setDestination(
+                dynamic_cast<commands::ActiveMQDestination*>(
+                    amqMessage->getDestination()->cloneDataStructure() ) );
+            ack.setFirstMessageId(
+                dynamic_cast<commands::MessageId*>(
+                    amqMessage->getMessageId()->cloneDataStructure() ) );
+            ack.setLastMessageId(
+                dynamic_cast<commands::MessageId*>(
+                    amqMessage->getMessageId()->cloneDataStructure() ) );
+            ack.setMessageCount( 1 );
+
+            if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
+                const OpenWireTransactionInfo* transactionInfo =
+                    dynamic_cast<const OpenWireTransactionInfo*>(
+                        session->getTransactionInfo() );
+
+                if( transactionInfo == NULL ) {
+                    throw OpenWireConnectorException(
+                        __FILE__, __LINE__,
+                        "OpenWireConnector::acknowledge - "
+                        "Transacted Session, has no Transaction Info.");
+                }
+
+                ack.setTransactionId(
+                    dynamic_cast<commands::TransactionId*>(
+                        transactionInfo->getTransactionInfo()->
+                            getTransactionId()->cloneDataStructure() ) );
+            }
+
+            transport->oneway( &ack );
+        }
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -1102,7 +1139,7 @@ void OpenWireConnector::createTemporaryDestination(
 
         // The broker did not return an error - this is good.
         // Just discard the response.
-        delete response; 
+        delete response;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -1128,7 +1165,7 @@ void OpenWireConnector::destroyTemporaryDestination(
 
         // The broker did not return an error - this is good.
         // Just discard the response.
-        delete response; 
+        delete response;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )

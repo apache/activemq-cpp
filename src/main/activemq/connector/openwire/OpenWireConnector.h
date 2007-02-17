@@ -406,10 +406,14 @@ namespace openwire{
 
         /**
          * Acknowledges a Message
-         * @param An ActiveMQMessage to Ack.
+         * @param session the Session that the message is linked to
+         * @param consumer the Consumer that the message was linked to
+         * @param message An ActiveMQMessage to Ack.
+         * @param ackType the type of ack to perform
          * @throws ConnectorException
          */
         virtual void acknowledge( const SessionInfo* session,
+                                  const ConsumerInfo* consumer,
                                   const cms::Message* message,
                                   AckType ackType )
             throw ( ConnectorException );
