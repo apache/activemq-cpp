@@ -54,7 +54,7 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     this->connection   = connection;
     this->closed       = false;
     this->asyncThread  = NULL;
-    this->useAsyncSend = Boolean::parseBoolean( 
+    this->useAsyncSend = Boolean::parseBoolean(
         properties.getProperty( "useAsyncSend", "false" ) );
 
     // If we are in Async Send Mode we need to start the Thread
@@ -66,7 +66,7 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     // Create a Transaction object only if the session is transactional
     if( isTransacted() )
     {
-        transaction = 
+        transaction =
             new ActiveMQTransaction(connection, this, properties );
     }
 }
@@ -98,7 +98,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         synchronized( &closableSessionResources ) {
             allResources = closableSessionResources.toArray();
         }
-        
+
         // Close all of the resources.
         for( unsigned int ix=0; ix<allResources.size(); ++ix ){
             cms::Closeable* resource = allResources[ix];
@@ -114,14 +114,14 @@ void ActiveMQSession::close() throw ( cms::CMSException )
             delete transaction;
             transaction = NULL;
         }
-                
+
         // Destroy this sessions resources
         connection->removeSession( this );
         sessionInfo = NULL;
-        
+
         // Now indicate that this session is closed.
         closed = true;
-        
+
         // Stop the Async Thread if its running
         stopThread();
 
@@ -230,17 +230,17 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         // Create the consumer instance.
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
             connection->getConnectionData()->getConnector()->
-                createConsumer( destination, 
-                                sessionInfo, 
-                                selector, 
+                createConsumer( destination,
+                                sessionInfo,
+                                selector,
                                 noLocal ), this );
-                                
+
         // Add the consumer to the map of closeable session resources.
         synchronized( &closableSessionResources ) {
             closableSessionResources.add( consumer );
-        }   
+        }
 
-        // Register this consumer as a listener of messages from the 
+        // Register this consumer as a listener of messages from the
         // connection.
         connection->addMessageListener(
             consumer->getConsumerInfo()->getConsumerId(), consumer );
@@ -277,7 +277,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         synchronized( &closableSessionResources ) {
             closableSessionResources.add( consumer );
         }
-        
+
         // Register the consumer as a listener of messages from the
         // connection.
         connection->addMessageListener(
@@ -307,12 +307,12 @@ cms::MessageProducer* ActiveMQSession::createProducer(
         ActiveMQProducer* producer = new ActiveMQProducer(
             connection->getConnectionData()->getConnector()->
                 createProducer( destination, sessionInfo ), this );
-                
+
         // Add the producer to the map of closeable session resources.
         synchronized( &closableSessionResources ) {
             closableSessionResources.add( producer );
         }
-        
+
         return producer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -373,8 +373,22 @@ cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
                 "Session Already Closed" );
         }
 
-        return connection->getConnectionData()->
-            getConnector()->createTemporaryQueue( sessionInfo );
+        // Create the consumer instance.
+        cms::TemporaryQueue* queue =
+            connection->getConnectionData()->
+                getConnector()->createTemporaryQueue( sessionInfo );
+
+        // Check if this object is closeable, if so we add it to our map
+        // of closeable resources so that it gets cleaned up.
+        if( dynamic_cast<cms::Closeable*>( queue ) != NULL ) {
+            // Add the consumer to the map of closeable session resources.
+            synchronized( &closableSessionResources ) {
+                closableSessionResources.add(
+                    dynamic_cast<cms::Closeable*>( queue ) );
+            }
+        }
+
+        return queue;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -394,15 +408,29 @@ cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
                 "Session Already Closed" );
         }
 
-        return connection->getConnectionData()->
-            getConnector()->createTemporaryTopic( sessionInfo );
+        // Create the consumer instance.
+        cms::TemporaryTopic* topic =
+            connection->getConnectionData()->
+                getConnector()->createTemporaryTopic( sessionInfo );
+
+        // Check if this object is closeable, if so we add it to our map
+        // of closeable resources so that it gets cleaned up.
+        if( dynamic_cast<cms::Closeable*>( topic ) != NULL ) {
+            // Add the consumer to the map of closeable session resources.
+            synchronized( &closableSessionResources ) {
+                closableSessionResources.add(
+                    dynamic_cast<cms::Closeable*>( topic ) );
+            }
+        }
+
+        return topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQSession::createMessage() 
+cms::Message* ActiveMQSession::createMessage()
     throw ( cms::CMSException )
 {
     try
@@ -422,7 +450,7 @@ cms::Message* ActiveMQSession::createMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::BytesMessage* ActiveMQSession::createBytesMessage() 
+cms::BytesMessage* ActiveMQSession::createBytesMessage()
     throw ( cms::CMSException )
 {
     try
@@ -444,7 +472,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* ActiveMQSession::createBytesMessage(
     const unsigned char* bytes,
-    std::size_t bytesSize ) 
+    std::size_t bytesSize )
         throw ( cms::CMSException )
 {
     try
@@ -460,7 +488,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage() 
+cms::TextMessage* ActiveMQSession::createTextMessage()
     throw ( cms::CMSException )
 {
     try
@@ -480,7 +508,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text ) 
+cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
     throw ( cms::CMSException )
 {
     try
@@ -496,7 +524,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MapMessage* ActiveMQSession::createMapMessage() 
+cms::MapMessage* ActiveMQSession::createMapMessage()
     throw ( cms::CMSException )
 {
     try
@@ -519,14 +547,14 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session::AcknowledgeMode ActiveMQSession::getAcknowledgeMode() const
 {
-    return sessionInfo != NULL ? 
+    return sessionInfo != NULL ?
         sessionInfo->getAckMode() : Session::AUTO_ACKNOWLEDGE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSession::isTransacted() const
 {
-    return sessionInfo != NULL ? 
+    return sessionInfo != NULL ?
         sessionInfo->getAckMode() == Session::SESSION_TRANSACTED : false;
 }
 
@@ -547,13 +575,13 @@ void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
         // Stores the Message and its consumer in the tranasction, if the
         // session is a transactional one.
         if( isTransacted() )
-        {      
+        {
             transaction->addToTransaction( message, consumer );
         }
 
         // Delegate to connector to ack this message.
         return connection->getConnectionData()->
-            getConnector()->acknowledge( 
+            getConnector()->acknowledge(
                 sessionInfo, dynamic_cast< cms::Message* >( message ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -594,7 +622,7 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::onDestroySessionResource( 
+void ActiveMQSession::onDestroySessionResource(
     ActiveMQSessionResource* resource )
         throw ( cms::CMSException )
 {
@@ -607,7 +635,7 @@ void ActiveMQSession::onDestroySessionResource(
                 "ActiveMQSession::onProducerClose - Session Already Closed");
         }
 
-        ActiveMQConsumer* consumer = 
+        ActiveMQConsumer* consumer =
             dynamic_cast< ActiveMQConsumer*>( resource );
 
         if( consumer != NULL )
@@ -623,14 +651,14 @@ void ActiveMQSession::onDestroySessionResource(
                 transaction->removeFromTransaction( consumer );
             }
         }
-        
+
         // Remove the entry from the session resource map if it's there
         cms::Closeable* closeableResource = dynamic_cast<cms::Closeable*>(resource);
         if( closeableResource != NULL ){
             synchronized( &closableSessionResources ) {
                 closableSessionResources.remove( closeableResource );
-            }   
-        }     
+            }
+        }
 
         // Free its resources.
         connection->getConnectionData()->
@@ -655,9 +683,9 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener()
 void ActiveMQSession::run()
 {
     try{
-        
+
         while( !closed )
-        {    
+        {
             std::pair<Message*, ActiveMQProducer*> messagePair;
 
             synchronized( &msgQueue )
@@ -674,21 +702,21 @@ void ActiveMQSession::run()
                     }
                     msgQueue.wait();
                 }
-                
+
                 // don't want to process messages if we are shutting down.
                 if( closed )
                 {
                     return;
                 }
-                
+
                 // get the data
                 messagePair = msgQueue.pop();
             }
 
             // Dispatch the message
             connection->getConnectionData()->
-                getConnector()->send( 
-                    messagePair.first, 
+                getConnector()->send(
+                    messagePair.first,
                     messagePair.second->getProducerInfo() );
 
             // Destroy Our copy of the message
@@ -698,7 +726,7 @@ void ActiveMQSession::run()
     catch(...)
     {
         cms::ExceptionListener* listener = this->getExceptionListener();
-        
+
         if( listener != NULL )
         {
             listener->onException( ActiveMQException(
@@ -706,34 +734,34 @@ void ActiveMQSession::run()
                 "ActiveMQSession::run - "
                 "Connector threw an unknown Exception, recovering..." ) );
         }
-    }        
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::startThread() throw ( ActiveMQException ) {
-    
+
     try
     {
         // Start the thread, if it's not already started.
         if( asyncThread == NULL )
         {
-            asyncThread = new Thread( this );        
-            asyncThread->start();                        
+            asyncThread = new Thread( this );
+            asyncThread->start();
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::stopThread() throw ( ActiveMQException ) {
-    
+
     try
     {
         // if the thread is running signal it to quit and then
         // wait for run to return so thread can die
         if( asyncThread != NULL )
-        {                        
+        {
             synchronized( &msgQueue )
             {
                 // Force a wakeup if run is in a wait.
@@ -745,7 +773,7 @@ void ActiveMQSession::stopThread() throw ( ActiveMQException ) {
             delete asyncThread;
             asyncThread = NULL;
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
@@ -760,7 +788,7 @@ void ActiveMQSession::purgeMessages() throw ( ActiveMQException )
             while( !msgQueue.empty() )
             {
                 // destroy these messages if this is not a transacted
-                // session, if it is then the tranasction will clean 
+                // session, if it is then the tranasction will clean
                 // the messages up.
                 delete msgQueue.pop().first;
             }
