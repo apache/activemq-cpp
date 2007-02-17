@@ -36,8 +36,8 @@ namespace core{
     class ActiveMQMessage;
     class ActiveMQProducer;
     class ActiveMQConsumer;
-   
-    class ActiveMQSession : 
+
+    class ActiveMQSession :
         public cms::Session,
         public concurrent::Runnable
     {
@@ -64,7 +64,9 @@ namespace core{
         bool closed;
 
         /**
-         * The set of closable session resources (consumers and producers).
+         * The set of closable session resources;
+         * This can consist of consumers and producers and sometimes
+         * destination.
          */
         util::Set<cms::Closeable*> closableSessionResources;
 
@@ -81,34 +83,34 @@ namespace core{
         /**
          * Outgoing Message Queue
          */
-        util::Queue< std::pair<cms::Message*, ActiveMQProducer*> > msgQueue;        
+        util::Queue< std::pair<cms::Message*, ActiveMQProducer*> > msgQueue;
 
     public:
-   
+
         ActiveMQSession( connector::SessionInfo* sessionInfo,
                          const util::Properties& properties,
                          ActiveMQConnection* connection );
-   
+
         virtual ~ActiveMQSession();
 
     public:   // Implements Mehtods
-   
+
         /**
          * Closes this session as well as any active child consumers or
          * producers.
          * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
-      
+
         /**
-         * Commits all messages done in this transaction and releases any 
+         * Commits all messages done in this transaction and releases any
          * locks currently held.
          * @throws CMSException
          */
         virtual void commit() throw ( cms::CMSException );
 
         /**
-         * Rollsback all messages done in this transaction and releases any 
+         * Rollsback all messages done in this transaction and releases any
          * locks currently held.
          * @throws CMSException
          */
@@ -124,7 +126,7 @@ namespace core{
                 throw ( cms::CMSException );
 
         /**
-         * Creates a MessageConsumer for the specified destination, using a 
+         * Creates a MessageConsumer for the specified destination, using a
          * message selector.
          * @param the Destination that this consumer receiving messages for.
          * @param the Message Selector string to use for this destination
@@ -135,13 +137,13 @@ namespace core{
             const std::string& selector )
                 throw ( cms::CMSException );
         /**
-         * Creates a MessageConsumer for the specified destination, using a 
+         * Creates a MessageConsumer for the specified destination, using a
          * message selector.
          * @param the Destination that this consumer receiving messages for.
          * @param the Message Selector string to use for this destination
-         * @param if true, and the destination is a topic, inhibits the 
-         *        delivery of messages published by its own connection. The 
-         *        behavior for NoLocal is not specified if the destination is 
+         * @param if true, and the destination is a topic, inhibits the
+         *        delivery of messages published by its own connection. The
+         *        behavior for NoLocal is not specified if the destination is
          *        a queue.
          * @throws CMSException
          */
@@ -150,9 +152,9 @@ namespace core{
             const std::string& selector,
             bool noLocal )
                 throw ( cms::CMSException );
-         
+
         /**
-         * Creates a durable subscriber to the specified topic, using a 
+         * Creates a durable subscriber to the specified topic, using a
          * message selector
          * @param the topic to subscribe to
          * @param name used to identify the subscription
@@ -167,7 +169,7 @@ namespace core{
                 throw ( cms::CMSException );
 
         /**
-         * Creates a MessageProducer to send messages to the specified 
+         * Creates a MessageProducer to send messages to the specified
          * destination.
          * @param the Destination to publish on
          * @throws CMSException
@@ -175,7 +177,7 @@ namespace core{
         virtual cms::MessageProducer* createProducer(
             const cms::Destination* destination )
                 throw ( cms::CMSException );
-         
+
         /**
          * Creates a queue identity given a Queue name.
          * @param the name of the new Queue
@@ -183,7 +185,7 @@ namespace core{
          */
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException );
-      
+
         /**
          * Creates a topic identity given a Queue name.
          * @param the name of the new Topic
@@ -205,19 +207,19 @@ namespace core{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic()
             throw ( cms::CMSException );
-         
+
         /**
          * Creates a new Message
          * @throws CMSException
          */
-        virtual cms::Message* createMessage() 
+        virtual cms::Message* createMessage()
             throw ( cms::CMSException );
 
         /**
          * Creates a BytesMessage
          * @throws CMSException
          */
-        virtual cms::BytesMessage* createBytesMessage() 
+        virtual cms::BytesMessage* createBytesMessage()
             throw ( cms::CMSException );
 
         /**
@@ -226,31 +228,31 @@ namespace core{
          * @param the size of the bytes array, or number of bytes to use
          * @throws CMSException
          */
-        virtual cms::BytesMessage* createBytesMessage( 
+        virtual cms::BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            std::size_t bytesSize ) 
+            std::size_t bytesSize )
                 throw ( cms::CMSException );
 
         /**
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual cms::TextMessage* createTextMessage() 
+        virtual cms::TextMessage* createTextMessage()
             throw ( cms::CMSException );
-      
+
         /**
          * Creates a new TextMessage and set the text to the value given
          * @param the initial text for the message
          * @throws CMSException
          */
-        virtual cms::TextMessage* createTextMessage( const std::string& text ) 
+        virtual cms::TextMessage* createTextMessage( const std::string& text )
             throw ( cms::CMSException );
 
         /**
          * Creates a new TextMessage
          * @throws CMSException
          */
-        virtual cms::MapMessage* createMapMessage() 
+        virtual cms::MapMessage* createMapMessage()
             throw ( cms::CMSException );
 
         /**
@@ -258,15 +260,15 @@ namespace core{
          * @return the Sessions Acknowledge Mode
          */
         virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const;
-      
+
         /**
          * Gets if the Sessions is a Transacted Session
          * @return transacted true - false.
          */
         virtual bool isTransacted() const;
-          
+
    public:   // ActiveMQSession specific Methods
-   
+
         /**
          * Sends a message from the Producer specified
          * @param cms::Message pointer
@@ -275,11 +277,11 @@ namespace core{
          */
         virtual void send( cms::Message* message, ActiveMQProducer* producer )
             throw ( cms::CMSException );
-         
+
         /**
-         * When a ActiveMQ core object is closed or destroyed it should call 
-         * back and let the session know that it is going away, this allows 
-         * the session to clean up any associated resources.  This method 
+         * When a ActiveMQ core object is closed or destroyed it should call
+         * back and let the session know that it is going away, this allows
+         * the session to clean up any associated resources.  This method
          * destroy's the data that is associated with a Producer object
          * @param The Producer that is being destoryed
          * @throw CMSException
@@ -288,7 +290,7 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Called to acknowledge the receipt of a message.  
+         * Called to acknowledge the receipt of a message.
          * @param The consumer that received the message
          * @param The Message to acknowledge.
          * @throws CMSException
@@ -296,7 +298,7 @@ namespace core{
         virtual void acknowledge( ActiveMQConsumer* consumer,
                                   ActiveMQMessage* message )
             throw ( cms::CMSException );
-         
+
         /**
          * This method gets any registered exception listener of this sessions
          * connection and returns it.  Mainly intended for use by the objects
@@ -322,9 +324,9 @@ namespace core{
          * is registered with a Thread and started.  This function reads from
          * the outgoing message queue and dispatches calls to the connector that
          * is registered with this class.
-         */            
+         */
         virtual void run();
-        
+
         /**
          * Starts the message processing thread to receive messages
          * asynchronously.  This thread is started when setMessageListener
@@ -332,7 +334,7 @@ namespace core{
          * consumer asynchronously instead of synchronously (receive).
          */
         void startThread() throw ( exceptions::ActiveMQException );
-        
+
         /**
          * Stops the asynchronous message processing thread if it's started.
          */
