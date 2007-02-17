@@ -582,7 +582,9 @@ void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
         // Delegate to connector to ack this message.
         return connection->getConnectionData()->
             getConnector()->acknowledge(
-                sessionInfo, dynamic_cast< cms::Message* >( message ) );
+                sessionInfo,
+                consumer->getConsumerInfo(),
+                dynamic_cast< cms::Message* >( message ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

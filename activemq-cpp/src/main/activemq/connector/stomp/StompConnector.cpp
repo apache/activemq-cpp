@@ -268,12 +268,12 @@ void StompConnector::disconnect()
 
         // Send the disconnect command to the broker.
         DisconnectCommand cmd;
-		transport->oneway( &cmd );
+        transport->oneway( &cmd );
 
     } catch( CommandIOException& ex ){
-		transport->close();
-		throw ex;
-	}
+        transport->close();
+        throw ex;
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException );
 }
@@ -455,13 +455,13 @@ void StompConnector::send( cms::Message* message,
         }
 
         // Send it
-		transport->oneway( command );
+        transport->oneway( command );
     }
-	catch( CommandIOException& ex ){
-		transport->close();
-		throw ConnectorException( __FILE__, __LINE__,
-			ex.what() );
-	}
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
+    }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
@@ -488,6 +488,7 @@ void StompConnector::send( std::list<cms::Message*>& messages,
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::acknowledge( const SessionInfo* session,
+                                  const ConsumerInfo* consumer AMQCPP_UNUSED,
                                   const cms::Message* message,
                                   AckType ackType AMQCPP_UNUSED)
     throw ( ConnectorException )
@@ -520,14 +521,14 @@ void StompConnector::acknowledge( const SessionInfo* session,
                         session->getTransactionInfo()->getTransactionId() ) );
             }
 
-			transport->oneway( &cmd );
+            transport->oneway( &cmd );
         }
     }
-	catch( CommandIOException& ex ){
-		transport->close();
-		throw ConnectorException( __FILE__, __LINE__,
-			ex.what() );
-	}
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
+    }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
@@ -552,15 +553,15 @@ TransactionInfo* StompConnector::startTransaction(
         cmd.setTransactionId(
                 Integer::toString( transaction->getTransactionId() ) );
 
-		transport->oneway( &cmd );
+        transport->oneway( &cmd );
 
         return transaction;
     }
-	catch( CommandIOException& ex ){
-		transport->close();
-		throw ConnectorException( __FILE__, __LINE__,
-			ex.what() );
-	}
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
+    }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
@@ -582,11 +583,11 @@ void StompConnector::commit( TransactionInfo* transaction,
 
         transport->oneway( &cmd );
     }
-	catch( CommandIOException& ex ){
-		transport->close();
-		throw ConnectorException( __FILE__, __LINE__,
-			ex.what() );
-	}
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
+    }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
@@ -607,11 +608,11 @@ void StompConnector::rollback( TransactionInfo* transaction,
 
         transport->oneway( &cmd );
     }
-	catch( CommandIOException& ex ){
-		transport->close();
-		throw ConnectorException( __FILE__, __LINE__,
-			ex.what() );
-	}
+    catch( CommandIOException& ex ){
+        transport->close();
+        throw ConnectorException( __FILE__, __LINE__,
+            ex.what() );
+    }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }

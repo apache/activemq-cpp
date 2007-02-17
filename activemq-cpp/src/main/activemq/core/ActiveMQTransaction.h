@@ -38,7 +38,7 @@ namespace core{
     class ActiveMQConnection;
     class ActiveMQSession;
     class ActiveMQMessage;
-    class ActiveMQMessageListener;
+    class ActiveMQConsumer;
 
     /**
      * Transaction Management class, hold messages that are to be redelivered
@@ -67,7 +67,7 @@ namespace core{
 
         // Mapping of MessageListener Ids to Lists of Messages that are
         // redelivered on a Rollback
-        typedef std::map< ActiveMQMessageListener*, MessageList > RollbackMap;
+        typedef std::map< ActiveMQConsumer*, MessageList > RollbackMap;
 
     private:
 
@@ -106,7 +106,7 @@ namespace core{
          * @param session - the session that contains this transaction
          * @param properties - configuratoin parameters for this object
          */
-    	ActiveMQTransaction( ActiveMQConnection* connection,
+        ActiveMQTransaction( ActiveMQConnection* connection,
                              ActiveMQSession* session,
                              const util::Properties& properties );
 
@@ -116,18 +116,18 @@ namespace core{
          * Adds the Message as a part of the Transaction for the specified
          * ActiveMQConsumer.
          * @param message - Message to Transact
-         * @param listener - Listener to redeliver to on Rollback
+         * @param consumer - Listener to redeliver to on Rollback
          */
         virtual void addToTransaction( ActiveMQMessage* message,
-                                       ActiveMQMessageListener* listener );
+                                       ActiveMQConsumer* consumer );
 
         /**
-         * Removes the ActiveMQMessageListener and all of its transacted
+         * Removes the ActiveMQConsumer and all of its transacted
          * messages from the Transaction, this is usually only done when
-         * a ActiveMQMessageListener is destroyed.
+         * a ActiveMQConsumer is destroyed.
          * @param listener - consumer who is to be removed.
          */
-        virtual void removeFromTransaction( ActiveMQMessageListener* listener );
+        virtual void removeFromTransaction( ActiveMQConsumer* listener );
 
         /**
          * Commit the current Transaction
@@ -245,7 +245,7 @@ namespace core{
             MessageList messages;
 
             // Consumer we are redelivering to
-            ActiveMQMessageListener* listener;
+            ActiveMQConsumer* consumer;
 
             // Connection to use for sending message acks
             ActiveMQConnection* connection;
@@ -255,7 +255,7 @@ namespace core{
 
         public:
 
-            RollbackTask( ActiveMQMessageListener* listener,
+            RollbackTask( ActiveMQConsumer* consumer,
                           ActiveMQConnection* connection,
                           ActiveMQSession* session,
                           MessageList& messages,
@@ -264,7 +264,7 @@ namespace core{
 
                 // Store State Data.
                 this->messages        = messages;
-                this->listener        = listener;
+                this->consumer        = consumer;
                 this->redeliveryDelay = redeliveryDelay;
                 this->maxRedeliveries = maxRedeliveries;
                 this->session         = session;

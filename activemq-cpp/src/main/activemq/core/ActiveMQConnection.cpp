@@ -201,6 +201,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             // was not consumed.
             connectionData->getConnector()->acknowledge(
                 consumer->getSessionInfo(),
+                consumer,
                 (Message*)message,
                 Connector::DeliveredAck );
 
