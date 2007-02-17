@@ -375,15 +375,16 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
         const commands::ActiveMQDestination* amqDestination =
-            dynamic_cast<const commands::ActiveMQDestination*>(destination);
+            dynamic_cast<const commands::ActiveMQDestination*>( destination );
+
         if( amqDestination == NULL ) {
             throw ConnectorException( __FILE__, __LINE__,
                 "Destination was either NULL or not created by this OpenWireConnector" );
         }
 
-
-        consumerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
-            amqDestination->cloneDataStructure()) );
+        consumerInfo->setDestination(
+            dynamic_cast<commands::ActiveMQDestination*>(
+                amqDestination->cloneDataStructure()) );
 
         // Get any options specified in the destination and apply them to the
         // ConsumerInfo object.
