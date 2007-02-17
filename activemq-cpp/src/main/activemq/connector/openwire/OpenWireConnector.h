@@ -54,11 +54,12 @@
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 
+#include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
+#include <activemq/connector/openwire/commands/BrokerInfo.h>
 #include <activemq/connector/openwire/commands/ConnectionInfo.h>
 #include <activemq/connector/openwire/commands/ConsumerInfo.h>
-#include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/connector/openwire/commands/LocalTransactionId.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
-#include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 
 namespace activemq{
 namespace connector{
@@ -77,6 +78,19 @@ namespace openwire{
             DISCONNECTED,
             CONNECTING,
             CONNECTED
+        };
+
+        // Enumeration of Transaction State flags
+        enum TransactionType
+        {
+            TRANSACTION_BEGIN = 0,
+            TRANSACTION_PREPARE = 1,
+            TRANSACTION_COMMITONEPHASE = 2,
+            TRANSACTION_COMMITTWOPHASE = 3,
+            TRANSACTION_ROLLBACK = 4,
+            TRANSACTION_RECOVER = 5,
+            TRANSACTION_FORGET = 6,
+            TRANSACTION_END = 7
         };
 
     private:
@@ -612,7 +626,7 @@ namespace openwire{
          */
         std::string createTemporaryDestinationName()
             throw ( ConnectorException );
-            
+
         /**
          * Creates a commands::ConsumerInfo object.  Used for both standard
          * and durable consumers.
@@ -622,6 +636,14 @@ namespace openwire{
         commands::ConsumerInfo* createConsumerInfo(
             const cms::Destination* destination,
             connector::SessionInfo* session ) throw ( ConnectorException );
+
+        /**
+         * Create a Transaction Id using the local context to create
+         * the LocalTransactionId Command.
+         * @returns a new TransactionId pointer, caller owns.
+         */
+        commands::TransactionId* createLocalTransactionId()
+            throw ( ConnectorException );
 
     };
 

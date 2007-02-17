@@ -43,7 +43,9 @@ namespace openwire{
             session = NULL;
         }
 
-        virtual ~OpenWireTransactionInfo() {}
+        virtual ~OpenWireTransactionInfo() {
+            delete transactionInfo;
+        }
 
         /**
          * Gets the Transction Id
@@ -102,6 +104,7 @@ namespace openwire{
          * @param transactionInfo - the TransactionInfo for this Session.
          */
         virtual void setTransactionInfo( commands::TransactionInfo* transactionInfo ) {
+            delete transactionInfo;
             this->transactionInfo = transactionInfo;
         }
 
