@@ -332,7 +332,7 @@ namespace stomp{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Creates a Temporary Queue given a name and session info
@@ -342,7 +342,7 @@ namespace stomp{
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Sends a Message
@@ -448,7 +448,7 @@ namespace stomp{
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Unsubscribe from a givenDurable Subscription
@@ -456,7 +456,7 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual void unsubscribe( const std::string& name )
-            throw ( ConnectorException );
+            throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Destroys the given connector resource.

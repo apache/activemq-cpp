@@ -799,3 +799,24 @@ void ActiveMQSession::purgeMessages() throw ( ActiveMQException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::unsubscribe( const std::string& name ) 
+    throw ( CMSException )
+{
+    try
+    {
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQSession::createConsumer - Session Already Closed" );
+        }
+
+        // Delegate to the connector.
+        connection->getConnectionData()->getConnector()->unsubscribe( name );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+

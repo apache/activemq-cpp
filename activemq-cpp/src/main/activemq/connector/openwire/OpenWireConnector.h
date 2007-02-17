@@ -239,20 +239,20 @@ namespace openwire{
          * Starts the service.
          * @throws CMSException
          */
-        virtual void start(void) throw( cms::CMSException );
+        virtual void start() throw( cms::CMSException );
 
         /**
          * Closes this object and deallocates the appropriate resources.
          * @throws CMSException
          */
-        virtual void close(void) throw( cms::CMSException );
+        virtual void close() throw( cms::CMSException );
 
         /**
          * Gets the Client Id for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Client Id String
          */
-        virtual std::string getClientId(void) const {
+        virtual std::string getClientId() const {
             return properties.getProperty(
                 core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_CLIENTID ), "" );
@@ -263,7 +263,7 @@ namespace openwire{
          * connection has been closed, then this method returns ""
          * @return Username String
          */
-        virtual std::string getUsername(void) const {
+        virtual std::string getUsername() const {
             return properties.getProperty(
                 core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_USERNAME ), "" );
@@ -274,7 +274,7 @@ namespace openwire{
          * connection has been closed, then this method returns ""
          * @return Password String
          */
-        virtual std::string getPassword(void) const {
+        virtual std::string getPassword() const {
             return properties.getProperty(
                 core::ActiveMQConstants::toString(
                     core::ActiveMQConstants::PARAM_PASSWORD ), "" );
@@ -286,7 +286,7 @@ namespace openwire{
          * @param reference to a transport
          * @throws InvalidStateException if the Transport is not set
          */
-        virtual transport::Transport& getTransport(void) const
+        virtual transport::Transport& getTransport() const
             throw ( exceptions::InvalidStateException ) {
 
             if( transport == NULL ) {
@@ -387,7 +387,7 @@ namespace openwire{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Creates a Temporary Queue given a name and session info
@@ -398,7 +398,7 @@ namespace openwire{
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Sends a Message
@@ -504,7 +504,7 @@ namespace openwire{
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException );
+                throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Unsubscribe from a givenDurable Subscription
@@ -512,7 +512,7 @@ namespace openwire{
          * @throws ConnectorException
          */
         virtual void unsubscribe( const std::string& name )
-            throw ( ConnectorException );
+            throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
          * Destroys the given connector resource.

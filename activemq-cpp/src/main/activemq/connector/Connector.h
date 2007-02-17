@@ -33,6 +33,7 @@
 #include <cms/MapMessage.h>
 
 #include <activemq/exceptions/InvalidStateException.h>
+#include <activemq/exceptions/UnsupportedOperationException.h>
 
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/SessionInfo.h>
@@ -63,28 +64,28 @@ namespace connector{
 
     public:
 
-           virtual ~Connector(void) {};
+        virtual ~Connector() {};
 
         /**
          * Gets the Client Id for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Client Id String
          */
-        virtual std::string getClientId(void) const = 0;
+        virtual std::string getClientId() const = 0;
 
         /**
          * Gets the Username for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Username String
          */
-        virtual std::string getUsername(void) const = 0;
+        virtual std::string getUsername() const = 0;
 
         /**
          * Gets the Password for this connection, if this
          * connection has been closed, then this method returns ""
          * @return Password String
          */
-        virtual std::string getPassword(void) const = 0;
+        virtual std::string getPassword() const = 0;
 
         /**
          * Gets a reference to the Transport that this connection
@@ -92,7 +93,7 @@ namespace connector{
          * @return reference to a transport
          * @throws InvalidStateException if the Transport is not set
          */
-        virtual transport::Transport& getTransport(void) const
+        virtual transport::Transport& getTransport() const
             throw (exceptions::InvalidStateException ) = 0;
 
         /**
@@ -179,20 +180,22 @@ namespace connector{
          * @param session Session Information
          * @return a newly created Temporary Topic Object
          * @throws ConnectorException
+         * @throws UnsupportedOperationException
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException ) = 0;
+                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Creates a Temporary Queue given a name and session info
          * @param session Session Information
          * @return a newly created Temporary Queue Object
          * @throws ConnectorException
+         * @throws UnsupportedOperationException
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException ) = 0;
+                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends a Message
@@ -294,19 +297,21 @@ namespace connector{
          * @param session Session Information
          * @param transaction Transaction Info for this Message
          * @throws ConnectorException
+         * @throws UnsupportedOperationException
          */
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException ) = 0;
+                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Unsubscribe from a givenDurable Subscription
          * @param name name of the Subscription
          * @throws ConnectorException
+         * @throws UnsupportedOperationException
          */
         virtual void unsubscribe( const std::string&  )
-            throw ( ConnectorException ) = 0;
+            throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Destroys the given connector resource.
