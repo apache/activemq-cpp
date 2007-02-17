@@ -355,22 +355,107 @@ ConsumerInfo* OpenWireConnector::createConsumer(
 {
     OpenWireConsumerInfo* consumer = NULL;
     commands::ConsumerInfo* consumerInfo = NULL;
-
+    
     try
     {
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
-        consumerInfo = new commands::ConsumerInfo();
+        consumerInfo = createConsumerInfo( destination, session ); 
         consumer->setConsumerInfo( consumerInfo );
 
+        consumerInfo->setSelector( selector );
+        consumerInfo->setNoLocal( noLocal );       
+        
+        // Send the message to the broker.
+        Response* response = syncRequest(consumerInfo);
+        
+        // The broker did not return an error - this is good.
+        // Just discard the response.
+        delete response;
+
+        return consumer;
+        
+    } catch( ConnectorException& ex ) {
+        delete consumer;
+        delete consumerInfo;
+        
+        ex.setMark( __FILE__, __LINE__ );
+        throw ex;
+    } catch( ... ) {
+        delete consumer;
+        delete consumerInfo;
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__, 
+            "caught unknown exception" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConsumerInfo* OpenWireConnector::createDurableConsumer(
+    const cms::Topic* topic,
+    connector::SessionInfo* session,
+    const std::string& name,
+    const std::string& selector,
+    bool noLocal )
+        throw ( ConnectorException )
+{
+    OpenWireConsumerInfo* consumer = NULL;
+    commands::ConsumerInfo* consumerInfo = NULL;
+    
+    try
+    {
+        enforceConnected();
+
+        consumer = new OpenWireConsumerInfo();
+        consumerInfo = createConsumerInfo( topic, session ); 
+        consumer->setConsumerInfo( consumerInfo );
+
+        consumerInfo->setSelector( selector );
+        consumerInfo->setNoLocal( noLocal );        
+        consumerInfo->setSubscriptionName( name );        
+        
+        // Send the message to the broker.
+        Response* response = syncRequest(consumerInfo);
+        
+        // The broker did not return an error - this is good.
+        // Just discard the response.
+        delete response;
+
+        return consumer;
+        
+    } catch( ConnectorException& ex ) {
+        delete consumer;
+        delete consumerInfo;
+        
+        ex.setMark( __FILE__, __LINE__ );
+        throw ex;
+    } catch( ... ) {
+        delete consumer;
+        delete consumerInfo;
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__, 
+            "caught unknown exception" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
+    const cms::Destination* destination,
+    connector::SessionInfo* session )
+        throw ( ConnectorException )
+{   
+    commands::ConsumerInfo* consumerInfo = NULL;
+    
+    try
+    {
+        consumerInfo = new commands::ConsumerInfo();
         commands::ConsumerId* consumerId = new commands::ConsumerId();
         consumerInfo->setConsumerId( consumerId );
 
         consumerId->setConnectionId( session->getConnectionId() );
         consumerId->setSessionId( session->getSessionId() );
         consumerId->setValue( getNextConsumerId() );
-        consumerInfo->setSelector( selector );
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
@@ -397,8 +482,6 @@ ConsumerInfo* OpenWireConnector::createConsumer(
             options.getProperty( "consumer.maximumPendingMessageLimit", "0" )) );
         consumerInfo->setDispatchAsync( Boolean::parseBoolean(
             options.getProperty( "consumer.dispatchAsync", "false" )) );
-        consumerInfo->setNoLocal( Boolean::parseBoolean(
-            options.getProperty( "consumer.noLocal", "false" )) );
         consumerInfo->setExclusive( Boolean::parseBoolean(
             options.getProperty( "consumer.exclusive", "false" )) );
         consumerInfo->setRetroactive( Boolean::parseBoolean(
@@ -419,48 +502,25 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         // Just discard the response.
         delete response;
 
-        return consumer;
+        return consumerInfo;
 
     } catch( ConnectorException& ex ) {
-        delete consumer;
         delete consumerInfo;
 
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( std::exception& ex ) {
-        delete consumer;
         delete consumerInfo;
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
             ex.what() );
 
     } catch( ... ) {
-        delete consumer;
         delete consumerInfo;
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ConsumerInfo* OpenWireConnector::createDurableConsumer(
-    const cms::Topic* topic,
-    connector::SessionInfo* session,
-    const std::string& name,
-    const std::string& selector,
-    bool noLocal )
-        throw ( ConnectorException )
-{
-    try
-    {
-        enforceConnected();
-
-        // TODO
-        return NULL;
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
