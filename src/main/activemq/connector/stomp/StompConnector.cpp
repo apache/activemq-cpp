@@ -31,7 +31,6 @@
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
 #include <activemq/connector/stomp/commands/DisconnectCommand.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>
 #include <activemq/util/Integer.h>
@@ -387,7 +386,7 @@ cms::Queue* StompConnector::createQueue( const std::string& name,
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* StompConnector::createTemporaryTopic(
     SessionInfo* session AMQCPP_UNUSED)
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -403,7 +402,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* StompConnector::createTemporaryQueue(
     SessionInfo* session AMQCPP_UNUSED)
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -693,7 +692,7 @@ cms::TextMessage* StompConnector::createTextMessage(
 cms::MapMessage* StompConnector::createMapMessage(
     SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction AMQCPP_UNUSED )
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -708,7 +707,7 @@ cms::MapMessage* StompConnector::createMapMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
-    throw ( ConnectorException )
+    throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {

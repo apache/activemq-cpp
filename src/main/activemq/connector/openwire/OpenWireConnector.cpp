@@ -54,6 +54,7 @@
 #include <activemq/connector/openwire/commands/TransactionInfo.h>
 #include <activemq/connector/openwire/commands/LocalTransactionId.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/connector/openwire/commands/RemoveSubscriptionInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -633,7 +634,7 @@ cms::Queue* OpenWireConnector::createQueue( const std::string& name,
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
     connector::SessionInfo* session AMQCPP_UNUSED )
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -654,7 +655,7 @@ cms::TemporaryTopic* OpenWireConnector::createTemporaryTopic(
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* OpenWireConnector::createTemporaryQueue(
     connector::SessionInfo* session AMQCPP_UNUSED )
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -983,7 +984,7 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
 cms::MapMessage* OpenWireConnector::createMapMessage(
     connector::SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction AMQCPP_UNUSED )
-        throw ( ConnectorException )
+        throw ( ConnectorException, UnsupportedOperationException )
 {
     try
     {
@@ -995,16 +996,38 @@ cms::MapMessage* OpenWireConnector::createMapMessage(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::unsubscribe( const std::string& name )
-    throw ( ConnectorException )
+    throw ( ConnectorException, UnsupportedOperationException )
 {
+    commands::RemoveSubscriptionInfo* rsi = NULL;
+    
     try
     {
         enforceConnected();
+        
+        rsi = new commands::RemoveSubscriptionInfo();
+        rsi->setConnectionId( dynamic_cast<commands::ConnectionId*>(
+            connectionInfo.getConnectionId()->cloneDataStructure()) );
+        rsi->setSubcriptionName(name);
+        rsi->setClientId(connectionInfo.getClientId());
+                
+        // Send the message to the broker.
+        Response* response = syncRequest(rsi);
 
-        // TODO
+        // The broker did not return an error - this is good.
+        // Just discard the response.
+        delete response;
+        
+    } catch( ConnectorException& ex ) {
+        delete rsi;
+
+        ex.setMark( __FILE__, __LINE__ );
+        throw ex;
+    } catch( ... ) {
+        delete rsi;
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "caught unknown exception" );
     }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

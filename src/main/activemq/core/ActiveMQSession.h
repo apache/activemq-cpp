@@ -266,6 +266,22 @@ namespace core{
          * @return transacted true - false.
          */
         virtual bool isTransacted() const;
+        
+        /**
+         * Unsubscribes a durable subscription that has been created by a 
+         * client.
+         * 
+         * This method deletes the state being maintained on behalf of the 
+         * subscriber by its provider.  It is erroneous for a client to delete a 
+         * durable subscription while there is an active MessageConsumer or 
+         * Subscriber for the subscription, or while a consumed message is 
+         * part of a pending transaction or has not been acknowledged in the 
+         * session.
+         * @param name the name used to identify this subscription
+         * @throws CMSException
+         */
+        virtual void unsubscribe( const std::string& name ) 
+            throw ( cms::CMSException );
 
    public:   // ActiveMQSession specific Methods
 
