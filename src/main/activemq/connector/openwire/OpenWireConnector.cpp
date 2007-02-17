@@ -32,27 +32,28 @@
 #include <activemq/connector/openwire/BrokerException.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
-#include <activemq/connector/openwire/commands/ActiveMQTempTopic.h>
-#include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
-#include <activemq/connector/openwire/commands/ConnectionId.h>
-#include <activemq/connector/openwire/commands/DestinationInfo.h>
-#include <activemq/connector/openwire/commands/RemoveInfo.h>
-#include <activemq/connector/openwire/commands/ShutdownInfo.h>
-#include <activemq/connector/openwire/commands/SessionInfo.h>
-#include <activemq/connector/openwire/commands/Message.h>
-#include <activemq/connector/openwire/commands/MessageAck.h>
-#include <activemq/connector/openwire/commands/MessageDispatch.h>
-#include <activemq/connector/openwire/commands/WireFormatInfo.h>
-#include <activemq/connector/openwire/commands/BrokerInfo.h>
-#include <activemq/connector/openwire/commands/BrokerError.h>
-#include <activemq/connector/openwire/commands/ActiveMQTopic.h>
-#include <activemq/connector/openwire/commands/ActiveMQQueue.h>
-#include <activemq/connector/openwire/commands/ExceptionResponse.h>
-#include <activemq/connector/openwire/commands/BrokerError.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
 #include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
 #include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
 #include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQTopic.h>
+#include <activemq/connector/openwire/commands/ActiveMQQueue.h>
+#include <activemq/connector/openwire/commands/ActiveMQTempTopic.h>
+#include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
+#include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/connector/openwire/commands/BrokerError.h>
+#include <activemq/connector/openwire/commands/ConnectionId.h>
+#include <activemq/connector/openwire/commands/DestinationInfo.h>
+#include <activemq/connector/openwire/commands/ExceptionResponse.h>
+#include <activemq/connector/openwire/commands/Message.h>
+#include <activemq/connector/openwire/commands/MessageAck.h>
+#include <activemq/connector/openwire/commands/MessageDispatch.h>
+#include <activemq/connector/openwire/commands/RemoveInfo.h>
+#include <activemq/connector/openwire/commands/ShutdownInfo.h>
+#include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/connector/openwire/commands/TransactionInfo.h>
+#include <activemq/connector/openwire/commands/LocalTransactionId.h>
+#include <activemq/connector/openwire/commands/WireFormatInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -359,38 +360,38 @@ ConsumerInfo* OpenWireConnector::createConsumer(
 {
     OpenWireConsumerInfo* consumer = NULL;
     commands::ConsumerInfo* consumerInfo = NULL;
-    
+
     try
     {
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
-        consumerInfo = createConsumerInfo( destination, session ); 
+        consumerInfo = createConsumerInfo( destination, session );
         consumer->setConsumerInfo( consumerInfo );
 
         consumerInfo->setSelector( selector );
-        consumerInfo->setNoLocal( noLocal );       
-        
+        consumerInfo->setNoLocal( noLocal );
+
         // Send the message to the broker.
         Response* response = syncRequest(consumerInfo);
-        
+
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
 
         return consumer;
-        
+
     } catch( ConnectorException& ex ) {
         delete consumer;
         delete consumerInfo;
-        
+
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( ... ) {
         delete consumer;
         delete consumerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
 }
@@ -406,39 +407,39 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
 {
     OpenWireConsumerInfo* consumer = NULL;
     commands::ConsumerInfo* consumerInfo = NULL;
-    
+
     try
     {
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
-        consumerInfo = createConsumerInfo( topic, session ); 
+        consumerInfo = createConsumerInfo( topic, session );
         consumer->setConsumerInfo( consumerInfo );
 
         consumerInfo->setSelector( selector );
-        consumerInfo->setNoLocal( noLocal );        
-        consumerInfo->setSubscriptionName( name );        
-        
+        consumerInfo->setNoLocal( noLocal );
+        consumerInfo->setSubscriptionName( name );
+
         // Send the message to the broker.
         Response* response = syncRequest(consumerInfo);
-        
+
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
 
         return consumer;
-        
+
     } catch( ConnectorException& ex ) {
         delete consumer;
         delete consumerInfo;
-        
+
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( ... ) {
         delete consumer;
         delete consumerInfo;
-        
-        throw OpenWireConnectorException( __FILE__, __LINE__, 
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
 }
@@ -448,9 +449,9 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
     const cms::Destination* destination,
     connector::SessionInfo* session )
         throw ( ConnectorException )
-{   
+{
     commands::ConsumerInfo* consumerInfo = NULL;
-    
+
     try
     {
         consumerInfo = new commands::ConsumerInfo();
@@ -832,22 +833,29 @@ TransactionInfo* OpenWireConnector::startTransaction(
 
         enforceConnected();
 
-//        TransactionInfo* transaction = new StompTransactionInfo();
-//
-//        transaction->setTransactionId( getNextTransactionId() );
-//
-//        session->setTransactionInfo( transaction );
-//
-//        BeginCommand cmd;
-//
-//        cmd.setTransactionId(
-//                Integer::toString( transaction->getTransactionId() ) );
-//
-//        transport->oneway( &cmd );
-//
-//        return transaction;
+        OpenWireTransactionInfo* transaction =
+            new OpenWireTransactionInfo();
 
-        return NULL;
+        // Place Transaction Data in session for later use as well as
+        // the session in the Transaction Data
+        session->setTransactionInfo( transaction );
+        transaction->setSessionInfo( session );
+
+        // Prepare and send the Transaction command
+        commands::TransactionInfo* info = new commands::TransactionInfo();
+
+        info->setConnectionId(
+            dynamic_cast<commands::ConnectionId*>(
+                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+        info->setTransactionId( createLocalTransactionId() );
+        info->setType( (int)TRANSACTION_BEGIN );
+
+        transport->oneway( info );
+
+        // Store for later
+        transaction->setTransactionInfo( info );
+
+        return transaction;
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -861,19 +869,29 @@ TransactionInfo* OpenWireConnector::startTransaction(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::commit( TransactionInfo* transaction,
-                                connector::SessionInfo* session )
+                                SessionInfo* session AMQCPP_UNUSED )
     throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-//        CommitCommand cmd;
-//
-//        cmd.setTransactionId(
-//                Integer::toString( transaction->getTransactionId() ) );
-//
-//        transport->oneway( &cmd );
+        OpenWireTransactionInfo* transactionInfo =
+            dynamic_cast<OpenWireTransactionInfo*>( transaction );
+
+        if( transactionInfo == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::commit - "
+                "Transaction was not of the OpenWire flavor.");
+        }
+
+        commands::TransactionInfo* info =
+            transactionInfo->getTransactionInfo();
+
+        info->setType( (int)TRANSACTION_COMMITONEPHASE );
+
+        transport->oneway( info );
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -886,19 +904,29 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::rollback( TransactionInfo* transaction,
-                                  connector::SessionInfo* session )
+                                  SessionInfo* session AMQCPP_UNUSED )
     throw ( ConnectorException )
 {
     try
     {
         enforceConnected();
 
-//        AbortCommand cmd;
-//
-//        cmd.setTransactionId(
-//                Integer::toString( transaction->getTransactionId() ) );
-//
-//        transport->oneway( &cmd );
+        OpenWireTransactionInfo* transactionInfo =
+            dynamic_cast<OpenWireTransactionInfo*>( transaction );
+
+        if( transactionInfo == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::commit - "
+                "Transaction was not of the OpenWire flavor.");
+        }
+
+        commands::TransactionInfo* info =
+            transactionInfo->getTransactionInfo();
+
+        info->setType( (int)TRANSACTION_ROLLBACK );
+
+        transport->oneway( info );
     }
     catch( CommandIOException& ex ){
         transport->close();
@@ -1229,4 +1257,18 @@ std::string OpenWireConnector::createTemporaryDestinationName()
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::TransactionId* OpenWireConnector::createLocalTransactionId()
+    throw ( ConnectorException ) {
+
+    commands::LocalTransactionId* id = new commands::LocalTransactionId();
+
+    id->setConnectionId(
+        dynamic_cast<commands::ConnectionId*>(
+            connectionInfo.getConnectionId()->cloneDataStructure() ) );
+    id->setValue( getNextTransactionId() );
+
+    return id;
 }
