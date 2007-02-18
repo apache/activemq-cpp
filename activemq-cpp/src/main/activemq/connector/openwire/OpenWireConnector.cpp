@@ -302,13 +302,13 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
 
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
-        
+
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
         try{ transport->close(); } catch( ... ){}
 
-        throw OpenWireConnectorException(__FILE__, __LINE__, 
+        throw OpenWireConnectorException(__FILE__, __LINE__,
             "Caught unknown exception" );
     }
 
@@ -367,7 +367,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
     const cms::Destination* destination,
     connector::SessionInfo* session,
     const std::string& selector,
-    bool noLocal AMQCPP_UNUSED )
+    bool noLocal )
         throw ( ConnectorException )
 {
     OpenWireConsumerInfo* consumer = NULL;
@@ -391,11 +391,11 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
-        
+
         // Since we've successfully registered - add this consumer to the
         // consumer info map.
         synchronized( &consumerInfoMap ) {
-            consumerInfoMap.setValue( 
+            consumerInfoMap.setValue(
                 consumerInfo->getConsumerId()->getValue(),
                 consumer );
         }
@@ -434,7 +434,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
-        consumer->setSessionInfo( session );        
+        consumer->setSessionInfo( session );
         consumerInfo = createConsumerInfo( topic, session );
         consumer->setConsumerInfo( consumerInfo );
 
@@ -565,7 +565,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         producer = new OpenWireProducerInfo();
         producer->setSessionInfo( session );
-        
+
         producerInfo = new commands::ProducerInfo();
         producer->setProducerInfo( producerInfo );
 
@@ -715,7 +715,7 @@ void OpenWireConnector::send( cms::Message* message,
                 "Producer was not of the OpenWire flavor.");
         }
 
-        const SessionInfo* session = producerInfo->getSessionInfo();        
+        const SessionInfo* session = producerInfo->getSessionInfo();
         commands::Message* amqMessage =
             dynamic_cast< commands::Message* >( message );
 
@@ -768,17 +768,17 @@ void OpenWireConnector::send( cms::Message* message,
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
-        
+
     } catch( ConnectorException& ex ){
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "Caught unknown exception" );
     }
@@ -876,13 +876,13 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
         }
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
-        
+
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "Caught unknown exception" );
     }
@@ -925,9 +925,9 @@ TransactionInfo* OpenWireConnector::startTransaction(
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "Caught unknown exception" );
     }
@@ -963,9 +963,9 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "Caught unknown exception" );
     }
@@ -1001,9 +1001,9 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        
+
         try{ transport->close(); } catch( ... ){}
-        
+
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "Caught unknown exception" );
     }
@@ -1123,13 +1123,13 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
             dynamic_cast<commands::ActiveMQTempDestination*>(resource);
 
         if( consumer != NULL ) {
-            
+
             // Remove this consumer from the consumer info map
             synchronized( &consumerInfoMap ) {
-                consumerInfoMap.remove( 
+                consumerInfoMap.remove(
                     consumer->getConsumerInfo()->getConsumerId()->getValue() );
             }
-            
+
             dataStructure = consumer->getConsumerInfo()->getConsumerId();
         } else if( producer != NULL ) {
             dataStructure = producer->getProducerInfo()->getProducerId();
@@ -1192,10 +1192,10 @@ void OpenWireConnector::onCommand( transport::Command* command )
             }
             if( message == NULL ) {
                 delete command;
-                throw OpenWireConnectorException( __FILE__, __LINE__, 
+                throw OpenWireConnectorException( __FILE__, __LINE__,
                     "Received unsupported dispatch message" );
             }
-            
+
             // Get the consumer info object for this consumer.
             OpenWireConsumerInfo* info = NULL;
             synchronized( &consumerInfoMap ) {
@@ -1206,9 +1206,9 @@ void OpenWireConnector::onCommand( transport::Command* command )
                         "Received dispatch message for unregistered consumer" );
                 }
             }
-                
-            try{                                
-                
+
+            try{
+
                 // Callback the listener (the connection object).
                 if( messageListener != NULL ){
                     messageListener->onConsumerMessage(
@@ -1216,7 +1216,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
                         message,
                         false );
                 }
-                
+
             }catch( ... ){/* do nothing*/}
 
             delete command;
@@ -1289,7 +1289,7 @@ Response* OpenWireConnector::syncRequest( Command* command )
     throw ( ConnectorException )
 {
     try
-    {   
+    {
         Response* response = transport->request(command);
 
         commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);
