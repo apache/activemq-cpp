@@ -45,7 +45,10 @@ namespace commands{
 
     public:
 
-        ActiveMQMessageBase() {}
+        ActiveMQMessageBase() {
+            this->ackHandler = NULL;
+            this->redeliveryCount = 0;
+        }
         virtual ~ActiveMQMessageBase() {}
 
         /**
