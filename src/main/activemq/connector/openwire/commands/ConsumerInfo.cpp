@@ -162,7 +162,7 @@ std::string ConsumerInfo::toString() const {
     stream << " Value of NoLocal = " << this->isNoLocal() << std::endl;
     stream << " Value of Exclusive = " << this->isExclusive() << std::endl;
     stream << " Value of Retroactive = " << this->isRetroactive() << std::endl;
-    stream << " Value of Priority = " << this->getPriority() << std::endl;
+    stream << " Value of Priority = " << (int)this->getPriority() << std::endl;
     for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
         stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;
         if( this->getBrokerPath()[ibrokerPath] != NULL ) {
