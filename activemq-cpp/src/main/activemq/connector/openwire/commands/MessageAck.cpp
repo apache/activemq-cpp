@@ -139,7 +139,7 @@ std::string MessageAck::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << " Value of AckType = " << this->getAckType() << std::endl;
+    stream << " Value of AckType = " << (int)this->getAckType() << std::endl;
     stream << " Value of FirstMessageId is Below:" << std::endl;
     if( this->getFirstMessageId() != NULL ) {
         stream << this->getFirstMessageId()->toString() << std::endl;
