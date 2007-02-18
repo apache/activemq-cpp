@@ -48,14 +48,24 @@ unsigned char ActiveMQBytesMessageMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ActiveMQMessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    MessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
+    ActiveMQBytesMessage* info =
+        dynamic_cast<ActiveMQBytesMessage*>( dataStructure );
+    info->beforeUnmarshal( wireFormat );
+
+
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ActiveMQBytesMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    int rc = ActiveMQMessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+    ActiveMQBytesMessage* info =
+        dynamic_cast<ActiveMQBytesMessage*>( dataStructure );
+
+    info->beforeMarshal( wireFormat );
+    int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
 
     return rc + 0;
 }
@@ -63,20 +73,31 @@ int ActiveMQBytesMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, D
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ActiveMQMessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    MessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
+    ActiveMQBytesMessage* info =
+        dynamic_cast<ActiveMQBytesMessage*>( dataStructure );
+    info->afterMarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ActiveMQMessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    ActiveMQBytesMessage* info =
+        dynamic_cast<ActiveMQBytesMessage*>( dataStructure );
+    info->beforeUnmarshal( wireFormat );
+    info->afterUnmarshal( wireFormat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ActiveMQMessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    ActiveMQBytesMessage* info =
+        dynamic_cast<ActiveMQBytesMessage*>( dataStructure );
+    info->beforeMarshal( wireFormat );
+    MessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
+    info->afterMarshal( wireFormat );
 }
 
