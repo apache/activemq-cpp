@@ -319,6 +319,10 @@ out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " 
 out.println("        stream << \" Value of "+propertyName+"[\" << i" + parameterName+" << \"] = \" << this->"+getter+"()[i"+parameterName+"] << std::endl;" );
 out.println("    }" );
 
+    } else if( type.equals("unsigned char") ){
+
+out.println("    stream << \" Value of "+propertyName+" = \" << (int)this->"+getter+"() << std::endl;");
+
     } else if( property.getType().isPrimitiveType() ||
                type.equals("std::string") ){
 
