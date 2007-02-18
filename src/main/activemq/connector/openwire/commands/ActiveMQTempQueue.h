@@ -80,7 +80,7 @@ namespace commands{
 
             stream << "Begin Class = ActiveMQTempQueue" << std::endl;
             stream << ActiveMQTempDestination::toString();
-            stream << "Begin Class = ActiveMQTempQueue" << std::endl;
+            stream << "End Class = ActiveMQTempQueue" << std::endl;
 
             return stream.str();
         }

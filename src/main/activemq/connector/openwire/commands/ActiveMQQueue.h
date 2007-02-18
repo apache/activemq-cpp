@@ -78,7 +78,7 @@ namespace commands{
 
             stream << "Begin Class = ActiveMQQueue" << std::endl;
             stream << ActiveMQDestination::toString();
-            stream << "Begin Class = ActiveMQQueue" << std::endl;
+            stream << "End Class = ActiveMQQueue" << std::endl;
 
             return stream.str();
         }
