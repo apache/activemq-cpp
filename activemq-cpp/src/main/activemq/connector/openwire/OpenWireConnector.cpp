@@ -301,16 +301,15 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
         oneway( &shutdown );
 
     } catch( ConnectorException& ex ){
-        try{
-            transport->close();
-        } catch( cms::CMSException& e ){}
+        try{ transport->close(); } catch( ... ){}
+        
+        ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-        try{
-            transport->close();
-        } catch( cms::CMSException& e ){}
+        try{ transport->close(); } catch( ... ){}
 
-        throw OpenWireConnectorException(__FILE__, __LINE__, "Caught unknown exception" );
+        throw OpenWireConnectorException(__FILE__, __LINE__, 
+            "Caught unknown exception" );
     }
 
 }
@@ -379,6 +378,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
+        consumer->setSessionInfo( session );
         consumerInfo = createConsumerInfo( destination, session );
         consumer->setConsumerInfo( consumerInfo );
 
@@ -434,6 +434,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
         enforceConnected();
 
         consumer = new OpenWireConsumerInfo();
+        consumer->setSessionInfo( session );        
         consumerInfo = createConsumerInfo( topic, session );
         consumer->setConsumerInfo( consumerInfo );
 
@@ -563,6 +564,8 @@ ProducerInfo* OpenWireConnector::createProducer(
         enforceConnected();
 
         producer = new OpenWireProducerInfo();
+        producer->setSessionInfo( session );
+        
         producerInfo = new commands::ProducerInfo();
         producer->setProducerInfo( producerInfo );
 
@@ -712,7 +715,7 @@ void OpenWireConnector::send( cms::Message* message,
                 "Producer was not of the OpenWire flavor.");
         }
 
-        const SessionInfo* session = producerInfo->getSessionInfo();
+        const SessionInfo* session = producerInfo->getSessionInfo();        
         commands::Message* amqMessage =
             dynamic_cast< commands::Message* >( message );
 
@@ -765,14 +768,20 @@ void OpenWireConnector::send( cms::Message* message,
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
+        
+    } catch( ConnectorException& ex ){
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( ... ) {
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
     }
-    catch( CommandIOException& ex ){
-        transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -863,16 +872,20 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
                             getTransactionId()->cloneDataStructure() ) );
             }
 
-            transport->oneway( &ack );
+            oneway( &ack );
         }
+    } catch( ConnectorException& ex ){
+        try{ transport->close(); } catch( ... ){}
+        
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( ... ) {
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
     }
-    catch( CommandIOException& ex ){
-        transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -901,21 +914,23 @@ TransactionInfo* OpenWireConnector::startTransaction(
         info->setTransactionId( createLocalTransactionId() );
         info->setType( (int)TRANSACTION_BEGIN );
 
-        transport->oneway( info );
+        oneway( info );
 
         // Store for later
         transaction->setTransactionInfo( info );
 
         return transaction;
+    } catch( ConnectorException& ex ){
+        try{ transport->close(); } catch( ... ){}
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( ... ) {
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
     }
-    catch( CommandIOException& ex ){
-        transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
-    return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -942,15 +957,18 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
 
         info->setType( (int)TRANSACTION_COMMITONEPHASE );
 
-        transport->oneway( info );
+        oneway( info );
+    } catch( ConnectorException& ex ){
+        try{ transport->close(); } catch( ... ){}
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( ... ) {
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
     }
-    catch( CommandIOException& ex ){
-        transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -977,15 +995,18 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
 
         info->setType( (int)TRANSACTION_ROLLBACK );
 
-        transport->oneway( info );
+        oneway( info );
+    } catch( ConnectorException& ex ){
+        try{ transport->close(); } catch( ... ){}
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( ... ) {
+        
+        try{ transport->close(); } catch( ... ){}
+        
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
     }
-    catch( CommandIOException& ex ){
-        transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
-    }
-    AMQ_CATCH_RETHROW( ConnectorException )
-    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
