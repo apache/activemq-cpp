@@ -243,12 +243,12 @@ void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure*
     looseMarshalNestedObject( wireFormat, info->getReplyTo(), dataOut );
     looseMarshalLong( wireFormat, info->getTimestamp(), dataOut );
     looseMarshalString( info->getType(), dataOut );
-    dataOut->write( info->getContent().size() != 0 );
+    dataOut->writeBoolean( info->getContent().size() != 0 );
     if( info->getContent().size() != 0 ) {
         dataOut->writeInt( (int)info->getContent().size() );
         dataOut->write( (const unsigned char*)(&info->getContent()[0]), (int)info->getContent().size() );
     }
-    dataOut->write( info->getMarshalledProperties().size() != 0 );
+    dataOut->writeBoolean( info->getMarshalledProperties().size() != 0 );
     if( info->getMarshalledProperties().size() != 0 ) {
         dataOut->writeInt( (int)info->getMarshalledProperties().size() );
         dataOut->write( (const unsigned char*)(&info->getMarshalledProperties()[0]), (int)info->getMarshalledProperties().size() );
