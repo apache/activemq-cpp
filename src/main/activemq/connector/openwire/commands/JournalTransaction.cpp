@@ -99,7 +99,7 @@ std::string JournalTransaction::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << " Value of Type = " << this->getType() << std::endl;
+    stream << " Value of Type = " << (int)this->getType() << std::endl;
     stream << " Value of WasPrepared = " << this->getWasPrepared() << std::endl;
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalTransaction" << std::endl;

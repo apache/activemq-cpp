@@ -124,7 +124,7 @@ std::string DestinationInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << " Value of OperationType = " << this->getOperationType() << std::endl;
+    stream << " Value of OperationType = " << (int)this->getOperationType() << std::endl;
     stream << " Value of Timeout = " << this->getTimeout() << std::endl;
     for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
         stream << " Value of BrokerPath[" << ibrokerPath << "] is Below:" << std::endl;

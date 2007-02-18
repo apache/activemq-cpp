@@ -110,7 +110,7 @@ std::string TransactionInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << " Value of Type = " << this->getType() << std::endl;
+    stream << " Value of Type = " << (int)this->getType() << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = TransactionInfo" << std::endl;
 
