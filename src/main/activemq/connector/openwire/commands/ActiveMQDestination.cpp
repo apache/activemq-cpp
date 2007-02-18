@@ -116,7 +116,7 @@ std::string ActiveMQDestination::toString() const {
     stream << " Value of physicalName = " << physicalName << std::endl;
     stream << " Value of options = " << this->options.toString() << std::endl;
     stream << BaseDataStructure::toString();
-    stream << "Begin Class = ActiveMQDestination" << std::endl;
+    stream << "End Class = ActiveMQDestination" << std::endl;
 
     return stream.str();
 }
