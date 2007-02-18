@@ -28,11 +28,11 @@ using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQDestination::ADVISORY_PREFIX = "ActiveMQ.Advisory.";
-const std::string ActiveMQDestination::CONSUMER_ADVISORY_PREFIX = 
+const std::string ActiveMQDestination::CONSUMER_ADVISORY_PREFIX =
     ActiveMQDestination::ADVISORY_PREFIX + "Consumers.";
-const std::string ActiveMQDestination::PRODUCER_ADVISORY_PREFIX = 
+const std::string ActiveMQDestination::PRODUCER_ADVISORY_PREFIX =
     ActiveMQDestination::ADVISORY_PREFIX + "Producers.";
-const std::string ActiveMQDestination::CONNECTION_ADVISORY_PREFIX = 
+const std::string ActiveMQDestination::CONNECTION_ADVISORY_PREFIX =
     ActiveMQDestination::ADVISORY_PREFIX + "Connections.";
 const std::string ActiveMQDestination::DEFAULT_ORDERED_TARGET = "coordinator";
 const std::string ActiveMQDestination::TEMP_PREFIX = "{TD{";
@@ -43,7 +43,7 @@ const std::string ActiveMQDestination::DestinationFilter::ANY_DESCENDENT = "*";
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQDestination::ActiveMQDestination() {
-    
+
     this->physicalName = "";
     this->orderedTarget = DEFAULT_ORDERED_TARGET;
     this->exclusive = false;
@@ -63,7 +63,7 @@ ActiveMQDestination::ActiveMQDestination( const std::string& physicalName ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
-    
+
     this->physicalName = physicalName;
 
     size_t pos = physicalName.find_first_of('?');
@@ -83,16 +83,16 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
     // Copy the data of the base class or classes
     BaseDataStructure::copyDataStructure( src );
 
-    const ActiveMQDestination* srcPtr = 
+    const ActiveMQDestination* srcPtr =
         dynamic_cast<const ActiveMQDestination*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw exceptions::NullPointerException(
             __FILE__, __LINE__,
             "BrokerId::copyDataStructure - src is NULL or invalid" );
     }
-    
+
     this->setPhysicalName( srcPtr->getPhysicalName() );
     this->setAdvisory( srcPtr->isAdvisory() );
     this->setOrdered( srcPtr->isOrdered() );
@@ -101,13 +101,34 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQDestination::getDataStructureType() const
-{
-    return ActiveMQDestination::ID_ACTIVEMQDESTINATION; 
+std::string ActiveMQDestination::toString() const {
+    std::ostringstream stream;
+
+    stream << "Begin Class = ActiveMQDestination" << std::endl;
+
+    stream << " Value of exclusive = "
+           << std::boolalpha << exclusive << std::endl;
+    stream << " Value of ordered = "
+           << std::boolalpha << ordered << std::endl;
+    stream << " Value of advisory = "
+           << std::boolalpha << advisory << std::endl;
+    stream << " Value of orderedTarget = " << orderedTarget << std::endl;
+    stream << " Value of physicalName = " << physicalName << std::endl;
+    stream << " Value of options = " << this->options.toString() << std::endl;
+    stream << BaseDataStructure::toString();
+    stream << "Begin Class = ActiveMQDestination" << std::endl;
+
+    return stream.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQDestination::getClientId( 
+unsigned char ActiveMQDestination::getDataStructureType() const
+{
+    return ActiveMQDestination::ID_ACTIVEMQDESTINATION;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQDestination::getClientId(
     const ActiveMQDestination* destination )
 {
     std::string answer = "";
