@@ -28,7 +28,7 @@ import org.codehaus.jam.JClass;
  */
 public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator {
 
-	protected String targetDir="./src/main";
+    protected String targetDir="./src/main";
 
     public Object run() {
         filePostFix = getFilePostFix();
@@ -36,12 +36,54 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             destDir = new File(targetDir+"/activemq/connector/openwire/marshal/v"+getOpenwireVersion());
         }
         return super.run();
-    }	   
-    
+    }
+
+    protected String getBaseClassName(JClass jclass) {
+        String answer = jclass.getSimpleName();
+
+        if( answer.equals("ActiveMQTextMessage") ) {
+            answer = "MessageMarshaller";
+        } else if( answer.equals("ActiveMQBytesMessage") ) {
+            answer = "MessageMarshaller";
+        } else if( answer.equals("ActiveMQMapMessage") ) {
+            answer = "MessageMarshaller";
+        } else if( answer.equals("ActiveMQObjectMessage") ) {
+            answer = "MessageMarshaller";
+        } else if( answer.equals("ActiveMQStreamMessage") ) {
+            answer = "MessageMarshaller";
+        }
+
+        // We didn't map it, so let the base class handle it.
+        if( answer.equals( jclass.getSimpleName() ) ) {
+            answer = super.getBaseClassName(jclass);
+        }
+
+        return answer;
+    }
+
+    public boolean isMarshallAware(JClass j) {
+
+        String answer = jclass.getSimpleName();
+
+        if( answer.equals("ActiveMQTextMessage") ) {
+            return true;
+        } else if( answer.equals("ActiveMQBytesMessage") ) {
+            return true;
+        } else if( answer.equals("ActiveMQMapMessage") ) {
+            return true;
+        } else if( answer.equals("ActiveMQObjectMessage") ) {
+            return true;
+        } else if( answer.equals("ActiveMQStreamMessage") ) {
+            return true;
+        } else {
+            return super.isMarshallAware(jclass);
+        }
+    }
+
     protected String getFilePostFix() {
         return ".h";
     }
-    
+
     public String toCppType(JClass type) {
         String name = type.getSimpleName();
         if (name.equals("String")) {
@@ -50,13 +92,13 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
         else if( type.isArrayType() ) {
             if( name.equals( "byte[]" ) )
                 name = "unsigned char[]";
-            
+
             JClass arrayClass = type.getArrayComponentType();
-            
+
             if( arrayClass.isPrimitiveType() ) {
                 return "std::vector<" + name.substring(0, name.length()-2) + ">";
             } else {
-                return "std::vector<" + name.substring(0, name.length()-2) + "*>";                
+                return "std::vector<" + name.substring(0, name.length()-2) + "*>";
             }
         }
         else if( name.equals( "Throwable" ) || name.equals( "Exception" ) ) {
@@ -84,8 +126,8 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             return name;
         }
     }
-    
-	protected void generateLicence(PrintWriter out) {
+
+    protected void generateLicence(PrintWriter out) {
 out.println("/*");
 out.println(" * Licensed to the Apache Software Foundation (ASF) under one or more");
 out.println(" * contributor license agreements.  See the NOTICE file distributed with");
@@ -102,11 +144,11 @@ out.println(" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
 out.println(" * See the License for the specific language governing permissions and");
 out.println(" * limitations under the License.");
 out.println(" */");
-	}
+    }
 
-	protected void generateFile(PrintWriter out) throws Exception {
-		generateLicence(out);
-		
+    protected void generateFile(PrintWriter out) throws Exception {
+        generateLicence(out);
+
 out.println("");
 out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
 out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
@@ -122,7 +164,7 @@ out.println("");
     } else {
         out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+baseClass+".h>");
     }
-    
+
 out.println("");
 out.println("#include <activemq/io/DataInputStream.h>");
 out.println("#include <activemq/io/DataOutputStream.h>");
@@ -167,16 +209,16 @@ out.println("         */");
 out.println("        virtual unsigned char getDataStructureType() const;");
 out.println("");
     }
-out.println("        /**"); 
+out.println("        /**");
 out.println("         * Un-marshal an object instance from the data input stream");
 out.println("         * @param wireFormat - describs the wire format of the broker");
 out.println("         * @param o - Object to be un-marshaled");
 out.println("         * @param dataIn - BinaryReader that provides that data");
 out.println("         * @param bs - BooleanStream");
-out.println("         */"); 
-out.println("        virtual void tightUnmarshal( OpenWireFormat* wireFormat,"); 
-out.println("                                     commands::DataStructure* dataStructure,"); 
-out.println("                                     io::DataInputStream* dataIn,"); 
+out.println("         */");
+out.println("        virtual void tightUnmarshal( OpenWireFormat* wireFormat,");
+out.println("                                     commands::DataStructure* dataStructure,");
+out.println("                                     io::DataInputStream* dataIn,");
 out.println("                                     utils::BooleanStream* bs ) throw( io::IOException );");
 out.println("");
 out.println("        /**");
@@ -186,8 +228,8 @@ out.println("         * @param o - Object to be marshaled");
 out.println("         * @param bs - BooleanStream");
 out.println("         * @returns int");
 out.println("         */");
-out.println("        virtual int tightMarshal1( OpenWireFormat* wireFormat,"); 
-out.println("                                   commands::DataStructure* dataStructure,"); 
+out.println("        virtual int tightMarshal1( OpenWireFormat* wireFormat,");
+out.println("                                   commands::DataStructure* dataStructure,");
 out.println("                                   utils::BooleanStream* bs ) throw( io::IOException );");
 out.println("");
 out.println("        /**");
@@ -197,31 +239,31 @@ out.println("         * @param o - Object to be marshaled");
 out.println("         * @param dataOut - BinaryReader that provides that data sink");
 out.println("         * @param bs - BooleanStream");
 out.println("         */");
-out.println("        virtual void tightMarshal2( OpenWireFormat* wireFormat,"); 
-out.println("                                    commands::DataStructure* dataStructure,"); 
-out.println("                                    io::DataOutputStream* dataOut,"); 
+out.println("        virtual void tightMarshal2( OpenWireFormat* wireFormat,");
+out.println("                                    commands::DataStructure* dataStructure,");
+out.println("                                    io::DataOutputStream* dataOut,");
 out.println("                                    utils::BooleanStream* bs ) throw( io::IOException );");
 out.println("");
-out.println("        /**"); 
+out.println("        /**");
 out.println("         * Un-marshal an object instance from the data input stream");
 out.println("         * @param wireFormat - describs the wire format of the broker");
 out.println("         * @param o - Object to be marshaled");
 out.println("         * @param dataIn - BinaryReader that provides that data source");
-out.println("         */"); 
-out.println("        virtual void looseUnmarshal( OpenWireFormat* wireFormat,"); 
-out.println("                                     commands::DataStructure* dataStructure,"); 
+out.println("         */");
+out.println("        virtual void looseUnmarshal( OpenWireFormat* wireFormat,");
+out.println("                                     commands::DataStructure* dataStructure,");
 out.println("                                     io::DataInputStream* dataIn ) throw( io::IOException );");
 out.println("");
-out.println("        /**"); 
+out.println("        /**");
 out.println("         * Write a object instance to data output stream");
 out.println("         * @param wireFormat - describs the wire format of the broker");
 out.println("         * @param o - Object to be marshaled");
 out.println("         * @param dataOut - BinaryWriter that provides that data sink");
 out.println("         */");
-out.println("        virtual void looseMarshal( OpenWireFormat* wireFormat,"); 
-out.println("                                   commands::DataStructure* dataStructure,"); 
+out.println("        virtual void looseMarshal( OpenWireFormat* wireFormat,");
+out.println("                                   commands::DataStructure* dataStructure,");
 out.println("                                   io::DataOutputStream* dataOut ) throw( io::IOException );");
-out.println(""); 
+out.println("");
 out.println("    };");
 out.println("");
 out.println("}}}}}");
@@ -229,9 +271,9 @@ out.println("");
 out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
 out.println("");
         }
- 	
+
     public void generateFactory(PrintWriter out) {
-		generateLicence(out);
+        generateLicence(out);
 out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
 out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
 out.println("");
@@ -248,8 +290,8 @@ out.println("namespace openwire{");
 out.println("namespace marshal{");
 out.println("namespace v"+getOpenwireVersion()+"{");
 out.println("");
-out.println("    /**"); 
-out.println("     * Used to create marshallers for a specific version of the wire"); 
+out.println("    /**");
+out.println("     * Used to create marshallers for a specific version of the wire");
 out.println("     * protocol.");
 out.println("     *");
 out.println("     *  NOTE!: This file is autogenerated - do not modify!");
@@ -271,11 +313,11 @@ out.println("");
 out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
     }
 
-	public String getTargetDir() {
-		return targetDir;
-	}
+    public String getTargetDir() {
+        return targetDir;
+    }
 
-	public void setTargetDir(String targetDir) {
-		this.targetDir = targetDir;
-	}
+    public void setTargetDir(String targetDir) {
+        this.targetDir = targetDir;
+    }
 }
