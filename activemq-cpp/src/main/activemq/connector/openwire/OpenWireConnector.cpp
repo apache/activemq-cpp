@@ -1130,11 +1130,11 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
                     consumer->getConsumerInfo()->getConsumerId()->getValue() );
             }
             
-            dataStructure = consumer->getConsumerInfo();
+            dataStructure = consumer->getConsumerInfo()->getConsumerId();
         } else if( producer != NULL ) {
-            dataStructure = producer->getProducerInfo();
+            dataStructure = producer->getProducerInfo()->getProducerId();
         } else if( session != NULL ) {
-            dataStructure = session->getSessionInfo();
+            dataStructure = session->getSessionInfo()->getSessionId();
         } else if( tempDestination != NULL ) {
             // User deletes these
             destroyTemporaryDestination( tempDestination );
@@ -1289,7 +1289,7 @@ Response* OpenWireConnector::syncRequest( Command* command )
     throw ( ConnectorException )
 {
     try
-    {
+    {   
         Response* response = transport->request(command);
 
         commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);
