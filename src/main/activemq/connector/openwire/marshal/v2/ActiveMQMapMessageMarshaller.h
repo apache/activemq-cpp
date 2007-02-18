@@ -23,7 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/connector/openwire/marshal/v2/ActiveMQMessageMarshaller.h>
+#include <activemq/connector/openwire/marshal/v2/MessageMarshaller.h>
 
 #include <activemq/io/DataInputStream.h>
 #include <activemq/io/DataOutputStream.h>
@@ -45,7 +45,7 @@ namespace v2{
      *         if you need to make a change, please see the Java Classes
      *         in the activemq-openwire-generator module
      */
-    class ActiveMQMapMessageMarshaller : public ActiveMQMessageMarshaller
+    class ActiveMQMapMessageMarshaller : public MessageMarshaller
     {
     public:
 
