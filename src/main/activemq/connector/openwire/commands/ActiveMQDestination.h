@@ -110,6 +110,13 @@ namespace commands{
         virtual unsigned char getDataStructureType() const;
 
         /**
+         * Returns a string containing the information for this DataStructure
+         * such as its type and value of its elements.
+         * @return formatted string useful for debugging.
+         */
+        virtual std::string toString() const;
+
+        /**
          * Fetch this destination's physical name
          * @returns const string containing the name
          */
