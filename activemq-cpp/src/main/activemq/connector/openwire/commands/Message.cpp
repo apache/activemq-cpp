@@ -228,7 +228,7 @@ std::string Message::toString() const {
     stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
     stream << " Value of Persistent = " << this->isPersistent() << std::endl;
     stream << " Value of Expiration = " << this->getExpiration() << std::endl;
-    stream << " Value of Priority = " << this->getPriority() << std::endl;
+    stream << " Value of Priority = " << (int)this->getPriority() << std::endl;
     stream << " Value of ReplyTo is Below:" << std::endl;
     if( this->getReplyTo() != NULL ) {
         stream << this->getReplyTo()->toString() << std::endl;
