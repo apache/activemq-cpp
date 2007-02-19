@@ -504,7 +504,7 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
         consumerInfo->setBrowser( Boolean::parseBoolean(
             options.getProperty( "consumer.browser", "false" )) );
         consumerInfo->setPrefetchSize( Integer::parseInt(
-            options.getProperty( "consumer.prefetchSize", "0" )) );
+            options.getProperty( "consumer.prefetchSize", "1000" )) );
         consumerInfo->setMaximumPendingMessageLimit( Integer::parseInt(
             options.getProperty( "consumer.maximumPendingMessageLimit", "0" )) );
         consumerInfo->setDispatchAsync( Boolean::parseBoolean(

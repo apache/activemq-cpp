@@ -73,7 +73,7 @@ void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSExcep
         io::ByteArrayOutputStream bos( content );
         io::DataOutputStream dos( &bos );
 
-        dos.writeInt( msg.length() );
+        dos.writeInt( (int)msg.length() );
         dos.write( (const unsigned char*)msg.c_str(), msg.length() );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
