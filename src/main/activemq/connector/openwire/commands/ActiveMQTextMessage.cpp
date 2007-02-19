@@ -39,7 +39,7 @@ ActiveMQTextMessage::~ActiveMQTextMessage()
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQTextMessage::getDataStructureType() const
 {
-    return ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE; 
+    return ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +49,8 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
         if( getContent().size() < 4 ) {
             return "";
         }
-        
-        return std::string( (const char*)&getContent()[4], getContent().size()-4 ); 
+
+        return std::string( (const char*)&getContent()[4], getContent().size()-4 );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -60,10 +60,6 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) {
     try{
         setText( std::string(msg) );
-        /*size_t length = strlen( msg );
-        for( size_t i = 0; i < length; ++i ){
-            getContent().push_back( msg[i] );
-        }*/
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -76,13 +72,9 @@ void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSExcep
         content.clear();
         io::ByteArrayOutputStream bos( content );
         io::DataOutputStream dos( &bos );
-        
+
         dos.writeInt( msg.length() );
         dos.write( (const unsigned char*)msg.c_str(), msg.length() );
-
-        /*for( size_t i = 0; i < msg.length(); ++i ){
-            getContent().push_back( msg[i] );
-        }*/
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
