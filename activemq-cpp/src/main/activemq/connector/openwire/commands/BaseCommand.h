@@ -96,6 +96,8 @@ namespace commands{
 
             stream << "Begin Class = BaseCommand" << std::endl;
             stream << BaseDataStructure::toString();
+            stream << "  Response Required = " << responseRequired << std::endl;
+            stream << "  Command Id = " << commandId << std::endl;
             stream << "End Class = BaseCommand" << std::endl;
 
             return stream.str();
