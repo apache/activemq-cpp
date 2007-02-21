@@ -48,92 +48,122 @@ unsigned char ProducerInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ProducerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ProducerInfo* info =
-        dynamic_cast<ProducerInfo*>( dataStructure );
-    info->setProducerId( dynamic_cast< ProducerId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    if( bs->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        ProducerInfo* info =
+            dynamic_cast<ProducerInfo*>( dataStructure );
+        info->setProducerId( dynamic_cast< ProducerId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setDispatchAsync( bs->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setDispatchAsync( bs->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ProducerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ProducerInfo* info =
-        dynamic_cast<ProducerInfo*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getProducerId(), bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
-    rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
-    bs->writeBoolean( info->isDispatchAsync() );
+        ProducerInfo* info =
+            dynamic_cast<ProducerInfo*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getProducerId(), bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
+        rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
+        bs->writeBoolean( info->isDispatchAsync() );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ProducerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ProducerInfo* info =
-        dynamic_cast<ProducerInfo*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getProducerId(), dataOut, bs );
-    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
-    bs->readBoolean();
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ProducerInfo* info =
+            dynamic_cast<ProducerInfo*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getProducerId(), dataOut, bs );
+        tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
+        tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ProducerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ProducerInfo* info =
-        dynamic_cast<ProducerInfo*>( dataStructure );
-    info->setProducerId( dynamic_cast< ProducerId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    try {
 
-    if( dataIn->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ProducerInfo* info =
+            dynamic_cast<ProducerInfo*>( dataStructure );
+        info->setProducerId( dynamic_cast< ProducerId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setDispatchAsync( dataIn->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setDispatchAsync( dataIn->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ProducerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ProducerInfo* info =
-        dynamic_cast<ProducerInfo*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getProducerId(), dataOut );
-    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
-    looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-    dataOut->writeBoolean( info->isDispatchAsync() );
+        ProducerInfo* info =
+            dynamic_cast<ProducerInfo*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getProducerId(), dataOut );
+        looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
+        looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
+        dataOut->writeBoolean( info->isDispatchAsync() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

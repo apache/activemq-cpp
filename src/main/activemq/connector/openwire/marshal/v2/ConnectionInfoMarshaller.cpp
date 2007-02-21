@@ -48,110 +48,140 @@ unsigned char ConnectionInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConnectionInfo* info =
-        dynamic_cast<ConnectionInfo*>( dataStructure );
-    info->setConnectionId( dynamic_cast< ConnectionId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setClientId( tightUnmarshalString( dataIn, bs ) );
-    info->setPassword( tightUnmarshalString( dataIn, bs ) );
-    info->setUserName( tightUnmarshalString( dataIn, bs ) );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    if( bs->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        ConnectionInfo* info =
+            dynamic_cast<ConnectionInfo*>( dataStructure );
+        info->setConnectionId( dynamic_cast< ConnectionId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setClientId( tightUnmarshalString( dataIn, bs ) );
+        info->setPassword( tightUnmarshalString( dataIn, bs ) );
+        info->setUserName( tightUnmarshalString( dataIn, bs ) );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setBrokerMasterConnector( bs->readBoolean() );
+        info->setManageable( bs->readBoolean() );
+        info->setClientMaster( bs->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setBrokerMasterConnector( bs->readBoolean() );
-    info->setManageable( bs->readBoolean() );
-    info->setClientMaster( bs->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConnectionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConnectionInfo* info =
-        dynamic_cast<ConnectionInfo*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
-    rc += tightMarshalString1( info->getClientId(), bs );
-    rc += tightMarshalString1( info->getPassword(), bs );
-    rc += tightMarshalString1( info->getUserName(), bs );
-    rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
-    bs->writeBoolean( info->isBrokerMasterConnector() );
-    bs->writeBoolean( info->isManageable() );
-    bs->writeBoolean( info->isClientMaster() );
+        ConnectionInfo* info =
+            dynamic_cast<ConnectionInfo*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
+        rc += tightMarshalString1( info->getClientId(), bs );
+        rc += tightMarshalString1( info->getPassword(), bs );
+        rc += tightMarshalString1( info->getUserName(), bs );
+        rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
+        bs->writeBoolean( info->isBrokerMasterConnector() );
+        bs->writeBoolean( info->isManageable() );
+        bs->writeBoolean( info->isClientMaster() );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ConnectionInfo* info =
-        dynamic_cast<ConnectionInfo*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
-    tightMarshalString2( info->getClientId(), dataOut, bs );
-    tightMarshalString2( info->getPassword(), dataOut, bs );
-    tightMarshalString2( info->getUserName(), dataOut, bs );
-    tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ConnectionInfo* info =
+            dynamic_cast<ConnectionInfo*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+        tightMarshalString2( info->getClientId(), dataOut, bs );
+        tightMarshalString2( info->getPassword(), dataOut, bs );
+        tightMarshalString2( info->getUserName(), dataOut, bs );
+        tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionInfo* info =
-        dynamic_cast<ConnectionInfo*>( dataStructure );
-    info->setConnectionId( dynamic_cast< ConnectionId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setClientId( looseUnmarshalString( dataIn ) );
-    info->setPassword( looseUnmarshalString( dataIn ) );
-    info->setUserName( looseUnmarshalString( dataIn ) );
+    try {
 
-    if( dataIn->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConnectionInfo* info =
+            dynamic_cast<ConnectionInfo*>( dataStructure );
+        info->setConnectionId( dynamic_cast< ConnectionId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setClientId( looseUnmarshalString( dataIn ) );
+        info->setPassword( looseUnmarshalString( dataIn ) );
+        info->setUserName( looseUnmarshalString( dataIn ) );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setBrokerMasterConnector( dataIn->readBoolean() );
+        info->setManageable( dataIn->readBoolean() );
+        info->setClientMaster( dataIn->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setBrokerMasterConnector( dataIn->readBoolean() );
-    info->setManageable( dataIn->readBoolean() );
-    info->setClientMaster( dataIn->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConnectionInfo* info =
-        dynamic_cast<ConnectionInfo*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
-    looseMarshalString( info->getClientId(), dataOut );
-    looseMarshalString( info->getPassword(), dataOut );
-    looseMarshalString( info->getUserName(), dataOut );
-    looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-    dataOut->writeBoolean( info->isBrokerMasterConnector() );
-    dataOut->writeBoolean( info->isManageable() );
-    dataOut->writeBoolean( info->isClientMaster() );
+        ConnectionInfo* info =
+            dynamic_cast<ConnectionInfo*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
+        looseMarshalString( info->getClientId(), dataOut );
+        looseMarshalString( info->getPassword(), dataOut );
+        looseMarshalString( info->getUserName(), dataOut );
+        looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
+        dataOut->writeBoolean( info->isBrokerMasterConnector() );
+        dataOut->writeBoolean( info->isManageable() );
+        dataOut->writeBoolean( info->isClientMaster() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

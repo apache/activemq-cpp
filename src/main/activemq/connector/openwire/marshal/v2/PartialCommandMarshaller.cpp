@@ -48,63 +48,93 @@ unsigned char PartialCommandMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void PartialCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    PartialCommand* info =
-        dynamic_cast<PartialCommand*>( dataStructure );
-    info->setCommandId( dataIn->readInt() );
-    info->setData( tightUnmarshalByteArray( dataIn, bs ) );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        PartialCommand* info =
+            dynamic_cast<PartialCommand*>( dataStructure );
+        info->setCommandId( dataIn->readInt() );
+        info->setData( tightUnmarshalByteArray( dataIn, bs ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int PartialCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    PartialCommand* info =
-        dynamic_cast<PartialCommand*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    bs->writeBoolean( info->getData().size() != 0 );
-    rc += info->getData().size() == 0 ? 0 : (int)info->getData().size() + 4;
+        PartialCommand* info =
+            dynamic_cast<PartialCommand*>( dataStructure );
 
-    return rc + 4;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        bs->writeBoolean( info->getData().size() != 0 );
+        rc += info->getData().size() == 0 ? 0 : (int)info->getData().size() + 4;
+
+        return rc + 4;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void PartialCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    PartialCommand* info =
-        dynamic_cast<PartialCommand*>( dataStructure );
-    dataOut->writeInt( info->getCommandId() );
-    if( bs->readBoolean() ) {
-        dataOut->writeInt( (int)info->getData().size() );
-        dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size() );
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        PartialCommand* info =
+            dynamic_cast<PartialCommand*>( dataStructure );
+        dataOut->writeInt( info->getCommandId() );
+        if( bs->readBoolean() ) {
+            dataOut->writeInt( (int)info->getData().size() );
+            dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size() );
+        }
     }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void PartialCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    PartialCommand* info =
-        dynamic_cast<PartialCommand*>( dataStructure );
-    info->setCommandId( dataIn->readInt() );
-    info->setData( looseUnmarshalByteArray( dataIn ) );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        PartialCommand* info =
+            dynamic_cast<PartialCommand*>( dataStructure );
+        info->setCommandId( dataIn->readInt() );
+        info->setData( looseUnmarshalByteArray( dataIn ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void PartialCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    PartialCommand* info =
-        dynamic_cast<PartialCommand*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeInt( info->getCommandId() );
-    dataOut->write( info->getData().size() != 0 );
-    if( info->getData().size() != 0 ) {
-        dataOut->writeInt( (int)info->getData().size() );
-        dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size() );
+        PartialCommand* info =
+            dynamic_cast<PartialCommand*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeInt( info->getCommandId() );
+        dataOut->write( info->getData().size() != 0 );
+        if( info->getData().size() != 0 ) {
+            dataOut->writeInt( (int)info->getData().size() );
+            dataOut->write( (const unsigned char*)(&info->getData()[0]), (int)info->getData().size() );
+        }
     }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

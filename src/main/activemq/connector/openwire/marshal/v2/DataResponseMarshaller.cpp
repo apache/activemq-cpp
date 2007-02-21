@@ -48,53 +48,83 @@ unsigned char DataResponseMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void DataResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    DataResponse* info =
-        dynamic_cast<DataResponse*>( dataStructure );
-    info->setData( dynamic_cast< DataStructure* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        DataResponse* info =
+            dynamic_cast<DataResponse*>( dataStructure );
+        info->setData( dynamic_cast< DataStructure* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int DataResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    DataResponse* info =
-        dynamic_cast<DataResponse*>( dataStructure );
+    try {
 
-    int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getData(), bs );
+        DataResponse* info =
+            dynamic_cast<DataResponse*>( dataStructure );
 
-    return rc + 0;
+        int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getData(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    DataResponse* info =
-        dynamic_cast<DataResponse*>( dataStructure );
-    tightMarshalNestedObject2( wireFormat, info->getData(), dataOut, bs );
+        ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        DataResponse* info =
+            dynamic_cast<DataResponse*>( dataStructure );
+        tightMarshalNestedObject2( wireFormat, info->getData(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DataResponse* info =
-        dynamic_cast<DataResponse*>( dataStructure );
-    info->setData( dynamic_cast< DataStructure* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    try {
+
+        ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        DataResponse* info =
+            dynamic_cast<DataResponse*>( dataStructure );
+        info->setData( dynamic_cast< DataStructure* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    DataResponse* info =
-        dynamic_cast<DataResponse*>( dataStructure );
-    ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalNestedObject( wireFormat, info->getData(), dataOut );
+        DataResponse* info =
+            dynamic_cast<DataResponse*>( dataStructure );
+         ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalNestedObject( wireFormat, info->getData(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

@@ -48,60 +48,90 @@ unsigned char JournalQueueAckMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void JournalQueueAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    JournalQueueAck* info =
-        dynamic_cast<JournalQueueAck*>( dataStructure );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setMessageAck( dynamic_cast< MessageAck* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        JournalQueueAck* info =
+            dynamic_cast<JournalQueueAck*>( dataStructure );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setMessageAck( dynamic_cast< MessageAck* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int JournalQueueAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    JournalQueueAck* info =
-        dynamic_cast<JournalQueueAck*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getDestination(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getMessageAck(), bs );
+        JournalQueueAck* info =
+            dynamic_cast<JournalQueueAck*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getDestination(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getMessageAck(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void JournalQueueAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    JournalQueueAck* info =
-        dynamic_cast<JournalQueueAck*>( dataStructure );
-    tightMarshalNestedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    tightMarshalNestedObject2( wireFormat, info->getMessageAck(), dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        JournalQueueAck* info =
+            dynamic_cast<JournalQueueAck*>( dataStructure );
+        tightMarshalNestedObject2( wireFormat, info->getDestination(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getMessageAck(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void JournalQueueAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    JournalQueueAck* info =
-        dynamic_cast<JournalQueueAck*>( dataStructure );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setMessageAck( dynamic_cast< MessageAck* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        JournalQueueAck* info =
+            dynamic_cast<JournalQueueAck*>( dataStructure );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setMessageAck( dynamic_cast< MessageAck* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void JournalQueueAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    JournalQueueAck* info =
-        dynamic_cast<JournalQueueAck*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalNestedObject( wireFormat, info->getDestination(), dataOut );
-    looseMarshalNestedObject( wireFormat, info->getMessageAck(), dataOut );
+        JournalQueueAck* info =
+            dynamic_cast<JournalQueueAck*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalNestedObject( wireFormat, info->getDestination(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getMessageAck(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

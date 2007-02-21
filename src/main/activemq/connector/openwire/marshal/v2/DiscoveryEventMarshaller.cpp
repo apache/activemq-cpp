@@ -48,56 +48,86 @@ unsigned char DiscoveryEventMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void DiscoveryEventMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    DiscoveryEvent* info =
-        dynamic_cast<DiscoveryEvent*>( dataStructure );
-    info->setServiceName( tightUnmarshalString( dataIn, bs ) );
-    info->setBrokerName( tightUnmarshalString( dataIn, bs ) );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        DiscoveryEvent* info =
+            dynamic_cast<DiscoveryEvent*>( dataStructure );
+        info->setServiceName( tightUnmarshalString( dataIn, bs ) );
+        info->setBrokerName( tightUnmarshalString( dataIn, bs ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int DiscoveryEventMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    DiscoveryEvent* info =
-        dynamic_cast<DiscoveryEvent*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalString1( info->getServiceName(), bs );
-    rc += tightMarshalString1( info->getBrokerName(), bs );
+        DiscoveryEvent* info =
+            dynamic_cast<DiscoveryEvent*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalString1( info->getServiceName(), bs );
+        rc += tightMarshalString1( info->getBrokerName(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DiscoveryEventMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    DiscoveryEvent* info =
-        dynamic_cast<DiscoveryEvent*>( dataStructure );
-    tightMarshalString2( info->getServiceName(), dataOut, bs );
-    tightMarshalString2( info->getBrokerName(), dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        DiscoveryEvent* info =
+            dynamic_cast<DiscoveryEvent*>( dataStructure );
+        tightMarshalString2( info->getServiceName(), dataOut, bs );
+        tightMarshalString2( info->getBrokerName(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DiscoveryEventMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DiscoveryEvent* info =
-        dynamic_cast<DiscoveryEvent*>( dataStructure );
-    info->setServiceName( looseUnmarshalString( dataIn ) );
-    info->setBrokerName( looseUnmarshalString( dataIn ) );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        DiscoveryEvent* info =
+            dynamic_cast<DiscoveryEvent*>( dataStructure );
+        info->setServiceName( looseUnmarshalString( dataIn ) );
+        info->setBrokerName( looseUnmarshalString( dataIn ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DiscoveryEventMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    DiscoveryEvent* info =
-        dynamic_cast<DiscoveryEvent*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalString( info->getServiceName(), dataOut );
-    looseMarshalString( info->getBrokerName(), dataOut );
+        DiscoveryEvent* info =
+            dynamic_cast<DiscoveryEvent*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalString( info->getServiceName(), dataOut );
+        looseMarshalString( info->getBrokerName(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

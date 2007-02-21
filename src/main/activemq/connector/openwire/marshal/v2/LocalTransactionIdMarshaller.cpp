@@ -48,58 +48,88 @@ unsigned char LocalTransactionIdMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void LocalTransactionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    LocalTransactionId* info =
-        dynamic_cast<LocalTransactionId*>( dataStructure );
-    info->setValue( tightUnmarshalLong( wireFormat, dataIn, bs ) );
-    info->setConnectionId( dynamic_cast< ConnectionId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        TransactionIdMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        LocalTransactionId* info =
+            dynamic_cast<LocalTransactionId*>( dataStructure );
+        info->setValue( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+        info->setConnectionId( dynamic_cast< ConnectionId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int LocalTransactionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    LocalTransactionId* info =
-        dynamic_cast<LocalTransactionId*>( dataStructure );
+    try {
 
-    int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalLong1( wireFormat, info->getValue(), bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
+        LocalTransactionId* info =
+            dynamic_cast<LocalTransactionId*>( dataStructure );
 
-    return rc + 0;
+        int rc = TransactionIdMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalLong1( wireFormat, info->getValue(), bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void LocalTransactionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    LocalTransactionId* info =
-        dynamic_cast<LocalTransactionId*>( dataStructure );
-    tightMarshalLong2( wireFormat, info->getValue(), dataOut, bs );
-    tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+        TransactionIdMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        LocalTransactionId* info =
+            dynamic_cast<LocalTransactionId*>( dataStructure );
+        tightMarshalLong2( wireFormat, info->getValue(), dataOut, bs );
+        tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void LocalTransactionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    LocalTransactionId* info =
-        dynamic_cast<LocalTransactionId*>( dataStructure );
-    info->setValue( looseUnmarshalLong( wireFormat, dataIn ) );
-    info->setConnectionId( dynamic_cast< ConnectionId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    try {
+
+        TransactionIdMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        LocalTransactionId* info =
+            dynamic_cast<LocalTransactionId*>( dataStructure );
+        info->setValue( looseUnmarshalLong( wireFormat, dataIn ) );
+        info->setConnectionId( dynamic_cast< ConnectionId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void LocalTransactionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    LocalTransactionId* info =
-        dynamic_cast<LocalTransactionId*>( dataStructure );
-    TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalLong( wireFormat, info->getValue(), dataOut );
-    looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
+        LocalTransactionId* info =
+            dynamic_cast<LocalTransactionId*>( dataStructure );
+         TransactionIdMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalLong( wireFormat, info->getValue(), dataOut );
+        looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

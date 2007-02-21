@@ -48,73 +48,103 @@ unsigned char DataArrayResponseMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void DataArrayResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    DataArrayResponse* info =
-        dynamic_cast<DataArrayResponse*>( dataStructure );
+        ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    if( bs->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getData().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getData().push_back( dynamic_cast< DataStructure* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        DataArrayResponse* info =
+            dynamic_cast<DataArrayResponse*>( dataStructure );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getData().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getData().push_back( dynamic_cast< DataStructure* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
+        }
+        else {
+            info->getData().clear();
         }
     }
-    else {
-        info->getData().clear();
-    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int DataArrayResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    DataArrayResponse* info =
-        dynamic_cast<DataArrayResponse*>( dataStructure );
+    try {
 
-    int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalObjectArray1( wireFormat, info->getData(), bs );
+        DataArrayResponse* info =
+            dynamic_cast<DataArrayResponse*>( dataStructure );
 
-    return rc + 0;
+        int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalObjectArray1( wireFormat, info->getData(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataArrayResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    DataArrayResponse* info =
-        dynamic_cast<DataArrayResponse*>( dataStructure );
-    tightMarshalObjectArray2( wireFormat, info->getData(), dataOut, bs );
+        ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        DataArrayResponse* info =
+            dynamic_cast<DataArrayResponse*>( dataStructure );
+        tightMarshalObjectArray2( wireFormat, info->getData(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataArrayResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    DataArrayResponse* info =
-        dynamic_cast<DataArrayResponse*>( dataStructure );
+    try {
 
-    if( dataIn->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getData().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getData().push_back( dynamic_cast<DataStructure* >(
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        DataArrayResponse* info =
+            dynamic_cast<DataArrayResponse*>( dataStructure );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getData().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getData().push_back( dynamic_cast<DataStructure* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
+        }
+        else {
+            info->getData().clear();
         }
     }
-    else {
-        info->getData().clear();
-    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void DataArrayResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    DataArrayResponse* info =
-        dynamic_cast<DataArrayResponse*>( dataStructure );
-    ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalObjectArray( wireFormat, info->getData(), dataOut );
+        DataArrayResponse* info =
+            dynamic_cast<DataArrayResponse*>( dataStructure );
+         ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalObjectArray( wireFormat, info->getData(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

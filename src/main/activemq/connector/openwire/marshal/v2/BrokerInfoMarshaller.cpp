@@ -48,120 +48,150 @@ unsigned char BrokerInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void BrokerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    BrokerInfo* info =
-        dynamic_cast<BrokerInfo*>( dataStructure );
-    info->setBrokerId( dynamic_cast< BrokerId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setBrokerURL( tightUnmarshalString( dataIn, bs ) );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    if( bs->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getPeerBrokerInfos().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getPeerBrokerInfos().push_back( dynamic_cast< BrokerInfo* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        BrokerInfo* info =
+            dynamic_cast<BrokerInfo*>( dataStructure );
+        info->setBrokerId( dynamic_cast< BrokerId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setBrokerURL( tightUnmarshalString( dataIn, bs ) );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getPeerBrokerInfos().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getPeerBrokerInfos().push_back( dynamic_cast< BrokerInfo* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
         }
+        else {
+            info->getPeerBrokerInfos().clear();
+        }
+        info->setBrokerName( tightUnmarshalString( dataIn, bs ) );
+        info->setSlaveBroker( bs->readBoolean() );
+        info->setMasterBroker( bs->readBoolean() );
+        info->setFaultTolerantConfiguration( bs->readBoolean() );
+        info->setDuplexConnection( bs->readBoolean() );
+        info->setNetworkConnection( bs->readBoolean() );
+        info->setConnectionId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
     }
-    else {
-        info->getPeerBrokerInfos().clear();
-    }
-    info->setBrokerName( tightUnmarshalString( dataIn, bs ) );
-    info->setSlaveBroker( bs->readBoolean() );
-    info->setMasterBroker( bs->readBoolean() );
-    info->setFaultTolerantConfiguration( bs->readBoolean() );
-    info->setDuplexConnection( bs->readBoolean() );
-    info->setNetworkConnection( bs->readBoolean() );
-    info->setConnectionId( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int BrokerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    BrokerInfo* info =
-        dynamic_cast<BrokerInfo*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getBrokerId(), bs );
-    rc += tightMarshalString1( info->getBrokerURL(), bs );
-    rc += tightMarshalObjectArray1( wireFormat, info->getPeerBrokerInfos(), bs );
-    rc += tightMarshalString1( info->getBrokerName(), bs );
-    bs->writeBoolean( info->isSlaveBroker() );
-    bs->writeBoolean( info->isMasterBroker() );
-    bs->writeBoolean( info->isFaultTolerantConfiguration() );
-    bs->writeBoolean( info->isDuplexConnection() );
-    bs->writeBoolean( info->isNetworkConnection() );
-    rc += tightMarshalLong1( wireFormat, info->getConnectionId(), bs );
+        BrokerInfo* info =
+            dynamic_cast<BrokerInfo*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getBrokerId(), bs );
+        rc += tightMarshalString1( info->getBrokerURL(), bs );
+        rc += tightMarshalObjectArray1( wireFormat, info->getPeerBrokerInfos(), bs );
+        rc += tightMarshalString1( info->getBrokerName(), bs );
+        bs->writeBoolean( info->isSlaveBroker() );
+        bs->writeBoolean( info->isMasterBroker() );
+        bs->writeBoolean( info->isFaultTolerantConfiguration() );
+        bs->writeBoolean( info->isDuplexConnection() );
+        bs->writeBoolean( info->isNetworkConnection() );
+        rc += tightMarshalLong1( wireFormat, info->getConnectionId(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BrokerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    BrokerInfo* info =
-        dynamic_cast<BrokerInfo*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getBrokerId(), dataOut, bs );
-    tightMarshalString2( info->getBrokerURL(), dataOut, bs );
-    tightMarshalObjectArray2( wireFormat, info->getPeerBrokerInfos(), dataOut, bs );
-    tightMarshalString2( info->getBrokerName(), dataOut, bs );
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    tightMarshalLong2( wireFormat, info->getConnectionId(), dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        BrokerInfo* info =
+            dynamic_cast<BrokerInfo*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getBrokerId(), dataOut, bs );
+        tightMarshalString2( info->getBrokerURL(), dataOut, bs );
+        tightMarshalObjectArray2( wireFormat, info->getPeerBrokerInfos(), dataOut, bs );
+        tightMarshalString2( info->getBrokerName(), dataOut, bs );
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        tightMarshalLong2( wireFormat, info->getConnectionId(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BrokerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    BrokerInfo* info =
-        dynamic_cast<BrokerInfo*>( dataStructure );
-    info->setBrokerId( dynamic_cast< BrokerId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setBrokerURL( looseUnmarshalString( dataIn ) );
+    try {
 
-    if( dataIn->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getPeerBrokerInfos().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getPeerBrokerInfos().push_back( dynamic_cast<BrokerInfo* >(
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        BrokerInfo* info =
+            dynamic_cast<BrokerInfo*>( dataStructure );
+        info->setBrokerId( dynamic_cast< BrokerId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setBrokerURL( looseUnmarshalString( dataIn ) );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getPeerBrokerInfos().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getPeerBrokerInfos().push_back( dynamic_cast<BrokerInfo* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
         }
+        else {
+            info->getPeerBrokerInfos().clear();
+        }
+        info->setBrokerName( looseUnmarshalString( dataIn ) );
+        info->setSlaveBroker( dataIn->readBoolean() );
+        info->setMasterBroker( dataIn->readBoolean() );
+        info->setFaultTolerantConfiguration( dataIn->readBoolean() );
+        info->setDuplexConnection( dataIn->readBoolean() );
+        info->setNetworkConnection( dataIn->readBoolean() );
+        info->setConnectionId( looseUnmarshalLong( wireFormat, dataIn ) );
     }
-    else {
-        info->getPeerBrokerInfos().clear();
-    }
-    info->setBrokerName( looseUnmarshalString( dataIn ) );
-    info->setSlaveBroker( dataIn->readBoolean() );
-    info->setMasterBroker( dataIn->readBoolean() );
-    info->setFaultTolerantConfiguration( dataIn->readBoolean() );
-    info->setDuplexConnection( dataIn->readBoolean() );
-    info->setNetworkConnection( dataIn->readBoolean() );
-    info->setConnectionId( looseUnmarshalLong( wireFormat, dataIn ) );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BrokerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    BrokerInfo* info =
-        dynamic_cast<BrokerInfo*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getBrokerId(), dataOut );
-    looseMarshalString( info->getBrokerURL(), dataOut );
-    looseMarshalObjectArray( wireFormat, info->getPeerBrokerInfos(), dataOut );
-    looseMarshalString( info->getBrokerName(), dataOut );
-    dataOut->writeBoolean( info->isSlaveBroker() );
-    dataOut->writeBoolean( info->isMasterBroker() );
-    dataOut->writeBoolean( info->isFaultTolerantConfiguration() );
-    dataOut->writeBoolean( info->isDuplexConnection() );
-    dataOut->writeBoolean( info->isNetworkConnection() );
-    looseMarshalLong( wireFormat, info->getConnectionId(), dataOut );
+        BrokerInfo* info =
+            dynamic_cast<BrokerInfo*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getBrokerId(), dataOut );
+        looseMarshalString( info->getBrokerURL(), dataOut );
+        looseMarshalObjectArray( wireFormat, info->getPeerBrokerInfos(), dataOut );
+        looseMarshalString( info->getBrokerName(), dataOut );
+        dataOut->writeBoolean( info->isSlaveBroker() );
+        dataOut->writeBoolean( info->isMasterBroker() );
+        dataOut->writeBoolean( info->isFaultTolerantConfiguration() );
+        dataOut->writeBoolean( info->isDuplexConnection() );
+        dataOut->writeBoolean( info->isNetworkConnection() );
+        looseMarshalLong( wireFormat, info->getConnectionId(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
