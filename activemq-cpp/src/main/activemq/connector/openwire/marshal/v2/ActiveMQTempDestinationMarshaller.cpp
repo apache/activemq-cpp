@@ -38,35 +38,65 @@ using namespace activemq::connector::openwire::marshal::v2;
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ActiveMQDestinationMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
+        ActiveMQDestinationMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ActiveMQTempDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    int rc = ActiveMQDestinationMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+    try {
 
-    return rc + 0;
+        int rc = ActiveMQDestinationMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ActiveMQDestinationMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
+        ActiveMQDestinationMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ActiveMQDestinationMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    try {
+
+        ActiveMQDestinationMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ActiveMQDestinationMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
+         ActiveMQDestinationMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

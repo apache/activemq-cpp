@@ -48,51 +48,81 @@ unsigned char ConnectionIdMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionIdMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConnectionId* info =
-        dynamic_cast<ConnectionId*>( dataStructure );
-    info->setValue( tightUnmarshalString( dataIn, bs ) );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ConnectionId* info =
+            dynamic_cast<ConnectionId*>( dataStructure );
+        info->setValue( tightUnmarshalString( dataIn, bs ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConnectionIdMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConnectionId* info =
-        dynamic_cast<ConnectionId*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalString1( info->getValue(), bs );
+        ConnectionId* info =
+            dynamic_cast<ConnectionId*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalString1( info->getValue(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionIdMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ConnectionId* info =
-        dynamic_cast<ConnectionId*>( dataStructure );
-    tightMarshalString2( info->getValue(), dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ConnectionId* info =
+            dynamic_cast<ConnectionId*>( dataStructure );
+        tightMarshalString2( info->getValue(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionIdMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionId* info =
-        dynamic_cast<ConnectionId*>( dataStructure );
-    info->setValue( looseUnmarshalString( dataIn ) );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConnectionId* info =
+            dynamic_cast<ConnectionId*>( dataStructure );
+        info->setValue( looseUnmarshalString( dataIn ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionIdMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConnectionId* info =
-        dynamic_cast<ConnectionId*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalString( info->getValue(), dataOut );
+        ConnectionId* info =
+            dynamic_cast<ConnectionId*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalString( info->getValue(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

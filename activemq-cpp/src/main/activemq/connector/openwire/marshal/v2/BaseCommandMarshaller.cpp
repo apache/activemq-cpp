@@ -38,55 +38,85 @@ using namespace activemq::connector::openwire::marshal::v2;
 ///////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    transport::Command* info =
-        dynamic_cast<transport::Command*>( dataStructure );
-    info->setCommandId( dataIn->readInt() );
-    info->setResponseRequired( bs->readBoolean() );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        transport::Command* info =
+            dynamic_cast<transport::Command*>( dataStructure );
+        info->setCommandId( dataIn->readInt() );
+        info->setResponseRequired( bs->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int BaseCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    transport::Command* info =
-        dynamic_cast<transport::Command*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    bs->writeBoolean( info->isResponseRequired() );
+        transport::Command* info =
+            dynamic_cast<transport::Command*>( dataStructure );
 
-    return rc + 4;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        bs->writeBoolean( info->isResponseRequired() );
+
+        return rc + 4;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    transport::Command* info =
-        dynamic_cast<transport::Command*>( dataStructure );
-    dataOut->writeInt( info->getCommandId() );
-    bs->readBoolean();
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        transport::Command* info =
+            dynamic_cast<transport::Command*>( dataStructure );
+        dataOut->writeInt( info->getCommandId() );
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    transport::Command* info =
-        dynamic_cast<transport::Command*>( dataStructure );
-    info->setCommandId( dataIn->readInt() );
-    info->setResponseRequired( dataIn->readBoolean() );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        transport::Command* info =
+            dynamic_cast<transport::Command*>( dataStructure );
+        info->setCommandId( dataIn->readInt() );
+        info->setResponseRequired( dataIn->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BaseCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    transport::Command* info =
-        dynamic_cast<transport::Command*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeInt( info->getCommandId() );
-    dataOut->writeBoolean( info->isResponseRequired() );
+        transport::Command* info =
+            dynamic_cast<transport::Command*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeInt( info->getCommandId() );
+        dataOut->writeBoolean( info->isResponseRequired() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

@@ -48,35 +48,65 @@ unsigned char KeepAliveInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void KeepAliveInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int KeepAliveInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+    try {
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void KeepAliveInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void KeepAliveInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void KeepAliveInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

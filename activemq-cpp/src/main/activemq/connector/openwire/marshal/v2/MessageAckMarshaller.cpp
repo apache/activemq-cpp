@@ -48,89 +48,119 @@ unsigned char MessageAckMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void MessageAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    MessageAck* info =
-        dynamic_cast<MessageAck*>( dataStructure );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setTransactionId( dynamic_cast< TransactionId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setAckType( dataIn->readByte() );
-    info->setFirstMessageId( dynamic_cast< MessageId* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setLastMessageId( dynamic_cast< MessageId* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setMessageCount( dataIn->readInt() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        MessageAck* info =
+            dynamic_cast<MessageAck*>( dataStructure );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setTransactionId( dynamic_cast< TransactionId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setConsumerId( dynamic_cast< ConsumerId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setAckType( dataIn->readByte() );
+        info->setFirstMessageId( dynamic_cast< MessageId* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setLastMessageId( dynamic_cast< MessageId* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setMessageCount( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int MessageAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    MessageAck* info =
-        dynamic_cast<MessageAck*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getTransactionId(), bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getFirstMessageId(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getLastMessageId(), bs );
+        MessageAck* info =
+            dynamic_cast<MessageAck*>( dataStructure );
 
-    return rc + 5;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getTransactionId(), bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getFirstMessageId(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getLastMessageId(), bs );
+
+        return rc + 5;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    MessageAck* info =
-        dynamic_cast<MessageAck*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    tightMarshalCachedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
-    tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
-    dataOut->write( info->getAckType() );
-    tightMarshalNestedObject2( wireFormat, info->getFirstMessageId(), dataOut, bs );
-    tightMarshalNestedObject2( wireFormat, info->getLastMessageId(), dataOut, bs );
-    dataOut->writeInt( info->getMessageCount() );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        MessageAck* info =
+            dynamic_cast<MessageAck*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
+        tightMarshalCachedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
+        tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
+        dataOut->write( info->getAckType() );
+        tightMarshalNestedObject2( wireFormat, info->getFirstMessageId(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getLastMessageId(), dataOut, bs );
+        dataOut->writeInt( info->getMessageCount() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    MessageAck* info =
-        dynamic_cast<MessageAck*>( dataStructure );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setTransactionId( dynamic_cast< TransactionId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setConsumerId( dynamic_cast< ConsumerId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setAckType( dataIn->readByte() );
-    info->setFirstMessageId( dynamic_cast< MessageId* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setLastMessageId( dynamic_cast< MessageId* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setMessageCount( dataIn->readInt() );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        MessageAck* info =
+            dynamic_cast<MessageAck*>( dataStructure );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setTransactionId( dynamic_cast< TransactionId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setConsumerId( dynamic_cast< ConsumerId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setAckType( dataIn->readByte() );
+        info->setFirstMessageId( dynamic_cast< MessageId* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setLastMessageId( dynamic_cast< MessageId* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setMessageCount( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    MessageAck* info =
-        dynamic_cast<MessageAck*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
-    looseMarshalCachedObject( wireFormat, info->getTransactionId(), dataOut );
-    looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
-    dataOut->write( info->getAckType() );
-    looseMarshalNestedObject( wireFormat, info->getFirstMessageId(), dataOut );
-    looseMarshalNestedObject( wireFormat, info->getLastMessageId(), dataOut );
-    dataOut->writeInt( info->getMessageCount() );
+        MessageAck* info =
+            dynamic_cast<MessageAck*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
+        looseMarshalCachedObject( wireFormat, info->getTransactionId(), dataOut );
+        looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
+        dataOut->write( info->getAckType() );
+        looseMarshalNestedObject( wireFormat, info->getFirstMessageId(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getLastMessageId(), dataOut );
+        dataOut->writeInt( info->getMessageCount() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

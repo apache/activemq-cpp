@@ -48,53 +48,83 @@ unsigned char ExceptionResponseMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ExceptionResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ExceptionResponse* info =
-        dynamic_cast<ExceptionResponse*>( dataStructure );
-    info->setException( dynamic_cast< BrokerError* >(
-        tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
+        ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ExceptionResponse* info =
+            dynamic_cast<ExceptionResponse*>( dataStructure );
+        info->setException( dynamic_cast< BrokerError* >(
+            tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ExceptionResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ExceptionResponse* info =
-        dynamic_cast<ExceptionResponse*>( dataStructure );
+    try {
 
-    int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalBrokerError1( wireFormat, info->getException(), bs );
+        ExceptionResponse* info =
+            dynamic_cast<ExceptionResponse*>( dataStructure );
 
-    return rc + 0;
+        int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalBrokerError1( wireFormat, info->getException(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ExceptionResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ExceptionResponse* info =
-        dynamic_cast<ExceptionResponse*>( dataStructure );
-    tightMarshalBrokerError2( wireFormat, info->getException(), dataOut, bs );
+        ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ExceptionResponse* info =
+            dynamic_cast<ExceptionResponse*>( dataStructure );
+        tightMarshalBrokerError2( wireFormat, info->getException(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ExceptionResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ExceptionResponse* info =
-        dynamic_cast<ExceptionResponse*>( dataStructure );
-    info->setException( dynamic_cast< BrokerError* >(
-        looseUnmarshalBrokerError( wireFormat, dataIn ) ) );
+    try {
+
+        ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ExceptionResponse* info =
+            dynamic_cast<ExceptionResponse*>( dataStructure );
+        info->setException( dynamic_cast< BrokerError* >(
+            looseUnmarshalBrokerError( wireFormat, dataIn ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ExceptionResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ExceptionResponse* info =
-        dynamic_cast<ExceptionResponse*>( dataStructure );
-    ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalBrokerError( wireFormat, info->getException(), dataOut );
+        ExceptionResponse* info =
+            dynamic_cast<ExceptionResponse*>( dataStructure );
+         ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalBrokerError( wireFormat, info->getException(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

@@ -48,71 +48,101 @@ unsigned char MessageDispatchMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void MessageDispatchMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    MessageDispatch* info =
-        dynamic_cast<MessageDispatch*>( dataStructure );
-    info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setMessage( dynamic_cast< Message* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setRedeliveryCounter( dataIn->readInt() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        MessageDispatch* info =
+            dynamic_cast<MessageDispatch*>( dataStructure );
+        info->setConsumerId( dynamic_cast< ConsumerId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setMessage( dynamic_cast< Message* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setRedeliveryCounter( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int MessageDispatchMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    MessageDispatch* info =
-        dynamic_cast<MessageDispatch*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getMessage(), bs );
+        MessageDispatch* info =
+            dynamic_cast<MessageDispatch*>( dataStructure );
 
-    return rc + 4;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getMessage(), bs );
+
+        return rc + 4;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageDispatchMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    MessageDispatch* info =
-        dynamic_cast<MessageDispatch*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
-    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    tightMarshalNestedObject2( wireFormat, info->getMessage(), dataOut, bs );
-    dataOut->writeInt( info->getRedeliveryCounter() );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        MessageDispatch* info =
+            dynamic_cast<MessageDispatch*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
+        tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getMessage(), dataOut, bs );
+        dataOut->writeInt( info->getRedeliveryCounter() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageDispatchMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    MessageDispatch* info =
-        dynamic_cast<MessageDispatch*>( dataStructure );
-    info->setConsumerId( dynamic_cast< ConsumerId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setMessage( dynamic_cast< Message* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setRedeliveryCounter( dataIn->readInt() );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        MessageDispatch* info =
+            dynamic_cast<MessageDispatch*>( dataStructure );
+        info->setConsumerId( dynamic_cast< ConsumerId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setMessage( dynamic_cast< Message* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setRedeliveryCounter( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void MessageDispatchMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    MessageDispatch* info =
-        dynamic_cast<MessageDispatch*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
-    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
-    looseMarshalNestedObject( wireFormat, info->getMessage(), dataOut );
-    dataOut->writeInt( info->getRedeliveryCounter() );
+        MessageDispatch* info =
+            dynamic_cast<MessageDispatch*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
+        looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getMessage(), dataOut );
+        dataOut->writeInt( info->getRedeliveryCounter() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

@@ -48,51 +48,81 @@ unsigned char ReplayCommandMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ReplayCommandMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ReplayCommand* info =
-        dynamic_cast<ReplayCommand*>( dataStructure );
-    info->setFirstNakNumber( dataIn->readInt() );
-    info->setLastNakNumber( dataIn->readInt() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ReplayCommand* info =
+            dynamic_cast<ReplayCommand*>( dataStructure );
+        info->setFirstNakNumber( dataIn->readInt() );
+        info->setLastNakNumber( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ReplayCommandMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+    try {
 
-    return rc + 8;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+
+        return rc + 8;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ReplayCommandMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ReplayCommand* info =
-        dynamic_cast<ReplayCommand*>( dataStructure );
-    dataOut->writeInt( info->getFirstNakNumber() );
-    dataOut->writeInt( info->getLastNakNumber() );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ReplayCommand* info =
+            dynamic_cast<ReplayCommand*>( dataStructure );
+        dataOut->writeInt( info->getFirstNakNumber() );
+        dataOut->writeInt( info->getLastNakNumber() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ReplayCommandMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ReplayCommand* info =
-        dynamic_cast<ReplayCommand*>( dataStructure );
-    info->setFirstNakNumber( dataIn->readInt() );
-    info->setLastNakNumber( dataIn->readInt() );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ReplayCommand* info =
+            dynamic_cast<ReplayCommand*>( dataStructure );
+        info->setFirstNakNumber( dataIn->readInt() );
+        info->setLastNakNumber( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ReplayCommandMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ReplayCommand* info =
-        dynamic_cast<ReplayCommand*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeInt( info->getFirstNakNumber() );
-    dataOut->writeInt( info->getLastNakNumber() );
+        ReplayCommand* info =
+            dynamic_cast<ReplayCommand*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeInt( info->getFirstNakNumber() );
+        dataOut->writeInt( info->getLastNakNumber() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

@@ -48,63 +48,93 @@ unsigned char RemoveSubscriptionInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void RemoveSubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    RemoveSubscriptionInfo* info =
-        dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
-    info->setConnectionId( dynamic_cast< ConnectionId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setSubcriptionName( tightUnmarshalString( dataIn, bs ) );
-    info->setClientId( tightUnmarshalString( dataIn, bs ) );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        RemoveSubscriptionInfo* info =
+            dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
+        info->setConnectionId( dynamic_cast< ConnectionId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setSubcriptionName( tightUnmarshalString( dataIn, bs ) );
+        info->setClientId( tightUnmarshalString( dataIn, bs ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int RemoveSubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    RemoveSubscriptionInfo* info =
-        dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
-    rc += tightMarshalString1( info->getSubcriptionName(), bs );
-    rc += tightMarshalString1( info->getClientId(), bs );
+        RemoveSubscriptionInfo* info =
+            dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConnectionId(), bs );
+        rc += tightMarshalString1( info->getSubcriptionName(), bs );
+        rc += tightMarshalString1( info->getClientId(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void RemoveSubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    RemoveSubscriptionInfo* info =
-        dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
-    tightMarshalString2( info->getSubcriptionName(), dataOut, bs );
-    tightMarshalString2( info->getClientId(), dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        RemoveSubscriptionInfo* info =
+            dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+        tightMarshalString2( info->getSubcriptionName(), dataOut, bs );
+        tightMarshalString2( info->getClientId(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void RemoveSubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    RemoveSubscriptionInfo* info =
-        dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
-    info->setConnectionId( dynamic_cast< ConnectionId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setSubcriptionName( looseUnmarshalString( dataIn ) );
-    info->setClientId( looseUnmarshalString( dataIn ) );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        RemoveSubscriptionInfo* info =
+            dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
+        info->setConnectionId( dynamic_cast< ConnectionId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setSubcriptionName( looseUnmarshalString( dataIn ) );
+        info->setClientId( looseUnmarshalString( dataIn ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void RemoveSubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    RemoveSubscriptionInfo* info =
-        dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
-    looseMarshalString( info->getSubcriptionName(), dataOut );
-    looseMarshalString( info->getClientId(), dataOut );
+        RemoveSubscriptionInfo* info =
+            dynamic_cast<RemoveSubscriptionInfo*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getConnectionId(), dataOut );
+        looseMarshalString( info->getSubcriptionName(), dataOut );
+        looseMarshalString( info->getClientId(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

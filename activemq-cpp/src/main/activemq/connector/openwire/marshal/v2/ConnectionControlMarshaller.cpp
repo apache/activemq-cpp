@@ -48,69 +48,99 @@ unsigned char ConnectionControlMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );
-    info->setClose( bs->readBoolean() );
-    info->setExit( bs->readBoolean() );
-    info->setFaultTolerant( bs->readBoolean() );
-    info->setResume( bs->readBoolean() );
-    info->setSuspend( bs->readBoolean() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ConnectionControl* info =
+            dynamic_cast<ConnectionControl*>( dataStructure );
+        info->setClose( bs->readBoolean() );
+        info->setExit( bs->readBoolean() );
+        info->setFaultTolerant( bs->readBoolean() );
+        info->setResume( bs->readBoolean() );
+        info->setSuspend( bs->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConnectionControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    bs->writeBoolean( info->isClose() );
-    bs->writeBoolean( info->isExit() );
-    bs->writeBoolean( info->isFaultTolerant() );
-    bs->writeBoolean( info->isResume() );
-    bs->writeBoolean( info->isSuspend() );
+        ConnectionControl* info =
+            dynamic_cast<ConnectionControl*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        bs->writeBoolean( info->isClose() );
+        bs->writeBoolean( info->isExit() );
+        bs->writeBoolean( info->isFaultTolerant() );
+        bs->writeBoolean( info->isResume() );
+        bs->writeBoolean( info->isSuspend() );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );
-    info->setClose( dataIn->readBoolean() );
-    info->setExit( dataIn->readBoolean() );
-    info->setFaultTolerant( dataIn->readBoolean() );
-    info->setResume( dataIn->readBoolean() );
-    info->setSuspend( dataIn->readBoolean() );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConnectionControl* info =
+            dynamic_cast<ConnectionControl*>( dataStructure );
+        info->setClose( dataIn->readBoolean() );
+        info->setExit( dataIn->readBoolean() );
+        info->setFaultTolerant( dataIn->readBoolean() );
+        info->setResume( dataIn->readBoolean() );
+        info->setSuspend( dataIn->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConnectionControl* info =
-        dynamic_cast<ConnectionControl*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeBoolean( info->isClose() );
-    dataOut->writeBoolean( info->isExit() );
-    dataOut->writeBoolean( info->isFaultTolerant() );
-    dataOut->writeBoolean( info->isResume() );
-    dataOut->writeBoolean( info->isSuspend() );
+        ConnectionControl* info =
+            dynamic_cast<ConnectionControl*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeBoolean( info->isClose() );
+        dataOut->writeBoolean( info->isExit() );
+        dataOut->writeBoolean( info->isFaultTolerant() );
+        dataOut->writeBoolean( info->isResume() );
+        dataOut->writeBoolean( info->isSuspend() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

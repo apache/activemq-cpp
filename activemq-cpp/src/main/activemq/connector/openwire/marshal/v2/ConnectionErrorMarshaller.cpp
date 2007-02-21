@@ -48,60 +48,90 @@ unsigned char ConnectionErrorMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionErrorMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConnectionError* info =
-        dynamic_cast<ConnectionError*>( dataStructure );
-    info->setException( dynamic_cast< BrokerError* >(
-        tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
-    info->setConnectionId( dynamic_cast< ConnectionId* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ConnectionError* info =
+            dynamic_cast<ConnectionError*>( dataStructure );
+        info->setException( dynamic_cast< BrokerError* >(
+            tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
+        info->setConnectionId( dynamic_cast< ConnectionId* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConnectionErrorMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConnectionError* info =
-        dynamic_cast<ConnectionError*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalBrokerError1( wireFormat, info->getException(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getConnectionId(), bs );
+        ConnectionError* info =
+            dynamic_cast<ConnectionError*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalBrokerError1( wireFormat, info->getException(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getConnectionId(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionErrorMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ConnectionError* info =
-        dynamic_cast<ConnectionError*>( dataStructure );
-    tightMarshalBrokerError2( wireFormat, info->getException(), dataOut, bs );
-    tightMarshalNestedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ConnectionError* info =
+            dynamic_cast<ConnectionError*>( dataStructure );
+        tightMarshalBrokerError2( wireFormat, info->getException(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getConnectionId(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionErrorMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConnectionError* info =
-        dynamic_cast<ConnectionError*>( dataStructure );
-    info->setException( dynamic_cast< BrokerError* >(
-        looseUnmarshalBrokerError( wireFormat, dataIn ) ) );
-    info->setConnectionId( dynamic_cast< ConnectionId* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConnectionError* info =
+            dynamic_cast<ConnectionError*>( dataStructure );
+        info->setException( dynamic_cast< BrokerError* >(
+            looseUnmarshalBrokerError( wireFormat, dataIn ) ) );
+        info->setConnectionId( dynamic_cast< ConnectionId* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConnectionErrorMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConnectionError* info =
-        dynamic_cast<ConnectionError*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalBrokerError( wireFormat, info->getException(), dataOut );
-    looseMarshalNestedObject( wireFormat, info->getConnectionId(), dataOut );
+        ConnectionError* info =
+            dynamic_cast<ConnectionError*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalBrokerError( wireFormat, info->getException(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getConnectionId(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

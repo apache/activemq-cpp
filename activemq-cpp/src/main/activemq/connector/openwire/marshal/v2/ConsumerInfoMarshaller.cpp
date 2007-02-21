@@ -48,156 +48,186 @@ unsigned char ConsumerInfoMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConsumerInfo* info =
-        dynamic_cast<ConsumerInfo*>( dataStructure );
-    info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setBrowser( bs->readBoolean() );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >(
-        tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
-    info->setPrefetchSize( dataIn->readInt() );
-    info->setMaximumPendingMessageLimit( dataIn->readInt() );
-    info->setDispatchAsync( bs->readBoolean() );
-    info->setSelector( tightUnmarshalString( dataIn, bs ) );
-    info->setSubscriptionName( tightUnmarshalString( dataIn, bs ) );
-    info->setNoLocal( bs->readBoolean() );
-    info->setExclusive( bs->readBoolean() );
-    info->setRetroactive( bs->readBoolean() );
-    info->setPriority( dataIn->readByte() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
-    if( bs->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
-                tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        ConsumerInfo* info =
+            dynamic_cast<ConsumerInfo*>( dataStructure );
+        info->setConsumerId( dynamic_cast< ConsumerId* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setBrowser( bs->readBoolean() );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
+        info->setPrefetchSize( dataIn->readInt() );
+        info->setMaximumPendingMessageLimit( dataIn->readInt() );
+        info->setDispatchAsync( bs->readBoolean() );
+        info->setSelector( tightUnmarshalString( dataIn, bs ) );
+        info->setSubscriptionName( tightUnmarshalString( dataIn, bs ) );
+        info->setNoLocal( bs->readBoolean() );
+        info->setExclusive( bs->readBoolean() );
+        info->setRetroactive( bs->readBoolean() );
+        info->setPriority( dataIn->readByte() );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast< BrokerId* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setAdditionalPredicate( dynamic_cast< BooleanExpression* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setNetworkSubscription( bs->readBoolean() );
+        info->setOptimizedAcknowledge( bs->readBoolean() );
+        info->setNoRangeAcks( bs->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setAdditionalPredicate( dynamic_cast< BooleanExpression* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setNetworkSubscription( bs->readBoolean() );
-    info->setOptimizedAcknowledge( bs->readBoolean() );
-    info->setNoRangeAcks( bs->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConsumerInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConsumerInfo* info =
-        dynamic_cast<ConsumerInfo*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
-    bs->writeBoolean( info->isBrowser() );
-    rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
-    bs->writeBoolean( info->isDispatchAsync() );
-    rc += tightMarshalString1( info->getSelector(), bs );
-    rc += tightMarshalString1( info->getSubscriptionName(), bs );
-    bs->writeBoolean( info->isNoLocal() );
-    bs->writeBoolean( info->isExclusive() );
-    bs->writeBoolean( info->isRetroactive() );
-    rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
-    rc += tightMarshalNestedObject1( wireFormat, info->getAdditionalPredicate(), bs );
-    bs->writeBoolean( info->isNetworkSubscription() );
-    bs->writeBoolean( info->isOptimizedAcknowledge() );
-    bs->writeBoolean( info->isNoRangeAcks() );
+        ConsumerInfo* info =
+            dynamic_cast<ConsumerInfo*>( dataStructure );
 
-    return rc + 9;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalCachedObject1( wireFormat, info->getConsumerId(), bs );
+        bs->writeBoolean( info->isBrowser() );
+        rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
+        bs->writeBoolean( info->isDispatchAsync() );
+        rc += tightMarshalString1( info->getSelector(), bs );
+        rc += tightMarshalString1( info->getSubscriptionName(), bs );
+        bs->writeBoolean( info->isNoLocal() );
+        bs->writeBoolean( info->isExclusive() );
+        bs->writeBoolean( info->isRetroactive() );
+        rc += tightMarshalObjectArray1( wireFormat, info->getBrokerPath(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getAdditionalPredicate(), bs );
+        bs->writeBoolean( info->isNetworkSubscription() );
+        bs->writeBoolean( info->isOptimizedAcknowledge() );
+        bs->writeBoolean( info->isNoRangeAcks() );
+
+        return rc + 9;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ConsumerInfo* info =
-        dynamic_cast<ConsumerInfo*>( dataStructure );
-    tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
-    bs->readBoolean();
-    tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
-    dataOut->writeInt( info->getPrefetchSize() );
-    dataOut->writeInt( info->getMaximumPendingMessageLimit() );
-    bs->readBoolean();
-    tightMarshalString2( info->getSelector(), dataOut, bs );
-    tightMarshalString2( info->getSubscriptionName(), dataOut, bs );
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
-    dataOut->write( info->getPriority() );
-    tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
-    tightMarshalNestedObject2( wireFormat, info->getAdditionalPredicate(), dataOut, bs );
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ConsumerInfo* info =
+            dynamic_cast<ConsumerInfo*>( dataStructure );
+        tightMarshalCachedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
+        bs->readBoolean();
+        tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
+        dataOut->writeInt( info->getPrefetchSize() );
+        dataOut->writeInt( info->getMaximumPendingMessageLimit() );
+        bs->readBoolean();
+        tightMarshalString2( info->getSelector(), dataOut, bs );
+        tightMarshalString2( info->getSubscriptionName(), dataOut, bs );
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+        dataOut->write( info->getPriority() );
+        tightMarshalObjectArray2( wireFormat, info->getBrokerPath(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getAdditionalPredicate(), dataOut, bs );
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConsumerInfo* info =
-        dynamic_cast<ConsumerInfo*>( dataStructure );
-    info->setConsumerId( dynamic_cast< ConsumerId* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setBrowser( dataIn->readBoolean() );
-    info->setDestination( dynamic_cast< ActiveMQDestination* >( 
-        looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
-    info->setPrefetchSize( dataIn->readInt() );
-    info->setMaximumPendingMessageLimit( dataIn->readInt() );
-    info->setDispatchAsync( dataIn->readBoolean() );
-    info->setSelector( looseUnmarshalString( dataIn ) );
-    info->setSubscriptionName( looseUnmarshalString( dataIn ) );
-    info->setNoLocal( dataIn->readBoolean() );
-    info->setExclusive( dataIn->readBoolean() );
-    info->setRetroactive( dataIn->readBoolean() );
-    info->setPriority( dataIn->readByte() );
+    try {
 
-    if( dataIn->readBoolean() ) {
-        short size = dataIn->readShort();
-        info->getBrokerPath().reserve( size );
-        for( int i = 0; i < size; i++ ) {
-            info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
-                looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConsumerInfo* info =
+            dynamic_cast<ConsumerInfo*>( dataStructure );
+        info->setConsumerId( dynamic_cast< ConsumerId* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setBrowser( dataIn->readBoolean() );
+        info->setDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
+        info->setPrefetchSize( dataIn->readInt() );
+        info->setMaximumPendingMessageLimit( dataIn->readInt() );
+        info->setDispatchAsync( dataIn->readBoolean() );
+        info->setSelector( looseUnmarshalString( dataIn ) );
+        info->setSubscriptionName( looseUnmarshalString( dataIn ) );
+        info->setNoLocal( dataIn->readBoolean() );
+        info->setExclusive( dataIn->readBoolean() );
+        info->setRetroactive( dataIn->readBoolean() );
+        info->setPriority( dataIn->readByte() );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getBrokerPath().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getBrokerPath().push_back( dynamic_cast<BrokerId* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
         }
+        else {
+            info->getBrokerPath().clear();
+        }
+        info->setAdditionalPredicate( dynamic_cast< BooleanExpression* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setNetworkSubscription( dataIn->readBoolean() );
+        info->setOptimizedAcknowledge( dataIn->readBoolean() );
+        info->setNoRangeAcks( dataIn->readBoolean() );
     }
-    else {
-        info->getBrokerPath().clear();
-    }
-    info->setAdditionalPredicate( dynamic_cast< BooleanExpression* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setNetworkSubscription( dataIn->readBoolean() );
-    info->setOptimizedAcknowledge( dataIn->readBoolean() );
-    info->setNoRangeAcks( dataIn->readBoolean() );
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConsumerInfo* info =
-        dynamic_cast<ConsumerInfo*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
-    dataOut->writeBoolean( info->isBrowser() );
-    looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
-    dataOut->writeInt( info->getPrefetchSize() );
-    dataOut->writeInt( info->getMaximumPendingMessageLimit() );
-    dataOut->writeBoolean( info->isDispatchAsync() );
-    looseMarshalString( info->getSelector(), dataOut );
-    looseMarshalString( info->getSubscriptionName(), dataOut );
-    dataOut->writeBoolean( info->isNoLocal() );
-    dataOut->writeBoolean( info->isExclusive() );
-    dataOut->writeBoolean( info->isRetroactive() );
-    dataOut->write( info->getPriority() );
-    looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
-    looseMarshalNestedObject( wireFormat, info->getAdditionalPredicate(), dataOut );
-    dataOut->writeBoolean( info->isNetworkSubscription() );
-    dataOut->writeBoolean( info->isOptimizedAcknowledge() );
-    dataOut->writeBoolean( info->isNoRangeAcks() );
+        ConsumerInfo* info =
+            dynamic_cast<ConsumerInfo*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalCachedObject( wireFormat, info->getConsumerId(), dataOut );
+        dataOut->writeBoolean( info->isBrowser() );
+        looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
+        dataOut->writeInt( info->getPrefetchSize() );
+        dataOut->writeInt( info->getMaximumPendingMessageLimit() );
+        dataOut->writeBoolean( info->isDispatchAsync() );
+        looseMarshalString( info->getSelector(), dataOut );
+        looseMarshalString( info->getSubscriptionName(), dataOut );
+        dataOut->writeBoolean( info->isNoLocal() );
+        dataOut->writeBoolean( info->isExclusive() );
+        dataOut->writeBoolean( info->isRetroactive() );
+        dataOut->write( info->getPriority() );
+        looseMarshalObjectArray( wireFormat, info->getBrokerPath(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getAdditionalPredicate(), dataOut );
+        dataOut->writeBoolean( info->isNetworkSubscription() );
+        dataOut->writeBoolean( info->isOptimizedAcknowledge() );
+        dataOut->writeBoolean( info->isNoRangeAcks() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

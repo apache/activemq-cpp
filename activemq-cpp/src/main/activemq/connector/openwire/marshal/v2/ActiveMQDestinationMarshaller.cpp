@@ -38,51 +38,81 @@ using namespace activemq::connector::openwire::marshal::v2;
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestinationMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ActiveMQDestination* info =
-        dynamic_cast<ActiveMQDestination*>( dataStructure );
-    info->setPhysicalName( tightUnmarshalString( dataIn, bs ) );
+        BaseDataStreamMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ActiveMQDestination* info =
+            dynamic_cast<ActiveMQDestination*>( dataStructure );
+        info->setPhysicalName( tightUnmarshalString( dataIn, bs ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ActiveMQDestinationMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ActiveMQDestination* info =
-        dynamic_cast<ActiveMQDestination*>( dataStructure );
+    try {
 
-    int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    rc += tightMarshalString1( info->getPhysicalName(), bs );
+        ActiveMQDestination* info =
+            dynamic_cast<ActiveMQDestination*>( dataStructure );
 
-    return rc + 0;
+        int rc = BaseDataStreamMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        rc += tightMarshalString1( info->getPhysicalName(), bs );
+
+        return rc + 0;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestinationMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ActiveMQDestination* info =
-        dynamic_cast<ActiveMQDestination*>( dataStructure );
-    tightMarshalString2( info->getPhysicalName(), dataOut, bs );
+        BaseDataStreamMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ActiveMQDestination* info =
+            dynamic_cast<ActiveMQDestination*>( dataStructure );
+        tightMarshalString2( info->getPhysicalName(), dataOut, bs );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestinationMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ActiveMQDestination* info =
-        dynamic_cast<ActiveMQDestination*>( dataStructure );
-    info->setPhysicalName( looseUnmarshalString( dataIn ) );
+    try {
+
+        BaseDataStreamMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ActiveMQDestination* info =
+            dynamic_cast<ActiveMQDestination*>( dataStructure );
+        info->setPhysicalName( looseUnmarshalString( dataIn ) );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ActiveMQDestinationMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ActiveMQDestination* info =
-        dynamic_cast<ActiveMQDestination*>( dataStructure );
-    BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    looseMarshalString( info->getPhysicalName(), dataOut );
+        ActiveMQDestination* info =
+            dynamic_cast<ActiveMQDestination*>( dataStructure );
+         BaseDataStreamMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        looseMarshalString( info->getPhysicalName(), dataOut );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

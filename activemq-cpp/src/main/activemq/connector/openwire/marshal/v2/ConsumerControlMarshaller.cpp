@@ -48,77 +48,107 @@ unsigned char ConsumerControlMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerControlMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    ConsumerControl* info =
-        dynamic_cast<ConsumerControl*>( dataStructure );
-    info->setClose( bs->readBoolean() );
-    info->setConsumerId( dynamic_cast< ConsumerId* >(
-        tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
-    info->setPrefetch( dataIn->readInt() );
-    info->setFlush( bs->readBoolean() );
-    info->setStart( bs->readBoolean() );
-    info->setStop( bs->readBoolean() );
+        BaseCommandMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        ConsumerControl* info =
+            dynamic_cast<ConsumerControl*>( dataStructure );
+        info->setClose( bs->readBoolean() );
+        info->setConsumerId( dynamic_cast< ConsumerId* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+        info->setPrefetch( dataIn->readInt() );
+        info->setFlush( bs->readBoolean() );
+        info->setStart( bs->readBoolean() );
+        info->setStop( bs->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int ConsumerControlMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    ConsumerControl* info =
-        dynamic_cast<ConsumerControl*>( dataStructure );
+    try {
 
-    int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
-    bs->writeBoolean( info->isClose() );
-    rc += tightMarshalNestedObject1( wireFormat, info->getConsumerId(), bs );
-    bs->writeBoolean( info->isFlush() );
-    bs->writeBoolean( info->isStart() );
-    bs->writeBoolean( info->isStop() );
+        ConsumerControl* info =
+            dynamic_cast<ConsumerControl*>( dataStructure );
 
-    return rc + 4;
+        int rc = BaseCommandMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        bs->writeBoolean( info->isClose() );
+        rc += tightMarshalNestedObject1( wireFormat, info->getConsumerId(), bs );
+        bs->writeBoolean( info->isFlush() );
+        bs->writeBoolean( info->isStart() );
+        bs->writeBoolean( info->isStop() );
+
+        return rc + 4;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerControlMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    ConsumerControl* info =
-        dynamic_cast<ConsumerControl*>( dataStructure );
-    bs->readBoolean();
-    tightMarshalNestedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
-    dataOut->writeInt( info->getPrefetch() );
-    bs->readBoolean();
-    bs->readBoolean();
-    bs->readBoolean();
+        BaseCommandMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        ConsumerControl* info =
+            dynamic_cast<ConsumerControl*>( dataStructure );
+        bs->readBoolean();
+        tightMarshalNestedObject2( wireFormat, info->getConsumerId(), dataOut, bs );
+        dataOut->writeInt( info->getPrefetch() );
+        bs->readBoolean();
+        bs->readBoolean();
+        bs->readBoolean();
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerControlMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    ConsumerControl* info =
-        dynamic_cast<ConsumerControl*>( dataStructure );
-    info->setClose( dataIn->readBoolean() );
-    info->setConsumerId( dynamic_cast< ConsumerId* >( 
-        looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
-    info->setPrefetch( dataIn->readInt() );
-    info->setFlush( dataIn->readBoolean() );
-    info->setStart( dataIn->readBoolean() );
-    info->setStop( dataIn->readBoolean() );
+    try {
+
+        BaseCommandMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        ConsumerControl* info =
+            dynamic_cast<ConsumerControl*>( dataStructure );
+        info->setClose( dataIn->readBoolean() );
+        info->setConsumerId( dynamic_cast< ConsumerId* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+        info->setPrefetch( dataIn->readInt() );
+        info->setFlush( dataIn->readBoolean() );
+        info->setStart( dataIn->readBoolean() );
+        info->setStop( dataIn->readBoolean() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerControlMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    ConsumerControl* info =
-        dynamic_cast<ConsumerControl*>( dataStructure );
-    BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeBoolean( info->isClose() );
-    looseMarshalNestedObject( wireFormat, info->getConsumerId(), dataOut );
-    dataOut->writeInt( info->getPrefetch() );
-    dataOut->writeBoolean( info->isFlush() );
-    dataOut->writeBoolean( info->isStart() );
-    dataOut->writeBoolean( info->isStop() );
+        ConsumerControl* info =
+            dynamic_cast<ConsumerControl*>( dataStructure );
+         BaseCommandMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeBoolean( info->isClose() );
+        looseMarshalNestedObject( wireFormat, info->getConsumerId(), dataOut );
+        dataOut->writeInt( info->getPrefetch() );
+        dataOut->writeBoolean( info->isFlush() );
+        dataOut->writeBoolean( info->isStart() );
+        dataOut->writeBoolean( info->isStop() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 

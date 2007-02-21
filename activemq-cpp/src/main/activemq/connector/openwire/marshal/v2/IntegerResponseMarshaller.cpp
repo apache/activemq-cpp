@@ -48,47 +48,77 @@ unsigned char IntegerResponseMarshaller::getDataStructureType() const {
 ///////////////////////////////////////////////////////////////////////////////
 void IntegerResponseMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+    try {
 
-    IntegerResponse* info =
-        dynamic_cast<IntegerResponse*>( dataStructure );
-    info->setResult( dataIn->readInt() );
+        ResponseMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+
+        IntegerResponse* info =
+            dynamic_cast<IntegerResponse*>( dataStructure );
+        info->setResult( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int IntegerResponseMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
 
-    int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+    try {
 
-    return rc + 4;
+        int rc = ResponseMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+
+        return rc + 4;
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void IntegerResponseMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
 
-    ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+    try {
 
-    IntegerResponse* info =
-        dynamic_cast<IntegerResponse*>( dataStructure );
-    dataOut->writeInt( info->getResult() );
+        ResponseMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+
+        IntegerResponse* info =
+            dynamic_cast<IntegerResponse*>( dataStructure );
+        dataOut->writeInt( info->getResult() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void IntegerResponseMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
 
-    ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
-    IntegerResponse* info =
-        dynamic_cast<IntegerResponse*>( dataStructure );
-    info->setResult( dataIn->readInt() );
+    try {
+
+        ResponseMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        IntegerResponse* info =
+            dynamic_cast<IntegerResponse*>( dataStructure );
+        info->setResult( dataIn->readInt() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void IntegerResponseMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
 
-    IntegerResponse* info =
-        dynamic_cast<IntegerResponse*>( dataStructure );
-    ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+    try {
 
-    dataOut->writeInt( info->getResult() );
+        IntegerResponse* info =
+            dynamic_cast<IntegerResponse*>( dataStructure );
+         ResponseMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+
+        dataOut->writeInt( info->getResult() );
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
