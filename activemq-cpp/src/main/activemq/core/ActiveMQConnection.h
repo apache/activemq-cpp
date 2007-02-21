@@ -199,11 +199,10 @@ namespace core{
          * @param own If true, it is the responsibility of the callee
          * to destroy the message object.  Otherwise, the callee must NOT
          * destroy it.
-         * 
+         *
          */
         virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
-                                        core::ActiveMQMessage* message,
-                                        bool own );
+                                        core::ActiveMQMessage* message );
 
     private:
 

@@ -97,13 +97,10 @@ namespace stomp{
             virtual ~MyMessageListener(){}
 
             virtual void onConsumerMessage( ConsumerInfo* consumer,
-                core::ActiveMQMessage* msg,
-                bool own )
+                core::ActiveMQMessage* msg )
             {
                 consumers.push_back( consumer );
-
-                if( own )
-                    delete msg;
+                delete msg;
             }
         };
 

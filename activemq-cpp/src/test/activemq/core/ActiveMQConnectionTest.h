@@ -89,8 +89,7 @@ namespace core{
 
             virtual void onConsumerMessage(
                 connector::ConsumerInfo* consumer,
-                core::ActiveMQMessage* msg AMQCPP_UNUSED,
-                bool own )
+                core::ActiveMQMessage* msg AMQCPP_UNUSED )
             {
                 consumers.push_back( consumer );
             }

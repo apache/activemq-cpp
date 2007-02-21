@@ -29,24 +29,21 @@ namespace connector{
      */
     class ConsumerMessageListener{
     public:
-    
+
         virtual ~ConsumerMessageListener(){}
-        
+
         /**
          * Called to dispatch a message to a particular consumer.
          * @param consumer the target consumer of the dispatch.
-         * @param msg the message to be dispatched.
-         * @param own If true, it is the responsibility of the callee
-         * to destroy the message object.  Otherwise, the callee must NOT
+         * @param msg the message to be dispatched. the receiver owns this
          * destroy it.
          */
-        virtual void onConsumerMessage( 
+        virtual void onConsumerMessage(
             ConsumerInfo* consumer,
-            core::ActiveMQMessage* msg,
-            bool own = true ) = 0;
-            
+            core::ActiveMQMessage* msg ) = 0;
+
     };
-        
+
 }}
 
 #endif /*_ACTIVEMQ_CONNECTOR_CONSUMERMESSAGELISTENER_H_*/
