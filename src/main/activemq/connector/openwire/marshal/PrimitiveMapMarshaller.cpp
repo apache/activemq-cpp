@@ -104,7 +104,7 @@ void PrimitiveMapMarshaller::unmarshal(
 
     try {
 
-        if( map == NULL ) {
+        if( map == NULL || src.empty() ) {
             return;
         }
 

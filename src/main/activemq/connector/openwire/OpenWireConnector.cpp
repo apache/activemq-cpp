@@ -1214,7 +1214,13 @@ void OpenWireConnector::onCommand( transport::Command* command )
                     messageListener->onConsumerMessage(
                         info,
                         message,
-                        false );
+                        true );
+
+                    // Clear the Message as we've passed it onto the
+                    // listener, who is responsible for deleting it at
+                    // the appropriate time, which depends on things like
+                    // the session being transacted etc.
+                    dispatch->setMessage( NULL );
                 }
 
             }catch( ... ){/* do nothing*/}
