@@ -178,8 +178,7 @@ void ActiveMQConnection::removeMessageListener( long long consumerId )
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
-                                            core::ActiveMQMessage* message,
-                                            bool own )
+                                            core::ActiveMQMessage* message )
 {
     try
     {
@@ -207,9 +206,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
                 Connector::DeliveredAck );
 
             // Delete the message here
-            if( own ){
-                delete message;
-            }
+            delete message;
 
             return;
         }

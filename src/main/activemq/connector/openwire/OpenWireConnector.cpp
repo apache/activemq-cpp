@@ -1211,10 +1211,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
 
                 // Callback the listener (the connection object).
                 if( messageListener != NULL ){
-                    messageListener->onConsumerMessage(
-                        info,
-                        message,
-                        true );
+                    messageListener->onConsumerMessage( info, message );
 
                     // Clear the Message as we've passed it onto the
                     // listener, who is responsible for deleting it at
