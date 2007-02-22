@@ -75,7 +75,9 @@ namespace commands{
          * wire
          * @param wireFormat - the wireformatting controller
          */
-        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( io::IOException ) {
+
             try{
 
                 marshalledProperties.clear();
@@ -85,8 +87,9 @@ namespace commands{
                         &properties, marshalledProperties );
                 }
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_RETHROW( io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+            AMQ_CATCHALL_THROW( io::IOException )
         }
 
         /**
@@ -94,14 +97,17 @@ namespace commands{
          * unmarshaled.
          * @param wireFormat - the wireformat object to control unmarshaling
          */
-        virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED ) {
+        virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( io::IOException ) {
+
             try{
 
                 marshal::PrimitiveMapMarshaller::unmarshal(
                     &properties, marshalledProperties );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_RETHROW( io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+            AMQ_CATCHALL_THROW( io::IOException )
         }
 
         /**

@@ -82,7 +82,8 @@ namespace commands{
          * Perform any processing needed before an marshal
          * @param wireformat - the OpenWireFormat object in use.
          */
-        virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED );
+        virtual void beforeMarshal( OpenWireFormat* wireFormat )
+            throw ( io::IOException );
 
         /**
          * Returns a string containing the information for this DataStructure
