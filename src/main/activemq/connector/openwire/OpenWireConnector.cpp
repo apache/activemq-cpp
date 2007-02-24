@@ -813,67 +813,64 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
 {
     try {
 
-        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ||
-            session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+        const commands::Message* amqMessage =
+            dynamic_cast<const commands::Message*>( message );
 
-            const commands::Message* amqMessage =
-                dynamic_cast<const commands::Message*>( message );
-
-            if( amqMessage == NULL ) {
-                throw OpenWireConnectorException(
-                    __FILE__, __LINE__,
-                    "OpenWireConnector::acknowledge - "
-                    "Message was not a commands::Message derivation.");
-            }
-
-            const OpenWireConsumerInfo* consumerInfo =
-                dynamic_cast<const OpenWireConsumerInfo*>( consumer );
-
-            if( consumerInfo == NULL ) {
-                throw OpenWireConnectorException(
-                    __FILE__, __LINE__,
-                    "OpenWireConnector::acknowledge - "
-                    "Consumer was not of the OpenWire flavor.");
-            }
-
-            commands::MessageAck ack;
-            ack.setAckType( (int)ackType );
-            ack.setConsumerId(
-                dynamic_cast<commands::ConsumerId*>(
-                    consumerInfo->getConsumerInfo()->
-                        getConsumerId()->cloneDataStructure() ) );
-            ack.setDestination(
-                dynamic_cast<commands::ActiveMQDestination*>(
-                    amqMessage->getDestination()->cloneDataStructure() ) );
-            ack.setFirstMessageId(
-                dynamic_cast<commands::MessageId*>(
-                    amqMessage->getMessageId()->cloneDataStructure() ) );
-            ack.setLastMessageId(
-                dynamic_cast<commands::MessageId*>(
-                    amqMessage->getMessageId()->cloneDataStructure() ) );
-            ack.setMessageCount( 1 );
-
-            if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
-
-                const OpenWireTransactionInfo* transactionInfo =
-                    dynamic_cast<const OpenWireTransactionInfo*>(
-                        session->getTransactionInfo() );
-
-                if( transactionInfo == NULL ) {
-                    throw OpenWireConnectorException(
-                        __FILE__, __LINE__,
-                        "OpenWireConnector::acknowledge - "
-                        "Transacted Session, has no Transaction Info.");
-                }
-
-                ack.setTransactionId(
-                    dynamic_cast<commands::TransactionId*>(
-                        transactionInfo->getTransactionInfo()->
-                            getTransactionId()->cloneDataStructure() ) );
-            }
-
-            oneway( &ack );
+        if( amqMessage == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::acknowledge - "
+                "Message was not a commands::Message derivation.");
         }
+
+        const OpenWireConsumerInfo* consumerInfo =
+            dynamic_cast<const OpenWireConsumerInfo*>( consumer );
+
+        if( consumerInfo == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::acknowledge - "
+                "Consumer was not of the OpenWire flavor.");
+        }
+
+        commands::MessageAck ack;
+        ack.setAckType( (int)ackType );
+        ack.setConsumerId(
+            dynamic_cast<commands::ConsumerId*>(
+                consumerInfo->getConsumerInfo()->
+                    getConsumerId()->cloneDataStructure() ) );
+        ack.setDestination(
+            dynamic_cast<commands::ActiveMQDestination*>(
+                amqMessage->getDestination()->cloneDataStructure() ) );
+        ack.setFirstMessageId(
+            dynamic_cast<commands::MessageId*>(
+                amqMessage->getMessageId()->cloneDataStructure() ) );
+        ack.setLastMessageId(
+            dynamic_cast<commands::MessageId*>(
+                amqMessage->getMessageId()->cloneDataStructure() ) );
+        ack.setMessageCount( 1 );
+
+        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            const OpenWireTransactionInfo* transactionInfo =
+                dynamic_cast<const OpenWireTransactionInfo*>(
+                    session->getTransactionInfo() );
+
+            if( transactionInfo == NULL ) {
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::acknowledge - "
+                    "Transacted Session, has no Transaction Info.");
+            }
+
+            ack.setTransactionId(
+                dynamic_cast<commands::TransactionId*>(
+                    transactionInfo->getTransactionInfo()->
+                        getTransactionId()->cloneDataStructure() ) );
+        }
+
+        oneway( &ack );
+
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
 
