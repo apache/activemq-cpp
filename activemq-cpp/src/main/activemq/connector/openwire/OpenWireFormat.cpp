@@ -64,19 +64,19 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     // parse params out of the properties
     stackTraceEnabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.stackTraceEnabled",
-                                "1" ) );
+                                "false" ) );
     cacheEnabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.cacheEnabled",
-                                "1" ) );
+                                "false" ) );
     tcpNoDelayEnabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.tcpNoDelayEnabled",
-                                "1" ) );
+                                "false" ) );
     tightEncodingEnabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.tightEncodingEnabled",
-                                "1" ) );
+                                "false" ) );
     sizePrefixDisabled = Boolean::parseBoolean(
         properties.getProperty( "wireFormat.sizePrefixDisabled",
-                                "0" ) );
+                                "false" ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
