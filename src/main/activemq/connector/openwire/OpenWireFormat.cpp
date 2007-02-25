@@ -61,22 +61,12 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     // Generate an ID
     this->id = Guid::createGUIDString();
 
-    // parse params out of the properties
-    stackTraceEnabled = Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.stackTraceEnabled",
-                                "false" ) );
-    cacheEnabled = Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.cacheEnabled",
-                                "false" ) );
-    tcpNoDelayEnabled = Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.tcpNoDelayEnabled",
-                                "false" ) );
-    tightEncodingEnabled = Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.tightEncodingEnabled",
-                                "false" ) );
-    sizePrefixDisabled = Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.sizePrefixDisabled",
-                                "false" ) );
+    // Set defaults for initial WireFormat negotiation
+    this->stackTraceEnabled = false;
+    this->cacheEnabled = false;
+    this->tcpNoDelayEnabled = false;
+    this->tightEncodingEnabled = false;
+    this->sizePrefixDisabled = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,19 +98,6 @@ void OpenWireFormat::setPreferedWireFormatInfo(
 
     delete preferedWireFormatInfo;
     this->preferedWireFormatInfo = info;
-
-    try {
-        preferedWireFormatInfo->setStackTraceEnabled( stackTraceEnabled );
-        preferedWireFormatInfo->setCacheEnabled( cacheEnabled );
-        preferedWireFormatInfo->setTcpNoDelayEnabled( tcpNoDelayEnabled );
-        preferedWireFormatInfo->setTightEncodingEnabled( tightEncodingEnabled );
-        preferedWireFormatInfo->setSizePrefixDisabled( sizePrefixDisabled );
-    } catch( ActiveMQException& e ) {
-        throw IllegalStateException(
-            __FILE__, __LINE__,
-            "OpenWireFormat::initialize - "
-            "Could not configure WireFormatInfo" );
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
