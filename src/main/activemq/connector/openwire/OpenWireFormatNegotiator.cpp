@@ -51,8 +51,7 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException )
-{
+    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -80,8 +79,37 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Response* OpenWireFormatNegotiator::request( Command* command )
+    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+
+    try{
+
+        if( closed || next == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "OpenWireFormatNegotiator::request - transport already closed" );
+        }
+
+        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
+            throw CommandIOException(
+                __FILE__,
+                __LINE__,
+                "OpenWireFormatNegotiator::request"
+                "Wire format negociation timeout: peer did not "
+                "send his wire format." );
+        }
+
+        return next->request( command );
+    }
+    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onCommand( Command* command ) {
-    
+
     DataStructure* dataStructure =
         dynamic_cast<DataStructure*>( command );
 

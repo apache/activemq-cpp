@@ -76,6 +76,8 @@ namespace openwire{
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
+         * First waits for the WireFormatInfo exchange to happen so that we
+         * know how to encode outbound data.
          * @param command the command to be sent.
          * @throws CommandIOException if an exception occurs during writing of
          * the command.
@@ -83,6 +85,17 @@ namespace openwire{
          * by this transport.
          */
         virtual void oneway( transport::Command* command )
+            throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
+
+        /**
+         * Sends the given request to the server and waits for the response.
+         * First waits for the WireFormatInfo exchange to happen so that we
+         * know how to encode outbound data.
+         * @param command The request to send.
+         * @return the response from the server.
+         * @throws CommandIOException if an error occurs with the request.
+         */
+        virtual transport::Response* request( transport::Command* command )
             throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
 
         /**
