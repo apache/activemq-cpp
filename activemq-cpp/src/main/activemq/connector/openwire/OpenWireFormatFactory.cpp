@@ -14,12 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include <activemq/connector/openwire/OpenwireFormatFactory.h>
 #include <activemq/connector/openwire/OpenwireFormat.h>
 
+#include <activemq/util/Boolean.h>
+
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::wireformat;
 using namespace activemq::connector;
 using namespace activemq::transport;
@@ -28,18 +31,35 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormat* OpenWireFormatFactory::createWireFormat( 
+WireFormat* OpenWireFormatFactory::createWireFormat(
     const util::Properties& properties )
         throw ( exceptions::IllegalStateException ) {
 
     WireFormatInfo* info = new WireFormatInfo();
-    
+
     // Configure the version to use
     info->setVersion( 2 );
-    
+
+    // parse params out of the properties
+    info->setStackTraceEnabled( Boolean::parseBoolean(
+        properties.getProperty( "wireFormat.stackTraceEnabled",
+                                "false" ) ) );
+    info->setCacheEnabled( Boolean::parseBoolean(
+        properties.getProperty( "wireFormat.cacheEnabled",
+                                "false" ) ) );
+    info->setTcpNoDelayEnabled( Boolean::parseBoolean(
+        properties.getProperty( "wireFormat.tcpNoDelayEnabled",
+                                "false" ) ) );
+    info->setTightEncodingEnabled( Boolean::parseBoolean(
+        properties.getProperty( "wireFormat.tightEncodingEnabled",
+                                "false" ) ) );
+    info->setSizePrefixDisabled( Boolean::parseBoolean(
+        properties.getProperty( "wireFormat.sizePrefixDisabled",
+                                "false" ) ) );
+
     // Create the Openwire Format Object
     OpenWireFormat* f = new OpenWireFormat( properties );
-    
+
     // give the format object the ownership
     f->setPreferedWireFormatInfo( info );
 
