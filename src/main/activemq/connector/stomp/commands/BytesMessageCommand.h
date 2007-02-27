@@ -477,7 +477,7 @@ namespace commands{
          */
         virtual void writeString( const std::string& value ) throw ( cms::CMSException ){
             checkWriteOnly();
-            dataOutputStream.writeBytes( value );
+            dataOutputStream.writeChars( value );
         }
 
         /**

@@ -44,18 +44,18 @@ namespace commands{
         class TestAckHandler : public core::ActiveMQAckHandler
         {
         public:
-        
+
             TestAckHandler() { wasAcked = false; }
             virtual ~TestAckHandler() {}
-            
+
             virtual void acknowledgeMessage( const core::ActiveMQMessage* message AMQCPP_UNUSED)
-                throw ( cms::CMSException ) 
+                throw ( cms::CMSException )
             {
                 wasAcked = true;
             }
-            
+
         public:
-        
+
             bool wasAcked;
 
         };
@@ -70,9 +70,9 @@ namespace commands{
             TestAckHandler ackHandler;
             BytesMessageCommand cmd;
 
-            CPPUNIT_ASSERT( cmd.getStompCommandId() == 
+            CPPUNIT_ASSERT( cmd.getStompCommandId() ==
                             CommandConstants::SEND );
-            
+
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             cmd.setResponseRequired( true );
             cmd.setCommandId( 123 );
@@ -82,55 +82,55 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCorrelationId() == 0 );
             CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
-            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) ==
                             "ID:123456" );
             StompTopic topic("testTopic");
             cmd.setCMSDestination( &topic );
-            CPPUNIT_ASSERT( cmd.getCMSDestination()->toProviderString() == 
+            CPPUNIT_ASSERT( cmd.getCMSDestination()->toProviderString() ==
                             "/topic/testTopic" );
-            
+
             StompFrame* frame = cmd.marshal().clone();
-            
+
             CPPUNIT_ASSERT( frame != NULL );
-            
+
             BytesMessageCommand cmd1( frame );
-            
+
             CPPUNIT_ASSERT( cmd.getCommandId() == cmd1.getCommandId() );
             CPPUNIT_ASSERT( cmd.getStompCommandId() == cmd1.getStompCommandId() );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == cmd1.isResponseRequired() );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == cmd1.getCorrelationId() );
             CPPUNIT_ASSERT( std::string(cmd.getTransactionId()) == cmd1.getTransactionId() );
-            
+
             cmd.setAckHandler( &ackHandler );
             cmd.acknowledge();
             CPPUNIT_ASSERT( ackHandler.wasAcked == true );
-            
-            CPPUNIT_ASSERT( 
+
+            CPPUNIT_ASSERT(
                 cmd.getProperties().hasProperty( "test" ) == false );
             cmd.getProperties().setProperty( "test", "value" );
-            CPPUNIT_ASSERT( 
+            CPPUNIT_ASSERT(
                 cmd.getProperties().hasProperty( "test" ) == true );
-            CPPUNIT_ASSERT( 
+            CPPUNIT_ASSERT(
                 std::string( cmd.getProperties().getProperty( "test" ) ) == "value" );
-                
+
             CPPUNIT_ASSERT( cmd.getCMSCorrelationId() == "" );
             cmd.setCMSCorrelationId( "ID:1234567" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationId() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationId() ) ==
                             "ID:1234567" );
-            CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == 
+            CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() ==
                             cms::DeliveryMode::PERSISTENT );
             cmd.setCMSDeliveryMode( cms::DeliveryMode::NON_PERSISTENT );
-            CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == 
+            CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() ==
                             cms::DeliveryMode::NON_PERSISTENT );
             cmd.setCMSDestination( &topic );
-            CPPUNIT_ASSERT( cmd.getCMSDestination()->toProviderString() == 
+            CPPUNIT_ASSERT( cmd.getCMSDestination()->toProviderString() ==
                             "/topic/testTopic" );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 0 );
             cmd.setCMSExpiration( 123 );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 123 );
             CPPUNIT_ASSERT( cmd.getCMSMessageId() == "" );
             cmd.setCMSMessageId( "ID:1234567" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageId() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageId() ) ==
                             "ID:1234567" );
             CPPUNIT_ASSERT( cmd.getCMSPriority() == 0 );
             cmd.setCMSPriority( 5 );
@@ -140,30 +140,30 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSRedelivered() == true );
             CPPUNIT_ASSERT( cmd.getCMSReplyTo() == NULL );
             cmd.setCMSReplyTo( &topic );
-            CPPUNIT_ASSERT( cmd.getCMSReplyTo()->toProviderString() == 
+            CPPUNIT_ASSERT( cmd.getCMSReplyTo()->toProviderString() ==
                             "/topic/testTopic" );
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 0 );
             cmd.setCMSTimeStamp( 123 );
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 123 );
             CPPUNIT_ASSERT( cmd.getCMSMessageType() == "" );
             cmd.setCMSMessageType( "test" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageType() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageType() ) ==
                             "test" );
             CPPUNIT_ASSERT( cmd.getRedeliveryCount() == 0 );
             cmd.setRedeliveryCount( 123 );
             CPPUNIT_ASSERT( cmd.getRedeliveryCount() == 123 );
-            
+
             const char* bodyBytes = "TESTBODYBYTES\0";
             CPPUNIT_ASSERT( cmd.getBodyLength() == 0 );
-            cmd.setBodyBytes( (const unsigned char*)bodyBytes, 
+            cmd.setBodyBytes( (const unsigned char*)bodyBytes,
                               strlen( bodyBytes ) + 1 );
-            CPPUNIT_ASSERT( cmd.getBodyLength() == 
+            CPPUNIT_ASSERT( cmd.getBodyLength() ==
                             (unsigned int)strlen( bodyBytes ) + 1 );
-            CPPUNIT_ASSERT( std::string( (const char*)cmd.getBodyBytes() ) == 
+            CPPUNIT_ASSERT( std::string( (const char*)cmd.getBodyBytes() ) ==
                             bodyBytes );
 
             cms::Message* cmd2 = cmd.clone();
-            
+
             CPPUNIT_ASSERT( cmd.getCMSPriority() == cmd2->getCMSPriority() );
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == cmd2->getCMSTimeStamp() );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == cmd2->getCMSExpiration() );
@@ -173,14 +173,14 @@ namespace commands{
             CPPUNIT_ASSERT( std::string(cmd.getCMSMessageType()) == cmd2->getCMSMessageType() );
             CPPUNIT_ASSERT( std::string(cmd.getCMSMessageId()) == cmd2->getCMSMessageId() );
 
-            core::ActiveMQMessage* message = 
+            core::ActiveMQMessage* message =
                 dynamic_cast< core::ActiveMQMessage* >( cmd2 );
-                
+
             CPPUNIT_ASSERT( message != NULL );
-            CPPUNIT_ASSERT( cmd.getRedeliveryCount() == 
+            CPPUNIT_ASSERT( cmd.getRedeliveryCount() ==
                             message->getRedeliveryCount() );
-            
-            StompCommand* cmd4 = 
+
+            StompCommand* cmd4 =
                 dynamic_cast< StompCommand* >( cmd2 );
 
             CPPUNIT_ASSERT( cmd4 != NULL );
@@ -188,26 +188,26 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getStompCommandId() == cmd4->getStompCommandId() );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == cmd4->isResponseRequired() );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == cmd4->getCorrelationId() );
-            CPPUNIT_ASSERT( std::string(cmd.getTransactionId()) == 
+            CPPUNIT_ASSERT( std::string(cmd.getTransactionId()) ==
                             cmd4->getTransactionId() );
 
-            BytesMessageCommand* cmd5 = 
+            BytesMessageCommand* cmd5 =
                 dynamic_cast< BytesMessageCommand* >( cmd2 );
 
             CPPUNIT_ASSERT( cmd5 != NULL );
-            CPPUNIT_ASSERT( std::string( (const char*)cmd.getBodyBytes() ) == 
+            CPPUNIT_ASSERT( std::string( (const char*)cmd.getBodyBytes() ) ==
                             (const char*)cmd5->getBodyBytes() );
 
             delete cmd2;
         }
-        
+
         void testReadOnly(){
-            
+
             StompFrame* frame = new StompFrame();
             frame->setCommand( CommandConstants::toString( CommandConstants::MESSAGE ) );
-            frame->getProperties().setProperty( CommandConstants::toString( CommandConstants::HEADER_DESTINATION ), 
+            frame->getProperties().setProperty( CommandConstants::toString( CommandConstants::HEADER_DESTINATION ),
                 (std::string)CommandConstants::topicPrefix + "mytopic" );
-            
+
             // write a bunch of values to the frame's body.
             io::ByteArrayOutputStream os( frame->getBody() );
             io::DataOutputStream dos(&os);
@@ -220,80 +220,80 @@ namespace commands{
             dos.writeUnsignedShort( 5 );
             dos.writeInt( 6 );
             dos.writeLong( 7LL );
-            dos.writeBytes( "hello world" );
-            
+            dos.writeChars( "hello world" );
+
             // Assign the frame to the bytes message.
             BytesMessageCommand cmd(frame);
-            
+
             // First, verify that we can't write (read-only)
-            
+
             try{
                 cmd.setBodyBytes( (unsigned char*)"test", 5 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeBoolean( true );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeByte( 2 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeBytes( std::vector<unsigned char>() );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeBytes( (unsigned char*)"test", 0, 5 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeChar( 'a' );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeFloat( 1.0f );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeDouble( 1.0 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeUnsignedShort( 3 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeShort( 4 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeInt( 5 );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeLong( 6LL );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.writeString( "test" );
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             // Now, verify that all the reads work properly
-            
+
             CPPUNIT_ASSERT( cmd.readBoolean() == true );
             CPPUNIT_ASSERT( cmd.readByte() == 1 );
             CPPUNIT_ASSERT( cmd.readChar() == 'a' );
@@ -305,71 +305,71 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.readLong() == 7LL );
             CPPUNIT_ASSERT( cmd.readString() == "hello world" );
         }
-        
+
         void testWriteOnly(){
-            
+
             BytesMessageCommand cmd;
-            
+
             // First, verify that we can't read (write-only)
-            
+
             try{
                 cmd.readBoolean();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readByte();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 std::vector<unsigned char> buf;
                 cmd.readBytes(buf);
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readChar();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readFloat();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readDouble();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readUnsignedShort();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readShort();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readInt();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readLong();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             try{
                 cmd.readString();
                 CPPUNIT_ASSERT( false );
             } catch( exceptions::IllegalStateException& e ){}
-            
+
             // Now, verify that all the writes work properly
-            
+
             cmd.writeBoolean( true );
             cmd.writeByte( 1 );
             cmd.writeChar( 'a' );
@@ -380,10 +380,10 @@ namespace commands{
             cmd.writeInt( 6 );
             cmd.writeLong( 7LL );
             cmd.writeString( "hello world" );
-            
+
             // Switch to read-only mode.
             cmd.reset();
-            
+
             CPPUNIT_ASSERT( cmd.readBoolean() == true );
             CPPUNIT_ASSERT( cmd.readByte() == 1 );
             CPPUNIT_ASSERT( cmd.readChar() == 'a' );

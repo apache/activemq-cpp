@@ -351,7 +351,7 @@ void ActiveMQBytesMessage::writeString( const std::string& value ) throw ( cms::
 
     try{
         checkWriteOnly();
-        dataOutputStream.writeBytes( value );
+        dataOutputStream.writeChars( value );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
