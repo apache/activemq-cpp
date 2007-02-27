@@ -281,7 +281,7 @@ void BaseDataStreamMarshaller::tightMarshalString2(
             // If we verified it only holds ascii values
             if( bs->readBoolean() ) {
                 dataOut->writeShort( (short)value.length() );
-                dataOut->writeBytes( value );
+                dataOut->write( (const unsigned char*)value.c_str(), 0, value.length() );
             } else {
                 dataOut->writeChars( value );
             }
