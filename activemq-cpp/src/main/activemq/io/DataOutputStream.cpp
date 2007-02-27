@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "DataOutputStream.h"
 #include <activemq/util/Endian.h>
 #include <activemq/util/Config.h>
@@ -51,12 +51,12 @@ void DataOutputStream::write( const std::vector<unsigned char>& buffer )
     throw ( IOException ) {
 
     try {
-        
+
         if( buffer.size() == 0 ){
             // nothing to write.
             return;
         }
-        
+
         outputStream->write( &buffer[0], buffer.size() );
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -75,9 +75,9 @@ void DataOutputStream::write( const unsigned char* buffer, std::size_t len )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::write( const unsigned char* buffer, 
-                              std::size_t offset, 
-                              std::size_t len ) throw ( IOException ) 
+void DataOutputStream::write( const unsigned char* buffer,
+                              std::size_t offset,
+                              std::size_t len ) throw ( IOException )
 {
 
     try {
@@ -118,8 +118,8 @@ void DataOutputStream::writeShort( short value ) throw ( IOException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUnsignedShort( unsigned short value ) 
-    throw ( IOException ) 
+void DataOutputStream::writeUnsignedShort( unsigned short value )
+    throw ( IOException )
 {
     try {
         write( (unsigned char)( (value & 0xFF00) >> 8 ) );
@@ -193,17 +193,21 @@ void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeBytes( const std::string& value ) throw ( IOException ) {
     try {
-        // add one so that we write the NULL
-        this->write( (const unsigned char*)value.c_str(), value.length() + 1 );
+        // do not add one so that we don't write the NULL
+        this->write( (const unsigned char*)value.c_str(), value.length() );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChars( const std::string& value AMQCPP_UNUSED) 
-throw ( IOException ) {
-    /* do nothing */
+void DataOutputStream::writeChars( const std::string& value ) throw ( IOException ) {
+    try {
+        // add one so that we write the NULL
+        this->write( (const unsigned char*)value.c_str(), value.length() + 1 );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
