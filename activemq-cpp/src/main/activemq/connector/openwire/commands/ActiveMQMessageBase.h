@@ -65,7 +65,7 @@ namespace commands{
          * to have its Marshalling methods invoked.
          * @returns boolean indicating desire to be in marshalling stages
          */
-        virtual bool IsMarshallAware() {
+        virtual bool isMarshalAware() const {
             return true;
         }
 
