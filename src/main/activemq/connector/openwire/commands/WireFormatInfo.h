@@ -265,8 +265,6 @@ namespace commands{
 
     private:
 
-        static std::vector<char> MAGIC;
-
         std::vector<unsigned char> magic;
         std::vector<unsigned char> marshalledProperties;
 
