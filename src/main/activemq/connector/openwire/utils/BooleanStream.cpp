@@ -130,7 +130,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
         }
         
         // Insert all data from data into the passed buffer
-        dataOut.insert( dataOut.end(), &data[0], &data[arrayLimit] );
+        dataOut.insert( dataOut.begin(), &data[0], &data[arrayLimit-1] );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
