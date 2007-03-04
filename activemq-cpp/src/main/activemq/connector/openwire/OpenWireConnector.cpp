@@ -1162,34 +1162,21 @@ void OpenWireConnector::onCommand( transport::Command* command )
 {
     try
     {
-        commands::MessageDispatch* dispatch =
-            dynamic_cast<commands::MessageDispatch*>( command );
-        commands::WireFormatInfo* brokerWireFormatInfo =
-            dynamic_cast<commands::WireFormatInfo*>( command );
-        commands::BrokerInfo* brokerInfo =
-            dynamic_cast<commands::BrokerInfo*>( command );
-        commands::ShutdownInfo* shutdownInfo =
-            dynamic_cast<commands::ShutdownInfo*>( command );
+        if( typeid( *command ) == typeid( commands::MessageDispatch ) ) {
 
-        if( dispatch != NULL ) {
+            commands::MessageDispatch* dispatch =
+                dynamic_cast<commands::MessageDispatch*>( command );
 
             // Due to the severe suckiness of C++, in order to cast to
             // a type that is in a different branch of the inheritence hierarchy
             // we have to cast to the type at the "crotch" of the branch and then
             // we can implicitly cast up the other branch.
-            core::ActiveMQMessage* message = dynamic_cast<commands::ActiveMQMessage*>(dispatch->getMessage());
-            if( message == NULL ) {
-                message = dynamic_cast<commands::ActiveMQTextMessage*>(dispatch->getMessage());
-            }
-            if( message == NULL ) {
-                message = dynamic_cast<commands::ActiveMQBytesMessage*>(dispatch->getMessage());
-            }
-            if( message == NULL ) {
-                message = dynamic_cast<commands::ActiveMQMapMessage*>(dispatch->getMessage());
-            }
+            core::ActiveMQMessage* message = dynamic_cast<core::ActiveMQMessage*>(dispatch->getMessage());
             if( message == NULL ) {
                 delete command;
-                throw OpenWireConnectorException( __FILE__, __LINE__,
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::onCommand - "
                     "Received unsupported dispatch message" );
             }
 
@@ -1199,7 +1186,9 @@ void OpenWireConnector::onCommand( transport::Command* command )
                 info = consumerInfoMap.getValue( dispatch->getConsumerId()->getValue() );
                 if( info == NULL ){
                     delete command;
-                    throw OpenWireConnectorException( __FILE__, __LINE__,
+                    throw OpenWireConnectorException(
+                        __FILE__, __LINE__,
+                        "OpenWireConnector::onCommand - "
                         "Received dispatch message for unregistered consumer" );
                 }
             }
@@ -1221,11 +1210,13 @@ void OpenWireConnector::onCommand( transport::Command* command )
 
             delete command;
 
-        } else if( brokerWireFormatInfo != NULL ) {
-            this->brokerWireFormatInfo = brokerWireFormatInfo;
-        } else if( brokerInfo != NULL ) {
-            this->brokerInfo = brokerInfo;
-        } else if( shutdownInfo != NULL ) {
+        } else if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
+            this->brokerWireFormatInfo =
+                dynamic_cast<commands::WireFormatInfo*>( command );
+        } else if( typeid( *command ) == typeid( commands::BrokerInfo ) ) {
+            this->brokerInfo =
+                dynamic_cast<commands::BrokerInfo*>( command );
+        } else if( typeid( *command ) == typeid( commands::ShutdownInfo ) ) {
 
             try {
                 if( state != DISCONNECTED ) {

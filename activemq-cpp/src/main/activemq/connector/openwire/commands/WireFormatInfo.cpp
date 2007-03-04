@@ -26,31 +26,20 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<char> WireFormatInfo::MAGIC;
-
-////////////////////////////////////////////////////////////////////////////////
 WireFormatInfo::WireFormatInfo()
 {
     // Init to our prefered version
     this->version = 2;
 
-    // Initialize the static MAGIC buffer.
-    if( MAGIC.empty() ) {
-        MAGIC.push_back( 'A' );
-        MAGIC.push_back( 'c' );
-        MAGIC.push_back( 't' );
-        MAGIC.push_back( 'i' );
-        MAGIC.push_back( 'v' );
-        MAGIC.push_back( 'e' );
-        MAGIC.push_back( 'M' );
-        MAGIC.push_back( 'Q' );
-    }
-
-    // Initialize member magic buffer to the static buffer.
-    magic.resize( MAGIC.size() );
-    for( std::size_t ix=0; ix<MAGIC.size(); ++ix ){
-        magic[ix] = MAGIC[ix];
-    }
+    // Initialize the MAGIC buffer.
+    magic.push_back( 'A' );
+    magic.push_back( 'c' );
+    magic.push_back( 't' );
+    magic.push_back( 'i' );
+    magic.push_back( 'v' );
+    magic.push_back( 'e' );
+    magic.push_back( 'M' );
+    magic.push_back( 'Q' );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,14 +157,20 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 bool WireFormatInfo::isValid() const {
 
-    if( magic.size() != MAGIC.size() ) {
+    if( magic.size() != std::string( "ActiveMQ" ).size() ) {
         return false;
     }
 
-    for( size_t i = 0; i < magic.size(); i++ ) {
-        if( magic[i] != MAGIC[i] ) {
-            return false;
-        }
+    if( magic[0] != 'A' ||
+        magic[1] != 'c' ||
+        magic[2] != 't' ||
+        magic[3] != 'i' ||
+        magic[4] != 'v' ||
+        magic[5] != 'e' ||
+        magic[6] != 'M' ||
+        magic[7] != 'Q' ) {
+
+        return false;
     }
 
     return true;
