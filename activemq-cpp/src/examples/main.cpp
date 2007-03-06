@@ -25,6 +25,8 @@
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
+#include <cms/BytesMessage.h>
+#include <cms/MapMessage.h>
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <stdlib.h>
@@ -45,16 +47,19 @@ private:
     MessageProducer* producer;
     int numMessages;
     bool useTopic;
+    std::string brokerURI;
 
 public:
 
-    HelloWorldProducer( int numMessages, bool useTopic = false ){
+    HelloWorldProducer( const std::string& brokerURI,
+                        int numMessages, bool useTopic = false ){
         connection = NULL;
         session = NULL;
         destination = NULL;
         producer = NULL;
         this->numMessages = numMessages;
         this->useTopic = useTopic;
+        this->brokerURI = brokerURI;
     }
 
     virtual ~HelloWorldProducer(){
@@ -64,7 +69,8 @@ public:
     virtual void run() {
         try {
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory = new ActiveMQConnectionFactory("tcp://127.0.0.1:61613");
+            ActiveMQConnectionFactory* connectionFactory =
+                new ActiveMQConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -93,8 +99,10 @@ public:
             for( int ix=0; ix<numMessages; ++ix ){
                 TextMessage* message = session->createTextMessage( text );
 
+                message->setIntProperty( "Integer", ix );
+
                 // Tell the producer to send the message
-                printf( "Sent message from thread %s\n", threadIdStr.c_str() );
+                printf( "Sent message #%d from thread %s\n", ix, threadIdStr.c_str() );
                 producer->send( message );
 
                 delete message;
@@ -150,16 +158,19 @@ private:
     MessageConsumer* consumer;
     long waitMillis;
     bool useTopic;
+    std::string brokerURI;
 
 public:
 
-    HelloWorldConsumer( long waitMillis, bool useTopic = false ){
+    HelloWorldConsumer( const std::string& brokerURI,
+                        long waitMillis, bool useTopic = false ){
         connection = NULL;
         session = NULL;
         destination = NULL;
         consumer = NULL;
         this->waitMillis = waitMillis;
         this->useTopic = useTopic;
+        this->brokerURI = brokerURI;
     }
     virtual ~HelloWorldConsumer(){
         cleanup();
@@ -171,7 +182,7 @@ public:
 
             // Create a ConnectionFactory
             ActiveMQConnectionFactory* connectionFactory =
-                new ActiveMQConnectionFactory( "tcp://127.0.0.1:61613" );
+                new ActiveMQConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -195,6 +206,9 @@ public:
 
             consumer->setMessageListener( this );
 
+            std::cout.flush();
+            std::cerr.flush();
+
             // Sleep while asynchronous messages come in.
             Thread::sleep( waitMillis );
 
@@ -214,6 +228,7 @@ public:
             const TextMessage* textMessage =
                 dynamic_cast< const TextMessage* >( message );
             string text = textMessage->getText();
+
             printf( "Message #%d Received: %s\n", count, text.c_str() );
         } catch (CMSException& e) {
             e.printStackTrace();
@@ -271,19 +286,32 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
 
+    // Set the URI to point to the IPAddress of your broker.
+    // add any optional params to the url to enable things like
+    // tightMarshalling or tcp logging etc.
+    std::string brokerURI =
+        "tcp://127.0.0.1:61613";
+//        "?wireFormat=openwire"
+//        "&commandTracingEnabled=true"
+//        "&tcpTracingEnabled=true"
+//        "&wireFormat.tightEncodingEnabled=true";
+
     //============================================================
     // set to true to use topics instead of queues
     // Note in the code above that this causes createTopic or
     // createQueue to be used in both consumer an producer.
     //============================================================
-    bool useTopics = false;
+    bool useTopics = true;
 
-    HelloWorldProducer producer( 1000, useTopics );
-    HelloWorldConsumer consumer( 8000, useTopics );
+    HelloWorldProducer producer( brokerURI, 2000, useTopics );   
+    HelloWorldConsumer consumer( brokerURI, 12000, useTopics );
 
     // Start the consumer thread.
     Thread consumerThread( &consumer );
     consumerThread.start();
+
+    // Give the consumer a but to start up.
+    Thread::sleep( 75 );
 
     // Start the producer thread.
     Thread producerThread( &producer );
