@@ -65,9 +65,6 @@ out.println("using namespace activemq::connector::openwire::marshal;");
 out.println("using namespace activemq::connector::openwire::utils;");
 out.println("using namespace activemq::connector::openwire::marshal::v"+getOpenwireVersion()+";");
 out.println("");
-
-    String typeName = jclass.getSimpleName().toUpperCase();
-
 out.println("///////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::test() {");
 out.println("");
