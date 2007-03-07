@@ -42,48 +42,6 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
         return super.getClassName(jclass) + "Test";
     }
 
-    protected String getBaseClassName(JClass jclass) {
-        String answer = jclass.getSimpleName();
-
-        if( answer.equals("ActiveMQTextMessage") ) {
-            answer = "MessageMarshaller";
-        } else if( answer.equals("ActiveMQBytesMessage") ) {
-            answer = "MessageMarshaller";
-        } else if( answer.equals("ActiveMQMapMessage") ) {
-            answer = "MessageMarshaller";
-        } else if( answer.equals("ActiveMQObjectMessage") ) {
-            answer = "MessageMarshaller";
-        } else if( answer.equals("ActiveMQStreamMessage") ) {
-            answer = "MessageMarshaller";
-        }
-
-        // We didn't map it, so let the base class handle it.
-        if( answer.equals( jclass.getSimpleName() ) ) {
-            answer = super.getBaseClassName(jclass);
-        }
-
-        return answer;
-    }
-
-    public boolean isMarshallAware(JClass j) {
-
-        String answer = jclass.getSimpleName();
-
-        if( answer.equals("ActiveMQTextMessage") ) {
-            return true;
-        } else if( answer.equals("ActiveMQBytesMessage") ) {
-            return true;
-        } else if( answer.equals("ActiveMQMapMessage") ) {
-            return true;
-        } else if( answer.equals("ActiveMQObjectMessage") ) {
-            return true;
-        } else if( answer.equals("ActiveMQStreamMessage") ) {
-            return true;
-        } else {
-            return super.isMarshallAware(jclass);
-        }
-    }
-
     protected String getFilePostFix() {
         return ".h";
     }
