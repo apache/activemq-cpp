@@ -96,6 +96,13 @@ public class AmqCppGeneratorTask extends Task {
                 script.run();
             }
             {
+                AmqCppMarshallingClassesGenerator script = new AmqCppMarshallingClassesGenerator();
+                script.setJam(jam);
+                script.setTargetDir(target+"/src/main");
+                script.setOpenwireVersion(version);
+                script.run();
+            }
+            {
                 AmqCppTestMarshallingHeadersGenerator script = new AmqCppTestMarshallingHeadersGenerator();
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/test");
@@ -103,9 +110,9 @@ public class AmqCppGeneratorTask extends Task {
                 script.run();
             }
             {
-                AmqCppMarshallingClassesGenerator script = new AmqCppMarshallingClassesGenerator();
+                AmqCppTestMarshallingClassesGenerator script = new AmqCppTestMarshallingClassesGenerator();
                 script.setJam(jam);
-                script.setTargetDir(target+"/src/main");
+                script.setTargetDir(target+"/src/test");
                 script.setOpenwireVersion(version);
                 script.run();
             }
