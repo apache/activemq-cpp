@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include <activemq/connector/openwire/OpenwireFormatFactory.h>
-#include <activemq/connector/openwire/OpenwireFormat.h>
+#include <activemq/connector/openwire/OpenWireFormatFactory.h>
+#include <activemq/connector/openwire/OpenWireFormat.h>
 
 #include <activemq/util/Boolean.h>
 
