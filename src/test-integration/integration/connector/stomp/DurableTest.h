@@ -15,28 +15,37 @@
  * limitations under the License.
  */
 
-#ifndef _INTEGRATION_COMMON_INTEGRATIONCOMMON_H_
-#define _INTEGRATION_COMMON_INTEGRATIONCOMMON_H_
+#ifndef _INTEGRATION_CONNECTOR_STOMP_DURABLETESTER_H_
+#define _INTEGRATION_CONNECTOR_STOMP_DURABLETESTER_H_
 
-#include <string>
+#include <integration/TestSupport.h>
+
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace integration{
-namespace common{
+namespace connector{
+namespace stomp{
 
-    class IntegrationCommon
+    class DurableTest : public CppUnit::TestFixture
     {
-    public:
+        CPPUNIT_TEST_SUITE( DurableTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
+    private:
     
-    	virtual ~IntegrationCommon();
-    
-        static const std::string  defaultURL;
-        static const int          defaultDelay;
-        static const unsigned int defaultMsgCount;
+        TestSupport testSupport;
         
-        static bool debug;
+    public:
+
+    	DurableTest();
+    	virtual ~DurableTest();
+
+        virtual void test();
         
     };
 
-}}
+}}}
 
-#endif /*_INTEGRATION_COMMON_INTEGRATIONCOMMON_H_*/
+#endif /*_INTEGRATION_CONNECTOR_STOMP_DURABLETESTER_H_*/

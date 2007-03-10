@@ -16,14 +16,14 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-  integration/common/AbstractTester.cpp \
-  integration/common/IntegrationCommon.cpp \
-  integration/durable/DurableTester.cpp \
-  integration/expiration/ExpirationTest.cpp \
-  integration/simple/SimpleTester.cpp \
-  integration/producer/AsyncSender.cpp \
-  integration/transactional/TransactionTester.cpp \
-  integration/various/SimpleRollbackTest.cpp \
+  integration/IntegrationCommon.cpp \
+  integration/TestSupport.cpp \
+  integration/connector/stomp/AsyncSenderTest.cpp \
+  integration/connector/stomp/DurableTest.cpp \
+  integration/connector/stomp/ExpirationTest.cpp \
+  integration/connector/stomp/SimpleRollbackTest.cpp \
+  integration/connector/stomp/SimpleTest.cpp \
+  integration/connector/stomp/TransactionTest.cpp \
   main.cpp
 
 ## Compile this as part of make check

@@ -15,12 +15,33 @@
  * limitations under the License.
  */
 
-#include "IntegrationCommon.h"
+#ifndef _INTEGRATION_CONNECTOR_STOMP_TRANSACTIONTESTER_H_
+#define _INTEGRATION_CONNECTOR_STOMP_TRANSACTIONTESTER_H_
 
-using namespace integration;
-using namespace integration::common;
+#include <integration/TestSupport.h>
 
-const std::string IntegrationCommon::defaultURL = "tcp://127.0.0.1:61613";
-const int         IntegrationCommon::defaultDelay = 5;
-const unsigned int         IntegrationCommon::defaultMsgCount = 1000;
-bool IntegrationCommon::debug = false;
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+
+namespace integration{
+namespace connector{
+namespace stomp{
+
+    class TransactionTest : public CppUnit::TestFixture
+    {
+        CPPUNIT_TEST_SUITE( TransactionTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
+    public:
+
+    	TransactionTest();
+    	virtual ~TransactionTest();
+
+        virtual void test();
+        
+    };
+
+}}}
+
+#endif /*_INTEGRATION_CONNECTOR_STOMP_TRANSACTIONTESTER_H_*/

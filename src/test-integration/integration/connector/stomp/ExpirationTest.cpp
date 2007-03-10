@@ -17,9 +17,8 @@
 
 #include "ExpirationTest.h"
 
-#include <integration/common/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::expiration::ExpirationTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::ExpirationTest );
 
 #include <sstream>
 
@@ -77,8 +76,7 @@ using namespace activemq::concurrent;
 
 using namespace std;
 using namespace integration;
-using namespace integration::expiration;
-using namespace integration::common;
+using namespace integration::connector::stomp;
 
 std::string messageTag = Guid().createGUID();
 

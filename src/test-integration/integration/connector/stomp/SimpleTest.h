@@ -15,40 +15,37 @@
  * limitations under the License.
  */
 
-#ifndef _INTEGRATION_EXPIRATION_EXPIRATIONTEST_H_
-#define _INTEGRATION_EXPIRATION_EXPIRATIONTEST_H_
+#ifndef _INTEGRATION_CONNECTOR_STOMP_SIMPLETESTER_H_
+#define _INTEGRATION_CONNECTOR_STOMP_SIMPLETESTER_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/concurrent/Mutex.h>
-
-#include <cms/MessageListener.h>
-#include <cms/ExceptionListener.h>
-#include <cms/ConnectionFactory.h>
-#include <cms/Connection.h>
-#include <cms/Session.h>
-#include <cms/MessageProducer.h>
+#include <integration/TestSupport.h>
 
 namespace integration{
-namespace expiration{
-
-    class ExpirationTest : public CppUnit::TestFixture   
+namespace connector{
+namespace stomp{
+    
+    class SimpleTest : public CppUnit::TestFixture
     {
-        CPPUNIT_TEST_SUITE( ExpirationTest );
-        CPPUNIT_TEST( testExpired );
-        CPPUNIT_TEST( testNotExpired );
+        CPPUNIT_TEST_SUITE( SimpleTest );
+        CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
-    public:
+    private:
     
-        ExpirationTest(){}
-        virtual ~ExpirationTest(){}
+        TestSupport testSupport;
         
-        virtual void testExpired();
-        virtual void testNotExpired();
+    public:
+
+    	SimpleTest();
+    	virtual ~SimpleTest();
+
+        virtual void test(void);
+
     };
 
-}}
+}}}
 
-#endif /*_INTEGRATION_EXPIRATION_EXPIRATIONTEST_H_*/
+#endif /*_INTEGRATION_CONNECTOR_STOMP_SIMPLETESTER_H_*/

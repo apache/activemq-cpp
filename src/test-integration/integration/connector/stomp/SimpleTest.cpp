@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include "TransactionTester.h"
+#include "SimpleTester.h"
 #include <integration/common/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::transactional::TransactionTester );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTester );
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -70,75 +70,58 @@ using namespace activemq::transport;
 using namespace activemq::concurrent;
 
 using namespace integration;
-using namespace integration::transactional;
-using namespace integration::common;
+using namespace integration::connector::stomp;
 
-TransactionTester::TransactionTester() : AbstractTester( cms::Session::SESSION_TRANSACTED )
+SimpleTester::SimpleTester()
+:
+    testSupport( "stomp://localhost:61613" )
 {
-    this->initialize();
+    testSupport.initialize();
 }
 
-TransactionTester::~TransactionTester()
-{}
+SimpleTester::~SimpleTester()
+{
+}
 
-void TransactionTester::test()
+void SimpleTester::test()
 {
     try
     {
         if( IntegrationCommon::debug ) {
-            cout << "Starting activemqcms transactional test (sending "
+            cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
                  << IntegrationCommon::defaultDelay 
-                << " milli-seconds) ...\n"
-                << endl;
+                 << " milli-seconds) ...\n"
+                 << endl;
         }
         
         // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer = 
             session->createConsumer( topic );            
-        consumer->setMessageListener( this );
+        consumer->setMessageListener( &testSupport );
         cms::MessageProducer* producer = 
             session->createProducer( topic );
 
         // Send some text messages
-        this->produceTextMessages( 
+        testSupport.produceTextMessages( 
             *producer, IntegrationCommon::defaultMsgCount );
-            
-        session->commit();
         
         // Send some bytes messages.
-        this->produceTextMessages( 
+        testSupport.produceTextMessages( 
             *producer, IntegrationCommon::defaultMsgCount );
-        
-        session->commit();
 
-        // Wait till we get all the messages
-        waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        // Wait for the messages to get here
+        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
         
+        unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
         CPPUNIT_ASSERT( 
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
-
-        numReceived = 0;
-
-        // Send some text messages
-        this->produceTextMessages( 
-            *producer, IntegrationCommon::defaultMsgCount );
-
-        session->rollback();
-
-        // Wait till we get all the messages
-        waitForMessages( IntegrationCommon::defaultMsgCount );
-
-        if( IntegrationCommon::debug ) {
-            printf("received: %d\n", numReceived );
-        }
-        CPPUNIT_ASSERT( 
-            numReceived == IntegrationCommon::defaultMsgCount );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
