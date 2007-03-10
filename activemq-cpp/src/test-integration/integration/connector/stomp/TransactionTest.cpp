@@ -74,7 +74,7 @@ using namespace integration::connector::stomp;
 
 TransactionTest::TransactionTest()
 :
-    testSupport( "stomp://localhost:61613", cms::Session::SESSION_TRANSACTED )
+    testSupport( "tcp://127.0.0.1:61613?wireFormat=stomp", cms::Session::SESSION_TRANSACTED )
 {
     testSupport.initialize();
 }

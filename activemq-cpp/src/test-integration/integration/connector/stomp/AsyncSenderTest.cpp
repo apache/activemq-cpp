@@ -76,7 +76,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest 
 ////////////////////////////////////////////////////////////////////////////////
 AsyncSenderTest::AsyncSenderTest()
 :
-    testSupport("stomp://localhost:61613?useAsyncSend=true")
+    testSupport("tcp://localhost:61613?wireFormat=stomp&useAsyncSend=true")
 {
     testSupport.initialize();
 }

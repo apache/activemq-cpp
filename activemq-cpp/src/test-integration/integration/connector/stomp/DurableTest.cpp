@@ -75,7 +75,7 @@ using namespace integration::connector::stomp;
 
 DurableTest::DurableTest()
 :
-    testSupport("stomp://localhost:61613")
+    testSupport("tcp://localhost:61613?wireFormat=stomp")
 {
     testSupport.initialize();
 }
