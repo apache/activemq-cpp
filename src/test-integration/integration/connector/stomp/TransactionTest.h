@@ -33,6 +33,10 @@ namespace stomp{
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
+    private:
+    
+        TestSupport testSupport;
+        
     public:
 
     	TransactionTest();

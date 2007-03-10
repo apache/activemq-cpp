@@ -16,7 +16,7 @@
  */
 
 #include "TransactionTest.h"
-#include <integration/common/IntegrationCommon.h>
+#include <integration/IntegrationCommon.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::TransactionTest );
 
@@ -129,7 +129,7 @@ void TransactionTest::test()
         testSupport.setNumReceived( 0 );
 
         // Send some text messages
-        this->produceTextMessages( 
+        testSupport.produceTextMessages( 
             *producer, IntegrationCommon::defaultMsgCount );
 
         session->rollback();

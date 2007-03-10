@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-#include "DurableTester.h"
+#include "DurableTest.h"
+
+#include <integration/IntegrationCommon.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::DurableTest );
 

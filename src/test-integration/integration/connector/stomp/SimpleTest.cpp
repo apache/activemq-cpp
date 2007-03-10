@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include "SimpleTester.h"
-#include <integration/common/IntegrationCommon.h>
+#include "SimpleTest.h"
+#include <integration/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTester );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTest );
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -72,18 +72,18 @@ using namespace activemq::concurrent;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-SimpleTester::SimpleTester()
+SimpleTest::SimpleTest()
 :
     testSupport( "stomp://localhost:61613" )
 {
     testSupport.initialize();
 }
 
-SimpleTester::~SimpleTester()
+SimpleTest::~SimpleTest()
 {
 }
 
-void SimpleTester::test()
+void SimpleTest::test()
 {
     try
     {

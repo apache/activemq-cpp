@@ -17,7 +17,7 @@
 
 #include "SimpleRollbackTest.h"
 
-#include <integration/common/IntegrationCommon.h>
+#include <integration/IntegrationCommon.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTest );
 
