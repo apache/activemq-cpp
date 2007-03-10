@@ -15,7 +15,9 @@
  * limitations under the License.
  */
  
-#include "AsyncSender.h"
+#include "AsyncSenderTest.h"
+
+#include <integration/IntegrationCommon.h>
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>

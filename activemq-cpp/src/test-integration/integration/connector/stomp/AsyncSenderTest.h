@@ -41,10 +41,6 @@ namespace stomp{
     
         AsyncSenderTest();
         virtual ~AsyncSenderTest();
-        
-        virtual std::string getBrokerURL() const {
-            return common::IntegrationCommon::defaultURL + "?useAsyncSend=true";
-        }
 
         virtual void test();
 

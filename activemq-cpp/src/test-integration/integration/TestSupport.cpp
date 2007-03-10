@@ -57,26 +57,26 @@ TestSupport::~TestSupport()
 void TestSupport::close() {
     try
     {
-        if( session != null ) {
+        if( session != NULL ) {
             session->close();
             delete session;
         }
         
-        if( connection != null ) {
+        if( connection != NULL ) {
             connection->close();
             delete connection;
         }
 
-        if( connectionFactory != null ) {
+        if( connectionFactory != NULL ) {
             delete connectionFactory;
         }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
     
-    session = null;
-    connection = null;
-    connectionFactory = null;
+    session = NULL;
+    connection = NULL;
+    connectionFactory = NULL;
 }
 
 void TestSupport::initialize(){

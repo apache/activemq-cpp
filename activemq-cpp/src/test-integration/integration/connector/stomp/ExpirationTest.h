@@ -29,7 +29,8 @@
 #include <cms/MessageProducer.h>
 
 namespace integration{
-namespace expiration{
+namespace connector{
+namespace stomp{
 
     class ExpirationTest : public CppUnit::TestFixture   
     {
@@ -47,6 +48,6 @@ namespace expiration{
         virtual void testNotExpired();
     };
 
-}}
+}}}
 
 #endif /*_INTEGRATION_CONNECTOR_STOMP_EXPIRATIONTEST_H_*/
