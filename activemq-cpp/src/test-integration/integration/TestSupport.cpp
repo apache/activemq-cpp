@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include "AbstractTester.h"
+#include "TestSupport.h"
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <integration/common/IntegrationCommon.h>
+#include <integration/IntegrationCommon.h>
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -40,34 +40,48 @@ using namespace activemq::exceptions;
 using namespace activemq::concurrent;
 
 using namespace integration;
-using namespace integration::common;
 
-AbstractTester::AbstractTester( cms::Session::AcknowledgeMode ackMode )
+TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode  )
  : connectionFactory( NULL ),
    connection( NULL )
 {
     this->ackMode = ackMode;
+    this->brokerUrl = brokerUrl;
 }
 
-AbstractTester::~AbstractTester()
+TestSupport::~TestSupport()
 {
+    close();
+}
+
+void TestSupport::close() {
     try
     {
-        session->close();
-        connection->close();
+        if( session != null ) {
+            session->close();
+            delete session;
+        }
+        
+        if( connection != null ) {
+            connection->close();
+            delete connection;
+        }
 
-        delete session;
-        delete connection;
-        delete connectionFactory;
+        if( connectionFactory != null ) {
+            delete connectionFactory;
+        }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+    
+    session = null;
+    connection = null;
+    connectionFactory = null;
 }
 
-void AbstractTester::initialize(){
+void TestSupport::initialize(){
     try
     {
-        string url = getBrokerURL();
         numReceived = 0;
     
         // Now create the connection
@@ -85,18 +99,17 @@ void AbstractTester::initialize(){
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-cms::Connection* AbstractTester::createDetachedConnection(
+cms::Connection* TestSupport::createDetachedConnection(
     const std::string& username,
     const std::string& password,
     const std::string& clientId ) {
 
     try
     {
-        string url = getBrokerURL();
     
         if( connectionFactory == NULL ) {
             // Create a Factory
-            connectionFactory = new ActiveMQConnectionFactory( url );
+            connectionFactory = new ActiveMQConnectionFactory( brokerUrl );
         }
 
         // Now create the connection
@@ -109,12 +122,12 @@ cms::Connection* AbstractTester::createDetachedConnection(
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-void AbstractTester::doSleep(void) 
+void TestSupport::doSleep(void) 
 {
     Thread::sleep( IntegrationCommon::defaultDelay );
 }
 
-unsigned int AbstractTester::produceTextMessages( 
+unsigned int TestSupport::produceTextMessages( 
     cms::MessageProducer& producer,
     unsigned int count )
 {
@@ -146,7 +159,7 @@ unsigned int AbstractTester::produceTextMessages(
     AMQ_CATCHALL_THROW( ActiveMQException )    
 }
 
-unsigned int AbstractTester::produceBytesMessages( 
+unsigned int TestSupport::produceBytesMessages( 
     cms::MessageProducer& producer,
     unsigned int count )
 {
@@ -182,7 +195,7 @@ unsigned int AbstractTester::produceBytesMessages(
     AMQ_CATCHALL_THROW( ActiveMQException )    
 }
 
-void AbstractTester::waitForMessages( unsigned int count )
+void TestSupport::waitForMessages( unsigned int count )
 {
     try
     {
@@ -205,13 +218,13 @@ void AbstractTester::waitForMessages( unsigned int count )
     AMQ_CATCHALL_THROW( ActiveMQException )    
 }
 
-void AbstractTester::onException( const cms::CMSException& error )
+void TestSupport::onException( const cms::CMSException& error )
 {
     bool AbstractTester = false;
     CPPUNIT_ASSERT( AbstractTester );
 }
 
-void AbstractTester::onMessage( const cms::Message* message )
+void TestSupport::onMessage( const cms::Message* message )
 {
     // Got a text message.
     const cms::TextMessage* txtMsg = 

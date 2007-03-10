@@ -15,35 +15,26 @@
  * limitations under the License.
  */
 
-#ifndef _INTEGRATION_TRANSACTIONAL_DURABLETESTER_H_
-#define _INTEGRATION_TRANSACTIONAL_DURABLETESTER_H_
+#ifndef _INTEGRATION_INTEGRATIONCOMMON_H_
+#define _INTEGRATION_INTEGRATIONCOMMON_H_
 
-#include <integration/common/AbstractTester.h>
-
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <string>
 
 namespace integration{
-namespace durable{
 
-    class DurableTester : public CppUnit::TestFixture,
-                          public common::AbstractTester
+    class IntegrationCommon
     {
-        CPPUNIT_TEST_SUITE( DurableTester );
-        CPPUNIT_TEST( test );
-        CPPUNIT_TEST_SUITE_END();
-
     public:
-
-    	DurableTester();
-    	virtual ~DurableTester();
-
-        virtual void test(void);
-
-    private:
+    
+    	virtual ~IntegrationCommon();
+    
+        static const int          defaultDelay;
+        static const unsigned int defaultMsgCount;
+        
+        static bool debug;
         
     };
 
-}}
+}
 
-#endif /*_INTEGRATION_TRANSACTIONAL_DURABLETESTER_H_*/
+#endif /*_INTEGRATION_INTEGRATIONCOMMON_H_*/

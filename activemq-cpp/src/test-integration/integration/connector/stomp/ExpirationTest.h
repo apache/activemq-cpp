@@ -15,13 +15,11 @@
  * limitations under the License.
  */
 
-#ifndef _INTEGRATION_VARIOUS_SIMPLEROLLBACKTEST_H_
-#define _INTEGRATION_VARIOUS_SIMPLEROLLBACKTEST_H_
+#ifndef _INTEGRATION_CONNECTOR_STOMP_EXPIRATIONTEST_H_
+#define _INTEGRATION_CONNECTOR_STOMP_EXPIRATIONTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-
-#include <activemq/concurrent/Mutex.h>
 
 #include <cms/MessageListener.h>
 #include <cms/ExceptionListener.h>
@@ -31,38 +29,24 @@
 #include <cms/MessageProducer.h>
 
 namespace integration{
-namespace various{
+namespace expiration{
 
-    class SimpleRollbackTest : public CppUnit::TestFixture,
-                               public cms::ExceptionListener,
-                               public cms::MessageListener    
+    class ExpirationTest : public CppUnit::TestFixture   
     {
-        CPPUNIT_TEST_SUITE( SimpleRollbackTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE( ExpirationTest );
+        CPPUNIT_TEST( testExpired );
+        CPPUNIT_TEST( testNotExpired );
         CPPUNIT_TEST_SUITE_END();
 
     public:
     
-        SimpleRollbackTest();
-        virtual ~SimpleRollbackTest();
+        ExpirationTest(){}
+        virtual ~ExpirationTest(){}
         
-        virtual void test(void);
-        
-        virtual void onException( const cms::CMSException& error );
-        virtual void onMessage( const cms::Message* message );
-
-    private:
-
-        cms::ConnectionFactory* connectionFactory;
-        cms::Connection* connection;
-        cms::Session* session;
-
-        unsigned int numReceived;
-        unsigned int msgCount;
-        activemq::concurrent::Mutex mutex;
-
+        virtual void testExpired();
+        virtual void testNotExpired();
     };
 
 }}
 
-#endif /*_INTEGRATION_VARIOUS_SIMPLEROLLBACKTEST_H_*/
+#endif /*_INTEGRATION_CONNECTOR_STOMP_EXPIRATIONTEST_H_*/

@@ -14,11 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "DurableTester.h"
-#include <integration/common/IntegrationCommon.h>
-
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::durable::DurableTester );
+ 
+#include "AsyncSender.h"
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -70,23 +67,30 @@ using namespace activemq::transport;
 using namespace activemq::concurrent;
 
 using namespace integration;
-using namespace integration::durable;
-using namespace integration::common;
+using namespace integration::connector::stomp;
 
-DurableTester::DurableTester() : AbstractTester()
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest );
+
+////////////////////////////////////////////////////////////////////////////////
+AsyncSenderTest::AsyncSenderTest()
+:
+    testSupport("stomp://localhost:61613?useAsyncSend=true")
 {
-    this->initialize();
+    testSupport.initialize();
 }
 
-DurableTester::~DurableTester()
-{}
+////////////////////////////////////////////////////////////////////////////////
+AsyncSenderTest::~AsyncSenderTest()
+{
+}
 
-void DurableTester::test()
+////////////////////////////////////////////////////////////////////////////////
+void AsyncSenderTest::test()
 {
     try
     {
         if( IntegrationCommon::debug ) {
-            cout << "Starting activemqcms durable test (sending "
+            cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
                  << IntegrationCommon::defaultDelay 
@@ -94,49 +98,32 @@ void DurableTester::test()
                  << endl;
         }
         
-        std::string subName = Guid().createGUID();
-
         // Create CMS Object for Comms
-        cms::Topic* topic = session->createTopic("mytopic");
+        cms::Session* session = testSupport.getSession();
+        cms::Topic* topic = testSupport.getSession()->createTopic("mytopic");
         cms::MessageConsumer* consumer = 
-            session->createDurableConsumer( topic, subName, "" );            
-        consumer->setMessageListener( this );
+            session->createConsumer( topic );            
+        consumer->setMessageListener( &testSupport );
         cms::MessageProducer* producer = 
             session->createProducer( topic );
 
-        unsigned int sent;
-
         // Send some text messages
-        sent = this->produceTextMessages( *producer, 3 );
+        testSupport.produceTextMessages( 
+            *producer, IntegrationCommon::defaultMsgCount );
         
-        // Wait for all messages
-        waitForMessages( sent );
+        // Send some bytes messages.
+        testSupport.produceTextMessages( 
+            *producer, IntegrationCommon::defaultMsgCount );
 
+        // Wait for the messages to get here
+        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        
+        unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        
-        CPPUNIT_ASSERT( numReceived == sent );
-
-        // Nuke the consumer
-        delete consumer;
-
-        // Send some text messages
-        sent += this->produceTextMessages( *producer, 3 );
-
-        consumer = session->createDurableConsumer( topic, subName, "" );            
-        consumer->setMessageListener( this );
-
-        // Send some text messages
-        sent += this->produceTextMessages( *producer, 3 );
-
-        // Wait for all remaining messages
-        waitForMessages( sent );
-        
-        if( IntegrationCommon::debug ) {
-            printf("received: %d\n", numReceived );
-        }
-        CPPUNIT_ASSERT( numReceived == sent );
+        CPPUNIT_ASSERT( 
+            numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );

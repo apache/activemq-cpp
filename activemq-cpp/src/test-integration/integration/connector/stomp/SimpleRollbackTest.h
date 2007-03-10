@@ -15,66 +15,55 @@
  * limitations under the License.
  */
 
-#ifndef _INTEGRATION_COMMON_ABSTRACTTESTER_H_
-#define _INTEGRATION_COMMON_ABSTRACTTESTER_H_
+#ifndef _INTEGRATION_CONNECTOR_STOMP_SIMPLEROLLBACKTEST_H_
+#define _INTEGRATION_CONNECTOR_STOMP_SIMPLEROLLBACKTEST_H_
 
-#include "Tester.h"
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/concurrent/Mutex.h>
 
+#include <cms/MessageListener.h>
+#include <cms/ExceptionListener.h>
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
-#include <integration/common/IntegrationCommon.h>
 
 namespace integration{
-namespace common{
+namespace connector{
+namespace stomp{
 
-    class AbstractTester : public Tester
+    class SimpleRollbackTest : public CppUnit::TestFixture,
+                               public cms::ExceptionListener,
+                               public cms::MessageListener    
     {
+        CPPUNIT_TEST_SUITE( SimpleRollbackTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
     public:
     
-    	AbstractTester( cms::Session::AcknowledgeMode ackMode = 
-                            cms::Session::AUTO_ACKNOWLEDGE );
-    	virtual ~AbstractTester();
-    
-        virtual void initialize();
-        virtual void doSleep();
+        SimpleRollbackTest();
+        virtual ~SimpleRollbackTest();
         
-        virtual std::string getBrokerURL() const {
-            return IntegrationCommon::defaultURL;
-        }
-
-        virtual unsigned int produceTextMessages( 
-            cms::MessageProducer& producer,
-            unsigned int count );
-        virtual unsigned int produceBytesMessages( 
-            cms::MessageProducer& producer,
-            unsigned int count );
-
-        virtual void waitForMessages( unsigned int count );
-
+        virtual void test(void);
+        
         virtual void onException( const cms::CMSException& error );
         virtual void onMessage( const cms::Message* message );
 
-        virtual cms::Connection* createDetachedConnection(
-            const std::string& username,
-            const std::string& password,
-            const std::string& clientId );
+    private:
 
-    public:
-        
         cms::ConnectionFactory* connectionFactory;
         cms::Connection* connection;
         cms::Session* session;
 
         unsigned int numReceived;
+        unsigned int msgCount;
         activemq::concurrent::Mutex mutex;
-        cms::Session::AcknowledgeMode ackMode;
 
     };
 
-}}
+}}}
 
-#endif /*_INTEGRATION_COMMON_ABSTRACTTESTER_H_*/
+#endif /*_INTEGRATION_CONNECTOR_STOMP_SIMPLEROLLBACKTEST_H_*/

@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#include "AsyncSender.h"
+
+#include "DurableTester.h"
+
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::DurableTest );
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -67,30 +69,24 @@ using namespace activemq::transport;
 using namespace activemq::concurrent;
 
 using namespace integration;
-using namespace integration::common;
-using namespace integration::producer;
+using namespace integration::connector::stomp;
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::producer::AsyncSender );
-
-////////////////////////////////////////////////////////////////////////////////
-AsyncSender::AsyncSender() : AbstractTester()
+DurableTest::DurableTest()
+:
+    testSupport("stomp://localhost:61613")
 {
-    this->initialize();
-    numReceived = 0;
+    testSupport.initialize();
 }
 
-////////////////////////////////////////////////////////////////////////////////
-AsyncSender::~AsyncSender()
-{
-}
+DurableTest::~DurableTest()
+{}
 
-////////////////////////////////////////////////////////////////////////////////
-void AsyncSender::test()
+void DurableTest::test()
 {
     try
     {
         if( IntegrationCommon::debug ) {
-            cout << "Starting activemqcms test (sending "
+            cout << "Starting activemqcms durable test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
                  << IntegrationCommon::defaultDelay 
@@ -98,30 +94,53 @@ void AsyncSender::test()
                  << endl;
         }
         
+        std::string subName = Guid().createGUID();
+
         // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
-        consumer->setMessageListener( this );
+            session->createDurableConsumer( topic, subName, "" );            
+        consumer->setMessageListener( &testSupport );
         cms::MessageProducer* producer = 
             session->createProducer( topic );
 
-        // Send some text messages
-        this->produceTextMessages( 
-            *producer, IntegrationCommon::defaultMsgCount );
-        
-        // Send some bytes messages.
-        this->produceTextMessages( 
-            *producer, IntegrationCommon::defaultMsgCount );
+        unsigned int sent;
 
-        // Wait for the messages to get here
-        waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        // Send some text messages
+        sent = testSupport.produceTextMessages( *producer, 3 );
+        
+        // Wait for all messages
+        testSupport.waitForMessages( sent );
+
+        unsigned int numReceived = testSupport.getNumReceived();
         
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
-            numReceived == IntegrationCommon::defaultMsgCount * 2 );
+        
+        CPPUNIT_ASSERT( numReceived == sent );
+
+        // Nuke the consumer
+        delete consumer;
+
+        // Send some text messages
+        sent += testSupport.produceTextMessages( *producer, 3 );
+
+        consumer = session->createDurableConsumer( topic, subName, "" );            
+        consumer->setMessageListener( &testSupport );
+
+        // Send some text messages
+        sent += testSupport.produceTextMessages( *producer, 3 );
+
+        // Wait for all remaining messages
+        testSupport.waitForMessages( sent );
+        
+        numReceived = testSupport.getNumReceived();
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
+        CPPUNIT_ASSERT( numReceived == sent );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );

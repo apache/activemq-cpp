@@ -14,34 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ 
+#ifndef _INTEGRATION_CONNECTOR_STOMP_ASYNCSENDERTEST_H_
+#define _INTEGRATION_CONNECTOR_STOMP_ASYNCSENDERTEST_H_
 
-#ifndef _INTEGRATION_SIMPLE_SIMPLETESTER_H_
-#define _INTEGRATION_SIMPLE_SIMPLETESTER_H_
+#include <integration/TestSupport.h>
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <integration/common/AbstractTester.h>
-
 namespace integration{
-namespace simple{
-    
-    class SimpleTester : public CppUnit::TestFixture,
-                         public common::AbstractTester
-    {
-        CPPUNIT_TEST_SUITE( SimpleTester );
+namespace connector{
+namespace stomp{
+
+    class AsyncSenderTest : public CppUnit::TestFixture {
+        
+        CPPUNIT_TEST_SUITE( AsyncSenderTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
+    private:
+    
+        TestSupport testSupport;
+        
     public:
+    
+        AsyncSenderTest();
+        virtual ~AsyncSenderTest();
+        
+        virtual std::string getBrokerURL() const {
+            return common::IntegrationCommon::defaultURL + "?useAsyncSend=true";
+        }
 
-    	SimpleTester();
-    	virtual ~SimpleTester();
-
-        virtual void test(void);
+        virtual void test();
 
     };
 
-}}
+}}}
 
-#endif /*_INTEGRATION_SIMPLE_SIMPLETESTER_H_*/
+#endif /*_INTEGRATION_CONNECTOR_STOMP_ASYNCSENDERTEST_H_*/

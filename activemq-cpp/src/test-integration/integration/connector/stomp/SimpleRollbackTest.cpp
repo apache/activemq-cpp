@@ -19,7 +19,7 @@
 
 #include <integration/common/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::various::SimpleRollbackTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTest );
 
 #include <sstream>
 
@@ -78,14 +78,13 @@ using namespace activemq::concurrent;
 
 using namespace std;
 using namespace integration;
-using namespace integration::various;
-using namespace integration::common;
+using namespace integration::connector::stomp;
 
 SimpleRollbackTest::SimpleRollbackTest()
 {
     try
     {
-        string url = IntegrationCommon::defaultURL;
+        string url = "stomp://localhost:61613";
         numReceived = 0;
 
         // Default amount to send and receive
