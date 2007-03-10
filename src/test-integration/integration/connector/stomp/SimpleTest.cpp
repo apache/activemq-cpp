@@ -74,7 +74,7 @@ using namespace integration::connector::stomp;
 
 SimpleTest::SimpleTest()
 :
-    testSupport( "stomp://localhost:61613" )
+    testSupport( "tcp://localhost:61613?wireFormat=stomp" )
 {
     testSupport.initialize();
 }

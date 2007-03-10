@@ -119,7 +119,7 @@ public:
     virtual void run() {
         try {
             // Create a ConnectionFactory
-            connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61613");
+            connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -235,7 +235,7 @@ public:
             
             // Create a ConnectionFactory
             ActiveMQConnectionFactory* connectionFactory =
-               new ActiveMQConnectionFactory("tcp://localhost:61613",user,passwd,sID);
+               new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp",user,passwd,sID);
 
             // Create a Connection
             connection = connectionFactory->createConnection();

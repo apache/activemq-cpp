@@ -84,7 +84,7 @@ SimpleRollbackTest::SimpleRollbackTest()
 {
     try
     {
-        string url = "stomp://localhost:61613";
+        string url = "tcp://localhost:61613?wireFormat=stomp";
         numReceived = 0;
 
         // Default amount to send and receive

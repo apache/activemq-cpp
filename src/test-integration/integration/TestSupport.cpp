@@ -42,8 +42,10 @@ using namespace activemq::concurrent;
 using namespace integration;
 
 TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode  )
- : connectionFactory( NULL ),
-   connection( NULL )
+: 
+    session( NULL ),
+    connectionFactory( NULL ),
+    connection( NULL )
 {
     this->ackMode = ackMode;
     this->brokerUrl = brokerUrl;
