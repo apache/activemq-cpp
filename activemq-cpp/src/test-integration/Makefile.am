@@ -18,6 +18,12 @@
 cc_sources = \
   integration/IntegrationCommon.cpp \
   integration/TestSupport.cpp \
+  integration/connector/openwire/OpenwireAsyncSenderTest.cpp \
+  integration/connector/openwire/OpenwireDurableTest.cpp \
+  integration/connector/openwire/OpenwireExpirationTest.cpp \
+  integration/connector/openwire/OpenwireSimpleRollbackTest.cpp \
+  integration/connector/openwire/OpenwireSimpleTest.cpp \
+  integration/connector/openwire/OpenwireTransactionTest.cpp \
   integration/connector/stomp/AsyncSenderTest.cpp \
   integration/connector/stomp/DurableTest.cpp \
   integration/connector/stomp/ExpirationTest.cpp \
