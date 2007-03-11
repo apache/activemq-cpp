@@ -658,6 +658,11 @@ namespace openwire{
         commands::TransactionId* createLocalTransactionId()
             throw ( ConnectorException );
 
+        /**
+         * Applies the destination options to the given consumer.
+         */
+        void applyDestinationOptions( commands::ConsumerInfo* info );
+
     };
 
 }}}
