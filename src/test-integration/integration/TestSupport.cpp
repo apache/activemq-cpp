@@ -222,12 +222,19 @@ void TestSupport::waitForMessages( unsigned int count )
 
 void TestSupport::onException( const cms::CMSException& error )
 {
-    bool AbstractTester = false;
-    CPPUNIT_ASSERT( AbstractTester );
+    CPPUNIT_ASSERT_MESSAGE( error.getStackTraceString(), false );
 }
 
 void TestSupport::onMessage( const cms::Message* message )
 {
+    if( session->getAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE ) {
+        try {
+            message->acknowledge();
+        } catch( CMSException& ex ) {
+            CPPUNIT_ASSERT_MESSAGE(ex.getStackTraceString(), false );
+        }
+    }
+    
     // Got a text message.
     const cms::TextMessage* txtMsg = 
         dynamic_cast<const cms::TextMessage*>(message);
@@ -247,7 +254,7 @@ void TestSupport::onMessage( const cms::Message* message )
         {
             mutex.notifyAll();
         }
-
+        
         return;
     }
     
@@ -272,7 +279,8 @@ void TestSupport::onMessage( const cms::Message* message )
         {
             mutex.notifyAll();
         }
-
+        
         return;
     }
+    
 }
