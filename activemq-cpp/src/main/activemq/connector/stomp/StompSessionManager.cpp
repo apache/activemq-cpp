@@ -369,7 +369,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_NOLOCAL );
 
-        if( destProperties.getProperty( noLocalStr, "false" ) == "true" )
+        if( destProperties.hasProperty( noLocalStr ) ) 
         {
             command.setNoLocal(
                 Boolean::parseBoolean(
