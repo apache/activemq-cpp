@@ -28,6 +28,8 @@
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
 
+#include <activemq/concurrent/Runnable.h>
+
 namespace integration{
 namespace connector{
 namespace stomp{
@@ -46,6 +48,67 @@ namespace stomp{
         
         virtual void testExpired();
         virtual void testNotExpired();
+        
+    public:
+    
+        class Producer : public activemq::concurrent::Runnable {
+        private:
+        
+            cms::Connection* connection;
+            cms::Session* session;
+            cms::Topic* destination;
+            cms::MessageProducer* producer;
+            int numMessages;
+            long long timeToLive;
+            bool disableTimeStamps;
+            std::string topic;
+        
+        public:
+        
+            Producer( std::string topic, int numMessages, long long timeToLive );
+        
+            virtual ~Producer();
+        
+            virtual bool getDisableTimeStamps() const;
+        
+            virtual void setDisableTimeStamps( bool value );
+        
+            virtual void run();
+        
+        private:
+        
+            void cleanup();
+        };
+
+        class Consumer : public cms::MessageListener, public activemq::concurrent::Runnable {
+        
+        private:
+        
+            cms::Connection* connection;
+            cms::Session* session;
+            cms::Topic* destination;
+            cms::MessageConsumer* consumer;
+            long waitMillis;
+            int numReceived;
+            std::string topic;
+        
+        public:
+        
+            Consumer( std::string topic, long waitMillis );
+            
+            virtual ~Consumer();
+        
+            virtual int getNumReceived() const;
+            
+            virtual void run();
+        
+            virtual void onMessage( const cms::Message* message );
+        
+        private:
+        
+            void cleanup();
+        };
+
     };
 
 }}}
