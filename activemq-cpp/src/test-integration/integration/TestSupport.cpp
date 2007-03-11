@@ -43,9 +43,9 @@ using namespace integration;
 
 TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode  )
 : 
-    session( NULL ),
     connectionFactory( NULL ),
-    connection( NULL )
+    connection( NULL ),
+    session( NULL )
 {
     this->ackMode = ackMode;
     this->brokerUrl = brokerUrl;
