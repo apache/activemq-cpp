@@ -100,7 +100,7 @@ void DurableTest::test()
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic("mytopic");
+        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
         cms::MessageConsumer* consumer = 
             session->createDurableConsumer( topic, subName, "" );            
         consumer->setMessageListener( &testSupport );
@@ -121,7 +121,7 @@ void DurableTest::test()
             printf("received: %d\n", numReceived );
         }
         
-        CPPUNIT_ASSERT( numReceived == sent );
+        CPPUNIT_ASSERT_EQUAL( sent, numReceived );
 
         // Nuke the consumer
         delete consumer;
@@ -142,7 +142,7 @@ void DurableTest::test()
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( numReceived == sent );
+        CPPUNIT_ASSERT_EQUAL( sent, numReceived );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
