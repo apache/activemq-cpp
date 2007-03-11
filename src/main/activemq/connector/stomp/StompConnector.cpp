@@ -498,8 +498,8 @@ void StompConnector::acknowledge( const SessionInfo* session,
 
         // Auto to Stomp means don't do anything, so we drop it here
         // for client acknowledge we have to send and ack.
-        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ||
-            session->getAckMode() == cms::Session::SESSION_TRANSACTED )
+        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE /*||
+            session->getAckMode() == cms::Session::SESSION_TRANSACTED*/ )
         {
             AckCommand cmd;
 
@@ -513,12 +513,12 @@ void StompConnector::acknowledge( const SessionInfo* session,
 
             cmd.setMessageId( message->getCMSMessageId() );
 
-            if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
+            /*if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
             {
                 cmd.setTransactionId(
                     Integer::toString(
                         session->getTransactionInfo()->getTransactionId() ) );
-            }
+            }*/
 
             transport->oneway( &cmd );
         }
