@@ -30,19 +30,17 @@ namespace stomp{
     class SimpleTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( SimpleTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testAutoAck );
+        CPPUNIT_TEST( testClientAck );
         CPPUNIT_TEST_SUITE_END();
-
-    private:
-    
-        TestSupport testSupport;
         
     public:
 
     	SimpleTest();
     	virtual ~SimpleTest();
 
-        virtual void test(void);
+        virtual void testAutoAck();
+        virtual void testClientAck();
 
     };
 

@@ -73,20 +73,74 @@ using namespace integration;
 using namespace integration::connector::stomp;
 
 SimpleTest::SimpleTest()
-:
-    testSupport( "tcp://localhost:61613?wireFormat=stomp" )
 {
-    testSupport.initialize();
 }
 
 SimpleTest::~SimpleTest()
 {
 }
 
-void SimpleTest::test()
+void SimpleTest::testAutoAck()
 {
     try
     {
+        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp");
+        testSupport.initialize();
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
+        cms::Topic* topic = session->createTopic("mytopic");
+        cms::MessageConsumer* consumer = 
+            session->createConsumer( topic );            
+        consumer->setMessageListener( &testSupport );
+        cms::MessageProducer* producer = 
+            session->createProducer( topic );
+
+        // Send some text messages
+        testSupport.produceTextMessages( 
+            *producer, IntegrationCommon::defaultMsgCount );
+        
+        // Send some bytes messages.
+        testSupport.produceTextMessages( 
+            *producer, IntegrationCommon::defaultMsgCount );
+
+        // Wait for the messages to get here
+        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        
+        unsigned int numReceived = testSupport.getNumReceived();
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
+        CPPUNIT_ASSERT( 
+            numReceived == IntegrationCommon::defaultMsgCount * 2 );
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        delete producer;                      
+        delete consumer;
+        delete topic;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+void SimpleTest::testClientAck()
+{
+    try
+    {
+        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp", cms::Session::CLIENT_ACKNOWLEDGE );
+        testSupport.initialize();
+        
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
