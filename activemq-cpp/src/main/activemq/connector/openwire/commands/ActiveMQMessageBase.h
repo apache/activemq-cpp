@@ -57,6 +57,13 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
+            const ActiveMQMessageBase<T>* message = 
+                dynamic_cast< const ActiveMQMessageBase<T>* >( src );
+            
+            this->properties.copy( message->properties );
+            this->setAckHandler( message->getAckHandler() );
+            this->setRedeliveryCount( message->getRedeliveryCount() );
+            
             openwire::commands::Message::copyDataStructure( src );
         }
 
