@@ -19,7 +19,7 @@
 
 #include <integration/IntegrationCommon.h>
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleRollbackTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleRollbackTest );
 
 #include <sstream>
 
