@@ -507,9 +507,15 @@ namespace commands{
          * @param destination - Destination Object
          */
         virtual void setCMSDestination( const cms::Destination* destination ) {
-            this->setDestination(
-                dynamic_cast<ActiveMQDestination*>(
-                    destination->clone() ) );
+
+            delete getDestination();
+            if( destination != NULL ) {
+                this->setDestination(
+                    dynamic_cast<ActiveMQDestination*>(
+                        destination->clone() ) );
+            } else {
+                this->setDestination( NULL );
+            }
         }
 
         /**
@@ -586,9 +592,15 @@ namespace commands{
          * @param id - Reply To value
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) {
-            this->setReplyTo(
-                dynamic_cast<ActiveMQDestination*>(
-                    destination->clone() ) );
+
+            delete getReplyTo();
+            if( destination != NULL ) {
+                this->setReplyTo(
+                    dynamic_cast<ActiveMQDestination*>(
+                        destination->clone() ) );
+            } else {
+                this->setReplyTo( NULL );
+            }
         }
 
         /**
