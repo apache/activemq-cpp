@@ -1221,16 +1221,13 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
 
         commands::DataStructure* dataStructure = NULL;
 
-        OpenWireConsumerInfo* consumer =
-            dynamic_cast<OpenWireConsumerInfo*>(resource);
-        OpenWireProducerInfo* producer =
-            dynamic_cast<OpenWireProducerInfo*>(resource);
-        OpenWireSessionInfo* session =
-            dynamic_cast<OpenWireSessionInfo*>(resource);
         commands::ActiveMQTempDestination* tempDestination =
             dynamic_cast<commands::ActiveMQTempDestination*>(resource);
 
-        if( consumer != NULL ) {
+        if( typeid( *resource ) == typeid( OpenWireConsumerInfo ) ) {
+
+            OpenWireConsumerInfo* consumer =
+                dynamic_cast<OpenWireConsumerInfo*>(resource);
 
             // Remove this consumer from the consumer info map
             synchronized( &consumerInfoMap ) {
@@ -1239,10 +1236,17 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
             }
 
             dataStructure = consumer->getConsumerInfo()->getConsumerId();
-        } else if( producer != NULL ) {
+        } else if( typeid( *resource ) == typeid( OpenWireProducerInfo ) ) {
+            OpenWireProducerInfo* producer =
+                dynamic_cast<OpenWireProducerInfo*>( resource );
             dataStructure = producer->getProducerInfo()->getProducerId();
-        } else if( session != NULL ) {
+        } else if( typeid( *resource ) == typeid( OpenWireSessionInfo ) ) {
+            OpenWireSessionInfo* session =
+                dynamic_cast<OpenWireSessionInfo*>(resource);
             dataStructure = session->getSessionInfo()->getSessionId();
+        } else if( typeid( *resource ) == typeid( OpenWireTransactionInfo ) ) {
+            delete resource;
+            return;
         } else if( tempDestination != NULL ) {
             // User deletes these
             destroyTemporaryDestination( tempDestination );
