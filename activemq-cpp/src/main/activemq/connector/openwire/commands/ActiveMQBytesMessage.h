@@ -69,6 +69,7 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQMessageBase<cms::BytesMessage>::copyDataStructure( src );
+            this->reset();
         }
 
         /**
