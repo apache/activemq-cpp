@@ -104,7 +104,7 @@ namespace openwire{
          * @param transactionInfo - the TransactionInfo for this Session.
          */
         virtual void setTransactionInfo( commands::TransactionInfo* transactionInfo ) {
-            delete transactionInfo;
+            delete this->transactionInfo;
             this->transactionInfo = transactionInfo;
         }
 
