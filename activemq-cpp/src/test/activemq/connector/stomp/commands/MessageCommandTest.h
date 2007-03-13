@@ -220,10 +220,17 @@ namespace commands{
             // Test getting a string property that doesn't exist. 
             try {
                 std::string str = cmd.getStringProperty( "text" );
-            } catch( cms::CMSException& e){
                 CPPUNIT_ASSERT(false);
+            } catch( cms::CMSException& e){
             }
             
+            // Test getting a bool property that doesn't exist. 
+            try {
+                bool value = cmd.getBooleanProperty( "text" );
+                CPPUNIT_ASSERT(false);
+            } catch( cms::CMSException& e){
+            }
+
             // Test accessing non-existent property
             try{
                 cmd.getIntProperty("string");
