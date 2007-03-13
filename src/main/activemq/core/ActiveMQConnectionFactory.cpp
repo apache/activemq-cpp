@@ -72,9 +72,6 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& password )
         throw ( cms::CMSException )
 {
-    this->setUsername( username );
-    this->setPassword( password );
-
     return createConnection( brokerURL, username, password, Guid::createGUIDString() );
 }
 
@@ -85,9 +82,6 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& clientId )
         throw ( cms::CMSException )
 {
-    this->setUsername( username );
-    this->setPassword( password );
-
     return createConnection( brokerURL, username, password, clientId );
 }
 

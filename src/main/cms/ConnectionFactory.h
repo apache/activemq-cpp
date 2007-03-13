@@ -48,9 +48,12 @@ namespace cms
          * Creates a connection with the default specified identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
-         * called.
-         * @param username to authenticate with, resets internal to new value
-         * @param password to authenticate with, resets internal to new value
+         * called.  The username and password values passed here do not
+         * change the defaults, subsequent calls to the parameterless
+         * createConnection will continue to use the default values that
+         * were set in the Constructor.
+         * @param username to authenticate with
+         * @param password to authenticate with
          * @returns a Connection Pointer
          * @throws CMSException
          */
@@ -62,9 +65,12 @@ namespace cms
          * Creates a connection with the specified user identity. The
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
-         * called.
-         * @param username to authenticate with, resets internal to new value
-         * @param password to authenticate with, resets internal to new value
+         * called.  The username and password values passed here do not
+         * change the defaults, subsequent calls to the parameterless
+         * createConnection will continue to use the default values that
+         * were set in the Constructor.
+         * @param username to authenticate with
+         * @param password to authenticate with
          * @param clientId to assign to connection if "" then a random cleint
          *        Id is created for this connection.
          * @returns a Connection Pointer
