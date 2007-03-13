@@ -89,20 +89,19 @@ SimpleRollbackTest::SimpleRollbackTest()
 
         // Default amount to send and receive
         msgCount = 1;
-    
+
         // Create a Factory
         connectionFactory = new ActiveMQConnectionFactory( url );
 
         // Now create the connection
-        connection = connectionFactory->createConnection(
-            "", "", Guid().createGUIDString() );
-    
-        // Set ourself as a recipient of Exceptions        
+        connection = connectionFactory->createConnection();
+
+        // Set ourself as a recipient of Exceptions
         connection->setExceptionListener( this );
         connection->start();
-        
+
         // Create a Session
-        session = connection->createSession( 
+        session = connection->createSession(
             cms::Session::SESSION_TRANSACTED );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -130,23 +129,23 @@ void SimpleRollbackTest::test()
     {
         // Create CMS Object for Comms
         cms::Topic* topic = session->createTopic("mytopic");
-        cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =
+            session->createConsumer( topic );
         consumer->setMessageListener( this );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
-        cms::TextMessage* textMsg = 
+        cms::TextMessage* textMsg =
             session->createTextMessage();
 
         for( size_t ix = 0; ix < msgCount; ++ix )
         {
             ostringstream lcStream;
-            lcStream << "SimpleTest - Message #" << ix << ends;            
+            lcStream << "SimpleTest - Message #" << ix << ends;
             textMsg->setText( lcStream.str() );
             producer->send( textMsg );
         }
-        
+
         delete textMsg;
 
         Thread::sleep( 100 );
@@ -158,11 +157,11 @@ void SimpleRollbackTest::test()
         for( size_t ix = 0; ix < msgCount; ++ix )
         {
             ostringstream lcStream;
-            lcStream << "SimpleTest - Message #" << ix << ends;            
+            lcStream << "SimpleTest - Message #" << ix << ends;
             textMsg->setText( lcStream.str() );
             producer->send( textMsg );
         }
-        
+
         delete textMsg;
 
         Thread::sleep( 500 );
@@ -189,7 +188,7 @@ void SimpleRollbackTest::test()
             printf( "Shutting Down\n" );
         }
 
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
@@ -208,48 +207,48 @@ void SimpleRollbackTest::onMessage( const cms::Message* message )
     try
     {
         // Got a text message.
-        const cms::TextMessage* txtMsg = 
+        const cms::TextMessage* txtMsg =
             dynamic_cast<const cms::TextMessage*>(message);
-            
+
         if( txtMsg != NULL )
         {
             if( IntegrationCommon::debug ) {
                 printf("received text msg: %s\n", txtMsg->getText().c_str() );
             }
-    
+
             numReceived++;
-    
+
             // Signal that we got one
             synchronized( &mutex )
             {
                 mutex.notifyAll();
             }
-    
+
             return;
         }
-        
+
         // Got a bytes msg.
-        const cms::BytesMessage* bytesMsg = 
+        const cms::BytesMessage* bytesMsg =
             dynamic_cast<const cms::BytesMessage*>(message);
-    
+
         if( bytesMsg != NULL )
         {
             const unsigned char* bytes = bytesMsg->getBodyBytes();
-            
+
             string transcode( (const char*)bytes, bytesMsg->getBodyLength() );
 
             if( IntegrationCommon::debug ) {
                 printf("Received Bytes Message: %s", transcode.c_str() );
             }
-    
+
             numReceived++;
-            
+
             // Signal that we got one
             synchronized( &mutex )
             {
                 mutex.notifyAll();
             }
-    
+
             return;
         }
     }

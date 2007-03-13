@@ -41,10 +41,8 @@ using namespace activemq::concurrent;
 
 using namespace integration;
 
-TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode  )
-: 
-    connectionFactory( NULL ),
-    connection( NULL ),
+TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode )
+ :  connection( NULL ),
     session( NULL )
 {
     this->ackMode = ackMode;
@@ -63,37 +61,32 @@ void TestSupport::close() {
             session->close();
             delete session;
         }
-        
+
         if( connection != NULL ) {
             connection->close();
             delete connection;
         }
-
-        if( connectionFactory != NULL ) {
-            delete connectionFactory;
-        }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
-    
+
     session = NULL;
     connection = NULL;
-    connectionFactory = NULL;
 }
 
 void TestSupport::initialize(){
     try
     {
         numReceived = 0;
-    
+
         // Now create the connection
-        connection = createDetachedConnection( 
+        connection = createDetachedConnection(
             "", "", Guid().createGUIDString() );
-    
-        // Set ourself as a recipient of Exceptions        
+
+        // Set ourself as a recipient of Exceptions
         connection->setExceptionListener( this );
         connection->start();
-        
+
         // Create a Session
         session = connection->createSession( ackMode );
     }
@@ -108,15 +101,10 @@ cms::Connection* TestSupport::createDetachedConnection(
 
     try
     {
-    
-        if( connectionFactory == NULL ) {
-            // Create a Factory
-            connectionFactory = new ActiveMQConnectionFactory( brokerUrl );
-        }
-
         // Now create the connection
-        cms::Connection* connection = connectionFactory->createConnection(
-            username, password, clientId );
+        cms::Connection* connection =
+            ActiveMQConnectionFactory::createConnection(
+                brokerUrl, username, password, clientId );
 
         return connection;
     }
@@ -124,12 +112,12 @@ cms::Connection* TestSupport::createDetachedConnection(
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-void TestSupport::doSleep(void) 
+void TestSupport::doSleep(void)
 {
     Thread::sleep( IntegrationCommon::defaultDelay );
 }
 
-unsigned int TestSupport::produceTextMessages( 
+unsigned int TestSupport::produceTextMessages(
     cms::MessageProducer& producer,
     unsigned int count )
 {
@@ -138,16 +126,16 @@ unsigned int TestSupport::produceTextMessages(
         // Send some text messages.
         ostringstream stream;
         string text = "this is a test text message: id = ";
-        
-        cms::TextMessage* textMsg = 
+
+        cms::TextMessage* textMsg =
             session->createTextMessage();
 
         unsigned int realCount = 0;
-                     
+
         for( unsigned int ix=0; ix<count; ++ix ){
             stream << text << ix << ends;
-            textMsg->setText( stream.str().c_str() );        
-            stream.str("");  
+            textMsg->setText( stream.str().c_str() );
+            stream.str("");
             producer.send( textMsg );
             doSleep();
             ++realCount;
@@ -158,10 +146,10 @@ unsigned int TestSupport::produceTextMessages(
         return realCount;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )    
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-unsigned int TestSupport::produceBytesMessages( 
+unsigned int TestSupport::produceBytesMessages(
     cms::MessageProducer& producer,
     unsigned int count )
 {
@@ -178,13 +166,13 @@ unsigned int TestSupport::produceBytesMessages(
         buf[6] = 5;
         buf[7] = 6;
 
-        cms::BytesMessage* bytesMsg = 
+        cms::BytesMessage* bytesMsg =
             session->createBytesMessage();
         bytesMsg->setBodyBytes( buf, 10 );
 
         unsigned int realCount = 0;
-        for( unsigned int ix=0; ix<count; ++ix ){                
-            producer.send( bytesMsg ); 
+        for( unsigned int ix=0; ix<count; ++ix ){
+            producer.send( bytesMsg );
             doSleep();
             ++realCount;
         }
@@ -194,7 +182,7 @@ unsigned int TestSupport::produceBytesMessages(
         return realCount;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )    
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 void TestSupport::waitForMessages( unsigned int count )
@@ -204,11 +192,11 @@ void TestSupport::waitForMessages( unsigned int count )
         synchronized( &mutex )
         {
             int stopAtZero = count + 5;
-            
+
             while( numReceived < count )
             {
                 mutex.wait( 500 );
-                
+
                 if( --stopAtZero == 0 )
                 {
                     break;
@@ -217,7 +205,7 @@ void TestSupport::waitForMessages( unsigned int count )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )    
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 void TestSupport::onException( const cms::CMSException& error )
@@ -234,11 +222,11 @@ void TestSupport::onMessage( const cms::Message* message )
             CPPUNIT_ASSERT_MESSAGE(ex.getStackTraceString(), false );
         }
     }
-    
+
     // Got a text message.
-    const cms::TextMessage* txtMsg = 
+    const cms::TextMessage* txtMsg =
         dynamic_cast<const cms::TextMessage*>(message);
-        
+
     if( txtMsg != NULL )
     {
         std::string text = txtMsg->getText();
@@ -254,18 +242,18 @@ void TestSupport::onMessage( const cms::Message* message )
         {
             mutex.notifyAll();
         }
-        
+
         return;
     }
-    
+
     // Got a bytes msg.
-    const cms::BytesMessage* bytesMsg = 
+    const cms::BytesMessage* bytesMsg =
         dynamic_cast<const cms::BytesMessage*>(message);
 
     if( bytesMsg != NULL )
     {
         const unsigned char* bytes = bytesMsg->getBodyBytes();
-        
+
         string transcode( (const char*)bytes, bytesMsg->getBodyLength() );
 
         if( IntegrationCommon::debug ) {
@@ -273,14 +261,14 @@ void TestSupport::onMessage( const cms::Message* message )
         }
 
         numReceived++;
-        
+
         // Signal that we got one
         synchronized( &mutex )
         {
             mutex.notifyAll();
         }
-        
+
         return;
     }
-    
+
 }

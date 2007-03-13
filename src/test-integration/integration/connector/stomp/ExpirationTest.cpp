@@ -198,14 +198,11 @@ void ExpirationTest::Consumer::run() {
         user="default";
         passwd="";
         sID="lsgID";
-        
-        // Create a ConnectionFactory
-        ActiveMQConnectionFactory* connectionFactory =
-           new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp",user,passwd,sID);
 
         // Create a Connection
-        connection = connectionFactory->createConnection();
-        delete connectionFactory;
+        connection = ActiveMQConnectionFactory::createConnection(
+            "tcp://localhost:61613?wireFormat=stomp", user, passwd, sID );
+
         connection->start();
 
         // Create a Session
@@ -213,7 +210,7 @@ void ExpirationTest::Consumer::run() {
 
         // Create the destination (Topic or Queue)
         string t = topic + "?consumer.retroactive=true";
-        
+
         destination = session->createTopic( t );
 
         consumer = session->createConsumer( destination );
@@ -270,7 +267,7 @@ void ExpirationTest::Consumer::cleanup(){
     }catch (CMSException& e) {}
     connection = NULL;
 }
-    
+
 void ExpirationTest::testExpired()
 {
     string topic = Guid().createGUID();
@@ -278,14 +275,14 @@ void ExpirationTest::testExpired()
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
-    
+
     Thread::sleep( 100 );
 
     Consumer consumer( topic, 2000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
-    
+
     Thread::sleep( 100 );
 
     CPPUNIT_ASSERT_EQUAL( 0, consumer.getNumReceived() );
@@ -299,14 +296,14 @@ void ExpirationTest::testNotExpired()
     Thread producerThread( &producer );
     producerThread.start();
     producerThread.join();
-    
+
     Consumer consumer( topic, 3000 );
     Thread consumerThread( &consumer );
     consumerThread.start();
     consumerThread.join();
 
     Thread::sleep( 50 );
-    
+
     CPPUNIT_ASSERT_EQUAL( 2, consumer.getNumReceived() );
 }
 

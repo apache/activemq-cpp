@@ -32,44 +32,44 @@ namespace integration{
     class TestSupport : public cms::ExceptionListener, public cms::MessageListener
     {
     public:
-    
+
     	TestSupport( const std::string& brokerUrl,
                      cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
     	virtual ~TestSupport();
-    
+
         virtual void initialize();
         virtual void close();
-        
+
         virtual activemq::concurrent::Mutex& getMutex() {
             return mutex;
         }
-        
+
         virtual std::string getBrokerUrl() const {
             return brokerUrl;
         }
-        
+
         virtual cms::Connection* getConnection() {
             return connection;
         }
-        
+
         virtual cms::Session* getSession() {
             return session;
         }
-        
+
         virtual unsigned int getNumReceived() const {
             return numReceived;
         }
-        
+
         virtual void setNumReceived( unsigned int numReceived ) {
             this->numReceived = numReceived;
         }
-        
+
         virtual void doSleep();
 
-        virtual unsigned int produceTextMessages( 
+        virtual unsigned int produceTextMessages(
             cms::MessageProducer& producer,
             unsigned int count );
-        virtual unsigned int produceBytesMessages( 
+        virtual unsigned int produceBytesMessages(
             cms::MessageProducer& producer,
             unsigned int count );
 
@@ -84,9 +84,8 @@ namespace integration{
             const std::string& clientId );
 
     public:
-        
+
         std::string brokerUrl;
-        cms::ConnectionFactory* connectionFactory;
         cms::Connection* connection;
         cms::Session* session;
 
