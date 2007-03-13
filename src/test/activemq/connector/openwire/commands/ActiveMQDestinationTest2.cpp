@@ -67,7 +67,9 @@ void ActiveMQDestinationTest::test()
     CPPUNIT_ASSERT( dest3->isAdvisory() == true );
     CPPUNIT_ASSERT( dest3->isConsumerAdvisory() == false );
     CPPUNIT_ASSERT( dest3->isProducerAdvisory() == false );
-    
+
+    delete dest3;
+
     std::string clientId = Guid::createGUIDString();
     std::string result = dest.createTemporaryName( clientId );
     CPPUNIT_ASSERT( result.find( clientId ) != string::npos );
@@ -87,7 +89,7 @@ void ActiveMQDestinationTest::testOptions(){
     dest.setPhysicalName( "test?option1=test1&option2=test2" );
 
     const util::Properties& properties = dest.getOptions();
-    
+
     CPPUNIT_ASSERT( properties.hasProperty( "option1" ) == true );
     CPPUNIT_ASSERT( properties.hasProperty( "option2" ) == true );
 
