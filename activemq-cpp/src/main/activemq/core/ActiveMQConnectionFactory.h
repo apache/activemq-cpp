@@ -30,62 +30,75 @@ namespace core{
     class ActiveMQConnectionFactory : public cms::ConnectionFactory
     {
     private:
-   
+
         // The user name this factory will use to connect
         std::string username;
-      
+
         // The password this factory will use to connect
         std::string password;
-      
-        // The client id to assign to the connection created
-        std::string clientId;
-      
+
         // The URL of the Broker, the default is:
         // "tcp://localhost:61616"
         std::string brokerURL;
 
     public:
 
-   	    ActiveMQConnectionFactory(void);
+   	    ActiveMQConnectionFactory();
 
         /**
          * Constructor
          * @param url the URL of the Broker we are connecting to.
          * @param username to authenticate with, defaults to ""
          * @param password to authenticate with, defaults to ""
-         * @param clientId to assign to connection, defaults to ""
          */
         ActiveMQConnectionFactory( const std::string& url,
                                    const std::string& username = "",
-                                   const std::string& password = "",
-                                   const std::string& clientId = "" );
+                                   const std::string& password = "" );
 
-   	    virtual ~ActiveMQConnectionFactory(void) {}
+   	    virtual ~ActiveMQConnectionFactory() {}
 
         /**
-         * Creates a connection with the default user identity. The 
-         * connection is created in stopped mode. No messages will be 
-         * delivered until the Connection.start method is explicitly 
-         * called. 
+         * Creates a connection with the default user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
          * @returns a Connection Pointer
          * @throws CMSException
          */
-        virtual cms::Connection* createConnection(void) throw ( cms::CMSException );
+        virtual cms::Connection* createConnection()
+            throw ( cms::CMSException );
 
         /**
-         * Creates a connection with the specified user identity. The 
-         * connection is created in stopped mode. No messages will be 
-         * delivered until the Connection.start method is explicitly called.
-         * @param username to authenticate with, defaults to ""
-         * @param password to authenticate with, defaults to ""
-         * @param clientId to assign to connection, defaults to ""
-         * @throw CMSException.
+         * Creates a connection with the specified user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
+         * @param username to authenticate with, resets internal to new value
+         * @param password to authenticate with, resets internal to new value
+         * @returns a Connection Pointer
+         * @throws CMSException
+         */
+        virtual cms::Connection* createConnection( const std::string& username,
+                                                   const std::string& password )
+            throw ( cms::CMSException );
+
+        /**
+         * Creates a connection with the specified user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
+         * @param username to authenticate with, resets internal to new value
+         * @param password to authenticate with, resets internal to new value
+         * @param clientId to assign to connection if "" then a random cleint
+         *        Id is created for this connection.
+         * @returns a Connection Pointer
+         * @throws CMSException
          */
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password,
-                                                   const std::string& clientId = "" )
+                                                   const std::string& clientId )
             throw ( cms::CMSException );
-                                       
+
         /**
          * Sets the username that should be used when creating a new connection
          * @param username string
@@ -93,16 +106,16 @@ namespace core{
         virtual void setUsername( const std::string& username ){
             this->username = username;
         }
-      
+
         /**
          * Gets the username that this factory will use when creating a new
          * connection instance.
          * @return username string, "" for default credentials
          */
-        virtual const std::string& getUsername(void) const {
+        virtual const std::string& getUsername() const {
             return username;
         }
-      
+
         /**
          * Sets the password that should be used when creating a new connection
          * @param password string
@@ -110,52 +123,52 @@ namespace core{
         virtual void setPassword( const std::string& password ){
             this->password = password;
         }
-      
+
         /**
          * Gets the password that this factory will use when creating a new
          * connection instance.
          * @return password string, "" for default credentials
          */
-        virtual const std::string& getPassword(void) const {
+        virtual const std::string& getPassword() const {
             return password;
         }
 
         /**
-         * Sets the Broker URL that should be used when creating a new 
+         * Sets the Broker URL that should be used when creating a new
          * connection instance
          * @param brokerURL string
          */
         virtual void setBrokerURL( const std::string& brokerURL ){
             this->brokerURL = brokerURL;
         }
-      
+
         /**
          * Gets the Broker URL that this factory will use when creating a new
          * connection instance.
          * @return brokerURL string
          */
-        virtual const std::string& getBrokerURL(void) const {
+        virtual const std::string& getBrokerURL() const {
             return brokerURL;
         }
 
+    public:
+
         /**
-         * Sets the Client Id that should be used when creating a new 
-         * connection instance
-         * @param clientId string
+         * Creates a connection with the specified user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly called.
+         * @param url the URL of the Broker we are connecting to.
+         * @param username to authenticate with
+         * @param password to authenticate with
+         * @param clientId to assign to connection, defaults to ""
+         * @throw CMSException.
          */
-        virtual void setClientId( const std::string& clientId ){
-            this->clientId = clientId;
-        }
-      
-        /**
-         * Gets the Client Id that this factory will use when creating a new
-         * connection instance.
-         * @return clientId string
-         */
-        virtual const std::string& getClientId(void) const {
-            return clientId;
-        }
-      
+        static cms::Connection* createConnection( const std::string& url,
+                                                  const std::string& username,
+                                                  const std::string& password,
+                                                  const std::string& clientId = "" )
+            throw ( cms::CMSException );
+
     protected:
 
         /**
@@ -165,10 +178,10 @@ namespace core{
          * @param properties a Properties object to set the parsed values in
          * @throws IllegalArgumentException if the passed URI is invalid
          */
-        virtual void parseURL( const std::string& URI, 
-                               util::Properties& properties )
+        static void parseURL( const std::string& URI,
+                              util::Properties& properties )
             throw ( exceptions::IllegalArgumentException );
-         
+
     };
 
 }}

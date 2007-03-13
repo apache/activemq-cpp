@@ -39,41 +39,64 @@ using namespace activemq::network;
 using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory(void)
+ActiveMQConnectionFactory::ActiveMQConnectionFactory()
 {
     brokerURL = "tcp://localhost:61616";
-    
+
     this->username = "";
     this->password = "";
-    this->clientId = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionFactory::ActiveMQConnectionFactory(
     const std::string& url,
     const std::string& username,
-    const std::string& password,
-    const std::string& clientId )
+    const std::string& password )
 {
     brokerURL = url;
 
     this->username = username;
     this->password = password;
-    this->clientId = clientId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* ActiveMQConnectionFactory::createConnection(void) 
-throw ( cms::CMSException )
+cms::Connection* ActiveMQConnectionFactory::createConnection()
+    throw ( cms::CMSException )
 {
-    return createConnection( username, password, clientId );
+    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* ActiveMQConnectionFactory::createConnection(
+    const std::string& username,
+    const std::string& password )
+        throw ( cms::CMSException )
+{
+    this->setUsername( username );
+    this->setPassword( password );
+
+    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password,
-    const std::string& clientId ) 
+    const std::string& clientId )
+        throw ( cms::CMSException )
+{
+    this->setUsername( username );
+    this->setPassword( password );
+
+    return createConnection( brokerURL, username, password, clientId );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* ActiveMQConnectionFactory::createConnection(
+    const std::string& url,
+    const std::string& username,
+    const std::string& password,
+    const std::string& clientId )
        throw ( cms::CMSException )
 {
     // Declared here so that they can be deleted in the catch block
@@ -82,65 +105,59 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     Connector* connector = NULL;
     ActiveMQConnectionData* connectionData = NULL;
     ActiveMQConnection* connection = NULL;
-    
-    this->username = username;
-    this->password = password;
-    this->clientId = clientId;
+    std::string clientIdLocal = clientId;
 
     try
     {
         properties = new SimpleProperties;
 
         // if no Client Id specified, create one
-        if( this->clientId == "" )
+        if( clientIdLocal == "" )
         {
-            this->clientId = Guid::createGUIDString();
+            clientIdLocal = Guid::createGUIDString();
         }
 
         // Store login data in the properties
-        properties->setProperty( 
+        properties->setProperty(
             ActiveMQConstants::toString(
-                ActiveMQConstants::PARAM_USERNAME ), 
-            this->username );
-        properties->setProperty( 
+                ActiveMQConstants::PARAM_USERNAME ), username );
+        properties->setProperty(
             ActiveMQConstants::toString(
-                ActiveMQConstants::PARAM_PASSWORD ), 
-            this->password );
-        properties->setProperty( 
+                ActiveMQConstants::PARAM_PASSWORD ), password );
+        properties->setProperty(
             ActiveMQConstants::toString(
-                ActiveMQConstants::PARAM_CLIENTID ), 
-            this->clientId );
+                ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
 
         // Parse out the properties from the URI
-        parseURL( brokerURL, *properties );
+        parseURL( url, *properties );
 
         // Create the Transport that the Connector will use.
-        string factoryName = 
+        string factoryName =
             properties->getProperty( "transport", "tcp" );
-        TransportFactory* factory = 
+        TransportFactory* factory =
             TransportFactoryMap::getInstance().lookup( factoryName );
         if( factory == NULL ){
-            throw ActiveMQException( 
-                __FILE__, __LINE__, 
+            throw ActiveMQException(
+                __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
                 "unknown transport factory" );
         }
-        
+
         // Create the transport.
         transport = factory->createTransport( *properties );
         if( transport == NULL ){
-            throw ActiveMQException( 
-                __FILE__, __LINE__, 
+            throw ActiveMQException(
+                __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
                 "failed creating new Transport" );
         }
 
         // What wire format are we using, defaults to Stomp
-        std::string wireFormat = 
+        std::string wireFormat =
             properties->getProperty( "wireFormat", "stomp" );
 
         // Now try and find a factory to create the Connector
-        ConnectorFactory* connectorfactory = 
+        ConnectorFactory* connectorfactory =
             ConnectorFactoryMap::getInstance()->lookup( wireFormat );
 
         if( connectorfactory == NULL )
@@ -161,7 +178,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
                 "ActiveMQConnectionFactory::createConnection - "
                 "Failed to Create the Connector" );
         }
-        
+
         // Start the Connector
         connector->start();
 
@@ -171,7 +188,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         // Create and Return the new connection object.
         connection = new ActiveMQConnection( connectionData );
-        
+
         return connection;
     }
     catch( exceptions::ActiveMQException& ex )
@@ -182,13 +199,13 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         delete connector;
         delete transport;
         delete properties;
-        
+
         throw ex;
     }
     catch( ... )
     {
-        exceptions::ActiveMQException ex( 
-            __FILE__, __LINE__, 
+        exceptions::ActiveMQException ex(
+            __FILE__, __LINE__,
             "ActiveMQConnectionFactory::create - "
             "caught unknown exception" );
 
@@ -202,28 +219,28 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::parseURL( const std::string& URI, 
+void ActiveMQConnectionFactory::parseURL( const std::string& URI,
                                           Properties& properties )
     throw ( exceptions::IllegalArgumentException )
 {
     try
     {
-        StringTokenizer tokenizer(URI, ":/");
-    
+        StringTokenizer tokenizer( URI, ":/" );
+
         std::vector<std::string> tokens;
-    
+
         // Require that there be three tokens at the least, these are
         // transport, url, port.
         if( tokenizer.countTokens() < 3 )
         {
             throw exceptions::IllegalArgumentException(
                 __FILE__, __LINE__,
-                (string("ActiveMQConnectionFactory::parseURL - "
-                        "Marlformed URI: ") + URI).c_str());
+                (string( "ActiveMQConnectionFactory::parseURL - "
+                         "Marlformed URI: ") + URI).c_str() );
         }
 
         // First element should be the Transport Type, following that is the
-        // URL and any params.  
+        // URL and any params.
         properties.setProperty( "transport", tokenizer.nextToken() );
 
         // Parse URL and Port as one item, optional params follow the ?
@@ -232,12 +249,12 @@ void ActiveMQConnectionFactory::parseURL( const std::string& URI,
         properties.setProperty( "uri", tokenizer.nextToken("&?").substr(3) );
 
         // Now get all the optional parameters and store them as properties
-        int count = tokenizer.toArray(tokens);
-        
+        int count = tokenizer.toArray( tokens );
+
         for( int i = 0; i < count; ++i )
         {
             tokenizer.reset( tokens[i], "=" );
-    
+
             if( tokenizer.countTokens() != 2 )
             {
                 throw exceptions::IllegalArgumentException(
@@ -245,12 +262,12 @@ void ActiveMQConnectionFactory::parseURL( const std::string& URI,
                     ( string( "ActiveMQConnectionFactory::parseURL - "
                               "Marlformed Parameter = " ) + tokens[i] ).c_str() );
             }
-            
+
             // Get them in order, passing both as nextToken calls in the
             // set Property can cause reversed order.
             string key   = tokenizer.nextToken();
             string value = tokenizer.nextToken();
-    
+
             // Store this param as a property
             properties.setProperty( key, value );
         }

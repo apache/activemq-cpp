@@ -35,29 +35,45 @@ namespace cms
         virtual ~ConnectionFactory() {}
 
         /**
-         * Creates a connection with the default user identity. The 
-         * connection is created in stopped mode. No messages will be 
-         * delivered until the Connection.start method is explicitly 
-         * called. 
+         * Creates a connection with the default user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
          * @return Pointer to a connection object, caller owns the pointer
          * @throws CMSException
          */
         virtual Connection* createConnection() throw ( CMSException ) = 0;
 
         /**
-         * Creates a connection with the specified user identity. The 
-         * connection is created in stopped mode. No messages will be 
-         * delivered until the Connection.start method is explicitly called.
-         * @param username - name to login with
-         * @param password - password to authenticate with
-         * @param clientId - User provided Client Id 
-         * @return Pointer to a connection object, caller owns the pointer
-         * @throw CMSException.
+         * Creates a connection with the default specified identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
+         * @param username to authenticate with, resets internal to new value
+         * @param password to authenticate with, resets internal to new value
+         * @returns a Connection Pointer
+         * @throws CMSException
          */
-        virtual Connection* createConnection( const std::string& username,
-                                              const std::string& password,
-                                              const std::string& clientId) 
-                                                  throw ( CMSException ) = 0;
+        virtual cms::Connection* createConnection( const std::string& username,
+                                                   const std::string& password )
+            throw ( cms::CMSException ) = 0;
+
+        /**
+         * Creates a connection with the specified user identity. The
+         * connection is created in stopped mode. No messages will be
+         * delivered until the Connection.start method is explicitly
+         * called.
+         * @param username to authenticate with, resets internal to new value
+         * @param password to authenticate with, resets internal to new value
+         * @param clientId to assign to connection if "" then a random cleint
+         *        Id is created for this connection.
+         * @returns a Connection Pointer
+         * @throws CMSException
+         */
+        virtual cms::Connection* createConnection( const std::string& username,
+                                                   const std::string& password,
+                                                   const std::string& clientId )
+            throw ( cms::CMSException ) = 0;
 
     };
 
