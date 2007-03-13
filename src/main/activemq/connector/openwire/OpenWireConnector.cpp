@@ -687,22 +687,27 @@ ProducerInfo* OpenWireConnector::createProducer(
         producerId->setSessionId( session->getSessionId() );
         producerId->setValue( getNextProducerId() );
 
-        // Cast the destination to an OpenWire destination, so we can
-        // get all the goodies.
-        const commands::ActiveMQDestination* amqDestination =
-            dynamic_cast<const commands::ActiveMQDestination*>(destination);
-        if( amqDestination == NULL ) {
-            throw ConnectorException( __FILE__, __LINE__,
-                "Destination was either NULL or not created by this OpenWireConnector" );
+        // Producers are allowed to have NULL destinations.  In this case, the
+        // destination is specified by the messages as they are sent.
+        if( destination != NULL ) {
+            
+            // Cast the destination to an OpenWire destination, so we can
+            // get all the goodies.
+            const commands::ActiveMQDestination* amqDestination =
+                dynamic_cast<const commands::ActiveMQDestination*>(destination);
+            if( amqDestination == NULL ) {
+                throw ConnectorException( __FILE__, __LINE__,
+                    "Destination was not created by this OpenWireConnector" );
+            }
+    
+            // Get any options specified in the destination and apply them to the
+            // ProducerInfo object.
+            producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
+                amqDestination->cloneDataStructure()) );
+            const Properties& options = amqDestination->getOptions();
+            producerInfo->setDispatchAsync( Boolean::parseBoolean(
+                options.getProperty( "producer.dispatchAsync", "false" )) );
         }
-
-        // Get any options specified in the destination and apply them to the
-        // ProducerInfo object.
-        producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
-            amqDestination->cloneDataStructure()) );
-        const Properties& options = amqDestination->getOptions();
-        producerInfo->setDispatchAsync( Boolean::parseBoolean(
-            options.getProperty( "producer.dispatchAsync", "false" )) );
 
         // Send the message to the broker.
         Response* response = syncRequest(producerInfo);

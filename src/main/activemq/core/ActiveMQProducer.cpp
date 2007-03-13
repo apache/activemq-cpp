@@ -154,6 +154,13 @@ void ActiveMQProducer::send( const cms::Destination* destination,
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
+        
+        if( destination == NULL ) {
+            
+            throw InvalidStateException( 
+                __FILE__, __LINE__, 
+                "ActiveMQProducer::send - Attempting to send on NULL destination");
+        }
 
         // configure the message
         message->setCMSDestination( destination );

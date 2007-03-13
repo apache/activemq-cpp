@@ -65,7 +65,14 @@ namespace stomp{
          * @param destination reference to a destination, copied internally
          */
         virtual void setDestination( const cms::Destination* destination ) {
-            this->destination = destination->clone();
+            
+            // Delete the previous destination if it exists.
+            delete this->destination;
+            this->destination = NULL;
+            
+            if( destination != NULL ) {
+                this->destination = destination->clone();
+            }
         }
 
         /**

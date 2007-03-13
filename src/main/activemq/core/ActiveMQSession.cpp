@@ -265,7 +265,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         {
             throw InvalidStateException(
                 __FILE__, __LINE__,
-                "ActiveMQSession::createProducer - Session Already Closed" );
+                "ActiveMQSession::createDurableConsumer - Session Already Closed" );
         }
 
         // Create the consumer instance.
