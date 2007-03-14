@@ -19,7 +19,7 @@
 
 #include <integration/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>
@@ -112,8 +112,41 @@ void OpenwireTempDestinationTest::test()
                                                    session,
                                                    responseTopic );
 
+        // Launch the Consumers in new Threads.
+        Thread requestorThread( requestConsumer );
+        Thread responderThread( responseConsumer );
+        requestorThread.start();
+        responderThread.start();
+        Thread::sleep( 100 );
+
         cms::MessageProducer* producer =
             session->createProducer( requestTopic );
+
+        // Send some bytes messages.
+        testSupport.produceTextMessages(
+            *producer, IntegrationCommon::defaultMsgCount, responseTopic );
+
+        // Let the request consumer get all its messages
+        waitForMessages( *requestConsumer,
+                         IntegrationCommon::defaultMsgCount );
+
+        // Check that we got them all.
+        CPPUNIT_ASSERT( requestConsumer->getNumReceived() ==
+                        IntegrationCommon::defaultMsgCount );
+
+        // Let the response consumer get all its messages
+        waitForMessages( *responseConsumer,
+                         IntegrationCommon::defaultMsgCount );
+
+        // Check that we got them all.
+        CPPUNIT_ASSERT( responseConsumer->getNumReceived() ==
+                        IntegrationCommon::defaultMsgCount );
+
+        // Shutdown the Consumer Threads.
+        requestConsumer->stop();
+        responseConsumer->stop();
+        requestorThread.join();
+        responderThread.join();
 
         delete producer;
         delete requestConsumer;
@@ -121,6 +154,32 @@ void OpenwireTempDestinationTest::test()
 
         delete requestTopic;
         delete responseTopic;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void OpenwireTempDestinationTest::waitForMessages(
+    Consumer& consumer,
+    unsigned int count )
+{
+    try
+    {
+        synchronized( &( consumer.getOnMsgMutex() ) )
+        {
+            unsigned int stopAtZero = count + 10;
+
+            while( consumer.getNumReceived() < count )
+            {
+                consumer.getOnMsgMutex().wait( 500 );
+
+                if( --stopAtZero == 0 )
+                {
+                    break;
+                }
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -186,7 +245,25 @@ void OpenwireTempDestinationTest::Consumer::onMessage(
     {
         const cms::Destination* replyTo = message->getCMSReplyTo();
 
+        if( replyTo != NULL ) {
+
+            cms::MessageProducer* producer = session->createProducer( replyTo );
+            cms::Message* response = session->createMessage();
+
+            // Send it back to the replyTo Destination
+            producer->send( response );
+
+            delete response;
+            delete producer;
+        }
+
         numReceived++;
+
+        // Signal anyone waiting on us getting new messages.
+        synchronized( &onMsgMutex ){
+            onMsgMutex.notifyAll();
+        }
+
     } catch( CMSException& e ) {
         e.printStackTrace();
     }
