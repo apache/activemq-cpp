@@ -318,6 +318,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTempDestinationTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTempDestinationTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTransactionTest.cpp"
 							>
 						</File>
