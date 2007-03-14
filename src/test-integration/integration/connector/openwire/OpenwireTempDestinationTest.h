@@ -57,8 +57,9 @@ namespace openwire{
             cms::Session* session;
             cms::Destination* destination;
             cms::MessageConsumer* consumer;
-            int numReceived;
+            unsigned int numReceived;
             activemq::concurrent::Mutex mutex;
+            activemq::concurrent::Mutex onMsgMutex;
 
         public:
 
@@ -68,7 +69,11 @@ namespace openwire{
 
             virtual ~Consumer();
 
-            virtual int getNumReceived() const {
+            virtual activemq::concurrent::Mutex& getOnMsgMutex() {
+                return this->onMsgMutex;
+            }
+
+            virtual unsigned int getNumReceived() const {
                 return this->numReceived;
             }
 
@@ -76,6 +81,10 @@ namespace openwire{
             virtual void run();
             virtual void onMessage( const cms::Message* message );
         };
+
+        // Internal Wait method
+        void waitForMessages( Consumer& consumer,
+                              unsigned int count );
 
     };
 
