@@ -184,6 +184,8 @@ void OpenwireTempDestinationTest::Consumer::onMessage(
 
     try
     {
+        const cms::Destination* replyTo = message->getCMSReplyTo();
+
         numReceived++;
     } catch( CMSException& e ) {
         e.printStackTrace();
