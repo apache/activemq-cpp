@@ -24,6 +24,7 @@ cc_sources = \
   integration/connector/openwire/OpenwireSimpleRollbackTest.cpp \
   integration/connector/openwire/OpenwireSimpleTest.cpp \
   integration/connector/openwire/OpenwireTransactionTest.cpp \
+  integration/connector/openwire/OpenwireTempDestinationTest.cpp \
   integration/connector/stomp/AsyncSenderTest.cpp \
   integration/connector/stomp/DurableTest.cpp \
   integration/connector/stomp/ExpirationTest.cpp \
@@ -33,7 +34,7 @@ cc_sources = \
   main.cpp
 
 ## Compile this as part of make check
-check_PROGRAMS = activemq-test-integration
+bin_PROGRAMS = activemq-test-integration
 
 ## 
 ## Compiler/Linker Options
