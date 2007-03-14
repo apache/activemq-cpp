@@ -119,7 +119,8 @@ void TestSupport::doSleep(void)
 
 unsigned int TestSupport::produceTextMessages(
     cms::MessageProducer& producer,
-    unsigned int count )
+    unsigned int count,
+    cms::Destination* replyTo )
 {
     try
     {
@@ -129,6 +130,7 @@ unsigned int TestSupport::produceTextMessages(
 
         cms::TextMessage* textMsg =
             session->createTextMessage();
+        textMsg->setCMSReplyTo( replyTo );
 
         unsigned int realCount = 0;
 
@@ -151,7 +153,8 @@ unsigned int TestSupport::produceTextMessages(
 
 unsigned int TestSupport::produceBytesMessages(
     cms::MessageProducer& producer,
-    unsigned int count )
+    unsigned int count,
+    cms::Destination* replyTo )
 {
     try
     {
@@ -169,6 +172,7 @@ unsigned int TestSupport::produceBytesMessages(
         cms::BytesMessage* bytesMsg =
             session->createBytesMessage();
         bytesMsg->setBodyBytes( buf, 10 );
+        bytesMsg->setCMSReplyTo( replyTo );
 
         unsigned int realCount = 0;
         for( unsigned int ix=0; ix<count; ++ix ){

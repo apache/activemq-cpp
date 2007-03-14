@@ -33,9 +33,9 @@ namespace integration{
     {
     public:
 
-    	TestSupport( const std::string& brokerUrl,
+      TestSupport( const std::string& brokerUrl,
                      cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
-    	virtual ~TestSupport();
+      virtual ~TestSupport();
 
         virtual void initialize();
         virtual void close();
@@ -68,10 +68,12 @@ namespace integration{
 
         virtual unsigned int produceTextMessages(
             cms::MessageProducer& producer,
-            unsigned int count );
+            unsigned int count,
+            cms::Destination* replyTo = NULL );
         virtual unsigned int produceBytesMessages(
             cms::MessageProducer& producer,
-            unsigned int count );
+            unsigned int count,
+            cms::Destination* replyTo = NULL );
 
         virtual void waitForMessages( unsigned int count );
 
