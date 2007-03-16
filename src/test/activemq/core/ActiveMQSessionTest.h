@@ -214,7 +214,7 @@ namespace core{
             long long expiration = 0LL;
             
             if( timeStamp != 0 ) {
-                msg->setCMSTimeStamp( timeStamp );
+                msg->setCMSTimestamp( timeStamp );
 
                 if( timeToLive > 0LL ) {
                     expiration = timeToLive + timeStamp;

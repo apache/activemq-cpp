@@ -614,7 +614,7 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimeStamp(void) const {
+        virtual long long getCMSTimestamp(void) const {
             return this->getTimestamp();
         }
 
@@ -622,7 +622,7 @@ namespace commands{
          * Sets the Time Stamp for this message
          * @param timeStamp - integer time stamp value
          */
-        virtual void setCMSTimeStamp( long long timeStamp ) {
+        virtual void setCMSTimestamp( long long timeStamp ) {
             this->setTimestamp( timeStamp );
         }
 
@@ -630,7 +630,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSMessageType(void) const {
+        virtual std::string getCMSType(void) const {
             return this->getType();
         }
 
@@ -638,7 +638,7 @@ namespace commands{
          * Sets the CMS Message Type for this message
          * @param type - message type value string
          */
-        virtual void setCMSMessageType( const std::string& type ) {
+        virtual void setCMSType( const std::string& type ) {
             this->setType( type );
         }
 

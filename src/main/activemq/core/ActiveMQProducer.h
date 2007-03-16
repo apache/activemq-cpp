@@ -138,7 +138,7 @@ namespace core{
          * Sets if Message Ids are disbled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageId( bool value ) {
+        virtual void setDisableMessageID( bool value ) {
             if( producerInfo != NULL ){
                 producerInfo->setDisableMessageId( value );
             }
@@ -148,7 +148,7 @@ namespace core{
          * Sets if Message Ids are disbled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageId() const {
+        virtual bool getDisableMessageID() const {
             if( this->producerInfo != NULL ) {
                 return this->producerInfo->isDisableMessageId();
             }

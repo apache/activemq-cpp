@@ -171,7 +171,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
         if( !disableTimestamps ) {
             long long timeStamp = Date::getCurrentTimeMilliseconds();
-            message->setCMSTimeStamp(timeStamp);
+            message->setCMSTimestamp(timeStamp);
             if( timeToLive > 0LL ) {
                 expiration = timeToLive + timeStamp;
             }

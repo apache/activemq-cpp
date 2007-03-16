@@ -117,7 +117,7 @@ namespace core{
          * Get the Client Id for this session
          * @return string version of Client Id
          */
-        virtual std::string getClientId() const;
+        virtual std::string getClientID() const;
 
         /**
          * Retrieves the Connection Data object for this object.
