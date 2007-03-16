@@ -126,17 +126,17 @@ void OpenWireFormat::marshal( transport::Command* command,
             }
 
             if( tightEncodingEnabled ) {
-                BooleanStream* bs = new BooleanStream();
-                size += dsm->tightMarshal1( this, dataStructure, bs );
-                size += bs->marshalledSize();
+                BooleanStream bs;
+                size += dsm->tightMarshal1( this, dataStructure, &bs );
+                size += bs.marshalledSize();
 
                 if( !sizePrefixDisabled ) {
                     dataOut->writeInt( size );
                 }
 
                 dataOut->writeByte( type );
-                bs->marshal( dataOut );
-                dsm->tightMarshal2( this, dataStructure, dataOut, bs );
+                bs.marshal( dataOut );
+                dsm->tightMarshal2( this, dataStructure, dataOut, &bs );
 
             } else {
                 DataOutputStream* looseOut = dataOut;
