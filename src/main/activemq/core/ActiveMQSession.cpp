@@ -245,6 +245,16 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         connection->addMessageListener(
             consumer->getConsumerInfo()->getConsumerId(), consumer );
 
+        // Start the Consumer, we are now ready to receive messages
+        try{
+            connection->getConnectionData()->getConnector()->startConsumer(
+                consumer->getConsumerInfo() );
+        } catch( ActiveMQException& ex ) {
+            this->onDestroySessionResource( consumer );
+            ex.setMark( __FILE__, __LINE__ );
+            throw ex;
+        }
+
         return consumer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -282,6 +292,16 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         // connection.
         connection->addMessageListener(
             consumer->getConsumerInfo()->getConsumerId(), consumer );
+
+        // Start the Consumer, we are now ready to receive messages
+        try{
+            connection->getConnectionData()->getConnector()->startConsumer(
+                consumer->getConsumerInfo() );
+        } catch( ActiveMQException& ex ) {
+            this->onDestroySessionResource( consumer );
+            ex.setMark( __FILE__, __LINE__ );
+            throw ex;
+        }
 
         return consumer;
     }
@@ -801,7 +821,7 @@ void ActiveMQSession::purgeMessages() throw ( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::unsubscribe( const std::string& name ) 
+void ActiveMQSession::unsubscribe( const std::string& name )
     throw ( CMSException )
 {
     try
@@ -819,4 +839,3 @@ void ActiveMQSession::unsubscribe( const std::string& name )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-

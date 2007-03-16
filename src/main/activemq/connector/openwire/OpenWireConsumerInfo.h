@@ -36,10 +36,14 @@ namespace openwire{
         // Session Info - We do not own this
         const SessionInfo* session;
 
+        // Has this consumer been started.
+        bool started;
+
     public:
 
         OpenWireConsumerInfo() {
-            session = NULL;
+            this->session = NULL;
+            this->started = false;
         }
 
         virtual ~OpenWireConsumerInfo() {}
@@ -151,6 +155,21 @@ namespace openwire{
          */
         virtual void setConsumerInfo( commands::ConsumerInfo* consumerInfo ) {
             this->consumerInfo = consumerInfo;
+        }
+
+        /**
+         * @returns if this Consumer has been started already
+         */
+        virtual bool isStarted() const {
+            return this->started;
+        }
+
+        /**
+         * Sets if the consumer is started or not
+         * @param started - True if Consumer is started
+         */
+        virtual void setStarted( bool started ) {
+            this->started = started;
         }
 
     };
