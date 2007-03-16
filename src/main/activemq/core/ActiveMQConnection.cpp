@@ -202,7 +202,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             connectionData->getConnector()->acknowledge(
                 consumer->getSessionInfo(),
                 consumer,
-                (Message*)message,
+                dynamic_cast<Message*>( message ),
                 Connector::DeliveredAck );
 
             // Delete the message here
