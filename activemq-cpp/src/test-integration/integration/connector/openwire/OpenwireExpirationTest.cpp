@@ -112,7 +112,7 @@ void OpenwireExpirationTest::Producer::run() {
         delete connectionFactory;
         connection->start();
 
-        string sss=connection->getClientId();
+        string sss=connection->getClientID();
         cout << sss << endl;
 
         session = connection->createSession( Session::AUTO_ACKNOWLEDGE);

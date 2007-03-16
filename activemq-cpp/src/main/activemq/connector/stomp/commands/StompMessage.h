@@ -462,7 +462,7 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimeStamp() const {
+        virtual long long getCMSTimestamp() const {
             return util::Long::parseLong( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TIMESTAMP ), "0" ) );
@@ -472,7 +472,7 @@ namespace commands{
          * Sets the Time Stamp for this message
          * @param timeStamp time stamp value
          */
-        virtual void setCMSTimeStamp( long long timeStamp ) {
+        virtual void setCMSTimestamp( long long timeStamp ) {
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TIMESTAMP ),
@@ -483,7 +483,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSMessageType() const {
+        virtual std::string getCMSType() const {
             std::string type = getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TYPE ), "null" );
@@ -497,7 +497,7 @@ namespace commands{
          * Sets the CMS Message Type for this message
          * @param type type value
          */
-        virtual void setCMSMessageType( const std::string& type ) {
+        virtual void setCMSType( const std::string& type ) {
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TYPE ),

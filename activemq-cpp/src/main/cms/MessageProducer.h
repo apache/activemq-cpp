@@ -101,13 +101,13 @@ namespace cms
          * Sets if Message Ids are disbled for this Producer
          * @param value - boolean indicating enable / disable (true / false)
          */
-        virtual void setDisableMessageId( bool value ) = 0;
+        virtual void setDisableMessageID( bool value ) = 0;
       
         /**
          * Gets if Message Ids are disbled for this Producer
          * @return boolean indicating enable / disable (true / false)
          */
-        virtual bool getDisableMessageId() const = 0;
+        virtual bool getDisableMessageID() const = 0;
 
         /**
          * Sets if Message Time Stamps are disbled for this Producer

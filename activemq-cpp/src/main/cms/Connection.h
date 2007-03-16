@@ -63,7 +63,7 @@ namespace cms
          * Get the Client Id for this session
          * @return Client Id String
          */
-        virtual std::string getClientId() const = 0;      
+        virtual std::string getClientID() const = 0;      
 
         /**
          * Gets the registered Exception Listener for this connection

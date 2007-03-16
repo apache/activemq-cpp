@@ -138,12 +138,12 @@ namespace commands{
             cmd.setCMSReplyTo( &topic );
             CPPUNIT_ASSERT( cmd.getCMSReplyTo()->toProviderString() == 
                             "/topic/testTopic" );
-            CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 0 );
-            cmd.setCMSTimeStamp( 123 );
-            CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == 123 );
-            CPPUNIT_ASSERT( cmd.getCMSMessageType() == "" );
-            cmd.setCMSMessageType( "text" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageType() ) == 
+            CPPUNIT_ASSERT( cmd.getCMSTimestamp() == 0 );
+            cmd.setCMSTimestamp( 123 );
+            CPPUNIT_ASSERT( cmd.getCMSTimestamp() == 123 );
+            CPPUNIT_ASSERT( cmd.getCMSType() == "" );
+            cmd.setCMSType( "text" );
+            CPPUNIT_ASSERT( std::string( cmd.getCMSType() ) == 
                             "text" );
             CPPUNIT_ASSERT( cmd.getRedeliveryCount() == 0 );
             cmd.setRedeliveryCount( 123 );
@@ -156,12 +156,12 @@ namespace commands{
             cms::Message* cmd2 = cmd.clone();
             
             CPPUNIT_ASSERT( cmd.getCMSPriority() == cmd2->getCMSPriority() );
-            CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == cmd2->getCMSTimeStamp() );
+            CPPUNIT_ASSERT( cmd.getCMSTimestamp() == cmd2->getCMSTimestamp() );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == cmd2->getCMSExpiration() );
             CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == cmd2->getCMSDeliveryMode() );
             CPPUNIT_ASSERT( std::string(cmd.getCMSCorrelationID()) == cmd2->getCMSCorrelationID() );
             CPPUNIT_ASSERT( cmd.getCMSReplyTo()->toProviderString() == cmd2->getCMSReplyTo()->toProviderString() );
-            CPPUNIT_ASSERT( std::string(cmd.getCMSMessageType()) == cmd2->getCMSMessageType() );
+            CPPUNIT_ASSERT( std::string(cmd.getCMSType()) == cmd2->getCMSType() );
             CPPUNIT_ASSERT( std::string(cmd.getCMSMessageID()) == cmd2->getCMSMessageID() );
 
             core::ActiveMQMessage* message = 

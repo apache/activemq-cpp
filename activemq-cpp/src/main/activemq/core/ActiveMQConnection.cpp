@@ -91,7 +91,7 @@ cms::Session* ActiveMQConnection::createSession(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConnection::getClientId() const
+std::string ActiveMQConnection::getClientID() const
 {
    return connectionData->getConnector()->getClientId();
 }
