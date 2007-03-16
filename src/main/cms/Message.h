@@ -224,13 +224,13 @@ namespace cms{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationId(void) const = 0;
+        virtual std::string getCMSCorrelationID() const = 0;
 
         /**
          * Sets the Correlation Id used by this message
          * @param correlationId - String representing the correlation id.
          */
-        virtual void setCMSCorrelationId( const std::string& correlationId ) = 0;
+        virtual void setCMSCorrelationID( const std::string& correlationId ) = 0;
 
         /**
          * Gets the DeliveryMode for this message
@@ -272,13 +272,13 @@ namespace cms{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageId() const = 0;
+        virtual std::string getCMSMessageID() const = 0;
       
         /**
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
-        virtual void setCMSMessageId( const std::string& id ) = 0;
+        virtual void setCMSMessageID( const std::string& id ) = 0;
       
         /**
          * Gets the Priority Value for this Message

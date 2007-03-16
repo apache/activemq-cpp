@@ -123,7 +123,7 @@ namespace stomp{
             // Sync to expected output
             StompTopic topic1("a");
             textCommand.setCMSDestination( &topic1 );
-            textCommand.setCMSMessageId( "123" );
+            textCommand.setCMSMessageID( "123" );
             textCommand.getProperties().setProperty( 
                 "sampleProperty", "testvalue" );
             textCommand.setText( "testMessage" );
@@ -131,7 +131,7 @@ namespace stomp{
             // Sync to expected output
             StompTopic topic2("a");
             bytesCommand.setCMSDestination( &topic2 );
-            bytesCommand.setCMSMessageId( "123" );
+            bytesCommand.setCMSMessageID( "123" );
             bytesCommand.getProperties().setProperty( 
                 "sampleProperty", "testvalue" );
             bytesCommand.setBodyBytes( 
@@ -173,9 +173,9 @@ namespace stomp{
 
             StompTopic topic2("a");
             bytesCommand.setCMSDestination( &topic2 );
-            bytesCommand.setCMSMessageId( "123" );
+            bytesCommand.setCMSMessageID( "123" );
             textCommand.setCMSDestination( &topic2 );
-            textCommand.setCMSMessageId( "123" );
+            textCommand.setCMSMessageID( "123" );
 
             textCommand.setText("This is a TextMessage");
 

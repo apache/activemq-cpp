@@ -209,7 +209,7 @@ namespace core{
             // Init Message
             msg->setText( message.c_str() );
             msg->setCMSDestination( &destination );
-            msg->setCMSMessageId( "Id: 123456" );
+            msg->setCMSMessageID( "Id: 123456" );
             
             long long expiration = 0LL;
             

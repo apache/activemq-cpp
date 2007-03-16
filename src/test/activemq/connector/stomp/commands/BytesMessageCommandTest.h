@@ -113,9 +113,9 @@ namespace commands{
             CPPUNIT_ASSERT(
                 std::string( cmd.getProperties().getProperty( "test" ) ) == "value" );
 
-            CPPUNIT_ASSERT( cmd.getCMSCorrelationId() == "" );
-            cmd.setCMSCorrelationId( "ID:1234567" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationId() ) ==
+            CPPUNIT_ASSERT( cmd.getCMSCorrelationID() == "" );
+            cmd.setCMSCorrelationID( "ID:1234567" );
+            CPPUNIT_ASSERT( std::string( cmd.getCMSCorrelationID() ) ==
                             "ID:1234567" );
             CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() ==
                             cms::DeliveryMode::PERSISTENT );
@@ -128,9 +128,9 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 0 );
             cmd.setCMSExpiration( 123 );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == 123 );
-            CPPUNIT_ASSERT( cmd.getCMSMessageId() == "" );
-            cmd.setCMSMessageId( "ID:1234567" );
-            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageId() ) ==
+            CPPUNIT_ASSERT( cmd.getCMSMessageID() == "" );
+            cmd.setCMSMessageID( "ID:1234567" );
+            CPPUNIT_ASSERT( std::string( cmd.getCMSMessageID() ) ==
                             "ID:1234567" );
             CPPUNIT_ASSERT( cmd.getCMSPriority() == 0 );
             cmd.setCMSPriority( 5 );
@@ -168,10 +168,10 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSTimeStamp() == cmd2->getCMSTimeStamp() );
             CPPUNIT_ASSERT( cmd.getCMSExpiration() == cmd2->getCMSExpiration() );
             CPPUNIT_ASSERT( cmd.getCMSDeliveryMode() == cmd2->getCMSDeliveryMode() );
-            CPPUNIT_ASSERT( std::string(cmd.getCMSCorrelationId()) == cmd2->getCMSCorrelationId() );
+            CPPUNIT_ASSERT( std::string(cmd.getCMSCorrelationID()) == cmd2->getCMSCorrelationID() );
             CPPUNIT_ASSERT( cmd.getCMSReplyTo()->toProviderString() == cmd2->getCMSReplyTo()->toProviderString() );
             CPPUNIT_ASSERT( std::string(cmd.getCMSMessageType()) == cmd2->getCMSMessageType() );
-            CPPUNIT_ASSERT( std::string(cmd.getCMSMessageId()) == cmd2->getCMSMessageId() );
+            CPPUNIT_ASSERT( std::string(cmd.getCMSMessageID()) == cmd2->getCMSMessageID() );
 
             core::ActiveMQMessage* message =
                 dynamic_cast< core::ActiveMQMessage* >( cmd2 );

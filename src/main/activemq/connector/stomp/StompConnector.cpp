@@ -503,7 +503,7 @@ void StompConnector::acknowledge( const SessionInfo* session,
         {
             AckCommand cmd;
 
-            if( message->getCMSMessageId() == "" )
+            if( message->getCMSMessageID() == "" )
             {
                 throw StompConnectorException(
                     __FILE__, __LINE__,
@@ -511,7 +511,7 @@ void StompConnector::acknowledge( const SessionInfo* session,
                     "Message has no Message Id, cannot ack.");
             }
 
-            cmd.setMessageId( message->getCMSMessageId() );
+            cmd.setMessageId( message->getCMSMessageID() );
 
             /*if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
             {
