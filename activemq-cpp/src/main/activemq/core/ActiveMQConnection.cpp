@@ -235,7 +235,6 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
            "IOTransport::run - caught unknown exception" );
         fire( ex );
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,6 +264,3 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-
-
-

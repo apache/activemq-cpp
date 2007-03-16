@@ -384,22 +384,14 @@ ConsumerInfo* OpenWireConnector::createConsumer(
 
         consumerInfo->setSelector( selector );
         consumerInfo->setNoLocal( noLocal );
-        
+
         /**
          * Override default options with uri-encoded parameters.
          */
         applyDestinationOptions( consumerInfo );
 
-        // Send the message to the broker.
-        Response* response = syncRequest(consumerInfo);
-
-        // The broker did not return an error - this is good.
-        // Just discard the response.
-        delete response;
-
-        // Since we've successfully registered - add this consumer to the
-        // consumer info map.
         synchronized( &consumerInfoMap ) {
+            // Optimistically place the Consumer into the Map.
             consumerInfoMap.setValue(
                 consumerInfo->getConsumerId()->getValue(),
                 consumer );
@@ -446,18 +438,18 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
         consumerInfo->setSelector( selector );
         consumerInfo->setNoLocal( noLocal );
         consumerInfo->setSubscriptionName( name );
-        
+
         /**
          * Override default options with uri-encoded parameters.
          */
         applyDestinationOptions( consumerInfo );
 
-        // Send the message to the broker.
-        Response* response = syncRequest(consumerInfo);
-
-        // The broker did not return an error - this is good.
-        // Just discard the response.
-        delete response;
+        synchronized( &consumerInfoMap ) {
+            // Optimistically place the Consumer into the Map.
+            consumerInfoMap.setValue(
+                consumerInfo->getConsumerId()->getValue(),
+                consumer );
+        }
 
         return consumer;
 
@@ -477,24 +469,24 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info ) 
+void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
 {
     const commands::ActiveMQDestination* amqDestination = info->getDestination();
-    
+
     // Get any options specified in the destination and apply them to the
     // ConsumerInfo object.
     const Properties& options = amqDestination->getOptions();
-    
+
     std::string noLocalStr =
         core::ActiveMQConstants::toString(
             core::ActiveMQConstants::CONSUMER_NOLOCAL );
-    if( options.hasProperty( noLocalStr ) ) 
+    if( options.hasProperty( noLocalStr ) )
     {
         info->setNoLocal(
             Boolean::parseBoolean(
                 options.getProperty( noLocalStr ) ) );
     }
-    
+
     std::string selectorStr =
         core::ActiveMQConstants::toString(
             core::ActiveMQConstants::CONSUMER_SELECTOR );
@@ -570,7 +562,7 @@ void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
             Boolean::parseBoolean(
                 options.getProperty( retroactiveStr ) ) );
     }
-    
+
     std::string browserStr = "consumer.browser";
 
     if( options.hasProperty( browserStr ) )
@@ -579,7 +571,7 @@ void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
             Boolean::parseBoolean(
                 options.getProperty( browserStr ) ) );
     }
-    
+
     std::string networkSubscriptionStr = "consumer.networkSubscription";
 
     if( options.hasProperty( networkSubscriptionStr ) )
@@ -588,7 +580,7 @@ void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
             Boolean::parseBoolean(
                 options.getProperty( networkSubscriptionStr ) ) );
     }
-    
+
     std::string optimizedAcknowledgeStr = "consumer.optimizedAcknowledge";
 
     if( options.hasProperty( optimizedAcknowledgeStr ) )
@@ -597,7 +589,7 @@ void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
             Boolean::parseBoolean(
                 options.getProperty( optimizedAcknowledgeStr ) ) );
     }
-    
+
     std::string noRangeAcksStr = "consumer.noRangeAcks";
 
     if( options.hasProperty( noRangeAcksStr ) )
@@ -624,7 +616,7 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
 
         consumerId->setConnectionId( session->getConnectionId() );
         consumerId->setSessionId( session->getSessionId() );
-        consumerId->setValue( getNextConsumerId() );        
+        consumerId->setValue( getNextConsumerId() );
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
@@ -662,6 +654,46 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::startConsumer( ConsumerInfo* consumer )
+    throw ( ConnectorException ) {
+
+    try
+    {
+        enforceConnected();
+
+        OpenWireConsumerInfo* consumerInfo =
+            dynamic_cast<OpenWireConsumerInfo*>( consumer );
+
+        if( consumerInfo == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::startConsumer - "
+                "Consumer was not of the OpenWire flavor.");
+        }
+
+        if( consumerInfo->getConsumerInfo() == NULL ||
+            consumerInfo->isStarted() == true ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::startConsumer - "
+                "Consumer was not in the correct state.");
+        }
+
+        // Send the message to the broker.
+        Response* response = syncRequest( consumerInfo->getConsumerInfo() );
+
+        // The broker did not return an error - this is good.
+        // Just discard the response.
+        delete response;
+
+        // Tag the Consumer as started
+        consumerInfo->setStarted( true );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ProducerInfo* OpenWireConnector::createProducer(
     const cms::Destination* destination,
     connector::SessionInfo* session )
@@ -690,7 +722,7 @@ ProducerInfo* OpenWireConnector::createProducer(
         // Producers are allowed to have NULL destinations.  In this case, the
         // destination is specified by the messages as they are sent.
         if( destination != NULL ) {
-            
+
             // Cast the destination to an OpenWire destination, so we can
             // get all the goodies.
             const commands::ActiveMQDestination* amqDestination =
@@ -699,7 +731,7 @@ ProducerInfo* OpenWireConnector::createProducer(
                 throw ConnectorException( __FILE__, __LINE__,
                     "Destination was not created by this OpenWireConnector" );
             }
-    
+
             // Get any options specified in the destination and apply them to the
             // ProducerInfo object.
             producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
@@ -1238,6 +1270,12 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
             synchronized( &consumerInfoMap ) {
                 consumerInfoMap.remove(
                     consumer->getConsumerInfo()->getConsumerId()->getValue() );
+            }
+
+            // Unstarted Consumers can just be deleted.
+            if( consumer->isStarted() == false ) {
+                delete resource;
+                return;
             }
 
             dataStructure = consumer->getConsumerInfo()->getConsumerId();

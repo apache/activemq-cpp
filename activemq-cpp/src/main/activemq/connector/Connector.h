@@ -142,6 +142,18 @@ namespace connector{
                 throw ( ConnectorException ) = 0;
 
         /**
+         * Given a valid Consumer info Object that was previously created
+         * by a call to <code>createConsumer</code>, the Consumer will be
+         * registered with the Broker, and be placed in a state in which
+         * it will now be able to receive messages.  All preperations
+         * for message receipt should be done before calling this method.
+         * @param consumer - ConsumerInfo of a consumer that isn't started
+         * @throws ConnectorException
+         */
+        virtual void startConsumer( ConsumerInfo* consumer )
+            throw ( ConnectorException ) = 0;
+
+        /**
          * Create a Consumer for the given Session
          * @param destination Destination to Subscribe to.
          * @param session Session Information.
