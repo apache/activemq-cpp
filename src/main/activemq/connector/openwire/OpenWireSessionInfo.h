@@ -50,7 +50,9 @@ namespace openwire{
             transaction = NULL;
             sessionInfo = NULL;
         }
-        virtual ~OpenWireSessionInfo() {}
+        virtual ~OpenWireSessionInfo() {
+            delete sessionInfo;
+        }
 
         /**
          * Gets the Connection Id of the Connection that this consumer is
