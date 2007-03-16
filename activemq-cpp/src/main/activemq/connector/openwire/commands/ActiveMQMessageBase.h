@@ -472,7 +472,7 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationId(void) const {
+        virtual std::string getCMSCorrelationID(void) const {
             return this->getCorrelationId();
         }
 
@@ -480,7 +480,7 @@ namespace commands{
          * Sets the Correlation Id used by this message
          * @param correlationId - String representing the correlation id.
          */
-        virtual void setCMSCorrelationId( const std::string& correlationId ) {
+        virtual void setCMSCorrelationID( const std::string& correlationId ) {
             this->setCorrelationId( correlationId );
         }
 
@@ -545,7 +545,7 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageId(void) const {
+        virtual std::string getCMSMessageID(void) const {
             return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
         }
 
@@ -553,7 +553,7 @@ namespace commands{
          * Sets the CMS Message Id for this message
          * @param id - time value
          */
-        virtual void setCMSMessageId( const std::string& id AMQCPP_UNUSED) {}
+        virtual void setCMSMessageID( const std::string& id AMQCPP_UNUSED) {}
 
         /**
          * Gets the Priority Value for this Message

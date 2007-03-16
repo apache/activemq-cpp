@@ -59,14 +59,14 @@ namespace marshal{
 
             // Sync to expected output
             textCommand.setCMSDestination( &myTopic );
-            textCommand.setCMSMessageId( "123" );
+            textCommand.setCMSMessageID( "123" );
             textCommand.getProperties().setProperty( 
                 "sampleProperty", "testvalue" );
             textCommand.setText( "testMessage" );
 
             // Sync to expected output
             bytesCommand.setCMSDestination( &myTopic );
-            bytesCommand.setCMSMessageId( "123" );
+            bytesCommand.setCMSMessageID( "123" );
             bytesCommand.getProperties().setProperty( 
                 "sampleProperty", "testvalue" );
             bytesCommand.setBodyBytes( 
