@@ -34,7 +34,7 @@ cc_sources = \
   main.cpp
 
 ## Compile this as part of make check
-bin_PROGRAMS = activemq-test-integration
+check_PROGRAMS = activemq-test-integration
 
 ## 
 ## Compiler/Linker Options
