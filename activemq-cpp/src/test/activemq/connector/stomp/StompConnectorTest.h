@@ -127,10 +127,10 @@ namespace stomp{
             CPPUNIT_ASSERT( info4->getAckMode() == cms::Session::SESSION_TRANSACTED );
             CPPUNIT_ASSERT( info4->getConnectionId() == connectionId );
 
-            connector->destroyResource( info1 );
-            connector->destroyResource( info2 );
-            connector->destroyResource( info3 );
-            connector->destroyResource( info4 );
+            delete info1;
+            delete info2;
+            delete info3;
+            delete info4;
 
             // Delete the connector here - this assures the propery order
             // of destruction.
@@ -182,15 +182,15 @@ namespace stomp{
             CPPUNIT_ASSERT( cinfo4->getDestination()->toProviderString() == dest4.toProviderString() );
             CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
 
-            connector->destroyResource( cinfo1 );
-            connector->destroyResource( cinfo2 );
-            connector->destroyResource( cinfo3 );
-            connector->destroyResource( cinfo4 );
+            delete cinfo1;
+            delete cinfo2;
+            delete cinfo3;
+            delete cinfo4;
 
-            connector->destroyResource( info1 );
-            connector->destroyResource( info2 );
-            connector->destroyResource( info3 );
-            connector->destroyResource( info4 );
+            delete info1;
+            delete info2;
+            delete info3;
+            delete info4;
 
             // Delete the connector here - this assures the propery order
             // of destruction.
@@ -234,15 +234,15 @@ namespace stomp{
             CPPUNIT_ASSERT( pinfo4->getSessionInfo() == info4 );
             CPPUNIT_ASSERT( pinfo4->getDestination()->toProviderString() == dest4.toProviderString() );
 
-            connector->destroyResource( pinfo1 );
-            connector->destroyResource( pinfo2 );
-            connector->destroyResource( pinfo3 );
-            connector->destroyResource( pinfo4 );
+            delete pinfo1;
+            delete pinfo2;
+            delete pinfo3;
+            delete pinfo4;
 
-            connector->destroyResource( info1 );
-            connector->destroyResource( info2 );
-            connector->destroyResource( info3 );
-            connector->destroyResource( info4 );
+            delete info1;
+            delete info2;
+            delete info3;
+            delete info4;
 
             // Delete the connector here - this assures the propery order
             // of destruction.
@@ -316,15 +316,15 @@ namespace stomp{
                     listener.consumers[ix] == cinfo4 );
             }
 
-            connector->destroyResource( cinfo1 );
-            connector->destroyResource( cinfo2 );
-            connector->destroyResource( cinfo3 );
-            connector->destroyResource( cinfo4 );
+            delete cinfo1;
+            delete cinfo2;
+            delete cinfo3;
+            delete cinfo4;
 
-            connector->destroyResource( info1 );
-            connector->destroyResource( info2 );
-            connector->destroyResource( info3 );
-            connector->destroyResource( info4 );
+            delete info1;
+            delete info2;
+            delete info3;
+            delete info4;
 
             // Delete the connector here - this assures the propery order
             // of destruction.
@@ -358,16 +358,16 @@ namespace stomp{
 
             cmdListener.cmd = NULL;
 
-            connector->destroyResource( cinfo1 );
+            delete cinfo1;
             CPPUNIT_ASSERT( cmdListener.cmd == NULL );
 
             cmdListener.cmd = NULL;
 
-            connector->destroyResource( cinfo2 );
+            delete cinfo2;
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
 
-            connector->destroyResource( info1 );
-            connector->destroyResource( info2 );
+            delete info1;
+            delete info2;
 
             delete connector;
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );

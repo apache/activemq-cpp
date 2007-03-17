@@ -329,7 +329,7 @@ connector::SessionInfo* OpenWireConnector::createSession(
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
         sessionId->setValue( getNextSessionId() );
         info->setSessionId( sessionId );
-        OpenWireSessionInfo* session = new OpenWireSessionInfo();
+        OpenWireSessionInfo* session = new OpenWireSessionInfo( this );
 
         try{
 
@@ -377,7 +377,7 @@ ConsumerInfo* OpenWireConnector::createConsumer(
     {
         enforceConnected();
 
-        consumer = new OpenWireConsumerInfo();
+        consumer = new OpenWireConsumerInfo( this );
         consumer->setSessionInfo( session );
         consumerInfo = createConsumerInfo( destination, session );
         consumer->setConsumerInfo( consumerInfo );
@@ -430,7 +430,7 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
     {
         enforceConnected();
 
-        consumer = new OpenWireConsumerInfo();
+        consumer = new OpenWireConsumerInfo( this );
         consumer->setSessionInfo( session );
         consumerInfo = createConsumerInfo( topic, session );
         consumer->setConsumerInfo( consumerInfo );
@@ -706,7 +706,7 @@ ProducerInfo* OpenWireConnector::createProducer(
     {
         enforceConnected();
 
-        producer = new OpenWireProducerInfo();
+        producer = new OpenWireProducerInfo( this );
         producer->setSessionInfo( session );
 
         producerInfo = new commands::ProducerInfo();
@@ -1042,7 +1042,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
         enforceConnected();
 
         OpenWireTransactionInfo* transaction =
-            new OpenWireTransactionInfo();
+            new OpenWireTransactionInfo( this );
 
         // Place Transaction Data in session for later use as well as
         // the session in the Transaction Data
@@ -1246,7 +1246,7 @@ void OpenWireConnector::unsubscribe( const std::string& name )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::destroyResource( ConnectorResource* resource )
+void OpenWireConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException )
 {
     try
@@ -1273,7 +1273,6 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
 
             // Unstarted Consumers can just be deleted.
             if( consumer->isStarted() == false ) {
-                delete resource;
                 return;
             }
 
@@ -1287,7 +1286,7 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
                 dynamic_cast<OpenWireSessionInfo*>(resource);
             dataStructure = session->getSessionInfo()->getSessionId();
         } else if( typeid( *resource ) == typeid( OpenWireTransactionInfo ) ) {
-            delete resource;
+            // Nothing to do for Transaction Info's
             return;
         } else if( tempDestination != NULL ) {
             // User deletes these
@@ -1302,9 +1301,6 @@ void OpenWireConnector::destroyResource( ConnectorResource* resource )
 
         // Dispose of this data structure at the broker.
         disposeOf( dataStructure );
-
-        // No matter what we end it here.
-        delete resource;
     }
     catch( ConnectorException& ex ) {
         delete resource;
@@ -1498,6 +1494,9 @@ void OpenWireConnector::createTemporaryDestination(
         // The broker did not return an error - this is good.
         // Just discard the response.
         delete response;
+
+        // Now that its setup, link it to this Connector
+        tempDestination->setConnector( this );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )

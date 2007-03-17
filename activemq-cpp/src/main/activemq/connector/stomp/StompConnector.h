@@ -456,11 +456,12 @@ namespace stomp{
             throw ( ConnectorException, exceptions::UnsupportedOperationException );
 
         /**
-         * Destroys the given connector resource.
-         * @param resource resource the resource to be destroyed.
+         * Closes the given connector resource, caller must still delete
+         * the resource once its been closed.
+         * @param resource the resource to be closed
          * @throws ConnectorException
          */
-        virtual void destroyResource( ConnectorResource* resource )
+        virtual void closeResource( ConnectorResource* resource )
             throw ( ConnectorException );
 
         /**

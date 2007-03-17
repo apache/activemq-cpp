@@ -19,7 +19,7 @@
 
 #include <integration/IntegrationCommon.h>
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>

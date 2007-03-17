@@ -41,30 +41,10 @@ ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::~ActiveMQTempDestination()
 {
-    try{
-        close();
-    }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQTempDestination::getDataStructureType() const
 {
     return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTempDestination::close() throw ( cms::CMSException ) {
-
-    try {
-
-        // Give the Connector a chance to clean up this temp Destination
-        if( connector != NULL ) {
-            connector->destroyResource( this );
-        }
-
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }

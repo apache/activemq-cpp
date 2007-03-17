@@ -326,11 +326,12 @@ namespace connector{
             throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
 
         /**
-         * Destroys the given connector resource.
-         * @param resource the resource to be destroyed.
+         * Closes the given connector resource, caller must still delete
+         * the resource once its been closed.
+         * @param resource the resource to be closed
          * @throws ConnectorException
          */
-        virtual void destroyResource( ConnectorResource* resource )
+        virtual void closeResource( ConnectorResource* resource )
             throw ( ConnectorException ) = 0;
 
         /**

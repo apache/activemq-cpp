@@ -23,6 +23,7 @@
 
 #include <activemq/connector/stomp/StompSessionManager.h>
 #include <activemq/connector/stomp/StompResponseBuilder.h>
+#include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
 #include <activemq/transport/DummyTransport.h>
@@ -109,9 +110,14 @@ namespace stomp{
         void testSessions()
         {
             std::string connectionId = "testConnectionId";
-            StompResponseBuilder responseBuilder("testSessionId");
+            StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            StompSessionManager manager( connectionId, &transport );
+            util::SimpleProperties properties;
+
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            StompSessionManager manager( connectionId, NULL, &transport );
 
             SessionInfo* info1 = manager.createSession( cms::Session::AUTO_ACKNOWLEDGE );
             CPPUNIT_ASSERT( info1->getAckMode() == cms::Session::AUTO_ACKNOWLEDGE );
@@ -138,9 +144,14 @@ namespace stomp{
         void testConsumers()
         {
             std::string connectionId = "testConnectionId";
-            StompResponseBuilder responseBuilder("testSessionId");
+            StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            StompSessionManager manager( connectionId, &transport );
+            util::SimpleProperties properties;
+
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            StompSessionManager manager( connectionId, NULL, &transport );
 
             SessionInfo* info1 = manager.createSession( cms::Session::AUTO_ACKNOWLEDGE );
             std::string sel1 = "";
@@ -188,9 +199,14 @@ namespace stomp{
         void testCommand()
         {
             std::string connectionId = "testConnectionId";
-            StompResponseBuilder responseBuilder("testSessionId");
+            StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            StompSessionManager manager( connectionId, &transport );
+            util::SimpleProperties properties;
+
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            StompSessionManager manager( connectionId, NULL, &transport );
 
             StompTopic dest1( "dummy.topic" );
             StompTopic dest2( "dummy.topic2" );
@@ -248,12 +264,15 @@ namespace stomp{
 
         void testSendingCommands(){
 
-
-
             std::string connectionId = "testConnectionId";
-            StompResponseBuilder responseBuilder("testSessionId");
+            StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            StompSessionManager manager( connectionId, &transport );
+            util::SimpleProperties properties;
+
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            StompSessionManager manager( connectionId, NULL, &transport );
 
             StompTopic dest1( "dummy.topic.1" );
 
@@ -290,9 +309,14 @@ namespace stomp{
         void testSubscribeOptions(){
 
             std::string connectionId = "testConnectionId";
-            StompResponseBuilder responseBuilder("testSessionId");
+            StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            StompSessionManager manager( connectionId, &transport );
+            util::SimpleProperties properties;
+
+            // Using a pointer for the connector so we ensure the proper destruction
+            // order of objects - connector before the transport.
+            StompConnector* connector = new StompConnector( &transport, properties );
+            StompSessionManager manager( connectionId, NULL, &transport );
 
             MyProperty retroactive =
                 std::make_pair( "activemq.retroactive", "true" );

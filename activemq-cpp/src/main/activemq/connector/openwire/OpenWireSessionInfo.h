@@ -45,12 +45,15 @@ namespace openwire{
 
     public:
 
-        OpenWireSessionInfo() {
+        OpenWireSessionInfo( Connector* connector ) :
+            SessionInfo( connector ) {
+
             ackMode = cms::Session::AUTO_ACKNOWLEDGE;
             transaction = NULL;
             sessionInfo = NULL;
         }
         virtual ~OpenWireSessionInfo() {
+            this->close();
             delete sessionInfo;
         }
 
@@ -59,7 +62,7 @@ namespace openwire{
          * using to receive its messages.
          * @return string value of the connection id
          */
-        virtual const std::string& getConnectionId(void) const{
+        virtual const std::string& getConnectionId() const{
             if( sessionInfo != NULL ) {
                 connectionId = sessionInfo->getSessionId()->getConnectionId();
             }
@@ -80,7 +83,7 @@ namespace openwire{
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual long long getSessionId(void) const {
+        virtual long long getSessionId() const {
             if( sessionInfo != NULL ) {
                 return (unsigned int)sessionInfo->getSessionId()->getValue();
             }
@@ -110,7 +113,7 @@ namespace openwire{
          * Gets the Ack Mode of this Session
          * @return Ack Mode
          */
-        virtual cms::Session::AcknowledgeMode getAckMode(void) const {
+        virtual cms::Session::AcknowledgeMode getAckMode() const {
             return ackMode;
         }
 
@@ -120,7 +123,7 @@ namespace openwire{
          * getAckMode and see if the session is transacted.
          * @return Transaction Id of current Transaction
          */
-        virtual const TransactionInfo* getTransactionInfo(void) const {
+        virtual const TransactionInfo* getTransactionInfo() const {
             return transaction;
         }
 

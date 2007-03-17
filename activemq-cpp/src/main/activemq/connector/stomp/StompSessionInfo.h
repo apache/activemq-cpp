@@ -25,7 +25,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompSessionInfo : public connector::SessionInfo
+    class StompSessionInfo : public SessionInfo
     {
     private:
 
@@ -44,21 +44,31 @@ namespace stomp{
 
     public:
 
-        StompSessionInfo(void)
-        {
+        StompSessionInfo() : SessionInfo() {
+
             sessionId = 0;
             ackMode = cms::Session::AUTO_ACKNOWLEDGE;
             transaction = NULL;
         }
 
-        virtual ~StompSessionInfo(void) {}
+        StompSessionInfo( Connector* connector ) :
+            SessionInfo( connector ) {
+
+            sessionId = 0;
+            ackMode = cms::Session::AUTO_ACKNOWLEDGE;
+            transaction = NULL;
+        }
+
+        virtual ~StompSessionInfo() {
+            this->close();
+        }
 
         /**
          * Gets the Connection Id of the Connection that this consumer is
          * using to receive its messages.
          * @return string value of the connection id
          */
-        virtual const std::string& getConnectionId(void) const{
+        virtual const std::string& getConnectionId() const{
             return connectionId;
         }
 
@@ -75,7 +85,7 @@ namespace stomp{
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual long long getSessionId(void) const {
+        virtual long long getSessionId() const {
             return sessionId;
         }
 
@@ -99,7 +109,7 @@ namespace stomp{
          * Gets the Ack Mode of this Session
          * @return Ack Mode
          */
-        virtual cms::Session::AcknowledgeMode getAckMode(void) const {
+        virtual cms::Session::AcknowledgeMode getAckMode() const {
             return ackMode;
         }
 
@@ -109,7 +119,7 @@ namespace stomp{
          * getAckMode and see if the session is transacted.
          * @return Transaction Id of current Transaction
          */
-        virtual const TransactionInfo* getTransactionInfo(void) const {
+        virtual const TransactionInfo* getTransactionInfo() const {
             return transaction;
         }
 

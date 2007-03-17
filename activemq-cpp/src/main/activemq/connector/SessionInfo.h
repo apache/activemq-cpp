@@ -17,25 +17,30 @@
 #ifndef _ACTIVEMQ_CONNECTOR_SESSIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_SESSIONINFO_H_
 
-#include <activemq/connector/ConnectorResource.h>
+#include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <cms/Session.h>
 
 namespace activemq{
 namespace connector{
 
-    class SessionInfo : public ConnectorResource
+    class SessionInfo : public BaseConnectorResource
     {
     public:
 
-   	    virtual ~SessionInfo(void) {}
+        SessionInfo() : BaseConnectorResource() {}
+
+        SessionInfo( Connector* connector ) :
+            BaseConnectorResource( connector ) {}
+
+        virtual ~SessionInfo(void) {}
 
         /**
          * Gets the Connection Id of the Connection that this consumer is
          * using to receive its messages.
          * @return string value of the connection id
          */
-        virtual const std::string& getConnectionId(void) const = 0;
+        virtual const std::string& getConnectionId() const = 0;
 
         /**
          * Sets the Connection Id of the Connection that this consumer is
@@ -48,7 +53,7 @@ namespace connector{
          * Gets the Sessions Id value
          * @return id for this session
          */
-        virtual long long getSessionId(void) const = 0;
+        virtual long long getSessionId() const = 0;
 
         /**
          * Sets the Session Id for this Session
@@ -66,7 +71,7 @@ namespace connector{
          * Gets the Ack Mode of this Session
          * @return Ack Mode
          */
-        virtual cms::Session::AcknowledgeMode getAckMode(void) const = 0;
+        virtual cms::Session::AcknowledgeMode getAckMode() const = 0;
 
         /**
          * Gets the currently active transaction info, if this session is
@@ -74,14 +79,15 @@ namespace connector{
          * getAckMode and see if the session is transacted.
          * @return Transaction Id of current Transaction
          */
-        virtual const TransactionInfo* getTransactionInfo(void) const = 0;
+        virtual const TransactionInfo* getTransactionInfo() const = 0;
 
         /**
          * Sets the current transaction info for this session, this is nit
          * used when the session is not transacted.
          * @param transaction Transaction Id
          */
-        virtual void setTransactionInfo( const TransactionInfo* transaction ) = 0;
+        virtual void setTransactionInfo(
+            const TransactionInfo* transaction ) = 0;
 
     };
 

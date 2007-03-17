@@ -22,7 +22,7 @@
 #include <cms/Destination.h>
 #include <cms/DeliveryMode.h>
 
-#include <activemq/core/ActiveMQSessionResource.h>
+#include <activemq/connector/ConnectorResourceListener.h>
 #include <activemq/connector/ProducerInfo.h>
 
 namespace activemq{
@@ -31,7 +31,7 @@ namespace core{
     class ActiveMQSession;
 
     class ActiveMQProducer : public cms::MessageProducer,
-                             public ActiveMQSessionResource
+                             public connector::ConnectorResourceListener
     {
     private:
 
@@ -211,7 +211,7 @@ namespace core{
          * this Session resource.
          * @return pointer to a Connector Resource, can be NULL
          */
-        virtual connector::ConnectorResource* getConnectorResource(void) {
+        virtual connector::ConnectorResource* getConnectorResource() {
             return producerInfo;
         }
 
@@ -221,9 +221,20 @@ namespace core{
          * Retrives this object ProducerInfo pointer
          * @return ProducerInfo pointer
          */
-        virtual connector::ProducerInfo* getProducerInfo(void){
+        virtual connector::ProducerInfo* getProducerInfo(){
             return producerInfo;
         }
+
+    protected:   // ConnectorResourceListener
+
+        /**
+         * When a Connector Resouce is closed it will notify any registered
+         * Listeners of its close so that they can take the appropriate
+         * action.
+         * @param resource - The ConnectorResource that was closed.
+         */
+        virtual void onConnectorResourceClosed(
+            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
 
    };
 

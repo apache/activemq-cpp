@@ -40,6 +40,7 @@ using namespace activemq::connector::stomp::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 StompSessionManager::StompSessionManager( const std::string& connectionId,
+                                          Connector* connector,
                                           Transport* transport )
 {
     if( transport == NULL )
@@ -50,6 +51,7 @@ StompSessionManager::StompSessionManager( const std::string& connectionId,
     }
 
     this->transport = transport;
+    this->connector = connector;
     this->connectionId = connectionId;
     this->nextSessionId = 0;
     this->nextConsumerId = 0;
@@ -95,7 +97,7 @@ connector::SessionInfo* StompSessionManager::createSession(
 {
     try
     {
-        SessionInfo* session = new StompSessionInfo();
+        SessionInfo* session = new StompSessionInfo( connector );
 
         // Init data
         session->setAckMode( ackMode );
@@ -201,7 +203,7 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
             }
 
             // Initialize a new Consumer info Message
-            ConsumerInfo* consumer = new StompConsumerInfo();
+            ConsumerInfo* consumer = new StompConsumerInfo( connector );
 
             consumer->setConsumerId( getNextConsumerId() );
             consumer->setDestination( destination );
@@ -369,7 +371,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_NOLOCAL );
 
-        if( destProperties.hasProperty( noLocalStr ) ) 
+        if( destProperties.hasProperty( noLocalStr ) )
         {
             command.setNoLocal(
                 Boolean::parseBoolean(

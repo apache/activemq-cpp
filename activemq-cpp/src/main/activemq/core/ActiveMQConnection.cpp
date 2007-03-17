@@ -255,11 +255,6 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
         synchronized( &activeSessions ) {
             activeSessions.remove( session );
         }
-
-        // Destroy this sessions resources
-        getConnectionData()->
-            getConnector()->destroyResource( session->getSessionInfo() );
-
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

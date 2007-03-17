@@ -25,7 +25,7 @@
 
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/connector/Connector.h>
-#include <activemq/connector/ConnectorResource.h>
+#include <activemq/connector/BaseConnectorResource.h>
 #include <cms/Closeable.h>
 #include <vector>
 #include <string>
@@ -36,8 +36,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQTempDestination : public ActiveMQDestination,
-                                    public ConnectorResource,
-                                    public cms::Closeable
+                                    public BaseConnectorResource
     {
     protected:
 
@@ -91,33 +90,6 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const {
             return ActiveMQDestination::equals( value );
-        }
-
-    public:   // Closeable
-
-        /**
-         * Closes this object and deallocates the appropriate resources.
-         * The object is generally no longer usable after calling close.
-         * @throws CMSException
-         */
-        virtual void close() throw( cms::CMSException );
-
-    public:    // ActiveMQTempDestination
-
-        /**
-         * Gets the Connector that this object will call when its closed
-         * @returns pointer to a Connector, or NULL if not set.
-         */
-        const connector::Connector* getConnector() const {
-            return this->connector;
-        }
-
-        /**
-         * Sets the Connector that this object will call when its closed
-         * @param connector - pointer to a Connector or NULL to clear.
-         */
-        virtual void setConnector( connector::Connector* connector ) {
-            this->connector = connector;
         }
 
     };

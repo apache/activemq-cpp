@@ -105,8 +105,8 @@ void ActiveMQTransaction::clearTransaction(void)
         if( transactionInfo != NULL )
         {
             // Dispose of the ProducerInfo
-            connection->getConnectionData()->
-                getConnector()->destroyResource( transactionInfo );
+            transactionInfo->close();
+            delete transactionInfo;
         }
 
         synchronized( &rollbackLock )
@@ -176,6 +176,32 @@ void ActiveMQTransaction::removeFromTransaction(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
+
+    try {
+
+        // Delete all the messages, then remove the consumer's entry from
+        // the Rollback Map.
+        synchronized( &rollbackLock )
+        {
+            RollbackMap::iterator iter = rollbackMap.begin();
+
+            for( ; iter == rollbackMap.end(); ++iter ) {
+
+                long long id = iter->first->getConsumerInfo()->getConsumerId();
+
+                if( id == consumerId ) {
+                    removeFromTransaction( iter->first );
+                    return;
+                }
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransaction::commit(void) throw ( exceptions::ActiveMQException )
 {
     try
@@ -220,9 +246,9 @@ void ActiveMQTransaction::rollback(void) throw ( exceptions::ActiveMQException )
         connection->getConnectionData()->getConnector()->
             rollback( transactionInfo, session->getSessionInfo() );
 
-        // Dispose of the ProducerInfo
-        connection->getConnectionData()->
-            getConnector()->destroyResource( transactionInfo );
+        // Dispose of the TransactionInfo
+        transactionInfo->close();
+        delete transactionInfo;
 
         // Start a new Transaction
         transactionInfo = connection->getConnectionData()->

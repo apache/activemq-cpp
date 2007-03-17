@@ -163,6 +163,14 @@ namespace commands{
                 return this->getPhysicalName();
         }
 
+        /**
+         * Destroy's the Temp Destination at the Broker
+         * @throws CMSException
+         */
+        virtual void destroy() throw ( cms::CMSException ) {
+            close();
+        }
+
     };
 
 }}}}

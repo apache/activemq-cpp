@@ -19,24 +19,29 @@
 
 #include <cms/Destination.h>
 
-#include <activemq/connector/ConnectorResource.h>
+#include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/SessionInfo.h>
 
 namespace activemq{
 namespace connector{
 
-    class ProducerInfo : public ConnectorResource
+    class ProducerInfo : public BaseConnectorResource
     {
     public:
 
-        virtual ~ProducerInfo(void) {}
+        ProducerInfo() : BaseConnectorResource() {}
+
+        ProducerInfo( Connector* connector ) :
+            BaseConnectorResource( connector ) {}
+
+        virtual ~ProducerInfo() {}
 
         /**
          * Retrieves the default destination that this producer
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination* getDestination(void) const = 0;
+        virtual const cms::Destination* getDestination() const = 0;
 
         /**
          * Sets the Default Destination for this Producer
@@ -48,7 +53,7 @@ namespace connector{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual long long getProducerId(void) const = 0;
+        virtual long long getProducerId() const = 0;
 
         /**
          * Sets the ID that is assigned to this Producer
@@ -60,7 +65,7 @@ namespace connector{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const = 0;
+        virtual const SessionInfo* getSessionInfo() const = 0;
 
         /**
          * Gets the Session Info that this consumer is attached too

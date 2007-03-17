@@ -229,7 +229,7 @@ void StompConnector::connect()
 
         // Connected so we now create the SessionManager
         sessionManager = new StompSessionManager(
-            connected->getSessionId(), transport );
+            connected->getSessionId(), this, transport );
 
         // Give our message listener to the session manager it will
         // notify all the interested clients
@@ -341,7 +341,7 @@ ProducerInfo* StompConnector::createProducer(
     {
         enforceConnected();
 
-        ProducerInfo* producer = new StompProducerInfo();
+        ProducerInfo* producer = new StompProducerInfo( this );
 
         producer->setDestination( destination );
         producer->setProducerId( getNextProducerId() );
@@ -541,7 +541,7 @@ TransactionInfo* StompConnector::startTransaction(
     {
         enforceConnected();
 
-        TransactionInfo* transaction = new StompTransactionInfo();
+        TransactionInfo* transaction = new StompTransactionInfo( this );
 
         transaction->setTransactionId( getNextTransactionId() );
 
@@ -720,7 +720,7 @@ void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::destroyResource( ConnectorResource* resource )
+void StompConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException )
 {
     try
@@ -756,9 +756,6 @@ void StompConnector::destroyResource( ConnectorResource* resource )
                 throw ex;
             }
         }
-
-        // All went well - finish by deleting the resource.
-        delete resource;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );

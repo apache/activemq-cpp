@@ -41,20 +41,25 @@ namespace openwire{
 
     public:
 
-        OpenWireProducerInfo() {
+        OpenWireProducerInfo( Connector* connector ) :
+            ProducerInfo( connector ) {
+
             this->disableMessageIds = false;
             this->producerInfo = NULL;
             this->session = NULL;
         }
 
-        virtual ~OpenWireProducerInfo() {}
+        virtual ~OpenWireProducerInfo() { 
+            this->close();
+            delete producerInfo; 
+        }
 
         /**
          * Retrieves the default destination that this producer
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination* getDestination(void) const {
+        virtual const cms::Destination* getDestination() const {
             if( this->producerInfo != NULL ) {
                 return this->producerInfo->getDestination()->getCMSDestination();
             }
@@ -79,7 +84,7 @@ namespace openwire{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual long long getProducerId(void) const {
+        virtual long long getProducerId() const {
             if( this->producerInfo != NULL ) {
                 return (unsigned int)
                     this->producerInfo->getProducerId()->getValue();
@@ -102,7 +107,7 @@ namespace openwire{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const {
+        virtual const SessionInfo* getSessionInfo() const {
             return session;
         }
 

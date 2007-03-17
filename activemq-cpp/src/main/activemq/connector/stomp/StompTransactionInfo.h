@@ -24,7 +24,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompTransactionInfo : public connector::TransactionInfo
+    class StompTransactionInfo : public TransactionInfo
     {
     private:
 
@@ -36,15 +36,22 @@ namespace stomp{
 
     public:
 
-        /**
-         * Default Constructor
-         */
-        StompTransactionInfo(void) {
+        StompTransactionInfo() : TransactionInfo() {
+
             transactionId = 0;
             session = NULL;
         }
 
-        virtual ~StompTransactionInfo(void) {}
+        StompTransactionInfo( Connector* connector ) :
+            TransactionInfo( connector ) {
+
+            transactionId = 0;
+            session = NULL;
+        }
+
+        virtual ~StompTransactionInfo() {
+            this->close();
+        }
 
         /**
          * Gets the Transction Id

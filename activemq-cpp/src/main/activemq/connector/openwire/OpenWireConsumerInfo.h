@@ -41,12 +41,17 @@ namespace openwire{
 
     public:
 
-        OpenWireConsumerInfo() {
+        OpenWireConsumerInfo( Connector* connector ) :
+            ConsumerInfo( connector ) {
+
             this->session = NULL;
             this->started = false;
         }
 
-        virtual ~OpenWireConsumerInfo() {}
+        virtual ~OpenWireConsumerInfo() { 
+            this->close();
+            delete consumerInfo;
+        }
 
         /**
          * Gets this message consumer's message selector expression.

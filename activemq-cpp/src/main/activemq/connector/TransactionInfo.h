@@ -17,24 +17,29 @@
 #ifndef _ACTIVEMQ_CONNECTOR_TRANSACTIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_TRANSACTIONINFO_H_
 
-#include <activemq/connector/ConnectorResource.h>
+#include <activemq/connector/BaseConnectorResource.h>
 
 namespace activemq{
 namespace connector{
 
     class SessionInfo;
 
-    class TransactionInfo : public ConnectorResource
+    class TransactionInfo : public BaseConnectorResource
     {
     public:
 
-   	    virtual ~TransactionInfo(void) {}
+        TransactionInfo() : BaseConnectorResource() {}
+
+        TransactionInfo( Connector* connector ) :
+            BaseConnectorResource( connector ) {}
+
+        virtual ~TransactionInfo() {}
 
         /**
          * Gets the Transction Id
          * @return unsigned int Id
          */
-        virtual long long getTransactionId(void) const = 0;
+        virtual long long getTransactionId() const = 0;
 
         /**
          * Sets the Transction Id
@@ -46,7 +51,7 @@ namespace connector{
          * Gets the Session Info that this transaction is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const = 0;
+        virtual const SessionInfo* getSessionInfo() const = 0;
 
         /**
          * Gets the Session Info that this transaction is attached too

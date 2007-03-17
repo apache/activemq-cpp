@@ -30,7 +30,6 @@
 #include <activemq/exceptions/InvalidStateException.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
 #include <activemq/util/Properties.h>
-#include <activemq/core/ActiveMQSessionResource.h>
 
 namespace activemq{
 namespace core{
@@ -57,8 +56,7 @@ namespace core{
      *   rolled back more than this many time, the message is dropped.
      */
     class ActiveMQTransaction : public concurrent::TaskListener,
-                                public connector::TransactionInfo,
-                                public ActiveMQSessionResource
+                                public connector::TransactionInfo
     {
     private:
 
@@ -110,7 +108,7 @@ namespace core{
                              ActiveMQSession* session,
                              const util::Properties& properties );
 
-        virtual ~ActiveMQTransaction(void);
+        virtual ~ActiveMQTransaction();
 
         /**
          * Adds the Message as a part of the Transaction for the specified
@@ -124,22 +122,30 @@ namespace core{
         /**
          * Removes the ActiveMQConsumer and all of its transacted
          * messages from the Transaction, this is usually only done when
-         * a ActiveMQConsumer is destroyed.
+         * an ActiveMQConsumer is destroyed.
          * @param listener - consumer who is to be removed.
          */
         virtual void removeFromTransaction( ActiveMQConsumer* listener );
 
         /**
+         * Removes the ActiveMQConsumer and all of its transacted
+         * messages from the Transaction, this is usually only done when
+         * an ActiveMQConsumer is destroyed.
+         * @param listener - consumer who is to be removed.
+         */
+        virtual void removeFromTransaction( long long consumerId );
+
+        /**
          * Commit the current Transaction
          * @throw CMSException
          */
-        virtual void commit(void) throw ( exceptions::ActiveMQException );
+        virtual void commit() throw ( exceptions::ActiveMQException );
 
         /**
          * Rollback the current Transaction
          * @throw CMSException
          */
-        virtual void rollback(void) throw ( exceptions::ActiveMQException );
+        virtual void rollback() throw ( exceptions::ActiveMQException );
 
         /**
          * Get the Transaction Information object for the current
@@ -156,7 +162,7 @@ namespace core{
          * Gets the Transction Id
          * @return integral value of Id
          */
-        virtual long long getTransactionId(void) const {
+        virtual long long getTransactionId() const {
             return transactionInfo->getTransactionId();
         }
 
@@ -225,7 +231,7 @@ namespace core{
          * well.
          * @throw ActiveMQException
          */
-        virtual void clearTransaction(void);
+        virtual void clearTransaction();
 
     private:
 
@@ -272,7 +278,7 @@ namespace core{
             }
 
             // Dispatches the Messages to the Consumer.
-            virtual void run(void);
+            virtual void run();
 
         };
 

@@ -18,6 +18,7 @@
 
 #include <activemq/exceptions/NullPointerException.h>
 #include <activemq/exceptions/InvalidStateException.h>
+#include <activemq/exceptions/IllegalArgumentException.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <cms/ExceptionListener.h>
@@ -26,6 +27,7 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace activemq::concurrent;
 
@@ -39,13 +41,16 @@ ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
             __FILE__, __LINE__,
             "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Session");
     }
-    
+
     // Init Producer Data
     this->session        = session;
     this->consumerInfo   = consumerInfo;
     this->listenerThread = NULL;
     this->listener       = NULL;
     this->closed         = false;
+
+    // Listen for our resource to close
+    this->consumerInfo->addListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,69 +59,70 @@ ActiveMQConsumer::~ActiveMQConsumer()
     try
     {
         close();
+
+        delete consumerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::close() 
+void ActiveMQConsumer::close()
     throw ( cms::CMSException )
 {
     try
     {
         if( !closed ) {
-            
-            closed = true;
-            
+
             // Identifies any errors encountered during shutdown.
             bool haveException = false;
-            ActiveMQException error; 
-            
-            // Dispose of the Consumer Info, this should stop us from getting
-            // any more messages.  This may result in message traffic
-            // going to the connector.  If the socket is broken, this
-            // will result in an exception, in which case we catch it
-            // and continue to shutdown normally.
-            try{
-                session->onDestroySessionResource( this );
-            } catch( ActiveMQException& ex ){
-                if( !haveException ){ 
-                    ex.setMark( __FILE__, __LINE__ );                
-                    error = ex;
-                    haveException = true;
+            ActiveMQException error;
+
+            // Close the ConsumerInfo
+            if( !consumerInfo->isClosed() ) {
+                try{
+                    // We don't want a callback now
+                    this->consumerInfo->removeListener( this );
+                    this->consumerInfo->close();
+                } catch ( ActiveMQException& ex ){
+                    if( !haveException ){
+                        ex.setMark( __FILE__, __LINE__ );
+                        error = ex;
+                        haveException = true;
+                    }
                 }
             }
-            
+
+            closed = true;
+
             // Stop the asynchronous message processin thread if it's
             // running.
             try{
                 stopThread();
             } catch ( ActiveMQException& ex ){
-                if( !haveException ){ 
-                    ex.setMark( __FILE__, __LINE__ );                
+                if( !haveException ){
+                    ex.setMark( __FILE__, __LINE__ );
                     error = ex;
                     haveException = true;
                 }
             }
-            
+
             // Purge all the pending messages
             try{
                 purgeMessages();
             } catch ( ActiveMQException& ex ){
-                if( !haveException ){ 
-                    ex.setMark( __FILE__, __LINE__ );                
+                if( !haveException ){
+                    ex.setMark( __FILE__, __LINE__ );
                     error = ex;
                     haveException = true;
                 }
             }
-            
+
             // If we encountered an error, propagate it.
             if( haveException ){
                 error.setMark( __FILE__, __LINE__ );
                 throw error;
             }
-                                  
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -124,7 +130,7 @@ void ActiveMQConsumer::close()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQConsumer::getMessageSelector() const 
+std::string ActiveMQConsumer::getMessageSelector() const
     throw ( cms::CMSException )
 {
     try
@@ -156,7 +162,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
             {
                 msgQueue.wait();
             }
-            
+
             // This will only happen when this object is being
             // closed in another thread context - kind of
             // scary.
@@ -164,7 +170,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
                 throw ActiveMQException( __FILE__, __LINE__,
                     "Consumer is being closed in another thread" );
             }
-            
+
             // Fetch the Message then copy it so it can be handed off
             // to the user.
             cms::Message* message = msgQueue.pop();
@@ -172,7 +178,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
 
             // The Message is cleaned up here if the Session is not
             // transacted, otherwise we let the transaction clean up
-            // this message as it will have already been ack'd and 
+            // this message as it will have already been ack'd and
             // stored for later redelivery.
             destroyMessage( message );
 
@@ -186,7 +192,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive( int millisecs ) 
+cms::Message* ActiveMQConsumer::receive( int millisecs )
     throw ( cms::CMSException )
 {
     try
@@ -202,7 +208,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         {
             // Check for empty, and wait if its not
             if( !closed && msgQueue.empty() ){
-                
+
                 msgQueue.wait(millisecs);
 
                 // if its still empty...bail
@@ -210,7 +216,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
                     return NULL;
                 }
             }
-            
+
             // This will only happen when this object is being
             // closed in another thread context - kind of
             // scary.
@@ -226,7 +232,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
 
             // The Message is cleaned up here if the Session is not
             // transacted, otherwise we let the transaction clean up
-            // this message as it will have already been ack'd and 
+            // this message as it will have already been ack'd and
             // stored for later redelivery.
             destroyMessage( message );
 
@@ -240,7 +246,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receiveNoWait() 
+cms::Message* ActiveMQConsumer::receiveNoWait()
     throw ( cms::CMSException )
 {
     try
@@ -263,14 +269,14 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
 
                 // The Message is cleaned up here if the Session is not
                 // transacted, otherwise we let the transaction clean up
-                // this message as it will have already been ack'd and 
+                // this message as it will have already been ack'd and
                 // stored for later redelivery.
                 destroyMessage( message );
 
                 return result;
             }
         }
-        
+
         return NULL;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -293,12 +299,12 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener )
         {
             this->listener = listener;
         }
-        
+
         // Start the thread if it isn't already running.
         // If it is already running, this method will wake the thread up
         // to notify it that there is a message listener, so that it may
         // get rid of backed up messages.
-        startThread();                
+        startThread();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -337,7 +343,7 @@ void ActiveMQConsumer::run()
 
             synchronized( &msgQueue )
             {
-                
+
                 // Gaurd against spurious wakeup or race to sync lock
                 // also if the listner has been unregistered we don't
                 // have anyone to notify, so we wait till a new one is
@@ -350,23 +356,23 @@ void ActiveMQConsumer::run()
                     }
                     msgQueue.wait();
                 }
-                
+
                 // don't want to process messages if we are shutting down.
                 if( closed )
                 {
                     return;
                 }
-                
+
                 // Dispatch the message
                 message = msgQueue.pop();
             }
-        
+
             // Notify the listener
-            notifyListener( message );            
-            
+            notifyListener( message );
+
             // The Message is cleaned up here if the Session is not
             // transacted, otherwise we let the transaction clean up
-            // this message as it will have already been ack'd and 
+            // this message as it will have already been ack'd and
             // stored for later redelivery.
             destroyMessage( message );
         }
@@ -374,7 +380,7 @@ void ActiveMQConsumer::run()
     catch( ... )
     {
         cms::ExceptionListener* listener = session->getExceptionListener();
-        
+
         if( listener != NULL )
         {
             listener->onException( ActiveMQException(
@@ -382,11 +388,11 @@ void ActiveMQConsumer::run()
                 "ActiveMQConsumer::run - "
                 "MessageListener threw an unknown Exception, recovering..." ) );
         }
-    }        
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::dispatch( ActiveMQMessage* message ) 
+void ActiveMQConsumer::dispatch( ActiveMQMessage* message )
     throw ( cms::CMSException )
 {
     try
@@ -399,23 +405,23 @@ void ActiveMQConsumer::dispatch( ActiveMQMessage* message )
             // stop now, don't queue
             return;
         }
-        
-        // If the Session is in ClientAcknowledge mode, then we set the 
+
+        // If the Session is in ClientAcknowledge mode, then we set the
         // handler in the message to this object and send it out.  Otherwise
         // we ack it here for all the other Modes.
         if( session->getAcknowledgeMode() == Session::CLIENT_ACKNOWLEDGE ) {
-            
+
             // Register ourself so that we can handle the Message's
             // acknowledge method.
             message->setAckHandler( this );
-            
+
         } else {
             session->acknowledge( this, message );
         }
 
         // No listener, so we queue it
         synchronized( &msgQueue ) {
-            
+
             msgQueue.push( dynamic_cast< cms::Message* >( message ) );
             msgQueue.notifyAll();
         }
@@ -434,7 +440,7 @@ void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
             while( !msgQueue.empty() )
             {
                 // destroy these messages if this is not a transacted
-                // session, if it is then the tranasction will clean 
+                // session, if it is then the tranasction will clean
                 // the messages up.
                 destroyMessage( msgQueue.pop() );
             }
@@ -458,33 +464,33 @@ void ActiveMQConsumer::onActiveMQMessage( ActiveMQMessage* message )
         }
 
         this->dispatch( message );
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::notifyListener( Message* message ) throw ( ActiveMQException ){
-    
+
     try
     {
         MessageListener* listener = NULL;
         synchronized( &listenerLock )
         {
-            listener = getMessageListener();                
+            listener = getMessageListener();
         }
         if(listener != NULL)
         {
             listener->onMessage( message );
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::destroyMessage( Message* message ) throw ( ActiveMQException ){
-    
+
     try
     {
         /**
@@ -495,42 +501,42 @@ void ActiveMQConsumer::destroyMessage( Message* message ) throw ( ActiveMQExcept
         {
             delete message;
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::startThread() throw ( ActiveMQException ) {
-    
+
     try
     {
         // Start the thread, if it's not already started.
         if( listenerThread == NULL )
         {
-            listenerThread = new Thread( this );        
-            listenerThread->start();                        
+            listenerThread = new Thread( this );
+            listenerThread->start();
         }
-        
+
         // notify the Queue so that any pending messages get delivered
         synchronized( &msgQueue )
         {
             msgQueue.notifyAll();
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::stopThread() throw ( ActiveMQException ) {
-    
+
     try
     {
         // if the thread is running signal it to quit and then
         // wait for run to return so thread can die
         if( listenerThread != NULL )
-        {                        
+        {
             synchronized( &msgQueue )
             {
                 // Force a wakeup if run is in a wait.
@@ -542,8 +548,35 @@ void ActiveMQConsumer::stopThread() throw ( ActiveMQException ) {
             delete listenerThread;
             listenerThread = NULL;
         }
-    }        
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::onConnectorResourceClosed(
+    const ConnectorResource* resource ) throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::onConnectorResourceClosed - "
+                "Producer Already Closed");
+        }
+
+        if( resource != consumerInfo ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__,
+                "ActiveMQConsumer::onConnectorResourceClosed - "
+                "Unknown object passed to this callback");
+        }
+
+        // If our producer isn't closed already, then lets close
+        this->close();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
