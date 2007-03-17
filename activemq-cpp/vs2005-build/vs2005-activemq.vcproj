@@ -425,6 +425,14 @@
 				Name="connector"
 				>
 				<File
+					RelativePath="..\src\main\activemq\connector\BaseConnectorResource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\connector\BaseConnectorResource.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\connector\Connector.h"
 					>
 				</File>
@@ -450,6 +458,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\connector\ConnectorResource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\connector\ConnectorResourceListener.h"
 					>
 				</File>
 				<File
@@ -1850,10 +1862,6 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQSession.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\core\ActiveMQSessionResource.h"
 					>
 				</File>
 				<File
