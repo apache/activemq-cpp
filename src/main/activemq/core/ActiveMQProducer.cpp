@@ -19,6 +19,7 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/exceptions/NullPointerException.h>
 #include <activemq/exceptions/InvalidStateException.h>
+#include <activemq/exceptions/IllegalArgumentException.h>
 #include <activemq/util/Date.h>
 
 using namespace std;
@@ -49,6 +50,9 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
     this->disableTimestamps   = false;
     this->defaultPriority     = 4;
     this->defaultTimeToLive   = 0;
+
+    // Listen for our resource to close
+    this->producerInfo->addListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +61,8 @@ ActiveMQProducer::~ActiveMQProducer(void)
     try
     {
         close();
+
+        delete producerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -69,8 +75,13 @@ void ActiveMQProducer::close()
     try
     {
         if( !closed ) {
-            // Dispose of the ProducerInfo
-            session->onDestroySessionResource( this );
+
+            // Close the ProducerInfo
+            if( !producerInfo->isClosed() ) {
+                // We don't want a callback now
+                this->producerInfo->removeListener( this );
+                this->producerInfo->close();
+            }
 
             closed = true;
         }
@@ -154,11 +165,11 @@ void ActiveMQProducer::send( const cms::Destination* destination,
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
-        
+
         if( destination == NULL ) {
-            
-            throw InvalidStateException( 
-                __FILE__, __LINE__, 
+
+            throw InvalidStateException(
+                __FILE__, __LINE__,
                 "ActiveMQProducer::send - Attempting to send on NULL destination");
         }
 
@@ -185,3 +196,30 @@ void ActiveMQProducer::send( const cms::Destination* destination,
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::onConnectorResourceClosed(
+    const ConnectorResource* resource ) throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed )
+        {
+            throw InvalidStateException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::onConnectorResourceClosed - "
+                "Producer Already Closed");
+        }
+
+        if( resource != producerInfo ) {
+            throw IllegalArgumentException(
+                __FILE__, __LINE__,
+                "ActiveMQProducer::onConnectorResourceClosed - "
+                "Unknown object passed to this callback");
+        }
+
+        // If our producer isn't closed already, then lets close
+        this->close();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}

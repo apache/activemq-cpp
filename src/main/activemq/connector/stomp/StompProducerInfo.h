@@ -43,13 +43,27 @@ namespace stomp{
 
     public:
 
-        StompProducerInfo(void) {
+        StompProducerInfo() : ProducerInfo() {
+
             this->producerId = 0;
             this->disableMessageIds = false;
             this->session = NULL;
             this->destination = NULL;
         }
-        virtual ~StompProducerInfo(void) { delete destination; }
+
+        StompProducerInfo( Connector* connector ) :
+            ProducerInfo( connector ) {
+
+            this->producerId = 0;
+            this->disableMessageIds = false;
+            this->session = NULL;
+            this->destination = NULL;
+        }
+
+        virtual ~StompProducerInfo(void) { 
+            this->close();
+            delete destination; 
+        }
 
         /**
          * Retrieves the default destination that this producer
@@ -65,11 +79,11 @@ namespace stomp{
          * @param destination reference to a destination, copied internally
          */
         virtual void setDestination( const cms::Destination* destination ) {
-            
+
             // Delete the previous destination if it exists.
             delete this->destination;
             this->destination = NULL;
-            
+
             if( destination != NULL ) {
                 this->destination = destination->clone();
             }

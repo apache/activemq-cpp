@@ -65,6 +65,7 @@ cc_sources = \
     activemq/connector/openwire/utils/OpenwireStringSupport.cpp \
     activemq/connector/openwire/marshal/PrimitiveMapMarshaller.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
+    activemq/connector/BaseConnectorResource.cpp \
     activemq/network/SocketInputStream.cpp \
     activemq/network/ServerSocket.cpp \
     activemq/network/TcpSocket.cpp \
@@ -89,7 +90,6 @@ cc_sources = \
     activemq/util/URISupport.cpp
 
 h_sources = \
-    activemq/core/ActiveMQSessionResource.h \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQMessage.h \
     activemq/core/ActiveMQConnectionData.h \
@@ -166,7 +166,9 @@ h_sources = \
     activemq/connector/TransactionInfo.h \
     activemq/connector/SessionInfo.h \
     activemq/connector/ConnectorResource.h \
+    activemq/connector/ConnectorResourceListener.h \
     activemq/connector/ConnectorFactory.h \
+    activemq/connector/BaseConnectorResource.h \
     activemq/connector/stomp/StompSessionInfo.h \
     activemq/connector/stomp/StompTransactionInfo.h \
     activemq/connector/stomp/StompSessionManager.h \

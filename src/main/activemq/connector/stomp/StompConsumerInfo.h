@@ -18,6 +18,8 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONSUMERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONSUMERINFO_H_
 
+#include <activemq/connector/ConsumerInfo.h>
+
 namespace activemq{
 namespace connector{
 namespace stomp{
@@ -40,20 +42,33 @@ namespace stomp{
 
     public:
 
-        StompConsumerInfo(void) {
+        StompConsumerInfo() : ConsumerInfo() {
+
             selector = "";
             consumerId = 0;
             destination = NULL;
             session = NULL;
         }
 
-        virtual ~StompConsumerInfo(void) { delete destination; }
+        StompConsumerInfo( Connector* connector ) :
+            ConsumerInfo( connector ) {
+
+            selector = "";
+            consumerId = 0;
+            destination = NULL;
+            session = NULL;
+        }
+
+        virtual ~StompConsumerInfo() { 
+            this->close();
+            delete destination;
+        }
 
         /**
          * Gets this message consumer's message selector expression.
          * @return This Consumer's selector expression or "".
          */
-        virtual const std::string& getMessageSelector(void) const {
+        virtual const std::string& getMessageSelector() const {
             return selector;
         }
 
@@ -69,7 +84,7 @@ namespace stomp{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual long long getConsumerId(void) const {
+        virtual long long getConsumerId() const {
             return consumerId;
         }
 
@@ -85,7 +100,7 @@ namespace stomp{
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination this consumer is attached to
          */
-        virtual const cms::Destination* getDestination(void) const {
+        virtual const cms::Destination* getDestination() const {
             return destination;
         }
 
@@ -101,7 +116,7 @@ namespace stomp{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const {
+        virtual const SessionInfo* getSessionInfo() const {
             return session;
         }
 

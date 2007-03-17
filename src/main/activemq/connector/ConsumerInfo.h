@@ -17,7 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_CONSUMERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_CONSUMERINFO_H_
 
-#include <activemq/connector/ConnectorResource.h>
+#include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/SessionInfo.h>
 #include <cms/Destination.h>
 #include <string>
@@ -25,17 +25,22 @@
 namespace activemq{
 namespace connector{
 
-    class ConsumerInfo : public ConnectorResource
+    class ConsumerInfo : public BaseConnectorResource
     {
     public:
 
-        virtual ~ConsumerInfo(void) {}
+        ConsumerInfo() : BaseConnectorResource() {}
+
+        ConsumerInfo( Connector* connector ) :
+            BaseConnectorResource( connector ) {}
+
+        virtual ~ConsumerInfo() {}
 
         /**
          * Gets this message consumer's message selector expression.
          * @return This Consumer's selector expression or "".
          */
-        virtual const std::string& getMessageSelector(void) const = 0;
+        virtual const std::string& getMessageSelector() const = 0;
 
         /**
          * Sets this message consumer's message selector expression.
@@ -47,7 +52,7 @@ namespace connector{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual long long getConsumerId(void) const = 0;
+        virtual long long getConsumerId() const = 0;
 
         /**
          * Sets the ID that is assigned to this consumer
@@ -59,7 +64,7 @@ namespace connector{
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination
          */
-        virtual const cms::Destination* getDestination(void) const = 0;
+        virtual const cms::Destination* getDestination() const = 0;
 
         /**
          * Sets the destination that this Consumer is listening on
@@ -71,7 +76,7 @@ namespace connector{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const = 0;
+        virtual const SessionInfo* getSessionInfo() const = 0;
 
         /**
          * Gets the Session Info that this consumer is attached too

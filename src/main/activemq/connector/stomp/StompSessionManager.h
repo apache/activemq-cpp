@@ -23,6 +23,7 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/connector/ConnectorException.h>
+#include <activemq/connector/Connector.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
 #include <activemq/connector/ConsumerMessageListener.h>
 #include <activemq/connector/stomp/commands/SubscribeCommand.h>
@@ -73,11 +74,16 @@ namespace stomp{
         // The global connection id
         std::string connectionId;
 
+        // Connector that we are working for
+        connector::Connector* connector;
+
     public:
 
-    	StompSessionManager( const std::string& connectionId,
+        StompSessionManager( const std::string& connectionId,
+                             connector::Connector* connector,
                              transport::Transport* transport );
-    	virtual ~StompSessionManager(void);
+
+        virtual ~StompSessionManager();
 
         /**
          * Creates a new Session and returns a SessionInfo object whose
@@ -184,13 +190,13 @@ namespace stomp{
          * Gets the Next Session Id
          * @return unique session id
          */
-        virtual long long getNextSessionId(void);
+        virtual long long getNextSessionId();
 
         /**
          * Gets the Next Session Id
          * @return unique session id
          */
-        virtual long long getNextConsumerId(void);
+        virtual long long getNextConsumerId();
 
     };
 

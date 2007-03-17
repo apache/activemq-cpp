@@ -22,9 +22,9 @@
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/connector/SessionInfo.h>
-#include <activemq/core/ActiveMQSessionResource.h>
 #include <activemq/util/Set.h>
 #include <activemq/util/Queue.h>
+#include <activemq/connector/ConnectorResourceListener.h>
 #include <set>
 
 namespace activemq{
@@ -39,7 +39,8 @@ namespace core{
 
     class ActiveMQSession :
         public cms::Session,
-        public concurrent::Runnable
+        public concurrent::Runnable,
+        public connector::ConnectorResourceListener
     {
     private:
 
@@ -266,21 +267,21 @@ namespace core{
          * @return transacted true - false.
          */
         virtual bool isTransacted() const;
-        
+
         /**
-         * Unsubscribes a durable subscription that has been created by a 
+         * Unsubscribes a durable subscription that has been created by a
          * client.
-         * 
-         * This method deletes the state being maintained on behalf of the 
-         * subscriber by its provider.  It is erroneous for a client to delete a 
-         * durable subscription while there is an active MessageConsumer or 
-         * Subscriber for the subscription, or while a consumed message is 
-         * part of a pending transaction or has not been acknowledged in the 
+         *
+         * This method deletes the state being maintained on behalf of the
+         * subscriber by its provider.  It is erroneous for a client to delete a
+         * durable subscription while there is an active MessageConsumer or
+         * Subscriber for the subscription, or while a consumed message is
+         * part of a pending transaction or has not been acknowledged in the
          * session.
          * @param name the name used to identify this subscription
          * @throws CMSException
          */
-        virtual void unsubscribe( const std::string& name ) 
+        virtual void unsubscribe( const std::string& name )
             throw ( cms::CMSException );
 
    public:   // ActiveMQSession specific Methods
@@ -292,17 +293,6 @@ namespace core{
          * @throws CMSException
          */
         virtual void send( cms::Message* message, ActiveMQProducer* producer )
-            throw ( cms::CMSException );
-
-        /**
-         * When a ActiveMQ core object is closed or destroyed it should call
-         * back and let the session know that it is going away, this allows
-         * the session to clean up any associated resources.  This method
-         * destroy's the data that is associated with a Producer object
-         * @param The Producer that is being destoryed
-         * @throw CMSException
-         */
-        virtual void onDestroySessionResource( ActiveMQSessionResource* resource )
             throw ( cms::CMSException );
 
         /**
@@ -333,6 +323,17 @@ namespace core{
             return sessionInfo;
         }
 
+    protected:   // ConnectorResourceListener
+
+        /**
+         * When a Connector Resouce is closed it will notify any registered
+         * Listeners of its close so that they can take the appropriate
+         * action.
+         * @param resource - The ConnectorResource that was closed.
+         */
+        virtual void onConnectorResourceClosed(
+            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
+
     protected:
 
         /**
@@ -361,6 +362,18 @@ namespace core{
          * result of a rollback, or of the consumer being shutdown.
          */
         virtual void purgeMessages() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Given a ConnectorResource pointer, this method will add it to the map
+         * of closeable resources that this connection must close on shutdown
+         * and register itself as a ConnectorResourceListener so that it
+         * can be told when the resouce has been closed by someone else
+         * and remove it from its map of closeable resources.
+         * @param resource - ConnectorResouce to monitor, if NULL no action
+         *                   is taken and no exception is thrown.
+         */
+        virtual void checkConnectorResource(
+            connector::ConnectorResource* resource );
 
     };
 

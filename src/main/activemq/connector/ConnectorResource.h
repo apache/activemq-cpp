@@ -18,20 +18,54 @@
 #ifndef ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
 #define ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
 
+#include <cms/Closeable.h>
+#include <activemq/connector/ConnectorResourceListener.h>
+
 namespace activemq{
 namespace connector{
 
+    class Connector;
+
     /**
-     * An object who's lifetime is determined by
-     * the connector that created it.  All ConnectorResources
-     * should be given back to the connector rather than
-     * deleting explicitly.
+     * A Connector Resource is an object that is created in the Connector
+     * and must alert the connector to is closing so that the connector
+     * can clean up and resouces that are associated with the resouce.
+     * The lifetime of the ConnectorResource is still managed by the
+     * class that owns it, but it must be close on destruction.
+     * <p>
+     * The Connector Resouce should notify its owner of its close by
+     * calling back to its owner through a registered
+     * <code>ConnectorResouceListener</code> from its owner.
      */
-    class ConnectorResource
-    {
+    class ConnectorResource : public cms::Closeable {
+
     public:
 
         virtual ~ConnectorResource() {}
+
+        /**
+         * Adds a new listener to this Connector Resource
+         * @param listener - Listener of ConnectorResource events to add
+         */
+        virtual void addListener( ConnectorResourceListener* listener ) = 0;
+
+        /**
+         * Removes a new listener to this Connector Resource
+         * @param listener - Listener of ConnectorResource events to remove
+         */
+        virtual void removeListener( ConnectorResourceListener* listener ) = 0;
+
+        /**
+         * Gets the Connector that this resource is associated with
+         * @returns Connector pointer to this resources Connector
+         */
+        virtual Connector* getConnector() const = 0;
+
+        /**
+         * Sets the Connector that this Resouce is associated with.
+         * @param connector - The Connector the resource is associated with.
+         */
+        virtual void setConnector( Connector* connector ) = 0;
 
     };
 

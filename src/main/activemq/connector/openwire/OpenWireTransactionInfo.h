@@ -38,12 +38,15 @@ namespace openwire{
 
     public:
 
-        OpenWireTransactionInfo() {
+        OpenWireTransactionInfo( Connector* connector ) :
+            TransactionInfo( connector ) {
+
             transactionInfo = NULL;
             session = NULL;
         }
 
         virtual ~OpenWireTransactionInfo() {
+            this->close();
             delete transactionInfo;
         }
 
