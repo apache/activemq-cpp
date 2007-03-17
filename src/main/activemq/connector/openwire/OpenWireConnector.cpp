@@ -875,17 +875,16 @@ void OpenWireConnector::send( cms::Message* message,
                 "Message is not a valid Open Wire type.");
         }
 
-        if( !producer->isDisableMessageId() )
-        {
-            commands::MessageId* id = new commands::MessageId();
-            id->setProducerId(
-                dynamic_cast<commands::ProducerId*>(
-                    producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
+        // Always assign the message ID, regardless of the disable
+        // flag.  Not adding a message ID will cause an NPE at the broker.
+        commands::MessageId* id = new commands::MessageId();
+        id->setProducerId(
+            dynamic_cast<commands::ProducerId*>(
+                producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
 
-            id->setProducerSequenceId( getNextProducerSequenceId() );
+        id->setProducerSequenceId( getNextProducerSequenceId() );
 
-            amqMessage->setMessageId( id );
-        }
+        amqMessage->setMessageId( id );
 
         amqMessage->setProducerId(
             dynamic_cast<commands::ProducerId*>(
