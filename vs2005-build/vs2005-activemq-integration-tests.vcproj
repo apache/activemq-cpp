@@ -212,6 +212,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test-integration\integration\TestRegistry.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test-integration\integration\TestSupport.cpp"
 					>
 				</File>
@@ -315,6 +319,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSimpleTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSlowListenerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSlowListenerTest.h"
 							>
 						</File>
 						<File

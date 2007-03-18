@@ -1845,10 +1845,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\core\ActiveMQMessageListener.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQProducer.cpp"
 					>
 				</File>
@@ -1865,11 +1861,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQSessionExecutor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\ActiveMQSessionExecutor.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQTransaction.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\ActiveMQTransaction.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\DispatchData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\Dispatcher.h"
 					>
 				</File>
 			</Filter>
