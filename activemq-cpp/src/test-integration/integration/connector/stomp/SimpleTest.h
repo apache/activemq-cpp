@@ -32,6 +32,10 @@ namespace stomp{
         CPPUNIT_TEST_SUITE( SimpleTest );
         CPPUNIT_TEST( testAutoAck );
         CPPUNIT_TEST( testClientAck );
+        CPPUNIT_TEST( testProducerWithNullDestination );
+        CPPUNIT_TEST( testSyncReceive );
+        CPPUNIT_TEST( testMultipleConnections );
+        CPPUNIT_TEST( testMultipleSessions );
         CPPUNIT_TEST_SUITE_END();
         
     public:
@@ -41,6 +45,10 @@ namespace stomp{
 
         virtual void testAutoAck();
         virtual void testClientAck();
+        virtual void testProducerWithNullDestination();
+        virtual void testSyncReceive();
+        virtual void testMultipleConnections();
+        virtual void testMultipleSessions();
 
     };
 

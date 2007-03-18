@@ -30,6 +30,7 @@
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/network/Socket.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
@@ -129,7 +130,6 @@ void OpenwireSimpleTest::testAutoAck()
         delete topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 void OpenwireSimpleTest::testClientAck()
@@ -183,6 +183,228 @@ void OpenwireSimpleTest::testClientAck()
         delete topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
+void OpenwireSimpleTest::testProducerWithNullDestination()
+{
+    try
+    {
+        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire", cms::Session::CLIENT_ACKNOWLEDGE );
+        testSupport.initialize();
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
+        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::MessageConsumer* consumer =  session->createConsumer( topic );            
+        consumer->setMessageListener( &testSupport );
+        cms::MessageProducer* producer = session->createProducer( NULL );
+
+        cms::TextMessage* textMsg = session->createTextMessage();
+        
+        // Send some text messages
+        producer->send( topic, textMsg );
+        
+        delete textMsg;
+
+        // Wait for the messages to get here
+        testSupport.waitForMessages( 1 );
+        
+        unsigned int numReceived = testSupport.getNumReceived();
+        if( IntegrationCommon::debug ) {
+            printf("received: %d\n", numReceived );
+        }
+        CPPUNIT_ASSERT_EQUAL( 1, (int)numReceived );
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        delete producer;                      
+        delete consumer;
+        delete topic;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}
+
+void OpenwireSimpleTest::testSyncReceive()
+{
+    try
+    {
+        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire", cms::Session::CLIENT_ACKNOWLEDGE );
+        testSupport.initialize();
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
+        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::MessageConsumer* consumer = session->createConsumer( topic );
+        cms::MessageProducer* producer = session->createProducer( topic );
+
+        cms::TextMessage* textMsg = session->createTextMessage();
+        
+        // Send some text messages
+        producer->send( textMsg );
+        
+        delete textMsg;
+
+        cms::Message* message = consumer->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        delete producer;                      
+        delete consumer;
+        delete topic;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}
+
+void OpenwireSimpleTest::testMultipleConnections()
+{
+    try
+    {
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61616?wireFormat=openwire");
+        cms::Connection* connection1 = factory->createConnection();
+        connection1->start();
+        
+        cms::Connection* connection2 = factory->createConnection();
+        connection2->start();
+        
+        CPPUNIT_ASSERT( connection1->getClientID() != connection2->getClientID() );
+        
+        cms::Session* session1 = connection1->createSession();
+        cms::Session* session2 = connection2->createSession();
+        
+        cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
+        
+        
+        cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
+        cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
+        
+        cms::MessageProducer* producer = session2->createProducer( topic );
+
+        cms::TextMessage* textMsg = session2->createTextMessage();
+        
+        // Send some text messages
+        producer->send( textMsg );
+        
+        delete textMsg;
+
+        cms::Message* message = consumer1->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+        
+        message = consumer2->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        
+        connection1->close();
+        connection2->close();
+        
+        delete producer;                      
+        delete consumer1;
+        delete consumer2;
+        delete topic;
+        delete session1;
+        delete session2;
+        delete connection1;
+        delete connection2;
+        delete factory;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}
+
+void OpenwireSimpleTest::testMultipleSessions()
+{
+    try
+    {
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61616?wireFormat=openwire");
+        cms::Connection* connection = factory->createConnection();
+        connection->start();
+        
+        cms::Session* session1 = connection->createSession();
+        cms::Session* session2 = connection->createSession();
+        
+        cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
+        
+        cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
+        cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
+        
+        cms::MessageProducer* producer = session2->createProducer( topic );
+
+        cms::TextMessage* textMsg = session2->createTextMessage();
+        
+        // Send some text messages
+        producer->send( textMsg );
+        
+        delete textMsg;
+
+        cms::Message* message = consumer1->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+        
+        message = consumer2->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        
+        connection->close();
+        
+        delete producer;                      
+        delete consumer1;
+        delete consumer2;
+        delete topic;
+        delete session1;
+        delete session2;
+        delete connection;
+        delete factory;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}
