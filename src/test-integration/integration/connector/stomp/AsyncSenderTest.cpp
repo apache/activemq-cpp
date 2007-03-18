@@ -71,8 +71,6 @@ using namespace activemq::concurrent;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest );
-
 ////////////////////////////////////////////////////////////////////////////////
 AsyncSenderTest::AsyncSenderTest()
 :

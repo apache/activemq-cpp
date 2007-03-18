@@ -19,8 +19,6 @@
 
 #include <integration/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleRollbackTest );
-
 #include <sstream>
 
 #include <activemq/core/ActiveMQConnectionFactory.h>

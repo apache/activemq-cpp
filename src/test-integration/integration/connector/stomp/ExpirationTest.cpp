@@ -17,8 +17,6 @@
 
 #include "ExpirationTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::ExpirationTest );
-
 #include <sstream>
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
