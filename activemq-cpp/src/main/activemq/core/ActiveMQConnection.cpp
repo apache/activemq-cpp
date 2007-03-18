@@ -38,7 +38,7 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData)
     this->started = false;
     this->closed = false;
     this->exceptionListener = NULL;
-    
+
     alwaysSessionAsync = Boolean::parseBoolean(
         connectionData->getProperties().getProperty( "alwaysSessionAsync", "true" ) );
 
@@ -60,7 +60,7 @@ ActiveMQConnection::~ActiveMQConnection()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer, 
+void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer,
     Dispatcher* dispatcher )
 {
     // Add the consumer to the map.
@@ -69,10 +69,10 @@ void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer,
         dispatchers.setValue( consumer->getConsumerId(), dispatcher );
     }
 }
-        
+
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::removeDispatcher( const connector::ConsumerInfo* consumer ) {
-    
+
     // Remove the consumer from the map.
     synchronized( &dispatchers )
     {
@@ -92,15 +92,15 @@ cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession( 
+cms::Session* ActiveMQConnection::createSession(
     cms::Session::AcknowledgeMode ackMode ) throw ( cms::CMSException )
 {
     try
     {
-        // Determine whether or not to make dispatch for this session asynchronous        
-        bool doSessionAsync = alwaysSessionAsync || !activeSessions.isEmpty() || 
+        // Determine whether or not to make dispatch for this session asynchronous
+        bool doSessionAsync = alwaysSessionAsync || !activeSessions.isEmpty() ||
             ackMode==Session::SESSION_TRANSACTED || ackMode==Session::CLIENT_ACKNOWLEDGE;
-                        
+
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ),
@@ -112,7 +112,7 @@ cms::Session* ActiveMQConnection::createSession(
         synchronized( &activeSessions ) {
             activeSessions.add( session );
         }
-        
+
         // If we're already started, start the session.
         if( started ) {
             session->start();
@@ -179,7 +179,7 @@ void ActiveMQConnection::start() throw ( cms::CMSException )
     // messages delivered while this connection is stopped are dropped
     // and not acknowledged.
     started = true;
-    
+
     // Start all the sessions.
     std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
     for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
@@ -193,8 +193,8 @@ void ActiveMQConnection::stop() throw ( cms::CMSException )
     // Once current deliveries are done this stops the delivery of any
     // new messages.
     started = false;
-    
-    // Start all the sessions.
+
+    // Stop all the sessions.
     std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
     for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
         sessions[ix]->stop();
@@ -242,7 +242,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
         {
             dispatcher = dispatchers.getValue(consumer->getConsumerId());
         }
-        
+
         // Dispatch the message.
         if( dispatcher != NULL ) {
             DispatchData data( consumer, message );
