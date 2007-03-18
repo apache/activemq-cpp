@@ -19,8 +19,6 @@
 
 #include <integration/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTest );
-
 #include <sstream>
 
 #include <activemq/core/ActiveMQConnectionFactory.h>

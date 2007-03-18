@@ -18,8 +18,6 @@
 #include "SimpleTest.h"
 #include <integration/IntegrationCommon.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTest );
-
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/util/SimpleProperties.h>

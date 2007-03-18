@@ -18,8 +18,6 @@
 #include "OpenwireTransactionTest.h"
 #include <integration/IntegrationCommon.h>
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
-
 #include <activemq/concurrent/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/util/SimpleProperties.h>
