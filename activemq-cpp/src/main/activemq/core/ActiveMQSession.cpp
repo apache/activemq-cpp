@@ -41,8 +41,7 @@ using namespace activemq::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
                                   const Properties& properties,
-                                  ActiveMQConnection* connection,
-                                  bool sessionAsyncDispatch )
+                                  ActiveMQConnection* connection )
 {
     if( sessionInfo == NULL || connection == NULL )
     {
@@ -56,7 +55,6 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     this->connection   = connection;
     this->closed       = false;
     this->asyncThread  = NULL;
-    this->sessionAsyncDispatch = sessionAsyncDispatch;
     this->useAsyncSend = Boolean::parseBoolean(
         properties.getProperty( "useAsyncSend", "false" ) );
 
@@ -87,6 +85,13 @@ ActiveMQSession::~ActiveMQSession()
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::fire( exceptions::ActiveMQException& ex ) {
+    if( connection != NULL ) {
+        connection->fire( ex );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -717,6 +722,11 @@ void ActiveMQSession::onConnectorResourceClosed(
 
         if( consumer != NULL )
         {
+            bool wasStarted = isStarted();
+            if( wasStarted ) {
+                stop();
+            }
+            
             // Remove the dispatcher for the Connection
             connection->removeDispatcher( consumer );
 
@@ -730,6 +740,10 @@ void ActiveMQSession::onConnectorResourceClosed(
             // Remove this consumer from the consumers map.
             synchronized( &consumers ) {
                 consumers.remove( consumer->getConsumerId() );
+            }
+            
+            if( wasStarted ) {
+                start();
             }
         }
 

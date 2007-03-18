@@ -47,32 +47,20 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::execute( DispatchData& data ) {
         
-    // If dispatch async is off, just dispatch in the context of the transport
-    // thread.
-    if ( !session->isSessionAsyncDispatch() ){
-        dispatch(data);
-    }else {
-        
-        synchronized( &messageQueue ) {
-            messageQueue.push(data);
-            wakeup();
-        }
+    // Add the data to the queue.
+    synchronized( &messageQueue ) {
+        messageQueue.push(data);
+        wakeup();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::executeFirst( DispatchData& data ) {
         
-    // If dispatch async is off, just dispatch in the context of the transport
-    // thread.
-    if ( !session->isSessionAsyncDispatch() && started ){
-        dispatch(data);
-    }else {
-        
-        synchronized( &messageQueue ) {
-            messageQueue.enqueueFront(data);
-            wakeup();
-        }
+    // Add the data to the front of the queue.
+    synchronized( &messageQueue ) {
+        messageQueue.enqueueFront(data);
+        wakeup();
     }
 }
     
@@ -83,7 +71,7 @@ void ActiveMQSessionExecutor::start() {
         started = true;
         
         // Don't create the thread unless we need to.
-        if( session->isSessionAsyncDispatch() && thread == NULL ) {
+        if( thread == NULL ) {
             thread = new Thread( this );
             thread->start();
         }
@@ -126,19 +114,32 @@ void ActiveMQSessionExecutor::clear() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
         
-    ActiveMQConsumer* consumer = NULL;
-    util::Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
-    
-    synchronized(&consumers) {
-        consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
-    }
-    
-    if( consumer == NULL ) {
-        execute( data );
-    } else {
-        consumer->dispatch( data );
-    }
+    try {
+        ActiveMQConsumer* consumer = NULL;
+        util::Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
         
+        synchronized(&consumers) {
+            consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
+        }
+        
+        // If the consumer is not available, just delete the message.
+        // Otherwise, dispatch the message to the consumer.
+        if( consumer == NULL ) {
+            delete data.getMessage();
+        } else {
+            consumer->dispatch( data );
+        }
+        
+    } catch( ActiveMQException& ex ) {
+        ex.setMark(__FILE__, __LINE__ );
+        ex.printStackTrace();
+    } catch( std::exception& ex ) {
+        ActiveMQException amqex( __FILE__, __LINE__, ex.what() );
+        amqex.printStackTrace();
+    } catch( ... ) {
+        ActiveMQException amqex( __FILE__, __LINE__, "caught unknown exception" );
+        amqex.printStackTrace();
+    }
 }
     
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,10 +163,14 @@ void ActiveMQSessionExecutor::run() {
         }
         
     } catch( ActiveMQException& ex ) {
-        ex.printStackTrace();
+        ex.setMark(__FILE__, __LINE__ );
+        session->fire( ex );
+    } catch( std::exception& stdex ) {
+        ActiveMQException ex( __FILE__, __LINE__, stdex.what() );
+        session->fire( ex );
     } catch( ... ) {
         ActiveMQException ex(__FILE__, __LINE__, "caught unknown exception" );
-        ex.printStackTrace();
+        session->fire( ex );
     }
 }
 
@@ -190,12 +195,8 @@ void ActiveMQSessionExecutor::dispatchAll() {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::wakeup() {
  
-    if( session->isSessionAsyncDispatch() ) {
-        synchronized( &messageQueue ) {
-            messageQueue.notifyAll();
-        }
-    } else if( started ){
-        dispatchAll();
+    synchronized( &messageQueue ) {
+        messageQueue.notifyAll();
     }
 }
 

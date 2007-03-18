@@ -83,12 +83,6 @@ namespace core{
          * Maintain the set of all active sessions.
          */
         util::Set<ActiveMQSession*> activeSessions;
-        
-        /**
-         * If true, dispatch for all sessions will be asynchronous to the 
-         * transport.
-         */
-        bool alwaysSessionAsync;
 
     public:
 
@@ -210,7 +204,7 @@ namespace core{
         virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
                                         core::ActiveMQMessage* message );
 
-    private:
+    public:
 
         /**
          * Notify the excpetion listener
