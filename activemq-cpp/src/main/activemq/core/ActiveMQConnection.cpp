@@ -217,10 +217,17 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             fire( ex );
 
             return;
-        }
+        }        
 
-        // When not started we drop incomming messages
-        if( !started )
+        // Look up the dispatcher.
+        Dispatcher* dispatcher = NULL;
+        synchronized( &dispatchers )
+        {
+            dispatcher = dispatchers.getValue(consumer->getConsumerId());
+        }
+        
+        // If we have no registered dispatcher, this is bad!! (should never happen)
+        if( dispatcher == NULL )
         {
             // Indicate to Broker that we received the message, but it
             // was not consumed.
@@ -233,21 +240,12 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             // Delete the message here
             delete message;
 
-            return;
-        }
-
-        // Look up the dispatcher.
-        Dispatcher* dispatcher = NULL;
-        synchronized( &dispatchers )
-        {
-            dispatcher = dispatchers.getValue(consumer->getConsumerId());
+            throw ActiveMQException(__FILE__, __LINE__, "no dispatcher registered for consumer" );
         }
 
         // Dispatch the message.
-        if( dispatcher != NULL ) {
-            DispatchData data( consumer, message );
-            dispatcher->dispatch( data );
-        }
+        DispatchData data( consumer, message );
+        dispatcher->dispatch( data );
     }
     catch( exceptions::ActiveMQException& ex )
     {

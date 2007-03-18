@@ -409,3 +409,59 @@ void SimpleTest::testMultipleSessions()
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
 
+void SimpleTest::testReceiveAlreadyInQueue() {
+    
+        try
+    {
+        
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay 
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+        
+        // Create CMS Object for Comms
+        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        cms::Connection* connection = factory->createConnection();
+
+        cms::Session* session = connection->createSession();
+        
+        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        
+        cms::MessageConsumer* consumer = session->createConsumer( topic );
+        
+        cms::MessageProducer* producer = session->createProducer( topic );
+
+        cms::TextMessage* textMsg = session->createTextMessage();
+        
+        // Send some text messages
+        producer->send( textMsg );
+        
+        delete textMsg;
+        
+        Thread::sleep( 100 );
+        
+        connection->start();
+
+        cms::Message* message = consumer->receive(1000);
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+        
+        connection->close();
+        
+        delete producer;                      
+        delete consumer;
+        delete topic;
+        delete session;
+        delete connection;
+        delete factory;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}

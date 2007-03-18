@@ -133,7 +133,9 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
         consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
     }
     
-    if( consumer != NULL ) {
+    if( consumer == NULL ) {
+        execute( data );
+    } else {
         consumer->dispatch( data );
     }
         
