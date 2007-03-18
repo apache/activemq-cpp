@@ -215,21 +215,21 @@ namespace core{
 
                 consumerListener->onConsumerMessage( &consumer, cmd );
 
-                CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
+                CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener.messages.size() );
 
                 connection.removeDispatcher( &consumer );
 
                 msgListener.messages.clear();
                 consumerListener->onConsumerMessage( &consumer, cmd );
 
-                CPPUNIT_ASSERT( msgListener.messages.size() == 0 );
+                CPPUNIT_ASSERT_EQUAL( 0, (int)msgListener.messages.size() );
 
                 connection.addDispatcher( &consumer, &msgListener );
 
                 connection.stop();
                 consumerListener->onConsumerMessage( &consumer, cmd );
                 connection.start();
-                CPPUNIT_ASSERT( msgListener.messages.size() == 0 );
+                CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener.messages.size() );
 
                 cmd = new connector::stomp::commands::TextMessageCommand;
 
@@ -237,7 +237,7 @@ namespace core{
                 cmd->setCMSDestination( &topic2 );
 
                 consumerListener->onConsumerMessage( &consumer, cmd );
-                CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
+                CPPUNIT_ASSERT_EQUAL( 2, (int)msgListener.messages.size() );
 
                 connection.removeDispatcher( &consumer );
                 msgListener.messages.clear();
@@ -257,12 +257,9 @@ namespace core{
                 delete session2;
                 delete session3;
 
-            }
-            catch(...)
-            {
-                bool exceptionThrown = false;
-
-                CPPUNIT_ASSERT( exceptionThrown );
+            } catch( exceptions::ActiveMQException& ex ) {
+                ex.printStackTrace();
+                throw ex;
             }
         }
 
