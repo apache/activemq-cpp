@@ -36,6 +36,7 @@ namespace stomp{
         CPPUNIT_TEST( testSyncReceive );
         CPPUNIT_TEST( testMultipleConnections );
         CPPUNIT_TEST( testMultipleSessions );
+        CPPUNIT_TEST( testReceiveAlreadyInQueue );
         CPPUNIT_TEST_SUITE_END();
         
     public:
@@ -49,6 +50,7 @@ namespace stomp{
         virtual void testSyncReceive();
         virtual void testMultipleConnections();
         virtual void testMultipleSessions();
+        virtual void testReceiveAlreadyInQueue();
 
     };
 
