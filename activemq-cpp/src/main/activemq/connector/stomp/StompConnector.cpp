@@ -33,7 +33,7 @@
 #include <activemq/connector/stomp/commands/DisconnectCommand.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>
-#include <activemq/util/Integer.h>
+#include <activemq/util/Long.h>
 #include <activemq/util/Config.h>
 
 using namespace std;
@@ -449,7 +449,7 @@ void StompConnector::send( cms::Message* message,
             }
 
             stompCommand->setTransactionId(
-                Integer::toString(
+                Long::toString(
                     session->getTransactionInfo()->getTransactionId() ) );
         }
 
@@ -550,7 +550,7 @@ TransactionInfo* StompConnector::startTransaction(
         BeginCommand cmd;
 
         cmd.setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
 
         transport->oneway( &cmd );
 
@@ -578,7 +578,7 @@ void StompConnector::commit( TransactionInfo* transaction,
         CommitCommand cmd;
 
         cmd.setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
 
         transport->oneway( &cmd );
     }
@@ -603,7 +603,7 @@ void StompConnector::rollback( TransactionInfo* transaction,
         AbortCommand cmd;
 
         cmd.setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
 
         transport->oneway( &cmd );
     }
@@ -631,7 +631,7 @@ cms::Message* StompConnector::createMessage(
         if( transaction != NULL )
         {
             cmd->setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
         }
 
         return cmd;
@@ -655,7 +655,7 @@ cms::BytesMessage* StompConnector::createBytesMessage(
         if( transaction != NULL )
         {
             cmd->setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
         }
 
         return cmd;
@@ -679,7 +679,7 @@ cms::TextMessage* StompConnector::createTextMessage(
         if( transaction != NULL )
         {
             cmd->setTransactionId(
-                Integer::toString( transaction->getTransactionId() ) );
+                Long::toString( transaction->getTransactionId() ) );
         }
 
         return cmd;
