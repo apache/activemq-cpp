@@ -24,6 +24,7 @@
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/ActiveMQProducer.h>
+#include <activemq/core/ActiveMQSessionExecutor.h>
 #include <activemq/util/Boolean.h>
 
 #include <activemq/connector/TransactionInfo.h>
@@ -40,7 +41,8 @@ using namespace activemq::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
                                   const Properties& properties,
-                                  ActiveMQConnection* connection)
+                                  ActiveMQConnection* connection,
+                                  bool sessionAsyncDispatch )
 {
     if( sessionInfo == NULL || connection == NULL )
     {
@@ -54,6 +56,7 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     this->connection   = connection;
     this->closed       = false;
     this->asyncThread  = NULL;
+    this->sessionAsyncDispatch = sessionAsyncDispatch;
     this->useAsyncSend = Boolean::parseBoolean(
         properties.getProperty( "useAsyncSend", "false" ) );
 
@@ -69,6 +72,9 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
         transaction =
             new ActiveMQTransaction(connection, this, properties );
     }
+    
+    // Create the session executor object.
+    executor = new ActiveMQSessionExecutor( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,11 +99,14 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 
     try
     {
+        // Stop the dispatch executor.
+        stop();        
+        
         // Get the complete list of closeable session resources.
         std::vector<cms::Closeable*> allResources;
         synchronized( &closableSessionResources ) {
             allResources = closableSessionResources.toArray();
-        }
+        }        
 
         // Close all of the resources.
         for( unsigned int ix=0; ix<allResources.size(); ++ix ){
@@ -127,6 +136,9 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 
         // Remove any unsent cloned messages.
         purgeMessages();
+        
+        delete executor;
+        executor = NULL;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -227,31 +239,38 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
 
-        ConsumerInfo* consumerInfo =
+		ConsumerInfo* consumerInfo =
             connection->getConnectionData()->getConnector()->
                 createConsumer( destination,
                                 sessionInfo,
                                 selector,
                                 noLocal );
 
-        // Add to Session Closeables and Monitor for close, if needed.
+		// Add to Session Closeables and Monitor for close, if needed.
         checkConnectorResource(
             dynamic_cast<ConnectorResource*>( consumerInfo ) );
 
-        // Create the consumer instance.
+		// Create the consumer instance.
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
             consumerInfo, this );
 
-        // Register this consumer as a listener of messages from the
-        // connection.
-        connection->addMessageListener(
-            consumer->getConsumerInfo()->getConsumerId(), consumer );
+
+        // Add the consumer to the map.
+        synchronized( &consumers ) {
+            consumers.setValue( consumerInfo->getConsumerId(), consumer );
+        }
+
+        // Register this as a message dispatcher for the consumer.
+        connection->addDispatcher( consumerInfo, this );
 
         // Start the Consumer, we are now ready to receive messages
         try{
             connection->getConnectionData()->getConnector()->startConsumer(
-                consumer->getConsumerInfo() );
+                consumerInfo );
         } catch( ActiveMQException& ex ) {
+			synchronized( &consumers ) {
+            	consumers.remove( consumerInfo->getConsumerId() );
+        	}
             delete consumer;
             ex.setMark( __FILE__, __LINE__ );
             throw ex;
@@ -293,16 +312,22 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
             consumerInfo, this );
 
-        // Register the consumer as a listener of messages from the
-        // connection.
-        connection->addMessageListener(
-            consumer->getConsumerInfo()->getConsumerId(), consumer );
+        // Add the consumer to the map.
+        synchronized( &consumers ) {
+            consumers.setValue( consumerInfo->getConsumerId(), consumer );
+        }
+
+        // Register this as a message dispatcher for the consumer.
+        connection->addDispatcher( consumerInfo, this );
 
         // Start the Consumer, we are now ready to receive messages
         try{
             connection->getConnectionData()->getConnector()->startConsumer(
-                consumer->getConsumerInfo() );
+                consumerInfo );
         } catch( ActiveMQException& ex ) {
+			synchronized( &consumers ) {
+            	consumers.remove( consumerInfo->getConsumerId() );
+        	}		
             delete consumer;
             ex.setMark( __FILE__, __LINE__ );
             throw ex;
@@ -582,7 +607,7 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
         }
 
         cms::MapMessage* message = connection->getConnectionData()->
-            getConnector()->createMapMessage( sessionInfo, transaction );
+                getConnector()->createMapMessage( sessionInfo, transaction );
 
         // Add to Session Closeables and Monitor for close, if needed.
         checkConnectorResource(
@@ -653,7 +678,7 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
                 "ActiveMQSession::onProducerClose - Session Already Closed" );
         }
 
-        if( useAsyncSend == true ) {
+        if( useAsyncSend ) {
 
             // Put it in the send queue, thread will dispatch it.  We clone it
             // in case the client deletes their copy before we get a chance to
@@ -689,17 +714,21 @@ void ActiveMQSession::onConnectorResourceClosed(
         const ConsumerInfo* consumer =
             dynamic_cast<const ConsumerInfo*>( resource );
 
-        if( consumer != NULL ) {
-
-            // Remove this Consumer from the Connection
-            connection->removeMessageListener(
-                consumer->getConsumerId() );
+        if( consumer != NULL )
+        {
+            // Remove the dispatcher for the Connection
+            connection->removeDispatcher( consumer );                           
 
             // Remove this consumer from the Transaction if we are
             // transactional
             if( transaction != NULL ) {
                 transaction->removeFromTransaction(
                     consumer->getConsumerId() );
+            }
+            
+            // Remove this consumer from the consumers map.
+            synchronized( &consumers ) {
+                consumers.remove( consumer->getConsumerId() );
             }
         }
 
@@ -884,3 +913,58 @@ void ActiveMQSession::checkConnectorResource(
     // Register as a Listener
     resource->addListener( this );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::dispatch( DispatchData& message ) {
+    
+    if( executor != NULL ) {
+        executor->execute( message );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::redispatch( util::Queue<DispatchData>& unconsumedMessages )
+{
+    util::Queue<DispatchData> reversedList;
+    
+    // Copy the list in reverse order then clear the original list.
+    synchronized( &unconsumedMessages ) {
+        unconsumedMessages.reverse( reversedList );
+        unconsumedMessages.clear();
+    }
+    
+    // Add the list to the front of the executor.
+    while( !reversedList.empty() ) {
+        DispatchData data = reversedList.pop();
+        executor->executeFirst( data );
+    }
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::start()
+{
+    if( executor != NULL ) {
+        executor->start();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::stop()
+{
+    if( executor != NULL ) {
+        executor->stop();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQSession::isStarted() const
+{
+    if( executor == NULL ) {
+        return false;
+    }
+    
+    return executor->isStarted();
+}
+
+

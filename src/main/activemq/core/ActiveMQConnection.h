@@ -21,8 +21,8 @@
 #include <cms/Connection.h>
 #include <cms/ExceptionListener.h>
 #include <activemq/core/ActiveMQConnectionData.h>
-#include <activemq/core/ActiveMQMessageListener.h>
 #include <activemq/core/ActiveMQMessage.h>
+#include <activemq/core/Dispatcher.h>
 #include <activemq/connector/ConsumerMessageListener.h>
 #include <activemq/util/Properties.h>
 #include <activemq/util/Map.h>
@@ -31,6 +31,11 @@
 #include <string>
 
 namespace activemq{
+    
+    namespace connector {
+        class ConsumerInfo;
+    }
+    
 namespace core{
 
     class cms::Session;
@@ -70,14 +75,20 @@ namespace core{
         bool closed;
 
         /**
-         * Map of Consumer Ids to ActiveMQMessageListeners
+         * Map of message dispatchers indexed by consumer id.
          */
-        util::Map< long long, ActiveMQMessageListener* > consumers;
+        util::Map< long long, Dispatcher* > dispatchers;
 
         /**
          * Maintain the set of all active sessions.
          */
-        util::Set<cms::Session*> activeSessions;
+        util::Set<ActiveMQSession*> activeSessions;
+        
+        /**
+         * If true, dispatch for all sessions will be asynchronous to the 
+         * transport.
+         */
+        bool alwaysSessionAsync;
 
     public:
 
@@ -95,6 +106,19 @@ namespace core{
          * @param session The session to be unregistered from this connection.
          */
         virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
+        
+        /**
+         * Adds a dispatcher for a consumer.
+         * @param consumer - The consumer for which to register a dispatcher.
+         * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
+         */
+        virtual void addDispatcher( connector::ConsumerInfo* consumer, Dispatcher* dispatcher );
+        
+        /**
+         * Removes the dispatcher for a consumer.
+         * @param consumer - The consumer for which to remove the dispatcher.
+         */
+        virtual void removeDispatcher( const connector::ConsumerInfo* consumer );
 
     public:   // Connection Interface Methods
 
@@ -161,24 +185,6 @@ namespace core{
          * @throws CMSException
          */
         virtual void stop() throw ( cms::CMSException );
-
-    public:   // ActiveMQConnection Methods
-
-        /**
-         * Adds the ActiveMQMessageListener to the Mapping of Consumer Id's
-         * to listeners, all message to that id will be routed to the given
-         * listener
-         * @param consumerId Consumer Id String
-         * @param listener ActiveMQMessageListener Pointer
-         */
-        virtual void addMessageListener( long long consumerId,
-                                         ActiveMQMessageListener* listener );
-
-        /**
-         * Remove the Listener for the specified Consumer Id
-         * @param consumerId Consumer Id string
-         */
-        virtual void removeMessageListener( long long consumerId );
 
     public:     // ExceptionListener interface methods
 

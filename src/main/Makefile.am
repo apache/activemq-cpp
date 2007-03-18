@@ -23,6 +23,7 @@ cc_sources = \
     activemq/core/ActiveMQTransaction.cpp \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
+    activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/logger/LoggerHierarchy.cpp \
     activemq/logger/LogWriter.cpp \
     activemq/logger/Logger.cpp \
@@ -96,12 +97,14 @@ h_sources = \
     activemq/core/ActiveMQDestination.h \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQTransaction.h \
-    activemq/core/ActiveMQMessageListener.h \
     activemq/core/ActiveMQConnectionFactory.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQSession.h \
     activemq/core/ActiveMQAckHandler.h \
     activemq/core/ActiveMQConstants.h \
+    activemq/core/ActiveMQSessionExecutor.h \
+    activemq/core/DispatchData.h \
+    activemq/core/Dispatcher.h \
     activemq/logger/LoggerCommon.h \
     activemq/logger/LogRecord.h \
     activemq/logger/SimpleLogger.h \

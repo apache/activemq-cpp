@@ -21,10 +21,12 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/util/Boolean.h>
 
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace std;
@@ -36,6 +38,9 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData)
     this->started = false;
     this->closed = false;
     this->exceptionListener = NULL;
+    
+    alwaysSessionAsync = Boolean::parseBoolean(
+        connectionData->getProperties().getProperty( "alwaysSessionAsync", "true" ) );
 
     // Register for messages and exceptions from the connector.
     Connector* connector = connectionData->getConnector();
@@ -55,33 +60,62 @@ ActiveMQConnection::~ActiveMQConnection()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession()
-    throw ( cms::CMSException )
+void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer, 
+    Dispatcher* dispatcher )
+{
+    // Add the consumer to the map.
+    synchronized( &dispatchers )
+    {
+        dispatchers.setValue( consumer->getConsumerId(), dispatcher );
+    }
+}
+        
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::removeDispatcher( const connector::ConsumerInfo* consumer ) {
+    
+    // Remove the consumer from the map.
+    synchronized( &dispatchers )
+    {
+        dispatchers.remove( consumer->getConsumerId() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException )
 {
     try
     {
-        return this->createSession( Session::AUTO_ACKNOWLEDGE );
+        return createSession( Session::AUTO_ACKNOWLEDGE );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* ActiveMQConnection::createSession(
-   cms::Session::AcknowledgeMode ackMode )
-      throw ( cms::CMSException )
+cms::Session* ActiveMQConnection::createSession( 
+    cms::Session::AcknowledgeMode ackMode ) throw ( cms::CMSException )
 {
     try
     {
+        // Determine whether or not to make dispatch for this session asynchronous        
+        bool doSessionAsync = alwaysSessionAsync || !activeSessions.isEmpty() || 
+            ackMode==Session::SESSION_TRANSACTED || ackMode==Session::CLIENT_ACKNOWLEDGE;
+                        
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ),
             connectionData->getProperties(),
-            this );
+            this,
+            doSessionAsync );
 
         // Add the session to the set of active sessions.
         synchronized( &activeSessions ) {
             activeSessions.add( session );
+        }
+        
+        // If we're already started, start the session.
+        if( started ) {
+            session->start();
         }
 
         return session;
@@ -107,7 +141,7 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
         }
 
         // Get the complete list of active sessions.
-        std::vector<cms::Session*> allSessions;
+        std::vector<ActiveMQSession*> allSessions;
         synchronized( &activeSessions ) {
             allSessions = activeSessions.toArray();
         }
@@ -145,6 +179,12 @@ void ActiveMQConnection::start() throw ( cms::CMSException )
     // messages delivered while this connection is stopped are dropped
     // and not acknowledged.
     started = true;
+    
+    // Start all the sessions.
+    std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
+    for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
+        sessions[ix]->start();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,26 +193,11 @@ void ActiveMQConnection::stop() throw ( cms::CMSException )
     // Once current deliveries are done this stops the delivery of any
     // new messages.
     started = false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addMessageListener( long long consumerId,
-                                             ActiveMQMessageListener* listener )
-{
-    // Place in Map
-    synchronized( &consumers )
-    {
-        consumers.setValue( consumerId, listener );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeMessageListener( long long consumerId )
-{
-    // Remove from Map
-    synchronized( &consumers )
-    {
-        consumers.remove( consumerId );
+    
+    // Start all the sessions.
+    std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
+    for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
+        sessions[ix]->stop();
     }
 }
 
@@ -211,16 +236,17 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             return;
         }
 
-        // Started, so lock map and dispatch the message.
-        synchronized( &consumers )
+        // Look up the dispatcher.
+        Dispatcher* dispatcher = NULL;
+        synchronized( &dispatchers )
         {
-            if( consumers.containsKey(consumer->getConsumerId()) )
-            {
-                ActiveMQMessageListener* listener =
-                    consumers.getValue(consumer->getConsumerId());
-
-                listener->onActiveMQMessage( message );
-            }
+            dispatcher = dispatchers.getValue(consumer->getConsumerId());
+        }
+        
+        // Dispatch the message.
+        if( dispatcher != NULL ) {
+            DispatchData data( consumer, message );
+            dispatcher->dispatch( data );
         }
     }
     catch( exceptions::ActiveMQException& ex )

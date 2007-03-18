@@ -341,28 +341,30 @@ void ActiveMQTransaction::RollbackTask::run(void)
 
         for( ; itr != messages.end(); ++itr )
         {
-            ( *itr )->setRedeliveryCount( ( *itr )->getRedeliveryCount() + 1 );
+            ActiveMQMessage* message = *itr;
+            message->setRedeliveryCount( message->getRedeliveryCount() + 1 );
 
             // Redeliver Messages at some point in the future
             Thread::sleep( redeliveryDelay );
 
-            if( ( *itr )->getRedeliveryCount() >= maxRedeliveries )
+            if( message->getRedeliveryCount() >= maxRedeliveries )
             {
                 // Poison Ack the Message, we give up processing this one
                 connection->getConnectionData()->getConnector()->
                     acknowledge(
                         session->getSessionInfo(),
                         consumer->getConsumerInfo(),
-                        dynamic_cast< Message* >( *itr ),
+                        dynamic_cast< Message* >( message ),
                         Connector::PoisonAck );
 
                 // Won't redeliver this so we kill it here.
-                delete *itr;
+                delete message;
 
                 return;
             }
 
-            consumer->onActiveMQMessage( *itr );
+            DispatchData data( consumer->getConsumerInfo(), message );
+            consumer->dispatch( data );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

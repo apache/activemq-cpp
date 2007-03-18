@@ -22,9 +22,11 @@
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/connector/SessionInfo.h>
+#include <activemq/core/Dispatcher.h>
 #include <activemq/util/Set.h>
 #include <activemq/util/Queue.h>
 #include <activemq/connector/ConnectorResourceListener.h>
+#include <activemq/util/Map.h>
 #include <set>
 
 namespace activemq{
@@ -36,9 +38,11 @@ namespace core{
     class ActiveMQMessage;
     class ActiveMQProducer;
     class ActiveMQConsumer;
+    class ActiveMQSessionExecutor;
 
     class ActiveMQSession :
         public cms::Session,
+        public Dispatcher,
         public concurrent::Runnable,
         public connector::ConnectorResourceListener
     {
@@ -70,6 +74,11 @@ namespace core{
          * destination.
          */
         util::Set<cms::Closeable*> closableSessionResources;
+        
+        /**
+         * Map of consumers.
+         */
+        util::Map<long long, ActiveMQConsumer*> consumers;
 
         /**
          *  Thread to notif a listener if one is added
@@ -80,19 +89,68 @@ namespace core{
          * Is this Session using Async Sends.
          */
         bool useAsyncSend;
+        
+        /**
+         * Indicates whether or not dispatching should be done asynchronously.
+         */
+        bool sessionAsyncDispatch;
 
         /**
          * Outgoing Message Queue
          */
         util::Queue< std::pair<cms::Message*, ActiveMQProducer*> > msgQueue;
+        
+        ActiveMQSessionExecutor* executor;
 
     public:
 
         ActiveMQSession( connector::SessionInfo* sessionInfo,
                          const util::Properties& properties,
-                         ActiveMQConnection* connection );
+                         ActiveMQConnection* connection,
+                         bool sessionAsyncDispatch );
 
         virtual ~ActiveMQSession();
+        
+        /**
+         * Indicates whether or not dispatching should be done asynchronously.
+         */
+        bool isSessionAsyncDispatch() const {
+            return sessionAsyncDispatch;
+        }
+        
+        util::Map<long long, ActiveMQConsumer*>& getConsumers() {
+            return consumers;
+        }
+        
+        /**
+         * Redispatches the given set of unconsumed messages to the consumers.
+         * @param unconsumedMessages - unconsumed messages to be redelivered.
+         */
+        void redispatch( util::Queue<DispatchData>& unconsumedMessages );
+        
+        /**
+         * Stops asynchronous message delivery.
+         */
+        void start();
+        
+        /**
+         * Starts asynchronous message delivery.
+         */
+        void stop();
+        
+        /**
+         * Indicates whether or not the session is currently in the started
+         * state.
+         */
+        bool isStarted() const;
+    
+    public:  // Methods from ActiveMQMessageDispatcher
+    
+        /**
+         * Dispatches a message to a particular consumer.
+         * @param message - the message to be dispatched
+         */
+        virtual void dispatch( DispatchData& message );
 
     public:   // Implements Mehtods
 
@@ -267,21 +325,21 @@ namespace core{
          * @return transacted true - false.
          */
         virtual bool isTransacted() const;
-
+        
         /**
-         * Unsubscribes a durable subscription that has been created by a
+         * Unsubscribes a durable subscription that has been created by a 
          * client.
-         *
-         * This method deletes the state being maintained on behalf of the
-         * subscriber by its provider.  It is erroneous for a client to delete a
-         * durable subscription while there is an active MessageConsumer or
-         * Subscriber for the subscription, or while a consumed message is
-         * part of a pending transaction or has not been acknowledged in the
+         * 
+         * This method deletes the state being maintained on behalf of the 
+         * subscriber by its provider.  It is erroneous for a client to delete a 
+         * durable subscription while there is an active MessageConsumer or 
+         * Subscriber for the subscription, or while a consumed message is 
+         * part of a pending transaction or has not been acknowledged in the 
          * session.
          * @param name the name used to identify this subscription
          * @throws CMSException
          */
-        virtual void unsubscribe( const std::string& name )
+        virtual void unsubscribe( const std::string& name ) 
             throw ( cms::CMSException );
 
    public:   // ActiveMQSession specific Methods

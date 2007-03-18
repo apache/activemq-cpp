@@ -102,7 +102,7 @@ void OpenwireTempDestinationTest::test()
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
 
-        cms::Destination* requestTopic = session->createTopic( "myRequestTopic" );
+        cms::Destination* requestTopic = session->createTopic( Guid::createGUIDString() );
         cms::Destination* responseTopic = session->createTemporaryTopic();
 
         Consumer* requestConsumer = new Consumer( testSupport.getConnection(),

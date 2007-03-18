@@ -110,19 +110,19 @@ namespace core{
             }
         };
 
-        class MyActiveMQMessageListener : public ActiveMQMessageListener
+        class MyDispatcher : public Dispatcher
         {
         public:
 
             std::vector<ActiveMQMessage*> messages;
 
         public:
-            virtual ~MyActiveMQMessageListener(){}
+            virtual ~MyDispatcher(){}
 
-            virtual void onActiveMQMessage( ActiveMQMessage* message )
+            virtual void dispatch( DispatchData& data )
                 throw ( exceptions::ActiveMQException )
             {
-                messages.push_back( message );
+                messages.push_back( data.getMessage() );
             }
         };
 
@@ -136,7 +136,7 @@ namespace core{
                 MyMessageListener listener;
                 MyExceptionListener exListener;
                 MyCommandListener cmdListener;
-                MyActiveMQMessageListener msgListener;
+                MyDispatcher msgListener;
                 std::string connectionId = "testConnectionId";
                 util::SimpleProperties* properties =
                     new util::SimpleProperties();
@@ -198,7 +198,7 @@ namespace core{
                 consumer.setSessionInfo( &session );
                 consumer.setDestination( &myTopic );
 
-                connection.addMessageListener( 1, &msgListener );
+                connection.addDispatcher( &consumer, &msgListener );
 
                 connector::stomp::commands::TextMessageCommand* cmd =
                     new connector::stomp::commands::TextMessageCommand;
@@ -217,14 +217,14 @@ namespace core{
 
                 CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
 
-                connection.removeMessageListener( 1 );
+                connection.removeDispatcher( &consumer );
 
                 msgListener.messages.clear();
                 consumerListener->onConsumerMessage( &consumer, cmd );
 
                 CPPUNIT_ASSERT( msgListener.messages.size() == 0 );
 
-                connection.addMessageListener( 1, &msgListener );
+                connection.addDispatcher( &consumer, &msgListener );
 
                 connection.stop();
                 consumerListener->onConsumerMessage( &consumer, cmd );
@@ -239,7 +239,7 @@ namespace core{
                 consumerListener->onConsumerMessage( &consumer, cmd );
                 CPPUNIT_ASSERT( msgListener.messages.size() == 1 );
 
-                connection.removeMessageListener( 1 );
+                connection.removeDispatcher( &consumer );
                 msgListener.messages.clear();
 
                 session1->close();
