@@ -39,9 +39,6 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData)
     this->closed = false;
     this->exceptionListener = NULL;
 
-    alwaysSessionAsync = Boolean::parseBoolean(
-        connectionData->getProperties().getProperty( "alwaysSessionAsync", "true" ) );
-
     // Register for messages and exceptions from the connector.
     Connector* connector = connectionData->getConnector();
     connector->setConsumerMessageListener( this );
@@ -97,16 +94,12 @@ cms::Session* ActiveMQConnection::createSession(
 {
     try
     {
-        // Determine whether or not to make dispatch for this session asynchronous
-        bool doSessionAsync = alwaysSessionAsync || !activeSessions.isEmpty() ||
-            ackMode==Session::SESSION_TRANSACTED || ackMode==Session::CLIENT_ACKNOWLEDGE;
 
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ),
             connectionData->getProperties(),
-            this,
-            doSessionAsync );
+            this );
 
         // Add the session to the set of active sessions.
         synchronized( &activeSessions ) {
@@ -224,28 +217,18 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
         synchronized( &dispatchers )
         {
             dispatcher = dispatchers.getValue(consumer->getConsumerId());
-        }
         
-        // If we have no registered dispatcher, this is bad!! (should never happen)
-        if( dispatcher == NULL )
-        {
-            // Indicate to Broker that we received the message, but it
-            // was not consumed.
-            connectionData->getConnector()->acknowledge(
-                consumer->getSessionInfo(),
-                consumer,
-                dynamic_cast<Message*>( message ),
-                Connector::DeliveredAck );
-
-            // Delete the message here
-            delete message;
-
-            throw ActiveMQException(__FILE__, __LINE__, "no dispatcher registered for consumer" );
+            // If we have no registered dispatcher, the consumer was probably
+            // just closed.  Just delete the message.
+            if( dispatcher == NULL ) {                
+                delete message;                
+            } else {
+    
+                // Dispatch the message.
+                DispatchData data( consumer, message );
+                dispatcher->dispatch( data );
+            }
         }
-
-        // Dispatch the message.
-        DispatchData data( consumer, message );
-        dispatcher->dispatch( data );
     }
     catch( exceptions::ActiveMQException& ex )
     {

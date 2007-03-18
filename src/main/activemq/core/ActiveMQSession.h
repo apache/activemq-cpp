@@ -89,11 +89,6 @@ namespace core{
          * Is this Session using Async Sends.
          */
         bool useAsyncSend;
-        
-        /**
-         * Indicates whether or not dispatching should be done asynchronously.
-         */
-        bool sessionAsyncDispatch;
 
         /**
          * Outgoing Message Queue
@@ -106,17 +101,9 @@ namespace core{
 
         ActiveMQSession( connector::SessionInfo* sessionInfo,
                          const util::Properties& properties,
-                         ActiveMQConnection* connection,
-                         bool sessionAsyncDispatch );
+                         ActiveMQConnection* connection );
 
         virtual ~ActiveMQSession();
-        
-        /**
-         * Indicates whether or not dispatching should be done asynchronously.
-         */
-        bool isSessionAsyncDispatch() const {
-            return sessionAsyncDispatch;
-        }
         
         util::Map<long long, ActiveMQConsumer*>& getConsumers() {
             return consumers;
@@ -143,6 +130,11 @@ namespace core{
          * state.
          */
         bool isStarted() const;
+        
+        /**
+         * Fires the given exception to the exception listener of the connection
+         */
+        void fire( exceptions::ActiveMQException& ex );
     
     public:  // Methods from ActiveMQMessageDispatcher
     
