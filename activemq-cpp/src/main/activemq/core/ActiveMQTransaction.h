@@ -78,7 +78,7 @@ namespace core{
         // Transaction Info for the current Transaction
         connector::TransactionInfo* transactionInfo;
 
-        // Map of ActiveMQMessageListener to Messages to Rollback
+        // Map of ActiveMQMessageConsumer to Messages to Rollback
         RollbackMap rollbackMap;
 
         // Lock object to protect the rollback Map

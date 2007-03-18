@@ -26,8 +26,7 @@
 #include <activemq/connector/ConnectorResourceListener.h>
 #include <activemq/util/Queue.h>
 #include <activemq/core/ActiveMQAckHandler.h>
-#include <activemq/core/ActiveMQMessageListener.h>
-#include <activemq/concurrent/Runnable.h>
+#include <activemq/core/Dispatcher.h>
 #include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
@@ -35,36 +34,29 @@ namespace core{
 
     class ActiveMQSession;
 
-    class ActiveMQConsumer :
+    class ActiveMQConsumer : 
         public cms::MessageConsumer,
         public ActiveMQAckHandler,
-        public concurrent::Runnable,
-        public ActiveMQMessageListener,
-        public connector::ConnectorResourceListener
+        public Dispatcher,
+		public connector::ConnectorResourceListener
     {
     private:
-
+    
         // The session that owns this Consumer
         ActiveMQSession* session;
-
+        
         // The Consumer info for this Consumer
         connector::ConsumerInfo* consumerInfo;
-
+        
         // The Message Listener for this Consumer
         cms::MessageListener* listener;
-
-        // Lock to protect us from dispatching to a dead listener
-        concurrent::Mutex listenerLock;
-
-        // Message Queue
-        util::Queue<cms::Message*> msgQueue;
-
-        // Thread to notif a listener if one is added
-        concurrent::Thread* listenerThread;
-
+        
+        // Queue of unconsumed messages.
+        util::Queue<DispatchData> unconsumedMessages;
+        
         // Boolean that indicates if the consumer has been closed
         bool closed;
-
+        
     public:
 
         /**
@@ -85,7 +77,7 @@ namespace core{
          * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
-
+         
         /**
          * Synchronously Receive a Message
          * @return new message
@@ -129,9 +121,9 @@ namespace core{
          * @return This Consumer's selector expression or "".
          * @throws cms::CMSException
          */
-        virtual std::string getMessageSelector() const
+        virtual std::string getMessageSelector() const 
             throw ( cms::CMSException );
-
+          
         /**
          * Method called to acknowledge the message passed
          * @param message the Message to Acknowlegde
@@ -140,31 +132,16 @@ namespace core{
         virtual void acknowledgeMessage( const ActiveMQMessage* message )
             throw ( cms::CMSException );
 
+    public:  // Dispatcher Methods
+    
         /**
-         * Run method that is called from the Thread class when this object
-         * is registered with a Thread and started.  This function reads from
-         * the message queue and dispatches calls to the MessageConsumer that
-         * is registered with this class.
-         *
-         * It is a error for a MessageListener to throw an exception in their
-         * onMessage method, but if it does happen this function will get any
-         * registered exception listener from the session and notify it.
-         */
-        virtual void run();
-
-    public:  // ActiveMQMessageListener Methods
-
-        /**
-         * Called asynchronously when a new message is received, the message
-         * that is passed is now the property of the callee, and the caller
-         * will disavowe all knowledge of the message, i.e Callee must delete.
+         * Called asynchronously by the session to dispatch a message.
          * @param message object pointer
          */
-        virtual void onActiveMQMessage( ActiveMQMessage* message )
-            throw ( exceptions::ActiveMQException );
-
+        virtual void dispatch( DispatchData& message );
+    
     public:  // ActiveMQSessionResource
-
+    
         /**
          * Retrieve the Connector resource that is associated with
          * this Session resource.
@@ -177,19 +154,8 @@ namespace core{
     public:  // ActiveMQConsumer Methods
 
         /**
-         * Called to dispatch a message to this consumer, this is usually
-         * called from the context of another thread.  This will enqueue a
-         * message on the Consumers Queue, or notify a listener if one is
-         * currently registered.
-         * @param message cms::Message pointer to the message to dispatch
-         * @throws cms::CMSException
-         */
-        virtual void dispatch( ActiveMQMessage* message )
-            throw ( cms::CMSException );
-
-        /**
          * Get the Consumer information for this consumer
-         * @return Pointer to a Consumer Info Object
+         * @return Pointer to a Consumer Info Object            
          */
         virtual connector::ConsumerInfo* getConsumerInfo() {
             return consumerInfo;
@@ -207,40 +173,20 @@ namespace core{
             const connector::ConnectorResource* resource ) throw ( cms::CMSException );
 
     protected:
-
+            
         /**
          * Purges all messages currently in the queue.  This can be as a
          * result of a rollback, or of the consumer being shutdown.
          */
         virtual void purgeMessages() throw (exceptions::ActiveMQException);
-
+        
         /**
          * Destroys the message if the session is transacted, otherwise
          * does nothing.
          * @param message the message to destroy
          */
-        virtual void destroyMessage( cms::Message* message )
+        virtual void destroyMessage( cms::Message* message ) 
             throw (exceptions::ActiveMQException);
-
-        /**
-         * Notifies the listener of a message.
-         * @param message the message to pass to the listener
-         */
-        void notifyListener( cms::Message* message )
-            throw (exceptions::ActiveMQException);
-
-        /**
-         * Starts the message processing thread to receive messages
-         * asynchronously.  This thread is started when setMessageListener
-         * is invoked, which means that the caller is choosing to use this
-         * consumer asynchronously instead of synchronously (receive).
-         */
-        void startThread() throw (exceptions::ActiveMQException);
-
-        /**
-         * Stops the asynchronous message processing thread if it's started.
-         */
-        void stopThread() throw (exceptions::ActiveMQException);
 
     };
 

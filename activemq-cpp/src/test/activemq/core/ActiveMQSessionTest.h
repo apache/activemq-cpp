@@ -368,7 +368,7 @@ namespace core{
                 }
             }
 
-            CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
+            CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener1.messages.size() );
 
             msgListener1.messages[0]->acknowledge();
 
@@ -382,7 +382,7 @@ namespace core{
                 }
             }
 
-            CPPUNIT_ASSERT( msgListener2.messages.size() == 1 );
+            CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener2.messages.size() );
             
             msgListener2.messages[0]->acknowledge();
 
@@ -459,7 +459,7 @@ namespace core{
                 }
             }
 
-            CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
+            CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener1.messages.size() );
 
             session->commit();
 

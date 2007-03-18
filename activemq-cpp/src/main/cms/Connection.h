@@ -43,13 +43,13 @@ namespace cms
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
-        
-        /**
-         * Creates a new Session to work for this Connection
+
+		/**
+         * Creates an AUTO_ACKNOWLEDGE Session.
          * @throws CMSException
          */
         virtual Session* createSession() throw ( CMSException ) = 0;
-
+				
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode

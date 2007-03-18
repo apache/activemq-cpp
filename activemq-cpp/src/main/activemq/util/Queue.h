@@ -17,7 +17,8 @@
 #ifndef ACTIVEMQ_UTIL_QUEUE_H
 #define ACTIVEMQ_UTIL_QUEUE_H
 
-#include <queue>
+#include <list>
+#include <vector>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -62,6 +63,11 @@ namespace util{
         virtual ~Queue(void);
 
         /**
+         * Empties this queue.
+         */
+        void clear();
+        
+        /**
          * Returns a Reference to the element at the head of the queue
          * @return reference to a queue type object or (safe)
          */
@@ -90,6 +96,12 @@ namespace util{
          * @param t - Queue Object Type reference.
          */
         void push( const T &t );
+        
+        /**
+         * Places a new Object at the front of the queue
+         * @param t - Queue Object Type reference.
+         */
+        void enqueueFront( const T &t );
 
         /**
          * Removes and returns the element that is at the Head of the queue
@@ -108,6 +120,19 @@ namespace util{
          * @return boolean indicating queue emptiness
          */
         bool empty(void) const;
+        
+        /**
+         * @return the all values in this queue as a std::vector.
+         */
+        virtual std::vector<T> toArray() const;
+        
+        /**
+         * Reverses the order of the contents of this queue and stores them
+         * in the target queue.
+         * @param target - The target queue that will receive the contents of
+         * this queue in reverse order.
+         */
+        void reverse( Queue<T>& target ) const;
    
         /**
          * Locks the object.
@@ -176,7 +201,7 @@ namespace util{
     private:
 
         // The real queue
-        std::queue<T> queue;
+        std::list<T> queue;
 
         // Object used for sync
         concurrent::Mutex mutex;
@@ -190,7 +215,7 @@ namespace util{
     //-----{ Static Init }----------------------------------------------------//
     template <typename T>
     T Queue<T>::safe;
-   
+    
     //-----{ Retrieve current length of Queue }-------------------------------//
    
     template <typename T> inline size_t Queue<T>::size() const
@@ -218,12 +243,24 @@ namespace util{
     {
     }
 
+    template <typename T> 
+    void Queue<T>::clear()
+    {
+        queue.clear();
+    }
+    
     //-----{ Add Elements to Back of Queue }----------------------------------//
 
     template <typename T> 
     void Queue<T>::push( const T &t )
     {
-        queue.push( t );
+        queue.push_back( t );
+    }
+    
+    template <typename T> 
+    void Queue<T>::enqueueFront( const T &t )
+    {
+        queue.push_front( t );
     }
 
     //-----{ Remove Elements from Front of Queue }----------------------------//
@@ -239,7 +276,7 @@ namespace util{
         // Pop the element into a temp, since we need to remain locked.
         // this means getting front and then popping.
         T temp = queue.front();
-        queue.pop();
+        queue.pop_front();
    
         return temp;
     }
@@ -294,6 +331,30 @@ namespace util{
         }
    
         return queue.back();
+    }
+    
+    template <typename T> 
+    void Queue<T>::reverse( Queue<T>& target ) const 
+    {
+        typename std::list<T>::const_reverse_iterator iter;
+        iter = queue.rbegin();
+        for( ; iter != queue.rend(); ++iter ) {
+            target.push( *iter );
+        }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    std::vector<T> Queue<T>::toArray() const{
+        std::vector<T> valueArray(queue.size());
+        
+        typename std::list<T>::const_iterator iter;
+        iter=queue.begin();
+        for( int ix=0; iter != queue.end(); ++iter, ++ix ){
+            valueArray[ix] = *iter;
+        }
+        
+        return valueArray;
     }
 
 }}

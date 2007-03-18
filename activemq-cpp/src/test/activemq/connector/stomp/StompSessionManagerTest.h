@@ -139,6 +139,8 @@ namespace stomp{
             delete info2;
             delete info3;
             delete info4;
+            
+            delete connector;
         }
 
         void testConsumers()
@@ -194,6 +196,8 @@ namespace stomp{
             delete cinfo2;
             delete cinfo3;
             delete cinfo4;
+            
+            delete connector;
         }
 
         void testCommand()
@@ -260,6 +264,8 @@ namespace stomp{
             delete cinfo2;
             delete cinfo3;
             delete cinfo4;
+            
+            delete connector;
         }
 
         void testSendingCommands(){
@@ -304,6 +310,8 @@ namespace stomp{
 
             delete cinfo1;
             delete cinfo2;
+            
+            delete connector;
         }
 
         void testSubscribeOptions(){
@@ -427,6 +435,8 @@ namespace stomp{
 
             // Done
             delete session;
+            
+            delete connector;
 
         }
 

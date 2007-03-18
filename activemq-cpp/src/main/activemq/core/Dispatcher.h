@@ -15,33 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CORE_ACTIVEMQMESSAGELISTENER_H_
-#define _ACTIVEMQ_CORE_ACTIVEMQMESSAGELISTENER_H_
+#ifndef ACTIVEMQ_CORE_DISPATCHER_H_
+#define ACTIVEMQ_CORE_DISPATCHER_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/core/DispatchData.h>
 
 namespace activemq{
 namespace core{
-
-    class ActiveMQMessage;
-
-    class ActiveMQMessageListener
-    {
+    
+    /**
+     * Interface for an object responsible for dispatching messages to 
+     * consumers.
+     */
+    class Dispatcher {
     public:
-
-        virtual ~ActiveMQMessageListener(void) {}
-
+    
+        virtual ~Dispatcher(){}
+        
         /**
-         * Called asynchronously when a new message is received, the message
-         * that is passed is now the property of the callee, and the caller
-         * will disavowe all knowledge of the message, i.e Callee must delete.
-         * @param Message object pointer
+         * Dispatches a message to a particular consumer.
+         * @param message - the message to be dispatched.
          */
-        virtual void onActiveMQMessage( ActiveMQMessage* message ) 
-            throw ( exceptions::ActiveMQException ) = 0;
-
+        virtual void dispatch( DispatchData& message ) = 0;
     };
-
+    
 }}
 
-#endif /*_ACTIVEMQ_CORE_ACTIVEMQMESSAGELISTENER_H_*/
+#endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/
