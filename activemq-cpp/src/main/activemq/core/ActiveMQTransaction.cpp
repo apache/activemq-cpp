@@ -51,8 +51,8 @@ ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
 
         // Store State Data
         this->connection = connection;
-        this->session    = session;
-        this->taskCount  = 0;
+        this->session = session;
+        this->taskCount = 0;
 
         // convert from property Strings to int.
         redeliveryDelay = Integer::parseInt(
@@ -202,7 +202,7 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::commit(void) throw ( exceptions::ActiveMQException )
+void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException )
 {
     try
     {
@@ -230,7 +230,7 @@ void ActiveMQTransaction::commit(void) throw ( exceptions::ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::rollback(void) throw ( exceptions::ActiveMQException )
+void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
 {
     try
     {
@@ -267,17 +267,16 @@ void ActiveMQTransaction::rollback(void) throw ( exceptions::ActiveMQException )
 
             for(; itr != rollbackMap.end(); ++itr)
             {
-                ThreadPool::getInstance()->queueTask(make_pair(
+                ThreadPool::getInstance()->queueTask( make_pair(
                     new RollbackTask( itr->first,
                                       connection,
                                       session,
                                       itr->second,
                                       maxRedeliveries,
-                                      redeliveryDelay ) , this ) );
+                                      redeliveryDelay ), this ) );
 
                 // Count the tasks started.
                 taskCount++;
-
             }
 
             // Clear the map.  Ownership of the messages is now handed off
