@@ -212,17 +212,6 @@ namespace core{
          virtual void onTaskException( concurrent::Runnable* task,
                                        exceptions::ActiveMQException& ex );
 
-    public:  // ActiveMQSessionResource
-
-        /**
-         * Retrieve the Connector resource that is associated with
-         * this Session resource.
-         * @return pointer to a Connector Resource, can be NULL
-         */
-        virtual connector::ConnectorResource* getConnectorResource(void) {
-            return transactionInfo;
-        }
-
     protected:
 
         /**
