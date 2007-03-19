@@ -17,7 +17,12 @@
 
 #include "StompDestinationTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::StompDestinationTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompDestinationTest );
+
+using namespace std;
+using namespace activemq;
+using namespace activemq::connector;
+using namespace activemq::connector::stomp;
 
 ///////////////////////////////////////////////////////////////////////////////
 void StompDestinationTest::test()
