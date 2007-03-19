@@ -28,7 +28,7 @@ namespace core{
      * Interface for all ActiveMQ Messages that will pass through the core
      * API layer.  This interface defines a method that the API uses to set
      * an Acknowledgement handler that will be called by the message when
-     * a user calls the <code>acknowledge</code> method of the Message 
+     * a user calls the <code>acknowledge</code> method of the Message
      * interface.  This is only done when the Session that this message
      * passes through is in Client Acknowledge mode.
      */
@@ -44,20 +44,20 @@ namespace core{
          * @param handler ActiveMQAckHandler to call
          */
         virtual void setAckHandler( ActiveMQAckHandler* handler ) = 0;
-        
+
         /**
          * Gets the number of times this message has been redelivered.
          * @return redelivery count
          */
-        virtual int getRedeliveryCount(void) const = 0;
-        
+        virtual int getRedeliveryCount() const = 0;
+
         /**
-         * Sets the count of the number of times this message has been 
+         * Sets the count of the number of times this message has been
          * redelivered
          * @param count the redelivery count
          */
         virtual void setRedeliveryCount( int count ) = 0;
-        
+
         /**
          * Returns if this message has expired, meaning that its
          * Expiration time has elapsed.
