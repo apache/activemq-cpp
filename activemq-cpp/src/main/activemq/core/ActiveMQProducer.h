@@ -92,8 +92,9 @@ namespace core{
          * milliseconds.
          * @throws CMSException
          */
-        virtual void send( cms::Message* message, int deliveryMode, int priority,
-            long long timeToLive) throw ( cms::CMSException );
+        virtual void send( cms::Message* message, int deliveryMode,
+                           int priority, long long timeToLive )
+                               throw ( cms::CMSException );
 
         /**
          * Sends the message to the designated destination.
@@ -115,8 +116,9 @@ namespace core{
          * @throws CMSException
          */
         virtual void send( const cms::Destination* destination,
-            cms::Message* message, int deliveryMode, int priority,
-            long long timeToLive) throw ( cms::CMSException );
+                           cms::Message* message, int deliveryMode,
+                           int priority, long long timeToLive )
+                                throw ( cms::CMSException );
 
         /**
          * Sets the delivery mode for this Producer
