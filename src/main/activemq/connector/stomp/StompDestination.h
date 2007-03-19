@@ -20,7 +20,11 @@
 
 #include <string>
 
-#include <activemq/core/ActiveMQDestination.h>
+#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/StringTokenizer.h>
+#include <activemq/exceptions/IllegalArgumentException.h>
+
+#include <cms/Destination.h>
 
 namespace activemq{
 namespace connector{
@@ -28,29 +32,89 @@ namespace stomp{
 
     /**
      * Templatized Destination Class that bundles all the common aspects
-     * of a Stomp Destination into one class.  The template arguement is 
+     * of a Stomp Destination into one class.  The template arguement is
      * one of Topic, Queue, TemporaryTopic, or TemporaryQueue.
      */
     template <typename T>
-    class StompDestination : public core::ActiveMQDestination<T>
+    class StompDestination : public T
     {
+    private:
+
+        // Params that are optional on the destination
+        util::SimpleProperties properties;
+
+        // Destination type
+        cms::Destination::DestinationType destType;
+
+        // Name of the Destination
+        std::string name;
+
     public:
 
         /**
          * Copy Consturctor
          * @param source CMS Dest to Copy, must be a compatible type
          */
-    	StompDestination( const cms::Destination* source ) :
-            core::ActiveMQDestination<T>( source ) {}
-        
+        StompDestination( const cms::Destination* source ) {
+            this->copy( *source );
+        }
+
         /**
          * Custom Constructor
-         * @param name string destination name plus any params
+         * @param dest string destination name plus any params
          * @param type the type of destination this represents.
          */
-    	StompDestination( const std::string& name,
-                          cms::Destination::DestinationType type ) :
-            core::ActiveMQDestination<T>( name, type ){}
+        StompDestination( const std::string& dest,
+                          cms::Destination::DestinationType destType ) {
+            try
+            {
+                util::StringTokenizer tokenizer(dest, "?&");
+                std::vector<std::string> tokens;
+
+                // Set the type, we know that much anyway
+                this->destType = destType;
+
+                // Require that there at least one token, the dest
+                if( tokenizer.countTokens() < 1 )
+                {
+                    throw exceptions::IllegalArgumentException(
+                        __FILE__, __LINE__,
+                        ( std::string(
+                            "ActiveMQDestination::ActiveMQDestination - "
+                            "Marlformed Dest: " ) + dest ).c_str() );
+                }
+
+                // Grab the name, that's always first.
+                this->name = tokenizer.nextToken();
+
+                // Now get all the optional parameters and store them as properties
+                int count = tokenizer.toArray( tokens );
+
+                for( int i = 0; i < count; ++i )
+                {
+                    tokenizer.reset( tokens[i], "=" );
+
+                    if( tokenizer.countTokens() != 2 )
+                    {
+                        throw exceptions::IllegalArgumentException(
+                            __FILE__, __LINE__,
+                            ( std::string(
+                                "ActiveMQDestination::ActiveMQDestination - "
+                                "Marlformed Parameter = ") + tokens[i] ).c_str() );
+                    }
+
+                    // Get the out in the right order
+                    std::string key   = tokenizer.nextToken();
+                    std::string value = tokenizer.nextToken();
+
+                    // Store this param as a property
+                    properties.setProperty( key, value );
+                }
+            }
+            AMQ_CATCH_RETHROW( exceptions::IllegalArgumentException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, exceptions::IllegalArgumentException )
+            AMQ_CATCHALL_THROW( exceptions::IllegalArgumentException )
+        }
 
         virtual ~StompDestination() {}
 
@@ -60,11 +124,85 @@ namespace stomp{
          * @return name in a format that is used by the broker
          */
         virtual std::string toProviderString() const {
-            return getPrefix() + core::ActiveMQDestination<T>::getName();
+            return getPrefix() + getName();
+        }
+
+        /**
+         * Get the properties of this Destination, these are the optional
+         * params that can be specified on a destination name i.e/
+         * TEST.QUEUE?consumer.dispatchAsync=false&consumer.prefetchSize=10
+         * @returns const reference to a properties object
+         */
+        virtual const util::Properties& getProperties() const {
+            return properties;
+        }
+
+        /**
+         * Copy the contents of the given properties object to this
+         * objects Properties object.  Existing values are erased.
+         * @param properties the Properties to copy to this object.
+         */
+        virtual void setProperties( const util::Properties& properties ){
+            this->properties.copy( &properties );
+        }
+
+        /**
+         * Gets the Destination Name minus any optional params that can
+         * be appended to the destination with an ?
+         * @returns destination name minus params
+         */
+        virtual const std::string& getName() const {
+            return name;
+        }
+
+        /**
+         * Sets the Destination Name minus any optional params that can
+         * be appended to the destination with an ?
+         * @param name destination name minus params
+         */
+        virtual void setName( const std::string& name ) {
+            this->name = name;
+        }
+
+        /**
+         * Retrieve the Destination Type for this Destination
+         * @return The Destination Type
+         */
+        virtual cms::Destination::DestinationType getDestinationType() const {
+            return destType;
+        }
+
+        /**
+         * Set the Destination Type for this Destination
+         * @param destType The Destination Type
+         */
+        virtual void setDestinationType( cms::Destination::DestinationType destType ) {
+            this->destType = destType;
+        }
+
+        /**
+         * Copies the contents of the given Destinastion object to this one.
+         * @param source The source Destination object.
+         */
+        virtual void copy( const cms::Destination& source ) {
+
+            try
+            {
+                // This will throw an Bad Cast Exception if the destination
+                // isn't a compatible type
+                const StompDestination<T>& destination =
+                    dynamic_cast< const StompDestination<T>& >( source );
+
+                this->name = destination.getName();
+                this->destType = destination.getDestinationType();
+
+                this->properties.copy( &destination.getProperties() );
+            }
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     protected:
-    
+
         /**
          * Retrieves the proper Stomp Prefix for the specified type
          * of Destination
