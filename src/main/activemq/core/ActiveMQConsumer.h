@@ -34,29 +34,29 @@ namespace core{
 
     class ActiveMQSession;
 
-    class ActiveMQConsumer : 
+    class ActiveMQConsumer :
         public cms::MessageConsumer,
         public ActiveMQAckHandler,
         public Dispatcher,
-		public connector::ConnectorResourceListener
+    public connector::ConnectorResourceListener
     {
     private:
-    
+
         // The session that owns this Consumer
         ActiveMQSession* session;
-        
+
         // The Consumer info for this Consumer
         connector::ConsumerInfo* consumerInfo;
-        
+
         // The Message Listener for this Consumer
         cms::MessageListener* listener;
-        
+
         // Queue of unconsumed messages.
         util::Queue<DispatchData> unconsumedMessages;
-        
+
         // Boolean that indicates if the consumer has been closed
         bool closed;
-        
+
     public:
 
         /**
@@ -77,7 +77,7 @@ namespace core{
          * @throws CMSException
          */
         virtual void close() throw ( cms::CMSException );
-         
+
         /**
          * Synchronously Receive a Message
          * @return new message
@@ -121,9 +121,9 @@ namespace core{
          * @return This Consumer's selector expression or "".
          * @throws cms::CMSException
          */
-        virtual std::string getMessageSelector() const 
+        virtual std::string getMessageSelector() const
             throw ( cms::CMSException );
-          
+
         /**
          * Method called to acknowledge the message passed
          * @param message the Message to Acknowlegde
@@ -133,29 +133,18 @@ namespace core{
             throw ( cms::CMSException );
 
     public:  // Dispatcher Methods
-    
+
         /**
          * Called asynchronously by the session to dispatch a message.
          * @param message object pointer
          */
         virtual void dispatch( DispatchData& message );
-    
-    public:  // ActiveMQSessionResource
-    
-        /**
-         * Retrieve the Connector resource that is associated with
-         * this Session resource.
-         * @return pointer to a Connector Resource, can be NULL
-         */
-        virtual connector::ConnectorResource* getConnectorResource() {
-            return consumerInfo;
-        }
 
     public:  // ActiveMQConsumer Methods
 
         /**
          * Get the Consumer information for this consumer
-         * @return Pointer to a Consumer Info Object            
+         * @return Pointer to a Consumer Info Object
          */
         virtual connector::ConsumerInfo* getConsumerInfo() {
             return consumerInfo;
@@ -173,19 +162,19 @@ namespace core{
             const connector::ConnectorResource* resource ) throw ( cms::CMSException );
 
     protected:
-            
+
         /**
          * Purges all messages currently in the queue.  This can be as a
          * result of a rollback, or of the consumer being shutdown.
          */
         virtual void purgeMessages() throw (exceptions::ActiveMQException);
-        
+
         /**
          * Destroys the message if the session is transacted, otherwise
          * does nothing.
          * @param message the message to destroy
          */
-        virtual void destroyMessage( cms::Message* message ) 
+        virtual void destroyMessage( cms::Message* message )
             throw (exceptions::ActiveMQException);
 
     };

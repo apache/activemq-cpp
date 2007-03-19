@@ -204,17 +204,6 @@ namespace core{
             return defaultTimeToLive;
         }
 
-    public:  // ActiveMQSessionResource
-
-        /**
-         * Retrieve the Connector resource that is associated with
-         * this Session resource.
-         * @return pointer to a Connector Resource, can be NULL
-         */
-        virtual connector::ConnectorResource* getConnectorResource() {
-            return producerInfo;
-        }
-
     public:
 
         /**
