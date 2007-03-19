@@ -280,6 +280,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test\activemq\connector\stomp\StompDestinationTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\connector\stomp\StompDestinationTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\activemq\connector\stomp\StompFrameTest.cpp"
 						>
 					</File>
@@ -626,14 +634,6 @@
 				</File>
 				<File
 					RelativePath="..\src\test\activemq\core\ActiveMQConnectionTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\core\ActiveMQDestinationTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\core\ActiveMQDestinationTest.h"
 					>
 				</File>
 				<File
