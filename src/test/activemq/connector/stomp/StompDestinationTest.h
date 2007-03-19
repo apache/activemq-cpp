@@ -25,7 +25,8 @@
 #include <cms/Topic.h>
 
 namespace activemq{
-namespace core{
+namespace connector{
+namespace stomp{
 
     class StompDestinationTest : public CppUnit::TestFixture
     {
@@ -35,15 +36,15 @@ namespace core{
 
     public:
 
-        class MyDestination : public StompDestinationTest< cms::Topic >
+        class MyDestination : public StompDestination< cms::Topic >
         {
         public:
 
             MyDestination( const cms::Destination* dest ) :
-                StompDestinationTest< cms::Topic >( dest ) {}
+                StompDestination< cms::Topic >( dest ) {}
 
             MyDestination( const std::string& name )
-                : StompDestinationTest< cms::Topic >( name, cms::Destination::TOPIC )
+                : StompDestination< cms::Topic >( name, cms::Destination::TOPIC )
             {}
 
             virtual ~MyDestination() {}
@@ -82,6 +83,17 @@ namespace core{
             virtual std::string getTopicName(void)
                 const throw( cms::CMSException ) { return getName(); }
 
+        protected:
+
+            /**
+             * Retrieves the proper Stomp Prefix for the specified type
+             * of Destination
+             * @return string prefix
+             */
+            virtual std::string getPrefix() const {
+                return "topic/";
+            }
+
         };
 
         StompDestinationTest() {}
@@ -91,6 +103,6 @@ namespace core{
 
     };
 
-}}
+}}}
 
 #endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPDESTINATIONTEST_H_*/

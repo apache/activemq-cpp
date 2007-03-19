@@ -42,6 +42,7 @@ cc_sources = \
   activemq/connector/stomp/StompCommandWriterTest.cpp \
   activemq/connector/stomp/StompConnectorTest.cpp \
   activemq/connector/stomp/StompFrameTest.cpp \
+  activemq/connector/stomp/StompDestinationTest.cpp \
   activemq/connector/stomp/StompSessionManagerTest.cpp \
   activemq/connector/openwire/OpenWireFormatTest.cpp \
   activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
