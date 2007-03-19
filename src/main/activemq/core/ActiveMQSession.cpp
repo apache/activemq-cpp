@@ -50,11 +50,11 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
             "ActiveMQSession::ActiveMQSession - Init with NULL data");
     }
 
-    this->sessionInfo  = sessionInfo;
-    this->transaction  = NULL;
-    this->connection   = connection;
-    this->closed       = false;
-    this->asyncThread  = NULL;
+    this->sessionInfo = sessionInfo;
+    this->transaction = NULL;
+    this->connection  = connection;
+    this->closed = false;
+    this->asyncThread = NULL;
     this->useAsyncSend = Boolean::parseBoolean(
         properties.getProperty( "useAsyncSend", "false" ) );
 
@@ -726,7 +726,7 @@ void ActiveMQSession::onConnectorResourceClosed(
             if( wasStarted ) {
                 stop();
             }
-            
+
             // Remove the dispatcher for the Connection
             connection->removeDispatcher( consumer );
 
@@ -741,7 +741,7 @@ void ActiveMQSession::onConnectorResourceClosed(
             synchronized( &consumers ) {
                 consumers.remove( consumer->getConsumerId() );
             }
-            
+
             if( wasStarted ) {
                 start();
             }
@@ -953,7 +953,6 @@ void ActiveMQSession::redispatch( util::Queue<DispatchData>& unconsumedMessages 
         DispatchData data = reversedList.pop();
         executor->executeFirst( data );
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -981,5 +980,3 @@ bool ActiveMQSession::isStarted() const
 
     return executor->isStarted();
 }
-
-
