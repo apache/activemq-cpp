@@ -94,7 +94,6 @@ h_sources = \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQMessage.h \
     activemq/core/ActiveMQConnectionData.h \
-    activemq/core/ActiveMQDestination.h \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQTransaction.h \
     activemq/core/ActiveMQConnectionFactory.h \

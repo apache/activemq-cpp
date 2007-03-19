@@ -64,7 +64,6 @@ cc_sources = \
   activemq/connector/openwire/commands/BrokerInfoTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
-  activemq/core/ActiveMQDestinationTest.cpp \
   activemq/core/ActiveMQSessionTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
   activemq/io/BufferedInputStreamTest.cpp \
