@@ -186,7 +186,7 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
         {
             RollbackMap::iterator iter = rollbackMap.begin();
 
-            for( ; iter == rollbackMap.end(); ++iter ) {
+            for( ; iter != rollbackMap.end(); ++iter ) {
 
                 long long id = iter->first->getConsumerInfo()->getConsumerId();
 
