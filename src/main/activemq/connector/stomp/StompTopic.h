@@ -62,7 +62,7 @@ namespace stomp{
          * @returns cloned copy of this object
          */
         virtual cms::Destination* clone() const {
-            return new StompTopic( getTopicName() );
+            return new StompTopic( this );
         }
 
     protected:

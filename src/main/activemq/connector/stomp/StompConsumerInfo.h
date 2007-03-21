@@ -39,6 +39,11 @@ namespace stomp{
 
         // Session Info - We do not own this
         const SessionInfo* session;
+        
+        bool noLocal;
+        
+        // Subscription name for this consumer, "" for non-durables
+        std::string name;
 
     public:
 
@@ -48,6 +53,7 @@ namespace stomp{
             consumerId = 0;
             destination = NULL;
             session = NULL;
+            noLocal = false;
         }
 
         StompConsumerInfo( Connector* connector ) :
@@ -57,6 +63,7 @@ namespace stomp{
             consumerId = 0;
             destination = NULL;
             session = NULL;
+            noLocal = false;
         }
 
         virtual ~StompConsumerInfo() { 
@@ -126,6 +133,22 @@ namespace stomp{
          */
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
+        }
+        
+        virtual bool getNoLocal() const {
+            return noLocal;
+        }
+        
+        virtual void setNoLocal( bool noLocal ) {
+            this->noLocal = noLocal;
+        }
+        
+        virtual const std::string& getName() const {
+            return name;
+        }
+        
+        virtual void setName( const std::string& name ) {
+            this->name = name;
         }
 
     };

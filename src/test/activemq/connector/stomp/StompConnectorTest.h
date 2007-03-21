@@ -154,6 +154,7 @@ namespace stomp{
             std::string sel1 = "";
             StompTopic dest1( "dummy.topic.1" );
             ConsumerInfo* cinfo1 = connector->createConsumer( &dest1, info1, sel1 );
+            connector->startConsumer( cinfo1 );
             CPPUNIT_ASSERT( cinfo1->getSessionInfo() == info1 );
             CPPUNIT_ASSERT( cinfo1->getDestination()->toProviderString() == dest1.toProviderString() );
             CPPUNIT_ASSERT( cinfo1->getMessageSelector() == sel1 );
@@ -162,6 +163,7 @@ namespace stomp{
             std::string sel2 = "mysel2";
             StompTopic dest2( "dummy.topic.2" );
             ConsumerInfo* cinfo2 = connector->createConsumer( &dest2, info2, sel2 );
+            connector->startConsumer( cinfo2 );
             CPPUNIT_ASSERT( cinfo2->getSessionInfo() == info2 );
             CPPUNIT_ASSERT( cinfo2->getDestination()->toProviderString() == dest2.toProviderString() );
             CPPUNIT_ASSERT( cinfo2->getMessageSelector() == sel2 );
@@ -170,6 +172,7 @@ namespace stomp{
             std::string sel3 = "mysel3";
             StompQueue dest3( "dummy.queue.1" );
             ConsumerInfo* cinfo3 = connector->createConsumer( &dest3, info3, sel3 );
+            connector->startConsumer( cinfo3 );
             CPPUNIT_ASSERT( cinfo3->getSessionInfo() == info3 );
             CPPUNIT_ASSERT( cinfo3->getDestination()->toProviderString() == dest3.toProviderString() );
             CPPUNIT_ASSERT( cinfo3->getMessageSelector() == sel3 );
@@ -178,6 +181,7 @@ namespace stomp{
             std::string sel4 = "";
             StompTopic dest4( "dummy.queue.2" );
             ConsumerInfo* cinfo4 = connector->createConsumer( &dest4, info4, sel4 );
+            connector->startConsumer( cinfo4 );
             CPPUNIT_ASSERT( cinfo4->getSessionInfo() == info4 );
             CPPUNIT_ASSERT( cinfo4->getDestination()->toProviderString() == dest4.toProviderString() );
             CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
@@ -267,15 +271,19 @@ namespace stomp{
 
             SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
             ConsumerInfo* cinfo1 = connector->createConsumer( &dest1, info1, "" );
+            connector->startConsumer( cinfo1 );
 
             SessionInfo* info2 = connector->createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
             ConsumerInfo* cinfo2 = connector->createConsumer( &dest1, info2, "" );
+            connector->startConsumer( cinfo2 );
 
             SessionInfo* info3 = connector->createSession( cms::Session::CLIENT_ACKNOWLEDGE );
             ConsumerInfo* cinfo3 = connector->createConsumer( &dest2, info3, "" );
+            connector->startConsumer( cinfo3 );
 
             SessionInfo* info4 = connector->createSession( cms::Session::SESSION_TRANSACTED );
             ConsumerInfo* cinfo4 = connector->createConsumer( &dest2, info4, "" );
+            connector->startConsumer( cinfo4 );
 
             MyMessageListener listener;
             connector->setConsumerMessageListener( &listener );
@@ -348,12 +356,14 @@ namespace stomp{
 
             SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
             ConsumerInfo* cinfo1 = connector->createConsumer( &dest1, info1, "" );
+            connector->startConsumer( cinfo1 );
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
 
             cmdListener.cmd = NULL;
 
             SessionInfo* info2 = connector->createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
             ConsumerInfo* cinfo2 = connector->createConsumer( &dest1, info2, "" );
+            connector->startConsumer(cinfo2);
             CPPUNIT_ASSERT( cmdListener.cmd == NULL );
 
             cmdListener.cmd = NULL;

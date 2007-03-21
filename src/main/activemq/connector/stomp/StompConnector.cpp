@@ -312,6 +312,20 @@ ConsumerInfo* StompConnector::createConsumer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StompConnector::startConsumer(ConsumerInfo* consumer )
+        throw ( ConnectorException )
+{
+    try
+    {
+        enforceConnected();
+
+        return sessionManager->startConsumer(consumer);
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCHALL_THROW( ConnectorException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo* StompConnector::createDurableConsumer(
     const cms::Topic* topic,
     SessionInfo* session,

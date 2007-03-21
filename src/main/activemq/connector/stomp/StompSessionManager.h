@@ -140,6 +140,18 @@ namespace stomp{
             const std::string& selector = "",
             bool noLocal = false )
                 throw ( StompConnectorException );
+                
+        /**
+         * Given a valid Consumer info Object that was previously created
+         * by a call to <code>createConsumer</code>, the Consumer will be
+         * registered with the Broker, and be placed in a state in which
+         * it will now be able to receive messages.  All preperations
+         * for message receipt should be done before calling this method.
+         * @param consumer - ConsumerInfo of a consumer that isn't started
+         * @throws ConnectorException
+         */
+        virtual void startConsumer( connector::ConsumerInfo* consumer )
+                throw ( StompConnectorException );
 
         /**
          * Removes the Consumer from the session, will unsubscrive if the

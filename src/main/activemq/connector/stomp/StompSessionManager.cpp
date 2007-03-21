@@ -149,8 +149,38 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
 {
     try
     {
+        // Initialize a new Consumer info Message
+        StompConsumerInfo* consumer = new StompConsumerInfo( connector );
+
+        consumer->setConsumerId( getNextConsumerId() );
+        consumer->setDestination( destination );
+        consumer->setMessageSelector( selector );
+        consumer->setSessionInfo( session );
+        consumer->setNoLocal( noLocal );
+        consumer->setName( name );
+
+        return consumer;
+    }
+    AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCHALL_THROW( StompConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompSessionManager::startConsumer(
+    connector::ConsumerInfo* consumer) throw ( StompConnectorException )
+{
+    try
+    {
+        StompConsumerInfo* stompConsumer = dynamic_cast<StompConsumerInfo*>(consumer);
+        if( stompConsumer == NULL ) {
+            throw StompConnectorException(__FILE__, __LINE__,
+                "ConsumerInfo is not of type created by this connector" );
+        }
+        
         synchronized( &mutex )
         {
+            const cms::Destination* destination = stompConsumer->getDestination();
+            
             // Find the right mapping to consumers
             ConsumerMap& consumerMap =
                 destinationMap[ destination->toProviderString() ];
@@ -162,20 +192,20 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
                 // Send the request to the Broker
                 SubscribeCommand cmd;
 
-                if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE )
+                if( stompConsumer->getSessionInfo()->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE )
                 {
                     cmd.setAckMode( CommandConstants::ACK_CLIENT );
                 }
                 cmd.setDestination( destination->toProviderString() );
 
-                if( noLocal == true )
+                if( stompConsumer->getNoLocal() )
                 {
-                    cmd.setNoLocal( noLocal );
+                    cmd.setNoLocal( stompConsumer->getNoLocal() );
                 }
 
-                if( name != "" )
+                if( stompConsumer->getName() != "" )
                 {
-                    cmd.setSubscriptionName( name );
+                    cmd.setSubscriptionName( stompConsumer->getName() );
                 }
 
                 // Grab any options from the destination and set them
@@ -187,9 +217,9 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
                 // that specifies a selector it will be ignored.  While
                 // this is not ideal, is the only way to handle the fact
                 // that activemq stomp doesn't support multiple sessions.
-                if( selector != "" )
+                if( stompConsumer->getMessageSelector() != "" )
                 {
-                    cmd.setMessageSelector( selector );
+                    cmd.setMessageSelector( stompConsumer->getMessageSelector() );
                 }
 
                 // Fire the message
@@ -202,22 +232,10 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
                 }
             }
 
-            // Initialize a new Consumer info Message
-            ConsumerInfo* consumer = new StompConsumerInfo( connector );
-
-            consumer->setConsumerId( getNextConsumerId() );
-            consumer->setDestination( destination );
-            consumer->setMessageSelector( selector );
-            consumer->setSessionInfo( session );
-
             // Store this consumer for later message dispatching.
             consumerMap.insert(
-                make_pair( consumer->getConsumerId(), consumer ) );
-
-            return consumer;
+                make_pair( stompConsumer->getConsumerId(), stompConsumer ) );
         }
-
-        return NULL;
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )

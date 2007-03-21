@@ -61,7 +61,7 @@ namespace stomp{
          * @returns cloned copy of this object
          */
         virtual cms::Destination* clone() const {
-            return new StompQueue( getQueueName() );
+            return new StompQueue( this );
         }
 
     protected:

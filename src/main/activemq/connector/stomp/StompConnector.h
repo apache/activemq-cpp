@@ -284,8 +284,8 @@ namespace stomp{
          * @param consumer - ConsumerInfo of a consumer that isn't started
          * @throws ConnectorException
          */
-        virtual void startConsumer( ConsumerInfo* consumer AMQCPP_UNUSED )
-            throw ( ConnectorException ) {}
+        virtual void startConsumer( ConsumerInfo* consumer )
+            throw ( ConnectorException );
 
         /**
          * Create a Consumer for the given Session
