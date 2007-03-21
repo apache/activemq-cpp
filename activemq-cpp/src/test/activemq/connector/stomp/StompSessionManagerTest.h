@@ -159,6 +159,7 @@ namespace stomp{
             std::string sel1 = "";
             StompTopic dest1( "dummy.topic.1" );
             ConsumerInfo* cinfo1 = manager.createConsumer( &dest1, info1, sel1 );
+            manager.startConsumer( cinfo1 );
             CPPUNIT_ASSERT( cinfo1->getSessionInfo() == info1 );
             CPPUNIT_ASSERT( cinfo1->getDestination()->toProviderString() == dest1.toProviderString() );
             CPPUNIT_ASSERT( cinfo1->getMessageSelector() == sel1 );
@@ -167,6 +168,7 @@ namespace stomp{
             std::string sel2 = "mysel2";
             StompTopic dest2( "dummy.topic.2" );
             ConsumerInfo* cinfo2 = manager.createConsumer( &dest2, info2, sel2 );
+            manager.startConsumer( cinfo2 );
             CPPUNIT_ASSERT( cinfo2->getSessionInfo() == info2 );
             CPPUNIT_ASSERT( cinfo2->getDestination()->toProviderString() == dest2.toProviderString() );
             CPPUNIT_ASSERT( cinfo2->getMessageSelector() == sel2 );
@@ -175,6 +177,7 @@ namespace stomp{
             std::string sel3 = "mysel3";
             StompQueue dest3( "dummy.queue.1" );
             ConsumerInfo* cinfo3 = manager.createConsumer( &dest3, info3, sel3 );
+            manager.startConsumer( cinfo3 );
             CPPUNIT_ASSERT( cinfo3->getSessionInfo() == info3 );
             CPPUNIT_ASSERT( cinfo3->getDestination()->toProviderString() == dest3.toProviderString() );
             CPPUNIT_ASSERT( cinfo3->getMessageSelector() == sel3 );
@@ -183,6 +186,7 @@ namespace stomp{
             std::string sel4 = "";
             StompTopic dest4( "dummy.queue.2" );
             ConsumerInfo* cinfo4 = manager.createConsumer( &dest4, info4, sel4 );
+            manager.startConsumer( cinfo4 );
             CPPUNIT_ASSERT( cinfo4->getSessionInfo() == info4 );
             CPPUNIT_ASSERT( cinfo4->getDestination()->toProviderString() == dest4.toProviderString() );
             CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
@@ -217,15 +221,19 @@ namespace stomp{
 
             SessionInfo* info1 = manager.createSession( cms::Session::AUTO_ACKNOWLEDGE );
             ConsumerInfo* cinfo1 = manager.createConsumer( &dest1, info1, "" );
+            manager.startConsumer( cinfo1 );
 
             SessionInfo* info2 = manager.createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
             ConsumerInfo* cinfo2 = manager.createConsumer( &dest1, info2, "" );
+            manager.startConsumer( cinfo2 );
 
             SessionInfo* info3 = manager.createSession( cms::Session::CLIENT_ACKNOWLEDGE );
             ConsumerInfo* cinfo3 = manager.createConsumer( &dest2, info3, "" );
+            manager.startConsumer( cinfo3 );
 
             SessionInfo* info4 = manager.createSession( cms::Session::SESSION_TRANSACTED );
             ConsumerInfo* cinfo4 = manager.createConsumer( &dest2, info4, "" );
+            manager.startConsumer( cinfo4 );
 
             MyMessageListener listener;
             manager.setConsumerMessageListener( &listener );
@@ -287,12 +295,14 @@ namespace stomp{
 
             SessionInfo* info1 = manager.createSession( cms::Session::AUTO_ACKNOWLEDGE );
             ConsumerInfo* cinfo1 = manager.createConsumer( &dest1, info1, "" );
+            manager.startConsumer( cinfo1 );
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
 
             cmdListener.cmd = NULL;
 
             SessionInfo* info2 = manager.createSession( cms::Session::DUPS_OK_ACKNOWLEDGE );
             ConsumerInfo* cinfo2 = manager.createConsumer( &dest1, info2, "" );
+            manager.startConsumer( cinfo2 );
             CPPUNIT_ASSERT( cmdListener.cmd == NULL );
 
             cmdListener.cmd = NULL;
@@ -353,7 +363,9 @@ namespace stomp{
 
             cmdListener.expected.clear();
             StompTopic dest1( "dummy.topic.1" );
+            
             consumer = manager.createConsumer( &dest1, session, "" );
+            manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
             CPPUNIT_ASSERT( cmdListener.subscribe != NULL );
 
@@ -366,7 +378,9 @@ namespace stomp{
             cmdListener.expected.clear();
             cmdListener.expected.push_back( retroactive );
             StompTopic dest2( "dummy.topic.1?consumer.retroactive=true" );
+            
             consumer = manager.createConsumer( &dest2, session, "" );
+            manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
             CPPUNIT_ASSERT( cmdListener.subscribe != NULL );
 
@@ -395,7 +409,9 @@ namespace stomp{
                 "consumer.selector=" + selector.second + "&" +
                 "consumer.exclusive=" + exclusive.second + "&" +
                 "consumer.priority=" + priority.second );
+            
             consumer = manager.createConsumer( &dest3, session, "" );
+            manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
             CPPUNIT_ASSERT( cmdListener.subscribe != NULL );
 
@@ -423,10 +439,12 @@ namespace stomp{
                 "consumer.selector=" + selector.second + "&" +
                 "consumer.exclusive=" + exclusive.second + "&" +
                 "consumer.priority=" + priority.second );
+            
             consumer = manager.createConsumer( &dest4, session, "", true );
+            manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
             CPPUNIT_ASSERT( cmdListener.subscribe != NULL );
-
+            
             manager.removeConsumer( consumer );
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
             delete consumer;
