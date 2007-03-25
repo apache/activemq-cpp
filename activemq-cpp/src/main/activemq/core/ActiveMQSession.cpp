@@ -722,6 +722,7 @@ void ActiveMQSession::onConnectorResourceClosed(
 
         if( consumer != NULL )
         {
+            // If the executor thread is currently running, stop it.
             bool wasStarted = isStarted();
             if( wasStarted ) {
                 stop();
@@ -736,12 +737,35 @@ void ActiveMQSession::onConnectorResourceClosed(
                 transaction->removeFromTransaction(
                     consumer->getConsumerId() );
             }
-
-            // Remove this consumer from the consumers map.
+            
+            ActiveMQConsumer* obj = NULL;
             synchronized( &consumers ) {
-                consumers.remove( consumer->getConsumerId() );
+                
+                if( consumers.containsKey( consumer->getConsumerId() ) ) {
+                    
+                    // Get the consumer reference
+                    obj = consumers.getValue( consumer->getConsumerId() );
+
+                    // Remove this consumer from the map.
+                    consumers.remove( consumer->getConsumerId() );
+                }
+            }
+            
+            // Clean up any resources in the executor for this consumer
+            if( obj != NULL && executor != NULL ) {              
+            
+                // Purge any pending messages for this consumer.
+                vector<ActiveMQMessage*> messages = 
+                    executor->purgeConsumerMessages(obj);
+                    
+                // Destroy the messages.
+                for( unsigned int ix=0; ix<messages.size(); ++ix ) {
+                    delete messages[ix];
+                }
             }
 
+            // If the executor thread was previously running, start it back
+            // up.
             if( wasStarted ) {
                 start();
             }

@@ -21,12 +21,15 @@
 #include <activemq/core/Dispatcher.h>
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/concurrent/Thread.h>
-#include <activemq/util/Queue.h>
+#include <activemq/concurrent/Mutex.h>
+#include <vector>
+#include <list>
 
 namespace activemq{
 namespace core{
   
     class ActiveMQSession;
+    class ActiveMQConsumer;
   
     /**
      * Delegate dispatcher for a single session.  Contains a thread
@@ -39,9 +42,11 @@ namespace core{
     private:
         
         ActiveMQSession* session;
-        util::Queue<DispatchData> messageQueue;
-        bool started;
+        std::list<DispatchData> messageQueue;        
         concurrent::Thread* thread;
+        concurrent::Mutex mutex;
+        bool started;
+        bool closed;
         
     public:
     
@@ -70,6 +75,14 @@ namespace core{
         virtual void executeFirst( DispatchData& data );
             
         /**
+         * Removes all messages for the given consumer from the queue and
+         * returns them.
+         * @param consumer the subject consmer
+         * @return all messages that were queued for the consumer.
+         */
+        virtual std::vector<ActiveMQMessage*> purgeConsumerMessages( ActiveMQConsumer* consumer );
+        
+        /**
          * Starts the dispatching.
          */
         virtual void start();
@@ -78,6 +91,12 @@ namespace core{
          * Stops dispatching.
          */
         virtual void stop();
+        
+        /**
+         * Terminates the dispatching thread.  Once this is called, the executor is no longer
+         * usable.
+         */         
+        virtual void close();
         
         /**
          * Indicates if the executor is started
@@ -90,13 +109,6 @@ namespace core{
          * Removes all queued messgaes and destroys them.
          */
         virtual void clear();
-        
-        /**
-         * Depending on whether or not the session is async,
-         * notifies the thread or simply dispatches all available
-         * messages synchronously.
-         */
-        virtual void wakeup();
             
         /**
          * Dispatches a message to a particular consumer.
