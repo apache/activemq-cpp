@@ -1003,17 +1003,24 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
                 dynamic_cast<const OpenWireTransactionInfo*>(
                     session->getTransactionInfo() );
 
-            if( transactionInfo == NULL ) {
+            if( transactionInfo == NULL ||
+                transactionInfo->getTransactionInfo() == NULL ||
+                transactionInfo->getTransactionInfo()->getTransactionId() == NULL ) {
                 throw OpenWireConnectorException(
                     __FILE__, __LINE__,
                     "OpenWireConnector::acknowledge - "
                     "Transacted Session, has no Transaction Info.");
             }
 
-            ack.setTransactionId(
+            const commands::TransactionId* transactionId = 
+                dynamic_cast<const commands::TransactionId*>(
+                    transactionInfo->getTransactionInfo()->getTransactionId() );
+
+            commands::TransactionId* clonedTransactionId =
                 dynamic_cast<commands::TransactionId*>(
-                    transactionInfo->getTransactionInfo()->
-                        getTransactionId()->cloneDataStructure() ) );
+                    transactionId->cloneDataStructure() );
+
+            ack.setTransactionId( clonedTransactionId );
         }
 
         oneway( &ack );
