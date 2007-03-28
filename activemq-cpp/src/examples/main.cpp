@@ -75,6 +75,9 @@ public:
             // Create a Connection
             connection = connectionFactory->createConnection();
             connection->start();
+            
+            // free the factory, we are done with it.
+            delete connectionFactory;
 
             // Create a Session
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
