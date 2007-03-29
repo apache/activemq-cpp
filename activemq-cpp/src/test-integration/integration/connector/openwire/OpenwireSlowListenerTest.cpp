@@ -80,7 +80,7 @@ OpenwireSlowListenerTest::~OpenwireSlowListenerTest()
 {
 }
 
-void OpenwireSlowListenerTest::SlowListener::onMessage(const cms::Message* message) { 
+void OpenwireSlowListenerTest::SlowListener::onMessage(const cms::Message* message) {
 
     synchronized( &threadIds ) {
         count++;
@@ -103,33 +103,34 @@ void OpenwireSlowListenerTest::test()
         cms::Session* session = connection->createSession( cms::Session::AUTO_ACKNOWLEDGE );
         cms::Destination* destination = session->createTopic(Guid::createGUIDString());
         cms::MessageProducer* producer = session->createProducer( destination );
-    
+
         const unsigned int numConsumers = 5;
         cms::MessageConsumer* consumers[numConsumers];
-        
+
         // Create several consumers for the same destination.
         for (unsigned int i = 0; i < numConsumers; i++)
         {
             consumers[i] = session->createConsumer( destination );
             consumers[i]->setMessageListener(&listener);
         }
-    
+
         connection->start();
-    
+
         cms::BytesMessage* message = session->createBytesMessage();
-    
+
         unsigned int msgCount = 50;
         for (unsigned int i = 0; i < msgCount; i++){
             producer->send(message);
         }
+        delete message;
 
         // Wait no more than 10 seconds for all the messages to come in.
         waitForMessages( msgCount * numConsumers, 10000, listener );
-        
+
         connection->close();
-        
+
         synchronized( &listener.threadIds ) {
-            
+
             // Make sure that the listenerwas always accessed by the same thread
             // and that it received all the messages from all consumers.
             CPPUNIT_ASSERT_EQUAL( 1, (int)listener.threadIds.size() );
@@ -139,7 +140,7 @@ void OpenwireSlowListenerTest::test()
         {
             delete consumers[i];
         }
-        
+
         delete destination;
         delete producer;
         delete session;
@@ -151,24 +152,24 @@ void OpenwireSlowListenerTest::test()
     }
 }
 
-void OpenwireSlowListenerTest::waitForMessages( unsigned int count, 
-    long long maxWaitTime, 
-    OpenwireSlowListenerTest::SlowListener& l ) 
+void OpenwireSlowListenerTest::waitForMessages( unsigned int count,
+    long long maxWaitTime,
+    OpenwireSlowListenerTest::SlowListener& l )
 {
     long long startTime = Date::getCurrentTimeMilliseconds();
-    
+
     synchronized( &l.threadIds ) {
-        
+
         while( l.count < count ) {
-            
+
             long long curTime = Date::getCurrentTimeMilliseconds();
             if( (curTime - startTime) >= maxWaitTime ) {
                 return;
             }
-            
+
             l.threadIds.wait( 500 );
         }
-        
+
     }
 }
 

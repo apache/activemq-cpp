@@ -21,7 +21,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpl
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSlowListenerTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
-//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::DurableTest );
