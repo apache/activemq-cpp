@@ -231,6 +231,7 @@ namespace core{
                 connection.start();
                 CPPUNIT_ASSERT_EQUAL( 1, (int)msgListener.messages.size() );
 
+                delete cmd;
                 cmd = new connector::stomp::commands::TextMessageCommand;
 
                 connector::stomp::StompTopic topic2( "test" );
