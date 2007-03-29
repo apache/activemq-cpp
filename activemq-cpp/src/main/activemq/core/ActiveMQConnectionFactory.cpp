@@ -148,7 +148,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         // What wire format are we using, defaults to Stomp
         std::string wireFormat =
-            properties->getProperty( "wireFormat", "stomp" );
+            properties->getProperty( "wireFormat", "openwire" );
 
         // Now try and find a factory to create the Connector
         ConnectorFactory* connectorfactory =
