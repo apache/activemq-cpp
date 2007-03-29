@@ -75,7 +75,7 @@ public:
             // Create a Connection
             connection = connectionFactory->createConnection();
             connection->start();
-            
+
             // free the factory, we are done with it.
             delete connectionFactory;
 
@@ -293,8 +293,8 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // add any optional params to the url to enable things like
     // tightMarshalling or tcp logging etc.
     std::string brokerURI =
-        "tcp://127.0.0.1:61613";
-//        "?wireFormat=openwire"
+        "tcp://127.0.0.1:61616"
+        "?wireFormat=openwire";
 //        "&commandTracingEnabled=true"
 //        "&tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true";
@@ -306,7 +306,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     bool useTopics = true;
 
-    HelloWorldProducer producer( brokerURI, 2000, useTopics );   
+    HelloWorldProducer producer( brokerURI, 2000, useTopics );
     HelloWorldConsumer consumer( brokerURI, 12000, useTopics );
 
     // Start the consumer thread.
