@@ -875,6 +875,11 @@ void OpenWireConnector::send( cms::Message* message,
                 "Message is not a valid Open Wire type.");
         }
 
+        // Clear any old data that might be in the message object
+        delete amqMessage->getMessageId();
+        delete amqMessage->getProducerId();
+        delete amqMessage->getTransactionId();
+
         // Always assign the message ID, regardless of the disable
         // flag.  Not adding a message ID will cause an NPE at the broker.
         commands::MessageId* id = new commands::MessageId();
@@ -1012,7 +1017,7 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
                     "Transacted Session, has no Transaction Info.");
             }
 
-            const commands::TransactionId* transactionId = 
+            const commands::TransactionId* transactionId =
                 dynamic_cast<const commands::TransactionId*>(
                     transactionInfo->getTransactionInfo()->getTransactionId() );
 
