@@ -131,6 +131,16 @@ namespace core{
          */
         bool isStarted() const;
         
+        bool isAutoAcknowledge() const {
+            return sessionInfo->getAckMode() == cms::Session::AUTO_ACKNOWLEDGE;
+        }
+        bool isDupsOkAcknowledge() const {
+            return sessionInfo->getAckMode() == cms::Session::DUPS_OK_ACKNOWLEDGE;
+        }
+        bool isClientAcknowledge() const {
+            return sessionInfo->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE;
+        }
+        
         /**
          * Fires the given exception to the exception listener of the connection
          */

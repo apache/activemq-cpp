@@ -960,7 +960,7 @@ void OpenWireConnector::send( std::list<cms::Message*>& messages,
 void OpenWireConnector::acknowledge( const SessionInfo* session,
                                      const ConsumerInfo* consumer,
                                      const cms::Message* message,
-                                     AckType ackType = ConsumedAck )
+                                     AckType ackType )
     throw ( ConnectorException )
 {
     try {
