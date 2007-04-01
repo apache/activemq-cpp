@@ -42,19 +42,29 @@ namespace core{
     {
     private:
 
-        // The session that owns this Consumer
+        /**
+         * The session that owns this Consumer
+         */
         ActiveMQSession* session;
 
-        // The Consumer info for this Consumer
+        /**
+         * The Consumer info for this Consumer
+         */
         connector::ConsumerInfo* consumerInfo;
 
-        // The Message Listener for this Consumer
+        /**
+         * The Message Listener for this Consumer
+         */
         cms::MessageListener* listener;
 
-        // Queue of unconsumed messages.
+        /**
+         * Queue of unconsumed messages.
+         */
         util::Queue<DispatchData> unconsumedMessages;
 
-        // Boolean that indicates if the consumer has been closed
+        /**
+         * Boolean that indicates if the consumer has been closed
+         */
         bool closed;
 
     public:
@@ -174,8 +184,36 @@ namespace core{
          * does nothing.
          * @param message the message to destroy
          */
-        virtual void destroyMessage( cms::Message* message )
+        virtual void destroyMessage( ActiveMQMessage* message )
             throw (exceptions::ActiveMQException);
+            
+        /**
+         * Used by synchronous receive methods to wait for messages to come in.
+         * @param timeout - The maximum number of milliseconds to wait before 
+         * returning.
+         * If -1, it will block until a messages is received or this consumer 
+         * is closed.
+         * If 0, will not block at all.  If > 0, will wait at a maximum the 
+         * specified number of milliseconds before returning.
+         * @return the message, if received within the allotted time.  
+         * Otherwise NULL.
+         * @throws InvalidStateException if this consumer is closed upon 
+         * entering this method.
+         */
+        ActiveMQMessage* dequeue(int timeout) throw ( cms::CMSException );
+        
+        /**
+         * Pre-consume processing
+         * @param message - the message being consumed.
+         */
+        virtual void beforeMessageIsConsumed( ActiveMQMessage* message );
+        
+        /**
+         * Post-consume processing
+         * @param message - the consumed message
+         * @param messageExpired - flag indicating if the message has expired.
+         */
+        virtual void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
 
     };
 
