@@ -214,6 +214,9 @@ void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException )
                 "Commit called before transaction was started.");
         }
 
+        // Stop any deliveries
+        session->stop();
+
         // Commit the current Transaction
         connection->getConnectionData()->getConnector()->
             commit( transactionInfo, session->getSessionInfo() );
@@ -224,6 +227,9 @@ void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException )
         // Start a new Transaction
         transactionInfo = connection->getConnectionData()->
             getConnector()->startTransaction( session->getSessionInfo() );
+
+        // Stop any deliveries
+        session->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -241,6 +247,9 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
                 "ActiveMQTransaction::rollback - "
                 "Rollback called before transaction was started.");
         }
+
+        // Stop any Deliveries
+        session->stop();
 
         // Rollback the Transaction
         connection->getConnectionData()->getConnector()->
@@ -283,6 +292,9 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
             // to the rollback tasks.
             rollbackMap.clear();
         }
+
+        // Start Deliveries
+        session->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -363,7 +375,7 @@ void ActiveMQTransaction::RollbackTask::run(void)
             }
 
             DispatchData data( consumer->getConsumerInfo(), message );
-            consumer->dispatch( data );
+            session->dispatch( data );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
