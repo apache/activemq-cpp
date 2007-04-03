@@ -23,8 +23,6 @@
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/util/Integer.h>
 
-#include <activemq/concurrent/ThreadPool.h>
-
 using namespace std;
 using namespace cms;
 using namespace activemq;
@@ -52,11 +50,8 @@ ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
         // Store State Data
         this->connection = connection;
         this->session = session;
-        this->taskCount = 0;
 
         // convert from property Strings to int.
-        redeliveryDelay = Integer::parseInt(
-            properties.getProperty( "transaction.redeliveryDelay", "25" ) );
         maxRedeliveries = Integer::parseInt(
             properties.getProperty( "transaction.maxRedeliveryCount", "5" ) );
 
@@ -80,18 +75,6 @@ ActiveMQTransaction::~ActiveMQTransaction(void)
 
         // Clean up
         clearTransaction();
-
-        // Must allow all the tasks to complete before we destruct otherwise
-        // the callbacks will cause an exception.
-        synchronized( &tasksDone )
-        {
-            while( taskCount != 0 )
-            {
-                tasksDone.wait(1000);
-
-                // TODO - Log Here to get some indication if we are stuck
-            }
-        }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -263,89 +246,36 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
         transactionInfo = connection->getConnectionData()->
             getConnector()->startTransaction( session->getSessionInfo() );
 
-        // Create a task for each consumer and copy its message list out
-        // to the Rollback task so we can clear the list for new messages
-        // that might come in next.
-        //  NOTE - This could be turned into a Thread so that the connection
-        //  doesn't have to wait on this method to complete an release its
-        //  mutex so it can dispatch new messages.  That would however requre
-        //  copying the whole map over to the thread.
+        // Start Deliveries
+        session->start();
+
+        // Roolback the messages to the Session, since we have the lock on the
+        // rollbackLock, then no message will added to the transaction unitll we
+        // are done processing all the messages that we to redeliver and the map
+        // is cleared.
         synchronized( &rollbackLock )
         {
             RollbackMap::iterator itr = rollbackMap.begin();
 
             for(; itr != rollbackMap.end(); ++itr)
             {
-                ThreadPool::getInstance()->queueTask( make_pair(
-                    new RollbackTask( itr->first,
-                                      connection,
-                                      session,
-                                      itr->second,
-                                      maxRedeliveries,
-                                      redeliveryDelay ), this ) );
-
-                // Count the tasks started.
-                taskCount++;
+                redeliverMessages( itr->first, itr->second );
             }
 
             // Clear the map.  Ownership of the messages is now handed off
             // to the rollback tasks.
             rollbackMap.clear();
         }
-
-        // Start Deliveries
-        session->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::onTaskComplete( Runnable* task )
-{
-    try
-    {
-        // Delete the task
-        delete task;
+void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
+                                             MessageList& messages ) 
+    throw ( exceptions::ActiveMQException ) {
 
-        taskCount--;
-
-        if( taskCount == 0 )
-        {
-            synchronized( &tasksDone )
-            {
-                tasksDone.notifyAll();
-            }
-        }
-    }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::onTaskException( Runnable* task,
-                                           exceptions::ActiveMQException& ex )
-{
-    try
-    {
-        // Delegate
-        onTaskComplete( task );
-
-        // Route the Error
-        ExceptionListener* listener = connection->getExceptionListener();
-
-        if( listener != NULL )
-        {
-            listener->onException( ex );
-        }
-    }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::RollbackTask::run(void)
-{
     try
     {
         MessageList::iterator itr = messages.begin();
@@ -354,9 +284,6 @@ void ActiveMQTransaction::RollbackTask::run(void)
         {
             ActiveMQMessage* message = *itr;
             message->setRedeliveryCount( message->getRedeliveryCount() + 1 );
-
-            // Redeliver Messages at some point in the future
-            Thread::sleep( redeliveryDelay );
 
             if( message->getRedeliveryCount() >= maxRedeliveries )
             {

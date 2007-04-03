@@ -24,8 +24,6 @@
 #include <cms/CMSException.h>
 
 #include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/TaskListener.h>
-#include <activemq/concurrent/Runnable.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <activemq/exceptions/InvalidStateException.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
@@ -48,15 +46,11 @@ namespace core{
      *
      * Configuration options
      *
-     * transaction.redeliveryDelay
-     *   Wait time between the redelivery of each message
-     *
      * transaction.maxRedeliveryCount
      *   Max number of times a message can be redelivered, if the session is
      *   rolled back more than this many time, the message is dropped.
      */
-    class ActiveMQTransaction : public concurrent::TaskListener,
-                                public connector::TransactionInfo
+    class ActiveMQTransaction : public connector::TransactionInfo
     {
     private:
 
@@ -87,14 +81,8 @@ namespace core{
         // Max number of redeliveries before we quit
         int maxRedeliveries;
 
-        // Wait time between sends of message on a rollback
-        int redeliveryDelay;
-
         // Mutex that is signaled when all tasks complete.
         concurrent::Mutex tasksDone;
-
-        // Count of Tasks that are outstanding
-        int taskCount;
 
     public:
 
@@ -190,28 +178,6 @@ namespace core{
             transactionInfo->setSessionInfo( session );
         }
 
-    protected:   // Task Listener Interface
-
-        /**
-         * Called when a queued task has completed, the task that
-         * finished is passed along for user consumption.  The task is
-         * deleted and the count of outstanding tasks is reduced.
-         * @param task - Runnable Pointer to the task that finished
-         */
-        virtual void onTaskComplete( concurrent::Runnable* task );
-
-         /**
-          * Called when a queued task has thrown an exception while
-          * being run.  The Callee should assume that this was an
-          * unrecoverable exeption and that this task is now defunct.
-          * Deletes the Task and notifies the connection that the
-          * exception has occurred.  Reduce the outstanding task count.
-          * @param task - Runnable Pointer to the task
-          * @param ex - The ActiveMQException that was thrown.
-          */
-         virtual void onTaskException( concurrent::Runnable* task,
-                                       exceptions::ActiveMQException& ex );
-
     protected:
 
         /**
@@ -222,55 +188,17 @@ namespace core{
          */
         virtual void clearTransaction();
 
-    private:
-
-        // Internal class that is used to redeliver one consumers worth
-        // of messages from this transaction.
-        class RollbackTask : public concurrent::Runnable
-        {
-        private:
-
-            // Wait time before redelivery in millisecs
-            int redeliveryDelay;
-
-            // Max number of time to redeliver this message
-            int maxRedeliveries;
-
-            // Messages to Redeliver
-            MessageList messages;
-
-            // Consumer we are redelivering to
-            ActiveMQConsumer* consumer;
-
-            // Connection to use for sending message acks
-            ActiveMQConnection* connection;
-
-            // Session for this Transaction
-            ActiveMQSession* session;
-
-        public:
-
-            RollbackTask( ActiveMQConsumer* consumer,
-                          ActiveMQConnection* connection,
-                          ActiveMQSession* session,
-                          MessageList& messages,
-                          int maxRedeliveries,
-                          int redeliveryDelay ){
-
-                // Store State Data.
-                this->messages        = messages;
-                this->consumer        = consumer;
-                this->redeliveryDelay = redeliveryDelay;
-                this->maxRedeliveries = maxRedeliveries;
-                this->session         = session;
-                this->connection      = connection;
-            }
-
-            // Dispatches the Messages to the Consumer.
-            virtual void run();
-
-        };
-
+        /**
+         * Redelivers each message that is in the Message List to the specified
+         * consumer, throwing messages away as they hit their max redilviery 
+         * count.
+         * @param consumer - the ActiveMQConsumer to redeliver to
+         * @param messages - the list of messages that should be sent.
+         * @throws ActiveMQException if an error occurs.
+         */
+        virtual void redeliverMessages( ActiveMQConsumer* consumer,
+                                        MessageList& messages ) 
+                                            throw ( exceptions::ActiveMQException );
     };
 
 }}
