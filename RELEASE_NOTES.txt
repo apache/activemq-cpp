@@ -1,4 +1,80 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.0                                 ==
+=========================================================================
+
+== Overview ==
+
+This version is a major release containing new features and bug fixes.
+
+    * Full OpenWire v2 support!
+    * You can switch between openwire and stomp via the connection URL
+    * Temporary destinations when using OpenWire
+    * Added support for asynchronous send
+    * Fixed client acknowledge
+    * Resolved some memory leaks
+    * Sessions are now single threaded
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-38] - Async error on broker when running integration tests
+    * [AMQCPP-44] - Reason for socket errors not reported correctly on Windows
+    * [AMQCPP-46] - ActiveMQConnection doesn't propagate exception listener to underlying connector
+    * [AMQCPP-51] - Autoconf is not properly setting CXXFLAGS on Linux
+    * [AMQCPP-52] - Valgrind reports memory leaks when running PrimitiveMapTest
+    * [AMQCPP-53] - Declaration of extern int errno after including errno.h doesn't compile
+    * [AMQCPP-54] - Build broken due to autoconf problem?
+    * [AMQCPP-55] - Need close() to propagate to child resources
+    * [AMQCPP-56] - GCC warnings and possible SocketFactory bug on 64-bit Linux
+    * [AMQCPP-58] - Possible memory leak when reestablishing connection
+    * [AMQCPP-59] - Exception is thrown when destroying consumer after connection failure
+    * [AMQCPP-60] - message information is lost from stomp message to jms
+    * [AMQCPP-61] - CMSException::what returns c_str of temporary std::string
+    * [AMQCPP-62] - Broken CLIENT_ACKNOWLEDGE
+    * [AMQCPP-64] - Inconsistency in topic names when creating topics
+    * [AMQCPP-75] - setCMSReplyTo with null destination segfaults when using Openwire wire format
+    * [AMQCPP-76] - Integer property not propagated when using Openwire
+    * [AMQCPP-77] - Inconsistency when getting string property between Stomp and Openwire
+    * [AMQCPP-78] - session tries to destroy already destroyed temporary queue
+    * [AMQCPP-80] - sending with explicit message id hangs
+    * [AMQCPP-81] - openwire consumer never receives messages already in queue
+    * [AMQCPP-83] - Integration tests fail for openwire
+    * [AMQCPP-85] - activemq/util/Character.h not being installed by automake
+    * [AMQCPP-86] - Valgrind reports memory leaks in unit tests
+    * [AMQCPP-87] - ActiveMQConnectionFactory creates only one unique clientId
+    * [AMQCPP-90] - Openwire Session doesn't run its MessageListeners from a single thread
+    * [AMQCPP-91] - A few more Openwire memory leaks
+    * [AMQCPP-92] - memory leak in openwire session info
+
+Improvement
+
+    * [AMQCPP-40] - A few stray unix and sun defines
+    * [AMQCPP-47] - MapMessage getters should be const
+    * [AMQCPP-48] - Fix compilation with Visual Studio .NET 2003
+    * [AMQCPP-49] - Add -W -Wall compile options
+    * [AMQCPP-50] - Derive cms::CMSException from std::exception
+    * [AMQCPP-57] - Typo in names of delivery modes
+    * [AMQCPP-79] - allow createProducer to accept null destination
+    * [AMQCPP-89] - Case of cms::Message getter and setter names are not consistent with case of JMS Message getter and setter names
+    * [AMQCPP-94] - StompConnector should use Long::toString instead of Integer::toString
+
+New Feature
+
+    * [AMQCPP-30] - Add support to activemq-cpp to support the openwire protocol
+    * [AMQCPP-63] - asynchronous send
+
+Task
+
+    * [AMQCPP-82] - Make openwire the default protocol
+    * [AMQCPP-84] - add unit/integration tests
+    * [AMQCPP-88] - Remove setCMSMessageId from CMS API
+    * [AMQCPP-95] - Perform Memory Leak testing on 2.0 codebase
+
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 1.1                                 ==
 =========================================================================
 
