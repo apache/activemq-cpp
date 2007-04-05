@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "CommandConstants.h"
 #include <stdio.h>
 
@@ -44,7 +44,7 @@ CommandConstants::StaticInitializer CommandConstants::staticInits;
 
 ////////////////////////////////////////////////////////////////////////////////
 CommandConstants::StaticInitializer::StaticInitializer(){
-    
+
     stompHeaders[HEADER_DESTINATION] = "destination";
     stompHeaders[HEADER_TRANSACTIONID] = "transaction";
     stompHeaders[HEADER_CONTENTLENGTH] = "content-length";
@@ -67,8 +67,6 @@ CommandConstants::StaticInitializer::StaticInitializer(){
     stompHeaders[HEADER_REPLYTO] = "reply-to";
     stompHeaders[HEADER_TYPE] = "type";
     stompHeaders[HEADER_AMQMSGTYPE] = "amq-msg-type";
-    stompHeaders[HEADER_JMSXGROUPID] = "JMSXGroupID";
-    stompHeaders[HEADER_JMSXGROUPSEQNO] = "JMSXGroupSeq";
     stompHeaders[HEADER_SELECTOR] = "selector";
     stompHeaders[HEADER_DISPATCH_ASYNC] = "activemq.dispatchAsync";
     stompHeaders[HEADER_EXCLUSIVE] = "activemq.exclusive";
@@ -105,11 +103,11 @@ CommandConstants::StaticInitializer::StaticInitializer(){
     for( int ix=0; ix<NUM_STOMP_HEADERS; ++ix ){
         stompHeaderMap[stompHeaders[ix]] = (StompHeader)ix;
     }
-    
+
     for( int ix=0; ix<NUM_COMMANDS; ++ix ){
         commandMap[commands[ix]] = (CommandId)ix;
     }
-    
+
     for( int ix=0; ix<NUM_ACK_MODES; ++ix ){
         ackModeMap[ackModes[ix]] = (AckMode)ix;
     }
@@ -125,7 +123,7 @@ cms::Destination* CommandConstants::toDestination( const std::string& dest )
 {
     std::size_t qpos = dest.find(queuePrefix);
     std::size_t tpos = dest.find(topicPrefix);
-    
+
     if(tpos == 0)
     {
         return new StompTopic(dest.substr(strlen(topicPrefix)));
@@ -140,6 +138,6 @@ cms::Destination* CommandConstants::toDestination( const std::string& dest )
             __FILE__, __LINE__,
             "CommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());
     }
-}  
+}
 
 

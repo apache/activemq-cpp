@@ -36,20 +36,20 @@ void ActiveMQMessageTest::test()
     MyAckHandler ackHandler;
 
     CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQMessage::ID_ACTIVEMQMESSAGE );
-    
+
     myMessage.setAckHandler( &ackHandler );
     myMessage.acknowledge();
-    
+
     CPPUNIT_ASSERT( ackHandler.wasAcked == true );
-    
+
     CPPUNIT_ASSERT( myMessage.getPropertyNames().size() == 0 );
     CPPUNIT_ASSERT( myMessage.propertyExists( "something" ) == false );
-    
+
     try {
         myMessage.getBooleanProperty( "somethingElse" );
         CPPUNIT_ASSERT( false );
     } catch(...) {}
-    
+
     myMessage.setBooleanProperty( "boolean", false );
     myMessage.setByteProperty( "byte", 60 );
     myMessage.setDoubleProperty( "double", 642.5643 );
@@ -58,7 +58,7 @@ void ActiveMQMessageTest::test()
     myMessage.setLongProperty( "long", 0xFFFFFFFF0000000LL );
     myMessage.setShortProperty( "short", 512 );
     myMessage.setStringProperty( "string", "This is a test String" );
-    
+
     CPPUNIT_ASSERT( myMessage.getBooleanProperty( "boolean" ) == false );
     CPPUNIT_ASSERT( myMessage.getByteProperty( "byte" ) == 60 );
     CPPUNIT_ASSERT( myMessage.getDoubleProperty( "double" ) == 642.5643 );
@@ -67,4 +67,7 @@ void ActiveMQMessageTest::test()
     CPPUNIT_ASSERT( myMessage.getLongProperty( "long" ) == 0xFFFFFFFF0000000LL );
     CPPUNIT_ASSERT( myMessage.getShortProperty( "short" ) == 512 );
     CPPUNIT_ASSERT( myMessage.getStringProperty( "string" ) == "This is a test String" );
+
+    myMessage.setStringProperty( "JMSXGroupID", "hello" );
+    CPPUNIT_ASSERT( myMessage.getStringProperty( "JMSXGroupID" ) == "hello" );
 }

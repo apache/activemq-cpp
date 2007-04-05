@@ -27,10 +27,10 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-    
-    class CommandConstants{    
+
+    class CommandConstants{
     public:
-    
+
         enum CommandId{
             CONNECT,
             CONNECTED,
@@ -47,7 +47,7 @@ namespace commands{
             RECEIPT,
             NUM_COMMANDS
         };
-        
+
         enum StompHeader{
             HEADER_DESTINATION,
             HEADER_TRANSACTIONID,
@@ -69,8 +69,6 @@ namespace commands{
             HEADER_REPLYTO,
             HEADER_TYPE,
             HEADER_AMQMSGTYPE,
-            HEADER_JMSXGROUPID,
-            HEADER_JMSXGROUPSEQNO,
             HEADER_DISPATCH_ASYNC,
             HEADER_EXCLUSIVE,
             HEADER_MAXPENDINGMSGLIMIT,
@@ -87,98 +85,98 @@ namespace commands{
             HEADER_ID,
             HEADER_SUBSCRIPTION,
             NUM_STOMP_HEADERS
-        }; 
-        
+        };
+
         enum AckMode{
             ACK_CLIENT,
             ACK_AUTO,
             NUM_ACK_MODES
         };
-        
+
         enum MessageType
         {
             TEXT,
             BYTES,
             NUM_MSG_TYPES
         };
-        
+
         static const char* queuePrefix;
         static const char* topicPrefix;
-        
+
         static const std::string& toString( const CommandId cmd ){
             return StaticInitializer::commands[cmd];
         }
-        
-        static CommandId toCommandId( const std::string& cmd ){     
-            std::map<std::string, CommandId>::iterator iter = 
+
+        static CommandId toCommandId( const std::string& cmd ){
+            std::map<std::string, CommandId>::iterator iter =
                 StaticInitializer::commandMap.find(cmd);
 
             if( iter == StaticInitializer::commandMap.end() ){
                 return NUM_COMMANDS;
             }
-                    
+
             return iter->second;
         }
-        
+
         static bool isCommandId( const std::string& str ){
-            std::map<std::string, CommandId>::iterator iter = 
+            std::map<std::string, CommandId>::iterator iter =
                 StaticInitializer::commandMap.find(str);
 
             return iter != StaticInitializer::commandMap.end();
-        }         
-        
+        }
+
         static std::string toString( const StompHeader header ){
             return StaticInitializer::stompHeaders[header];
         }
-        
-        static StompHeader toStompHeader( const std::string& header ){  
-            
-            std::map<std::string, StompHeader>::iterator iter = 
+
+        static StompHeader toStompHeader( const std::string& header ){
+
+            std::map<std::string, StompHeader>::iterator iter =
                 StaticInitializer::stompHeaderMap.find(header);
 
             if( iter == StaticInitializer::stompHeaderMap.end() ){
                 return NUM_STOMP_HEADERS;
             }
-                    
-            return iter->second;            
+
+            return iter->second;
         }
-        
+
         static bool isStompHeader( const std::string& str ){
-            std::map<std::string, StompHeader>::iterator iter = 
+            std::map<std::string, StompHeader>::iterator iter =
                 StaticInitializer::stompHeaderMap.find(str);
 
             return iter != StaticInitializer::stompHeaderMap.end();
-        }     
-        
+        }
+
         static std::string toString( const AckMode mode ){
             return StaticInitializer::ackModes[mode];
         }
-        
+
         static AckMode toAckMode( const std::string& mode ){
-            std::map<std::string, AckMode>::iterator iter = 
+            std::map<std::string, AckMode>::iterator iter =
                 StaticInitializer::ackModeMap.find(mode);
 
             if( iter == StaticInitializer::ackModeMap.end() ){
                 return NUM_ACK_MODES;
             }
-                    
+
             return iter->second;
-        }  
-         
+        }
+
         static std::string toString( const MessageType type ){
             return StaticInitializer::msgTypes[type];
         }
-        
+
         static MessageType toMessageType( const std::string& type ){
-            std::map<std::string, MessageType>::iterator iter = 
+            std::map<std::string, MessageType>::iterator iter =
                 StaticInitializer::msgTypeMap.find(type);
 
             if( iter == StaticInitializer::msgTypeMap.end() ){
                 return NUM_MSG_TYPES;
             }
-                    
+
             return iter->second;
-        }  
+        }
 
         static cms::Destination* toDestination( const std::string& dest )
             throw ( exceptions::IllegalArgumentException );
@@ -187,7 +185,7 @@ namespace commands{
         public:
             StaticInitializer();
             virtual ~StaticInitializer(){}
-            
+
             static std::string stompHeaders[NUM_STOMP_HEADERS];
             static std::string commands[NUM_COMMANDS];
             static std::string ackModes[NUM_ACK_MODES];
@@ -197,12 +195,12 @@ namespace commands{
             static std::map<std::string, AckMode> ackModeMap;
             static std::map<std::string, MessageType> msgTypeMap;
         };
-        
+
     private:
-    
-        static StaticInitializer staticInits;        
+
+        static StaticInitializer staticInits;
     };
-    
+
 }}}}
 
 #endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_*/
