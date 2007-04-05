@@ -31,7 +31,7 @@
 namespace activemq{
 namespace concurrent{
 
-   class ThreadPoolTest : 
+   class ThreadPoolTest :
       public CppUnit::TestFixture,
       public TaskListener
    {
@@ -45,25 +45,25 @@ namespace concurrent{
       Mutex mutex;
       Mutex completeMutex;
       bool caughtEx;
-      
+
    public:
- 
-   	ThreadPoolTest() 
-      { 
+
+       ThreadPoolTest()
+      {
          complete = 0;
          tasksToComplete = 0;
          caughtEx = false;
       }
-      
-   	virtual ~ThreadPoolTest() {};
-      
+
+       virtual ~ThreadPoolTest() {};
+
       virtual void onTaskComplete(Runnable* task AMQCPP_UNUSED)
       {
         try{
              synchronized(&mutex)
              {
                 complete++;
-                
+
                 if(tasksToComplete == complete)
                 {
                    mutex.notifyAll();
@@ -74,27 +74,27 @@ namespace concurrent{
         }
       }
 
-      virtual void onTaskException(Runnable* task AMQCPP_UNUSED, 
+      virtual void onTaskException(Runnable* task AMQCPP_UNUSED,
         exceptions::ActiveMQException& ex AMQCPP_UNUSED)
       {
          caughtEx = true;
       }
-      
+
    public:
-   
+
       class MyTask : public Runnable
       {
       public:
-      
+
          int value;
-         
+
          MyTask(int x)
          {
             value = x;
          }
-         
+
          virtual ~MyTask() {};
-         
+
          virtual void run(void)
          {
             value += 100;
@@ -104,18 +104,18 @@ namespace concurrent{
       class MyWaitingTask : public Runnable
       {
       public:
-      
+
          Mutex* mutex;
          Mutex* complete;
-         
+
          MyWaitingTask(Mutex* mutex, Mutex* complete)
          {
             this->mutex = mutex;
             this->complete = complete;
          }
-         
+
          virtual ~MyWaitingTask() {};
-         
+
          virtual void run(void)
          {
             try
@@ -138,14 +138,14 @@ namespace concurrent{
       };
 
    public:
-        
+
       void test2()
       {
          try
          {
             ThreadPool pool;
             Mutex myMutex;
-    
+
             CPPUNIT_ASSERT( pool.getMaxThreads() == ThreadPool::DEFAULT_MAX_POOL_SIZE );
             CPPUNIT_ASSERT( pool.getBlockSize() == ThreadPool::DEFAULT_MAX_BLOCK_SIZE );
             pool.setMaxThreads(3);
@@ -156,25 +156,25 @@ namespace concurrent{
             pool.reserve( 4 );
             CPPUNIT_ASSERT( pool.getPoolSize() == 3 );
             CPPUNIT_ASSERT( pool.getFreeThreadCount() == 3 );
-    
+
             MyWaitingTask task1(&myMutex, &completeMutex);
             MyWaitingTask task2(&myMutex, &completeMutex);
             MyWaitingTask task3(&myMutex, &completeMutex);
             MyWaitingTask task4(&myMutex, &completeMutex);
-    
+
             complete = 0;
             tasksToComplete = 4;
-    
+
             pool.queueTask(ThreadPool::Task(&task1, this));
             pool.queueTask(ThreadPool::Task(&task2, this));
             pool.queueTask(ThreadPool::Task(&task3, this));
             pool.queueTask(ThreadPool::Task(&task4, this));
-             
+
             Thread::sleep( 1000 );
-             
+
             CPPUNIT_ASSERT( pool.getFreeThreadCount() == 0 );
             CPPUNIT_ASSERT( pool.getBacklog() == 1 );
-    
+
             int count = 0;
             while(complete != tasksToComplete && count < 100)
             {
@@ -190,7 +190,7 @@ namespace concurrent{
 
                count++;
             }
-    
+
             CPPUNIT_ASSERT( complete == tasksToComplete );
             CPPUNIT_ASSERT( caughtEx == false );
          }
@@ -199,18 +199,18 @@ namespace concurrent{
             ex.setMark( __FILE__, __LINE__ );
          }
       }
-   
+
       void test1()
       {
          MyTask task1(1);
          MyTask task2(2);
          MyTask task3(3);
-         
+
          complete = 0;
          tasksToComplete = 3;
-         
+
          ThreadPool* pool = ThreadPool::getInstance();
-         
+
          // Can't check this here since one of the other tests might
          // have used the global thread pool.
          // CPPUNIT_ASSERT( pool->getPoolSize() == 0 );
@@ -218,15 +218,15 @@ namespace concurrent{
          pool->queueTask(ThreadPool::Task(&task1, this));
          pool->queueTask(ThreadPool::Task(&task2, this));
          pool->queueTask(ThreadPool::Task(&task3, this));
-         
-         Thread::sleep(500);
-         
+
+         Thread::sleep(1000);
+
          CPPUNIT_ASSERT( complete == tasksToComplete );
 
          CPPUNIT_ASSERT( task1.value == 101 );
          CPPUNIT_ASSERT( task2.value == 102 );
          CPPUNIT_ASSERT( task3.value == 103 );
-         
+
          CPPUNIT_ASSERT( pool->getPoolSize() > 0 );
          CPPUNIT_ASSERT( pool->getBacklog() == 0 );
 
@@ -239,11 +239,11 @@ namespace concurrent{
          CPPUNIT_ASSERT( pool->getMaxThreads() == 50 );
          CPPUNIT_ASSERT( pool->getBlockSize() == 50 );
 
-         Thread::sleep(500);
+         Thread::sleep(1000);
 
          CPPUNIT_ASSERT( pool->getFreeThreadCount() == pool->getPoolSize() );
          CPPUNIT_ASSERT( caughtEx == false );
-         
+
       }
    };
 
