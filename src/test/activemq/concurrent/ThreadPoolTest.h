@@ -21,6 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <activemq/concurrent/CountDownLatch.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/ThreadPool.h>
@@ -31,221 +32,104 @@
 namespace activemq{
 namespace concurrent{
 
-   class ThreadPoolTest :
-      public CppUnit::TestFixture,
-      public TaskListener
-   {
-      CPPUNIT_TEST_SUITE( ThreadPoolTest );
-      CPPUNIT_TEST( test1 );
-      CPPUNIT_TEST( test2 );
-      CPPUNIT_TEST_SUITE_END();
+    class ThreadPoolTest :
+        public CppUnit::TestFixture,
+        public TaskListener
+    {
+        CPPUNIT_TEST_SUITE( ThreadPoolTest );
+        CPPUNIT_TEST( test1 );
+        CPPUNIT_TEST( test2 );
+        CPPUNIT_TEST_SUITE_END();
 
-      int tasksToComplete;
-      int complete;
-      Mutex mutex;
-      Mutex completeMutex;
-      bool caughtEx;
+        int tasksToComplete;
+        int complete;
+        Mutex mutex;
+        bool caughtEx;
+        CountDownLatch* latch;
 
-   public:
+    public:
 
-       ThreadPoolTest()
-      {
-         complete = 0;
-         tasksToComplete = 0;
-         caughtEx = false;
-      }
+        ThreadPoolTest() {
+            complete = 0;
+            tasksToComplete = 0;
+            caughtEx = false;
+            latch = NULL;
+        }
 
-       virtual ~ThreadPoolTest() {};
+        virtual ~ThreadPoolTest() {}
 
-      virtual void onTaskComplete(Runnable* task AMQCPP_UNUSED)
-      {
-        try{
-             synchronized(&mutex)
-             {
+        virtual void onTaskComplete(Runnable* task AMQCPP_UNUSED)
+        {
+            try{
+
                 complete++;
 
-                if(tasksToComplete == complete)
-                {
-                   mutex.notifyAll();
+                if( latch != NULL ) {
+                    latch->countDown();
                 }
-             }
-        }catch( exceptions::ActiveMQException& ex ){
-            ex.setMark( __FILE__, __LINE__ );
-        }
-      }
-
-      virtual void onTaskException(Runnable* task AMQCPP_UNUSED,
-        exceptions::ActiveMQException& ex AMQCPP_UNUSED)
-      {
-         caughtEx = true;
-      }
-
-   public:
-
-      class MyTask : public Runnable
-      {
-      public:
-
-         int value;
-
-         MyTask(int x)
-         {
-            value = x;
-         }
-
-         virtual ~MyTask() {};
-
-         virtual void run(void)
-         {
-            value += 100;
-         }
-      };
-
-      class MyWaitingTask : public Runnable
-      {
-      public:
-
-         Mutex* mutex;
-         Mutex* complete;
-
-         MyWaitingTask(Mutex* mutex, Mutex* complete)
-         {
-            this->mutex = mutex;
-            this->complete = complete;
-         }
-
-         virtual ~MyWaitingTask() {};
-
-         virtual void run(void)
-         {
-            try
-            {
-               synchronized(mutex)
-               {
-                  mutex->wait();
-               }
-
-               synchronized(complete)
-               {
-                   complete->notify();
-               }
-            }
-            catch( exceptions::ActiveMQException& ex )
-            {
+            }catch( exceptions::ActiveMQException& ex ){
                 ex.setMark( __FILE__, __LINE__ );
             }
-         }
-      };
+        }
 
-   public:
+        virtual void onTaskException(Runnable* task AMQCPP_UNUSED,
+            exceptions::ActiveMQException& ex AMQCPP_UNUSED) {
+            caughtEx = true;
+        }
 
-      void test2()
-      {
-         try
-         {
-            ThreadPool pool;
-            Mutex myMutex;
+    public:
 
-            CPPUNIT_ASSERT( pool.getMaxThreads() == ThreadPool::DEFAULT_MAX_POOL_SIZE );
-            CPPUNIT_ASSERT( pool.getBlockSize() == ThreadPool::DEFAULT_MAX_BLOCK_SIZE );
-            pool.setMaxThreads(3);
-            pool.setBlockSize(1);
-            CPPUNIT_ASSERT( pool.getMaxThreads() == 3 );
-            CPPUNIT_ASSERT( pool.getBlockSize() == 1 );
-            CPPUNIT_ASSERT( pool.getPoolSize() == 0 );
-            pool.reserve( 4 );
-            CPPUNIT_ASSERT( pool.getPoolSize() == 3 );
-            CPPUNIT_ASSERT( pool.getFreeThreadCount() == 3 );
+        class MyTask : public Runnable
+        {
+        public:
 
-            MyWaitingTask task1(&myMutex, &completeMutex);
-            MyWaitingTask task2(&myMutex, &completeMutex);
-            MyWaitingTask task3(&myMutex, &completeMutex);
-            MyWaitingTask task4(&myMutex, &completeMutex);
+            int value;
 
-            complete = 0;
-            tasksToComplete = 4;
-
-            pool.queueTask(ThreadPool::Task(&task1, this));
-            pool.queueTask(ThreadPool::Task(&task2, this));
-            pool.queueTask(ThreadPool::Task(&task3, this));
-            pool.queueTask(ThreadPool::Task(&task4, this));
-
-            Thread::sleep( 1000 );
-
-            CPPUNIT_ASSERT( pool.getFreeThreadCount() == 0 );
-            CPPUNIT_ASSERT( pool.getBacklog() == 1 );
-
-            int count = 0;
-            while(complete != tasksToComplete && count < 100)
-            {
-               synchronized(&myMutex)
-               {
-                  myMutex.notifyAll();
-               }
-
-               synchronized(&completeMutex)
-               {
-                  completeMutex.wait(1000);
-               }
-
-               count++;
+            MyTask( int x ) {
+                value = x;
             }
 
-            CPPUNIT_ASSERT( complete == tasksToComplete );
-            CPPUNIT_ASSERT( caughtEx == false );
-         }
-         catch( exceptions::ActiveMQException& ex )
-         {
-            ex.setMark( __FILE__, __LINE__ );
-         }
-      }
+            virtual ~MyTask() {};
 
-      void test1()
-      {
-         MyTask task1(1);
-         MyTask task2(2);
-         MyTask task3(3);
+            virtual void run(void) {
+                value += 100;
+            }
+        };
 
-         complete = 0;
-         tasksToComplete = 3;
+        class MyWaitingTask : public Runnable
+        {
+        public:
 
-         ThreadPool* pool = ThreadPool::getInstance();
+            Mutex* mutex;
+            CountDownLatch* startedLatch;
 
-         // Can't check this here since one of the other tests might
-         // have used the global thread pool.
-         // CPPUNIT_ASSERT( pool->getPoolSize() == 0 );
+            MyWaitingTask( Mutex* mutex, CountDownLatch* startedLatch ) {
+                this->mutex = mutex;
+                this->startedLatch = startedLatch;
+            }
 
-         pool->queueTask(ThreadPool::Task(&task1, this));
-         pool->queueTask(ThreadPool::Task(&task2, this));
-         pool->queueTask(ThreadPool::Task(&task3, this));
+            virtual ~MyWaitingTask() {};
 
-         Thread::sleep(1000);
+            virtual void run(void) {
+                try
+                {
+                    synchronized(mutex) {
+                        startedLatch->countDown();
+                        mutex->wait();
+                    }
+                }
+                catch( exceptions::ActiveMQException& ex ) {
+                    ex.setMark( __FILE__, __LINE__ );
+                }
+            }
+        };
 
-         CPPUNIT_ASSERT( complete == tasksToComplete );
+    public:
 
-         CPPUNIT_ASSERT( task1.value == 101 );
-         CPPUNIT_ASSERT( task2.value == 102 );
-         CPPUNIT_ASSERT( task3.value == 103 );
+        virtual void test1();
+        virtual void test2();
 
-         CPPUNIT_ASSERT( pool->getPoolSize() > 0 );
-         CPPUNIT_ASSERT( pool->getBacklog() == 0 );
-
-         CPPUNIT_ASSERT( pool->getMaxThreads() == ThreadPool::DEFAULT_MAX_POOL_SIZE );
-         CPPUNIT_ASSERT( pool->getBlockSize() == ThreadPool::DEFAULT_MAX_BLOCK_SIZE );
-
-         pool->setMaxThreads(50);
-         pool->setBlockSize(50);
-
-         CPPUNIT_ASSERT( pool->getMaxThreads() == 50 );
-         CPPUNIT_ASSERT( pool->getBlockSize() == 50 );
-
-         Thread::sleep(1000);
-
-         CPPUNIT_ASSERT( pool->getFreeThreadCount() == pool->getPoolSize() );
-         CPPUNIT_ASSERT( caughtEx == false );
-
-      }
-   };
+    };
 
 }}
 
