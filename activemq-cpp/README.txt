@@ -16,28 +16,41 @@ The build requires the *libuuid* library that is part of the e2fsprogs
 package and is available from http://e2fsprogs.sourceforge.net/ which is 
 not always installed by default.
 
-1.2 cppunit
+On Fedora, type the following:
+
+  sudo yum install e2fsprogs-devel
+  
+On Debian/Ubuntu, type the following:
+
+  sudo apt-get install uuid-dev
+
+
+1.2 CppUnit
 --------------------------------------------------------------------------
 
-The package contains a complete set of cppunit tests.  In order for you to 
-build an run the tests, you will need to download and install the cppunit 
+The package contains a complete set of CppUnit tests.  In order for you to 
+build an run the tests, you will need to download and install the CppUnit 
 suite.  See http://cppunit.sourceforge.net/cppunit-wiki
 
-or on Fedora type the following:
+On Fedora, type the following:
 
   sudo yum install cppunit
+  
+On Debian/Ubuntu, type the following:
 
-Make sure that the paths to the installed cppunit library and includes are 
+  sudo apt-get install libcppunit-dev
+
+Make sure that the paths to the installed CppUnit library and includes are 
 visible in your current shell before you try building the tests.
 
-Windows users will need to build the cppunit library using the CPPUnit 
+Windows users will need to build the CppUnit library using the CPPUnit 
 MSVC project files. A discussion of the build process can be found 
 on the CPPUnit wiki under 
 http://cppunit.sourceforge.net/cppunit-wiki/BuildingCppUnit1 this covers 
 both MSVC along with many other platforms and tool suites.
 
 
-1.3 GNU Build System (for building on \*nix)
+1.3 GNU Build System (for building on Unix/Linux/OS X/Cygwin)
 --------------------------------------------------------------------------
 
 To Generate the ./configure script use to create the Makefiles, you need 
@@ -49,7 +62,12 @@ autoconf    >= 2.59
 automake    >= 1.9.6
 libtool     >= 1.5.22
 
-2 Building on \*nix (Unix/Linux/OS X/Cygwin)
+On Debian/Ubuntu, multiple versions of autoconf and automake are available
+in separate packages. If you have multiple versions of autoconf or automake
+installed on your system, you may have to configure the versions to use
+using /usr/sbin/update-alternatives.
+
+2 Building on Unix/Linux/OS X/Cygwin
 --------------------------------------------------------------------------
 
 This assumes you have all of the project dependencies installed.  We're 
@@ -76,7 +94,7 @@ This should be run the first time and anytime you change configure.ac or
 any of the Makefile.am files.
 
     -----------------------------------------------------------------------
-    |Solaris 10 Note:  CPP_UNIT might not build until you correct the file| 
+    |Solaris 10 Note:  CppUnit might not build until you correct the file | 
     |  libstdc++.la to contain the correct data, see this discussion:     |
     |  http://forum.sun.com/jive/thread.jspa?threadID=73150               |
     -----------------------------------------------------------------------
@@ -146,7 +164,7 @@ There is an example application that ships with the distribution in
 src/examples.   The example is compiled by default with the "make" 
 command, but can easily be compiled manually using the command:
 
-  g++ -o main -pthread -I ../main main.cpp ../../out/libactivemq-cpp-0_0_2.a -luuid
+  g++ -o main -pthread -I ../main main.cpp ../../out/libactivemq-cpp-2_0.a -luuid
 
 6 Notes for Windows users
 --------------------------------------------------------------------------
