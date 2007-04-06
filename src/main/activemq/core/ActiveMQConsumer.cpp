@@ -362,7 +362,7 @@ void ActiveMQConsumer::beforeMessageIsConsumed( ActiveMQMessage* message ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::afterMessageIsConsumed( ActiveMQMessage* message, 
-    bool messageExpired )
+    bool messageExpired AMQCPP_UNUSED )
 {
     try
     {
