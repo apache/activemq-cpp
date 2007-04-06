@@ -49,7 +49,8 @@ namespace concurrent{
         virtual ~CountDownLatch();
 
         /**
-         * Waits for the Count to be zero, and then
+         * Waits for the Count to be zero, and then returns
+         * @throws CMSException
          */
         virtual void await() throw ( cms::CMSException );
 
