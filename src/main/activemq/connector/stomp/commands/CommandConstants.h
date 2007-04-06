@@ -68,7 +68,6 @@ namespace commands{
             HEADER_PERSISTENT,
             HEADER_REPLYTO,
             HEADER_TYPE,
-            HEADER_AMQMSGTYPE,
             HEADER_DISPATCH_ASYNC,
             HEADER_EXCLUSIVE,
             HEADER_MAXPENDINGMSGLIMIT,
