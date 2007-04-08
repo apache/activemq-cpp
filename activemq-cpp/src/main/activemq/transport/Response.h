@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_RESPONSE_H_
 #define ACTIVEMQ_TRANSPORT_RESPONSE_H_
 
@@ -22,12 +22,18 @@
 
 namespace activemq{
 namespace transport{
-  
+
+    /**
+     * Defines the interface for Response Commands from the Broker, all
+     * responses must implement this interface in order to work in the
+     * transport layer.  Responses are mapped to the Command they are
+     * linked to by a Correlation Id that is set by the Sedning Transport.
+     */
     class Response : public Command{
     public:
-  
+
         virtual ~Response(void) {}
-        
+
         /**
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
@@ -39,9 +45,9 @@ namespace transport{
          * @param corrId
          */
         virtual void setCorrelationId( int corrId ) = 0;
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_RESPONSE_H_*/
