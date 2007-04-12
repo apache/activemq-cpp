@@ -31,7 +31,7 @@ namespace commands{
      * Stomp Command that Represents Acknowledgement of a message
      * receive.  The Ack Command has one required attribute, message
      * Id.  For each message sent to the client from the broker, the
-     * message will not be considered consumed until an Ack is sent.  
+     * message will not be considered consumed until an Ack is sent.
      * Optionally a Transaction Id can be set that indicates that the
      * message acknowledgement should be part of a named transaction.
      */
@@ -39,39 +39,47 @@ namespace commands{
     {
     public:
 
-        AckCommand(void) :
+        AckCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        AckCommand( StompFrame* frame ) : 
+        AckCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        virtual ~AckCommand(void) {}
-      
+        virtual ~AckCommand() {}
+
         /**
          * Get the Message Id of this Command
          * @return the Id of the Message
-         */      
-        virtual std::string getMessageId(void) const{
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual std::string getMessageId() const{
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_MESSAGEID ), "" );
         }
-      
+
         /**
          * Set the Message Id that this Ack is associated with
          * @param messageId the Message Id
          */
         virtual void setMessageId( const std::string& messageId ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_MESSAGEID ),
                 messageId );
         }
 
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new AckCommand( getFrame().clone() );
+        }
+
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -84,7 +92,7 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
@@ -92,14 +100,14 @@ namespace commands{
         virtual bool validate( const StompFrame& frame ) const
         {
             // Make sure the message is an ACK message.
-            bool isAck = frame.getCommand() == 
+            bool isAck = frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ACK );
-                       
+
             // Make sure it has a message ID header.
             bool hasMessageId = frame.getProperties().hasProperty(
-                   CommandConstants::toString( 
+                   CommandConstants::toString(
                        CommandConstants::HEADER_MESSAGEID ) );
-            
+
             if( isAck && hasMessageId )
             {
                 return true;

@@ -27,26 +27,36 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-    
+
     /**
      * Commits a Transaction.
      */
     class CommitCommand  : public AbstractCommand< transport::Command >
     {
     public:
-   
-        CommitCommand(void) :
+
+        CommitCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        CommitCommand( StompFrame* frame ) : 
+
+        CommitCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        virtual ~CommitCommand(void) {}
+
+        virtual ~CommitCommand() {}
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new CommitCommand( getFrame().clone() );
+        }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -59,17 +69,17 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::COMMIT )) &&
                (frame.getProperties().hasProperty(
-                    CommandConstants::toString( 
+                    CommandConstants::toString(
                         CommandConstants::HEADER_TRANSACTIONID ) ) ) )
             {
                 return true;

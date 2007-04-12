@@ -17,7 +17,7 @@
 
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_
- 
+
 #include <string>
 #include <string.h>
 #include <map>
@@ -31,19 +31,19 @@ namespace stomp{
      * A Stomp-level message frame that encloses all messages
      * to and from the broker.
      */
-    class StompFrame{           
+    class StompFrame{
     public:
-    
+
         /**
          * Default constructor.
          */
         StompFrame(){}
-        
+
         /**
          * Destruction.
          */
         virtual ~StompFrame() {}
-        
+
         /**
          * Clonse this message exactly, returns a new instance that the
          * caller is required to delete.
@@ -51,12 +51,22 @@ namespace stomp{
          */
         virtual StompFrame* clone() const {
             StompFrame* frame = new StompFrame();
-            frame->command = command;
-            frame->properties = properties;
-            frame->body = body;
+            frame->copy( this );
             return frame;
         }
-        
+
+        /**
+         * Copies the contents of the passed Frame to this one
+         * @param src - Frame to copy
+         */
+        virtual void copy( const StompFrame* src ) {
+
+            this->setCommand( src->getCommand() );
+            this->properties.copy( &( src->getProperties() ) );
+            // Use the Vectors assignment operator.
+            this->body = src->getBody();
+        }
+
         /**
          * Sets the command for this stomp frame.
          * @param cmd command The command to be set.
@@ -64,23 +74,23 @@ namespace stomp{
         void setCommand( const std::string& cmd ){
             this->command = cmd;
         }
-        
+
         /**
          * Accessor for this frame's command field.
          */
         const std::string& getCommand() const{
             return command;
         }
-        
+
         /**
          * Gets access to the header properties for this frame.
          * @return the Properties object owned by this Frame
          */
         util::Properties& getProperties(){ return properties; }
-        const util::Properties& getProperties() const { 
+        const util::Properties& getProperties() const {
             return properties;
         }
-        
+
         /**
          * Accessor for the body data of this frame.
          * @return char pointer to body data
@@ -88,37 +98,37 @@ namespace stomp{
         const std::vector<unsigned char>& getBody() const{
             return body;
         }
-        
+
         /**
          * Non-const version of the body accessor.
          */
         std::vector<unsigned char>& getBody(){
             return body;
         }
-        
+
         /**
          * Return the number of bytes contained in this frames body
          * @return Body bytes length.
          */
         std::size_t getBodyLength() const{ return body.size(); }
-        
+
         /**
          * Sets the body data of this frame as a byte sequence.
          * @param bytes The byte buffer to be set in the body.
          * @param numBytes The number of bytes in the buffer.
          */
         void setBody( const unsigned char* bytes, std::size_t numBytes ){
-            
+
             // Remove old data
             body.clear();
-           
+
             // Copy data to internal buffer.
             for( std::size_t ix = 0; ix < numBytes; ++ix )
             {
                 body.push_back(bytes[ix]);
             }
-        }   
-        
+        }
+
     private:
 
         // String Name of this command.
@@ -128,9 +138,9 @@ namespace stomp{
         util::SimpleProperties properties;
 
         // Byte data of Body.
-        std::vector<unsigned char> body;         
+        std::vector<unsigned char> body;
     };
-    
+
 }}}
 
 #endif /*ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_*/

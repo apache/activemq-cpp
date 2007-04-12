@@ -27,38 +27,43 @@
 
 namespace activemq{
 namespace transport{
-	
-	class TransportFactoryMapTest : public CppUnit::TestFixture {
-		
-	  CPPUNIT_TEST_SUITE( TransportFactoryMapTest );
-	  CPPUNIT_TEST( test );
-	  CPPUNIT_TEST_SUITE_END();	  
-		
-	public:
-	
-		class TestTransportFactory : public TransportFactory
-		{
-		public:
-		
-		   virtual Transport* createTransport(
-		      const activemq::util::Properties& properties AMQCPP_UNUSED) { return NULL; };
-		};
-        
+
+    class TransportFactoryMapTest : public CppUnit::TestFixture {
+
+        CPPUNIT_TEST_SUITE( TransportFactoryMapTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
+    public:
+
+        class TestTransportFactory : public TransportFactory
+        {
+        public:
+
+            virtual Transport* createTransport(
+                const activemq::util::Properties& properties AMQCPP_UNUSED,
+                Transport* next = NULL,
+                bool own = true ) throw ( exceptions::ActiveMQException ) {
+
+                return NULL;
+            };
+        };
+
         virtual ~TransportFactoryMapTest(){}
-		
-		void test(){
-			
-			TransportFactoryMap& factMap = 
+
+        void test(){
+
+            TransportFactoryMap& factMap =
                 TransportFactoryMap::getInstance();
-			TestTransportFactory testFactory;
-			
-			factMap.registerTransportFactory( "test", &testFactory );
-			
-			CPPUNIT_ASSERT( factMap.lookup( "test" ) == &testFactory );
-			
-			std::vector<std::string> names;
-			CPPUNIT_ASSERT( factMap.getFactoryNames( names ) >= 1 );
-			
+            TestTransportFactory testFactory;
+
+            factMap.registerTransportFactory( "test", &testFactory );
+
+            CPPUNIT_ASSERT( factMap.lookup( "test" ) == &testFactory );
+
+            std::vector<std::string> names;
+            CPPUNIT_ASSERT( factMap.getFactoryNames( names ) >= 1 );
+
             bool found = false;
             for( unsigned int i = 0; i < names.size(); ++i )
             {
@@ -68,13 +73,13 @@ namespace transport{
                     break;
                 }
             }
-			CPPUNIT_ASSERT( found );
-			
-			factMap.unregisterTransportFactory( "test" );
-			CPPUNIT_ASSERT( factMap.lookup( "test" ) == NULL );			
-		}
-	};
-	
+            CPPUNIT_ASSERT( found );
+
+            factMap.unregisterTransportFactory( "test" );
+            CPPUNIT_ASSERT( factMap.lookup( "test" ) == NULL );
+        }
+    };
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPTEST_H_*/

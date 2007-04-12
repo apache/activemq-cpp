@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 #define ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 
@@ -29,7 +29,7 @@
 
 namespace activemq{
 namespace transport{
-  
+
     /**
      * Implementation of the Transport interface that performs
      * marshalling of commands to IO streams.  This class does not
@@ -38,7 +38,7 @@ namespace transport{
      * a command is received, the command listener is notified.  The
      * polling thread is not started until the start method is called.
      * The close method will close the associated streams.  Close can
-     * be called explicitly by the user, but is also called in the 
+     * be called explicitly by the user, but is also called in the
      * destructor.  Once this object has been closed, it cannot be
      * restarted.
      */
@@ -47,53 +47,53 @@ namespace transport{
         public Transport,
         public concurrent::Runnable
     {
-        
+
         LOGCMS_DECLARE( logger )
-        
+
     private:
-        
+
         /**
          * Listener to incoming commands.
          */
         CommandListener* listener;
-        
+
         /**
          * Reads commands from the input stream.
          */
         CommandReader* reader;
-        
+
         /**
          * Writes commands to the output stream.
          */
         CommandWriter* writer;
-        
+
         /**
          * Listener of exceptions from this transport.
          */
         TransportExceptionListener* exceptionListener;
-        
+
         /**
          * The input stream for incoming commands.
          */
         io::InputStream* inputStream;
-        
+
         /**
          * The output stream for out-going commands.
          */
         io::OutputStream* outputStream;
-        
+
         /**
          * The polling thread.
          */
         concurrent::Thread* thread;
-        
+
         /**
          * Flag marking this transport as closed.
          */
         bool closed;
-        
+
     private:
-    
+
         /**
          * Notify the excpetion listener
          * @param ex the exception to send
@@ -101,19 +101,19 @@ namespace transport{
         void fire( exceptions::ActiveMQException& ex ){
 
             if( exceptionListener != NULL ){
-                
+
                 try{
                     exceptionListener->onTransportException( this, ex );
                 }catch( ... ){}
-            }            
+            }
         }
-        
+
         /**
          * Notify the command listener.
          * @param command the command the send
          */
         void fire( Command* command ){
-            
+
             try{
                 // Since the listener is responsible for freeing the memory,
                 // if there is no listener - free the command here.
@@ -121,17 +121,17 @@ namespace transport{
                     delete command;
                     return;
                 }
-                
+
                 listener->onCommand( command );
-                
+
             }catch( ... ){}
         }
-        
+
     public:
-  
+
         IOTransport();
         virtual ~IOTransport();
-        
+
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
@@ -142,7 +142,7 @@ namespace transport{
          * by this transport.
          */
         virtual void oneway( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
-        
+
         /**
          * Not supported by this class - throws an exception.
          * @param command the command to be sent.
@@ -150,7 +150,7 @@ namespace transport{
          * @throws UnsupportedOperationException.
          */
         virtual Response* request( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
-        
+
         /**
          * Assigns the command listener for non-response commands.
          * @param listener the listener.
@@ -158,7 +158,7 @@ namespace transport{
         virtual void setCommandListener( CommandListener* listener ){
             this->listener = listener;
         }
-        
+
         /**
          * Sets the command reader.
          * @param reader the object that will be used for reading command objects.
@@ -166,7 +166,7 @@ namespace transport{
         virtual void setCommandReader( CommandReader* reader ){
             this->reader = reader;
         }
-        
+
         /**
          * Sets the command writer.
          * @param writer the object that will be used for writing command objects.
@@ -174,7 +174,7 @@ namespace transport{
         virtual void setCommandWriter( CommandWriter* writer ){
             this->writer = writer;
         }
-        
+
         /**
          * Sets the observer of asynchronous exceptions from this transport.
          * @param listener the listener of transport exceptions.
@@ -182,7 +182,7 @@ namespace transport{
         virtual void setTransportExceptionListener( TransportExceptionListener* listener ){
             this->exceptionListener = listener;
         }
-        
+
         /**
          * Sets the input stream for in-coming commands.
          * @param is The input stream.
@@ -190,7 +190,7 @@ namespace transport{
         virtual void setInputStream( io::InputStream* is ){
             this->inputStream = is;
         }
-        
+
         /**
          * Sets the output stream for out-going commands.
          * @param os The output stream.
@@ -198,7 +198,7 @@ namespace transport{
         virtual void setOutputStream( io::OutputStream* os ){
             this->outputStream = os;
         }
-        
+
         /**
          * Starts this transport object and creates the thread for
          * polling on the input stream for commands.  If this object
@@ -209,7 +209,7 @@ namespace transport{
          * has already been closed.
          */
         virtual void start() throw( cms::CMSException );
-        
+
         /**
          * Stops the polling thread and closes the streams.  This can
          * be called explicitly, but is also called in the destructor. Once
@@ -217,14 +217,14 @@ namespace transport{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException );
-        
+
         /**
          * Runs the polling thread.
          */
         virtual void run();
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_*/

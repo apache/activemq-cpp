@@ -18,15 +18,11 @@
 
 #include <activemq/util/Guid.h>
 #include <activemq/util/SimpleProperties.h>
-#include <activemq/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/network/SocketFactory.h>
-#include <activemq/transport/TransportFactoryMap.h>
-#include <activemq/network/Socket.h>
+#include <activemq/transport/TransportBuilder.h>
 #include <activemq/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/util/StringTokenizer.h>
 #include <activemq/support/LibraryInit.h>
 
 using namespace std;
@@ -35,7 +31,6 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::network;
 using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +95,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     ActiveMQConnectionData* connectionData = NULL;
     ActiveMQConnection* connection = NULL;
     std::string clientIdLocal = clientId;
+    TransportBuilder transportBuilder;
 
     try
     {
@@ -122,23 +118,9 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
             ActiveMQConstants::toString(
                 ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
 
-        // Parse out the properties from the URI
-        parseURL( url, *properties );
+        // Use the TransportBuilder to get our Transport
+        transport = transportBuilder.buildTransport( url, *properties );
 
-        // Create the Transport that the Connector will use.
-        string factoryName =
-            properties->getProperty( "transport", "tcp" );
-        TransportFactory* factory =
-            TransportFactoryMap::getInstance().lookup( factoryName );
-        if( factory == NULL ){
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "unknown transport factory" );
-        }
-
-        // Create the transport.
-        transport = factory->createTransport( *properties );
         if( transport == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
@@ -210,63 +192,4 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         throw ex;
     }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactory::parseURL( const std::string& URI,
-                                          Properties& properties )
-    throw ( exceptions::IllegalArgumentException )
-{
-    try
-    {
-        StringTokenizer tokenizer( URI, ":/" );
-
-        std::vector<std::string> tokens;
-
-        // Require that there be three tokens at the least, these are
-        // transport, url, port.
-        if( tokenizer.countTokens() < 3 )
-        {
-            throw exceptions::IllegalArgumentException(
-                __FILE__, __LINE__,
-                (string( "ActiveMQConnectionFactory::parseURL - "
-                         "Marlformed URI: ") + URI).c_str() );
-        }
-
-        // First element should be the Transport Type, following that is the
-        // URL and any params.
-        properties.setProperty( "transport", tokenizer.nextToken() );
-
-        // Parse URL and Port as one item, optional params follow the ?
-        // and then each param set is delimited with & we extract first
-        // three chars as they are the left over ://
-        properties.setProperty( "uri", tokenizer.nextToken("&?").substr(3) );
-
-        // Now get all the optional parameters and store them as properties
-        int count = tokenizer.toArray( tokens );
-
-        for( int i = 0; i < count; ++i )
-        {
-            tokenizer.reset( tokens[i], "=" );
-
-            if( tokenizer.countTokens() != 2 )
-            {
-                throw exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__,
-                    ( string( "ActiveMQConnectionFactory::parseURL - "
-                              "Marlformed Parameter = " ) + tokens[i] ).c_str() );
-            }
-
-            // Get them in order, passing both as nextToken calls in the
-            // set Property can cause reversed order.
-            string key   = tokenizer.nextToken();
-            string value = tokenizer.nextToken();
-
-            // Store this param as a property
-            properties.setProperty( key, value );
-        }
-    }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
 }

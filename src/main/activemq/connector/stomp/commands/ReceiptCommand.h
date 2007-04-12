@@ -34,24 +34,34 @@ namespace commands{
     class ReceiptCommand : public AbstractCommand< transport::Response >
     {
     public:
-   
-        ReceiptCommand(void) :
+
+        ReceiptCommand() :
             AbstractCommand<transport::Response>() {
                 initialize( getFrame() );
         }
-        ReceiptCommand( StompFrame* frame ) : 
+
+        ReceiptCommand( StompFrame* frame ) :
             AbstractCommand<transport::Response>( frame ) {
                 validate( getFrame() );
         }
+
         virtual ~ReceiptCommand(void) {}
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new ReceiptCommand( getFrame().clone() );
+        }
 
         /**
          * Get the receipt id
          * @returns the message id
-         */      
-        virtual std::string getReceiptId(void) const{
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual std::string getReceiptId() const{
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_RECEIPTID ), "" );
         }
 
@@ -60,14 +70,14 @@ namespace commands{
          * @param id the receipt id
          */
         virtual void setReceiptId( const std::string& id ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_RECEIPTID ),
                 id );
         }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -80,17 +90,17 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::RECEIPT )) &&
                (frame.getProperties().hasProperty(
-                    CommandConstants::toString( 
+                    CommandConstants::toString(
                         CommandConstants::HEADER_RECEIPTID ) ) ) )
             {
                 return true;

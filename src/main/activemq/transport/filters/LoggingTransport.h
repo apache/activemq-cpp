@@ -14,42 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef ACTIVEMQ_TRANSPORT_LOGGINGTRANSPORT_H_
-#define ACTIVEMQ_TRANSPORT_LOGGINGTRANSPORT_H_
+
+#ifndef ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_
+#define ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/logger/LoggerDefines.h>
 
-namespace activemq {
-namespace transport {
-    
+namespace activemq{
+namespace transport{
+namespace filters{
+
     /**
      * A transport filter that logs commands as they are sent/received.
      */
     class LoggingTransport : public TransportFilter
-    { 
+    {
     private:
-    
-        LOGCMS_DECLARE(logger) 
-        
+
+        LOGCMS_DECLARE( logger )
+
     public:
-  
+
         /**
          * Constructor.
          * @param next - the next Transport in the chain
          * @param own - true if this filter owns the next and should delete it
          */
-        LoggingTransport( Transport* next, const bool own = true );
-        
-        virtual ~LoggingTransport(){};
-        
+        LoggingTransport( Transport* next, bool own = true );
+
+        virtual ~LoggingTransport() {}
+
         /**
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
         virtual void onCommand( Command* command );
-        
+
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
@@ -60,7 +61,7 @@ namespace transport {
          * by this transport.
          */
         virtual void oneway( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException);
-        
+
         /**
          * Not supported by this class - throws an exception.
          * @param command the command that is sent as a request
@@ -69,6 +70,7 @@ namespace transport {
         virtual Response* request( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException);
 
     };
-    
-}}
-#endif /*ACTIVEMQ_TRANSPORT_LOGGINGTRANSPORT_H_*/
+
+}}}
+
+#endif /*ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_*/

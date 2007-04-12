@@ -15,29 +15,35 @@
  * limitations under the License.
  */
 
-#include "IOTransportFactory.h"
-#include <activemq/util/Config.h>
-#include <activemq/transport/IOTransport.h>
+#include "AsyncSendTransportFactory.h"
+
+#include <activemq/transport/filters/AsyncSendTransport.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::filters;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* IOTransportFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
-    Transport* next AMQCPP_UNUSED,
-    bool own AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+TransportFactory& AsyncSendTransportFactory::getInstance(void)
+{
+    // Create the one and only instance of the registrar
+    static TransportFactoryMapRegistrar registrar(
+        "transport.filters.AsyncSendTransport",
+        new AsyncSendTransportFactory() );
 
-    // IO is the Base Tranport, it can have no next.
-    return new IOTransport();
+    return registrar.getFactory();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& IOTransportFactory::getInstance() {
+Transport* AsyncSendTransportFactory::createTransport(
+    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    Transport* next,
+    bool own ) throw ( ActiveMQException ) {
 
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "transport.IOTransport", new IOTransportFactory() );
-
-    return registrar.getFactory();
+    try{
+        return new AsyncSendTransport( next, own );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

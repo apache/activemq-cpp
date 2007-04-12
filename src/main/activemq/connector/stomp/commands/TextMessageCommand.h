@@ -45,7 +45,15 @@ namespace commands{
         virtual ~TextMessageCommand() {}
 
         /**
-         * Clonse this message exactly, returns a new instance that the
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return dynamic_cast<StompCommand*>( this->clone() );
+        }
+
+        /**
+         * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */

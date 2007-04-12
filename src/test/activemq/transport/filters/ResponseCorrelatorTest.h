@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_COMMANDS_RESPONSECORRELATORTEST_H_
-#define ACTIVEMQ_COMMANDS_RESPONSECORRELATORTEST_H_
+#ifndef ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_
+#define ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/transport/ResponseCorrelator.h>
+#include <activemq/transport/filters/ResponseCorrelator.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
@@ -30,6 +30,7 @@
 
 namespace activemq{
 namespace transport{
+namespace filters{
 
     class ResponseCorrelatorTest : public CppUnit::TestFixture {
 
@@ -38,70 +39,85 @@ namespace transport{
         CPPUNIT_TEST( testOneway );
         CPPUNIT_TEST( testTransportException );
         CPPUNIT_TEST( testMultiRequests );
-        CPPUNIT_TEST_SUITE_END();    
-    
+        CPPUNIT_TEST_SUITE_END();
+
     public:
-    
+
         class MyCommand : public Command{
         private:
-        
+
             unsigned int commandId;
             bool responseRequired;
-            
+
         public:
-        
+
             virtual void setCommandId( int id ){
                 commandId = id;
             }
             virtual int getCommandId() const{
                 return commandId;
             }
-            
+
             virtual void setResponseRequired( const bool required ){
                 responseRequired = required;
             }
             virtual bool isResponseRequired() const{
                 return responseRequired;
             }
-            
+
             virtual std::string toString() const{ return ""; }
+
+            virtual Command* cloneCommand() const{
+                MyCommand* command = new MyCommand;
+                command->commandId = commandId;
+                command->responseRequired = responseRequired;
+                return command;
+            }
         };
-        
+
         class MyResponse : public Response{
         private:
-        
+
             unsigned int commandId;
             bool responseRequired;
             unsigned int corrId;
-            
+
         public:
-        
+
             virtual void setCommandId( int id ){
                 commandId = id;
             }
             virtual int getCommandId() const{
                 return commandId;
             }
-            
+
             virtual void setResponseRequired( const bool required ){
                 responseRequired = required;
             }
             virtual bool isResponseRequired() const{
                 return responseRequired;
             }
-        
+
             virtual int getCorrelationId() const{
                 return corrId;
             }
             virtual void setCorrelationId( int corrId ){
                 this->corrId = corrId;
             }
-            
+
             virtual std::string toString() const{ return ""; }
+
+            virtual Command* cloneCommand() const{
+                MyResponse* command = new MyResponse;
+                command->commandId = commandId;
+                command->responseRequired = responseRequired;
+                command->corrId = corrId;
+                return command;
+            }
         };
-        
-        class MyTransport 
-        : 
+
+        class MyTransport
+        :
             public Transport,
             public concurrent::Runnable{
         public:
@@ -114,9 +130,9 @@ namespace transport{
             concurrent::Mutex startedMutex;
             bool done;
             std::queue<Command*> requests;
-            
+
         public:
-        
+
             MyTransport(){
                 reader = NULL;
                 writer = NULL;
@@ -125,13 +141,13 @@ namespace transport{
                 thread = NULL;
                 done = false;
             }
-            
+
             virtual ~MyTransport(){
-                
+
                 close();
             }
-            
-            virtual void oneway( Command* command ) 
+
+            virtual void oneway( Command* command )
                 throw(CommandIOException, exceptions::UnsupportedOperationException)
             {
                 synchronized( &mutex ){
@@ -139,48 +155,48 @@ namespace transport{
                     mutex.notifyAll();
                 }
             }
-            
-            virtual Response* request( Command* command AMQCPP_UNUSED) 
+
+            virtual Response* request( Command* command AMQCPP_UNUSED)
                 throw(CommandIOException, exceptions::UnsupportedOperationException)
             {
-                throw exceptions::UnsupportedOperationException( 
-                    __FILE__, 
-                    __LINE__, 
+                throw exceptions::UnsupportedOperationException(
+                    __FILE__,
+                    __LINE__,
                     "stuff" );
             }
-            
+
             virtual void setCommandListener( CommandListener* listener ){
                 this->listener = listener;
             }
-            
+
             virtual void setCommandReader( CommandReader* reader ){
                 this->reader = reader;
             }
-            
+
             virtual void setCommandWriter( CommandWriter* writer ){
                 this->writer = writer;
             }
-            
-            virtual void setTransportExceptionListener( 
+
+            virtual void setTransportExceptionListener(
                 TransportExceptionListener* listener )
             {
                 this->exListener = listener;
             }
-            
+
             virtual void start() throw( cms::CMSException ){
                 close();
-                
+
                 done = false;
-                
+
                 thread = new concurrent::Thread( this );
                 thread->start();
             }
-            
+
             virtual void close() throw( cms::CMSException ){
-                
+
                 done = true;
-                
-                if( thread != NULL ){                    
+
+                if( thread != NULL ){
                     synchronized( &mutex ){
                         mutex.notifyAll();
                     }
@@ -189,17 +205,17 @@ namespace transport{
                     thread = NULL;
                 }
             }
-            
+
             virtual Response* createResponse( Command* command ){
-                
+
                 MyResponse* resp = new MyResponse();
                 resp->setCorrelationId( command->getCommandId() );
                 resp->setResponseRequired( false );
                 return resp;
             }
-            
+
             virtual void run(){
-                
+
                 try{
 
                     synchronized(&startedMutex)
@@ -208,24 +224,24 @@ namespace transport{
                     }
 
                     synchronized( &mutex ){
-                        
+
                         while( !done ){
-                            
+
                             if( requests.empty() ){
                                 mutex.wait();
                             }else{
-                                
+
                                 Command* cmd = requests.front();
                                 requests.pop();
-                                
+
                                 // Only send a response if one is required.
                                 Response* resp = NULL;
                                 if( cmd->isResponseRequired() ){
                                     resp = createResponse( cmd );
                                 }
-                                
+
                                 mutex.unlock();
-                                
+
                                 // Send both the response and the original
                                 // command back to the correlator.
                                 if( listener != NULL ){
@@ -234,7 +250,7 @@ namespace transport{
                                     }
                                     listener->onCommand( cmd );
                                 }
-                                
+
                                 mutex.lock();
                             }
                         }
@@ -244,7 +260,7 @@ namespace transport{
                         exListener->onTransportException( this, ex );
                     }
                 }
-                catch( ... ){                    
+                catch( ... ){
                     if( exListener ){
                         exceptions::ActiveMQException ex( __FILE__, __LINE__, "stuff" );
                         exListener->onTransportException( this, ex );
@@ -252,47 +268,47 @@ namespace transport{
                 }
             }
         };
-        
+
         class MyBrokenTransport : public MyTransport{
         public:
-        
-            MyBrokenTransport(){}            
+
+            MyBrokenTransport(){}
             virtual ~MyBrokenTransport(){}
-            
-            virtual Response* createResponse( Command* command AMQCPP_UNUSED){                
+
+            virtual Response* createResponse( Command* command AMQCPP_UNUSED){
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "bad stuff" );
             }
         };
-        
-        class MyListener 
-        : 
+
+        class MyListener
+        :
             public CommandListener,
             public TransportExceptionListener{
-                
+
         public:
-            
+
             int exCount;
             std::set<int> commands;
             concurrent::Mutex mutex;
-            
+
         public:
-        
+
             MyListener(){
                 exCount = 0;
             }
             virtual ~MyListener(){}
             virtual void onCommand( Command* command ){
-                
+
                 synchronized( &mutex ){
                     commands.insert( command->getCommandId() );
 
-                    mutex.notify(); 
+                    mutex.notify();
                 }
             }
-            
-            virtual void onTransportException( 
-                Transport* source AMQCPP_UNUSED, 
+
+            virtual void onTransportException(
+                Transport* source AMQCPP_UNUSED,
                 const exceptions::ActiveMQException& ex AMQCPP_UNUSED)
             {
                 synchronized( &mutex ){
@@ -300,50 +316,50 @@ namespace transport{
                 }
             }
         };
-        
+
         class RequestThread : public concurrent::Thread{
         public:
-        
+
             Transport* transport;
             MyCommand cmd;
             Response* resp;
         public:
-        
+
             RequestThread(){
                 transport = NULL;
                 resp = NULL;
             }
             virtual ~RequestThread(){
                 join();
-                
+
                 if( resp != NULL ){
                     delete resp;
                     resp = NULL;
                 }
             }
-            
+
             void setTransport( Transport* transport ){
                 this->transport = transport;
             }
-            
+
             void run(){
-                
-                try{                    
-                    resp = transport->request(&cmd);                    
+
+                try{
+                    resp = transport->request(&cmd);
                 }catch( ... ){
                     CPPUNIT_ASSERT( false );
                 }
             }
         };
-        
+
     public:
 
         virtual ~ResponseCorrelatorTest(){}
-        
+
         void testBasics(){
-            
+
             try{
-                
+
                 MyListener listener;
                 MyTransport transport;
                 ResponseCorrelator correlator( &transport, false );
@@ -351,7 +367,7 @@ namespace transport{
                 correlator.setTransportExceptionListener( &listener );
                 CPPUNIT_ASSERT( transport.listener == &correlator );
                 CPPUNIT_ASSERT( transport.exListener == &correlator );
-                
+
                 // Give the thread a little time to get up and running.
                 synchronized(&transport.startedMutex)
                 {
@@ -359,35 +375,35 @@ namespace transport{
                     correlator.start();
                     transport.startedMutex.wait();
                 }
-                
+
                 // Send one request.
                 MyCommand cmd;
                 Response* resp = correlator.request( &cmd );
                 CPPUNIT_ASSERT( resp != NULL );
                 CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
-                
+
                 // Wait to get the message back asynchronously.
                 concurrent::Thread::sleep( 100 );
-                
+
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
                 // it is the original command.
-                CPPUNIT_ASSERT( listener.commands.size() == 1 );                
+                CPPUNIT_ASSERT( listener.commands.size() == 1 );
                 CPPUNIT_ASSERT( listener.exCount == 0 );
-                
+
                 correlator.close();
-                
+
                 // Destroy the response.
                 delete resp;
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
-        
+
         void testOneway(){
-            
+
             try{
-                
+
                 MyListener listener;
                 MyTransport transport;
                 ResponseCorrelator correlator( &transport, false );
@@ -395,40 +411,40 @@ namespace transport{
                 correlator.setTransportExceptionListener( &listener );
                 CPPUNIT_ASSERT( transport.listener == &correlator );
                 CPPUNIT_ASSERT( transport.exListener == &correlator );
-                
+
                 // Give the thread a little time to get up and running.
                 synchronized(&transport.startedMutex)
                 {
                     // Start the transport.
-                    correlator.start(); 
-                    
+                    correlator.start();
+
                     transport.startedMutex.wait();
                 }
-                
+
                 // Send many oneway request (we'll get them back asynchronously).
                 const unsigned int numCommands = 1000;
-                MyCommand commands[numCommands];                
+                MyCommand commands[numCommands];
                 for( unsigned int ix=0; ix<numCommands; ix++ ){
                     correlator.oneway( &commands[ix] );
                 }
-                
+
                 // Give the thread a little time to get all the messages back.
                 concurrent::Thread::sleep( 500 );
-                
+
                 // Make sure we got them all back.
                 CPPUNIT_ASSERT( listener.commands.size() == numCommands );
                 CPPUNIT_ASSERT( listener.exCount == 0 );
-                
+
                 correlator.close();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
-        
+
         void testTransportException(){
-            
+
             try{
-                
+
                 MyListener listener;
                 MyBrokenTransport transport;
                 ResponseCorrelator correlator( &transport, false );
@@ -436,17 +452,17 @@ namespace transport{
                 correlator.setTransportExceptionListener( &listener );
                 CPPUNIT_ASSERT( transport.listener == &correlator );
                 CPPUNIT_ASSERT( transport.exListener == &correlator );
-                
+
                 // Give the thread a little time to get up and running.
                 synchronized(&transport.startedMutex)
                 {
                     // Start the transport.
                     correlator.start();
-                    
+
                     transport.startedMutex.wait();
                 }
-                
-                // Send one request.                
+
+                // Send one request.
                 MyCommand cmd;
                 try{
                     correlator.request( &cmd );
@@ -454,26 +470,26 @@ namespace transport{
                 }catch( CommandIOException& ex ){
                     // Expected.
                 }
-                
+
                 // Wait to make sure we get the asynchronous message back.
                 concurrent::Thread::sleep( 200 );
-                
+
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
                 // it is the original command.
-                CPPUNIT_ASSERT( listener.commands.size() == 0 );                
+                CPPUNIT_ASSERT( listener.commands.size() == 0 );
                 CPPUNIT_ASSERT( listener.exCount == 1 );
-                
+
                 correlator.close();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
-        
+
         void testMultiRequests(){
-            
+
             try{
-                
+
                 MyListener listener;
                 MyTransport transport;
                 ResponseCorrelator correlator( &transport, false );
@@ -481,19 +497,19 @@ namespace transport{
                 correlator.setTransportExceptionListener( &listener );
                 CPPUNIT_ASSERT( transport.listener == &correlator );
                 CPPUNIT_ASSERT( transport.exListener == &correlator );
-                
+
                 // Start the transport.
-                correlator.start();                               
-                
+                correlator.start();
+
                 // Make sure the start command got down to the thread.
                 CPPUNIT_ASSERT( transport.thread != NULL );
-                
+
                 // Give the thread a little time to get up and running.
                 synchronized(&transport.startedMutex)
                 {
                     transport.startedMutex.wait(500);
                 }
-                
+
                 // Start all the requester threads.
                 const unsigned int numRequests = 100;
                 RequestThread requesters[numRequests];
@@ -501,7 +517,7 @@ namespace transport{
                     requesters[ix].setTransport( &correlator );
                     requesters[ix].start();
                 }
-                
+
                 // Make sure we got all the responses and that they were all
                 // what we expected.
                 for( unsigned int ix=0; ix<numRequests; ++ix ){
@@ -530,16 +546,16 @@ namespace transport{
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
                 // it is the original command.
-                CPPUNIT_ASSERT( listener.commands.size() == numRequests );                
+                CPPUNIT_ASSERT( listener.commands.size() == numRequests );
                 CPPUNIT_ASSERT( listener.exCount == 0 );
-                
+
                 correlator.close();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
     };
-    
-}}
 
-#endif /*ACTIVEMQ_COMMANDS_RESPONSECORRELATORTEST_H_*/
+}}}
+
+#endif /*ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_*/

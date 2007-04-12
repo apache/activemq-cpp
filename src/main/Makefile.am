@@ -74,14 +74,19 @@ cc_sources = \
     activemq/network/SocketOutputStream.cpp \
     activemq/network/SocketFactory.cpp \
     activemq/network/SocketError.cpp \
-    activemq/transport/IOTransportFactory.cpp \
-    activemq/transport/ResponseCorrelator.cpp \
-    activemq/transport/TcpTransport.cpp \
-    activemq/transport/IOTransport.cpp \
+    activemq/transport/TransportBuilder.cpp \
     activemq/transport/TransportFactoryMap.cpp \
-    activemq/transport/TcpTransportFactory.cpp \
     activemq/transport/TransportFilter.cpp \
-    activemq/transport/LoggingTransport.cpp \
+    activemq/transport/IOTransportFactory.cpp \
+    activemq/transport/IOTransport.cpp \
+    activemq/transport/filters/ResponseCorrelator.cpp \
+    activemq/transport/filters/ResponseCorrelatorFactory.cpp \
+    activemq/transport/filters/AsyncSendTransport.cpp \
+    activemq/transport/filters/AsyncSendTransportFactory.cpp \
+    activemq/transport/filters/TcpTransport.cpp \
+    activemq/transport/filters/TcpTransportFactory.cpp \
+    activemq/transport/filters/LoggingTransport.cpp \
+    activemq/transport/filters/LoggingTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
     activemq/util/Endian.cpp \
@@ -236,25 +241,30 @@ h_sources = \
     activemq/network/SocketOutputStream.h \
     activemq/network/SocketFactory.h \
     activemq/network/SocketError.h \
-    activemq/transport/IOTransportFactory.h \
+    activemq/transport/TransportBuilder.h \
     activemq/transport/Transport.h \
+    activemq/transport/TransportFilter.h \
     activemq/transport/TransportFactory.h \
-    activemq/transport/CommandListener.h \
-    activemq/transport/ResponseCorrelator.h \
-    activemq/transport/IOTransport.h \
-    activemq/transport/TcpTransport.h \
     activemq/transport/TransportExceptionListener.h \
-    activemq/transport/CommandReader.h \
-    activemq/transport/TcpTransportFactory.h \
-    activemq/transport/Command.h \
-    activemq/transport/CommandWriter.h \
     activemq/transport/TransportFactoryMapRegistrar.h \
     activemq/transport/TransportFactoryMap.h \
-    activemq/transport/FutureResponse.h \
     activemq/transport/Response.h \
+    activemq/transport/Command.h \
+    activemq/transport/CommandListener.h \
+    activemq/transport/CommandReader.h \
+    activemq/transport/CommandWriter.h \
     activemq/transport/CommandIOException.h \
-    activemq/transport/TransportFilter.h \
-    activemq/transport/LoggingTransport.h \
+    activemq/transport/IOTransportFactory.h \
+    activemq/transport/IOTransport.h \
+    activemq/transport/filters/FutureResponse.h \
+    activemq/transport/filters/ResponseCorrelator.h \
+    activemq/transport/filters/ResponseCorrelatorFactory.h \
+    activemq/transport/filters/AsyncSendTransport.h \
+    activemq/transport/filters/AsyncSendTransportFactory.h \
+    activemq/transport/filters/TcpTransport.h \
+    activemq/transport/filters/TcpTransportFactory.h \
+    activemq/transport/filters/LoggingTransport.h \
+    activemq/transport/filters/LoggingTransportFactory.h \
     activemq/util/Endian.h \
     activemq/util/Number.h \
     activemq/util/Config.h \

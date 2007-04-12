@@ -106,6 +106,7 @@ namespace transport{
          */
         virtual void setTransportExceptionListener(
             TransportExceptionListener* listener ) = 0;
+
     };
 
 }}

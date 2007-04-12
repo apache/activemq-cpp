@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
 
@@ -24,7 +24,7 @@
 
 namespace activemq{
 namespace transport{
-    
+
     /**
      * Interface for an object responsible for reading a command
      * from an input stream.
@@ -32,19 +32,19 @@ namespace transport{
     class CommandReader : public io::Reader
     {
     public:
-  
+
         virtual ~CommandReader(){}
-        
+
         /**
          * Reads a command from the given input stream.
          * @return The next command available on the stream.
          * @throws CommandIOException if a problem occurs during the read.
          */
-        virtual Command* readCommand() 
+        virtual Command* readCommand()
             throw ( CommandIOException ) = 0;
 
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_COMMANDS_COMMANDREADER_H_*/

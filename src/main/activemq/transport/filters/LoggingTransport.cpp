@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -14,75 +14,75 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "LoggingTransport.h"
- 
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::filters;
 
-LOGCMS_INITIALIZE( logger, LoggingTransport, "activemq.io.LoggingTransport")
+LOGCMS_INITIALIZE( logger, LoggingTransport, "activemq.transport.filters.LoggingTransport")
 
-//////////////////////////////////////////////////////////////////////////////// 
-LoggingTransport::LoggingTransport( Transport* next, const bool own )
-:
-    TransportFilter( next, own )
-{
-}
+////////////////////////////////////////////////////////////////////////////////
+LoggingTransport::LoggingTransport( Transport* next, bool own )
+ :  TransportFilter( next, own )
+{}
 
-//////////////////////////////////////////////////////////////////////////////// 
+////////////////////////////////////////////////////////////////////////////////
 void LoggingTransport::onCommand( Command* command ) {
-    
+
     ostringstream ostream;
     ostream << "*** BEGIN RECEIVED ASYNCHRONOUS COMMAND ***" << endl;
     ostream << command->toString() << endl;
     ostream << "*** END RECEIVED ASYNCHRONOUS COMMAND ***";
-    
-    LOGCMS_INFO( logger, ostream.str() );  
-    
+
+    LOGCMS_INFO( logger, ostream.str() );
+
     // Delegate to the base class.
     TransportFilter::onCommand( command );
 }
-   
-////////////////////////////////////////////////////////////////////////////////      
-void LoggingTransport::oneway( Command* command ) 
-    throw(CommandIOException, exceptions::UnsupportedOperationException) 
-{
+
+////////////////////////////////////////////////////////////////////////////////
+void LoggingTransport::oneway( Command* command )
+    throw(CommandIOException, exceptions::UnsupportedOperationException) {
+
     try {
+
         ostringstream ostream;
         ostream << "*** BEGIN SENDING ONEWAY COMMAND ***" << endl;
         ostream << command->toString() << endl;
         ostream << "*** END SENDING ONEWAY COMMAND ***";
-        
-        LOGCMS_INFO( logger, ostream.str() );  
-        
+
+        LOGCMS_INFO( logger, ostream.str() );
+
         // Delegate to the base class.
         TransportFilter::oneway( command );
-    } 
+    }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
-   
-////////////////////////////////////////////////////////////////////////////////      
-Response* LoggingTransport::request( Command* command ) 
-    throw(CommandIOException, exceptions::UnsupportedOperationException)
-{
-    try {        
-        
+
+////////////////////////////////////////////////////////////////////////////////
+Response* LoggingTransport::request( Command* command )
+    throw(CommandIOException, exceptions::UnsupportedOperationException) {
+
+    try {
+
         // Delegate to the base class.
         Response* response = TransportFilter::request( command );
-        
+
         ostringstream ostream;
         ostream << "*** SENDING REQUEST COMMAND ***" << endl;
         ostream << command->toString() << endl;
         ostream << "*** RECEIVED RESPONSE COMMAND ***" << endl;
         ostream << ( response == NULL? "NULL" : response->toString() );
-        
+
         LOGCMS_INFO( logger, ostream.str() );
-        
+
         return response;
-    } 
+    }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
     AMQ_CATCHALL_THROW( CommandIOException )

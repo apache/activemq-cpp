@@ -35,15 +35,25 @@ namespace commands{
     {
     public:
    
-        ConnectedCommand(void) :
+        ConnectedCommand() :
             AbstractCommand< transport::Response >() {
                 initialize( getFrame() );
         }
+
         ConnectedCommand( StompFrame* frame ) : 
             AbstractCommand< transport::Response >( frame ) {
                 validate( getFrame() );
         }
-        virtual ~ConnectedCommand(void) {}
+
+        virtual ~ConnectedCommand() {}
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new ConnectedCommand( getFrame().clone() );
+        }
 
         /**
          * Sets the Correlation Id if this Command

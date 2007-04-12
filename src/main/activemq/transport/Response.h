@@ -32,7 +32,7 @@ namespace transport{
     class Response : public Command{
     public:
 
-        virtual ~Response(void) {}
+        virtual ~Response() {}
 
         /**
          * Gets the Correlation Id that is associated with this message

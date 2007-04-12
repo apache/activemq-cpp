@@ -19,11 +19,14 @@
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::filters;
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int ResponseCorrelator::getNextCommandId() throw ( exceptions::ActiveMQException ){
+unsigned int ResponseCorrelator::getNextCommandId()
+    throw ( exceptions::ActiveMQException ){
 
     try{
+
         synchronized( &commandIdMutex ){
             return ++nextCommandId;
         }
@@ -37,7 +40,7 @@ unsigned int ResponseCorrelator::getNextCommandId() throw ( exceptions::ActiveMQ
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::ResponseCorrelator( Transport* next, const bool own )
+ResponseCorrelator::ResponseCorrelator( Transport* next, bool own )
 :
     TransportFilter( next, own )
 {
@@ -72,8 +75,7 @@ void ResponseCorrelator::setMaxResponseWaitTime( const unsigned long millisecond
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelator::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException )
-{
+    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( getNextCommandId() );
@@ -94,8 +96,7 @@ void ResponseCorrelator::oneway( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* ResponseCorrelator::request( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException )
-{
+    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( getNextCommandId() );
@@ -155,7 +156,7 @@ Response* ResponseCorrelator::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::onCommand( Command* command ){
+void ResponseCorrelator::onCommand( Command* command ) {
 
     // Let's see if the incoming command is a response.
     Response* response =
@@ -198,19 +199,7 @@ void ResponseCorrelator::onCommand( Command* command ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::setCommandListener( CommandListener* listener ){
-    this->commandlistener = listener;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::setTransportExceptionListener(
-    TransportExceptionListener* listener )
-{
-    this->exceptionListener = listener;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::start() throw( cms::CMSException ){
+void ResponseCorrelator::start() throw( cms::CMSException ) {
 
     /**
      * We're already started.

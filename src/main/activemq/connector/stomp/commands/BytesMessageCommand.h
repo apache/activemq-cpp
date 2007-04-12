@@ -100,6 +100,14 @@ namespace commands{
         virtual ~BytesMessageCommand() {}
 
         /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return dynamic_cast<StompCommand*>( this->clone() );
+        }
+
+        /**
          * Clears out the body of the message.  This does not clear the
          * headers or properties.
          */

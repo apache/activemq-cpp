@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
 
@@ -22,23 +22,23 @@
 
 namespace activemq{
 namespace transport{
-  
+
     /**
      * Interface for an observer of broker commands.
      */
     class CommandListener{
     public:
-  
-        virtual ~CommandListener(void){}
-     
+
+        virtual ~CommandListener() {}
+
         /**
          * Event handler for the receipt of a command.
          * @param command the received command object.
          */
         virtual void onCommand( Command* command ) = 0;
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_*/

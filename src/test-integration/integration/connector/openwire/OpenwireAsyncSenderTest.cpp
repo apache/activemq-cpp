@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "OpenwireAsyncSenderTest.h"
 
 #include <integration/IntegrationCommon.h>
@@ -74,7 +74,7 @@ using namespace integration::connector::openwire;
 ////////////////////////////////////////////////////////////////////////////////
 OpenwireAsyncSenderTest::OpenwireAsyncSenderTest()
 :
-    testSupport("tcp://localhost:61616?wireFormat=openwire&useAsyncSend=true")
+    testSupport("tcp://localhost:61616?wireFormat=openwire&transport.useAsyncSend=true")
 {
     testSupport.initialize();
 }
@@ -93,42 +93,42 @@ void OpenwireAsyncSenderTest::test()
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = testSupport.getSession()->createTopic("mytopic");
-        cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =
+            session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
-        
+
         // Send some bytes messages.
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
         testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
-        
+
         unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
+        CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
