@@ -95,7 +95,7 @@ namespace commands{
             }
         }
 
-    	virtual ~StompMessage() {
+        virtual ~StompMessage() {
 
             if( dest != NULL ){
                 delete dest;
@@ -507,6 +507,15 @@ namespace commands{
     public:    // ActiveMQMessage
 
         /**
+         * Gets the Acknowledgement Handler that this Message will use
+         * when the Acknowledge method is called.
+         * @returns handler ActiveMQAckHandler
+         */
+        virtual core::ActiveMQAckHandler* getAckHandler() const {
+            return this->ackHandler;
+        }
+
+        /**
          * Sets the Acknowledgement Handler that this Message will use
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler
@@ -577,7 +586,7 @@ namespace commands{
             testProperty( name );
 
             if( !getProperties().hasProperty( name ) ){
-                throw exceptions::NoSuchElementException( 
+                throw exceptions::NoSuchElementException(
                     __FILE__, __LINE__,
                     "property not available in message" );
             }
@@ -588,7 +597,7 @@ namespace commands{
             stream >> value;
 
             if( stream.fail() ){
-                throw exceptions::RuntimeException( 
+                throw exceptions::RuntimeException(
                     __FILE__, __LINE__,
                     "Error extracting property from string" );
             }

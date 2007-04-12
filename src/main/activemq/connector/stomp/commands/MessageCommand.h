@@ -26,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-        
+
     /**
      * Message command which represents a ActiveMQMessage with no body
      * can be sent or recieved.
@@ -35,29 +35,32 @@ namespace commands{
     {
     public:
 
-        MessageCommand(void) :
+        MessageCommand() :
             StompMessage< cms::Message >() {
                 initialize( getFrame() );
         }
-        MessageCommand( StompFrame* frame ) : 
+        MessageCommand( StompFrame* frame ) :
             StompMessage< cms::Message >( frame ) {
                 validate( getFrame() );
         }
-        virtual ~MessageCommand(void) {}
+        virtual ~MessageCommand() {}
 
         /**
-         * Clonse this message exactly, returns a new instance that the
+         * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::Message* clone(void) const {
-            StompFrame* frame = getFrame().clone();
-            
-            return new MessageCommand( frame );
+        virtual cms::Message* clone() const {
+
+            MessageCommand* command =
+                new MessageCommand( getFrame().clone() );
+            command->setAckHandler( this->getAckHandler() );
+
+            return command;
         }
 
     };
-    
+
 }}}}
 
 #endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_*/

@@ -36,13 +36,13 @@ namespace commands{
             StompMessage< cms::TextMessage >() {
                 initialize( getFrame() );
         }
-        
-        TextMessageCommand( StompFrame* frame ) : 
+
+        TextMessageCommand( StompFrame* frame ) :
             StompMessage< cms::TextMessage >( frame ) {
                 validate( getFrame() );
         }
-        
-    	virtual ~TextMessageCommand() {}
+
+        virtual ~TextMessageCommand() {}
 
         /**
          * Clonse this message exactly, returns a new instance that the
@@ -50,25 +50,28 @@ namespace commands{
          * @return new copy of this message
          */
         virtual cms::TextMessage* clone() const {
-            StompFrame* frame = getFrame().clone();
-            
-            return new TextMessageCommand( frame );
-        }   
+
+            TextMessageCommand* command =
+                new TextMessageCommand( getFrame().clone() );
+            command->setAckHandler( this->getAckHandler() );
+
+            return command;
+        }
 
         /**
          * Gets the message character buffer.
          * @return The message character buffer.
          */
         virtual std::string getText() const throw( cms::CMSException ) {
-            
+
             const std::vector<unsigned char>& bytes = getBytes();
             if( bytes.size() == 0 ){
                 return "";
             }
-            
+
             return std::string( (char*)&bytes[0] );
         }
-        
+
         /**
          * Sets the message contents.
          * @param msg The message buffer.

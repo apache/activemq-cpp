@@ -66,7 +66,6 @@ CommandConstants::StaticInitializer::StaticInitializer(){
     stompHeaders[HEADER_CONSUMERPRIORITY] = "activemq.priority";
     stompHeaders[HEADER_REPLYTO] = "reply-to";
     stompHeaders[HEADER_TYPE] = "type";
-    stompHeaders[HEADER_AMQMSGTYPE] = "amq-msg-type";
     stompHeaders[HEADER_SELECTOR] = "selector";
     stompHeaders[HEADER_DISPATCH_ASYNC] = "activemq.dispatchAsync";
     stompHeaders[HEADER_EXCLUSIVE] = "activemq.exclusive";
