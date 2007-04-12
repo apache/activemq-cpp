@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
 
@@ -26,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-    
+
     /**
      * Message sent to the broker to connect.
      */
@@ -34,15 +34,25 @@ namespace commands{
     {
     public:
 
-        ConnectCommand(void) :
+        ConnectCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        ConnectCommand( StompFrame* frame ) : 
+
+        ConnectCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        virtual ~ConnectCommand(void) {};
+
+        virtual ~ConnectCommand() {};
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new ConnectCommand( getFrame().clone() );
+        }
 
         /**
          * Sets the Command Id of this Message
@@ -50,49 +60,49 @@ namespace commands{
          */
         virtual void setCommandId( const unsigned int id ){
             setPropertyValue(
-                CommandConstants::toString( 
+                CommandConstants::toString(
                     CommandConstants::HEADER_REQUESTID),
                  util::Integer::toString( id ) );
         }
-        
+
         /**
          * Get the login
          * @return char* to login, can be ""
-         */      
-        virtual const char* getLogin(void) const {
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual const char* getLogin() const {
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_LOGIN) );
         }
-      
+
         /**
          * Set the login
          * @param login username string value
          */
         virtual void setLogin( const std::string& login ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_LOGIN) ,
                 login );
         }
-      
+
         /**
          * Get the password
          * @return char* to password, can be ""
-         */      
-        virtual const char* getPassword(void) const{
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual const char* getPassword() const{
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_PASSWORD) );
         }
-      
+
         /**
          * Set the password
          * @param password the passwrod string value
          */
         virtual void setPassword( const std::string& password ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_PASSWORD) ,
                 password );
         }
@@ -100,26 +110,26 @@ namespace commands{
         /**
          * Get the Client Id
          * @return char* to client Id, can be ""
-         */      
-        virtual const char* getClientId(void) const{
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual const char* getClientId() const{
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_CLIENT_ID) );
         }
-      
+
         /**
          * Set the Client Id
          * @param clientId client id string value
          */
         virtual void setClientId( const std::string& clientId ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_CLIENT_ID) ,
                 clientId );
         }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -132,14 +142,14 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if(frame.getCommand() == 
+            if(frame.getCommand() ==
                CommandConstants::toString( CommandConstants::CONNECT ) )
             {
                 return true;
@@ -149,7 +159,7 @@ namespace commands{
         }
 
     };
-    
+
 }}}}
 
 #endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_*/

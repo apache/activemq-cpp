@@ -18,32 +18,36 @@
 #ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 #define ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 
-#include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 
 namespace activemq{
 namespace transport{
-    
+
     /**
      * Manufactures IOTransports, which are objects that
      * read from input streams and write to output streams.
      */
     class IOTransportFactory : public TransportFactory{
     private:
-    
+
         static TransportFactoryMapRegistrar registrar;
-        
+
     public:
-        
+
         virtual ~IOTransportFactory(){}
-        
+
         /**
          * Creates a Transport instance.
-         * @param properties The properties for the transport.
+         * @param properties - Object that will hold transport config values
+         * @param next - the next transport in the chain, or NULL
+         * @param own - does the new Transport own the next
+         * @throws ActiveMQException if an error occurs.
          */
-        virtual Transport* createTransport( 
-            const activemq::util::Properties& properties );
+        virtual Transport* createTransport(
+            const activemq::util::Properties& properties,
+            Transport* next,
+            bool own ) throw ( exceptions::ActiveMQException );
 
         /**
          * Returns a reference to this TransportFactory
@@ -52,7 +56,7 @@ namespace transport{
         static TransportFactory& getInstance(void);
 
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_*/

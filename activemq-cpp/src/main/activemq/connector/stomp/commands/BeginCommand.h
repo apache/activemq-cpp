@@ -26,32 +26,42 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-    
+
     /**
      * Begins a Transaction.  Transactions in this case apply to
      * sending and acknowledging -- any messages sent or acknowledged
      * during a transaction will be handled atomically based on the
      * transaction.
-     * 
+     *
      * A transaction Identifier is required and this id will be used
      * for all sends, commits, aborts, or acks.
      */
     class BeginCommand : public AbstractCommand< transport::Command >
     {
     public:
-   
-        BeginCommand(void) :
+
+        BeginCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        BeginCommand( StompFrame* frame ) : 
+
+        BeginCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        virtual ~BeginCommand(void) {}
+
+        virtual ~BeginCommand() {}
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new BeginCommand( getFrame().clone() );
+        }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -64,17 +74,17 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::BEGIN )) &&
                (frame.getProperties().hasProperty(
-                    CommandConstants::toString( 
+                    CommandConstants::toString(
                         CommandConstants::HEADER_TRANSACTIONID ) ) ) )
             {
                 return true;

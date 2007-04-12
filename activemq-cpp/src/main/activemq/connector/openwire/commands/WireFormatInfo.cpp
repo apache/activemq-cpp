@@ -71,6 +71,9 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "WireFormatInfo::copyDataStructure - src is NULL or invalid" );
     }
+
+    this->properties.copy( srcPtr->getProperties() );
+    this->version = srcPtr->getVersion();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

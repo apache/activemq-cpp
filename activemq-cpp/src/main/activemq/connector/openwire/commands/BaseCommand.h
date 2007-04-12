@@ -73,6 +73,15 @@ namespace commands{
         }
 
         /**
+         * Returns a Cloned copy of this command, the caller is responsible
+         * for deallocating the returned object.
+         * @returns new copy of this command.
+         */
+        virtual transport::Command* cloneCommand() const {
+            return dynamic_cast<transport::Command*>( this->cloneDataStructure() );
+        }
+
+        /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object

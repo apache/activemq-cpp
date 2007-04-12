@@ -15,40 +15,46 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TCPTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_TCPTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
 
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
-#include <activemq/transport/IOTransportFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
-    
-    class TcpTransportFactory : public TransportFactory
-    {
+namespace filters{
+
+    /**
+     * Factory Responsible for creating the AsyncSendTransport.
+     */
+    class AsyncSendTransportFactory : public TransportFactory {
+
     public:
 
-    	virtual ~TcpTransportFactory(void) {}
+        virtual ~AsyncSendTransportFactory() {}
 
         /**
-         * Creates a Transport instance.  
-         * @param properties The properties for the transport.
-         * @throws ActiveMQException
+         * Creates a Transport instance.
+         * @param properties - Object that will hold transport config values
+         * @param next - the next transport in the chain, or NULL
+         * @param own - does the new Transport own the next
+         * @throws ActiveMQException if an error occurs.
          */
-        virtual Transport* createTransport( 
-            const activemq::util::Properties& properties )
-                throw ( exceptions::ActiveMQException );
+        virtual Transport* createTransport(
+            const activemq::util::Properties& properties,
+            Transport* next,
+            bool own ) throw ( exceptions::ActiveMQException );
 
         /**
          * Returns a reference to this TransportFactory
          * @returns TransportFactory Reference
          */
-        static TransportFactory& getInstance(void);
+        static TransportFactory& getInstance();
 
     };
 
-}}
+}}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_TCPTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_*/

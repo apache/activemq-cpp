@@ -24,70 +24,70 @@
 
 namespace activemq{
 namespace transport{
-  
+
     /**
      * The TransportFactoryMap contains keys that map to specific versions
      * of the TransportFactory class which create a particular type of
      * Transport.
      */
     class TransportFactoryMap{
-        
+
     private:
-    
+
         // Map of Factories
         std::map<std::string, TransportFactory*> factoryMap;
 
     private:
-   
+
         // Hidden Contrustor, prevents instantiation
-        TransportFactoryMap() {};
-      
+        TransportFactoryMap() {}
+
         // Hidden Destructor.
-        virtual ~TransportFactoryMap() {};
- 
+        virtual ~TransportFactoryMap() {}
+
         // Hidden Copy Constructore
         TransportFactoryMap( const TransportFactoryMap& factoryMap );
-      
+
         // Hidden Assignment operator
         TransportFactoryMap& operator=( const TransportFactoryMap& factoryMap );
-        
+
     public:
-        
+
         /**
          * Gets a singleton instance of this class.
          */
-        static TransportFactoryMap& getInstance(void);
-      
+        static TransportFactoryMap& getInstance();
+
         /**
          * Registers a new Transport Factory with this map
          * @param name to associate the factory with
          * @param factory to store.
          */
-        void registerTransportFactory( const std::string& name, 
+        void registerTransportFactory( const std::string& name,
                                        TransportFactory* factory );
-        
+
         /**
          * Unregisters a Transport Factory with this map
          * @param name of the factory to remove
          */
         void unregisterTransportFactory( const std::string& name );
-        
+
         /**
          * Lookup the named factory in the Map
          * @param name the factory name to lookup
          * @return the factory assciated with the name, or NULL
          */
         TransportFactory* lookup( const std::string& name );
-        
+
         /**
          * Fetch a list of factory names that this Map contains
          * @param factoryList vector object to receive the list
          * @returns count of factories.
          */
         std::size_t getFactoryNames( std::vector< std::string >& factoryList );
-        
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_*/

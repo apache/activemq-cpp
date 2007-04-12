@@ -38,6 +38,7 @@ cc_sources = \
   activemq/connector/stomp/commands/TextMessageCommandTest.cpp \
   activemq/connector/stomp/commands/UnsubscribeCommandTest.cpp \
   activemq/connector/stomp/marshal/MarshalerTest.cpp \
+  activemq/connector/stomp/StompResponseBuilder.cpp \
   activemq/connector/stomp/StompCommandReaderTest.cpp \
   activemq/connector/stomp/StompCommandWriterTest.cpp \
   activemq/connector/stomp/StompConnectorTest.cpp \
@@ -76,9 +77,10 @@ cc_sources = \
   activemq/logger/LoggerTest.cpp \
   activemq/network/SocketFactoryTest.cpp \
   activemq/network/SocketTest.cpp \
+  activemq/transport/DummyTransport.cpp \
   activemq/transport/DummyTransportFactory.cpp \
   activemq/transport/IOTransportTest.cpp \
-  activemq/transport/ResponseCorrelatorTest.cpp \
+  activemq/transport/filters/ResponseCorrelatorTest.cpp \
   activemq/transport/TransportFactoryMapRegistrarTest.cpp \
   activemq/transport/TransportFactoryMapTest.cpp \
   activemq/util/BooleanTest.cpp \

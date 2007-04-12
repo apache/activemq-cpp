@@ -29,8 +29,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireFormatNegotiator : public transport::TransportFilter
-    {
+    class OpenWireFormatNegotiator : public transport::TransportFilter {
     private:
 
         /**
@@ -69,7 +68,7 @@ namespace openwire{
          */
         OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
                                   transport::Transport* next,
-                                  const bool own = true );
+                                  bool own = true );
 
         virtual ~OpenWireFormatNegotiator();
 

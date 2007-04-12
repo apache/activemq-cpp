@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_COMMAND_H_
 #define ACTIVEMQ_TRANSPORT_COMMAND_H_
 
@@ -22,12 +22,12 @@
 
 namespace activemq{
 namespace transport{
-  
+
     class Command{
     public:
-  
+
         virtual ~Command(){}
-        
+
         /**
          * Sets the Command Id of this Message
          * @param id Command Id
@@ -39,7 +39,7 @@ namespace transport{
          * @return Command Id
          */
         virtual int getCommandId() const = 0;
-        
+
         /**
          * Set if this Message requires a Response
          * @param required true if response is required
@@ -51,15 +51,22 @@ namespace transport{
          * @return true if a response is required.
          */
         virtual bool isResponseRequired() const = 0;
-        
+
         /**
          * Returns a provider-specific string that provides information
          * about the contents of the command.
          */
         virtual std::string toString() const = 0;
-        
+
+        /**
+         * Returns a Cloned copy of this command, the caller is responsible
+         * for deallocating the returned object.
+         * @returns new copy of this command.
+         */
+        virtual Command* cloneCommand() const = 0;
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_COMMAND_H_*/

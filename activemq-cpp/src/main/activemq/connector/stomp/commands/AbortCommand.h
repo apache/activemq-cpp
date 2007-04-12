@@ -35,18 +35,26 @@ namespace commands{
     {
     public:
 
-        AbortCommand(void) :
+        AbortCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        AbortCommand( StompFrame* frame ) : 
+        AbortCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>(frame) {
                 validate( getFrame() );
         }
         virtual ~AbortCommand(void) {}
-        
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new AbortCommand( getFrame().clone() );
+        }
+
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -59,17 +67,17 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame the Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ABORT ) ) &&
                (frame.getProperties().hasProperty(
-                    CommandConstants::toString( 
+                    CommandConstants::toString(
                         CommandConstants::HEADER_TRANSACTIONID ) ) ) )
             {
                 return true;

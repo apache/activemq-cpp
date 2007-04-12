@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 
@@ -23,7 +23,7 @@
 
 namespace activemq{
 namespace transport{
-  
+
     class CommandIOException : public io::IOException{
     public:
 
@@ -31,7 +31,7 @@ namespace transport{
          * Default Constructor
          */
         CommandIOException() throw() {};
-        
+
         /**
          * Copy Constructor
          * @param ex the exception to copy
@@ -41,7 +41,7 @@ namespace transport{
         {
             *(exceptions::ActiveMQException*)this = ex;
         }
-        
+
         /**
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
@@ -51,25 +51,25 @@ namespace transport{
         {
             *(exceptions::ActiveMQException*)this = ex;
         }
-        
+
         /**
          * Consturctor
          * @param file name of the file were the exception occured.
          * @param lineNumber line where the exception occured
          * @param msg the message that was generated
          */
-        CommandIOException( const char* file, const int lineNumber, 
+        CommandIOException( const char* file, const int lineNumber,
                             const char* msg, ... ) throw()
         : io::IOException()
         {
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
-            
+
             // Set the first mark for this exception.
             setMark( file, lineNumber );
         }
-        
+
         /**
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
@@ -79,10 +79,10 @@ namespace transport{
         virtual exceptions::ActiveMQException* clone() const{
             return new CommandIOException( *this );
         }
-        
+
         virtual ~CommandIOException() throw() {}
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_*/

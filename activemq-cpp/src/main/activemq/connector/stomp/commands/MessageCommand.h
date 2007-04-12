@@ -39,11 +39,21 @@ namespace commands{
             StompMessage< cms::Message >() {
                 initialize( getFrame() );
         }
+
         MessageCommand( StompFrame* frame ) :
             StompMessage< cms::Message >( frame ) {
                 validate( getFrame() );
         }
+
         virtual ~MessageCommand() {}
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return dynamic_cast<StompCommand*>( this->clone() );
+        }
 
         /**
          * Clone this message exactly, returns a new instance that the

@@ -30,7 +30,7 @@ namespace commands{
     class StompCommand : public marshal::Marshalable
     {
     protected:
-        
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -39,7 +39,7 @@ namespace commands{
         virtual void initialize( StompFrame& frame ) = 0;
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
@@ -48,7 +48,7 @@ namespace commands{
 
     public:
 
-    	virtual ~StompCommand(void) {}
+        virtual ~StompCommand() {}
 
         /**
          * Sets the Command Id of this Message
@@ -60,56 +60,62 @@ namespace commands{
          * Gets the Command Id of this Message
          * @return Command Id
          */
-        virtual int getCommandId(void) const = 0;
-        
+        virtual int getCommandId() const = 0;
+
         /**
          * Set if this Message requires a Response
          * @param required true if response is required
          */
         virtual void setResponseRequired( const bool required ) = 0;
-        
+
         /**
          * Is a Response required for this Command
          * @return true if a response is required.
          */
-        virtual bool isResponseRequired(void) const = 0;
-        
+        virtual bool isResponseRequired() const = 0;
+
         /**
          * Gets the Correlation Id that is associated with this message
          * @return the Correlation Id
          */
-        virtual int getCorrelationId(void) const = 0;
-        
+        virtual int getCorrelationId() const = 0;
+
         /**
          * Sets the Correlation Id if this Command
          * @param corrId Id
          */
         virtual void setCorrelationId( int corrId ) = 0;
-        
+
         /**
          * Get the Transaction Id of this Command
          * @return the Id of the Transaction
-         */      
-        virtual std::string getTransactionId(void) const = 0;
-      
+         */
+        virtual std::string getTransactionId() const = 0;
+
         /**
          * Set the Transaction Id of this Command
          * @param id the Id of the Transaction
          */
         virtual void setTransactionId( const std::string& id ) = 0;
-        
+
         /**
          * Retrieve the Stomp Command Id for this message.
          * @return Stomp CommandId enum
          */
-        virtual CommandConstants::CommandId getStompCommandId(void) const = 0;
-        
+        virtual CommandConstants::CommandId getStompCommandId() const = 0;
+
         /**
          * Retrieves the Properties that are part of this command
          * @return const reference to a properties object
          */
-        virtual util::Properties& getProperties(void) = 0;
-        virtual const util::Properties& getProperties(void) const = 0;
+        virtual util::Properties& getProperties() = 0;
+        virtual const util::Properties& getProperties() const = 0;
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const = 0;
 
     };
 

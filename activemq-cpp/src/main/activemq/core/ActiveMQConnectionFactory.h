@@ -20,8 +20,6 @@
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 
-#include <activemq/exceptions/IllegalArgumentException.h>
-
 namespace activemq{
 namespace core{
 
@@ -43,7 +41,7 @@ namespace core{
 
     public:
 
-   	    ActiveMQConnectionFactory();
+           ActiveMQConnectionFactory();
 
         /**
          * Constructor
@@ -55,7 +53,7 @@ namespace core{
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
-   	    virtual ~ActiveMQConnectionFactory() {}
+           virtual ~ActiveMQConnectionFactory() {}
 
         /**
          * Creates a connection with the default user identity. The
@@ -174,19 +172,6 @@ namespace core{
                                                   const std::string& password,
                                                   const std::string& clientId = "" )
             throw ( cms::CMSException );
-
-    protected:
-
-        /**
-         * Parses the properties out of the provided Broker URI and sets
-         * them in the passed Properties Object.
-         * @param URI a Broker URI to parse
-         * @param properties a Properties object to set the parsed values in
-         * @throws IllegalArgumentException if the passed URI is invalid
-         */
-        static void parseURL( const std::string& URI,
-                              util::Properties& properties )
-            throw ( exceptions::IllegalArgumentException );
 
     };
 

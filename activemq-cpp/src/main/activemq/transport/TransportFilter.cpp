@@ -22,9 +22,32 @@ using namespace activemq;
 using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::onTransportException( 
-    Transport* source AMQCPP_UNUSED, 
-    const exceptions::ActiveMQException& ex )
-{
+TransportFilter::TransportFilter( Transport* next, const bool own ) {
+
+    this->next = next;
+    this->own = own;
+
+    commandlistener = NULL;
+    exceptionListener = NULL;
+
+    // Observe the nested transport for events.
+    next->setCommandListener( this );
+    next->setTransportExceptionListener( this );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+TransportFilter::~TransportFilter() {
+
+    if( own ){
+        delete next;
+        next = NULL;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::onTransportException(
+    Transport* source AMQCPP_UNUSED,
+    const exceptions::ActiveMQException& ex ) {
+
     fire( ex );
 }

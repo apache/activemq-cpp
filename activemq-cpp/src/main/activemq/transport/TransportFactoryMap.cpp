@@ -22,42 +22,44 @@ using namespace activemq::transport;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactoryMap& TransportFactoryMap::getInstance(void)
+TransportFactoryMap& TransportFactoryMap::getInstance()
 {
     // Static instance of this Map, create here so that one will
-    // always exist, the one and only Connector Map.      
+    // always exist, the one and only Connector Map.
     static TransportFactoryMap instance;
-    
+
     return instance;
-} 
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFactoryMap::registerTransportFactory( 
-    const std::string& name, 
+void TransportFactoryMap::registerTransportFactory(
+    const std::string& name,
     TransportFactory* factory )
 {
     factoryMap[name] = factory;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactoryMap::TransportFactoryMap( 
-const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){
+TransportFactoryMap::TransportFactoryMap(
+    const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){
 }
-      
+
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactoryMap& TransportFactoryMap::operator=( 
-const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){ 
+TransportFactoryMap& TransportFactoryMap::operator=(
+    const TransportFactoryMap& factoryMap AMQCPP_UNUSED ){
+
     return *this;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void TransportFactoryMap::unregisterTransportFactory( const std::string& name ){
     factoryMap.erase( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory* TransportFactoryMap::lookup( const std::string& name )
-{
-    map<string, TransportFactory*>::const_iterator itr = 
+TransportFactory* TransportFactoryMap::lookup( const std::string& name ) {
+
+    map<string, TransportFactory*>::const_iterator itr =
     factoryMap.find(name);
 
     if( itr != factoryMap.end() )
@@ -70,16 +72,16 @@ TransportFactory* TransportFactoryMap::lookup( const std::string& name )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-size_t TransportFactoryMap::getFactoryNames( 
+size_t TransportFactoryMap::getFactoryNames(
     std::vector< std::string >& factoryList )
-{    
+{
     map<string, TransportFactory*>::const_iterator itr =
     factoryMap.begin();
-  
+
     for(; itr != factoryMap.end(); ++itr)
     {
         factoryList.insert( factoryList.end(), itr->first );
     }
-  
+
     return factoryMap.size();
 }

@@ -32,7 +32,7 @@ using namespace activemq::connector::openwire::commands;
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
                                                     Transport* next,
-                                                    const bool own ) :
+                                                    bool own ) :
     TransportFilter( next, own ),
     wireInfoSentDownLatch(1),
     readyCountDownLatch(1)

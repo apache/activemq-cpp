@@ -27,37 +27,41 @@
 
 namespace activemq{
 namespace transport{
-	
-	class TransportFactoryMapRegistrarTest : public CppUnit::TestFixture {
-		
-	  CPPUNIT_TEST_SUITE( TransportFactoryMapRegistrarTest );
-	  CPPUNIT_TEST( test );
-	  CPPUNIT_TEST_SUITE_END();
-	  
-	public:
-	
-		class TestTransportFactory : public TransportFactory
-		{
-		public:
-		
-		   virtual Transport* createTransport(
-		      const activemq::util::Properties& properties AMQCPP_UNUSED ) { return NULL; };
-		};
-        
+
+    class TransportFactoryMapRegistrarTest : public CppUnit::TestFixture {
+
+        CPPUNIT_TEST_SUITE( TransportFactoryMapRegistrarTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
+    public:
+
+        class TestTransportFactory : public TransportFactory
+        {
+        public:
+
+            virtual Transport* createTransport(
+                const activemq::util::Properties& properties AMQCPP_UNUSED,
+                Transport* next = NULL,
+                bool own = true ) throw ( exceptions::ActiveMQException ) {
+                    return NULL;
+            };
+        };
+
         virtual ~TransportFactoryMapRegistrarTest(){}
-		
-		void test(){
-			
-			{
-				TransportFactoryMapRegistrar registrar("Test", new TestTransportFactory());
-			
-				CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup("Test") != NULL);
-			}
-			
-			CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup( "Test" ) == NULL );
-		}
-	};
-	
+
+        void test(){
+
+            {
+                TransportFactoryMapRegistrar registrar("Test", new TestTransportFactory());
+
+                CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup("Test") != NULL);
+            }
+
+            CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup( "Test" ) == NULL );
+        }
+    };
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_CONNECTORFACTORYMAPREGISTRARTEST_H_*/

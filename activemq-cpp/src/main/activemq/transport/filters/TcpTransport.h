@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TCPTRANSPORT_H_
-#define _ACTIVEMQ_TRANSPORT_TCPTRANSPORT_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
+#define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/network/Socket.h>
@@ -28,6 +28,7 @@
 
 namespace activemq{
 namespace transport{
+namespace filters{
 
     /**
      * Implements a TCP/IP based transport filter, this transport
@@ -35,7 +36,7 @@ namespace transport{
      * level transport should take care of manaing stream reads
      * and writes.
      */
-    class TcpTransport : public TransportFilter 
+    class TcpTransport : public TransportFilter
     {
     private:
 
@@ -43,10 +44,10 @@ namespace transport{
          * Socket that this Transport Communicates with
          */
         network::Socket* socket;
-        
+
         io::LoggingInputStream* loggingInputStream;
         io::LoggingOutputStream* loggingOutputStream;
-        
+
         io::BufferedInputStream* bufferedInputStream;
         io::BufferedOutputStream* bufferedOutputStream;
 
@@ -58,12 +59,12 @@ namespace transport{
          * @param next the next transport in the chain
          * @param own indicates if this transport owns the next.
          */
-    	TcpTransport( const activemq::util::Properties& properties,
-                      Transport* next, 
+        TcpTransport( const activemq::util::Properties& properties,
+                      Transport* next,
                       const bool own = true );
-                      
-    	virtual ~TcpTransport();
-        
+
+        virtual ~TcpTransport();
+
         /**
          * Delegates to the superclass and then closes the socket.
          * @throws CMSException if errors occur.
@@ -72,6 +73,6 @@ namespace transport{
 
     };
 
-}}
+}}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_TCPTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_*/

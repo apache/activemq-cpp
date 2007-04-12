@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
 #define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
 
@@ -30,36 +30,36 @@ namespace transport{
     class TransportFactoryMapRegistrar
     {
     public:
-   
-        /** 
+
+        /**
          * Constructor for this class
          * @param name of the factory to register
          * @param factory responsible for creating the transport
-         * @param manageLifetime boolean indicating if this object manages the 
+         * @param manageLifetime boolean indicating if this object manages the
          *        lifetime of the factory that is being registered.
          */
-        TransportFactoryMapRegistrar( const std::string& name, 
-                                      TransportFactory*  factory,
-                                      bool               manageLifetime = true)
-        {       
+        TransportFactoryMapRegistrar( const std::string& name,
+                                      TransportFactory* factory,
+                                      bool manageLifetime = true)
+        {
             // Register it in the map.
             TransportFactoryMap::getInstance().
-                registerTransportFactory(name, factory);
+                registerTransportFactory( name, factory );
 
-            // Store for later deletion            
+            // Store for later deletion
             this->factory        = factory;
             this->manageLifetime = manageLifetime;
             this->name           = name;
         }
-      
-        virtual ~TransportFactoryMapRegistrar(void)
+
+        virtual ~TransportFactoryMapRegistrar()
         {
             try
             {
                 // UnRegister it in the map.
                 TransportFactoryMap::getInstance().
                     unregisterTransportFactory( name );
-            
+
                 if( manageLifetime )
                 {
                     delete factory;
@@ -67,24 +67,24 @@ namespace transport{
             }
             catch(...) {}
         }
-      
+
         /**
          * Return a reference to the factory object that is contained in this
          * registrar.
          * @return TransportFactory reference
          */
-        virtual TransportFactory& getFactory(void) {
+        virtual TransportFactory& getFactory() {
             return *factory;
         }
-      
-    private:
-      
-        std::string       name;
-        TransportFactory* factory;
-        bool              manageLifetime;
 
-    }; 
-      
+    private:
+
+        std::string name;
+        TransportFactory* factory;
+        bool manageLifetime;
+
+    };
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_*/

@@ -26,7 +26,7 @@
 namespace integration{
 namespace connector{
 namespace stomp{
-    
+
     class SimpleTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( SimpleTest );
@@ -34,20 +34,22 @@ namespace stomp{
         CPPUNIT_TEST( testClientAck );
         CPPUNIT_TEST( testProducerWithNullDestination );
         CPPUNIT_TEST( testSyncReceive );
+        CPPUNIT_TEST( testSyncReceiveClientAck );
         CPPUNIT_TEST( testMultipleConnections );
         CPPUNIT_TEST( testMultipleSessions );
         CPPUNIT_TEST( testReceiveAlreadyInQueue );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
 
-    	SimpleTest();
-    	virtual ~SimpleTest();
+        SimpleTest();
+        virtual ~SimpleTest();
 
         virtual void testAutoAck();
         virtual void testClientAck();
         virtual void testProducerWithNullDestination();
         virtual void testSyncReceive();
+        virtual void testSyncReceiveClientAck();
         virtual void testMultipleConnections();
         virtual void testMultipleSessions();
         virtual void testReceiveAlreadyInQueue();

@@ -15,42 +15,46 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORFACTORY_H_
 
-#include <activemq/transport/Transport.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/Config.h>
+#include <activemq/transport/TransportFactory.h>
+#include <activemq/transport/TransportFactoryMapRegistrar.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
+namespace filters{
 
     /**
-     * Defines the interface for Factories that create Transports or
-     * TransportFilters.  Since Transports can be chained, the create
-     * method takes a pointer to the next transport in the list, and
-     * wether the newly create transport owns the next and should delete
-     * it on its own destruction.
+     * Factory Responsible for creating the ResponseCorrelator.
      */
-    class TransportFactory{
+    class ResponseCorrelatorFactory : public TransportFactory {
+
     public:
 
-        virtual ~TransportFactory() {}
+        virtual ~ResponseCorrelatorFactory() {}
 
         /**
          * Creates a Transport instance.
          * @param properties - Object that will hold transport config values
          * @param next - the next transport in the chain, or NULL
          * @param own - does the new Transport own the next
-         * @throws ActiveMQexception if an error occurs
+         * @throws ActiveMQException if an error occurs.
          */
         virtual Transport* createTransport(
             const activemq::util::Properties& properties,
-            Transport* next = NULL,
-            bool own = true ) throw ( exceptions::ActiveMQException ) = 0;
+            Transport* next,
+            bool own ) throw ( exceptions::ActiveMQException );
+
+        /**
+         * Returns a reference to this TransportFactory
+         * @returns TransportFactory Reference
+         */
+        static TransportFactory& getInstance();
 
     };
 
-}}
+}}}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORFACTORY_H_*/

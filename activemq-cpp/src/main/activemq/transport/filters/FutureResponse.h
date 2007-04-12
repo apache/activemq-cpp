@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_
-#define ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_
+
+#ifndef ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
+#define ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
 
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Concurrent.h>
@@ -26,7 +26,8 @@
 
 namespace activemq{
 namespace transport{
-    
+namespace filters{
+
     /**
      * A container that holds a response object.  Since this
      * object is Synchronizable, callers can wait on this object
@@ -35,18 +36,18 @@ namespace transport{
      */
     class FutureResponse : public concurrent::Synchronizable{
     private:
-    
+
         Response* response;
         concurrent::Mutex mutex;
-        
+
     public:
-    
+
         FutureResponse(){
             response = NULL;
         }
-        
+
         virtual ~FutureResponse(){}
-        
+
         /**
          * Locks the object.
          * @throws ActiveMQException
@@ -62,7 +63,7 @@ namespace transport{
         virtual void unlock() throw( exceptions::ActiveMQException ){
             mutex.unlock();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -72,7 +73,7 @@ namespace transport{
         virtual void wait() throw( exceptions::ActiveMQException ){
             mutex.wait();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -81,7 +82,7 @@ namespace transport{
          * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs ) 
+        virtual void wait( unsigned long millisecs )
             throw( exceptions::ActiveMQException )
         {
             mutex.wait( millisecs );
@@ -96,28 +97,28 @@ namespace transport{
         virtual void notify() throw( exceptions::ActiveMQException ){
             mutex.notify();
         }
-    
+
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
          * @throws ActiveMQException
          */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){ 
-            mutex.notifyAll(); 
+        virtual void notifyAll() throw( exceptions::ActiveMQException ){
+            mutex.notifyAll();
         }
-        
+
         /**
          * Getters for the response property.
          * @return the response object for the request
          */
         virtual const Response* getResponse() const{
             return response;
-        }        
+        }
         virtual Response* getResponse(){
             return response;
         }
-        
+
         /**
          * Setter for the response property.
          * @param response the response object for the request.
@@ -126,7 +127,7 @@ namespace transport{
             this->response = response;
         }
     };
-    
-}}
 
-#endif /*ACTIVEMQ_TRANSPORT_FUTURERESPONSE_H_*/
+}}}
+
+#endif /*ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_*/

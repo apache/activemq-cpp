@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
 
@@ -25,7 +25,7 @@
 
 namespace activemq{
 namespace transport{
-  
+
     /**
      * Interface for an object responsible for writing a command
      * to an output stream.
@@ -33,19 +33,19 @@ namespace transport{
     class CommandWriter : public io::Writer
     {
     public:
-  
+
         virtual ~CommandWriter() {}
-        
+
         /**
          * Writes a command to the given output stream.
          * @param command the command to write.
          * @throws CommandIOException if a problem occurs during the write.
          */
-        virtual void writeCommand( Command* command ) 
+        virtual void writeCommand( Command* command )
             throw ( CommandIOException ) = 0;
 
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_*/

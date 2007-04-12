@@ -36,7 +36,6 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
@@ -52,17 +51,8 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
 
     this->sessionInfo = sessionInfo;
     this->transaction = NULL;
-    this->connection  = connection;
+    this->connection = connection;
     this->closed = false;
-    this->asyncThread = NULL;
-    this->useAsyncSend = Boolean::parseBoolean(
-        properties.getProperty( "useAsyncSend", "false" ) );
-
-    // If we are in Async Send Mode we need to start the Thread
-    // otherwise we don't need to do anything.
-    if( this->useAsyncSend == true ) {
-        this->startThread();
-    }
 
     // Create a Transaction object only if the session is transactional
     if( isTransacted() )
@@ -136,12 +126,6 @@ void ActiveMQSession::close() throw ( cms::CMSException )
 
         // Now indicate that this session is closed.
         closed = true;
-
-        // Stop the Async Thread if its running
-        stopThread();
-
-        // Remove any unsent cloned messages.
-        purgeMessages();
 
         delete executor;
         executor = NULL;
@@ -684,21 +668,9 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
                 "ActiveMQSession::onProducerClose - Session Already Closed" );
         }
 
-        if( useAsyncSend ) {
-
-            // Put it in the send queue, thread will dispatch it.  We clone it
-            // in case the client deletes their copy before we get a chance to
-            // send it.
-            synchronized( &msgQueue ) {
-                msgQueue.push( make_pair( message->clone(), producer ) );
-                msgQueue.notifyAll();
-            }
-
-        } else {
-            // Send via the connection syncrhronously.
-            connection->getConnectionData()->
-                getConnector()->send( message, producer->getProducerInfo() );
-        }
+        // Send via the connection syncrhronously.
+        connection->getConnectionData()->
+            getConnector()->send( message, producer->getProducerInfo() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -737,12 +709,12 @@ void ActiveMQSession::onConnectorResourceClosed(
                 transaction->removeFromTransaction(
                     consumer->getConsumerId() );
             }
-            
+
             ActiveMQConsumer* obj = NULL;
             synchronized( &consumers ) {
-                
+
                 if( consumers.containsKey( consumer->getConsumerId() ) ) {
-                    
+
                     // Get the consumer reference
                     obj = consumers.getValue( consumer->getConsumerId() );
 
@@ -750,14 +722,14 @@ void ActiveMQSession::onConnectorResourceClosed(
                     consumers.remove( consumer->getConsumerId() );
                 }
             }
-            
+
             // Clean up any resources in the executor for this consumer
-            if( obj != NULL && executor != NULL ) {              
-            
+            if( obj != NULL && executor != NULL ) {
+
                 // Purge any pending messages for this consumer.
-                vector<ActiveMQMessage*> messages = 
+                vector<ActiveMQMessage*> messages =
                     executor->purgeConsumerMessages(obj);
-                    
+
                 // Destroy the messages.
                 for( unsigned int ix=0; ix<messages.size(); ++ix ) {
                     delete messages[ix];
@@ -795,125 +767,6 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener()
     }
 
     return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::run()
-{
-    try{
-
-        while( !closed )
-        {
-            std::pair<Message*, ActiveMQProducer*> messagePair;
-
-            synchronized( &msgQueue )
-            {
-                // Gaurd against spurious wakeup or race to sync lock
-                // also if the listner has been unregistered we don't
-                // have anyone to notify, so we wait till a new one is
-                // registered, and then we will deliver the backlog
-                while( msgQueue.empty() )
-                {
-                    if( closed )
-                    {
-                        break;
-                    }
-                    msgQueue.wait();
-                }
-
-                // don't want to process messages if we are shutting down.
-                if( closed )
-                {
-                    return;
-                }
-
-                // get the data
-                messagePair = msgQueue.pop();
-            }
-
-            // Dispatch the message
-            connection->getConnectionData()->
-                getConnector()->send(
-                    messagePair.first,
-                    messagePair.second->getProducerInfo() );
-
-            // Destroy Our copy of the message
-            delete messagePair.first;
-        }
-    }
-    catch(...)
-    {
-        cms::ExceptionListener* listener = this->getExceptionListener();
-
-        if( listener != NULL )
-        {
-            listener->onException( ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQSession::run - "
-                "Connector threw an unknown Exception, recovering..." ) );
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::startThread() throw ( ActiveMQException ) {
-
-    try
-    {
-        // Start the thread, if it's not already started.
-        if( asyncThread == NULL )
-        {
-            asyncThread = new Thread( this );
-            asyncThread->start();
-        }
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::stopThread() throw ( ActiveMQException ) {
-
-    try
-    {
-        // if the thread is running signal it to quit and then
-        // wait for run to return so thread can die
-        if( asyncThread != NULL )
-        {
-            synchronized( &msgQueue )
-            {
-                // Force a wakeup if run is in a wait.
-                msgQueue.notifyAll();
-            }
-
-            // Wait for it to die and then delete it.
-            asyncThread->join();
-            delete asyncThread;
-            asyncThread = NULL;
-        }
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::purgeMessages() throw ( ActiveMQException )
-{
-    try
-    {
-        synchronized( &msgQueue )
-        {
-            while( !msgQueue.empty() )
-            {
-                // destroy these messages if this is not a transacted
-                // session, if it is then the tranasction will clean
-                // the messages up.
-                delete msgQueue.pop().first;
-            }
-        }
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

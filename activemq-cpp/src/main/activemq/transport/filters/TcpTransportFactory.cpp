@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "TcpTransportFactory.h"
 
-#include <activemq/transport/TcpTransport.h>
-#include <activemq/transport/ResponseCorrelator.h>
-#include <activemq/transport/LoggingTransport.h>
+#include <activemq/transport/filters/TcpTransport.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,41 +30,18 @@ TransportFactory& TcpTransportFactory::getInstance(void)
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
         "tcp", new TcpTransportFactory() );
-        
+
     return registrar.getFactory();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* TcpTransportFactory::createTransport( 
-    const activemq::util::Properties& properties )
-        throw ( ActiveMQException )
-{
-    try
-    {
-        TransportFactory* factory = 
-            TransportFactoryMap::getInstance().lookup( "io" );
-    
-        if( factory == NULL ){
-            throw ActiveMQException( 
-                __FILE__, __LINE__, 
-                "TcpTransport::createTransport - "
-                "unknown transport factory");
-        }
-    
-        Transport* transport = new TcpTransport( 
-            properties, factory->createTransport( properties ) );
-        
-        // Create a response correlator.  This will wrap around our 
-        // transport and manage its lifecycle - we don't need the 
-        // internal transport anymore, so we can reuse its pointer.
-        transport = new ResponseCorrelator( transport );
-        
-        // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "commandTracingEnabled", "false" ) == "true" ) {
-            transport = new LoggingTransport( transport );
-        }
-        
-        return transport;
+Transport* TcpTransportFactory::createTransport(
+    const activemq::util::Properties& properties,
+    Transport* next,
+    bool own ) throw ( ActiveMQException ) {
+
+    try {
+        return new TcpTransport( properties, next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

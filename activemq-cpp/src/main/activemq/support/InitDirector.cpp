@@ -18,7 +18,10 @@
 
 #include <activemq/logger/LogWriter.h>
 #include <activemq/transport/IOTransportFactory.h>
-#include <activemq/transport/TcpTransportFactory.h>
+#include <activemq/transport/filters/AsyncSendTransportFactory.h>
+#include <activemq/transport/filters/TcpTransportFactory.h>
+#include <activemq/transport/filters/LoggingTransportFactory.h>
+#include <activemq/transport/filters/ResponseCorrelatorFactory.h>
 #include <activemq/connector/stomp/StompConnectorFactory.h>
 #include <activemq/connector/openwire/OpenWireConnectorFactory.h>
 
@@ -35,7 +38,10 @@ InitDirector::InitDirector(void)
         logger::LogWriter::getInstance();
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
-        transport::TcpTransportFactory::getInstance();
+        transport::filters::TcpTransportFactory::getInstance();
+        transport::filters::AsyncSendTransportFactory::getInstance();
+        transport::filters::LoggingTransportFactory::getInstance();
+        transport::filters::ResponseCorrelatorFactory::getInstance();
         transport::IOTransportFactory::getInstance();
     }
 

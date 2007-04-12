@@ -26,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-    
+
     /**
      * Message sent from the broker when an error
      * occurs.
@@ -39,31 +39,39 @@ namespace commands{
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
-        
-        ErrorCommand( StompFrame* frame ) : 
+
+        ErrorCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
-        
+
         virtual ~ErrorCommand() {};
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new ErrorCommand( getFrame().clone() );
+        }
 
         /**
          * Get the error message
          * @return the error message string
-         */      
+         */
         virtual std::string getErrorMessage() const {
-            return getPropertyValue( 
-                CommandConstants::toString( 
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_MESSAGE ), "" );
         }
-      
+
         /**
          * Set the error message
          * @param message the error message string
          */
         virtual void setErrorMessage( const std::string& message ) {
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_MESSAGE),
                 message );
         }
@@ -81,17 +89,17 @@ namespace commands{
          * @return Error Message String
          */
         virtual std::string getErrorDetails() const {
-            
+
             const std::vector<unsigned char>& bytes = getBytes();
             if( bytes.size() == 0 ){
                 return "";
             }
-            
+
             return std::string((char*)&getBytes()[0]);
         }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -104,14 +112,14 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ERROR_CMD ) ) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(

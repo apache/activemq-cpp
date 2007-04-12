@@ -26,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-        
+
     /**
      * Command sent to the broker to unsubscribe to a
      * topic or queue.
@@ -34,40 +34,50 @@ namespace commands{
     class UnsubscribeCommand : public AbstractCommand< transport::Command >
     {
     public:
-        
-        UnsubscribeCommand(void) :
+
+        UnsubscribeCommand() :
             AbstractCommand< transport::Command >() {
                 initialize( getFrame() );
         }
-        UnsubscribeCommand( StompFrame* frame ) : 
+
+        UnsubscribeCommand( StompFrame* frame ) :
             AbstractCommand< transport::Command >( frame ) {
                 validate( getFrame() );
         }
+
         virtual ~UnsubscribeCommand(void) {};
-        
+
+        /**
+         * Clone the StompCommand and return the new copy.
+         * @returns new copy of this command caller owns it.
+         */
+        virtual StompCommand* cloneStompCommand() const {
+            return new UnsubscribeCommand( getFrame().clone() );
+        }
+
         /**
          * Get the destination
          * @returns the Destination as a string
-         */      
-        virtual std::string getDestination(void) const{
-            return getPropertyValue( 
-                CommandConstants::toString( 
+         */
+        virtual std::string getDestination() const{
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_DESTINATION ), "" );
         }
-      
+
         /**
          * Set the destination
          * @param destination the destiantion as a String
          */
         virtual void setDestination( const std::string& destination ){
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_DESTINATION ),
                 destination );
         }
-      
+
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -80,17 +90,17 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if((frame.getCommand() == 
+            if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::UNSUBSCRIBE )) &&
                (frame.getProperties().hasProperty(
-                    CommandConstants::toString( 
+                    CommandConstants::toString(
                         CommandConstants::HEADER_DESTINATION ) ) ) )
             {
                 return true;
@@ -100,7 +110,7 @@ namespace commands{
         }
 
     };
-    
+
 }}}}
 
 #endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_*/

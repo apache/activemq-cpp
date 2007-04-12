@@ -15,29 +15,35 @@
  * limitations under the License.
  */
 
-#include "IOTransportFactory.h"
-#include <activemq/util/Config.h>
-#include <activemq/transport/IOTransport.h>
+#include "ResponseCorrelatorFactory.h"
+
+#include <activemq/transport/filters/ResponseCorrelator.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::filters;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* IOTransportFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
-    Transport* next AMQCPP_UNUSED,
-    bool own AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+TransportFactory& ResponseCorrelatorFactory::getInstance(void)
+{
+    // Create the one and only instance of the registrar
+    static TransportFactoryMapRegistrar registrar(
+        "transport.filters.ResponseCorrelator",
+        new ResponseCorrelatorFactory() );
 
-    // IO is the Base Tranport, it can have no next.
-    return new IOTransport();
+    return registrar.getFactory();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& IOTransportFactory::getInstance() {
+Transport* ResponseCorrelatorFactory::createTransport(
+    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    Transport* next,
+    bool own ) throw ( ActiveMQException ) {
 
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "transport.IOTransport", new IOTransportFactory() );
-
-    return registrar.getFactory();
+    try {
+        return new ResponseCorrelator( next, own );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

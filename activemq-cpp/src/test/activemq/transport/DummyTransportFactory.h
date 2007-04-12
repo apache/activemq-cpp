@@ -18,52 +18,32 @@
 #ifndef ACTIVEMQ_TRANSPORT_DUMMYTRANSPORTFACTORY_H_
 #define ACTIVEMQ_TRANSPORT_DUMMYTRANSPORTFACTORY_H_
 
-#include <activemq/transport/DummyTransport.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
-#include <activemq/connector/stomp/StompResponseBuilder.h>
 #include <activemq/support/LibraryInit.h>
 
 namespace activemq{
 namespace transport{
-    
+
     /**
      * Manufactures DummyTransports, which are objects that
      * read from input streams and write to output streams.
      */
     class DummyTransportFactory : public TransportFactory{
-    private:
-    
- //       static TransportFactoryMapRegistrar registrar;
-        
     public:
-        
+
         virtual ~DummyTransportFactory(){}
-        
+
         /**
-         * Creates a Transport instance. 
+         * Creates a Transport instance.
          * @param properties The properties for the transport.
          */
-        virtual Transport* createTransport( 
-            const activemq::util::Properties& properties )
-        {
-            std::string wireFormat = 
-                properties.getProperty( "wireFormat", "stomp" );
-
-            DummyTransport::ResponseBuilder* builder = NULL;
-
-            if( wireFormat == "stomp" )
-            {
-                builder = new connector::stomp::StompResponseBuilder(
-                    properties.getProperty( 
-                        "transport.sessionId", "testSessionId" ) );
-            }
-            
-            return new DummyTransport( builder, true );
-        }
+        virtual Transport* createTransport(
+            const activemq::util::Properties& properties,
+            Transport* next = NULL,
+            bool own = true ) throw ( exceptions::ActiveMQException );
 
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TRANSPORT_DUMMYTRANSPORTFACTORY_H_*/

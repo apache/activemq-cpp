@@ -18,3 +18,62 @@
 #include "SocketFactoryTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::network::SocketFactoryTest );
+
+using namespace activemq;
+using namespace activemq::network;
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketFactoryTest::test()
+{
+    try
+    {
+        MyServerThread serverThread;
+        serverThread.start();
+
+        concurrent::Thread::sleep( 40 );
+
+        util::SimpleProperties properties;
+
+        std::ostringstream ostream;
+
+        ostream << "127.0.0.1:" << port;
+
+        properties.setProperty("soLinger", "false");
+
+        Socket* client = SocketFactory::createSocket(
+            ostream.str(), properties );
+
+        synchronized(&serverThread.mutex)
+        {
+            if(serverThread.getNumClients() != 1)
+            {
+                serverThread.mutex.wait(1000);
+            }
+        }
+
+        CPPUNIT_ASSERT( client->isConnected() );
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
+
+        client->close();
+
+        synchronized(&serverThread.mutex)
+        {
+            if(serverThread.getNumClients() != 0)
+            {
+                serverThread.mutex.wait(1000);
+            }
+        }
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 0 );
+
+        serverThread.stop();
+        serverThread.join();
+
+        delete client;
+    }
+    catch(exceptions::ActiveMQException ex)
+    {
+        CPPUNIT_ASSERT( false );
+    }
+}

@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#ifndef ACTIVEMQ_TRANSPORT_RESPONSECORRELATOR_H_
-#define ACTIVEMQ_TRANSPORT_RESPONSECORRELATOR_H_
+
+#ifndef ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
+#define ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
 
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/transport/FutureResponse.h>
+#include <activemq/transport/filters/FutureResponse.h>
 #include <activemq/transport/Command.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Concurrent.h>
@@ -28,77 +28,78 @@
 
 namespace activemq{
 namespace transport{
-  
+namespace filters{
+
     /**
      * This type of transport filter is responsible for correlating
      * asynchronous responses with requests.  Non-response messages
      * are simply sent directly to the CommandListener.  It owns
      * the transport that it
      */
-    class ResponseCorrelator : public TransportFilter 
+    class ResponseCorrelator : public TransportFilter
     {
-    private:        
+    private:
 
         /**
          * The next command id for sent commands.
          */
-        unsigned int nextCommandId;        
-        
+        unsigned int nextCommandId;
+
         /**
          * Map of request ids to future response objects.
          */
         std::map<unsigned int, FutureResponse*> requestMap;
-        
+
         /**
          * Maximum amount of time in milliseconds to wait for a response.
          */
         unsigned long maxResponseWaitTime;
-        
+
         /**
          * Sync object for accessing the next command id variable.
          */
         concurrent::Mutex commandIdMutex;
-        
+
         /**
          * Sync object for accessing the request map.
          */
         concurrent::Mutex mapMutex;
-        
+
         /**
          * Flag to indicate the closed state.
          */
         bool closed;
-       
+
     private:
-    
+
         /**
          * Returns the next available command id.
          */
         unsigned int getNextCommandId() throw ( exceptions::ActiveMQException );
-         
+
     public:
-  
+
         /**
          * Constructor.
          * @param next the next transport in the chain
          * @param own indicates if this transport owns the next
          */
-        ResponseCorrelator( Transport* next, const bool own = true );
-        
+        ResponseCorrelator( Transport* next, bool own = true );
+
         virtual ~ResponseCorrelator();
-        
+
         /**
          * Gets the maximum wait time for a response in milliseconds.
          * @return max time that a response can take
          */
         virtual unsigned long getMaxResponseWaitTime() const;
-        
+
         /**
          * Sets the maximum wait time for a response in milliseconds.
          * @param milliseconds the max time that a response can take.
          */
         virtual void setMaxResponseWaitTime( const unsigned long milliseconds );
-        
+
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
@@ -108,18 +109,18 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) 
+        virtual void oneway( Command* command )
             throw( CommandIOException, exceptions::UnsupportedOperationException );
-        
+
         /**
          * Sends the given request to the server and waits for the response.
          * @param command The request to send.
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual Response* request( Command* command ) 
+        virtual Response* request( Command* command )
             throw( CommandIOException, exceptions::UnsupportedOperationException );
-        
+
         /**
          * This is called in the context of the nested transport's
          * reading thread.  In the case of a response object,
@@ -129,20 +130,7 @@ namespace transport{
          * @param command the received from the nested transport.
          */
         virtual void onCommand( Command* command );
-        
-        /**
-         * Assigns the command listener for non-response commands.
-         * @param listener the listener.
-         */
-        virtual void setCommandListener( CommandListener* listener );
-        
-        /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport exceptions.
-         */
-        virtual void setTransportExceptionListener( 
-            TransportExceptionListener* listener );
-        
+
         /**
          * Starts this transport object and creates the thread for
          * polling on the input stream for commands.  If this object
@@ -153,7 +141,7 @@ namespace transport{
          * has already been closed.
          */
         virtual void start() throw( cms::CMSException );
-        
+
         /**
          * Stops the polling thread and closes the streams.  This can
          * be called explicitly, but is also called in the destructor. Once
@@ -161,9 +149,9 @@ namespace transport{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException );
-        
-    };
-    
-}}
 
-#endif /*ACTIVEMQ_TRANSPORT_RESPONSECORRELATOR_H_*/
+    };
+
+}}}
+
+#endif /*ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_*/

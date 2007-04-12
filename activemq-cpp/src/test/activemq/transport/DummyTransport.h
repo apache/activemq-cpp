@@ -27,22 +27,23 @@
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/util/Config.h>
+#include <activemq/concurrent/CountDownLatch.h>
 
 namespace activemq{
 namespace transport{
-    
+
     class DummyTransport : public Transport{
-    
+
     public:
-    
+
         class ResponseBuilder{
         public:
             virtual ~ResponseBuilder(){}
-            
+
             virtual Response* buildResponse( const Command* cmd ) = 0;
         };
 
-        class InternalCommandListener : 
+        class InternalCommandListener :
             public CommandListener,
             public concurrent::Thread
         {
@@ -52,17 +53,21 @@ namespace transport{
             ResponseBuilder* responseBuilder;
             concurrent::Mutex mutex;
             Command* command;
+            Response* response;
             bool done;
+            concurrent::CountDownLatch startedLatch;
 
         public:
 
-            InternalCommandListener(void) {
+            InternalCommandListener(void) : startedLatch(1) {
                 command = NULL;
+                response = NULL;
                 transport = NULL;
                 responseBuilder = NULL;
                 done = false;
-                
+
                 this->start();
+                startedLatch.await();
             }
 
             virtual ~InternalCommandListener() {
@@ -72,6 +77,8 @@ namespace transport{
                     mutex.notifyAll();
                 }
                 this->join();
+
+                delete response;
             }
 
             void setTransport( DummyTransport* transport ){
@@ -87,9 +94,13 @@ namespace transport{
                 synchronized( &mutex )
                 {
                     this->command = command;
-                    
+                    // Create a response now before the caller has a
+                    // chance to destroy the command.
+                    this->response = 
+                        responseBuilder->buildResponse( command );
+
                     mutex.notifyAll();
-                }                
+                }
             }
 
             void run(void)
@@ -100,35 +111,31 @@ namespace transport{
                     {
                         while( !done )
                         {
+                            startedLatch.countDown();
                             mutex.wait();
-                            
+
                             if( command == NULL )
                             {
                                 continue;
                             }
-                            
-                            concurrent::Thread::sleep( 100 );
-                            
-                            if( responseBuilder != NULL && 
-                                transport != NULL )
+
+                            // If we created a response then send it.
+                            if( response != NULL && transport != NULL )
                             {
-                                transport->fireCommand( 
-                                    responseBuilder->buildResponse( 
-                                        command ) );
-                                        
-                                command = NULL;
-                                
-                                return;
+                                transport->fireCommand( this->response );
                             }
+
+                            this->response = NULL;
+                            this->command = NULL;
                         }
                     }
                 }
                 AMQ_CATCHALL_NOTHROW()
             }
         };
-        
+
     private:
-    
+
         ResponseBuilder* responseBuilder;
         CommandListener* commandListener;
         CommandListener* outgoingCommandListener;
@@ -137,112 +144,67 @@ namespace transport{
         concurrent::Mutex commandIdMutex;
         bool own;
         InternalCommandListener defaultListener;
-        
+        static DummyTransport* instance;
+
     public:
-    
-        DummyTransport( ResponseBuilder* responseBuilder , 
+
+        static DummyTransport* getInstance() {
+            return instance;
+        }
+
+        DummyTransport( ResponseBuilder* responseBuilder ,
                         bool own = false,
-                        bool useDefOutgoing = false ){
-            
-            this->responseBuilder = NULL;
-            this->commandListener = NULL;
-            this->outgoingCommandListener = NULL;
-            this->exceptionListener = NULL;
-            this->responseBuilder = responseBuilder;
-            this->own = own;
-            this->nextCommandId = 0;
-            if( useDefOutgoing )
-            {
-                this->outgoingCommandListener = &defaultListener;
-                this->defaultListener.setTransport( this );
-                this->defaultListener.setResponseBuilder( responseBuilder );
-            }
-        }
-        
-        virtual ~DummyTransport(){
-            if( own ){
-                delete responseBuilder;
-            }
-        }
-        
+                        bool useDefOutgoing = false );
+
+        virtual ~DummyTransport();
+
         void setResponseBuilder( ResponseBuilder* responseBuilder ){
             this->responseBuilder = responseBuilder;
         }
-        
-        unsigned int getNextCommandId() throw (exceptions::ActiveMQException){
-            
-            try{
-                synchronized( &commandIdMutex ){
-                    return ++nextCommandId;
-                }
-                
-                // Should never get here, but some compilers aren't
-                // smart enough to figure out we'll never get here.
-                return 0;
-            }
-            AMQ_CATCHALL_THROW( transport::CommandIOException )
-        }
-        
-        virtual void oneway( Command* command ) 
-                throw(CommandIOException, exceptions::UnsupportedOperationException)
-        {            
-            if( outgoingCommandListener != NULL ){
-                
-                command->setCommandId( getNextCommandId() );
-                command->setResponseRequired( false );
-                outgoingCommandListener->onCommand( command );
-                return;
-            }
-        }
-        
-        virtual Response* request( Command* command ) 
-            throw(CommandIOException, 
-                  exceptions::UnsupportedOperationException)
-        {
-            if( responseBuilder != NULL ){
-                command->setCommandId( getNextCommandId() );
-                command->setResponseRequired( true );
-                return responseBuilder->buildResponse( command );
-            }
-            
-            throw CommandIOException( __FILE__, __LINE__,
-                "no response builder available" );
-        }
-        
+
+        unsigned int getNextCommandId() throw (exceptions::ActiveMQException);
+
+        virtual void oneway( Command* command )
+                throw(CommandIOException, exceptions::UnsupportedOperationException);
+
+        virtual Response* request( Command* command )
+            throw(CommandIOException,
+                  exceptions::UnsupportedOperationException);
+
         virtual void setCommandListener( CommandListener* listener ){
             this->commandListener = listener;
         }
-        
+
         virtual void setOutgoingCommandListener( CommandListener* listener ){
             outgoingCommandListener = listener;
         }
-        
+
         virtual void setCommandReader( CommandReader* reader AMQCPP_UNUSED){}
-        
+
         virtual void setCommandWriter( CommandWriter* writer AMQCPP_UNUSED){}
-        
-        virtual void setTransportExceptionListener( 
+
+        virtual void setTransportExceptionListener(
             TransportExceptionListener* listener )
         {
             this->exceptionListener = listener;
         }
-        
+
         virtual void fireCommand( Command* cmd ){
             if( commandListener != NULL ){
                 commandListener->onCommand( cmd );
             }
         }
-        
+
         virtual void fireException( const exceptions::ActiveMQException& ex ){
             if( exceptionListener != NULL ){
                 exceptionListener->onTransportException( this, ex );
             }
         }
-        
+
         virtual void start() throw (cms::CMSException){}
         virtual void close() throw (cms::CMSException){}
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_TANSPORT_DUMMYTRANSPORT_H_*/

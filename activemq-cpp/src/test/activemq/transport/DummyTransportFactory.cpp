@@ -14,14 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "DummyTransportFactory.h"
 #include <activemq/support/LibraryInit.h>
+#include <activemq/connector/stomp/StompResponseBuilder.h>
+#include <activemq/transport/DummyTransport.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-//TransportFactoryMapRegistrar DummyTransportFactory::registrar(
-//    "dummy", new DummyTransportFactory());
-//
+Transport* DummyTransportFactory::createTransport(
+    const activemq::util::Properties& properties,
+    Transport* next,
+    bool own ) throw ( exceptions::ActiveMQException )
+{
+    // We don't use the next here, so clean it up now.
+    if( own == true ) {
+        delete next;
+    }
+
+    std::string wireFormat =
+        properties.getProperty( "wireFormat", "stomp" );
+
+    DummyTransport::ResponseBuilder* builder = NULL;
+
+    if( wireFormat == "stomp" )
+    {
+        builder = new connector::stomp::StompResponseBuilder(
+            properties.getProperty(
+                "transport.sessionId", "testSessionId" ) );
+    }
+
+    return new DummyTransport( builder, true, true );
+}
