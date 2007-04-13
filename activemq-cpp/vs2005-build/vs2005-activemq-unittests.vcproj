@@ -296,6 +296,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test\activemq\connector\stomp\StompResponseBuilder.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test\activemq\connector\stomp\StompResponseBuilder.h"
 						>
 					</File>
@@ -745,6 +749,10 @@
 				Name="transport"
 				>
 				<File
+					RelativePath="..\src\test\activemq\transport\DummyTransport.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\transport\DummyTransport.h"
 					>
 				</File>
@@ -765,14 +773,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\test\activemq\transport\ResponseCorrelatorTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\transport\ResponseCorrelatorTest.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\test\activemq\transport\TransportFactoryMapRegistrarTest.cpp"
 					>
 				</File>
@@ -788,6 +788,18 @@
 					RelativePath="..\src\test\activemq\transport\TransportFactoryMapTest.h"
 					>
 				</File>
+				<Filter
+					Name="filters"
+					>
+					<File
+						RelativePath="..\src\test\activemq\transport\filters\ResponseCorrelatorTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\activemq\transport\filters\ResponseCorrelatorTest.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="util"
