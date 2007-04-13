@@ -2229,10 +2229,6 @@
 				Name="transport"
 				>
 				<File
-					RelativePath="..\src\main\activemq\transport\BrokerError.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\transport\Command.h"
 					>
 				</File>
@@ -2253,10 +2249,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\transport\FutureResponse.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\transport\IOTransport.cpp"
 					>
 				</File>
@@ -2273,43 +2265,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\transport\LoggingTransport.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\LoggingTransport.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\transport\Response.h"
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\transport\ResponseCorrelator.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\ResponseCorrelator.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\TcpTransport.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\TcpTransport.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\TcpTransportFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\transport\TcpTransportFactory.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\transport\Transport.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\TransportBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\TransportBuilder.h"
 					>
 				</File>
 				<File
@@ -2340,6 +2308,78 @@
 					RelativePath="..\src\main\activemq\transport\TransportFilter.h"
 					>
 				</File>
+				<Filter
+					Name="filters"
+					>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\AsyncSendTransport.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\AsyncSendTransport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\AsyncSendTransportFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\AsyncSendTransportFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\FutureResponse.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\LoggingTransport.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\LoggingTransport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\LoggingTransportFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\LoggingTransportFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\ResponseCorrelator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\ResponseCorrelator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\ResponseCorrelatorFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\ResponseCorrelatorFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\TcpTransport.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\TcpTransport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\TcpTransportFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\filters\TcpTransportFactory.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="wireformat"
