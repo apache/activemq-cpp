@@ -33,7 +33,7 @@ LogManager* LogManager::instance = NULL;
 unsigned int LogManager::refCount = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager::~LogManager( void )
+LogManager::~LogManager()
 {
     // TODO - Delete all the loggers.
 }
@@ -43,47 +43,42 @@ void LogManager::setProperties( const Properties* properties )
 {
     // Copy the properties
     this->properties.copy(properties);
-    
+
     // Update the configuration of the loggers.
     // TODO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::addPropertyChangeListener( 
+void LogManager::addPropertyChangeListener(
     PropertyChangeListener* listener )
 {
-    if(find(listeners.begin(), listeners.end(), listener) == listeners.end())
-    {
-        listeners.push_back(listener);
+    if( find(listeners.begin(), listeners.end(), listener) == listeners.end() ) {
+        listeners.push_back( listener );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::removePropertyChangeListener( 
+void LogManager::removePropertyChangeListener(
     PropertyChangeListener* listener )
 {
-    listeners.remove(listener);
+    listeners.remove( listener );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* LogManager::getLogger( const std::string& name AMQCPP_UNUSED)
-{
+Logger* LogManager::getLogger( const std::string& name AMQCPP_UNUSED ) {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LogManager::getLoggerNames( const std::vector<std::string>& names  AMQCPP_UNUSED)
-{
+int LogManager::getLoggerNames( const std::vector<std::string>& names  AMQCPP_UNUSED ) {
     return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LogManager* LogManager::getInstance( void )
-{
-    synchronized( &mutex )
-    {
-        if( instance == NULL )
-        {
+LogManager* LogManager::getInstance() {
+
+    synchronized( &mutex ) {
+        if( instance == NULL ) {
             instance = new LogManager();
         }
 
@@ -91,24 +86,21 @@ LogManager* LogManager::getInstance( void )
 
         return instance;
     }
-    
+
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::returnInstance( void )
-{
-    synchronized( &mutex )
-    {
-        if( refCount == 0 )
-        {
+void LogManager::returnInstance() {
+
+    synchronized( &mutex ) {
+        if( refCount == 0 ) {
             return ;
         }
 
         refCount--;
 
-        if( refCount == 0 )
-        {
+        if( refCount == 0 ) {
             delete instance;
             instance = NULL;
         }
@@ -116,12 +108,11 @@ void LogManager::returnInstance( void )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogManager::destroy( void )
+void LogManager::destroy()
 {
-    if( instance != NULL )
-    {
-        synchronized( &mutex )
-        {
+    if( instance != NULL ) {
+
+        synchronized( &mutex ) {
             delete instance;
             instance = NULL;
             refCount = 0;

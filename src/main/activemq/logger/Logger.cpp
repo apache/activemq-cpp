@@ -26,147 +26,129 @@ using namespace activemq::logger;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger::Logger( const std::string& name AMQCPP_UNUSED, 
-                Logger* parent AMQCPP_UNUSED )
-{
+Logger::Logger( const std::string& name AMQCPP_UNUSED,
+                Logger* parent AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger::~Logger(void)
-{
+Logger::~Logger() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::addHandler(Handler* handler) throw ( IllegalArgumentException )
-{
-    if(handler == NULL)
+void Logger::addHandler( Handler* handler ) throw ( IllegalArgumentException ) {
+
+    if( handler == NULL )
     {
         IllegalArgumentException(
-            __FILE__, __LINE__, 
+            __FILE__, __LINE__,
             "Logger::addHandler - HAndler cannot be null");
     }
-    
-    if(find(handlers.begin(), handlers.end(), handler) != handlers.end())
+
+    if( find( handlers.begin(), handlers.end(), handler) != handlers.end() )
     {
-        handlers.push_back(handler);
+        handlers.push_back( handler );
     }
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::removeHandler(Handler* handler)
-{
-    list<Handler*>::iterator itr = 
-        find(handlers.begin(), handlers.end(), handler);
+void Logger::removeHandler( Handler* handler ) {
 
-    if(itr != handlers.end())
-    {
+    list<Handler*>::iterator itr =
+        find( handlers.begin(), handlers.end(), handler );
+
+    if( itr != handlers.end() ) {
+
         delete *itr;
         handlers.erase(itr);
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::setFilter( Filter* filter AMQCPP_UNUSED )
-{
+void Logger::setFilter( Filter* filter AMQCPP_UNUSED ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Logger::isLoggable( Level level AMQCPP_UNUSED ) const
-{
+bool Logger::isLoggable( Level level AMQCPP_UNUSED ) const{
     return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::entry(const std::string& blockName AMQCPP_UNUSED, 
-                   const std::string& file AMQCPP_UNUSED, 
-                   const int line AMQCPP_UNUSED)
-{
+void Logger::entry( const std::string& blockName AMQCPP_UNUSED,
+                    const std::string& file AMQCPP_UNUSED,
+                    const int line AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::exit(const std::string& blockName AMQCPP_UNUSED, 
-                  const std::string& file AMQCPP_UNUSED, 
-                  const int line AMQCPP_UNUSED)
-{
+void Logger::exit(const std::string& blockName AMQCPP_UNUSED,
+                  const std::string& file AMQCPP_UNUSED,
+                  const int line AMQCPP_UNUSED) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::debug(const std::string& file AMQCPP_UNUSED, 
-                   const int line AMQCPP_UNUSED, 
-                   const std::string fnctionName AMQCPP_UNUSED, 
-                   const std::string& message AMQCPP_UNUSED)
-{
+void Logger::debug( const std::string& file AMQCPP_UNUSED,
+                    const int line AMQCPP_UNUSED,
+                    const std::string fnctionName AMQCPP_UNUSED,
+                    const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::info(const std::string& file AMQCPP_UNUSED, 
-                  const int line AMQCPP_UNUSED, 
-                  const std::string fnctionName AMQCPP_UNUSED, 
-                  const std::string& message AMQCPP_UNUSED)
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void Logger::error(const std::string& file AMQCPP_UNUSED, 
-                   const int line AMQCPP_UNUSED, 
+void Logger::info( const std::string& file AMQCPP_UNUSED,
+                   const int line AMQCPP_UNUSED,
                    const std::string fnctionName AMQCPP_UNUSED,
-                   const std::string& message AMQCPP_UNUSED)
-{
+                   const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::warn(const std::string& file AMQCPP_UNUSED, 
-                  const int line AMQCPP_UNUSED, 
-                  const std::string fnctionName AMQCPP_UNUSED, 
-                  const std::string& message AMQCPP_UNUSED)
-{
+void Logger::error( const std::string& file AMQCPP_UNUSED,
+                    const int line AMQCPP_UNUSED,
+                    const std::string fnctionName AMQCPP_UNUSED,
+                    const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::fatal(const std::string& file AMQCPP_UNUSED, 
-                   const int line AMQCPP_UNUSED, 
-                   const std::string fnctionName AMQCPP_UNUSED, 
-                   const std::string& message AMQCPP_UNUSED)
-{
+void Logger::warn( const std::string& file AMQCPP_UNUSED,
+                   const int line AMQCPP_UNUSED,
+                   const std::string fnctionName AMQCPP_UNUSED,
+                   const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log( Level level AMQCPP_UNUSED, 
-                  const std::string& message AMQCPP_UNUSED)
-{
+void Logger::fatal( const std::string& file AMQCPP_UNUSED,
+                    const int line AMQCPP_UNUSED,
+                    const std::string fnctionName AMQCPP_UNUSED,
+                    const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(Level level AMQCPP_UNUSED, 
-                 const std::string& file AMQCPP_UNUSED, 
-                 const int line AMQCPP_UNUSED, 
-                 const std::string& message AMQCPP_UNUSED, 
-                 cms::CMSException& ex AMQCPP_UNUSED)
-{
+void Logger::log( Level level AMQCPP_UNUSED,
+                  const std::string& message AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(Level level AMQCPP_UNUSED, 
-                 const std::string& file AMQCPP_UNUSED, 
-                 const int line AMQCPP_UNUSED, 
-                 const std::string& message AMQCPP_UNUSED, ...)
-{
+void Logger::log( Level level AMQCPP_UNUSED,
+                  const std::string& file AMQCPP_UNUSED,
+                  const int line AMQCPP_UNUSED,
+                  const std::string& message AMQCPP_UNUSED,
+                  cms::CMSException& ex AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Logger::log(LogRecord& record AMQCPP_UNUSED)
-{
+void Logger::log( Level level AMQCPP_UNUSED,
+                  const std::string& file AMQCPP_UNUSED,
+                  const int line AMQCPP_UNUSED,
+                  const std::string& message AMQCPP_UNUSED, ... ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* Logger::getLogger(const std::string& name AMQCPP_UNUSED)
-{
+void Logger::log( LogRecord& record AMQCPP_UNUSED ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Logger* Logger::getLogger( const std::string& name AMQCPP_UNUSED ) {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* Logger::getAnonymousLogger(void)
-{
+Logger* Logger::getAnonymousLogger() {
     return NULL;
 }

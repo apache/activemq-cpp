@@ -26,39 +26,38 @@ namespace logger{
     /**
      * This Handler publishes log records to System.err. By default the
      * SimpleFormatter is used to generate brief summaries.
-     * 
-     * Configuration: By default each ConsoleHandler is initialized using 
+     *
+     * Configuration: By default each ConsoleHandler is initialized using
      * the following LogManager configuration properties. If properties are
-     * not defined (or have invalid values) then the specified default 
+     * not defined (or have invalid values) then the specified default
      * values are used.
      *
-     * ConsoleHandler.level specifies the default level for the Handler 
+     * ConsoleHandler.level specifies the default level for the Handler
      *  (defaults to Level.INFO).
-     * ConsoleHandler.filter specifies the name of a Filter class to use 
+     * ConsoleHandler.filter specifies the name of a Filter class to use
      *  (defaults to no Filter).
-     * ConsoleHandler.formatter specifies the name of a Formatter class to 
+     * ConsoleHandler.formatter specifies the name of a Formatter class to
      *  use (defaults to SimpleFormatter).
      */
-    class ConsoleHandler
-    {
+    class ConsoleHandler : public StreamHandler {
     private:
-   
+
         // The Standard Error Stream to log to
         io::StandardErrorOutputStream stream;
-      
+
         // The default Simple Formatter
         SimpleFormatter formatter;
-   
+
     public:
-   
-        ConsoleHandler(void) : StreamHandler(&stream, &formatter)
-        {
+
+        ConsoleHandler(void) : StreamHandler(&stream, &formatter) {
+
             // Defaults level to Info
             setLevel(Level.INFO);
         }
-      
+
         virtual ~ConsoleHandler(void) {}
-      
+
         /**
          * Close the current output stream.
          * <p>
@@ -68,11 +67,10 @@ namespace logger{
          */
         virtual void close(void) throw ( cms::CMSException )
         {
-            if(getOutputStream())
-            {
+            if( getOutputStream() ) {
                 getOutputStream->flush();
             }
-        }      
+        }
 
     };
 

@@ -24,22 +24,22 @@ namespace logger{
 #undef DEBUG
 #endif
 
-   /**
-    * Defines an enumeration for logging levels
-    */
-   enum Level
-   {
-      Off,
-      Null,
-      Markblock,
-      Debug,
-      Info,
-      Warn,
-      Error,
-      Fatal,
-      Throwing
-   };
-   
+    /**
+     * Defines an enumeration for logging levels
+     */
+    enum Level
+    {
+        Off,
+        Null,
+        Markblock,
+        Debug,
+        Info,
+        Warn,
+        Error,
+        Fatal,
+        Throwing
+    };
+
 }}
 
 #endif /*_ACTIVEMQ_LOGGER_LOGGERCOMMON_H_ */

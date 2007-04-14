@@ -22,54 +22,53 @@
 namespace activemq{
 namespace logger{
 
-   /**
-    * Print a brief summary of the LogRecord in a human readable format. 
-    * The summary will typically be 1 or 2 lines.
-    */
-   class SimpleFormatter : public Formatter
-   {
-   public:
-      
-      SimpleFormatter(void) {}
-      virtual ~SimpleFormatter(void) {}
+    /**
+     * Print a brief summary of the LogRecord in a human readable format.
+     * The summary will typically be 1 or 2 lines.
+     */
+    class SimpleFormatter : public Formatter {
+    public:
 
-      /**
-       * Format the given log record and return the formatted string.
-       * @param record The Log Record to Format
-       */
-      virtual std::string format( const LogRecord& record ) const {
-         return "";
-      }
-      
-      /**
-       * Format the message string from a log record.
-       * @param record The Log Record to Format
-       */
-      virtual std::string formatMessage( const LogRecord& record ) const{
-         return record.getMessage();
-      }
-      
-      /**
-       * Return the header string for a set of formatted records.  In the
-       * default implementation this method should return empty string
-       * @param handler the target handler, can be null
-       * @return empty string
-       */
-      virtual std::string getHead( const Handler* handler ) {
-         return "";
-      }
+        SimpleFormatter() {}
+        virtual ~SimpleFormatter() {}
 
-      /**
-       * Return the tail string for a set of formatted records.  In the
-       * default implementation this method should return empty string
-       * @param handler the target handler, can be null
-       * @return empty string
-       */
-      virtual std::string getTail( const Handler* handler ) {
-         return "";
-      }
+        /**
+         * Format the given log record and return the formatted string.
+         * @param record The Log Record to Format
+         */
+        virtual std::string format( const LogRecord& record ) const {
+            return "";
+        }
 
-   };
+        /**
+         * Format the message string from a log record.
+         * @param record The Log Record to Format
+         */
+         virtual std::string formatMessage( const LogRecord& record ) const{
+            return record.getMessage();
+        }
+
+        /**
+         * Return the header string for a set of formatted records.  In the
+         * default implementation this method should return empty string
+         * @param handler the target handler, can be null
+         * @return empty string
+         */
+        virtual std::string getHead( const Handler* handler ) {
+            return "";
+        }
+
+        /**
+         * Return the tail string for a set of formatted records.  In the
+         * default implementation this method should return empty string
+         * @param handler the target handler, can be null
+         * @return empty string
+         */
+        virtual std::string getTail( const Handler* handler ) {
+            return "";
+        }
+
+    };
 
 }}
 

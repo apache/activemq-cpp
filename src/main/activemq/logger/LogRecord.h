@@ -61,7 +61,7 @@ namespace logger{
          * Get Level of this log record
          * @return Level enumeration value.
          */
-        Level getLevel(void) const { 
+        Level getLevel() const { 
             return level; 
         };
       
@@ -77,7 +77,7 @@ namespace logger{
          * Gets the Source Logger's Name
          * @return the source loggers name
          */
-        const std::string& getLoggerName(void) const { 
+        const std::string& getLoggerName() const { 
             return loggerName; 
         };
       
@@ -93,7 +93,7 @@ namespace logger{
          * Gets the Source Log File name
          * @return the source loggers name
          */
-        const std::string& getSourceFile(void) const { 
+        const std::string& getSourceFile() const { 
             return sourceFile; 
         };
       
@@ -109,7 +109,7 @@ namespace logger{
          * Gets the Source Log line number
          * @return the source loggers line number
          */
-        unsigned long getSourceLine(void) const { 
+        unsigned long getSourceLine() const { 
             return sourceLine;
         };
       
@@ -125,7 +125,7 @@ namespace logger{
          * Gets the Message to be Logged
          * @return the source logger's message
          */
-        const std::string& getMessage(void) const { 
+        const std::string& getMessage() const { 
             return message; 
         };
       
@@ -141,7 +141,7 @@ namespace logger{
          * Gets the name of the function where this log was logged
          * @return the source logger's message
          */
-        const std::string& getSourceFunction(void) const { 
+        const std::string& getSourceFunction() const { 
             return functionName; 
          };
       
@@ -157,7 +157,7 @@ namespace logger{
          * Gets the time in mills that this message was logged.
          * @return UTC time in milliseconds
          */
-        unsigned long getTimestamp(void) const { return timeStamp; };
+        unsigned long getTimestamp() const { return timeStamp; };
       
         /**
          * Sets the time in mills that this message was logged.
@@ -171,7 +171,7 @@ namespace logger{
          * Gets the Thread Id where this Log was created
          * @return the source loggers line number
          */
-        unsigned long getTreadId(void) const { 
+        unsigned long getTreadId() const { 
             return threadId; 
         };
       
