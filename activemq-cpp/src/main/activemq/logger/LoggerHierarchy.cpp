@@ -21,12 +21,10 @@ using namespace activemq;
 using namespace activemq::logger;
 
 ////////////////////////////////////////////////////////////////////////////////
-LoggerHierarchy::LoggerHierarchy(void)
-{
+LoggerHierarchy::LoggerHierarchy(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-LoggerHierarchy::~LoggerHierarchy(void)
-{
+LoggerHierarchy::~LoggerHierarchy(){
 }
 

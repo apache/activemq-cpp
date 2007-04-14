@@ -69,7 +69,7 @@ namespace logger{
          */
         Logger( const std::string& name, Logger* parent );
         
-        virtual ~Logger(void);
+        virtual ~Logger();
         
         /**
          * Gets the name of this Logger
@@ -122,7 +122,7 @@ namespace logger{
          * Gets the Filter object that this class is using.
          * @return the Filter in use, can be null
          */
-        virtual const Filter* getFilter(void) const {
+        virtual const Filter* getFilter() const {
             return filter;
         }
         
@@ -132,7 +132,7 @@ namespace logger{
          * effective level will be inherited from its parent.
          * @return the level that is currently set
          */
-        virtual Level getLevel(void) const {
+        virtual Level getLevel() const {
             return level;
         }
         
@@ -156,7 +156,7 @@ namespace logger{
          * its parent logger.
          * @return true if using Parent Handlers
          */
-        virtual bool getUseParentHandlers(void) const {
+        virtual bool getUseParentHandlers() const {
             return useParentHandlers;
         }
         
@@ -378,7 +378,7 @@ namespace logger{
          * The caller is responsible for destroying the returned logger.
          * @return Newly created anonymous logger
          */
-        static Logger* getAnonymousLogger(void);
+        static Logger* getAnonymousLogger();
 
         /**
          * Find or create a logger for a named subsystem. If a logger has 

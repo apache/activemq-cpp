@@ -23,18 +23,17 @@ namespace logger{
     /**
      * A Formatter provides support for formatting LogRecords.
      *
-     * Typically each logging Handler will have a Formatter associated with 
+     * Typically each logging Handler will have a Formatter associated with
      * it. The Formatter takes a LogRecord and converts it to a string.
      *
-     * Some formatters (such as the XMLFormatter) need to wrap head and 
-     * tail strings around a set of formatted records. The getHeader and 
+     * Some formatters (such as the XMLFormatter) need to wrap head and
+     * tail strings around a set of formatted records. The getHeader and
      * getTail methods can be used to obtain these strings.
      */
-    class Formatter
-    {
+    class Formatter {
     public:
 
-        virtual ~Formatter(void) {}
+        virtual ~Formatter() {}
 
         /**
          * Format the given log record and return the formatted string.
@@ -42,14 +41,14 @@ namespace logger{
          * @returns the formatted record.
          */
         virtual std::string format( const LogRecord& record ) const = 0;
-      
+
         /**
          * Format the message string from a log record.
          * @param record The Log Record to Format
          * @returns the formatted message
          */
         virtual std::string formatMessage( const LogRecord& record ) const = 0;
-      
+
         /**
          * Return the header string for a set of formatted records.  In the
          * default implementation this method should return empty string

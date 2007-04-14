@@ -24,8 +24,8 @@ namespace logger{
     {
     public:
 
-    	LoggerHierarchy(void);
-    	virtual ~LoggerHierarchy(void);
+        LoggerHierarchy();
+        virtual ~LoggerHierarchy();
 
     };
 
