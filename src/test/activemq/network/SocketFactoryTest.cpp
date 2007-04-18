@@ -19,6 +19,10 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::network::SocketFactoryTest );
 
+#include <activemq/util/SimpleProperties.h>
+#include <activemq/network/SocketFactory.h>
+#include <activemq/network/TcpSocket.h>
+
 using namespace activemq;
 using namespace activemq::network;
 
@@ -42,6 +46,67 @@ void SocketFactoryTest::test()
 
         Socket* client = SocketFactory::createSocket(
             ostream.str(), properties );
+
+        synchronized(&serverThread.mutex)
+        {
+            if(serverThread.getNumClients() != 1)
+            {
+                serverThread.mutex.wait(1000);
+            }
+        }
+
+        CPPUNIT_ASSERT( client->isConnected() );
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
+
+        client->close();
+
+        synchronized(&serverThread.mutex)
+        {
+            if(serverThread.getNumClients() != 0)
+            {
+                serverThread.mutex.wait(1000);
+            }
+        }
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 0 );
+
+        serverThread.stop();
+        serverThread.join();
+
+        delete client;
+    }
+    catch(exceptions::ActiveMQException ex)
+    {
+        CPPUNIT_ASSERT( false );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketFactoryTest::testNoDelay()
+{
+    try
+    {
+        MyServerThread serverThread;
+        serverThread.start();
+
+        concurrent::Thread::sleep( 40 );
+
+        util::SimpleProperties properties;
+
+        std::ostringstream ostream;
+
+        ostream << "127.0.0.1:" << port;
+
+        properties.setProperty( "soLinger", "false" );
+        properties.setProperty( "tcpNoDelay", "true" );
+
+        Socket* client = SocketFactory::createSocket(
+            ostream.str(), properties );
+
+        TcpSocket* tcpSock = dynamic_cast<TcpSocket*>( client );
+        CPPUNIT_ASSERT( tcpSock != NULL );
+        CPPUNIT_ASSERT( tcpSock->getTcpNoDelay() == true );
 
         synchronized(&serverThread.mutex)
         {
