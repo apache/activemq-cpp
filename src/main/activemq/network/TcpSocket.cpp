@@ -30,6 +30,7 @@
     #include <netinet/in.h>
     #include <arpa/inet.h>
     #include <string.h>
+    #include <netinet/tcp.h>
 #endif
 
 #ifndef SHUT_RDWR
@@ -412,11 +413,26 @@ int TcpSocket::getSoTimeout() const throw( SocketException )
 
 ////////////////////////////////////////////////////////////////////////////////
 bool TcpSocket::getTcpNoDelay() const throw ( cms::CMSException ) {
-    return false;
+
+    try{
+        int value;
+        socklen_t length = sizeof( int );
+        checkResult(::getsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&value, &length ));
+        return value != 0;
+    }
+    AMQ_CATCH_RETHROW( SocketException )
+    AMQ_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::setTcpNoDelay( bool value ) throw ( cms::CMSException ) {
+
+    try{
+        int ivalue = value ? 1 : 0;
+        checkResult(::setsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&ivalue, sizeof(int) ));
+    }
+    AMQ_CATCH_RETHROW( SocketException )
+    AMQ_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
