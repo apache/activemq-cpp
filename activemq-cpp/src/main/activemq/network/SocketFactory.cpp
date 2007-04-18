@@ -88,14 +88,16 @@ Socket* SocketFactory::createSocket(
         dummy = properties.getProperty( "soSendBufferSize", "-1" );
         sscanf( dummy.c_str(), "%d", &soSendBufferSize );
 
+        // Get the socket TCP_NODELAY flag.
+        bool tcpNoDelay =
+            properties.getProperty( "tcpNoDelay", "false" ) == "true";
+
         // Now that we have all the elements that we wanted - let's do it!
         // Create a TCP Socket and then Wrap it in a buffered socket
         // so that users get the benefit of buffered reads and writes.
         // The buffered socket will own the TcpSocket instance, and will
         // clean it up when it is cleaned up.
         TcpSocket* tcpSocket = new TcpSocket();
-        /*BufferedSocket* bufferedSocket =
-            new BufferedSocket(tcpSocket, inputBufferSize, outputBufferSize);*/
 
         try
         {
@@ -105,6 +107,7 @@ Socket* SocketFactory::createSocket(
             // Set the socket options.
             tcpSocket->setSoLinger( soLinger );
             tcpSocket->setKeepAlive( soKeepAlive );
+            tcpSocket->setTcpNoDelay( tcpNoDelay );
 
             if( soReceiveBufferSize > 0 ){
                 tcpSocket->setReceiveBufferSize( soReceiveBufferSize );
@@ -113,6 +116,7 @@ Socket* SocketFactory::createSocket(
             if( soSendBufferSize > 0 ){
                 tcpSocket->setSendBufferSize( soSendBufferSize );
             }
+
         }
         catch ( SocketException& ex )
         {
