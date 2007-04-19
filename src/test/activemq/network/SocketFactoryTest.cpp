@@ -34,7 +34,7 @@ void SocketFactoryTest::test()
         MyServerThread serverThread;
         serverThread.start();
 
-        concurrent::Thread::sleep( 40 );
+        concurrent::Thread::sleep( 500 );
 
         util::SimpleProperties properties;
 
@@ -78,6 +78,8 @@ void SocketFactoryTest::test()
     }
     catch(exceptions::ActiveMQException ex)
     {
+        std::cout << "SocketFactoryTest::test - Caught Exception." << std::endl;
+        ex.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
 }
