@@ -25,6 +25,7 @@
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/util/Date.h>
 #include <activemq/util/PrimitiveMap.h>
+#include <cms/DeliveryMode.h>
 
 namespace activemq{
 namespace connector{
@@ -57,13 +58,13 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            const ActiveMQMessageBase<T>* message = 
+            const ActiveMQMessageBase<T>* message =
                 dynamic_cast< const ActiveMQMessageBase<T>* >( src );
-            
+
             this->properties.copy( message->properties );
             this->setAckHandler( message->getAckHandler() );
             this->setRedeliveryCount( message->getRedeliveryCount() );
-            
+
             openwire::commands::Message::copyDataStructure( src );
         }
 
@@ -497,7 +498,7 @@ namespace commands{
          * @param mode - DeliveryMode enumerated value.
          */
         virtual void setCMSDeliveryMode( int mode ) {
-            this->setPersistent( mode != 0 );
+            this->setPersistent( mode == (int)cms::DeliveryMode::PERSISTENT );
         }
 
         /**
