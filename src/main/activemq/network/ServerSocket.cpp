@@ -199,8 +199,18 @@ Socket* ServerSocket::accept() throw (SocketException)
         int temp_len = sizeof( sockaddr_in );
     #endif
 
-    SocketHandle ss_socket_handle = 
-        ::accept( socketHandle, reinterpret_cast<struct sockaddr*>(&temp), &temp_len );
+    SocketHandle ss_socket_handle = NULL;
+    
+    // Loop to ignore any signal interruptions that occur during the operation.  
+    do {
+        
+        ss_socket_handle = ::accept( socketHandle, 
+                                     reinterpret_cast<struct sockaddr*>(&temp), 
+                                     &temp_len );
+        
+    } while( ss_socket_handle < 0 && 
+             SocketError::getErrorCode() == SocketError::INTERRUPTED );
+        
     if( ss_socket_handle < 0 ) {
         throw SocketException( __FILE__, __LINE__, 
             "ServerSocket::accept- %s", SocketError::getErrorString().c_str() );
