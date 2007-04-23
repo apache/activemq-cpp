@@ -1,0 +1,13 @@
+=========================================================================
+==  Release Notes for CMS 1.0                                          ==
+=========================================================================
+
+== Overview ==
+
+This is the first official release of the C++ Messaging Service (CMS)
+API.  It is designed to closely mirror the JMS API.  CMS has evolved 
+under the activemq-cpp project and is now being extracted as it's own 
+tag and source bundle so that it may be used independently of 
+activemq-cpp.  The hope is that this will encourage more C++ 
+implementations and eventually the adoption of a standard API for 
+messaging from C++ applications.

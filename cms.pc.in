@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: CMS API
+Description: Messaging API for C++.
+Version: @VERSION@
+Libs: -L${libdir} -l@CMS_LIBRARY_NAME@-@CMS_API_VERSION@ -ldl
+Cflags: -I${includedir}/@CMS_LIBRARY_NAME@-@CMSAPI_VERSION@ -I${libdir}/@CMS_LIBRARY_NAME@-@CMS_API_VERSION@/include
