@@ -19,7 +19,7 @@
 #define _DECAF_IO_INPUTSTREAM_H_
 
 #include <decaf/io/IOException.h>
-#include <cms/Closeable.h>
+#include <decaf/io/Closeable.h>
 #include <activemq/concurrent/Synchronizable.h>
 #include <activemq/exceptions/UnsupportedOperationException.h>
 
@@ -29,12 +29,9 @@ namespace io{
     /**
      * Base interface for an input stream.
      */
-    class InputStream
-    :
-        public cms::Closeable,
-        public concurrent::Synchronizable
+    class InputStream : public Closeable,
+                        public concurrent::Synchronizable
     {
-
     public:
 
         virtual ~InputStream(){}

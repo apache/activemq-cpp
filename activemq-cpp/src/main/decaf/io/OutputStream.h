@@ -18,7 +18,7 @@
 #ifndef _DECAF_IO_OUTPUTSTREAM_H
 #define _DECAF_IO_OUTPUTSTREAM_H
 
-#include <cms/Closeable.h>
+#include <decaf/io/Closeable.h>
 #include <decaf/io/IOException.h>
 #include <activemq/concurrent/Synchronizable.h>
 
@@ -28,10 +28,8 @@ namespace io{
     /**
      * Base interface for an output stream.
      */
-    class OutputStream
-    :
-        public cms::Closeable,
-        public concurrent::Synchronizable
+    class OutputStream : public Closeable,
+                         public concurrent::Synchronizable
     {
     public:
 
