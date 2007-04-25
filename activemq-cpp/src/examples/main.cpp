@@ -230,7 +230,13 @@ public:
             count++;
             const TextMessage* textMessage =
                 dynamic_cast< const TextMessage* >( message );
-            string text = textMessage->getText();
+            string text = "";
+
+            if( textMessage != NULL ) {
+                text = textMessage->getText();
+            } else {
+                text = "NOT A TEXTMESSAGE!";
+            }
 
             printf( "Message #%d Received: %s\n", count, text.c_str() );
         } catch (CMSException& e) {
