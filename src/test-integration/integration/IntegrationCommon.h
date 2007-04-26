@@ -28,9 +28,18 @@ namespace integration{
 
         virtual ~IntegrationCommon() {}
 
-        static const int          defaultDelay;
-        static const unsigned int defaultMsgCount;
+        virtual std::string getStompURL() const {
+            return this->stompURL;
+        }
 
+        virtual std::string getOpenwireURL() const {
+            return this->openwireURL;
+        }
+
+    public:  // Statics
+
+        static const int defaultDelay;
+        static const unsigned int defaultMsgCount;
         static bool debug;
 
         static IntegrationCommon& getInstance();
