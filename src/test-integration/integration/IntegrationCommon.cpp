@@ -19,6 +19,21 @@
 
 using namespace integration;
 
-const int         IntegrationCommon::defaultDelay = 5;
-const unsigned int         IntegrationCommon::defaultMsgCount = 1000;
+const int IntegrationCommon::defaultDelay = 5;
+const unsigned int IntegrationCommon::defaultMsgCount = 1000;
 bool IntegrationCommon::debug = false;
+
+////////////////////////////////////////////////////////////////////////////////
+IntegrationCommon::IntegrationCommon() {
+
+    this->urlCommon = "tcp://localhost:";
+    this->stompURL = this->urlCommon + "61613?wireformat=stomp";
+    this->openwireURL = this->urlCommon + "61616?wireformat=openwire";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IntegrationCommon& IntegrationCommon::getInstance() {
+    static IntegrationCommon instance;
+
+    return instance;
+}
