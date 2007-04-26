@@ -30,7 +30,8 @@ namespace openwire{
     class OpenwireAsyncSenderTest : public CppUnit::TestFixture {
         
         CPPUNIT_TEST_SUITE( OpenwireAsyncSenderTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test1 );
+        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -42,7 +43,8 @@ namespace openwire{
         OpenwireAsyncSenderTest();
         virtual ~OpenwireAsyncSenderTest();
 
-        virtual void test();
+        virtual void test1();
+        virtual void test2();
 
     };
 
