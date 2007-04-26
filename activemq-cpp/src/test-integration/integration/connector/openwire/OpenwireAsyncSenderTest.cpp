@@ -31,6 +31,7 @@
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/network/Socket.h>
 #include <activemq/exceptions/NullPointerException.h>
+#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
@@ -85,7 +86,28 @@ OpenwireAsyncSenderTest::~OpenwireAsyncSenderTest()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireAsyncSenderTest::test()
+void OpenwireAsyncSenderTest::test1()
+{
+    try{
+        std::string brokerURI =
+            "tcp://127.0.0.1:61616"
+            "?wireFormat=openwire"
+            "&transport.useAsyncSend=true";
+        ActiveMQConnectionFactory* connectionFactory = 
+            new ActiveMQConnectionFactory(brokerURI);
+        cms::Connection* connection = connectionFactory->createConnection();
+        delete connectionFactory;
+        connection->start();
+        connection->stop();
+        delete connection;
+        CPPUNIT_ASSERT( true );
+    } catch(...) {
+        CPPUNIT_ASSERT( false );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireAsyncSenderTest::test2()
 {
     try
     {
