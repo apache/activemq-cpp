@@ -19,6 +19,7 @@
 
 using namespace integration;
 
+////////////////////////////////////////////////////////////////////////////////
 const int IntegrationCommon::defaultDelay = 5;
 const unsigned int IntegrationCommon::defaultMsgCount = 1000;
 bool IntegrationCommon::debug = false;
