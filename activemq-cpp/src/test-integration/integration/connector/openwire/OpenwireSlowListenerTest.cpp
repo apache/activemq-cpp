@@ -98,7 +98,9 @@ void OpenwireSlowListenerTest::test()
         SlowListener listener;
 
         ActiveMQConnectionFactory* connectionFactory;
-        connectionFactory = new activemq::core::ActiveMQConnectionFactory("tcp://127.0.0.1:61616?wireFormat=openwire");
+        connectionFactory =
+            new activemq::core::ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getOpenwireURL() );
         cms::Connection* connection = connectionFactory->createConnection();
         cms::Session* session = connection->createSession( cms::Session::AUTO_ACKNOWLEDGE );
         cms::Destination* destination = session->createTopic(Guid::createGUIDString());

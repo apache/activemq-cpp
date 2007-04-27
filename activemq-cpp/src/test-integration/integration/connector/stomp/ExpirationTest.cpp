@@ -16,6 +16,7 @@
  */
 
 #include "ExpirationTest.h"
+#include <integration/IntegrationCommon.h>
 
 #include <sstream>
 
@@ -75,8 +76,6 @@ using namespace std;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-
-
 ExpirationTest::Producer::Producer( string topic, int numMessages, long long timeToLive ){
     connection = NULL;
     session = NULL;
@@ -103,7 +102,8 @@ void ExpirationTest::Producer::setDisableTimeStamps( bool value ) {
 void ExpirationTest::Producer::run() {
     try {
         // Create a ConnectionFactory
-        ActiveMQConnectionFactory* connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        ActiveMQConnectionFactory* connectionFactory =
+            new ActiveMQConnectionFactory( IntegrationCommon::getInstance().getStompURL() );
 
         // Create a Connection
         connection = connectionFactory->createConnection();
@@ -199,7 +199,7 @@ void ExpirationTest::Consumer::run() {
 
         // Create a Connection
         connection = ActiveMQConnectionFactory::createConnection(
-            "tcp://localhost:61613?wireFormat=stomp", user, passwd, sID );
+            IntegrationCommon::getInstance().getStompURL(), user, passwd, sID );
 
         connection->start();
 

@@ -75,7 +75,7 @@ using namespace integration::connector::openwire;
 ////////////////////////////////////////////////////////////////////////////////
 OpenwireAsyncSenderTest::OpenwireAsyncSenderTest()
 :
-    testSupport("tcp://localhost:61616?wireFormat=openwire&transport.useAsyncSend=true")
+    testSupport( IntegrationCommon::getInstance().getOpenwireURL() + "&transport.useAsyncSend=true")
 {
     testSupport.initialize();
 }
@@ -90,10 +90,9 @@ void OpenwireAsyncSenderTest::test1()
 {
     try{
         std::string brokerURI =
-            "tcp://127.0.0.1:61616"
-            "?wireFormat=openwire"
+            IntegrationCommon::getInstance().getOpenwireURL() +
             "&transport.useAsyncSend=true";
-        ActiveMQConnectionFactory* connectionFactory = 
+        ActiveMQConnectionFactory* connectionFactory =
             new ActiveMQConnectionFactory(brokerURI);
         cms::Connection* connection = connectionFactory->createConnection();
         delete connectionFactory;

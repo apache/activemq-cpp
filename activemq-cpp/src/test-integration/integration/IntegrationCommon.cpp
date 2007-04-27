@@ -28,8 +28,8 @@ bool IntegrationCommon::debug = false;
 IntegrationCommon::IntegrationCommon() {
 
     this->urlCommon = "tcp://localhost:";
-    this->stompURL = this->urlCommon + "61613?wireformat=stomp";
-    this->openwireURL = this->urlCommon + "61616?wireformat=openwire";
+    this->stompURL = this->urlCommon + "61613?wireFormat=stomp";
+    this->openwireURL = this->urlCommon + "61616?wireFormat=openwire";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
