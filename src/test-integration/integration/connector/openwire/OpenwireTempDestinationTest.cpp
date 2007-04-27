@@ -74,7 +74,7 @@ using namespace integration::connector::openwire;
 
 ///////////////////////////////////////////////////////////////////////////////
 OpenwireTempDestinationTest::OpenwireTempDestinationTest()
-  : testSupport( "tcp://127.0.0.1:61616?wireFormat=openwire" )
+  : testSupport( IntegrationCommon::getInstance().getOpenwireURL() )
 {
     testSupport.initialize();
 }

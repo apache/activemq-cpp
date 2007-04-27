@@ -82,7 +82,7 @@ SimpleRollbackTest::SimpleRollbackTest()
 {
     try
     {
-        string url = "tcp://localhost:61613?wireFormat=stomp";
+        string url = IntegrationCommon::getInstance().getStompURL();
         numReceived = 0;
 
         // Default amount to send and receive

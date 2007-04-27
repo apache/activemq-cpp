@@ -73,7 +73,7 @@ using namespace integration::connector::stomp;
 
 DurableTest::DurableTest()
 :
-    testSupport("tcp://localhost:61613?wireFormat=stomp")
+    testSupport( IntegrationCommon::getInstance().getStompURL() )
 {
     testSupport.initialize();
 }
@@ -89,36 +89,36 @@ void DurableTest::test()
             cout << "Starting activemqcms durable test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         std::string subName = Guid().createGUID();
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic(Guid::createGUIDString());
-        cms::MessageConsumer* consumer = 
-            session->createDurableConsumer( topic, subName, "" );            
+        cms::MessageConsumer* consumer =
+            session->createDurableConsumer( topic, subName, "" );
         consumer->setMessageListener( &testSupport );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
         unsigned int sent;
 
         // Send some text messages
         sent = testSupport.produceTextMessages( *producer, 3 );
-        
+
         // Wait for all messages
         testSupport.waitForMessages( sent );
 
         unsigned int numReceived = testSupport.getNumReceived();
-        
+
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        
+
         CPPUNIT_ASSERT_EQUAL( sent, numReceived );
 
         // Nuke the consumer
@@ -127,7 +127,7 @@ void DurableTest::test()
         // Send some text messages
         sent += testSupport.produceTextMessages( *producer, 3 );
 
-        consumer = session->createDurableConsumer( topic, subName, "" );            
+        consumer = session->createDurableConsumer( topic, subName, "" );
         consumer->setMessageListener( &testSupport );
 
         // Send some text messages
@@ -135,7 +135,7 @@ void DurableTest::test()
 
         // Wait for all remaining messages
         testSupport.waitForMessages( sent );
-        
+
         numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
@@ -145,7 +145,7 @@ void DurableTest::test()
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }

@@ -17,6 +17,7 @@
 
 #include "OpenwireExpirationTest.h"
 
+#include <integration/IntegrationCommon.h>
 #include <sstream>
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
@@ -75,8 +76,6 @@ using namespace std;
 using namespace integration;
 using namespace integration::connector::openwire;
 
-
-
 OpenwireExpirationTest::Producer::Producer( string topic, int numMessages, long long timeToLive ){
     connection = NULL;
     session = NULL;
@@ -103,7 +102,9 @@ void OpenwireExpirationTest::Producer::setDisableTimeStamps( bool value ) {
 void OpenwireExpirationTest::Producer::run() {
     try {
         // Create a ConnectionFactory
-        ActiveMQConnectionFactory* connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        ActiveMQConnectionFactory* connectionFactory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getStompURL() );
 
         // Create a Connection
         connection = connectionFactory->createConnection();
@@ -199,7 +200,7 @@ void OpenwireExpirationTest::Consumer::run() {
 
         // Create a Connection
         connection = ActiveMQConnectionFactory::createConnection(
-            "tcp://localhost:61613?wireFormat=stomp", user, passwd, sID );
+            IntegrationCommon::getInstance().getStompURL(), user, passwd, sID );
         connection->start();
 
         // Create a Session
