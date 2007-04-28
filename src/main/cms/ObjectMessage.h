@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _CMS_OBJECTMESSAGE_H_
 #define _CMS_OBJECTMESSAGE_H_
 
@@ -22,10 +22,10 @@
 
 namespace cms{
 
-    class ObjectMessage : Message
+    class ObjectMessage : public Message
     {
     public:
-    
+
         virtual ~ObjectMessage() {}
 
     };
