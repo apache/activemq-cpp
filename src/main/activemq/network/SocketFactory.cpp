@@ -90,7 +90,7 @@ Socket* SocketFactory::createSocket(
 
         // Get the socket TCP_NODELAY flag.
         bool tcpNoDelay =
-            properties.getProperty( "tcpNoDelay", "false" ) == "true";
+            properties.getProperty( "tcpNoDelay", "true" ) == "true";
 
         // Now that we have all the elements that we wanted - let's do it!
         // Create a TCP Socket and then Wrap it in a buffered socket
