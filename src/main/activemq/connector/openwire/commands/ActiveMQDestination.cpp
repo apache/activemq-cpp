@@ -98,6 +98,7 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
     this->setOrdered( srcPtr->isOrdered() );
     this->setExclusive( srcPtr->isExclusive() );
     this->setOrderedTarget( srcPtr->getOrderedTarget() );
+    this->options.copy( &srcPtr->getOptions() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
