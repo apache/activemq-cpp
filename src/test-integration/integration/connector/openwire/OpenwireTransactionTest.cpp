@@ -72,7 +72,7 @@ using namespace integration::connector::openwire;
 
 OpenwireTransactionTest::OpenwireTransactionTest()
 :
-    testSupport( "tcp://127.0.0.1:61616?wireFormat=openwire", cms::Session::SESSION_TRANSACTED )
+    testSupport( IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::SESSION_TRANSACTED )
 {
     testSupport.initialize();
 }
@@ -88,46 +88,46 @@ void OpenwireTransactionTest::test()
             cout << "Starting activemqcms transactional test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                 << " milli-seconds) ...\n"
                 << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic("mytopic");
-        cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =
+            session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
-            
+
         session->commit();
-        
+
         // Send some bytes messages.
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
-        
+
         session->commit();
 
         // Wait till we get all the messages
         testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
-        
+
         unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
+        CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
         testSupport.setNumReceived( 0 );
 
         // Send some text messages
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         session->rollback();
@@ -139,13 +139,13 @@ void OpenwireTransactionTest::test()
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
+        CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
