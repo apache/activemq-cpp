@@ -31,9 +31,9 @@ using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const activemq::util::Properties& properties,
-                            Transport* next, 
+                            Transport* next,
                             const bool own )
-: 
+:
     TransportFilter( next, own ),
     socket( NULL ),
     loggingInputStream( NULL ),
@@ -43,38 +43,46 @@ TcpTransport::TcpTransport( const activemq::util::Properties& properties,
 {
     try
     {
+        if( !properties.hasProperty( "uri" ) ) {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "TcpTransport::TcpTransport - "
+                "No URI set for this transport to connect to.");
+        }
+
         // Create the IO device we will be communicating over the
         // wire with.  This may need to change if we add more types
-        // of sockets, such as SSL.  
-        socket = SocketFactory::createSocket( properties );
+        // of sockets, such as SSL.
+        socket = SocketFactory::createSocket(
+            properties.getProperty( "uri" ), properties );
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
         IOTransport* ioTransport = dynamic_cast<IOTransport*>( next );
         if( ioTransport == NULL ){
-            throw ActiveMQException( 
-                __FILE__, __LINE__, 
+            throw ActiveMQException(
+                __FILE__, __LINE__,
                 "TcpTransport::TcpTransport - "
                 "transport must be of type IOTransport");
         }
-        
+
         InputStream* inputStream = socket->getInputStream();
         OutputStream* outputStream = socket->getOutputStream();
-        
+
         // If tcp tracing was enabled, wrap the iostreams with logging streams
         if( properties.getProperty( "tcpTracingEnabled", "false" ) == "true" ) {
             loggingInputStream = new LoggingInputStream( inputStream );
             loggingOutputStream = new LoggingOutputStream( outputStream );
-            
+
             inputStream = loggingInputStream;
             outputStream = loggingOutputStream;
         }
-        
+
         // Now wrap the input/output streams with buffered streams
         bufferedInputStream = new BufferedInputStream(inputStream);
         bufferedOutputStream = new BufferedOutputStream(outputStream);
 
-        // Give the IOTransport the streams.        
+        // Give the IOTransport the streams.
         ioTransport->setInputStream( bufferedInputStream );
         ioTransport->setOutputStream( bufferedOutputStream );
     }
@@ -88,29 +96,29 @@ TcpTransport::~TcpTransport()
     try
     {
         try{
-            close();                        
+            close();
         } catch( cms::CMSException& ex ){ /* Absorb */ }
-        
+
         if( socket != NULL ) {
             delete socket;
             socket = NULL;
         }
-        
+
         if( loggingInputStream != NULL ) {
             delete loggingInputStream;
             loggingInputStream = NULL;
         }
-        
+
         if( loggingOutputStream != NULL ) {
             delete loggingOutputStream;
             loggingOutputStream = NULL;
         }
-        
+
         if( bufferedInputStream != NULL ) {
             delete bufferedInputStream;
             bufferedInputStream = NULL;
         }
-        
+
         if( bufferedOutputStream != NULL ) {
             delete bufferedOutputStream;
             bufferedOutputStream = NULL;
@@ -122,12 +130,12 @@ TcpTransport::~TcpTransport()
 
 ////////////////////////////////////////////////////////////////////////////////
 void TcpTransport::close() throw( cms::CMSException ) {
-    
+
     try
     {
         // Invoke the paren't close first.
         TransportFilter::close();
-        
+
         // Close the socket.
         if( socket != NULL ) {
             socket->close();
