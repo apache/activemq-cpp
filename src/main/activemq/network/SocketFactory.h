@@ -24,7 +24,7 @@ namespace activemq{
 namespace network{
 
     class Socket;
-   
+
     /**
      * Socket Factory implementation for use in Creating Sockets
      * <p>
@@ -32,7 +32,6 @@ namespace network{
      * Property Options: <p>
      * Name                  Value <p>
      * ------------------------------------- <p>
-     * uri                   The uri for the transport connection. Must be provided.<p>
      * inputBufferSize       size in bytes of the buffered input stream buffer.  Defaults to 10000.<p>
      * outputBufferSize      size in bytes of the buffered output stream buffer. Defaults to 10000.<p>
      * soLinger              linger time for the socket (in microseconds). Defaults to 0.<p>
@@ -40,24 +39,26 @@ namespace network{
      * soReceiveBufferSize   The size of the socket receive buffer (in bytes). Defaults to 2MB.<p>
      * soSendBufferSize      The size of the socket send buffer (in bytes). Defaults to 2MB.<p>
      * soTimeout             The timeout of socket IO operations (in microseconds). Defaults to 10000<p>
-     * 
+     *
      * @see <code>Socket</code>
      */
     class SocketFactory
     {
     public:
 
-   	    virtual ~SocketFactory();
-      
+           virtual ~SocketFactory();
+
         /**
          * Creates and returns a Socket dervied Object based on the values
          * defined in the Properties Object that is passed in.
+         * @param the URI for the Socket Connection.
          * @param properties a IProperties pointer.
          * @throws SocketException.
          */
-        static Socket* createSocket( const util::Properties& properties )
+        static Socket* createSocket( const std::string& uri,
+                                     const util::Properties& properties )
             throw ( SocketException );
-         
+
     };
 
 }}

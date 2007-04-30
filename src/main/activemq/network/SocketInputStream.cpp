@@ -134,14 +134,23 @@ unsigned char SocketInputStream::read() throw (IOException){
 std::size_t SocketInputStream::read( unsigned char* buffer, 
                                      std::size_t bufferSize ) throw (IOException)
 {
-    int len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
+    int len = 0;
     
-    // Check for a closed socket.
-    if( len == 0 ){
-        throw IOException( __FILE__, __LINE__, 
-            "activemq::io::SocketInputStream::read - The connection is broken" );
-    }
+    // Loop to ignore any signal interruptions that occur during the read.  
+    do {
+        
+        // Read data from the socket.
+        len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
     
+        // Check for a closed socket.
+        if( len == 0 ){
+            throw IOException( __FILE__, __LINE__, 
+                "activemq::io::SocketInputStream::read - The connection is broken" );
+        }
+            
+    } while( len == -1 && 
+             SocketError::getErrorCode() == SocketError::INTERRUPTED );
+        
     // Check for error.
     if( len == -1 ){
         
