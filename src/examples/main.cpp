@@ -230,7 +230,13 @@ public:
             count++;
             const TextMessage* textMessage =
                 dynamic_cast< const TextMessage* >( message );
-            string text = textMessage->getText();
+            string text = "";
+
+            if( textMessage != NULL ) {
+                text = textMessage->getText();
+            } else {
+                text = "NOT A TEXTMESSAGE!";
+            }
 
             printf( "Message #%d Received: %s\n", count, text.c_str() );
         } catch (CMSException& e) {
@@ -294,9 +300,10 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // tightMarshalling or tcp logging etc.
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
-        "?wireFormat=openwire";
-//        "&commandTracingEnabled=true"
-//        "&tcpTracingEnabled=true"
+        "?wireFormat=openwire"
+        "&transport.useAsyncSend=true";
+//        "&transport.commandTracingEnabled=true"
+//        "&transport.tcpTracingEnabled=true";
 //        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
