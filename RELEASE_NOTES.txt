@@ -1,4 +1,29 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.0.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version is a bug fix release for issues that were found in the 2.0 release
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-105] - Openwire ActiveMQMessage sets Persistant flag incorrectly
+    * [AMQCPP-107] - SocketInputStream::read() doesn't check for EINTR error
+    * [AMQCPP-109] - Exception when acknowledging null messages, originating from the receipt of an ObjectMessage
+    * [AMQCPP-112] - Openwire Experiation Integration tests fail when fixed to actually use Openwire
+
+Improvement
+
+    * [AMQCPP-101] - Add the Ability to set the TcpNoDelay flag of a TCP Socket
+    * [AMQCPP-102] - Create a Tag for CMS
+
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.0                                 ==
 =========================================================================
 
