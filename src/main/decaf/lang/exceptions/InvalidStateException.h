@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
-#define _ACTIVEMQ_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
+#ifndef _DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
+#define _DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 
-namespace activemq{
+namespace decaf{
+namespace lang{
 namespace exceptions{
 
     /*
      * Thrown when an operation is requested, but the state of the object
      * servicing the request is not correct for that request.
      */
-    class InvalidStateException : public ActiveMQException
+    class InvalidStateException : public Exception
     {
     public:
 
@@ -36,42 +37,42 @@ namespace exceptions{
         InvalidStateException() throw() {}
 
         /**
-         * Conversion Constructor from some other ActiveMQException
+         * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
-        InvalidStateException(const ActiveMQException& ex) throw()
-        : ActiveMQException()
+        InvalidStateException(const Exception& ex) throw()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
         InvalidStateException( const InvalidStateException& ex ) throw()
-        : ActiveMQException()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an 
+         * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          * @param file name where exception occurs
          * @param line number where the exception occurred.
          * @param message to report
          * @param list of primitives that are formatted into the message
          */
-        InvalidStateException( const char* file, 
+        InvalidStateException( const char* file,
                                const int lineNumber,
                                const char* msg, ... ) throw()
-        : ActiveMQException()
+        : Exception()
         {
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
-            
+
             // Set the first mark for this exception.
             setMark( file, lineNumber );
         }
@@ -81,14 +82,14 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone() const{
+        virtual InvalidStateException* clone() const{
             return new InvalidStateException(*this);
         }
 
         virtual ~InvalidStateException() throw() {}
-      
+
     };
 
 }}
 
-#endif /*_ACTIVEMQ_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_*/
+#endif /*_DECAF_LANG_EXCEPTIONS_INVALIDSTATEEXCEPTION_H_*/

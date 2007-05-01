@@ -14,48 +14,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_
-#define ACTIVEMQ_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_
+#ifndef _DECAF_LANG_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_
+#define _DECAF_LANG_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 
-namespace activemq{
+namespace decaf{
+namespace lang{
 namespace exceptions{
 
     /*
      * Thrown when an illegal argument was passed into a method.
      */
-    class IndexOutOfBoundsException : public ActiveMQException
+    class IndexOutOfBoundsException : public Exception
     {
     public:
-    
+
       /**
        * Default Constructor
        */
-      IndexOutOfBoundsException() throw() {};
-      
+      IndexOutOfBoundsException() throw() {}
+
       /**
        * Conversion Constructor from some other ActiveMQException
        * @param An exception that should become this type of Exception
        */
-      IndexOutOfBoundsException( const ActiveMQException& ex ) throw()
-      : ActiveMQException()
+      IndexOutOfBoundsException( const Exception& ex ) throw()
+      : Exception()
       {
-         *(ActiveMQException*)this = ex;
+         *(Exception*)this = ex;
       }
-      
+
       /**
        * Copy Constructor
        */
       IndexOutOfBoundsException( const IndexOutOfBoundsException& ex ) throw()
-      : ActiveMQException()
+      : Exception()
       {
-         *(ActiveMQException*)this = ex;
+         *(Exception*)this = ex;
       }
-        
+
       /**
        * Constructor - Initializes the file name and line number where
-       * this message occured.  Sets the message to report, using an 
+       * this message occured.  Sets the message to report, using an
        * optional list of arguments to parse into the message
        * @param file name where exception occurs
        * @param line number where the exception occurred.
@@ -64,7 +65,7 @@ namespace exceptions{
        */
       IndexOutOfBoundsException(const char* file, const int lineNumber,
          const char* msg, ...) throw()
-      : ActiveMQException()
+      : Exception()
       {
          va_list vargs ;
          va_start(vargs, msg) ;
@@ -73,23 +74,23 @@ namespace exceptions{
          // Set the first mark for this exception.
          setMark( file, lineNumber );
       }
-        
+
       /**
        * Clones this exception.  This is useful for cases where you need
        * to preserve the type of the original exception as well as the message.
        * All subclasses should override.
        */
-      virtual ActiveMQException* clone() const{
+      virtual IndexOutOfBoundsException* clone() const{
          return new IndexOutOfBoundsException( *this );
       }
-      
+
       /**
        * Destructor
        */
       virtual ~IndexOutOfBoundsException() throw() {}
-        
+
     };
 
 }}
 
-#endif /*ACTIVEMQ_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_*/
+#endif /*_DECAF_LANG_EXCEPTIONS_INDEXOUTOFBOUNDSEXCEPTION_H_*/
