@@ -14,19 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_
-#define ACTIVEMQ_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_
+#ifndef _DECAF_LANG_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_
+#define _DECAF_LANG_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 
-namespace activemq{
+namespace decaf{
+namespace lang{
 namespace exceptions{
 
     /*
      * Thrown when an error occurs from calling a method from syncronizable
      * and the caller doesn't hold a lock on the object.
      */
-    class IllegalMonitorStateException : public ActiveMQException
+    class IllegalMonitorStateException : public Exception
     {
     public:
 
@@ -39,38 +40,38 @@ namespace exceptions{
          * Conversion Constructor from some other ActiveMQException
          * @param An exception that should become this type of Exception
          */
-        IllegalMonitorStateException(const ActiveMQException& ex) throw()
-        : ActiveMQException()
+        IllegalMonitorStateException(const Exception& ex) throw()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
         IllegalMonitorStateException(const IllegalMonitorStateException& ex) throw()
-        : ActiveMQException()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an 
+         * this message occured.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          * @param file name where exception occurs
          * @param line number where the exception occurred.
          * @param message to report
          * @param list of primitives that are formatted into the message
          */
-        IllegalMonitorStateException( const char* file, 
+        IllegalMonitorStateException( const char* file,
                                       const int lineNumber,
                                       const char* msg, ...) throw()
         {
             va_list vargs;
             va_start(vargs, msg);
             buildMessage(msg, vargs);
-            
+
             // Set the first mark for this exception.
             setMark(file, lineNumber);
         }
@@ -80,7 +81,7 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone() const{
+        virtual IllegalMonitorStateException* clone() const{
             return new IllegalMonitorStateException(*this);
         }
 
@@ -88,6 +89,6 @@ namespace exceptions{
 
    };
 
-}}
+}}}
 
-#endif /*ACTIVEMQ_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_*/
+#endif /*_DECAF_LANG_EXCEPTIONS_ILLEGALMONITORSTATEEXCEPTION_H_*/
