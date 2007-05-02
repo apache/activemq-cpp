@@ -134,13 +134,13 @@ void TcpTransport::close() throw( cms::CMSException ) {
 
     try
     {
-        // Invoke the paren't close first.
-        TransportFilter::close();
-
         // Close the socket.
         if( socket != NULL ) {
             socket->close();
         }
+
+        // Invoke the paren't close first.
+        TransportFilter::close();
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )

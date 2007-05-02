@@ -17,14 +17,14 @@
 
 #ifndef ACTIVEMQ_NETWORK_SOCKETOUTPUTSTREAM_H_
 #define ACTIVEMQ_NETWORK_SOCKETOUTPUTSTREAM_H_
- 
+
 #include <activemq/io/OutputStream.h>
 #include <activemq/network/Socket.h>
 #include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
 namespace network{
-      
+
     /**
      * Output stream for performing write operations
      * on a socket.
@@ -32,30 +32,22 @@ namespace network{
     class SocketOutputStream : public io::OutputStream
     {
     private:
-   
+
         // The socket.
         Socket::SocketHandle socket;
         concurrent::Mutex mutex;
-        //bool debug;
-      
+        bool closed;
+
     public:
-   
+
         /**
          * Constructor.
          * @param socket the socket handle.
          */
         SocketOutputStream( Socket::SocketHandle socket );
-      
+
         virtual ~SocketOutputStream();
 
-        /**
-         * Enables Debugging of Socket Data
-         * @param debug true to enable
-         */      
-        /*virtual void setDebug( bool debug ){
-            this->debug = debug;
-        }*/
-      
         /**
          * Locks the object.
          * @throws ActiveMQException
@@ -63,15 +55,15 @@ namespace network{
         virtual void lock() throw( exceptions::ActiveMQException ){
             mutex.lock();
         }
-   
+
         /**
          * Unlocks the object.
          * @throws ActiveMQException
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){   
+        virtual void unlock() throw( exceptions::ActiveMQException ){
             mutex.unlock();
         }
-       
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -81,7 +73,7 @@ namespace network{
         virtual void wait() throw( exceptions::ActiveMQException ){
             mutex.wait();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -90,9 +82,9 @@ namespace network{
          * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs ) 
+        virtual void wait( unsigned long millisecs )
             throw( exceptions::ActiveMQException ) {
-         
+
             mutex.wait( millisecs );
         }
 
@@ -105,7 +97,7 @@ namespace network{
         virtual void notify() throw( exceptions::ActiveMQException ){
             mutex.notify();
         }
-        
+
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
@@ -114,38 +106,38 @@ namespace network{
         virtual void notifyAll() throw( exceptions::ActiveMQException ){
             mutex.notifyAll();
          }
-       
+
         /**
          * Writes a single byte to the output stream.
          * @param c the byte.
          * @throws IOException thrown if an error occurs.
          */
         virtual void write( unsigned char c ) throw ( io::IOException );
-      
+
         /**
          * Writes an array of bytes to the output stream.
          * @param buffer The array of bytes to write.
          * @param len The number of bytes from the buffer to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, 
+        virtual void write( const unsigned char* buffer,
                             std::size_t len ) throw ( io::IOException );
-      
+
         /**
          * Flush - does nothing.
          * @throws IOException
          */
         virtual void flush() throw ( io::IOException ){};
-      
+
         /**
          * Close - does nothing.  It is the responsibility of the owner
          * of the socket object to close it.
          * @throws CMSException
          */
-        virtual void close() throw( cms::CMSException ){} 
-        
+        virtual void close() throw( cms::CMSException );
+
     };
-   
+
 }}
 
 #endif /*ACTIVEMQ_NETWORK_SOCKETOUTPUTSTREAM_H_*/

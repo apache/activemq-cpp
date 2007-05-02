@@ -123,6 +123,18 @@ TcpSocket::~TcpSocket()
 {
     // No shutdown, just close - dont want blocking destructor.
     close();
+
+    // Destroy the input stream.
+    if( inputStream != NULL ){
+        delete inputStream;
+        inputStream = NULL;
+    }
+
+    // Destroy the output stream.
+    if( outputStream != NULL ){
+        delete outputStream;
+        outputStream = NULL;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +161,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
         checkResult( (int)(socketHandle = ::socket(AF_INET, SOCK_STREAM, 0)) );
 
         // Check port value.
-        if (port <= 0 || port > 65535) {
+        if( port <= 0 || port > 65535 ) {
             close();
             throw SocketException ( __FILE__, __LINE__,
                 "Socket::connect- Port out of range: %d", port );
@@ -171,7 +183,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
         // Resolve name
 #if defined(HAVE_STRUCT_ADDRINFO)
         addrinfo hints;
-        memset(&hints, 0, sizeof(addrinfo));
+        memset( &hints, 0, sizeof(addrinfo) );
         hints.ai_family = PF_INET;
         struct addrinfo *res_ptr = NULL;
 
@@ -196,10 +208,21 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
                             ( const sockaddr * )&target_addr,
                             sizeof( target_addr ) ) );
 
+        // Destroy the input stream.
+        if( inputStream != NULL ){
+            delete inputStream;
+            inputStream = NULL;
+        }
+
+        // Destroy the output stream.
+        if( outputStream != NULL ){
+            delete outputStream;
+            outputStream = NULL;
+        }
+
         // Create an input/output stream for this socket.
         inputStream = new SocketInputStream( socketHandle );
         outputStream = new SocketOutputStream( socketHandle );
-
     }
     catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -215,16 +238,14 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
 ////////////////////////////////////////////////////////////////////////////////
 void TcpSocket::close() throw( cms::CMSException )
 {
-    // Destroy the input stream.
+    // Close the input stream.
     if( inputStream != NULL ){
-        delete inputStream;
-        inputStream = NULL;
+        inputStream->close();
     }
 
-    // Destroy the output stream.
+    // Close the output stream.
     if( outputStream != NULL ){
-        delete outputStream;
-        outputStream = NULL;
+        outputStream->close();
     }
 
     if( isConnected() )
