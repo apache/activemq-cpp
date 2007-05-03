@@ -178,8 +178,8 @@ void ResponseCorrelator::onCommand( Command* command ) {
         if( iter == requestMap.end() ){
 
             // This is not terrible - just log it.
-            printf("ResponseCorrelator::onCommand() - received unknown response for request: %d\n",
-                response->getCorrelationId() );
+            //printf("ResponseCorrelator::onCommand() - received unknown response for request: %d\n",
+            //    response->getCorrelationId() );
             return;
         }
 
