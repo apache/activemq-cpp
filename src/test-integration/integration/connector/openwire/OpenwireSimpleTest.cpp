@@ -83,49 +83,49 @@ void OpenwireSimpleTest::testAutoAck()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire");
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL());
         testSupport.initialize();
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic("mytopic");
-        cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =
+            session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
-        
+
         // Send some bytes messages.
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
         testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
-        
+
         unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
+        CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
@@ -136,49 +136,49 @@ void OpenwireSimpleTest::testClientAck()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic("mytopic");
-        cms::MessageConsumer* consumer = 
-            session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =
+            session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
-        cms::MessageProducer* producer = 
+        cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
-        
+
         // Send some bytes messages.
-        testSupport.produceTextMessages( 
+        testSupport.produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
         testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
-        
+
         unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
-        CPPUNIT_ASSERT( 
+        CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
@@ -189,35 +189,35 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic(Guid::createGUIDString());
-        cms::MessageConsumer* consumer =  session->createConsumer( topic );            
+        cms::MessageConsumer* consumer =  session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
 
         cms::TextMessage* textMsg = session->createTextMessage();
-        
+
         // Send some text messages
         producer->send( topic, textMsg );
-        
+
         delete textMsg;
 
         // Wait for the messages to get here
         testSupport.waitForMessages( 1 );
-        
+
         unsigned int numReceived = testSupport.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
@@ -227,7 +227,7 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
@@ -238,18 +238,18 @@ void OpenwireSimpleTest::testSyncReceive()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61616?wireFormat=openwire", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
         cms::Topic* topic = session->createTopic(Guid::createGUIDString());
@@ -257,10 +257,10 @@ void OpenwireSimpleTest::testSyncReceive()
         cms::MessageProducer* producer = session->createProducer( topic );
 
         cms::TextMessage* textMsg = session->createTextMessage();
-        
+
         // Send some text messages
         producer->send( textMsg );
-        
+
         delete textMsg;
 
         cms::Message* message = consumer->receive(1000);
@@ -270,7 +270,7 @@ void OpenwireSimpleTest::testSyncReceive()
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        delete producer;                      
+        delete producer;
         delete consumer;
         delete topic;
     }
@@ -281,48 +281,50 @@ void OpenwireSimpleTest::testMultipleConnections()
 {
     try
     {
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61616?wireFormat=openwire");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getOpenwireURL() );
         cms::Connection* connection1 = factory->createConnection();
         connection1->start();
-        
+
         cms::Connection* connection2 = factory->createConnection();
         connection2->start();
-        
+
         CPPUNIT_ASSERT( connection1->getClientID() != connection2->getClientID() );
-        
+
         cms::Session* session1 = connection1->createSession();
         cms::Session* session2 = connection2->createSession();
-        
+
         cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
-        
-        
+
+
         cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
-        
+
         cms::MessageProducer* producer = session2->createProducer( topic );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
-        
+
         // Send some text messages
         producer->send( textMsg );
-        
+
         delete textMsg;
 
         cms::Message* message = consumer1->receive(1000);
         CPPUNIT_ASSERT( message != NULL );
         delete message;
-        
+
         message = consumer2->receive(1000);
         CPPUNIT_ASSERT( message != NULL );
         delete message;
@@ -330,11 +332,11 @@ void OpenwireSimpleTest::testMultipleConnections()
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        
+
         connection1->close();
         connection2->close();
-        
-        delete producer;                      
+
+        delete producer;
         delete consumer1;
         delete consumer2;
         delete topic;
@@ -351,42 +353,44 @@ void OpenwireSimpleTest::testMultipleSessions()
 {
     try
     {
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61616?wireFormat=openwire");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getOpenwireURL() );
         cms::Connection* connection = factory->createConnection();
         connection->start();
-        
+
         cms::Session* session1 = connection->createSession();
         cms::Session* session2 = connection->createSession();
-        
+
         cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
-        
+
         cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
-        
+
         cms::MessageProducer* producer = session2->createProducer( topic );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
-        
+
         // Send some text messages
         producer->send( textMsg );
-        
+
         delete textMsg;
 
         cms::Message* message = consumer1->receive(1000);
         CPPUNIT_ASSERT( message != NULL );
         delete message;
-        
+
         message = consumer2->receive(1000);
         CPPUNIT_ASSERT( message != NULL );
         delete message;
@@ -394,10 +398,10 @@ void OpenwireSimpleTest::testMultipleSessions()
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        
+
         connection->close();
-        
-        delete producer;                      
+
+        delete producer;
         delete consumer1;
         delete consumer2;
         delete topic;
@@ -410,40 +414,42 @@ void OpenwireSimpleTest::testMultipleSessions()
 }
 
 void OpenwireSimpleTest::testReceiveAlreadyInQueue() {
-    
+
         try
     {
-        
+
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
                  << IntegrationCommon::defaultMsgCount
                  << " messages per type and sleeping "
-                 << IntegrationCommon::defaultDelay 
+                 << IntegrationCommon::defaultDelay
                  << " milli-seconds) ...\n"
                  << endl;
         }
-        
+
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61616?wireFormat=openwire");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getOpenwireURL() );
         cms::Connection* connection = factory->createConnection();
 
         cms::Session* session = connection->createSession();
-        
+
         cms::Topic* topic = session->createTopic(Guid::createGUIDString());
-        
+
         cms::MessageConsumer* consumer = session->createConsumer( topic );
-        
+
         cms::MessageProducer* producer = session->createProducer( topic );
 
         cms::TextMessage* textMsg = session->createTextMessage();
-        
+
         // Send some text messages
         producer->send( textMsg );
-        
+
         delete textMsg;
-        
+
         Thread::sleep( 100 );
-        
+
         connection->start();
 
         cms::Message* message = consumer->receive(1000);
@@ -453,10 +459,10 @@ void OpenwireSimpleTest::testReceiveAlreadyInQueue() {
         if( IntegrationCommon::debug ) {
             printf("Shutting Down\n" );
         }
-        
+
         connection->close();
-        
-        delete producer;                      
+
+        delete producer;
         delete consumer;
         delete topic;
         delete session;

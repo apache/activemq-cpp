@@ -73,8 +73,7 @@ using namespace integration::connector::stomp;
 
 ////////////////////////////////////////////////////////////////////////////////
 AsyncSenderTest::AsyncSenderTest()
-:
-    testSupport("tcp://localhost:61613?wireFormat=stomp&transport.useAsyncSend=true")
+:  testSupport( IntegrationCommon::getInstance().getStompURL() + "&transport.useAsyncSend=true")
 {
     testSupport.initialize();
 }

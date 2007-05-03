@@ -22,11 +22,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/network/Socket.h>
-#include <activemq/network/TcpSocket.h>
-#include <activemq/network/BufferedSocket.h>
 #include <activemq/network/ServerSocket.h>
-#include <activemq/network/SocketFactory.h>
-#include <activemq/util/SimpleProperties.h>
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Thread.h>
@@ -40,6 +36,7 @@ namespace network{
    {
       CPPUNIT_TEST_SUITE( SocketFactoryTest );
       CPPUNIT_TEST( test );
+      CPPUNIT_TEST( testNoDelay );
       CPPUNIT_TEST_SUITE_END();
 
       static const int port = 23232;
@@ -86,7 +83,6 @@ namespace network{
                network::Socket* socket = server.accept();
                server.close();
 
-               //socket->setSoTimeout( 10 );
                socket->setSoLinger( false );
 
                synchronized(&mutex)
@@ -140,7 +136,8 @@ namespace network{
        SocketFactoryTest() {}
        virtual ~SocketFactoryTest() {}
 
-      void test();
+       void test();
+       void testNoDelay();
 
    };
 

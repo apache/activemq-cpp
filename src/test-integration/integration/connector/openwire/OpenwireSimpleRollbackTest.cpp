@@ -82,7 +82,7 @@ OpenwireSimpleRollbackTest::OpenwireSimpleRollbackTest()
 {
     try
     {
-        string url = "tcp://localhost:61616?wireFormat=openwire";
+        string url = IntegrationCommon::getInstance().getOpenwireURL();
         numReceived = 0;
 
         // Default amount to send and receive

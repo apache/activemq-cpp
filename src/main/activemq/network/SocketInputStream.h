@@ -17,40 +17,40 @@
 
 #ifndef ACTIVEMQ_NETWORK_SOCKETINPUTSTREAM_H_
 #define ACTIVEMQ_NETWORK_SOCKETINPUTSTREAM_H_
- 
+
 #include <activemq/io/InputStream.h>
 #include <activemq/network/Socket.h>
 #include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
 namespace network{
-    
+
     /**
      * Input stream for performing reads on a socket.  This
      * class will only work properly for blocking sockets.
      */
-	class SocketInputStream : public io::InputStream
-	{
-	private:
-	
-		// The socket handle.
-		Socket::SocketHandle socket;
-		concurrent::Mutex mutex;
-        //bool debug;
-		
-	public:
-	
-		/**
-		 * Constructor.
-		 * @param socket the socket handle.
-		 */
-		SocketInputStream( Socket::SocketHandle socket );
-		
-		/**
-		 * Destructor.
-		 */
-		virtual ~SocketInputStream();
-		
+    class SocketInputStream : public io::InputStream
+    {
+    private:
+
+        // The socket handle.
+        Socket::SocketHandle socket;
+        concurrent::Mutex mutex;
+        bool closed;
+
+    public:
+
+        /**
+         * Constructor.
+         * @param socket the socket handle.
+         */
+        SocketInputStream( Socket::SocketHandle socket );
+
+        /**
+         * Destructor.
+         */
+        virtual ~SocketInputStream();
+
         /**
          * Enables socket level output of the recieved data
          * @param debug true to turn on debugging
@@ -58,7 +58,7 @@ namespace network{
         /*virtual void setDebug( bool debug ){
             this->debug = debug;
         }*/
-        
+
         /**
          * Locks the object.
          * @throws ActiveMQException
@@ -66,15 +66,15 @@ namespace network{
         virtual void lock() throw( exceptions::ActiveMQException ){
             mutex.lock();
         }
-   
+
         /**
          * Unlocks the object.
          * @throws ActiveMQException
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){   
+        virtual void unlock() throw( exceptions::ActiveMQException ){
             mutex.unlock();
         }
-       
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -84,7 +84,7 @@ namespace network{
         virtual void wait() throw( exceptions::ActiveMQException ){
             mutex.wait();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -93,9 +93,9 @@ namespace network{
          * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs ) 
+        virtual void wait( unsigned long millisecs )
             throw( exceptions::ActiveMQException ) {
-         
+
             mutex.wait( millisecs );
         }
 
@@ -108,7 +108,7 @@ namespace network{
         virtual void notify() throw( exceptions::ActiveMQException ){
             mutex.notify();
         }
-        
+
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
@@ -118,52 +118,52 @@ namespace network{
         virtual void notifyAll() throw( exceptions::ActiveMQException ){
             mutex.notifyAll();
         }
-	    
-	    /**
-	     * Returns the number of bytes available on the socket to
+
+        /**
+         * Returns the number of bytes available on the socket to
          * be read right now.
-	     * @return The number of bytes currently available to
+         * @return The number of bytes currently available to
          * be read on the socket.
-	     */
-		virtual std::size_t available() const throw (activemq::io::IOException);
-		
-		/**
-		 * Reads a single byte from the buffer.  If no data
+         */
+        virtual std::size_t available() const throw (activemq::io::IOException);
+
+        /**
+         * Reads a single byte from the buffer.  If no data
          * is available, blocks until their is.
-		 * @return The next byte.
-		 * @throws IOException thrown if an error occurs.
-		 */
-		virtual unsigned char read() throw ( io::IOException );
-		
-		/**
-		 * Reads an array of bytes from the buffer.  If no data
+         * @return The next byte.
+         * @throws IOException thrown if an error occurs.
+         */
+        virtual unsigned char read() throw ( io::IOException );
+
+        /**
+         * Reads an array of bytes from the buffer.  If no data
          * is available, blocks until there is.
-		 * @param buffer (out) the target buffer.
-		 * @param bufferSize the size of the output buffer.
-		 * @return The number of bytes read.
-		 * @throws IOException thrown if an error occurs.
-		 */
-		virtual std::size_t read( unsigned char* buffer, 
-                                  std::size_t bufferSize ) 
+         * @param buffer (out) the target buffer.
+         * @param bufferSize the size of the output buffer.
+         * @return The number of bytes read.
+         * @throws IOException thrown if an error occurs.
+         */
+        virtual std::size_t read( unsigned char* buffer,
+                                  std::size_t bufferSize )
             throw (io::IOException);
-		
-		/**
-		 * Close - does nothing.  It is the responsibility of the owner
-		 * of the socket object to close it.
+
+        /**
+         * Close - does nothing.  It is the responsibility of the owner
+         * of the socket object to close it.
          * @throws CMSException
-		 */
-		virtual void close() throw( cms::CMSException ){}
-        
+         */
+        virtual void close() throw( cms::CMSException );
+
         /**
          * Not supported.
          * @throws an UnsupportedOperationException.
-         */ 
-        virtual std::size_t skip( std::size_t num ) 
-            throw ( io::IOException, 
+         */
+        virtual std::size_t skip( std::size_t num )
+            throw ( io::IOException,
                     exceptions::UnsupportedOperationException );
-        
-	};
-	
+
+    };
+
 }}
 
 #endif /*ACTIVEMQ_NETWORK_SOCKETINPUTSTREAM_H_*/

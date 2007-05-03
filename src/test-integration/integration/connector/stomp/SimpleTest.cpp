@@ -83,7 +83,7 @@ void SimpleTest::testAutoAck()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp");
+        TestSupport testSupport( IntegrationCommon::getInstance().getStompURL() );
         testSupport.initialize();
 
         if( IntegrationCommon::debug ) {
@@ -136,7 +136,7 @@ void SimpleTest::testClientAck()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
 
         if( IntegrationCommon::debug ) {
@@ -189,7 +189,7 @@ void SimpleTest::testProducerWithNullDestination()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
 
         if( IntegrationCommon::debug ) {
@@ -238,7 +238,7 @@ void SimpleTest::testSyncReceive()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp", cms::Session::AUTO_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::AUTO_ACKNOWLEDGE );
         testSupport.initialize();
 
         if( IntegrationCommon::debug ) {
@@ -281,7 +281,7 @@ void SimpleTest::testSyncReceiveClientAck()
 {
     try
     {
-        TestSupport testSupport("tcp://localhost:61613?wireFormat=stomp", cms::Session::CLIENT_ACKNOWLEDGE );
+        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
         testSupport.initialize();
 
         if( IntegrationCommon::debug ) {
@@ -336,7 +336,9 @@ void SimpleTest::testMultipleConnections()
         }
 
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getStompURL() );
         cms::Connection* connection1 = factory->createConnection();
         connection1->start();
 
@@ -406,7 +408,8 @@ void SimpleTest::testMultipleSessions()
         }
 
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory( IntegrationCommon::getInstance().getStompURL() );
         cms::Connection* connection = factory->createConnection();
         connection->start();
 
@@ -468,7 +471,9 @@ void SimpleTest::testReceiveAlreadyInQueue() {
         }
 
         // Create CMS Object for Comms
-        cms::ConnectionFactory* factory = new ActiveMQConnectionFactory("tcp://localhost:61613?wireFormat=stomp");
+        cms::ConnectionFactory* factory =
+            new ActiveMQConnectionFactory(
+                IntegrationCommon::getInstance().getStompURL() );
         cms::Connection* connection = factory->createConnection();
 
         cms::Session* session = connection->createSession();

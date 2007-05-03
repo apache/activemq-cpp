@@ -25,14 +25,35 @@ namespace integration{
     class IntegrationCommon
     {
     public:
-    
-    	virtual ~IntegrationCommon();
-    
-        static const int          defaultDelay;
+
+        virtual ~IntegrationCommon() {}
+
+        virtual std::string getStompURL() const {
+            return this->stompURL;
+        }
+
+        virtual std::string getOpenwireURL() const {
+            return this->openwireURL;
+        }
+
+    public:  // Statics
+
+        static const int defaultDelay;
         static const unsigned int defaultMsgCount;
-        
         static bool debug;
-        
+
+        static IntegrationCommon& getInstance();
+
+    protected:
+
+        IntegrationCommon();
+
+    private:
+
+        std::string urlCommon;
+        std::string stompURL;
+        std::string openwireURL;
+
     };
 
 }
