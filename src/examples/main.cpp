@@ -19,6 +19,7 @@
 
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Runnable.h>
+#include <activemq/concurrent/CountDownLatch.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Integer.h>
 #include <activemq/util/Config.h>
@@ -105,7 +106,7 @@ public:
                 message->setIntProperty( "Integer", ix );
 
                 // Tell the producer to send the message
-                printf( "Sent message #%d from thread %s\n", ix, threadIdStr.c_str() );
+                printf( "Sent message #%d from thread %s\n", ix+1, threadIdStr.c_str() );
                 producer->send( message );
 
                 delete message;
@@ -155,6 +156,7 @@ class HelloWorldConsumer : public ExceptionListener,
 
 private:
 
+    CountDownLatch latch;
     Connection* connection;
     Session* session;
     Destination* destination;
@@ -166,7 +168,7 @@ private:
 public:
 
     HelloWorldConsumer( const std::string& brokerURI,
-                        long waitMillis, bool useTopic = false ){
+                        long waitMillis, bool useTopic = false ) : latch(1){
         connection = NULL;
         session = NULL;
         destination = NULL;
@@ -177,6 +179,10 @@ public:
     }
     virtual ~HelloWorldConsumer(){
         cleanup();
+    }
+
+    void waitUnitlReady() {
+        latch.await();
     }
 
     virtual void run() {
@@ -211,6 +217,9 @@ public:
 
             std::cout.flush();
             std::cerr.flush();
+
+            // Indicate we are ready for messages.
+            latch.countDown();
 
             // Sleep while asynchronous messages come in.
             Thread::sleep( waitMillis );
@@ -320,8 +329,8 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     Thread consumerThread( &consumer );
     consumerThread.start();
 
-    // Give the consumer a but to start up.
-    Thread::sleep( 75 );
+    // Wait for the consumer to indicate that its ready to go.
+    consumer.waitUnitlReady();
 
     // Start the producer thread.
     Thread producerThread( &producer );
