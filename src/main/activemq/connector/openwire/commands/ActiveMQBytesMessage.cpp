@@ -23,7 +23,7 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBytesMessage::ActiveMQBytesMessage() : 
+ActiveMQBytesMessage::ActiveMQBytesMessage() :
     ActiveMQMessageBase< cms::BytesMessage >(),
     dataInputStream( &inputStream ),
     dataOutputStream( &outputStream )
@@ -43,12 +43,12 @@ unsigned char ActiveMQBytesMessage::getDataStructureType() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer, 
-                                         std::size_t numBytes ) 
+void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
+                                         std::size_t numBytes )
     throw( cms::CMSException ) {
 
     try{
-        
+
         clearBody();
         for( size_t i = 0; i < numBytes; ++i ) {
             getContent().push_back( buffer[i] );
@@ -62,7 +62,12 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
 const unsigned char* ActiveMQBytesMessage::getBodyBytes(void) const {
 
     try{
-        return reinterpret_cast<const unsigned char*>( &( getContent()[0] ) );
+
+        if( getContent().size() > 0 ) {
+            return reinterpret_cast<const unsigned char*>( &( getContent()[0] ) );
+        } else {
+            return NULL;
+        }
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -83,7 +88,7 @@ void ActiveMQBytesMessage::reset() throw ( cms::CMSException ) {
 
     try{
         readOnly = true;
-        inputStream.setBuffer( getContent() );            
+        inputStream.setBuffer( getContent() );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -134,7 +139,7 @@ void ActiveMQBytesMessage::writeByte( unsigned char value ) throw ( cms::CMSExce
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value ) 
+std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value )
     throw ( cms::CMSException ) {
 
     try{
@@ -157,7 +162,7 @@ void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t length ) 
+std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t length )
     throw ( cms::CMSException ) {
 
     try{
@@ -180,7 +185,7 @@ void ActiveMQBytesMessage::writeBytes( const unsigned char* value,
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }
-                         
+
 ////////////////////////////////////////////////////////////////////////////////
 char ActiveMQBytesMessage::readChar() throw ( cms::CMSException ) {
 
