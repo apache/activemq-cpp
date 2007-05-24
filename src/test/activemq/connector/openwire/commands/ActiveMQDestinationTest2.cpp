@@ -88,7 +88,7 @@ void ActiveMQDestinationTest::testOptions(){
 
     dest.setPhysicalName( "test?option1=test1&option2=test2" );
 
-    const util::Properties& properties = dest.getOptions();
+    const util::ActiveMQProperties& properties = dest.getOptions();
 
     CPPUNIT_ASSERT( properties.hasProperty( "option1" ) == true );
     CPPUNIT_ASSERT( properties.hasProperty( "option2" ) == true );

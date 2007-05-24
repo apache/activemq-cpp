@@ -34,12 +34,12 @@ void StompDestinationTest::test()
     MyDestination dest1( "test1?value1=1&value2=2" );
 
     CPPUNIT_ASSERT( dest1.getTopicName() == "test1" );
-    CPPUNIT_ASSERT( dest1.getProperties().hasProperty( "value1" ) == true );
-    CPPUNIT_ASSERT( dest1.getProperties().hasProperty( "value2" ) == true );
-    CPPUNIT_ASSERT( dest1.getProperties().hasProperty( "value3" ) != true );
+    CPPUNIT_ASSERT( dest1.getCMSProperties().hasProperty( "value1" ) == true );
+    CPPUNIT_ASSERT( dest1.getCMSProperties().hasProperty( "value2" ) == true );
+    CPPUNIT_ASSERT( dest1.getCMSProperties().hasProperty( "value3" ) != true );
 
-    std::string value1 = dest1.getProperties().getProperty( "value1" );
-    std::string value2 = dest1.getProperties().getProperty( "value2" );
+    std::string value1 = dest1.getCMSProperties().getProperty( "value1" );
+    std::string value2 = dest1.getCMSProperties().getProperty( "value2" );
 
     CPPUNIT_ASSERT( value1 == "1" );
     CPPUNIT_ASSERT( value2 == "2" );
@@ -50,12 +50,12 @@ void StompDestinationTest::test()
     CPPUNIT_ASSERT( dest2 != NULL );
 
     CPPUNIT_ASSERT( dest2->getTopicName() == "test1" );
-    CPPUNIT_ASSERT( dest2->getProperties().hasProperty( "value1" ) == true );
-    CPPUNIT_ASSERT( dest2->getProperties().hasProperty( "value2" ) == true );
-    CPPUNIT_ASSERT( dest2->getProperties().hasProperty( "value3" ) != true );
+    CPPUNIT_ASSERT( dest2->getCMSProperties().hasProperty( "value1" ) == true );
+    CPPUNIT_ASSERT( dest2->getCMSProperties().hasProperty( "value2" ) == true );
+    CPPUNIT_ASSERT( dest2->getCMSProperties().hasProperty( "value3" ) != true );
 
-    value1 = dest2->getProperties().getProperty( "value1" );
-    value2 = dest2->getProperties().getProperty( "value2" );
+    value1 = dest2->getCMSProperties().getProperty( "value1" );
+    value2 = dest2->getCMSProperties().getProperty( "value2" );
 
     CPPUNIT_ASSERT( value1 == "1" );
     CPPUNIT_ASSERT( value2 == "2" );
@@ -66,12 +66,12 @@ void StompDestinationTest::test()
     dest3.copy( dest1 );
 
     CPPUNIT_ASSERT( dest3.getTopicName() == "test1" );
-    CPPUNIT_ASSERT( dest3.getProperties().hasProperty( "value1" ) == true );
-    CPPUNIT_ASSERT( dest3.getProperties().hasProperty( "value2" ) == true );
-    CPPUNIT_ASSERT( dest3.getProperties().hasProperty( "value3" ) != true );
+    CPPUNIT_ASSERT( dest3.getCMSProperties().hasProperty( "value1" ) == true );
+    CPPUNIT_ASSERT( dest3.getCMSProperties().hasProperty( "value2" ) == true );
+    CPPUNIT_ASSERT( dest3.getCMSProperties().hasProperty( "value3" ) != true );
 
-    value1 = dest3.getProperties().getProperty( "value1" );
-    value2 = dest3.getProperties().getProperty( "value2" );
+    value1 = dest3.getCMSProperties().getProperty( "value1" );
+    value2 = dest3.getCMSProperties().getProperty( "value2" );
 
     CPPUNIT_ASSERT( value1 == "1" );
     CPPUNIT_ASSERT( value2 == "2" );
