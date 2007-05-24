@@ -62,8 +62,9 @@ std::size_t DataInputStream::read( unsigned char* buffer,
         try {
             read = inputStream->read( &buffer[offset], length );
         } catch( io::EOFException& ex ){
-            if( read == 0 ) 
-                return -1;
+            if( read == 0 ) {
+                return 0;
+            }
         }
 
         if( read == 0 ){

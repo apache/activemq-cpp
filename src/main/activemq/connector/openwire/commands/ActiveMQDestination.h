@@ -24,7 +24,7 @@
 #endif
 
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/ActiveMQProperties.h>
 #include <cms/Destination.h>
 
 #include <vector>
@@ -88,7 +88,7 @@ namespace commands{
         std::string orderedTarget;
 
         std::string physicalName;
-        util::SimpleProperties options;
+        util::ActiveMQProperties options;
 
     public:
 
@@ -295,7 +295,7 @@ namespace commands{
         /**
          * @returns a reference (const) to the options properties for this Dest.
          */
-        const activemq::util::Properties& getOptions() const {
+        const activemq::util::ActiveMQProperties& getOptions() const {
             return options;
         }
 

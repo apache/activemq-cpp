@@ -125,7 +125,7 @@ namespace stomp{
         /**
          * Properties for the connector.
          */
-        util::SimpleProperties properties;
+        util::Properties properties;
 
     private:
 

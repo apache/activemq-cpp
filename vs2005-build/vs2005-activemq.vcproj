@@ -333,7 +333,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\util\SimpleProperties.h"
+					RelativePath="..\src\main\activemq\util\Properties.h"
 					>
 				</File>
 				<File

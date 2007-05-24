@@ -112,7 +112,7 @@ namespace stomp{
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            util::SimpleProperties properties;
+            util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
             // order of objects - connector before the transport.
@@ -148,7 +148,7 @@ namespace stomp{
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            util::SimpleProperties properties;
+            util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
             // order of objects - connector before the transport.
@@ -209,7 +209,7 @@ namespace stomp{
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            util::SimpleProperties properties;
+            util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
             // order of objects - connector before the transport.
@@ -281,7 +281,7 @@ namespace stomp{
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            util::SimpleProperties properties;
+            util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
             // order of objects - connector before the transport.
@@ -329,7 +329,7 @@ namespace stomp{
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
             transport::DummyTransport transport( &responseBuilder );
-            util::SimpleProperties properties;
+            util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
             // order of objects - connector before the transport.

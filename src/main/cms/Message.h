@@ -18,8 +18,6 @@
 #ifndef _CMS_MESSAGE_H_
 #define _CMS_MESSAGE_H_
 
-#include <activemq/util/Properties.h>
-
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 #include <cms/DeliveryMode.h>

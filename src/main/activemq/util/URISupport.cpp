@@ -25,12 +25,12 @@ using namespace activemq::util;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-SimpleProperties URISupport::parseQuery( std::string query )
+Properties URISupport::parseQuery( std::string query )
     throw ( IllegalArgumentException )
 {
     try {
         
-        SimpleProperties options;        
+        Properties options;        
         URISupport::parseQuery( query, &options );
         return options;
     }

@@ -20,7 +20,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 
 #include <activemq/util/URISupport.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 
 using namespace std;
 using namespace activemq;
@@ -31,7 +31,7 @@ void URISupportTest::test()
 {
     string test = "?option1=test1&option2=test2";
     
-    SimpleProperties map = URISupport::parseQuery( test );
+    Properties map = URISupport::parseQuery( test );
 
     CPPUNIT_ASSERT( map.hasProperty( "option1" ) == true );
     CPPUNIT_ASSERT( map.hasProperty( "option2" ) == true );

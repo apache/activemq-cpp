@@ -22,10 +22,10 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/util/Guid.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/network/SocketFactory.h>

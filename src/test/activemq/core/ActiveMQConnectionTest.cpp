@@ -27,7 +27,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/transport/DummyTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
@@ -55,8 +55,8 @@ void ActiveMQConnectionTest::test()
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
-        util::SimpleProperties* properties =
-            new util::SimpleProperties();
+        util::Properties* properties =
+            new util::Properties();
         transport::Transport* transport = NULL;
 
         transport::TransportFactory* factory =

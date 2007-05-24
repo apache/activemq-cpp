@@ -17,7 +17,7 @@
 #include "ActiveMQConnectionFactory.h"
 
 #include <activemq/util/Guid.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/transport/TransportBuilder.h>
 #include <activemq/exceptions/NullPointerException.h>
@@ -89,7 +89,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
        throw ( cms::CMSException )
 {
     // Declared here so that they can be deleted in the catch block
-    SimpleProperties* properties = NULL;
+    Properties* properties = NULL;
     Transport* transport = NULL;
     Connector* connector = NULL;
     ActiveMQConnectionData* connectionData = NULL;
@@ -99,7 +99,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
     try
     {
-        properties = new SimpleProperties;
+        properties = new Properties;
 
         // if no Client Id specified, create one
         if( clientIdLocal == "" )

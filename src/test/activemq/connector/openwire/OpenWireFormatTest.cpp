@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTest );
 
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
 using namespace std;
@@ -33,6 +33,6 @@ using namespace activemq::connector::openwire;
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatTest::test()
 {
-    SimpleProperties properties;
+    Properties properties;
     //OpenWireFormat myWireFormat( properties );
 }

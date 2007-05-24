@@ -38,7 +38,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/util/Date.h>
 #include <activemq/connector/ConsumerMessageListener.h>
 

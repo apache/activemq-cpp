@@ -377,7 +377,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
     try
     {
         // Get the properties of this destination
-        const Properties& destProperties = dest->getProperties();
+        const cms::CMSProperties& destProperties = dest->getCMSProperties();
 
         if( destProperties.isEmpty() )
         {

@@ -18,7 +18,7 @@
 #ifndef _ACTIVEMQ_UTIL_URISUPPORT_H_
 #define _ACTIVEMQ_UTIL_URISUPPORT_H_
 
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
@@ -35,9 +35,9 @@ namespace util{
          * Properties object containing the parameter names as keys, and
          * the parameter values and values of the Properties.
          * @param query. the query string to parse.
-         * @returns SimpleProperties object with the parsed output.
+         * @returns Properties object with the parsed output.
          */
-        static SimpleProperties parseQuery( std::string query )
+        static Properties parseQuery( std::string query )
             throw ( exceptions::IllegalArgumentException );
          
         /**

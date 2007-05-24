@@ -475,7 +475,7 @@ void OpenWireConnector::applyDestinationOptions( commands::ConsumerInfo* info )
 
     // Get any options specified in the destination and apply them to the
     // ConsumerInfo object.
-    const Properties& options = amqDestination->getOptions();
+    const ActiveMQProperties& options = amqDestination->getOptions();
 
     std::string noLocalStr =
         core::ActiveMQConstants::toString(
@@ -736,7 +736,7 @@ ProducerInfo* OpenWireConnector::createProducer(
             // ProducerInfo object.
             producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
                 amqDestination->cloneDataStructure()) );
-            const Properties& options = amqDestination->getOptions();
+            const ActiveMQProperties& options = amqDestination->getOptions();
             producerInfo->setDispatchAsync( Boolean::parseBoolean(
                 options.getProperty( "producer.dispatchAsync", "false" )) );
         }

@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::network::SocketFactoryTest );
 
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/network/SocketFactory.h>
 #include <activemq/network/TcpSocket.h>
 
@@ -36,7 +36,7 @@ void SocketFactoryTest::test()
 
         concurrent::Thread::sleep( 500 );
 
-        util::SimpleProperties properties;
+        util::Properties properties;
 
         std::ostringstream ostream;
 
@@ -94,7 +94,7 @@ void SocketFactoryTest::testNoDelay()
 
         concurrent::Thread::sleep( 40 );
 
-        util::SimpleProperties properties;
+        util::Properties properties;
 
         std::ostringstream ostream;
 

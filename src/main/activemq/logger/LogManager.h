@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
@@ -133,7 +133,7 @@ namespace logger{
         std::list<PropertyChangeListener*> listeners;
 
         // Properties of the Log Manager
-        util::SimpleProperties properties;
+        util::Properties properties;
 
     public:
 

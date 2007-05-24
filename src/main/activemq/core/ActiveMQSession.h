@@ -25,6 +25,7 @@
 #include <activemq/util/Map.h>
 #include <activemq/util/Set.h>
 #include <activemq/util/Queue.h>
+#include <activemq/util/Properties.h>
 
 namespace activemq{
 namespace core{

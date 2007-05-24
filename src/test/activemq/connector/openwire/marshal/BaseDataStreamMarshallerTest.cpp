@@ -23,7 +23,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::BaseDat
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/io/ByteArrayOutputStream.h>
 #include <activemq/io/DataOutputStream.h>
 #include <activemq/io/ByteArrayInputStream.h>
@@ -44,7 +44,7 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
 {   
     SimpleDataStructureMarshaller* simpleMarshaller = new SimpleDataStructureMarshaller();
     ComplexDataStructureMarshaller* complexMarshaller = new ComplexDataStructureMarshaller();
-    SimpleProperties props;    
+    Properties props;    
     OpenWireFormat openWireFormat(props);
     openWireFormat.addMarshaller( simpleMarshaller );
     openWireFormat.addMarshaller( complexMarshaller );
@@ -81,7 +81,7 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
 {   
     SimpleDataStructureMarshaller* simpleMarshaller = new SimpleDataStructureMarshaller();
     ComplexDataStructureMarshaller* complexMarshaller = new ComplexDataStructureMarshaller();
-    SimpleProperties props;    
+    Properties props;    
     OpenWireFormat openWireFormat(props);
     openWireFormat.addMarshaller( simpleMarshaller );
     openWireFormat.addMarshaller( complexMarshaller );

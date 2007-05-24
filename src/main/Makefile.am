@@ -271,9 +271,9 @@ h_sources = \
     activemq/util/Character.h \
     activemq/util/Integer.h \
     activemq/util/Guid.h \
+    activemq/util/ActiveMQProperties.h \
     activemq/util/Properties.h \
     activemq/util/Long.h \
-    activemq/util/SimpleProperties.h \
     activemq/util/Boolean.h \
     activemq/util/StringTokenizer.h \
     activemq/util/Queue.h \
@@ -293,6 +293,7 @@ h_sources = \
     cms/Topic.h \
     cms/BytesMessage.h \
     cms/CMSException.h \
+    cms/CMSProperties.h \
     cms/Session.h \
     cms/Startable.h \
     cms/Closeable.h \

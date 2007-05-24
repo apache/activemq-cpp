@@ -22,7 +22,7 @@
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/exceptions/IllegalStateException.h>
 
 namespace activemq{
@@ -272,7 +272,7 @@ namespace openwire{
     private:
 
         // This object config data
-        activemq::util::SimpleProperties properties;
+        activemq::util::Properties properties;
 
         // Prefered WireFormatInfo
         commands::WireFormatInfo* preferedWireFormatInfo;

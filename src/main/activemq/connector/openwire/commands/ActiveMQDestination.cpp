@@ -71,7 +71,7 @@ void ActiveMQDestination::setPhysicalName( const std::string& physicalName ) {
 
         std::string optstring = physicalName.substr( pos + 1 );
         this->physicalName = physicalName.substr( 0, pos );
-        URISupport::parseQuery( optstring, &options );
+        URISupport::parseQuery( optstring, &options.getProperties() );
     }
 
     this->advisory = physicalName.find_first_of( ADVISORY_PREFIX ) == 0;

@@ -21,7 +21,7 @@
 #include <string>
 #include <string.h>
 #include <map>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 
 namespace activemq{
 namespace connector{
@@ -135,7 +135,7 @@ namespace stomp{
         std::string command;
 
         // Properties of the Stomp Message
-        util::SimpleProperties properties;
+        util::Properties properties;
 
         // Byte data of Body.
         std::vector<unsigned char> body;

@@ -46,7 +46,7 @@
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/concurrent/Mutex.h>
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/Properties.h>
 #include <activemq/core/ActiveMQConstants.h>
 
 #include <activemq/connector/openwire/OpenWireCommandReader.h>
@@ -186,7 +186,7 @@ namespace openwire{
         /**
          * Properties for the connector.
          */
-        util::SimpleProperties properties;
+        util::Properties properties;
 
         /**
          * Mapping of consumer IDs to their respective

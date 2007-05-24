@@ -199,7 +199,7 @@ Socket* ServerSocket::accept() throw (SocketException)
         int temp_len = sizeof( sockaddr_in );
     #endif
 
-    SocketHandle ss_socket_handle = NULL;
+    SocketHandle ss_socket_handle = (SocketHandle)0;
     
     // Loop to ignore any signal interruptions that occur during the operation.  
     do {

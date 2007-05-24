@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include <activemq/util/SimpleProperties.h>
+#include <activemq/util/ActiveMQProperties.h>
 #include <activemq/util/StringTokenizer.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
 
@@ -41,7 +41,7 @@ namespace stomp{
     private:
 
         // Params that are optional on the destination
-        util::SimpleProperties properties;
+        util::ActiveMQProperties properties;
 
         // Destination type
         cms::Destination::DestinationType destType;
@@ -133,7 +133,7 @@ namespace stomp{
          * TEST.QUEUE?consumer.dispatchAsync=false&consumer.prefetchSize=10
          * @returns const reference to a properties object
          */
-        virtual const util::Properties& getProperties() const {
+        virtual const cms::CMSProperties& getCMSProperties() const {
             return properties;
         }
 
@@ -142,7 +142,7 @@ namespace stomp{
          * objects Properties object.  Existing values are erased.
          * @param properties the Properties to copy to this object.
          */
-        virtual void setProperties( const util::Properties& properties ){
+        virtual void setCMSProperties( const cms::CMSProperties& properties ){
             this->properties.copy( &properties );
         }
 
@@ -196,7 +196,7 @@ namespace stomp{
                 this->name = destination.getName();
                 this->destType = destination.getDestinationType();
 
-                this->properties.copy( &destination.getProperties() );
+                this->properties.copy( &destination.getCMSProperties() );
             }
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
