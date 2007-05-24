@@ -18,6 +18,7 @@
 #ifndef _CMS_TEMPORARYQUEUE_H_
 #define _CMS_TEMPORARYQUEUE_H_
 
+#include <cms/Config.h>
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
@@ -26,7 +27,7 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific queue name.
      */
-    class TemporaryQueue : public Destination
+    class CMS_API TemporaryQueue : public Destination
     {
     public:
 

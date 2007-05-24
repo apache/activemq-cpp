@@ -18,6 +18,7 @@
 #ifndef _CMS_MAPMESSAGE_H_
 #define _CMS_MAPMESSAGE_H_
 
+#include <cms/Config.h>
 #include <cms/Message.h>
 
 namespace cms
@@ -36,7 +37,7 @@ namespace cms
      * client attempts to write to the message at this point, a 
      * CMSException is thrown.
      */
-    class MapMessage : public Message
+    class CMS_API MapMessage : public Message
     {
     public:
 

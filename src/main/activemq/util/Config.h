@@ -17,6 +17,16 @@
 #ifndef ACTIVEMQ_UTIL_CONFIG_H_
 #define ACTIVEMQ_UTIL_CONFIG_H_
 
+#ifdef AMQCPP_DLL
+#ifdef AMQCPP_EXPORTS
+#define AMQCPP_API __declspec(dllexport)
+#else
+#define AMQCPP_API __declspec(dllimport)
+#endif
+#else
+#define AMQCPP_API
+#endif
+
 //
 // The purpose of this header is to try to detect the supported headers 
 // of the platform when the ./configure script is not being used to generate

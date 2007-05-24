@@ -53,7 +53,7 @@ namespace concurrent{
      * and will be successful.
      * @see  pthread_mutex_t
      */
-    class Mutex : public Synchronizable
+    class AMQCPP_API Mutex : public Synchronizable
     {
     private:       // Data
 

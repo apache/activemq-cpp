@@ -17,12 +17,14 @@
 
 #ifndef _CMS_MESSAGELISTENER_H_
 #define _CMS_MESSAGELISTENER_H_
- 
+
+#include <cms/Config.h>
+
 namespace cms{
     
     class Message;
     
-    class MessageListener{
+    class CMS_API MessageListener{
     public:
     
         virtual ~MessageListener(){}

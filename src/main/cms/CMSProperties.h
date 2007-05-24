@@ -17,6 +17,8 @@
 #ifndef _CMS_CMSPROPERTIES_H_
 #define _CMS_CMSPROPERTIES_H_
 
+#include <cms/Config.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -27,7 +29,7 @@ namespace cms{
      * Interface for a Java-like properties object.  This is essentially
      * a map of key-value string pairs.
      */
-    class CMSProperties {
+    class CMS_API CMSProperties {
     public:
 
         virtual ~CMSProperties(){}

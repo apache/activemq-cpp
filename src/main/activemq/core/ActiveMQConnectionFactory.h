@@ -17,6 +17,8 @@
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONFACTORY_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONFACTORY_H_
 
+#include <activemq/util/Config.h>
+
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
 #include <activemq/util/Properties.h>
@@ -24,7 +26,7 @@
 namespace activemq{
 namespace core{
 
-    class ActiveMQConnectionFactory : public cms::ConnectionFactory
+    class AMQCPP_API ActiveMQConnectionFactory : public cms::ConnectionFactory
     {
     private:
 

@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CONCURRENT_SYNCHRONIZABLE_H
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace concurrent{
@@ -27,7 +28,7 @@ namespace concurrent{
      * The interface for all synchronizable objects (that is, objects
      * that can be locked and unlocked).
      */
-    class Synchronizable
+    class AMQCPP_API Synchronizable
     {
     public:
 

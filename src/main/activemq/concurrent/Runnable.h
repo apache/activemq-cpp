@@ -17,6 +17,8 @@
 #ifndef ACTIVEMQ_CONCURRENT_RUNNABLE_H_
 #define ACTIVEMQ_CONCURRENT_RUNNABLE_H_
 
+#include <activemq/util/Config.h>
+
 namespace activemq{
 namespace concurrent{
     
@@ -24,7 +26,7 @@ namespace concurrent{
      * Interface for a runnable object - defines a task
      * that can be run by a thread.
      */
-    class Runnable{
+    class AMQCPP_API Runnable{
     public:
     
         virtual ~Runnable(){}

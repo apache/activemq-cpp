@@ -18,6 +18,7 @@
 #ifndef _CMS_TEMPORARYTOPIC_H_
 #define _CMS_TEMPORARYTOPIC_H_
 
+#include <cms/Config.h>
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
@@ -26,7 +27,7 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific topic name.
      */
-    class TemporaryTopic : public Destination
+    class CMS_API TemporaryTopic : public Destination
     {
     public:
 

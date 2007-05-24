@@ -37,7 +37,7 @@ namespace concurrent{
      * implement the run method, or this class can be used as is with 
      * a provided Runnable delegate.
      */
-    class Thread : public Runnable
+    class AMQCPP_API Thread : public Runnable
     {
     private:
    

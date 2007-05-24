@@ -18,6 +18,7 @@
 #ifndef _CMS_MESSAGECONSUMER_H_
 #define _CMS_MESSAGECONSUMER_H_
 
+#include <cms/Config.h>
 #include <cms/MessageListener.h>
 #include <cms/Message.h>
 #include <cms/Closeable.h>
@@ -25,7 +26,7 @@
 namespace cms
 {
 
-    class MessageConsumer : public Closeable
+    class CMS_API MessageConsumer : public Closeable
     {
     public:
 

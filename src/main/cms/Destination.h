@@ -19,6 +19,7 @@
 #define _CMS_DESTINATION_H_
 
 #include <cms/CMSProperties.h>
+#include <cms/Config.h>
 
 #include <string>
 
@@ -27,7 +28,7 @@ namespace cms{
     /**
      * A Destination object encapsulates a provider-specific address. 
      */
-    class Destination{
+    class CMS_API Destination{
     public:
    
         enum DestinationType

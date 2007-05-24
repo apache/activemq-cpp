@@ -18,11 +18,12 @@
 #ifndef _CMS_OBJECTMESSAGE_H_
 #define _CMS_OBJECTMESSAGE_H_
 
+#include <cms/Config.h>
 #include <cms/Message.h>
 
 namespace cms{
 
-    class ObjectMessage : public Message
+    class CMS_API ObjectMessage : public Message
     {
     public:
 

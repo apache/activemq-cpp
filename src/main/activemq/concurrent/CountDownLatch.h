@@ -19,12 +19,13 @@
 #define _ACTIVEMQ_CONCURRENT_COUNTDOWNLATCH_H_
 
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/util/Config.h>
 #include <cms/CMSException.h>
 
 namespace activemq{
 namespace concurrent{
 
-    class CountDownLatch
+    class AMQCPP_API CountDownLatch
     {
     private:
 

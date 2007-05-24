@@ -18,11 +18,12 @@
 #ifndef _CMS_EXCEPTIONLISTENER_H_
 #define _CMS_EXCEPTIONLISTENER_H_
 
+#include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
 
-    class ExceptionListener
+    class CMS_API ExceptionListener
     {
     public:
    

@@ -17,12 +17,13 @@
  
 #ifndef _CMS_BYTESMESSAGE_H_
 #define _CMS_BYTESMESSAGE_H_
- 
+
+#include <cms/Config.h>
 #include <cms/Message.h>
 
 namespace cms{
    
-    class BytesMessage : public Message{
+    class CMS_API BytesMessage : public Message{
       
     public:
    
