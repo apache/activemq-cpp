@@ -13,7 +13,7 @@
 		/>
 	</Platforms>
 	<ToolFiles>
-	</ToolFiles>
+	</ToolFiles> 
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"

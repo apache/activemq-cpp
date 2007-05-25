@@ -11,7 +11,7 @@
 		<Platform
 			Name="Win32"
 		/>
-	</Platforms>
+	</Platforms> 
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>

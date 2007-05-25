@@ -17,7 +17,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq-unittests",
 	ProjectSection(ProjectDependencies) = postProject
 		{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26} = {60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}
 	EndProjectSection
-EndProject
+EndProject 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
