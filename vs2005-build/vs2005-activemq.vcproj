@@ -676,6 +676,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\activemq\connector\stomp\StompConnectionNegotiator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\stomp\StompConnectionNegotiator.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\connector\stomp\StompConnector.cpp"
 						>
 					</File>
