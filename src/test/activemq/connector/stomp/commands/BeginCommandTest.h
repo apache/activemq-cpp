@@ -33,43 +33,43 @@ namespace commands{
         CPPUNIT_TEST_SUITE( BeginCommandTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
 
-    	BeginCommandTest() {}
-    	virtual ~BeginCommandTest() {}
+        BeginCommandTest() {}
+        virtual ~BeginCommandTest() {}
 
         void test(void)
         {
             BeginCommand cmd;
 
-            CPPUNIT_ASSERT( cmd.getStompCommandId() == 
+            CPPUNIT_ASSERT( cmd.getStompCommandId() ==
                             CommandConstants::BEGIN );
-            
+
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             cmd.setResponseRequired( true );
             cmd.setCommandId( 123 );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             CPPUNIT_ASSERT( cmd.getCommandId() == 0 );
             cmd.setCorrelationId( 99 );
-            CPPUNIT_ASSERT( cmd.getCorrelationId() == 0 );
+            CPPUNIT_ASSERT( cmd.getCorrelationId() == 99 );
             CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
-            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) ==
                             "ID:123456" );
-            
+
             StompFrame* frame = cmd.marshal().clone();
-            
+
             CPPUNIT_ASSERT( frame != NULL );
-            
+
             BeginCommand cmd1( frame );
-            
+
             CPPUNIT_ASSERT( cmd.getCommandId() == cmd1.getCommandId() );
             CPPUNIT_ASSERT( cmd.getStompCommandId() == cmd1.getStompCommandId() );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == cmd1.isResponseRequired() );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == cmd1.getCorrelationId() );
             CPPUNIT_ASSERT( cmd.getTransactionId() == cmd1.getTransactionId() );
-            
+
         }
 
     };

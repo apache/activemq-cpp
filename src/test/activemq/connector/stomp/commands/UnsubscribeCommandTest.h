@@ -33,47 +33,47 @@ namespace commands{
         CPPUNIT_TEST_SUITE( UnsubscribeCommandTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
-    	UnsubscribeCommandTest() {}
-    	virtual ~UnsubscribeCommandTest() {}
+        UnsubscribeCommandTest() {}
+        virtual ~UnsubscribeCommandTest() {}
 
         void test(void)
         {
             UnsubscribeCommand cmd;
 
-            CPPUNIT_ASSERT( cmd.getStompCommandId() == 
+            CPPUNIT_ASSERT( cmd.getStompCommandId() ==
                             CommandConstants::UNSUBSCRIBE );
-            
+
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             cmd.setResponseRequired( true );
             cmd.setCommandId( 123 );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == false );
             CPPUNIT_ASSERT( cmd.getCommandId() == 0 );
             cmd.setCorrelationId( 99 );
-            CPPUNIT_ASSERT( cmd.getCorrelationId() == 0 );
+            CPPUNIT_ASSERT( cmd.getCorrelationId() == 99 );
             CPPUNIT_ASSERT( cmd.getTransactionId() == "" );
             cmd.setTransactionId( "ID:123456" );
-            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) ==
                             "ID:123456" );
             CPPUNIT_ASSERT( cmd.getDestination() == "" );
             cmd.setDestination( "456987" );
-            CPPUNIT_ASSERT( std::string( cmd.getDestination() ) == 
+            CPPUNIT_ASSERT( std::string( cmd.getDestination() ) ==
                             "456987" );
-            
+
             StompFrame* frame = cmd.marshal().clone();
-            
+
             CPPUNIT_ASSERT( frame != NULL );
-            
+
             UnsubscribeCommand cmd1( frame );
-            
+
             CPPUNIT_ASSERT( cmd.getCommandId() == cmd1.getCommandId() );
             CPPUNIT_ASSERT( cmd.getStompCommandId() == cmd1.getStompCommandId() );
             CPPUNIT_ASSERT( cmd.isResponseRequired() == cmd1.isResponseRequired() );
             CPPUNIT_ASSERT( cmd.getCorrelationId() == cmd1.getCorrelationId() );
             CPPUNIT_ASSERT( cmd.getTransactionId() == cmd1.getTransactionId() );
             CPPUNIT_ASSERT( cmd.getDestination() == cmd1.getDestination() );
-            
+
         }
     };
 

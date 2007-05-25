@@ -53,6 +53,7 @@ cc_sources = \
     activemq/connector/stomp/marshal/Marshaler.cpp \
     activemq/connector/stomp/StompConnector.cpp \
     activemq/connector/stomp/StompSelector.cpp \
+    activemq/connector/stomp/StompConnectionNegotiator.cpp \
     activemq/connector/openwire/OpenWireFormat.cpp \
     activemq/connector/openwire/OpenWireFormatFactory.cpp \
     activemq/connector/openwire/OpenWireCommandReader.cpp \
@@ -207,6 +208,7 @@ h_sources = \
     activemq/connector/stomp/StompCommandReader.h \
     activemq/connector/stomp/StompCommandWriter.h \
     activemq/connector/stomp/StompConnectorException.h \
+    activemq/connector/stomp/StompConnectionNegotiator.h \
     activemq/connector/stomp/StompProducerInfo.h \
     activemq/connector/stomp/StompSelector.h \
     activemq/connector/stomp/StompConsumerInfo.h \

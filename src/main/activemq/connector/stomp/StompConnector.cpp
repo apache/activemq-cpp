@@ -33,6 +33,7 @@
 #include <activemq/connector/stomp/commands/DisconnectCommand.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>
+#include <activemq/connector/stomp/StompConnectionNegotiator.h>
 #include <activemq/util/Long.h>
 #include <activemq/util/Config.h>
 
@@ -59,7 +60,6 @@ StompConnector::StompConnector( Transport* transport,
             "StompConnector::StompConnector - Transport cannot be NULL");
     }
 
-    this->transport = transport;
     this->state = DISCONNECTED;
     this->exceptionListener = NULL;
     this->messageListener = NULL;
@@ -67,6 +67,9 @@ StompConnector::StompConnector( Transport* transport,
     this->nextProducerId = 1;
     this->nextTransactionId = 1;
     this->properties.copy( &properties );
+
+    // Create the connection negotiator and wrap our transport
+    this->transport = new StompConnectionNegotiator( transport, false );
 
     // Observe the transport for events.
     this->transport->setCommandListener( this );

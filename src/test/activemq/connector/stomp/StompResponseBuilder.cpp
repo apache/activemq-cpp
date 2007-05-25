@@ -28,6 +28,20 @@ using namespace activemq::transport;
 ////////////////////////////////////////////////////////////////////////////////
 Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
 
+    // If this command requires a response we don't know what it is
+    // so we throw an exception.
+    if( cmd->isResponseRequired() ) {
+
+        throw transport::CommandIOException( __FILE__, __LINE__,
+            "StompResponseBuilder - unrecognized command" );
+    }
+
+    return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Command* StompResponseBuilder::buildIncomingCommand( const transport::Command* cmd ){
+
     const commands::ConnectCommand* connectCommand =
         dynamic_cast<const commands::ConnectCommand*>(cmd);
 
@@ -45,14 +59,6 @@ Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
         }
 
         return resp;
-    }
-
-    // If this command requires a response we don't know what it is
-    // so we throw an exception.
-    if( cmd->isResponseRequired() ) {
-
-        throw transport::CommandIOException( __FILE__, __LINE__,
-            "StompResponseBuilder - unrecognized command" );
     }
 
     return NULL;

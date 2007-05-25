@@ -41,6 +41,7 @@ namespace transport{
             virtual ~ResponseBuilder(){}
 
             virtual Response* buildResponse( const Command* cmd ) = 0;
+            virtual Command* buildIncomingCommand( const Command* cmd ) = 0;
         };
 
         class InternalCommandListener :
@@ -53,7 +54,7 @@ namespace transport{
             ResponseBuilder* responseBuilder;
             concurrent::Mutex mutex;
             Command* command;
-            Response* response;
+            Command* response;
             bool done;
             concurrent::CountDownLatch startedLatch;
 
@@ -96,8 +97,8 @@ namespace transport{
                     this->command = command;
                     // Create a response now before the caller has a
                     // chance to destroy the command.
-                    this->response = 
-                        responseBuilder->buildResponse( command );
+                    this->response =
+                        responseBuilder->buildIncomingCommand( command );
 
                     mutex.notifyAll();
                 }
@@ -154,7 +155,7 @@ namespace transport{
 
         DummyTransport( ResponseBuilder* responseBuilder ,
                         bool own = false,
-                        bool useDefOutgoing = false );
+                        bool useDefOutgoing = true );
 
         virtual ~DummyTransport();
 

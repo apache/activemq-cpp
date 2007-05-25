@@ -17,7 +17,7 @@
 
 #ifndef ACTIVEMQ_COMMAND_STOMP_COMMANDS_CONNECTEDCOMMAND_H_
 #define ACTIVEMQ_COMMAND_STOMP_COMMANDS_CONNECTEDCOMMAND_H_
- 
+
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Response.h>
@@ -26,22 +26,27 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
-	
+
     /**
      * The stomp command returned from the broker indicating
      * a connection has been established.
      */
-    class ConnectedCommand : public AbstractCommand< transport::Response >
+    class ConnectedCommand : public AbstractCommand< transport::Command >
     {
     public:
-   
+
         ConnectedCommand() :
-            AbstractCommand< transport::Response >() {
+            AbstractCommand< transport::Command >() {
                 initialize( getFrame() );
         }
 
-        ConnectedCommand( StompFrame* frame ) : 
-            AbstractCommand< transport::Response >( frame ) {
+        ConnectedCommand( StompFrame* frame ) :
+            AbstractCommand< transport::Command >( frame ) {
+                validate( getFrame() );
+        }
+
+        ConnectedCommand( const ConnectedCommand& cmd ) :
+            AbstractCommand< transport::Command >( cmd.getFrame().clone() ) {
                 validate( getFrame() );
         }
 
@@ -56,39 +61,28 @@ namespace commands{
         }
 
         /**
-         * Sets the Correlation Id if this Command
-         * @param corrId Id
-         */
-        virtual void setCorrelationId( int corrId ) {
-            setPropertyValue(
-                CommandConstants::toString( 
-                    CommandConstants::HEADER_RESPONSEID),
-                 util::Integer::toString( corrId ) );
-        }
-        
-        /**
          * Get the Session Id
          * @return the mew Sessoin Id String
-         */      
+         */
         virtual const char* getSessionId() const {
-            return getPropertyValue( 
-                CommandConstants::toString( 
+            return getPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_SESSIONID) );
         }
-      
+
         /**
          * Set the Session Id
          * @param session string containing the session id
          */
         virtual void setSessionId( const std::string& session ) {
-            setPropertyValue( 
-                CommandConstants::toString( 
+            setPropertyValue(
+                CommandConstants::toString(
                     CommandConstants::HEADER_SESSIONID),
                 session );
         }
 
     protected:
-    
+
         /**
          * Inheritors are required to override this method to init the
          * frame with data appropriate for the command type.
@@ -101,14 +95,14 @@ namespace commands{
         }
 
         /**
-         * Inheritors are required to override this method to validate 
+         * Inheritors are required to override this method to validate
          * the passed stomp frame before it is marshalled or unmarshaled
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
         virtual bool validate( const StompFrame& frame ) const
         {
-            if(frame.getCommand() == 
+            if(frame.getCommand() ==
                CommandConstants::toString( CommandConstants::CONNECTED ) )
             {
                 return true;

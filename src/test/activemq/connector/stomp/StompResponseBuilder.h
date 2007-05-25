@@ -39,6 +39,7 @@ namespace stomp{
         virtual ~StompResponseBuilder(){}
 
         virtual transport::Response* buildResponse( const transport::Command* cmd );
+        virtual transport::Command* buildIncomingCommand( const transport::Command* cmd );
 
     };
 

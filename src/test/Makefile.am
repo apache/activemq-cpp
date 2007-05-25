@@ -98,7 +98,7 @@ cc_sources = \
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test
 ## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
+## TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options

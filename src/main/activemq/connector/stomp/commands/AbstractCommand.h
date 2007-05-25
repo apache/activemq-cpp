@@ -223,8 +223,11 @@ namespace commands{
          * Default implementation - does nothing.
          * @param corrId Id
          */
-        virtual void setCorrelationId( int corrId AMQCPP_UNUSED ) {
-            /* do nothing */
+        virtual void setCorrelationId( int corrId ) {
+            setPropertyValue(
+                CommandConstants::toString(
+                    CommandConstants::HEADER_RESPONSEID),
+                 util::Integer::toString( corrId ) );
         }
 
         /**
