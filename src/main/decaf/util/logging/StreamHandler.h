@@ -74,7 +74,7 @@ namespace logging{
             try {
                 this->close();
             }
-            AMQ_CATCH_NOTHROW(exceptions::ActiveMQException)
+            AMQ_CATCH_NOTHROW( lang::Exception)
             AMQ_CATCALL_NOTHROW()
         }
 
@@ -112,7 +112,7 @@ namespace logging{
             try {
 
                 if( !stream ) {
-                    throw exceptions::NullPointerException(
+                    throw lang::exceptions::NullPointerException(
                         __FILE__, __LINE__,
                         "StreamHandler::publish - Stream not set.");
                 }
@@ -128,8 +128,8 @@ namespace logging{
                     }
                 }
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_RETHROW( lang::Exception )
+            AMQ_CATCHALL_THROW( lang::Exception )
         }
 
         /**
@@ -212,6 +212,6 @@ namespace logging{
 
     };
 
-}})
+}}}
 
 #endif /*_DECAF_UTIL_LOGGING_STREAMHANDLER_H_*/

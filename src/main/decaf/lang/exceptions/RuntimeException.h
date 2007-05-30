@@ -44,7 +44,7 @@ namespace exceptions{
         RuntimeException( const Exception& ex ) throw()
         : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**

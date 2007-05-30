@@ -89,6 +89,6 @@ namespace logging{
 
    };
 
-}})
+}}}
 
 #endif /*_DECAF_UTIL_LOGGING_SIMPLELOGGER_H_*/

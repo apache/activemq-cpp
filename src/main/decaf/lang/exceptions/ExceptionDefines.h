@@ -22,7 +22,7 @@
  * Macro for catching and rethrowing an exception of
  * a given type.
  * @param type The type of the exception to throw
- * (e.g. ActiveMQException ).
+ * (e.g. Exception ).
  */
 #define DECAF_CATCH_RETHROW( type ) \
     catch( type& ex ){ \
@@ -61,7 +61,7 @@
  */
 #define DECAF_CATCHALL_NOTHROW( ) \
     catch( ... ){ \
-        exceptions::ActiveMQException ex( __FILE__, __LINE__, \
+        lang::Exception ex( __FILE__, __LINE__, \
             "caught unknown exception, not rethrowing" ); \
     }
 
@@ -69,7 +69,7 @@
  * Macro for catching and rethrowing an exception of
  * a given type.
  * @param type The type of the exception to throw
- * (e.g. ActiveMQException ).
+ * (e.g. Exception ).
  */
 #define DECAF_CATCH_NOTHROW( type ) \
     catch( type& ex ){ \

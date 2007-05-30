@@ -24,7 +24,8 @@
 #include <iostream>
 #include <exception>
 
-namespace cms{
+namespace decaf{
+namespace lang{
 
     /**
      * This class represents an error that has occurred.
@@ -84,6 +85,6 @@ namespace cms{
 
     };
 
-}
+}}
 
 #endif /*_DECAF_LANG_THROWABLE_H_*/

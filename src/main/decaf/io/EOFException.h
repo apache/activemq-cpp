@@ -42,7 +42,7 @@ namespace io{
         EOFException( const exceptions::Exception& ex ) throw()
         : IOException()
         {
-            *(exceptions::ActiveMQException*)this = ex;
+            *(exceptions::Exception*)this = ex;
         }
 
         /**

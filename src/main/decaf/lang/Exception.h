@@ -134,7 +134,7 @@ namespace lang{
 
         /**
          * Assignment operator.
-         * @param const reference to another ActiveMQException
+         * @param const reference to another Exception
          */
         virtual Exception& operator =( const Exception& ex );
 

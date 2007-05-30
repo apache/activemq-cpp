@@ -88,13 +88,13 @@ namespace lang{
          * @exception runtime_error is thrown if the system could
          * not start the thread.
          */
-        virtual void start() throw ( exceptions::ActiveMQException );
+        virtual void start() throw ( Exception );
 
         /**
          * Wait til the thread exits. This is when the run()
          * method has returned or has thrown an exception.
          */
-        virtual void join() throw ( exceptions::ActiveMQException );
+        virtual void join() throw ( Exception );
 
         /**
          * Default implementation of the run method - does nothing.

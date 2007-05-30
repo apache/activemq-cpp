@@ -17,7 +17,7 @@
 #ifndef _DECAF_LANG_EXCEPTIONS_ILLEGALARGUMENTEXCEPTION_H_
 #define _DECAF_LANG_EXCEPTIONS_ILLEGALARGUMENTEXCEPTION_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 
 namespace decaf{
 namespace lang{
@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an illegal argument was passed into a method.
      */
-    class IllegalArgumentException : public ActiveMQException
+    class IllegalArgumentException : public Exception
     {
     public:
 
@@ -36,22 +36,22 @@ namespace exceptions{
         IllegalArgumentException() throw() {}
 
         /**
-         * Conversion Constructor from some other ActiveMQException
+         * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
-        IllegalArgumentException( const ActiveMQException& ex ) throw()
-        : ActiveMQException()
+        IllegalArgumentException( const Exception& ex ) throw()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
         IllegalArgumentException( const IllegalArgumentException& ex ) throw()
-        : ActiveMQException()
+        : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**
@@ -65,7 +65,7 @@ namespace exceptions{
          */
         IllegalArgumentException(const char* file, const int lineNumber,
             const char* msg, ...) throw()
-        : ActiveMQException()
+        : Exception()
         {
             va_list vargs ;
             va_start(vargs, msg) ;
@@ -80,7 +80,7 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual ActiveMQException* clone() const{
+        virtual Exception* clone() const{
             return new IllegalArgumentException( *this );
         }
 

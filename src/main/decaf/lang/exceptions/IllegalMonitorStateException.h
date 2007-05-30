@@ -37,7 +37,7 @@ namespace exceptions{
         IllegalMonitorStateException() throw() {};
 
         /**
-         * Conversion Constructor from some other ActiveMQException
+         * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
         IllegalMonitorStateException(const Exception& ex) throw()

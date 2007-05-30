@@ -36,13 +36,13 @@ namespace exceptions{
         NullPointerException() throw() {};
 
         /**
-         * Conversion Constructor from some other ActiveMQException
+         * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
         NullPointerException( const Exception& ex ) throw()
         : Exception()
         {
-            *(ActiveMQException*)this = ex;
+            *(Exception*)this = ex;
         }
 
         /**

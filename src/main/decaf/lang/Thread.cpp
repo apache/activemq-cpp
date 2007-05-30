@@ -24,10 +24,11 @@
 #endif
 
 #include <decaf/lang/Exception.h>
-#include <activemq/exceptions/RuntimeException.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Thread::Thread()
@@ -54,7 +55,7 @@ Thread::~Thread()
 void Thread::start() throw ( Exception )
 {
     if (this->started) {
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw Exception( __FILE__, __LINE__,
             "Thread already started");
     }
 
@@ -68,7 +69,7 @@ void Thread::start() throw ( Exception )
         runCallback,
         this);
     if (err != 0) {
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw Exception( __FILE__, __LINE__,
             "Coud not start thread");
     }
 
@@ -78,7 +79,7 @@ void Thread::start() throw ( Exception )
     this->threadHandle =
         (HANDLE)::_beginthreadex(NULL, 0, runCallback, this, 0, &threadId);
     if (this->threadHandle == NULL) {
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw Exception( __FILE__, __LINE__,
             "Coud not start thread");
     }
 
@@ -89,10 +90,10 @@ void Thread::start() throw ( Exception )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::join() throw( exceptions::ActiveMQException )
+void Thread::join() throw( Exception )
 {
     if (!this->started) {
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
+        throw Exception( __FILE__, __LINE__,
             "Thread::join() called without having called Thread::start()");
     }
     if (!this->joined) {
@@ -150,7 +151,7 @@ Thread::runCallback( void* param )
     try{
         thread->task->run();
     } catch( ... ){
-        exceptions::RuntimeException ex(__FILE__, __LINE__, "unhandled exception bubbled up to Thread::run");
+        RuntimeException ex(__FILE__, __LINE__, "unhandled exception bubbled up to Thread::run");
         ex.printStackTrace();
     }
 

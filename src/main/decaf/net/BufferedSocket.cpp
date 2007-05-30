@@ -66,7 +66,7 @@ BufferedSocket::~BufferedSocket()
     {
         close();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_NOTHROW( Exception )
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -92,7 +92,7 @@ void BufferedSocket::connect( const char* host, int port )
             socket->getOutputStream(), (std::size_t)outputBufferSize );
     }
     AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
     AMQ_CATCHALL_THROW( SocketException )
 }
 
@@ -129,6 +129,6 @@ void BufferedSocket::close() throw( cms::CMSException )
         }
     }
     AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
     AMQ_CATCHALL_THROW( SocketException )
 }

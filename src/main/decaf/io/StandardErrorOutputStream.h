@@ -47,17 +47,17 @@ namespace io{
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void lock() throw( exceptions::ActiveMQException ){
+        virtual void lock() throw( Exception ){
             mutex.lock();
         }
 
         /**
          * Unlocks the object.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){
+        virtual void unlock() throw( Exception ){
             mutex.unlock();
         }
 
@@ -65,9 +65,9 @@ namespace io{
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void wait() throw( exceptions::ActiveMQException ){
+        virtual void wait() throw( Exception ){
             mutex.wait();
         }
 
@@ -77,9 +77,9 @@ namespace io{
          * calling.  This wait will timeout after the specified time
          * interval.
          * @param time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( exceptions::ActiveMQException ){
+        virtual void wait( unsigned long millisecs ) throw( Exception ){
             mutex.wait( millisecs );
         }
 
@@ -87,9 +87,9 @@ namespace io{
          * Signals a waiter on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void notify() throw( exceptions::ActiveMQException ){
+        virtual void notify() throw( Exception ){
             mutex.notify();
         }
 
@@ -97,9 +97,9 @@ namespace io{
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
+        virtual void notifyAll() throw( Exception ){
             mutex.notifyAll();
         }
 

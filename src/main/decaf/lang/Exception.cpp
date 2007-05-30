@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include "Exception.h"
 #include <decaf/util/logging/LoggerDefines.h>
+#include <sstream>
 
 using namespace std;
 using namespace decaf;
@@ -33,16 +34,13 @@ Exception::Exception() throw(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception( const Exception& ex ) throw()
-: Throwable()
-{
+Exception::Exception( const Exception& ex ) throw() : Throwable() {
     *this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Exception::Exception( const char* file, const int lineNumber,
-                   const char* msg, ... ) throw()
-{
+                   const char* msg, ... ) throw() {
     va_list vargs;
     va_start( vargs, msg ) ;
     buildMessage( msg, vargs );
@@ -63,8 +61,8 @@ void Exception::setMessage( const char* msg, ... ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Exception::buildMessage(const char* format, va_list& vargs)
-{
+void Exception::buildMessage(const char* format, va_list& vargs) {
+
     // Allocate buffer with a guess of it's size
     int size = 128;
 
@@ -98,12 +96,12 @@ void Exception::buildMessage(const char* format, va_list& vargs)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Exception::setMark( const char* file, const int lineNumber ){
+void Exception::setMark( const char* file, const int lineNumber ) {
 
     // Add this mark to the end of the stack trace.
     stackTrace.push_back( std::make_pair( (std::string)file, (int)lineNumber ) );
 
-    ostringstream stream;
+    std::ostringstream stream;
     stream << "\tFILE: " << stackTrace[stackTrace.size()-1].first;
     stream << ", LINE: " << stackTrace[stackTrace.size()-1].second;
 
@@ -112,27 +110,27 @@ void Exception::setMark( const char* file, const int lineNumber ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception* Exception::clone() const{
-    return new ActiveMQException( *this );
+Exception* Exception::clone() const {
+    return new Exception( *this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::pair< std::string, int> > Exception::getStackTrace() const{
+std::vector< std::pair< std::string, int> > Exception::getStackTrace() const {
     return stackTrace;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Exception::printStackTrace() const{
+void Exception::printStackTrace() const {
     printStackTrace( std::cerr );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Exception::printStackTrace( std::ostream& stream ) const{
+void Exception::printStackTrace( std::ostream& stream ) const {
     stream << getStackTraceString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Exception::getStackTraceString() const{
+std::string Exception::getStackTraceString() const {
 
     // Create the output stream.
     std::ostringstream stream;
@@ -155,4 +153,3 @@ Exception& Exception::operator =( const Exception& ex ){
     this->stackTrace = ex.stackTrace;
     return *this;
 }
-

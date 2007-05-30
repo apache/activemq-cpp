@@ -21,6 +21,7 @@
 #include <decaf/io/InputStream.h>
 #include <decaf/net/Socket.h>
 #include <decaf/lang/Mutex.h>
+#include <decaf/lang/Exception.h>
 
 namespace decaf{
 namespace net{
@@ -52,17 +53,17 @@ namespace net{
 
         /**
          * Locks the object.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void lock() throw( exceptions::ActiveMQException ){
+        virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
         /**
          * Unlocks the object.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){
+        virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
@@ -70,9 +71,9 @@ namespace net{
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void wait() throw( exceptions::ActiveMQException ){
+        virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
@@ -82,10 +83,10 @@ namespace net{
          * calling.  This wait will timeout after the specified time
          * interval.
          * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void wait( unsigned long millisecs )
-            throw( exceptions::ActiveMQException ) {
+            throw( lang::Exception ) {
 
             mutex.wait( millisecs );
         }
@@ -94,9 +95,9 @@ namespace net{
          * Signals a waiter on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void notify() throw( exceptions::ActiveMQException ){
+        virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
@@ -104,9 +105,9 @@ namespace net{
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
+        virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
 
