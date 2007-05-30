@@ -20,8 +20,8 @@
 
 #include <decaf/io/IOException.h>
 #include <decaf/io/Closeable.h>
-#include <activemq/concurrent/Synchronizable.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
+#include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 namespace decaf{
 namespace io{
@@ -30,7 +30,7 @@ namespace io{
      * Base interface for an input stream.
      */
     class InputStream : public Closeable,
-                        public concurrent::Synchronizable
+                        public util::concurrent::Synchronizable
     {
     public:
 
@@ -78,7 +78,7 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, exceptions::UnsupportedOperationException ) = 0;
+        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) = 0;
 
     };
 

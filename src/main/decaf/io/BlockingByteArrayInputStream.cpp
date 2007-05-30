@@ -65,7 +65,7 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BlockingByteArrayInputStream::close() throw (cms::CMSException){
+void BlockingByteArrayInputStream::close() throw ( lang::Exception ){
 
     synchronized( this ){
 
@@ -103,8 +103,8 @@ unsigned char BlockingByteArrayInputStream::read() throw ( IOException ){
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t BlockingByteArrayInputStream::read( unsigned char* buffer,
-                                        std::size_t bufferSize )
-                                        throw ( IOException ){
+                                                std::size_t bufferSize )
+                                                throw ( IOException ){
     synchronized( this ){
 
         std::size_t ix = 0;
@@ -123,7 +123,8 @@ std::size_t BlockingByteArrayInputStream::read( unsigned char* buffer,
         }
 
         if( closing ){
-            throw IOException( __FILE__, __LINE__, "close occurred during read" );
+            throw IOException(
+                __FILE__, __LINE__, "close occurred during read" );
         }
 
         return ix;
@@ -134,7 +135,7 @@ std::size_t BlockingByteArrayInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t BlockingByteArrayInputStream::skip( std::size_t num )
-    throw ( io::IOException, exceptions::UnsupportedOperationException ){
+    throw ( io::IOException, lang::exceptions::UnsupportedOperationException ){
 
     std::size_t ix = 0;
 

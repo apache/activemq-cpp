@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an unsupported method is called.
      */
-    class UnsupportedOperationException : public Exception
+    class UnsupportedOperationException : public lang::Exception
     {
     public:
 
@@ -40,7 +40,7 @@ namespace exceptions{
          * @param An exception that should become this type of Exception
          */
         UnsupportedOperationException( const Exception& ex ) throw()
-        : ActiveMQException()
+        : Exception()
         {
             *(Exception*)this = ex;
         }
@@ -49,7 +49,7 @@ namespace exceptions{
          * Copy Constructor
          */
         UnsupportedOperationException( const UnsupportedOperationException& ex ) throw()
-        : ActiveMQException()
+        : Exception()
         {
             *(Exception*)this = ex;
         }
@@ -89,6 +89,6 @@ namespace exceptions{
 
     };
 
-}}
+}}}
 
 #endif /*_DECAF_LANG_EXCEPTIONS_UNSUPPORTEDOPERATIONEXCEPTION_H_*/

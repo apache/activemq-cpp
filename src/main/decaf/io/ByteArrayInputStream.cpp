@@ -21,7 +21,8 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::io;
-using namespace decaf::exceptions;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ByteArrayInputStream::ByteArrayInputStream(){
@@ -72,7 +73,7 @@ void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayInputStream::reset() throw (cms::CMSException){
+void ByteArrayInputStream::reset() throw ( lang::Exception){
     if( activeBuffer == NULL ){
         throw IOException( __FILE__, __LINE__, "Buffer has not been initialized" );
     }
@@ -92,7 +93,7 @@ unsigned char ByteArrayInputStream::read() throw ( IOException ){
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t ByteArrayInputStream::read( unsigned char* buffer,
-                                std::size_t bufferSize )
+                                        std::size_t bufferSize )
                                    throw ( IOException ){
     std::size_t ix = 0;
 
@@ -101,7 +102,9 @@ std::size_t ByteArrayInputStream::read( unsigned char* buffer,
         if(pos == activeBuffer->end())
         {
             // We don't have enough data to fulfill the request.
-            throw IOException( __FILE__, __LINE__, "Reached the end of the buffer" );
+            throw IOException(
+                __FILE__, __LINE__,
+                "Reached the end of the buffer" );
         }
 
         buffer[ix] = *(pos);
@@ -112,7 +115,7 @@ std::size_t ByteArrayInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t ByteArrayInputStream::skip( std::size_t num )
-    throw ( IOException, exceptions::UnsupportedOperationException ){
+    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     std::size_t ix = 0;
 

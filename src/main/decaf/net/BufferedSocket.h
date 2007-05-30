@@ -81,7 +81,7 @@ namespace net{
          * Closes this object and deallocates the appropriate resources.
          * @throws CMSException
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( lang::Exception );
 
         /**
          * Indicates whether or not this socket is connected to a destination.

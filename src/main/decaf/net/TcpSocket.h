@@ -201,7 +201,7 @@ namespace net{
          * Closes this object and deallocates the appropriate resources.
          * @throws CMSException
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( lang::Exception );
 
     public:
 
@@ -210,14 +210,14 @@ namespace net{
          * @returns true if TCP_NODELAY is enabled
          * @throws CMSException
          */
-        virtual bool getTcpNoDelay() const throw ( cms::CMSException );
+        virtual bool getTcpNoDelay() const throw ( lang::Exception );
 
         /**
          * Sets the Status of the TCP_NODELAY param for this socket as a Bool
          * @param value - true if TCP_NODELAY is to be enabled
          * @throws CMSException
          */
-        virtual void setTcpNoDelay( bool value ) throw ( cms::CMSException );
+        virtual void setTcpNoDelay( bool value ) throw ( lang::Exception );
 
     protected:
 

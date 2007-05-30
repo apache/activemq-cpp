@@ -57,7 +57,7 @@ namespace net{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual lang::Exception* clone() const{
+        virtual SocketException* clone() const{
             return new SocketException( *this );
         }
 

@@ -20,7 +20,7 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/net/Socket.h>
-#include <decaf/lang/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Exception.h>
 
 namespace decaf{
@@ -36,7 +36,7 @@ namespace net{
 
         // The socket handle.
         Socket::SocketHandle socket;
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
     public:
 
@@ -117,7 +117,7 @@ namespace net{
          * @return The number of bytes currently available to
          * be read on the socket.
          */
-        virtual std::size_t available() const throw (activemq::io::IOException);
+        virtual std::size_t available() const throw ( io::IOException );
 
         /**
          * Reads a single byte from the buffer.  If no data
@@ -137,14 +137,14 @@ namespace net{
          */
         virtual std::size_t read( unsigned char* buffer,
                                   std::size_t bufferSize )
-            throw (io::IOException);
+            throw ( io::IOException );
 
         /**
          * Close - does nothing.  It is the responsibility of the owner
          * of the socket object to close it.
          * @throws CMSException
          */
-        virtual void close() throw( cms::CMSException ){}
+        virtual void close() throw( lang::Exception ){}
 
         /**
          * Not supported.
@@ -152,7 +152,7 @@ namespace net{
          */
         virtual std::size_t skip( std::size_t num )
             throw ( io::IOException,
-                    exceptions::UnsupportedOperationException );
+                    lang::exceptions::UnsupportedOperationException );
 
     };
 

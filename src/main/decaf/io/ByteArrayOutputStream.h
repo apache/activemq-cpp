@@ -19,7 +19,7 @@
 #define _DECAF_IO_BYTEARRAYOUTPUTSTREAM_H_
 
 #include <decaf/io/OutputStream.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <vector>
 
 namespace decaf{
@@ -42,7 +42,7 @@ namespace io{
         /**
          * Synchronization object.
          */
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
     public:
 
@@ -60,7 +60,7 @@ namespace io{
         /**
          * Destructor
          */
-           virtual ~ByteArrayOutputStream() {};
+        virtual ~ByteArrayOutputStream() {};
 
         /**
          * Sets the internal buffer.  This input stream will wrap around
@@ -97,7 +97,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void lock() throw( Exception ){
+        virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
@@ -105,7 +105,7 @@ namespace io{
          * Unlocks the object.
          * @throws Exception
          */
-        virtual void unlock() throw( Exception ){
+        virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
@@ -115,7 +115,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void wait() throw( Exception ){
+        virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
@@ -127,7 +127,7 @@ namespace io{
          * @param time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( Exception ){
+        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
             mutex.wait(millisecs);
         }
 
@@ -137,7 +137,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notify() throw( Exception ){
+        virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
@@ -147,7 +147,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notifyAll() throw( Exception ){
+        virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
 
@@ -184,7 +184,7 @@ namespace io{
          * Invokes close on the target output stream.
          * @throws CMSException
          */
-        void close() throw( cms::CMSException ){ /* do nothing */ }
+        void close() throw( lang::Exception ){ /* do nothing */ }
 
    };
 

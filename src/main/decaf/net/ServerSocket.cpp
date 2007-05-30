@@ -169,7 +169,7 @@ void ServerSocket::bind( const char* host,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::close() throw (cms::CMSException){
+void ServerSocket::close() throw ( lang::Exception ){
 
     if( isBound() ) {
 

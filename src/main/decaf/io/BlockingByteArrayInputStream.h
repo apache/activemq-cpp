@@ -19,7 +19,7 @@
 #define _DECAF_IO_BLOCKINGBYTEARRAYINPUTSTREAM_H_
 
 #include <decaf/io/InputStream.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <vector>
 
 namespace decaf{
@@ -47,7 +47,7 @@ namespace io{
         /**
          * Synchronization object.
          */
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
         /**
          * Indicates that this stream is in the process of shutting
@@ -91,7 +91,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void lock() throw( Exception ){
+        virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
@@ -99,7 +99,7 @@ namespace io{
          * Unlocks the object.
          * @throws Exception
          */
-        virtual void unlock() throw( Exception ){
+        virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
@@ -109,7 +109,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void wait() throw( Exception ){
+        virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
@@ -121,7 +121,7 @@ namespace io{
          * @param time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( Exception ){
+        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
             mutex.wait(millisecs);
         }
 
@@ -131,7 +131,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notify() throw( Exception ){
+        virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
@@ -141,7 +141,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notifyAll() throw( Exception ){
+        virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
 
@@ -151,7 +151,7 @@ namespace io{
          * @return the data available in the internal buffer.
          * @throws IOException if an error occurs.
          */
-        virtual std::size_t available() const throw (IOException){
+        virtual std::size_t available() const throw ( IOException ){
             return std::distance( pos, buffer.end() );
         }
 
@@ -162,7 +162,7 @@ namespace io{
          * @return the next byte.
          * @throws IOException if an error occurs.
          */
-        virtual unsigned char read() throw (IOException);
+        virtual unsigned char read() throw ( IOException );
 
         /**
          * Reads an array of bytes from the buffer.  If the desired amount
@@ -175,13 +175,13 @@ namespace io{
          * @throws IOException f an error occurs.
          */
         virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize )
-            throw (IOException);
+            throw ( IOException );
 
         /**
          * Closes the target input stream.
          * @throws IOException if an error occurs.
          */
-        virtual void close() throw (cms::CMSException);
+        virtual void close() throw ( lang::Exception );
 
         /**
          * Skips over and discards n bytes of data from this input stream. The
@@ -200,7 +200,7 @@ namespace io{
          * @throws IOException if an error occurs
          */
         virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException, exceptions::UnsupportedOperationException );
+            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
 
    };
 

@@ -18,7 +18,7 @@
 #define _DECAF_IO_STANDARDERROROUTPUTSTREAM_H_
 
 #include <decaf/io/OutputStream.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #include <iostream>
 
@@ -32,7 +32,7 @@ namespace io{
         /**
          * Synchronization object.
          */
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
     public:
 
@@ -57,7 +57,7 @@ namespace io{
          * Unlocks the object.
          * @throws Exception
          */
-        virtual void unlock() throw( Exception ){
+        virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
@@ -67,7 +67,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void wait() throw( Exception ){
+        virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
@@ -79,7 +79,7 @@ namespace io{
          * @param time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( Exception ){
+        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
             mutex.wait( millisecs );
         }
 
@@ -89,7 +89,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notify() throw( Exception ){
+        virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
@@ -99,7 +99,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notifyAll() throw( Exception ){
+        virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
 
@@ -141,7 +141,7 @@ namespace io{
          * Invokes close on the target output stream.
          * throws CMSException if an error occurs
          */
-        void close() throw( cms::CMSException ){
+        void close() throw( lang::Exception ){
             std::cerr.flush();
         }
 

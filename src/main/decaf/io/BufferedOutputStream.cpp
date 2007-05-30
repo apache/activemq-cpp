@@ -59,7 +59,7 @@ void BufferedOutputStream::init( std::size_t bufSize ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedOutputStream::close() throw( cms::CMSException ){
+void BufferedOutputStream::close() throw( lang::Exception ){
 
     // Flush this stream.
     flush();

@@ -79,7 +79,7 @@ namespace net{
         /**
          * Closes the server socket.
          */
-        virtual void close() throw( cms::CMSException );
+        virtual void close() throw( lang::Exception );
 
         /**
          * @return true of the server socket is bound.

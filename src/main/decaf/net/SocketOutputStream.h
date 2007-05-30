@@ -20,7 +20,7 @@
 
 #include <decaf/io/OutputStream.h>
 #include <decaf/net/Socket.h>
-#include <decaf/lang/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace decaf{
 namespace net{
@@ -35,7 +35,7 @@ namespace net{
 
         // The socket.
         Socket::SocketHandle socket;
-        lang::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
     public:
 

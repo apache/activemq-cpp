@@ -210,7 +210,7 @@ namespace io{
          * @param value the value to write.
          * @throws IOException
          */
-        virtual void writeUTF( const std::string& value ) throw ( io::IOException );
+        virtual void writeUTF( const std::string& value ) throw ( IOException );
     };
 
 }}

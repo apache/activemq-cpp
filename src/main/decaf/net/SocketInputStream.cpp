@@ -34,11 +34,11 @@
 #include <sys/filio.h>
 #endif
 
-#include <decaf/network/SocketInputStream.h>
-#include <decaf/network/SocketError.h>
+#include <decaf/net/SocketInputStream.h>
+#include <decaf/net/SocketError.h>
 #include <decaf/io/IOException.h>
-#include <decaf/util/Character.h>
-#include <decaf/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/Character.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
@@ -52,7 +52,7 @@ using namespace decaf::lang;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::SocketInputStream( network::Socket::SocketHandle socket )
+SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket )
 {
     this->socket = socket;
 }
@@ -63,7 +63,7 @@ SocketInputStream::~SocketInputStream()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::available() const throw (activemq::io::IOException){
+std::size_t SocketInputStream::available() const throw ( io::IOException ){
 
 // The windows version
 #if defined(HAVE_WINSOCK2_H)
@@ -117,7 +117,7 @@ std::size_t SocketInputStream::available() const throw (activemq::io::IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SocketInputStream::read() throw (IOException){
+unsigned char SocketInputStream::read() throw ( IOException ){
 
     unsigned char c;
     std::size_t len = read( &c, 1 );
@@ -131,7 +131,7 @@ unsigned char SocketInputStream::read() throw (IOException){
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::read( unsigned char* buffer,
-                                     std::size_t bufferSize ) throw (IOException)
+                                     std::size_t bufferSize ) throw ( IOException )
 {
     int len = 0;
 
@@ -163,8 +163,9 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::skip( std::size_t num AMQCPP_UNUSED )
-throw ( io::IOException, exceptions::UnsupportedOperationException ) {
-    throw exceptions::UnsupportedOperationException(__FILE__, __LINE__,
+throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+    throw lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__,
         "skip() method is not supported");
 }
 

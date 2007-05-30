@@ -17,12 +17,13 @@
 
 #include "BufferedSocket.h"
 
-#include <decaf/lang/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BufferedSocket::BufferedSocket( Socket* socket,
@@ -66,8 +67,8 @@ BufferedSocket::~BufferedSocket()
     {
         close();
     }
-    AMQ_CATCH_NOTHROW( Exception )
-    AMQ_CATCHALL_NOTHROW()
+    DECAF_CATCH_NOTHROW( Exception )
+    DECAF_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,13 +92,13 @@ void BufferedSocket::connect( const char* host, int port )
         outputStream = new BufferedOutputStream(
             socket->getOutputStream(), (std::size_t)outputBufferSize );
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedSocket::close() throw( cms::CMSException )
+void BufferedSocket::close() throw( lang::Exception )
 {
     try
     {
@@ -119,7 +120,7 @@ void BufferedSocket::close() throw( cms::CMSException )
             // Close the socket
             try{
                 socket->close();
-            } catch( cms::CMSException& ex ){ /* Absorb */ }
+            } catch( lang::Exception& ex ){ /* Absorb */ }
 
             // if we own it, delete it.
             if( own ) {
@@ -128,7 +129,7 @@ void BufferedSocket::close() throw( cms::CMSException )
             socket = NULL;
         }
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }

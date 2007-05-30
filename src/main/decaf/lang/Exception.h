@@ -18,7 +18,7 @@
 #define _DECAF_LANG_EXCEPTION_EXCEPTION_H_
 
 #include <decaf/lang/Throwable.h>
-#include <activemq/exceptions/ExceptionDefines.h>
+#include <decaf/lang/exceptions/ExceptionDefines.h>
 #include <stdarg.h>
 #include <sstream>
 

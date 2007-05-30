@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-#include "DataOutputStream.h"
-#include <decaf/util/Endian.h>
+#include <decaf/io/DataOutputStream.h>
 #include <decaf/util/Config.h>
 
 using namespace decaf;
@@ -42,8 +41,8 @@ void DataOutputStream::write( const unsigned char c ) throw ( IOException ) {
         outputStream->write( c );
         written++;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +58,8 @@ void DataOutputStream::write( const std::vector<unsigned char>& buffer )
 
         outputStream->write( &buffer[0], buffer.size() );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +69,8 @@ void DataOutputStream::write( const unsigned char* buffer, std::size_t len )
     try {
         outputStream->write( buffer, len );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,8 +82,8 @@ void DataOutputStream::write( const unsigned char* buffer,
     try {
         outputStream->write( buffer+offset, len );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,8 +94,8 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
 
         this->write( ivalue );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,8 +103,8 @@ void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
     try {
         this->write( value );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,8 +112,8 @@ void DataOutputStream::writeShort( short value ) throw ( IOException ) {
     try {
         this->writeUnsignedShort( (unsigned short)value );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,8 +124,8 @@ void DataOutputStream::writeUnsignedShort( unsigned short value )
         write( (unsigned char)( (value & 0xFF00) >> 8 ) );
         write( (unsigned char)( (value & 0x00FF) >> 0 ) );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +133,8 @@ void DataOutputStream::writeChar( char value ) throw ( IOException ) {
     try {
         write( value );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,8 +145,8 @@ void DataOutputStream::writeInt( int value ) throw ( IOException ) {
         this->write( (unsigned char)( (value & 0x0000FF00) >> 8 ) );
         this->write( (unsigned char)( (value & 0x000000FF) >> 0 ) );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,8 +161,8 @@ void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
         this->write( (unsigned char)( (value & 0x000000000000FF00ULL) >> 8 ) );
         this->write( (unsigned char)( (value & 0x00000000000000FFULL) >> 0 ) );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,8 +173,8 @@ void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
         this->writeInt( lvalue );
         memcpy( &value, &lvalue, sizeof( unsigned int ) );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,8 +185,8 @@ void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
         this->writeLong( lvalue );
         memcpy( &value, &lvalue, sizeof( unsigned long long ) );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,8 +195,8 @@ void DataOutputStream::writeBytes( const std::string& value ) throw ( IOExceptio
         // do not add one so that we don't write the NULL
         this->write( (const unsigned char*)value.c_str(), value.length() );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,8 +205,8 @@ void DataOutputStream::writeChars( const std::string& value ) throw ( IOExceptio
         // add one so that we write the NULL
         this->write( (const unsigned char*)value.c_str(), value.length() + 1 );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +215,6 @@ void DataOutputStream::writeUTF( const std::string& value ) throw ( IOException 
         this->writeUnsignedShort( (unsigned short)value.length() );
         this->write( (const unsigned char*)value.c_str(), value.length() );
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }

@@ -40,6 +40,7 @@ namespace io{
         virtual void close() throw( lang::Exception ) = 0;
 
     };
-}
+
+}}
 
 #endif /*_DECAF_IO_CLOSEABLE_H_*/

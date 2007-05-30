@@ -38,7 +38,7 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        IOException( const exceptions::Exception& ex ) throw()
+        IOException( const lang::Exception& ex ) throw()
         : lang::Exception()
         {
             *(lang::Exception*)this = ex;
@@ -77,7 +77,7 @@ namespace io{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual lang::IOException* clone() const{
+        virtual IOException* clone() const{
             return new IOException( *this );
         }
 

@@ -121,7 +121,7 @@ namespace io{
          * @throws IOException if an error occurs
          */
         virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException, exceptions::UnsupportedOperationException );
+            throw ( io::IOException, lang::exceptions::UnsupportedOperationException );
 
     private:
 

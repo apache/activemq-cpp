@@ -97,7 +97,7 @@ namespace io{
          * Invokes close on the target output stream.
          * @throws CMSException thrown if an error occurs.
          */
-        void close() throw( cms::CMSException );
+        void close() throw( lang::Exception );
 
    private:
 

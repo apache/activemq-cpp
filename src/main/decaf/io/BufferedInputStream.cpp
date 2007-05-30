@@ -80,8 +80,8 @@ unsigned char BufferedInputStream::read() throw ( IOException ){
 
         return returnValue;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,13 +127,13 @@ std::size_t BufferedInputStream::read( unsigned char* targetBuffer,
         // Return the total number of bytes read.
         return totalRead;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t BufferedInputStream::skip( std::size_t num )
-    throw ( IOException, exceptions::UnsupportedOperationException ){
+    throw ( IOException, lang::exceptions::UnsupportedOperationException ){
 
     try{
         // If there's no data left, reset to pointers to the beginning of the
@@ -166,8 +166,8 @@ std::size_t BufferedInputStream::skip( std::size_t num )
         // Return the total number of bytes read.
         return totalSkipped;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +196,7 @@ void BufferedInputStream::bufferData() throw ( IOException ){
         // Increment the tail to the new end position.
         tail += bytesRead;
     }
-    AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
 }
 

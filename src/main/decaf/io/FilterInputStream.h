@@ -20,7 +20,7 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/IOException.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace decaf{
 namespace io{
@@ -42,7 +42,7 @@ namespace io{
         InputStream* inputStream;
 
         // Synchronization object.
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
         // Indicates if we own the wrapped stream
         bool own;
@@ -63,8 +63,8 @@ namespace io{
             try {
                 if( own == true ) delete inputStream;
             }
-            AMQ_CATCH_NOTHROW( IOException )
-            AMQ_CATCHALL_NOTHROW( )
+            DECAF_CATCH_NOTHROW( IOException )
+            DECAF_CATCHALL_NOTHROW( )
         }
 
         /**
@@ -77,8 +77,8 @@ namespace io{
             try {
                 return inputStream->available();
             }
-            AMQ_CATCH_RETHROW( IOException )
-            AMQ_CATCHALL_THROW( IOException )
+            DECAF_CATCH_RETHROW( IOException )
+            DECAF_CATCHALL_THROW( IOException )
         }
 
         /**
@@ -95,8 +95,8 @@ namespace io{
             try {
                 return inputStream->read();
             }
-            AMQ_CATCH_RETHROW( IOException )
-            AMQ_CATCHALL_THROW( IOException )
+            DECAF_CATCH_RETHROW( IOException )
+            DECAF_CATCHALL_THROW( IOException )
         }
 
         /**
@@ -114,21 +114,21 @@ namespace io{
             try {
                 return inputStream->read( buffer, bufferSize );
             }
-            AMQ_CATCH_RETHROW( IOException )
-            AMQ_CATCHALL_THROW( IOException )
+            DECAF_CATCH_RETHROW( IOException )
+            DECAF_CATCHALL_THROW( IOException )
         }
 
         /**
          * Close the Stream, the FilterOutputStream simply calls the close
          * method of the underlying stream
-         * @throws CMSException
+         * @throws Exception
          */
-        virtual void close() throw ( cms::CMSException ) {
+        virtual void close() throw ( lang::Exception ) {
             try {
                 inputStream->close();
             }
-            AMQ_CATCH_RETHROW( IOException )
-            AMQ_CATCHALL_THROW( IOException )
+            DECAF_CATCH_RETHROW( IOException )
+            DECAF_CATCHALL_THROW( IOException )
         }
 
         /**
@@ -147,13 +147,13 @@ namespace io{
          * @returns total butes skipped
          * @throws IOException if an error occurs
          */
-        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+        virtual std::size_t skip( std::size_t num ) throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
             try {
                 return inputStream->skip(num);
             }
-            AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
-            AMQ_CATCH_RETHROW( IOException )
-            AMQ_CATCHALL_THROW( IOException )
+            DECAF_CATCH_RETHROW( lang::exceptions::UnsupportedOperationException )
+            DECAF_CATCH_RETHROW( IOException )
+            DECAF_CATCHALL_THROW( IOException )
         }
 
     public:  // Synchronizable
@@ -164,7 +164,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void lock() throw( Exception ){
+        virtual void lock() throw( lang::Exception ){
             mutex.lock();
         }
 
@@ -172,7 +172,7 @@ namespace io{
          * Unlocks the object.
          * @throws Exception
          */
-        virtual void unlock() throw( Exception ){
+        virtual void unlock() throw( lang::Exception ){
             mutex.unlock();
         }
 
@@ -182,7 +182,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void wait() throw( Exception ){
+        virtual void wait() throw( lang::Exception ){
             mutex.wait();
         }
 
@@ -194,7 +194,7 @@ namespace io{
          * @param millisecs the time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( Exception ){
+        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
             mutex.wait(millisecs);
         }
 
@@ -204,7 +204,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notify() throw( Exception ){
+        virtual void notify() throw( lang::Exception ){
             mutex.notify();
         }
 
@@ -214,7 +214,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notifyAll() throw( exceptions::Exception ){
+        virtual void notifyAll() throw( lang::Exception ){
             mutex.notifyAll();
         }
 

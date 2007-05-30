@@ -39,10 +39,10 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        EOFException( const exceptions::Exception& ex ) throw()
+        EOFException( const lang::Exception& ex ) throw()
         : IOException()
         {
-            *(exceptions::Exception*)this = ex;
+            *(lang::Exception*)this = ex;
         }
 
         /**
@@ -52,7 +52,7 @@ namespace io{
         EOFException( const EOFException& ex ) throw()
         : IOException()
         {
-            *(exceptions::Exception*)this = ex;
+            *(lang::Exception*)this = ex;
         }
 
         /**
@@ -78,7 +78,7 @@ namespace io{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual exceptions::Exception* clone() const{
+        virtual EOFException* clone() const{
             return new EOFException( *this );
         }
 

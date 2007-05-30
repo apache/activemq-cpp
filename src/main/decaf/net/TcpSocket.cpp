@@ -51,6 +51,7 @@
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
+using namespace decaf::lang;
 
 #if defined(HAVE_WINSOCK2_H)
 
@@ -92,8 +93,8 @@ TcpSocket::TcpSocket() throw (SocketException)
         }
 #endif
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,8 +116,8 @@ TcpSocket::TcpSocket( SocketHandle socketHandle )
         this->inputStream = new SocketInputStream( socketHandle );
         this->outputStream = new SocketOutputStream( socketHandle );
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -204,17 +205,17 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
     }
     catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
-        try{ close(); } catch( cms::CMSException& cx){ /* Absorb */ }
+        try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw ex;
     }
     catch( ... ){
-        try{ close(); } catch( cms::CMSException& cx){ /* Absorb */ }
+        try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw SocketException( __FILE__, __LINE__, "connect() caught unknown exception");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::close() throw( cms::CMSException )
+void TcpSocket::close() throw( lang::Exception )
 {
     // Destroy the input stream.
     if( inputStream != NULL ){
@@ -252,8 +253,8 @@ int TcpSocket::getSoLinger() const throw( SocketException ){
 
         return value.l_onoff? value.l_linger : 0;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,8 +266,8 @@ void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
         value.l_linger = dolinger;
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_LINGER, (char*)&value, sizeof(value) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -278,8 +279,8 @@ bool TcpSocket::getKeepAlive() const throw( SocketException ){
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, &length ));
         return value != 0;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -289,8 +290,8 @@ void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
         int value = keepAlive? 1 : 0;
         checkResult(::setsockopt(socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, sizeof(int)) );
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -302,8 +303,8 @@ int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&value, &length ));
         return value;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,8 +313,8 @@ void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
     try{
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&size, sizeof(size) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,8 +326,8 @@ bool TcpSocket::getReuseAddress() const throw( SocketException ){
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, &length ));
         return value != 0;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -336,8 +337,8 @@ void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
         int value = reuse? 1 : 0;
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -349,8 +350,8 @@ int TcpSocket::getSendBufferSize() const throw( SocketException ){
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&value, &length ));
         return value;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -359,8 +360,8 @@ void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
     try{
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&size, sizeof(size) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,8 +380,8 @@ void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timot, sizeof (timot) ));
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_SNDTIMEO, (const char*) &timot, sizeof (timot) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,13 +408,13 @@ int TcpSocket::getSoTimeout() const throw( SocketException )
 #endif
 
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getTcpNoDelay() const throw ( cms::CMSException ) {
+bool TcpSocket::getTcpNoDelay() const throw ( lang::Exception ) {
 
     try{
         int value;
@@ -421,19 +422,19 @@ bool TcpSocket::getTcpNoDelay() const throw ( cms::CMSException ) {
         checkResult(::getsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&value, &length ));
         return value != 0;
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setTcpNoDelay( bool value ) throw ( cms::CMSException ) {
+void TcpSocket::setTcpNoDelay( bool value ) throw ( lang::Exception ) {
 
     try{
         int ivalue = value ? 1 : 0;
         checkResult(::setsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&ivalue, sizeof(int) ));
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    DECAF_CATCH_RETHROW( SocketException )
+    DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

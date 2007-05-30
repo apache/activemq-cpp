@@ -21,8 +21,8 @@
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/io/IOException.h>
 #include <decaf/io/EOFException.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf{
 namespace io{
@@ -134,8 +134,8 @@ namespace io{
                                   std::size_t offset,
                                   std::size_t length )
             throw ( io::IOException,
-                    exceptions::IndexOutOfBoundsException,
-                    exceptions::NullPointerException );
+                    lang::exceptions::IndexOutOfBoundsException,
+                    lang::exceptions::NullPointerException );
 
         /**
          * Reads one input byte and returns true if that byte is nonzero,
@@ -329,8 +329,8 @@ namespace io{
                                 std::size_t length )
             throw ( io::IOException,
                     io::EOFException,
-                    exceptions::IndexOutOfBoundsException,
-                    exceptions::NullPointerException );
+                    lang::exceptions::IndexOutOfBoundsException,
+                    lang::exceptions::NullPointerException );
 
         /**
          * Makes an attempt to skip over n bytes of data from the input
@@ -345,7 +345,7 @@ namespace io{
          */
         virtual std::size_t skip( std::size_t num )
             throw( io::IOException,
-                   exceptions::UnsupportedOperationException );
+                   lang::exceptions::UnsupportedOperationException );
 
     };
 
