@@ -206,6 +206,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-cpp.dll"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -288,6 +289,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
 				OutputFile="$(OutDir)\activemq-cppd.dll"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
