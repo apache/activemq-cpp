@@ -17,14 +17,16 @@
 #include "LogWriter.h"
 
 #include <iostream>
-#include <activemq/concurrent/Thread.h>
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/util/Config.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Config.h>
 
 using namespace std;
-using namespace activemq;
-using namespace activemq::concurrent;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////

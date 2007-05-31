@@ -20,7 +20,7 @@
 ## --------------------------------
 AC_INIT(decaf, 1, activemq-dev@geronimo.apache.org)
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_SRCDIR(src/decaf/decaf/lang/Thread.cpp)
+AC_CONFIG_SRCDIR(src/main/decaf/lang/Thread.cpp)
 
 ## -----------------------------------------------
 ## Define the Version variables
@@ -165,11 +165,11 @@ DX_INIT_DOXYGEN(decaf, doxygen.cfg, doc)
 
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(decaf.pc)
-AC_CONFIG_FILES(src/decaf/decaf/Makefile)
+AC_CONFIG_FILES(src/main/Makefile)
 
 #if test x$cppunit = xyes
 #then
-#  AC_CONFIG_FILES(src/test-decaf/Makefile)
+#  AC_CONFIG_FILES(src/test/Makefile)
 #fi
 
 AC_OUTPUT

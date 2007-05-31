@@ -66,7 +66,7 @@ void Mutex::lock() throw( lang::Exception )
 #endif
 
         lock_count = 1;
-        lock_owner = Thread::getId();
+        lock_owner = lang::Thread::getId();
     }
 }
 
@@ -80,7 +80,7 @@ void Mutex::unlock() throw( lang::Exception )
 
     if(!isLockOwner())
     {
-        throw lang::ActiveMQException(
+        throw lang::Exception(
             __FILE__, __LINE__,
             "Mutex::unlock - Failed, not Lock Owner!" );
     }

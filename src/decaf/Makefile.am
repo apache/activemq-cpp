@@ -18,13 +18,13 @@
 # Since we don't strictly follow the GNU standard of having 'NEWS README AUTHORS ChangeLog' files
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = src/decaf
+SUBDIRS = src/main
 #if BUILD_CPPUNIT_TESTS
-#  SUBDIRS += src/test-decaf
+#  SUBDIRS += src/test
 #endif
 
 #Distribute these directories:
-DIST_SUBDIRS = src/decaf
+DIST_SUBDIRS = src/main
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = decaf.pc

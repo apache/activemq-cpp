@@ -17,7 +17,7 @@
 #ifndef _DECAF_UTIL_LOGGING_HANDLER_H_
 #define _DECAF_UTIL_LOGGING_HANDLER_H_
 
-#include <cms/Closeable.h>
+#include <decaf/io/Closeable.h>
 #include <decaf/util/logging/LogRecord.h>
 
 namespace decaf{
@@ -40,7 +40,7 @@ namespace logging{
      * values for the Handler's Filter, Formatter, and Level. See the
      * specific documentation for each concrete Handler class.
      */
-    class Handler : public cms::Closeable {
+    class Handler : public io::Closeable {
     public:
 
         virtual ~Handler() {}

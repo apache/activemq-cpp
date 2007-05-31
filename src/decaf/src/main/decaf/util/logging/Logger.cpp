@@ -17,12 +17,13 @@
 #include "Logger.h"
 
 #include <decaf/util/logging/Handler.h>
-#include <activemq/util/Config.h>
+#include <decaf/util/Config.h>
 #include <algorithm>
 
 using namespace std;
-using namespace activemq;
-using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +130,7 @@ void Logger::log( Level level AMQCPP_UNUSED,
                   const std::string& file AMQCPP_UNUSED,
                   const int line AMQCPP_UNUSED,
                   const std::string& message AMQCPP_UNUSED,
-                  cms::CMSException& ex AMQCPP_UNUSED ) {
+                  lang::Exception& ex AMQCPP_UNUSED ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

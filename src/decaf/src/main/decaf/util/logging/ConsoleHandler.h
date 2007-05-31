@@ -18,7 +18,7 @@
 #define _DECAF_UTIL_LOGGING_CONSOLEHANDLER_H_
 
 #include <decaf/util/logging/StreamHandler.h>
-#include <activemq/io/StandardErrorOutputStream.h>
+#include <decaf/io/StandardErrorOutputStream.h>
 
 namespace decaf{
 namespace util{

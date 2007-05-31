@@ -19,7 +19,7 @@
 
 #include <decaf/util/logging/LoggerCommon.h>
 #include <decaf/util/logging/LogRecord.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 #include <list>
 #include <string>
@@ -91,7 +91,7 @@ namespace logging{
          * #throws IllegalArgumentException
          */
         virtual void addHandler( Handler* handler )
-            throw ( exceptions::IllegalArgumentException );
+            throw ( lang::exceptions::IllegalArgumentException );
 
         /**
          * Removes the specified Handler and destroys it
@@ -361,7 +361,7 @@ namespace logging{
                           const std::string& file,
                           const int line,
                           const std::string& message,
-                          cms::CMSException& ex );
+                          lang::Exception& ex );
 
     public:
 

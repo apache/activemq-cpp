@@ -22,8 +22,8 @@
 #include <string>
 #include <vector>
 
-#include <activemq/util/Properties.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace decaf{
 namespace util{

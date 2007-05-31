@@ -21,10 +21,10 @@
 #include <decaf/util/logging/Handler.h>
 #include <decaf/util/logging/Formatter.h>
 #include <decaf/util/logging/Filter.h>
-#include <activemq/io/OutputStream.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/io/OutputStream.h>
+#include <decaf/kang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/util/concurrent/Concurrent.h>
 
 namespace decaf{
 namespace util{

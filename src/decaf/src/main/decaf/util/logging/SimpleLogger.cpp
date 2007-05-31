@@ -20,8 +20,8 @@
 #include <decaf/util/logging/LogWriter.h>
 
 using namespace std;
-using namespace activemq;
-using namespace activemq::concurrent;
+using namespace decaf;
+using namespace decaf::util::concurrent;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////

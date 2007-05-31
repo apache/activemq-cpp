@@ -20,35 +20,35 @@
 #include <decaf/util/logging/SimpleLogger.h>
 #include <sstream>
 
-#define LOGCMS_DECLARE(loggerName)                                  \
-   static activemq::logger::SimpleLogger loggerName;
+#define LOGDECAF_DECLARE(loggerName)                                  \
+   static decaf::logger::SimpleLogger loggerName;
 
-#define LOGCMS_INITIALIZE(loggerName, className, loggerFamily)      \
-   activemq::logger::SimpleLogger className::loggerName(loggerFamily);
+#define LOGDECAF_INITIALIZE(loggerName, className, loggerFamily)      \
+   decaf::logger::SimpleLogger className::loggerName(loggerFamily);
 
-#define LOGCMS_DECLARE_LOCAL(loggerName)                            \
-   activemq::logger::Logger loggerName;
+#define LOGDECAF_DECLARE_LOCAL(loggerName)                            \
+   decaf::logger::Logger loggerName;
 
-#define LOGCMS_DEBUG(logger, message)                               \
+#define LOGDECAF_DEBUG(logger, message)                               \
    logger.debug(__FILE__, __LINE__, message);
 
-#define LOGCMS_DEBUG_1(logger, message, value);                     \
-   {                                                                \
-      std::ostringstream ostream;                                   \
-      ostream << message << value;                                  \
-      logger.debug(__FILE__, __LINE__, ostream.str());              \
+#define LOGDECAF_DEBUG_1(logger, message, value);                     \
+   {                                                                  \
+      std::ostringstream ostream;                                     \
+      ostream << message << value;                                    \
+      logger.debug(__FILE__, __LINE__, ostream.str());                \
    }
 
-#define LOGCMS_INFO(logger, message)                                \
+#define LOGDECAF_INFO(logger, message)                                \
    logger.info(__FILE__, __LINE__, message);
 
-#define LOGCMS_ERROR(logger, message)                               \
+#define LOGDECAF_ERROR(logger, message)                               \
    logger.error(__FILE__, __LINE__, message);
 
-#define LOGCMS_WARN(logger, message)                                \
+#define LOGDECAF_WARN(logger, message)                                \
    logger.warn(__FILE__, __LINE__, message);
 
-#define LOGCMS_FATAL(logger, message)                               \
+#define LOGDECAF_FATAL(logger, message)                               \
    logger.fatal(__FILE__, __LINE__, message);
 
 

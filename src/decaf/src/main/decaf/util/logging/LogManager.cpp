@@ -17,14 +17,14 @@
 #include "LogManager.h"
 
 #include <decaf/util/logging/PropertiesChangeListener.h>
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/util/Config.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/Config.h>
 
 #include <algorithm>
 
 using namespace std;
-using namespace activemq;
-using namespace activemq::util;
+using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,7 @@
  */
 
 #include "SocketError.h"
-#include <activemq/util/Config.h>
+#include <decaf/util/Config.h>
 
 #if defined(HAVE_WINSOCK2_H)
     #include <Winsock2.h>

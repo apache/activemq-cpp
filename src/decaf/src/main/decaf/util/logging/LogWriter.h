@@ -17,7 +17,7 @@
 #ifndef _DECAF_UTIL_LOGGING_LOGWRITER_H_
 #define _DECAF_UTIL_LOGGING_LOGWRITER_H_
 
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace decaf{
 namespace util{

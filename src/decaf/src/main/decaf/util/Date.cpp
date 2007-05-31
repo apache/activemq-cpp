@@ -28,7 +28,7 @@
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
-using namespace stl;
+using namespace std;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang::exceptions;

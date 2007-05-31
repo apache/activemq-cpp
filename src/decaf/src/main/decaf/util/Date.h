@@ -18,7 +18,7 @@
 #ifndef _DECAF_UTIL_DATE_H_
 #define _DECAF_UTIL_DATE_H_
 
-namespace activemq{
+namespace decaf{
 namespace util{
 
     /**
