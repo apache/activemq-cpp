@@ -162,7 +162,7 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::skip( std::size_t num AMQCPP_UNUSED )
+std::size_t SocketInputStream::skip( std::size_t num DECAF_UNUSED )
 throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
     throw lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,

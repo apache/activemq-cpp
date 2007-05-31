@@ -65,12 +65,12 @@ void LogManager::removePropertyChangeListener(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Logger* LogManager::getLogger( const std::string& name AMQCPP_UNUSED ) {
+Logger* LogManager::getLogger( const std::string& name DECAF_UNUSED ) {
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int LogManager::getLoggerNames( const std::vector<std::string>& names  AMQCPP_UNUSED ) {
+int LogManager::getLoggerNames( const std::vector<std::string>& names  DECAF_UNUSED ) {
     return 0;
 }
 

@@ -43,8 +43,8 @@ LogWriter::~LogWriter(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LogWriter::log(const std::string& file AMQCPP_UNUSED,
-                    const int          line AMQCPP_UNUSED,
+void LogWriter::log(const std::string& file DECAF_UNUSED,
+                    const int          line DECAF_UNUSED,
                     const std::string& prefix,
                     const std::string& message)
 {
