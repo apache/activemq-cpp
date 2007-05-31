@@ -32,6 +32,7 @@ cc_sources = \
    decaf/io/ByteArrayOutputStream.cpp \
    decaf/io/BlockingByteArrayInputStream.cpp \
    decaf/util/concurrent/Mutex.cpp \
+   decaf/util/concurrent/CountDownLatch.cpp \
    decaf/util/Date.cpp \
    decaf/util/logging/LoggerHierarchy.cpp \
    decaf/util/logging/Logger.cpp \
@@ -88,6 +89,7 @@ h_sources = \
    decaf/io/IOException.h \
    decaf/util/concurrent/Lock.h \
    decaf/util/concurrent/Concurrent.h \
+   decaf/util/concurrent/CountDownLatch.h \
    decaf/util/concurrent/Synchronizable.h \
    decaf/util/concurrent/Mutex.h \
    decaf/util/Date.h \
