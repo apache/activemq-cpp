@@ -96,7 +96,10 @@ h_sources = \
    decaf/util/concurrent/Mutex.h \
    decaf/util/Date.h \
    decaf/util/Guid.h \
+   decaf/util/Map.h \
    decaf/util/Properties.h \
+   decaf/util/Queue.h \
+   decaf/util/Set.h \
    decaf/util/StringTokenizer.h \
    decaf/util/logging/Handler.h \
    decaf/util/logging/Logger.h \
