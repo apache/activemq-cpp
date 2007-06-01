@@ -19,7 +19,10 @@ cc_sources = \
   decaf/lang/BooleanTest.cpp \
   decaf/lang/IntegerTest.cpp \
   decaf/lang/LongTest.cpp \
+  decaf/lang/ThreadTest.cpp \
   decaf/util/StringTokenizerTest.cpp \
+  decaf/util/DateTest.cpp \
+  decaf/util/concurrent/CountDownLatchTest.cpp \
   main.cpp
 
 ## Compile this as part of make check
