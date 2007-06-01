@@ -22,6 +22,7 @@ cc_sources = \
   decaf/lang/ThreadTest.cpp \
   decaf/util/StringTokenizerTest.cpp \
   decaf/util/DateTest.cpp \
+  decaf/util/GuidTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   main.cpp
 

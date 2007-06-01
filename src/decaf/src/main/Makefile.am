@@ -34,6 +34,7 @@ cc_sources = \
    decaf/util/concurrent/Mutex.cpp \
    decaf/util/concurrent/CountDownLatch.cpp \
    decaf/util/Date.cpp \
+   decaf/util/Guid.cpp \
    decaf/util/StringTokenizer.cpp \
    decaf/util/logging/LoggerHierarchy.cpp \
    decaf/util/logging/Logger.cpp \
@@ -94,6 +95,7 @@ h_sources = \
    decaf/util/concurrent/Synchronizable.h \
    decaf/util/concurrent/Mutex.h \
    decaf/util/Date.h \
+   decaf/util/Guid.h \
    decaf/util/Properties.h \
    decaf/util/StringTokenizer.h \
    decaf/util/logging/Handler.h \
