@@ -167,9 +167,9 @@ AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(decaf.pc)
 AC_CONFIG_FILES(src/main/Makefile)
 
-#if test x$cppunit = xyes
-#then
-#  AC_CONFIG_FILES(src/test/Makefile)
-#fi
+if test x$cppunit = xyes
+then
+  AC_CONFIG_FILES(src/test/Makefile)
+fi
 
 AC_OUTPUT
