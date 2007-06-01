@@ -21,13 +21,13 @@
 #include <sstream>
 
 #define LOGDECAF_DECLARE(loggerName)                                  \
-   static decaf::logger::SimpleLogger loggerName;
+   static decaf::util::logging::SimpleLogger loggerName;
 
 #define LOGDECAF_INITIALIZE(loggerName, className, loggerFamily)      \
-   decaf::logger::SimpleLogger className::loggerName(loggerFamily);
+   decaf::util::logging::SimpleLogger className::loggerName(loggerFamily);
 
 #define LOGDECAF_DECLARE_LOCAL(loggerName)                            \
-   decaf::logger::Logger loggerName;
+   decaf::util::logging::Logger loggerName;
 
 #define LOGDECAF_DEBUG(logger, message)                               \
    logger.debug(__FILE__, __LINE__, message);
