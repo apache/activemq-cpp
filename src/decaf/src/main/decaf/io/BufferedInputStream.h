@@ -30,7 +30,7 @@ namespace io{
      * in order to reduce the number of io operations on the
      * input stream.
      */
-    class BufferedInputStream : public FilterInputStream
+    class DECAF_API BufferedInputStream : public FilterInputStream
     {
     private:
 

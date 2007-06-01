@@ -27,7 +27,7 @@ namespace exceptions{
      * Thrown from an operation that attempts to access some element that does
      * not exist.
      */
-    class NoSuchElementException : public Exception
+    class DECAF_API NoSuchElementException : public Exception
     {
     public:
 

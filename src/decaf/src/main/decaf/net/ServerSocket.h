@@ -27,7 +27,7 @@ namespace net{
     /**
      * A server socket class (for testing purposes).
      */
-    class ServerSocket
+    class DECAF_API ServerSocket
     {
     public:
 

@@ -30,7 +30,7 @@ namespace net{
      * object and provides Buffered input and Output Streams to improce
      * the efficiency of the reads and writes.
      */
-    class BufferedSocket : public Socket
+    class DECAF_API BufferedSocket : public Socket
     {
     private:
 

@@ -25,7 +25,7 @@ namespace net{
     /**
      * Exception for errors when manipulating sockets.
      */
-    class SocketException : public io::IOException
+    class DECAF_API SocketException : public io::IOException
     {
     public:
 

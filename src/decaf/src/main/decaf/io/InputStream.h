@@ -22,6 +22,7 @@
 #include <decaf/io/Closeable.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace io{
@@ -29,8 +30,8 @@ namespace io{
     /**
      * Base interface for an input stream.
      */
-    class InputStream : public Closeable,
-                        public util::concurrent::Synchronizable
+    class DECAF_API InputStream : public Closeable,
+                                  public util::concurrent::Synchronizable
     {
     public:
 

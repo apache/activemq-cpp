@@ -28,7 +28,7 @@ namespace io{
      * Wrapper around another output stream that buffers
      * output before writing to the target output stream.
      */
-    class BufferedOutputStream : public FilterOutputStream
+    class DECAF_API BufferedOutputStream : public FilterOutputStream
     {
     private:
 

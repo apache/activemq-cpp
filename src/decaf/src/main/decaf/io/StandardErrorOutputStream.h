@@ -25,7 +25,7 @@
 namespace decaf{
 namespace io{
 
-    class StandardErrorOutputStream : public OutputStream
+    class DECAF_API StandardErrorOutputStream : public OutputStream
     {
     private:
 

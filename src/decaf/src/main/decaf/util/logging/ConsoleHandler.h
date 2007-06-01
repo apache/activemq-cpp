@@ -40,7 +40,7 @@ namespace logging{
      * ConsoleHandler.formatter specifies the name of a Formatter class to
      *  use (defaults to SimpleFormatter).
      */
-    class ConsoleHandler : public StreamHandler {
+    class DECAF_API ConsoleHandler : public StreamHandler {
     private:
 
         // The Standard Error Stream to log to

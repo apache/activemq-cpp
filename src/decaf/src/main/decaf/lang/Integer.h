@@ -23,7 +23,7 @@
 namespace decaf{
 namespace lang{
 
-    class Integer : public Number
+    class DECAF_API Integer : public Number
     {
     public:
 

@@ -23,7 +23,7 @@ namespace decaf{
 namespace util{
 namespace logging{
 
-   class LogWriter
+   class DECAF_API LogWriter
    {
    public:
 

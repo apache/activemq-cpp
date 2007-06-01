@@ -26,7 +26,7 @@ namespace io{
     /*
      * Signals that an End of File exception has occurred.
      */
-    class EOFException : public io::IOException
+    class DECAF_API EOFException : public io::IOException
     {
     public:
 

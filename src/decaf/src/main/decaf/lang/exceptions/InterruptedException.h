@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an Thread is interrupted during a wait.
      */
-    class InterruptedException : public Exception
+    class DECAF_API InterruptedException : public Exception
     {
     public:
 

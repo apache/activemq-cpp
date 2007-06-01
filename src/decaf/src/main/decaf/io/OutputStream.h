@@ -21,6 +21,7 @@
 #include <decaf/io/Closeable.h>
 #include <decaf/io/IOException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace io{
@@ -28,8 +29,8 @@ namespace io{
     /**
      * Base interface for an output stream.
      */
-    class OutputStream : public Closeable,
-                         public util::concurrent::Synchronizable
+    class DECAF_API OutputStream : public Closeable,
+                                   public util::concurrent::Synchronizable
     {
     public:
 

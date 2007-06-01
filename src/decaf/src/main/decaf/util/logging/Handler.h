@@ -40,7 +40,7 @@ namespace logging{
      * values for the Handler's Filter, Formatter, and Level. See the
      * specific documentation for each concrete Handler class.
      */
-    class Handler : public io::Closeable {
+    class DECAF_API Handler : public io::Closeable {
     public:
 
         virtual ~Handler() {}

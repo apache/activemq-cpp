@@ -28,7 +28,7 @@ namespace exceptions{
      * This could be a memory allocation exception or some other generally
      * unrecoverable exception.
      */
-    class RuntimeException : public Exception
+    class DECAF_API RuntimeException : public Exception
     {
     public:
 

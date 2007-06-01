@@ -45,7 +45,7 @@ namespace io{
      *
      *  DataOutputStream os = new DataOutputStream( new OutputStream(), true )
      */
-    class FilterOutputStream : public OutputStream
+    class DECAF_API FilterOutputStream : public OutputStream
     {
     protected:
 

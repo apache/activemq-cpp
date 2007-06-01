@@ -34,7 +34,7 @@ namespace io{
      * FilterInputStream  may further override some of these methods and may
      * also provide additional methods and fields.
      */
-    class FilterInputStream : public InputStream
+    class DECAF_API FilterInputStream : public InputStream
     {
     protected:
 

@@ -24,7 +24,7 @@ namespace lang{
      * Interface for a runnable object - defines a task
      * that can be run by a thread.
      */
-    class Runnable{
+    class DECAF_API Runnable{
     public:
 
         virtual ~Runnable(){}

@@ -29,7 +29,7 @@ namespace concurrent{
      * The interface for all synchronizable objects (that is, objects
      * that can be locked and unlocked).
      */
-    class Synchronizable
+    class DECAF_API Synchronizable
     {
     public:
 

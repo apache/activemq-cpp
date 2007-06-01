@@ -30,7 +30,7 @@ namespace io{
      * Simple implementation of InputStream that wraps around
      * a std::vector<unsigned char>.
      */
-    class ByteArrayInputStream : public InputStream
+    class DECAF_API ByteArrayInputStream : public InputStream
     {
     private:
 

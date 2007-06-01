@@ -18,6 +18,8 @@
 #ifndef _DECAF_UTIL_DATE_H_
 #define _DECAF_UTIL_DATE_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace util{
 
@@ -25,7 +27,7 @@ namespace util{
      * Wrapper class around a time value in milliseconds.  This
      * class is comparable to Java's java.util.Date class.
      */
-    class Date
+    class DECAF_API Date
     {
     private:
 

@@ -18,6 +18,7 @@
 #define _DECAF_UTIL_LOGGING_LOGRECORD_H_
 
 #include <decaf/util/logging/LoggerCommon.h>
+#include <decaf/util/Config.h>
 
 #include <string>
 
@@ -25,7 +26,7 @@ namespace decaf{
 namespace util{
 namespace logging{
 
-    class LogRecord
+    class DECAF_API LogRecord
     {
     private:
 

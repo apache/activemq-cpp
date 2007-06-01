@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an error occurs that involves a pointer being NULL
      */
-    class NullPointerException : public Exception
+    class DECAF_API NullPointerException : public Exception
     {
     public:
 

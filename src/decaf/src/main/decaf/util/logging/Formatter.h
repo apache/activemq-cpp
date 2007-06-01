@@ -31,7 +31,7 @@ namespace logging{
      * tail strings around a set of formatted records. The getHeader and
      * getTail methods can be used to obtain these strings.
      */
-    class Formatter {
+    class DECAF_API Formatter {
     public:
 
         virtual ~Formatter() {}

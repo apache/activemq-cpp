@@ -29,7 +29,7 @@ namespace net{
      * Output stream for performing write operations
      * on a socket.
      */
-    class SocketOutputStream : public io::OutputStream
+    class DECAF_API SocketOutputStream : public io::OutputStream
     {
     private:
 

@@ -17,6 +17,8 @@
 #ifndef _DECAF_UTIL_LOGGING_PROPERTIESCHANGELISTENER_H_
 #define _DECAF_UTIL_LOGGING_PROPERTIESCHANGELISTENER_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace util{
 namespace logging{
@@ -25,7 +27,7 @@ namespace logging{
     * Defines the interface that classes can use to listen for change
     * events on Properties.
     */
-   class PropertiesChangeListener
+   class DECAF_API PropertiesChangeListener
    {
    public:
 

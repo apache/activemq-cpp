@@ -30,7 +30,7 @@ namespace net{
      * Input stream for performing reads on a socket.  This
      * class will only work properly for blocking sockets.
      */
-    class SocketInputStream : public io::InputStream
+    class DECAF_API SocketInputStream : public io::InputStream
     {
     private:
 

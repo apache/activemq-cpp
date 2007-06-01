@@ -32,7 +32,7 @@ namespace logging{
      * entry and exit will be marked using the scope name, logger to the
      * logger at the MARKBLOCK log level.
      */
-    class MarkBlockLogger
+    class DECAF_API MarkBlockLogger
     {
     private:
 

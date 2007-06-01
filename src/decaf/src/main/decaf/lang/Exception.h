@@ -19,6 +19,7 @@
 
 #include <decaf/lang/Throwable.h>
 #include <decaf/lang/exceptions/ExceptionDefines.h>
+#include <decaf/util/Config.h>
 #include <stdarg.h>
 #include <sstream>
 
@@ -28,7 +29,7 @@ namespace lang{
     /*
      * Base class for all exceptions.
      */
-    class Exception : public Throwable
+    class DECAF_API Exception : public Throwable
     {
     private:
 

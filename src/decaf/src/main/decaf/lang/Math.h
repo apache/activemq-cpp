@@ -29,7 +29,7 @@ namespace lang{
      * numeric operations such as the elementary exponential, logarithm,
      * square root, and trigonometric functions.
      */
-    class Math
+    class DECAF_API Math
     {
     public:
 

@@ -27,7 +27,7 @@ namespace exceptions{
      * Thrown when an error occurs from calling a method from syncronizable
      * and the caller doesn't hold a lock on the object.
      */
-    class IllegalMonitorStateException : public Exception
+    class DECAF_API IllegalMonitorStateException : public Exception
     {
     public:
 

@@ -20,6 +20,7 @@
 #include <decaf/util/logging/LoggerCommon.h>
 #include <decaf/util/logging/LogRecord.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Config.h>
 
 #include <list>
 #include <string>
@@ -32,7 +33,7 @@ namespace logging{
     class Handler;
     class Filter;
 
-    class Logger
+    class DECAF_API Logger
     {
     private:
 

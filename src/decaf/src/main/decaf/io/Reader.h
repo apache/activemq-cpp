@@ -28,7 +28,7 @@ namespace io{
      * Reader interface that wraps around an input stream and provides
      * an interface for extracting the data from the input stream.
      */
-    class Reader
+    class DECAF_API Reader
     {
     public:
 

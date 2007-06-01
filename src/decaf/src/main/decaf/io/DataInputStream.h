@@ -40,7 +40,7 @@ namespace io{
      *
      *  DataInputStream os = new DataInputStream( new InputStream(), true )
      */
-    class DataInputStream : public FilterInputStream
+    class DECAF_API DataInputStream : public FilterInputStream
     {
     public:
 

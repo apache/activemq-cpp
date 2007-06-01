@@ -18,12 +18,13 @@
 #define _DECAF_UTIL_LOGGING_SIMPLELOGGER_H_
 
 #include <string>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{
 namespace logging{
 
-   class SimpleLogger
+   class DECAF_API SimpleLogger
    {
    public:
 

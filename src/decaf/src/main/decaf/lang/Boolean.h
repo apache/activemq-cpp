@@ -23,7 +23,7 @@
 namespace decaf{
 namespace lang{
 
-    class Boolean : public Number
+    class DECAF_API Boolean : public Number
     {
     public:
 

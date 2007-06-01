@@ -24,13 +24,15 @@
 #include <iostream>
 #include <exception>
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace lang{
 
     /**
      * This class represents an error that has occurred.
      */
-    class Throwable : public std::exception {
+    class DECAF_API Throwable : public std::exception {
 
     public:
 

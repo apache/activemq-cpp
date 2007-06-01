@@ -28,7 +28,7 @@ namespace io{
      * Writer interface for an object that wraps around an output
      * stream
      */
-    class Writer
+    class DECAF_API Writer
     {
     public:
 

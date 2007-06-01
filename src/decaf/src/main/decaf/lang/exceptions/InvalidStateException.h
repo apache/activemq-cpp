@@ -27,7 +27,7 @@ namespace exceptions{
      * Thrown when an operation is requested, but the state of the object
      * servicing the request is not correct for that request.
      */
-    class InvalidStateException : public Exception
+    class DECAF_API InvalidStateException : public Exception
     {
     public:
 

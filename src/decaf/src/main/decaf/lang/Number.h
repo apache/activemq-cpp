@@ -19,6 +19,7 @@
 #define _DECAF_LANG_NUMBER_H_
 
 #include <sstream>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace lang{
@@ -30,7 +31,7 @@ namespace lang{
      * Subclasses of Number must provide methods to convert the represented
      * numeric value to byte, double, float, int, long, and short.
      */
-    class Number {
+    class DECAF_API Number {
     public:
 
         virtual ~Number() {}

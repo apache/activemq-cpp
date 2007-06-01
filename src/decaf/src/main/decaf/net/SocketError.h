@@ -19,6 +19,7 @@
 #define _DECAF_NET_SOCKETERROR_H_
 
 #include <string>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace net{
@@ -27,7 +28,7 @@ namespace net{
      * Static utility class to simplify handling of error codes
      * for socket operations.
      */
-    class SocketError {
+    class DECAF_API SocketError {
     public:
 
         /**

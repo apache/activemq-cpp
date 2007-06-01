@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an unsupported method is called.
      */
-    class UnsupportedOperationException : public lang::Exception
+    class DECAF_API UnsupportedOperationException : public lang::Exception
     {
     public:
 

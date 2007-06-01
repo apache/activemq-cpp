@@ -23,13 +23,15 @@
 #include <string>
 #include <sstream>
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace util{
 
     /**
      * Java-like properties class for mapping string names to string values.
      */
-    class Properties{
+    class DECAF_API Properties{
     private:
 
         std::map< std::string, std::string > properties;

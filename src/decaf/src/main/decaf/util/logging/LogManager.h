@@ -24,6 +24,7 @@
 
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{
@@ -127,7 +128,7 @@ namespace logging{
      *
      * All methods on the LogManager object are multi-thread safe.
      */
-    class LogManager {
+    class DECAF_API LogManager {
     private:
 
         // Change listener on this class's Properties

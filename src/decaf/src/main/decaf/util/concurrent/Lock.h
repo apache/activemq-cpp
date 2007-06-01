@@ -20,6 +20,7 @@
 
 #include <decaf/lang/Exception.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{

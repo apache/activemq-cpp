@@ -27,7 +27,7 @@ namespace logging{
      * Print a brief summary of the LogRecord in a human readable format.
      * The summary will typically be 1 or 2 lines.
      */
-    class SimpleFormatter : public Formatter {
+    class DECAF_API SimpleFormatter : public Formatter {
     public:
 
         SimpleFormatter() {}

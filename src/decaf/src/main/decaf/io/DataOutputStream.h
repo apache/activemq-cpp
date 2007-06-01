@@ -28,7 +28,7 @@ namespace io{
      * types to an output stream in a portable way. An application can then
      * use a data input stream to read the data back in.
      */
-    class DataOutputStream : public FilterOutputStream
+    class DECAF_API DataOutputStream : public FilterOutputStream
     {
     protected:
 

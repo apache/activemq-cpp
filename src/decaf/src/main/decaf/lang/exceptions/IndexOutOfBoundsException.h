@@ -26,7 +26,7 @@ namespace exceptions{
     /*
      * Thrown when an illegal argument was passed into a method.
      */
-    class IndexOutOfBoundsException : public Exception
+    class DECAF_API IndexOutOfBoundsException : public Exception
     {
     public:
 

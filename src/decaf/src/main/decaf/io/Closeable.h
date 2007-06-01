@@ -26,7 +26,7 @@ namespace io{
     /**
      * Interface for a class that implements the close method.
      */
-    class Closeable{
+    class DECAF_API Closeable{
 
     public:
 

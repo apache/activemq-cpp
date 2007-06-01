@@ -32,7 +32,7 @@ namespace logging{
      * given LogRecord should be published. If isLoggable returns false,
      * the LogRecord will be discarded.
      */
-    class Filter {
+    class DECAF_API Filter {
     public:
 
         virtual ~Filter() {}

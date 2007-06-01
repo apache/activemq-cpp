@@ -30,7 +30,7 @@ namespace io{
      * block until the requested data becomes available in the internal
      * buffer via a call to setByteArray.
      */
-    class BlockingByteArrayInputStream : public InputStream
+    class DECAF_API BlockingByteArrayInputStream : public InputStream
     {
     private:
 

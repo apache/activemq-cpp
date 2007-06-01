@@ -23,7 +23,7 @@
 namespace decaf{
 namespace lang{
 
-    class Long : public Number{
+    class DECAF_API Long : public Number{
     public:
 
         Long() {}

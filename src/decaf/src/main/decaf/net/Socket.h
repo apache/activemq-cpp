@@ -30,7 +30,7 @@
 namespace decaf{
 namespace net{
 
-    class Socket : public decaf::io::Closeable
+    class DECAF_API Socket : public decaf::io::Closeable
     {
     public:
 

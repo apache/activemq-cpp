@@ -25,12 +25,13 @@
 #include <decaf/kang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{
 namespace logging{
 
-    class StreamHandler : public Handler {
+    class DECAF_API StreamHandler : public Handler {
     private:
 
         // OutputStream to write to

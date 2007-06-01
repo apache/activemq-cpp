@@ -34,7 +34,7 @@ namespace net{
     /**
      * Platform-independent implementation of the socket interface.
      */
-    class TcpSocket : public Socket
+    class DECAF_API TcpSocket : public Socket
     {
     private:
 

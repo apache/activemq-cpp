@@ -25,7 +25,7 @@ namespace io{
     /*
      * Signals that an I/O exception of some sort has occurred.
      */
-    class IOException : public lang::Exception
+    class DECAF_API IOException : public lang::Exception
     {
     public:
 

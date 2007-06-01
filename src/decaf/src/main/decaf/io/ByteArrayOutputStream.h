@@ -25,7 +25,7 @@
 namespace decaf{
 namespace io{
 
-    class ByteArrayOutputStream : public OutputStream
+    class DECAF_API ByteArrayOutputStream : public OutputStream
     {
     private:
 

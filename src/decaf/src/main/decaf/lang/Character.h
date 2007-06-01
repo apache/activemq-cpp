@@ -18,10 +18,12 @@
 #ifndef _DECAF_LANG_CHARACTER_H_
 #define _DECAF_LANG_CHARACTER_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace lang{
 
-    class Character{
+    class DECAF_API Character{
 
     public:
 
