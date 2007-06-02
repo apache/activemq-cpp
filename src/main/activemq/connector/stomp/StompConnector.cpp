@@ -90,6 +90,7 @@ StompConnector::~StompConnector()
     {
         close();
 
+        delete transport;
         delete sessionManager;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
