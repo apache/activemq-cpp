@@ -94,7 +94,6 @@ cms::Session* ActiveMQConnection::createSession(
 {
     try
     {
-
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ),
@@ -120,7 +119,11 @@ cms::Session* ActiveMQConnection::createSession(
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConnection::getClientID() const
 {
-   return connectionData->getConnector()->getClientId();
+    if( closed ) {
+        return "";
+    }
+
+    return connectionData->getConnector()->getClientId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,20 +213,20 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             fire( ex );
 
             return;
-        }        
+        }
 
         // Look up the dispatcher.
         Dispatcher* dispatcher = NULL;
         synchronized( &dispatchers )
         {
             dispatcher = dispatchers.getValue(consumer->getConsumerId());
-        
+
             // If we have no registered dispatcher, the consumer was probably
             // just closed.  Just delete the message.
-            if( dispatcher == NULL ) {                
-                delete message;                
+            if( dispatcher == NULL ) {
+                delete message;
             } else {
-    
+
                 // Dispatch the message.
                 DispatchData data( consumer, message );
                 dispatcher->dispatch( data );
