@@ -39,6 +39,7 @@ namespace core{
     {
         CPPUNIT_TEST_SUITE( ActiveMQConnectionTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -113,6 +114,7 @@ namespace core{
         };
 
         void test();
+        void test2();
 
     };
 

@@ -180,3 +180,61 @@ void ActiveMQConnectionTest::test()
         throw ex;
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionTest::test2()
+{
+    try
+    {
+        transport::TransportFactoryMapRegistrar registrar(
+            "dummy", new transport::DummyTransportFactory() );
+
+        MyMessageListener listener;
+        MyExceptionListener exListener;
+        MyCommandListener cmdListener;
+        MyDispatcher msgListener;
+        std::string connectionId = "testConnectionId";
+        util::Properties* properties =
+            new util::Properties();
+        transport::Transport* transport = NULL;
+
+        transport::TransportFactory* factory =
+            transport::TransportFactoryMap::getInstance().lookup(
+                "dummy" );
+        if( factory == NULL ){
+            CPPUNIT_ASSERT( false );
+        }
+
+        // Create the transport.
+        transport = factory->createTransport( *properties );
+        if( transport == NULL ){
+            CPPUNIT_ASSERT( false );
+        }
+
+        transport::DummyTransport* dTransport =
+            dynamic_cast< transport::DummyTransport*>( transport );
+
+        CPPUNIT_ASSERT( dTransport != NULL );
+
+        dTransport->setCommandListener( &cmdListener );
+
+        connector::stomp::StompConnector* connector =
+            new connector::stomp::StompConnector(
+                transport, *properties );
+
+        connector->start();
+
+        ActiveMQConnection connection(
+            new ActiveMQConnectionData(
+                connector, transport, properties) );
+
+        connection.getClientID();
+        connection.close();
+
+        CPPUNIT_ASSERT( connection.getClientID() == "" );
+
+    } catch( exceptions::ActiveMQException& ex ) {
+        ex.printStackTrace();
+        throw ex;
+    }
+}
