@@ -19,12 +19,13 @@
 
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{
 namespace concurrent{
 
-    class TaskListener
+    class DECAF_API TaskListener
     {
     public:
 

@@ -34,8 +34,8 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-LOGCMS_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
-LOGCMS_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
+LOGDECAF_INITIALIZE(logger, ThreadPool, "com.activemq.concurrent.ThreadPool")
+LOGDECAF_INITIALIZE(marker, ThreadPool, "com.activemq.concurrent.ThreadPool.Marker")
 
 ////////////////////////////////////////////////////////////////////////////////
 ThreadPool ThreadPool::instance;
@@ -94,7 +94,7 @@ void ThreadPool::queueTask( ThreadPool::Task task )
 {
     try
     {
-        if(!task.first || !task.second)
+        if( !task.first || !task.second )
         {
             throw exceptions::IllegalArgumentException( __FILE__, __LINE__,
                 "ThreadPool::QueueTask - Invalid args for Task");

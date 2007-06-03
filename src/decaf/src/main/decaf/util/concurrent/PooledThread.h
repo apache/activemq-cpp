@@ -20,6 +20,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/PooledThreadListener.h>
 #include <decaf/util/logging/LoggerDefines.h>
+#include <decaf/util/Config.h>
 
 #include <decaf/lang/Exception.h>
 
@@ -29,7 +30,7 @@ namespace concurrent{
 
     class ThreadPool;
 
-    class PooledThread : public lang::Thread
+    class DECAF_API PooledThread : public lang::Thread
     {
     private:
 
@@ -46,7 +47,7 @@ namespace concurrent{
         ThreadPool* pool;
 
         // Logger Init
-        LOGCMS_DECLARE(logger)
+        LOGDECAF_DECLARE(logger)
 
      public:
 

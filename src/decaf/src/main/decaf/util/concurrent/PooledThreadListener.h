@@ -18,6 +18,7 @@
 #define _DECAF_UTIL_CONCURRENT_POOLEDTHREADLISTENER_H_
 
 #include <decaf/lang/Exception.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace util{
@@ -25,7 +26,7 @@ namespace concurrent{
 
     class PooledThread;
 
-    class PooledThreadListener
+    class DECAF_API PooledThreadListener
     {
     public:
 

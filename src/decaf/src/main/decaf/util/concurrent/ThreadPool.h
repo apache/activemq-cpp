@@ -23,7 +23,8 @@
 #include <decaf/util/concurrent/TaskListener.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Queue.h>
-#include <deacf/util/logging/LoggerDefines.h>
+#include <decaf/util/logging/LoggerDefines.h>
+#include <decaf/util/Config.h>
 
 #include <vector>
 
@@ -47,7 +48,7 @@ namespace concurrent{
      * object that implements the <code>Runnable</code> insterface and
      * one of the worker threads will executing it in its thread context.
      */
-    class ThreadPool : public PooledThreadListener
+    class DECAF_API ThreadPool : public PooledThreadListener
     {
     public:
 
@@ -56,7 +57,7 @@ namespace concurrent{
         static const size_t DEFAULT_MAX_BLOCK_SIZE = 3;
 
         // Types
-        typedef std::pair<Runnable*, TaskListener*> Task;
+        typedef std::pair<lang::Runnable*, TaskListener*> Task;
 
     private:
 
@@ -82,8 +83,8 @@ namespace concurrent{
         Mutex poolLock;
 
         // Logger Init
-        LOGCMS_DECLARE(logger)
-        LOGCMS_DECLARE(marker)
+        LOGDECAF_DECLARE(logger)
+        LOGDECAF_DECLARE(marker)
 
     private:   // Statics
 

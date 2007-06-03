@@ -24,7 +24,21 @@ cc_sources = \
   decaf/util/DateTest.cpp \
   decaf/util/GuidTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
+  decaf/util/concurrent/MutexTest.cpp \
+  decaf/util/concurrent/ThreadPoolTest.cpp \
   main.cpp
+
+h_sources = \
+  decaf/lang/BooleanTest.h \
+  decaf/lang/IntegerTest.h \
+  decaf/lang/LongTest.h \
+  decaf/lang/ThreadTest.h \
+  decaf/util/StringTokenizerTest.h \
+  decaf/util/DateTest.h \
+  decaf/util/GuidTest.h \
+  decaf/util/concurrent/CountDownLatchTest.h \
+  decaf/util/concurrent/MutexTest.h \
+  decaf/util/concurrent/ThreadPoolTest.h
 
 ## Compile this as part of make check
 check_PROGRAMS = decaf-test

@@ -28,7 +28,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-LOGCMS_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread")
+LOGDECAF_INITIALIZE(logger, PooledThread, "com.activemq.concurrent.PooledThread")
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledThread::PooledThread(ThreadPool* pool)

@@ -33,6 +33,8 @@ cc_sources = \
    decaf/io/BlockingByteArrayInputStream.cpp \
    decaf/util/concurrent/Mutex.cpp \
    decaf/util/concurrent/CountDownLatch.cpp \
+   decaf/util/concurrent/PooledThread.cpp \
+   decaf/util/concurrent/ThreadPool.cpp \
    decaf/util/Date.cpp \
    decaf/util/Guid.cpp \
    decaf/util/StringTokenizer.cpp \
@@ -94,6 +96,10 @@ h_sources = \
    decaf/util/concurrent/CountDownLatch.h \
    decaf/util/concurrent/Synchronizable.h \
    decaf/util/concurrent/Mutex.h \
+   decaf/util/concurrent/PooledThread.h \
+   decaf/util/concurrent/PooledThreadListener.h \
+   decaf/util/concurrent/TaskListener.h \
+   decaf/util/concurrent/ThreadPool.h \
    decaf/util/Date.h \
    decaf/util/Guid.h \
    decaf/util/Map.h \

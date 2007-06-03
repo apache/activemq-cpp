@@ -17,6 +17,8 @@
 #ifndef _DECAF_LANG_RUNNABLE_H_
 #define _DECAF_LANG_RUNNABLE_H_
 
+#include <decaf/util/Config.h>
+
 namespace decaf{
 namespace lang{
 
