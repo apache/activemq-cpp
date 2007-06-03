@@ -124,7 +124,11 @@ namespace transport{
 
                 listener->onCommand( command );
 
-            }catch( ... ){}
+            }catch( ... ){
+                try{
+                    delete command;
+                } catch( ... ) {}
+            }
         }
 
     public:
