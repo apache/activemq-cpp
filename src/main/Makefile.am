@@ -307,7 +307,8 @@ h_sources = \
     cms/ConnectionFactory.h \
     cms/MessageProducer.h \
     cms/Message.h \
-    cms/MessageConsumer.h
+    cms/MessageConsumer.h \
+    cms/Config.h
 
 include activemq/connector/openwire/commands/srcmakefile.mk
 include activemq/connector/openwire/marshal/v2/srcmakefile.mk
