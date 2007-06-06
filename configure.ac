@@ -5,9 +5,9 @@
 # The ASF licenses this file to You under the Apache License, Version 2.0
 # (the "License"); you may not use this file except in compliance with
 # the License.  You may obtain a copy of the License at
-# 
+#
 # http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -83,26 +83,25 @@ AC_CHECK_HEADERS([pthread.h])
 
 AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 
-AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled])) 
+AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
-CXXFLAGS="$CXXFLAGS -W -Wall -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-# CPPUNIT_CXXFLAGS="$CPPUNIT_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+CXXFLAGS="$CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 LIBS="$LIBS"
 
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    CXXFLAGS="-ansi -pedantic $CXXFLAGS" 
+    CXXFLAGS="-ansi -pedantic $CXXFLAGS"
     LIBS="$LIBS"
     ;;
 
   *cygwin* ) ## Cygwin configuration
     # LIBS="-lwinmm -lm";
-    CXXFLAGS="$CXXFLAGS -Wno-uninitialized" 
+    CXXFLAGS="$CXXFLAGS -Wno-uninitialized"
     LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
     ;;
-    
+
   *solaris* ) ## Solaris configuration
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
@@ -110,13 +109,13 @@ case "${host_os}" in
     CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
     LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
     ;;
-    
+
   *) ## Unix configuration
 
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="-ansi -pedantic  $CXXFLAGS" 
+    CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
     LIBS="$LIBS -lm -lpthread -luuid"
 esac
 
@@ -139,7 +138,7 @@ AC_TRY_COMPILE(
       (void) a.ai_flags;
     } while(0)
   ],
-  [ 
+  [
     AC_MSG_RESULT(yes)
     AC_DEFINE(HAVE_STRUCT_ADDRINFO,, [define if you have struct addrinfo])
   ],
