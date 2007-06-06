@@ -306,7 +306,20 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     // Set the URI to point to the IPAddress of your broker.
     // add any optional params to the url to enable things like
-    // tightMarshalling or tcp logging etc.
+    // tightMarshalling or tcp logging etc.  See the CMS website for
+    // a full list of configuration options.
+    //
+    //  http://activemq.apache.org/cms/
+    //
+    // Wire Foormat Options:
+    // =====================
+    // Use either stomp or openwire, the default ports are different for each
+    //
+    // Examples:
+    //    tcp://127.0.0.1:61616                      default to openwire
+    //    tcp://127.0.0.1:61616?wireFormat=openwire  same as above
+    //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
+    //
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
