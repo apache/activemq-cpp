@@ -55,11 +55,15 @@ using namespace std;
 SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket )
 {
     this->socket = socket;
+    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::~SocketInputStream()
-{
+SocketInputStream::~SocketInputStream(){}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketInputStream::close() throw( cms::CMSException ){
+    this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +125,7 @@ unsigned char SocketInputStream::read() throw ( IOException ){
 
     unsigned char c;
     std::size_t len = read( &c, 1 );
-    if( len != sizeof(c) ){
+    if( len != sizeof(c)  && !closed ){
         throw IOException( __FILE__, __LINE__,
             "activemq::io::SocketInputStream::read - failed reading a byte");
     }
@@ -142,16 +146,16 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
         len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
 
         // Check for a closed socket.
-        if( len == 0 ){
+        if( len == 0 && !closed ){
             throw IOException( __FILE__, __LINE__,
                 "activemq::io::SocketInputStream::read - The connection is broken" );
         }
 
-    } while( len == -1 &&
+    } while( !closed && len == -1 &&
              SocketError::getErrorCode() == SocketError::INTERRUPTED );
 
     // Check for error.
-    if( len == -1 ){
+    if( len == -1 && !closed ){
 
         // Otherwise, this was a bad error - throw an exception.
         throw IOException( __FILE__, __LINE__,

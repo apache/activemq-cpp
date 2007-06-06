@@ -86,8 +86,7 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
-CXXFLAGS="$CXXFLAGS -W -Wall -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-# CPPUNIT_CXXFLAGS="$CPPUNIT_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+CXXFLAGS="$CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 LIBS="$LIBS"
 
 case "${host_os}" in

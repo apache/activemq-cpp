@@ -36,6 +36,7 @@ namespace net{
         // The socket.
         Socket::SocketHandle socket;
         util::concurrent::Mutex mutex;
+        bool closed;
 
     public:
 
@@ -133,7 +134,7 @@ namespace net{
          * of the socket object to close it.
          * @throws CMSException
          */
-        virtual void close() throw( lang::Exception ){}
+        virtual void close() throw( lang::Exception );
 
     };
 

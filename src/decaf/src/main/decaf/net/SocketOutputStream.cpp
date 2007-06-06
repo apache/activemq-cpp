@@ -49,11 +49,17 @@ using namespace std;
 SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket )
 {
     this->socket = socket;
+    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::~SocketOutputStream()
-{
+SocketOutputStream::~SocketOutputStream() {
+    close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SocketOutputStream::close() throw( cms::CMSException ) {
+	this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,10 +75,10 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
     std::size_t remaining = len;
     int sendOpts = AMQ_SEND_OPTS;
 
-    while( remaining > 0 )
+    while( remaining > 0 && !closed )
     {
         int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );
-        if( length == -1 ){
+        if( length == -1 && !closed ){
             throw IOException( __FILE__, __LINE__,
                 "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
         }
