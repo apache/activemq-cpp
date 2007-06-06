@@ -62,7 +62,7 @@ SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket )
 SocketInputStream::~SocketInputStream(){}
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketInputStream::close() throw( cms::CMSException ){
+void SocketInputStream::close() throw( lang::Exception ){
     this->closed = true;
 }
 
