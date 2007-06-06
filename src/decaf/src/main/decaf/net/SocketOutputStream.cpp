@@ -58,8 +58,8 @@ SocketOutputStream::~SocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::close() throw( cms::CMSException ) {
-	this->closed = true;
+void SocketOutputStream::close() throw( lang::Exception ) {
+    this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
