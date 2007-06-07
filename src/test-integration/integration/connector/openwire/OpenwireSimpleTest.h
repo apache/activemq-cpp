@@ -26,7 +26,7 @@
 namespace integration{
 namespace connector{
 namespace openwire{
-    
+
     class OpenwireSimpleTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( OpenwireSimpleTest );
@@ -37,12 +37,13 @@ namespace openwire{
         CPPUNIT_TEST( testMultipleConnections );
         CPPUNIT_TEST( testMultipleSessions );
         CPPUNIT_TEST( testReceiveAlreadyInQueue );
+        CPPUNIT_TEST( testQuickCreateAndDestroy );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
 
-    	OpenwireSimpleTest();
-    	virtual ~OpenwireSimpleTest();
+        OpenwireSimpleTest();
+        virtual ~OpenwireSimpleTest();
 
         virtual void testAutoAck();
         virtual void testClientAck();
@@ -51,6 +52,8 @@ namespace openwire{
         virtual void testMultipleConnections();
         virtual void testMultipleSessions();
         virtual void testReceiveAlreadyInQueue();
+        virtual void testQuickCreateAndDestroy();
+
     };
 
 }}}

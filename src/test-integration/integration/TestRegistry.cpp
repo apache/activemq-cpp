@@ -13,6 +13,7 @@
 #include "connector/stomp/SimpleRollbackTest.h"
 #include "connector/stomp/SimpleTest.h"
 #include "connector/stomp/TransactionTest.h"
+#include "connector/stomp/StompStressTests.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireAsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireDurableTest );
@@ -29,3 +30,4 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::ExpirationTest )
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::TransactionTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::StompStressTests );

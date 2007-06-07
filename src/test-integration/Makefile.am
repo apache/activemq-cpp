@@ -33,6 +33,7 @@ cc_sources = \
   integration/connector/stomp/SimpleRollbackTest.cpp \
   integration/connector/stomp/SimpleTest.cpp \
   integration/connector/stomp/TransactionTest.cpp \
+  integration/connector/stomp/StompStressTests.cpp \
   main.cpp
 
 ## Compile this as part of make check

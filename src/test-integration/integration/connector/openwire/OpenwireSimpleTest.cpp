@@ -471,3 +471,18 @@ void OpenwireSimpleTest::testReceiveAlreadyInQueue() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
+
+void OpenwireSimpleTest::testQuickCreateAndDestroy() {
+    try{
+
+        activemq::core::ActiveMQConnectionFactory connectionFactory(
+            "tcp://localhost:61616?wireFormat=openwire");
+        cms::Connection* connection = connectionFactory.createConnection();
+        cms::Session* session = connection->createSession(cms::Session::AUTO_ACKNOWLEDGE);
+        delete session;
+        delete connection;
+    } catch ( CMSException& e ) {
+        e.printStackTrace();
+        CPPUNIT_ASSERT( false );
+    }
+}
