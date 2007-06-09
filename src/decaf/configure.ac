@@ -165,6 +165,7 @@ DX_INIT_DOXYGEN(decaf, doxygen.cfg, doc)
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(decaf.pc)
 AC_CONFIG_FILES(src/main/Makefile)
+AC_CONFIG_FILES(src/examples/Makefile)
 
 if test x$cppunit = xyes
 then

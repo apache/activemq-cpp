@@ -18,7 +18,7 @@
 # Since we don't strictly follow the GNU standard of having 'NEWS README AUTHORS ChangeLog' files
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = src/main
+SUBDIRS = src/main src/examples
 if BUILD_CPPUNIT_TESTS
   SUBDIRS += src/test
 endif
