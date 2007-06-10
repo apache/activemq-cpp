@@ -32,6 +32,7 @@ cc_sources = \
   decaf/util/Endian.cpp \
   decaf/util/DateTest.cpp \
   decaf/util/GuidTest.cpp \
+  decaf/util/RandomTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
@@ -54,6 +55,7 @@ h_sources = \
   decaf/util/Endian.h \
   decaf/util/DateTest.h \
   decaf/util/GuidTest.h \
+  decaf/util/RandomTest.h \
   decaf/util/concurrent/CountDownLatchTest.h \
   decaf/util/concurrent/MutexTest.h \
   decaf/util/concurrent/ThreadPoolTest.h

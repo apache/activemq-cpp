@@ -42,6 +42,7 @@ cc_sources = \
    decaf/util/Date.cpp \
    decaf/util/Guid.cpp \
    decaf/util/StringTokenizer.cpp \
+   decaf/util/Random.cpp \
    decaf/util/logging/LoggerHierarchy.cpp \
    decaf/util/logging/Logger.cpp \
    decaf/util/logging/LogWriter.cpp \
@@ -111,6 +112,7 @@ h_sources = \
    decaf/util/Properties.h \
    decaf/util/Queue.h \
    decaf/util/Set.h \
+   decaf/util/Random.h \
    decaf/util/StringTokenizer.h \
    decaf/util/logging/Handler.h \
    decaf/util/logging/Logger.h \
