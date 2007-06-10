@@ -20,7 +20,14 @@ cc_sources = \
   decaf/lang/IntegerTest.cpp \
   decaf/lang/LongTest.cpp \
   decaf/lang/ThreadTest.cpp \
+  decaf/io/BufferedInputStreamTest.cpp \
+  decaf/io/BufferedOutputStreamTest.cpp \
+  decaf/io/ByteArrayInputStreamTest.cpp \
+  decaf/io/ByteArrayOutputStreamTest.cpp \
+  decaf/io/DataInputStreamTest.cpp \
+  decaf/io/DataOutputStreamTest.cpp \
   decaf/util/StringTokenizerTest.cpp \
+  decaf/util/Endian.cpp \
   decaf/util/DateTest.cpp \
   decaf/util/GuidTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
@@ -33,7 +40,14 @@ h_sources = \
   decaf/lang/IntegerTest.h \
   decaf/lang/LongTest.h \
   decaf/lang/ThreadTest.h \
+  decaf/io/BufferedInputStreamTest.h \
+  decaf/io/BufferedOutputStreamTest.h \
+  decaf/io/ByteArrayInputStreamTest.h \
+  decaf/io/ByteArrayOutputStreamTest.h \
+  decaf/io/DataInputStreamTest.h \
+  decaf/io/DataOutputStreamTest.h \
   decaf/util/StringTokenizerTest.h \
+  decaf/util/Endian.h \
   decaf/util/DateTest.h \
   decaf/util/GuidTest.h \
   decaf/util/concurrent/CountDownLatchTest.h \
