@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _ACTIVEMQ_UTIL_PROPERTIES_H_
 #define _ACTIVEMQ_UTIL_PROPERTIES_H_
 
@@ -146,12 +146,7 @@ namespace util{
         virtual void copy( const Properties* source ){
 
             clear();
-
-            std::vector< std::pair< std::string, std::string > > vec =
-                source->toArray();
-            for( unsigned int ix=0; ix<vec.size(); ++ix ){
-                properties[vec[ix].first] = vec[ix].second;
-            }
+            this->properties = source->properties;
         }
 
         /**
