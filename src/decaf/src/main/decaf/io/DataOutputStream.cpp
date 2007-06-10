@@ -171,7 +171,6 @@ void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
         unsigned int lvalue = 0;
         memcpy( &lvalue, &value, sizeof( float ) );
         this->writeInt( lvalue );
-        memcpy( &value, &lvalue, sizeof( unsigned int ) );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -183,7 +182,6 @@ void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
         unsigned long long lvalue = 0;
         memcpy( &lvalue, &value, sizeof( double ) );
         this->writeLong( lvalue );
-        memcpy( &value, &lvalue, sizeof( unsigned long long ) );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )

@@ -44,8 +44,8 @@ std::size_t DataInputStream::read( std::vector<unsigned char>& buffer )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t DataInputStream::read( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t length )
+                                   std::size_t offset,
+                                   std::size_t length )
     throw ( IOException, IndexOutOfBoundsException, NullPointerException ) {
 
     try {
@@ -283,8 +283,8 @@ void DataInputStream::readFully( std::vector< unsigned char >& buffer )
 
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStream::readFully( unsigned char* buffer,
-                                std::size_t offset,
-                                std::size_t length )
+                                 std::size_t offset,
+                                 std::size_t length )
     throw ( io::IOException,
             io::EOFException,
             lang::exceptions::IndexOutOfBoundsException,
@@ -316,7 +316,7 @@ void DataInputStream::readFully( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t DataInputStream::skip( std::size_t num )
-throw( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+    throw( io::IOException, lang::exceptions::UnsupportedOperationException ) {
     try {
         std::size_t total = 0;
         std::size_t cur = 0;
