@@ -60,13 +60,10 @@ void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     activeBuffer = &defaultBuffer;
 
     // Remove old data
-    defaultBuffer.clear();
+    defaultBuffer.resize( lbufferSize );
 
-    // Copy data to internal buffer.
-    for( std::size_t ix = 0; ix < lbufferSize; ++ix )
-    {
-        defaultBuffer.push_back(lbuffer[ix]);
-    }
+    // Copy to internal buffer
+    std::copy( lbuffer, lbuffer + lbufferSize, &defaultBuffer[0] );
 
     // Begin at the Beginning.
     reset();
@@ -97,16 +94,14 @@ std::size_t ByteArrayInputStream::read( unsigned char* buffer,
                                    throw ( IOException ){
     std::size_t ix = 0;
 
-    for( ; ix < bufferSize; ++ix, ++pos)
-    {
-        if(pos == activeBuffer->end())
-        {
-            // We don't have enough data to fulfill the request.
-            throw IOException(
-                __FILE__, __LINE__,
-                "Reached the end of the buffer" );
-        }
+    if( (std::size_t)distance( pos, activeBuffer->end() ) < bufferSize ) {
+        // We don't have enough data to fulfill the request.
+        throw IOException(
+            __FILE__, __LINE__,
+            "Reached the end of the buffer" );
+    }
 
+    for( ; ix < bufferSize; ++ix, ++pos) {
         buffer[ix] = *(pos);
     }
 
