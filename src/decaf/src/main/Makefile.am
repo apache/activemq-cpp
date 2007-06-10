@@ -25,6 +25,9 @@ cc_sources = \
    decaf/net/SocketFactory.cpp \
    decaf/lang/Exception.cpp \
    decaf/lang/Thread.cpp \
+   decaf/lang/Boolean.cpp \
+   decaf/lang/Integer.cpp \
+   decaf/lang/Long.cpp \
    decaf/io/BufferedOutputStream.cpp \
    decaf/io/BufferedInputStream.cpp \
    decaf/io/ByteArrayInputStream.cpp \
