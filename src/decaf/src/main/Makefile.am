@@ -22,6 +22,7 @@ cc_sources = \
    decaf/net/SocketInputStream.cpp \
    decaf/net/SocketError.cpp \
    decaf/net/TcpSocket.cpp \
+   decaf/net/SocketFactory.cpp \
    decaf/lang/Exception.cpp \
    decaf/lang/Thread.cpp \
    decaf/io/BufferedOutputStream.cpp \
@@ -53,6 +54,7 @@ h_sources = \
    decaf/net/Socket.h \
    decaf/net/SocketInputStream.h \
    decaf/net/ServerSocket.h \
+   decaf/net/SocketFactory.h \
    decaf/lang/Boolean.h \
    decaf/lang/Throwable.h \
    decaf/lang/Exception.h \
