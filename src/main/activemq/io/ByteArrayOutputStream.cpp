@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "ByteArrayOutputStream.h"
 #include <algorithm>
 
@@ -47,21 +47,17 @@ void ByteArrayOutputStream::clear() throw ( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ByteArrayOutputStream::write( unsigned char c ) 
+void ByteArrayOutputStream::write( unsigned char c )
    throw ( IOException )
 {
-    activeBuffer->push_back( c );  
+    activeBuffer->push_back( c );
 }
 
-////////////////////////////////////////////////////////////////////////////////    
-void ByteArrayOutputStream::write( const unsigned char* buffer, 
-                                   std::size_t len ) 
+////////////////////////////////////////////////////////////////////////////////
+void ByteArrayOutputStream::write( const unsigned char* buffer,
+                                   std::size_t len )
    throw ( IOException )
-{     
-    // Iterate until all the data is written.
-    for( std::size_t ix = 0; ix < len; ++ix)
-    {
-        activeBuffer->push_back( buffer[ix] );
-    }  
+{
+    activeBuffer->insert( activeBuffer->end(), buffer, buffer + len );
 }
 

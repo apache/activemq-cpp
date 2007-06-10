@@ -123,10 +123,7 @@ namespace stomp{
             body.clear();
 
             // Copy data to internal buffer.
-            for( std::size_t ix = 0; ix < numBytes; ++ix )
-            {
-                body.push_back(bytes[ix]);
-            }
+            body.insert( body.end(), bytes, bytes + numBytes );
         }
 
     private:

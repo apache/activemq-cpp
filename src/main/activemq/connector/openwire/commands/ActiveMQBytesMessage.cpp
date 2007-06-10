@@ -50,9 +50,8 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
     try{
 
         clearBody();
-        for( size_t i = 0; i < numBytes; ++i ) {
-            getContent().push_back( buffer[i] );
-        }
+        std::vector<unsigned char>& content = getContent();
+        content.insert( content.end(), buffer, buffer + numBytes );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
