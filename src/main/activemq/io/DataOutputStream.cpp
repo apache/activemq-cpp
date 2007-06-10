@@ -172,7 +172,6 @@ void DataOutputStream::writeFloat( float value ) throw ( IOException ) {
         unsigned int lvalue = 0;
         memcpy( &lvalue, &value, sizeof( float ) );
         this->writeInt( lvalue );
-        memcpy( &value, &lvalue, sizeof( unsigned int ) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -184,7 +183,6 @@ void DataOutputStream::writeDouble( double value ) throw ( IOException ) {
         unsigned long long lvalue = 0;
         memcpy( &lvalue, &value, sizeof( double ) );
         this->writeLong( lvalue );
-        memcpy( &value, &lvalue, sizeof( unsigned long long ) );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
