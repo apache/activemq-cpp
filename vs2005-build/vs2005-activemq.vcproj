@@ -503,6 +503,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\Random.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\Random.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\Set.h"
 					>
 				</File>

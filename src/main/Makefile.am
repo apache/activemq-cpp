@@ -93,6 +93,7 @@ cc_sources = \
     activemq/util/Endian.cpp \
     activemq/util/Date.cpp \
     activemq/util/Math.cpp \
+    activemq/util/Random.cpp \
     activemq/util/PrimitiveMap.cpp \
     activemq/util/URISupport.cpp
 
@@ -285,6 +286,7 @@ h_sources = \
     activemq/util/PrimitiveMap.h \
     activemq/util/Set.h \
     activemq/util/URISupport.h \
+    activemq/util/Random.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \

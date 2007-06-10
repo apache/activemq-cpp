@@ -444,6 +444,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test-integration\integration\connector\stomp\StompStressTests.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\integration\connector\stomp\StompStressTests.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test-integration\integration\connector\stomp\TransactionTest.cpp"
 							>
 						</File>

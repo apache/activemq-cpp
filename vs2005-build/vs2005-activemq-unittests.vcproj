@@ -1044,6 +1044,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\activemq\util\RandomTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\RandomTest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\util\StringTokenizerTest.cpp"
 					>
 				</File>
