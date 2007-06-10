@@ -35,24 +35,14 @@ namespace lang{
          * @param String to parse
          * @return int value
          */
-        static int parseInt( const std::string& value ){
-            int ret = 0;
-            std::istringstream istream(value);
-            istream.clear();
-            istream >> ret;
-            return ret;
-        }
+        static int parseInt( const std::string& value );
 
         /**
          * Converts the int to a String representation
          * @param int to convert
          * @return string representation
          */
-        static std::string toString( int value ){
-            std::ostringstream ostream;
-            ostream << value;
-            return ostream.str();
-        }
+        static std::string toString( int value );
 
     };
 

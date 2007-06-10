@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-decaf", "vs2005-decaf.vcproj", "{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-decaf-unittests", "vs2005-decaf-unittests.vcproj", "{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399} = {D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		DebugDLL|Win32 = DebugDLL|Win32
+		Release|Win32 = Release|Win32
+		ReleaseDLL|Win32 = ReleaseDLL|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.Debug|Win32.Build.0 = Debug|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.Release|Win32.ActiveCfg = Release|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.Release|Win32.Build.0 = Release|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{D85BD1AB-82E9-4012-BEBE-67AD5CE2E399}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.Debug|Win32.Build.0 = Debug|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.Release|Win32.ActiveCfg = Release|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.Release|Win32.Build.0 = Release|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{71582D83-8CC9-4C85-83BF-2E272B6DAE8A}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

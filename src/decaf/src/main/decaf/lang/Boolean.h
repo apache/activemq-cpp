@@ -35,24 +35,14 @@ namespace lang{
          * @param String to parse
          * @return bool value
          */
-        static bool parseBoolean( const std::string& value ){
-            bool ret = 0;
-            std::istringstream istream(value);
-            istream.clear();
-            istream >> std::boolalpha >> ret;
-            return ret;
-        }
+        static bool parseBoolean( const std::string& value );
 
         /**
          * Converts the bool to a String representation
          * @param bool to convert
          * @return string representation
          */
-        static std::string toString( bool value ){
-            std::ostringstream ostream;
-            ostream << std::boolalpha << value;
-            return ostream.str();
-        }
+        static std::string toString( bool value );
 
     };
 

@@ -15,35 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_LANG_LONG_H_
-#define _DECAF_LANG_LONG_H_
+#include "Integer.h"
 
-#include <decaf/lang/Number.h>
+using namespace decaf::lang;
 
-namespace decaf{
-namespace lang{
+////////////////////////////////////////////////////////////////////////////////
+int Integer::parseInt( const std::string& value )
+{
+    int ret = 0;
+    std::istringstream istream(value);
+    istream.clear();
+    istream >> ret;
+    return ret;
+}
 
-    class DECAF_API Long : public Number{
-    public:
-
-        Long() {}
-        virtual ~Long() {}
-
-        /**
-         * Parses the String passed and extracts an long.
-         * @param String to parse
-         * @return long value
-         */
-        static long long parseLong( const std::string& value );
-
-        /**
-         * Converts the long to a String representation
-         * @param long to convert
-         * @return string representation
-         */
-        static std::string toString( long long value );
-    };
-
-}}
-
-#endif /*_DECAF_LANG_LONG_H_*/
+////////////////////////////////////////////////////////////////////////////////
+std::string Integer::toString( int value )
+{
+    std::ostringstream ostream;
+    ostream << value;
+    return ostream.str();
+}

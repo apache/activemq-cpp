@@ -15,35 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_LANG_LONG_H_
-#define _DECAF_LANG_LONG_H_
+#include "Boolean.h"
 
-#include <decaf/lang/Number.h>
+using namespace decaf::lang;
 
-namespace decaf{
-namespace lang{
+////////////////////////////////////////////////////////////////////////////////
+bool Boolean::parseBoolean( const std::string& value )
+{
+    bool ret = 0;
+    std::istringstream istream(value);
+    istream.clear();
+    istream >> std::boolalpha >> ret;
+    return ret;
+}
 
-    class DECAF_API Long : public Number{
-    public:
-
-        Long() {}
-        virtual ~Long() {}
-
-        /**
-         * Parses the String passed and extracts an long.
-         * @param String to parse
-         * @return long value
-         */
-        static long long parseLong( const std::string& value );
-
-        /**
-         * Converts the long to a String representation
-         * @param long to convert
-         * @return string representation
-         */
-        static std::string toString( long long value );
-    };
-
-}}
-
-#endif /*_DECAF_LANG_LONG_H_*/
+////////////////////////////////////////////////////////////////////////////////
+std::string Boolean::toString( bool value )
+{
+    std::ostringstream ostream;
+    ostream << std::boolalpha << value;
+    return ostream.str();
+}

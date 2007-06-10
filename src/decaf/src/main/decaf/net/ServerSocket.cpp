@@ -42,6 +42,7 @@
 #include <assert.h>
 #include <string>
 
+using namespace decaf;
 using namespace decaf::net;
 
 #ifdef HAVE_WINSOCK2_H
