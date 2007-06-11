@@ -55,7 +55,7 @@ namespace util{
      * polling loop to ensure that you don't get stuck there.
      */
 
-    template <typename T> class Queue : public concurrent::Synchronizable
+    template <typename T> class DECAF_API Queue : public concurrent::Synchronizable
     {
     public:
 

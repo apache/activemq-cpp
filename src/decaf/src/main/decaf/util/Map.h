@@ -32,7 +32,8 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V> class Map : public concurrent::Synchronizable
+    template <typename K, typename V> class DECAF_API Map :
+        public concurrent::Synchronizable
     {
     private:
 

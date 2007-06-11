@@ -32,7 +32,7 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename E> class Set : public concurrent::Synchronizable
+    template <typename E> class DECAF_API Set : public concurrent::Synchronizable
     {
     private:
 
