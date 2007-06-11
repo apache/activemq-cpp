@@ -19,13 +19,14 @@
 #define _DECAF_UTIL_RANDOM_H_
 
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Config.h>
 #include <vector>
 #include <cmath>
 
 namespace decaf{
 namespace util{
 
-    class Random
+    class DECAF_API Random
     {
     public:
 
