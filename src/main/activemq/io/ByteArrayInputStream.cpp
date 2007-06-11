@@ -59,10 +59,11 @@ void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     activeBuffer = &defaultBuffer;
 
     // Remove old data
-    defaultBuffer.resize( lbufferSize );
+    defaultBuffer.clear();
+    defaultBuffer.reserve( lbufferSize );
 
-    // Copy to internal buffer
-    std::copy( lbuffer, lbuffer + lbufferSize, &defaultBuffer[0] );
+    // Copy data to internal buffer.
+    defaultBuffer.insert( defaultBuffer.end(), lbuffer, lbuffer + lbufferSize );
 
     // Begin at the Beginning.
     reset();
