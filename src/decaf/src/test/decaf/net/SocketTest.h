@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_IO_SOCKETTEST_H_
-#define _DECAF_IO_SOCKETTEST_H_
+#ifndef _DECAF_NET_SOCKETTEST_H_
+#define _DECAF_NET_SOCKETTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -155,4 +155,4 @@ namespace net{
 
 }}
 
-#endif /*_DECAF_IO_SOCKETTEST_H_*/
+#endif /*_DECAF_NET_SOCKETTEST_H_*/
