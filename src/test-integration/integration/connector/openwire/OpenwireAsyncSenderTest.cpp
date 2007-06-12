@@ -133,7 +133,7 @@ void OpenwireAsyncSenderTest::test2()
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport.produceBytesMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
