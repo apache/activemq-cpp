@@ -18,11 +18,13 @@
 #include "ResponseCorrelatorFactory.h"
 
 #include <activemq/transport/filters/ResponseCorrelator.h>
+#include <activemq/util/Long.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
+using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactory& ResponseCorrelatorFactory::getInstance(void)
@@ -42,7 +44,15 @@ Transport* ResponseCorrelatorFactory::createTransport(
     bool own ) throw ( ActiveMQException ) {
 
     try {
-        return new ResponseCorrelator( next, own );
+
+        ResponseCorrelator* transport = new ResponseCorrelator( next, own );
+
+        transport->setMaxResponseWaitTime(
+            (unsigned long)Long::parseLong( 
+                properties.getProperty( 
+                    "transport.ResponseCorrelator.maxResponseWaitTime", "3000" ) ) );
+
+        return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
