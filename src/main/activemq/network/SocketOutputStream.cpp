@@ -77,7 +77,7 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
     while( remaining > 0 && !closed )
     {
         int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );
-        if( length == -1 && !closed ){
+        if( length == -1 || closed ){
             throw IOException( __FILE__, __LINE__,
                 "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
         }
@@ -86,4 +86,3 @@ void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
         remaining -= length;
     }
 }
-

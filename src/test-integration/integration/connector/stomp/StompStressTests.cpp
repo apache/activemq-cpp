@@ -78,7 +78,7 @@ void StompStressTests::testRapidCreate()
         int count = 0;
         activemq::core::ActiveMQConnectionFactory connectionFactory(
             "tcp://localhost:61613?wireFormat=stomp");
-        while( count < 20 ) {
+        while( count < 50 ) {
 
             cms::Connection* connection = connectionFactory.createConnection();
             cms::Session* session = connection->createSession(cms::Session::AUTO_ACKNOWLEDGE);
