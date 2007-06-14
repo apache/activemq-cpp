@@ -116,8 +116,10 @@ namespace transport{
 
             try{
                 // Since the listener is responsible for freeing the memory,
-                // if there is no listener - free the command here.
-                if( listener == NULL ){
+                // if there is no listener - free the command here.  Also if
+                // we have been closed then we don't deliver any messages that
+                // might have snuck in while we where closing.
+                if( listener == NULL || closed == true ){
                     delete command;
                     return;
                 }
