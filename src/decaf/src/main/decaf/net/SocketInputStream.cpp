@@ -146,7 +146,7 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
         len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
 
         // Check for a closed socket.
-        if( len == 0 && !closed ){
+        if( len == 0 && closed ){
             throw IOException( __FILE__, __LINE__,
                 "activemq::io::SocketInputStream::read - The connection is broken" );
         }
@@ -155,7 +155,7 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
              SocketError::getErrorCode() == SocketError::INTERRUPTED );
 
     // Check for error.
-    if( len == -1 && !closed ){
+    if( len == -1 ){
 
         // Otherwise, this was a bad error - throw an exception.
         throw IOException( __FILE__, __LINE__,
