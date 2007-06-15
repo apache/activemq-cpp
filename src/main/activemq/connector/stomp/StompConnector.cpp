@@ -413,6 +413,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
             "StompConnector::createTemporaryTopic - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -429,6 +430,7 @@ cms::TemporaryQueue* StompConnector::createTemporaryQueue(
             "StompConnector::createTemporaryQueue - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -716,9 +718,10 @@ cms::MapMessage* StompConnector::createMapMessage(
     {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
-            "StompConnector::createTemporaryQueue - No Stomp Support");
+            "StompConnector::createMapMessage - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -731,9 +734,10 @@ void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
     {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
-            "StompConnector::createTemporaryQueue - No Stomp Support");
+            "StompConnector::unsubscribe - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 

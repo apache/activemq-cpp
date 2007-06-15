@@ -66,7 +66,7 @@ void OpenWireFormatNegotiator::oneway( Command* command )
                 __FILE__,
                 __LINE__,
                 "OpenWireFormatNegotiator::oneway"
-                "Wire format negociation timeout: peer did not "
+                "Wire format negotiation timeout: peer did not "
                 "send his wire format." );
         }
 
@@ -95,7 +95,7 @@ Response* OpenWireFormatNegotiator::request( Command* command )
                 __FILE__,
                 __LINE__,
                 "OpenWireFormatNegotiator::request"
-                "Wire format negociation timeout: peer did not "
+                "Wire format negotiation timeout: peer did not "
                 "send his wire format." );
         }
 
