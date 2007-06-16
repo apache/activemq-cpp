@@ -49,6 +49,17 @@ namespace commands{
         }
 
         /**
+         * Clone this object and return a new instance that the
+         * caller now owns, this will be an exact copy of this one
+         * @returns new copy of this object.
+         */
+        virtual DataStructure* cloneDataStructure() const {
+            ActiveMQMessage* message = new ActiveMQMessage();
+            message->copyDataStructure( this );
+            return message;
+        }
+
+        /**
          * Returns a string containing the information for this DataStructure
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
