@@ -148,6 +148,9 @@ void OpenwireDurableTest::test()
         delete producer;
         delete consumer;
         delete topic;
+
+        // Remove the subscription
+        session->unsubscribe( subName );
     }
     catch( ActiveMQException& ex ) {
         CPPUNIT_ASSERT_MESSAGE( ex.getStackTraceString(), false );
