@@ -51,13 +51,13 @@ void BaseConnectorResource::close() throw ( cms::CMSException )
             return;
         }
 
+        // We are now closed
+        this->closed = true;
+
         if( connector != NULL ) {
             // Close the connector resource
             connector->closeResource( this );
         }
-
-        // We are now closed
-        this->closed = true;
 
         // Notify the listeners
         std::set< ConnectorResourceListener* >::const_iterator iter =

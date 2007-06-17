@@ -1315,7 +1315,6 @@ void OpenWireConnector::closeResource( ConnectorResource* resource )
         disposeOf( dataStructure );
     }
     catch( ConnectorException& ex ) {
-        delete resource;
         ex.setMark(__FILE__, __LINE__ );
         throw ex;
     }
