@@ -17,8 +17,22 @@
 
 #include "OpenWireResponseBuilder.h"
 
-//#include <activemq/connector/stomp/commands/ConnectCommand.h>
-//#include <activemq/connector/stomp/commands/ConnectedCommand.h>
+#include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQObjectMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQStreamMessage.h>
+#include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
+#include <activemq/connector/openwire/commands/BrokerInfo.h>
+#include <activemq/connector/openwire/commands/ConnectionInfo.h>
+#include <activemq/connector/openwire/commands/ConsumerInfo.h>
+#include <activemq/connector/openwire/commands/DestinationInfo.h>
+#include <activemq/connector/openwire/commands/ProducerInfo.h>
+#include <activemq/connector/openwire/commands/Response.h>
+#include <activemq/connector/openwire/commands/RemoveSubscriptionInfo.h>
+#include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/connector/openwire/commands/ShutdownInfo.h>
+#include <activemq/connector/openwire/commands/WireFormatInfo.h>
 
 using namespace activemq;
 using namespace activemq::connector;
@@ -26,11 +40,31 @@ using namespace activemq::connector::openwire;
 using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireResponseBuilder::buildResponse( const transport::Command* cmd ){
+Response* OpenWireResponseBuilder::buildResponse(
+    const transport::Command* command ){
+
+    if( typeid( *command ) == typeid( commands::ActiveMQBytesMessage ) ||
+        typeid( *command ) == typeid( commands::ActiveMQMapMessage ) ||
+        typeid( *command ) == typeid( commands::ActiveMQMessage ) ||
+        typeid( *command ) == typeid( commands::ActiveMQObjectMessage ) ||
+        typeid( *command ) == typeid( commands::ActiveMQStreamMessage ) ||
+        typeid( *command ) == typeid( commands::ActiveMQTextMessage ) ||
+        typeid( *command ) == typeid( commands::ConnectionInfo ) ||
+        typeid( *command ) == typeid( commands::ConsumerInfo ) ||
+        typeid( *command ) == typeid( commands::DestinationInfo ) ||
+        typeid( *command ) == typeid( commands::ProducerInfo ) ||
+        typeid( *command ) == typeid( commands::RemoveSubscriptionInfo ) ||
+        typeid( *command ) == typeid( commands::SessionInfo ) ) {
+
+        // These Commands just require a response that matches their command IDs
+        commands::Response* response = new commands::Response();
+        response->setCorrelationId( command->getCommandId() );
+        return response;
+    }
 
     // If this command requires a response we don't know what it is
     // so we throw an exception.
-    if( cmd->isResponseRequired() ) {
+    if( command->isResponseRequired() ) {
 
         throw transport::CommandIOException( __FILE__, __LINE__,
             "OpenWireResponseBuilder - unrecognized command" );
@@ -41,26 +75,19 @@ Response* OpenWireResponseBuilder::buildResponse( const transport::Command* cmd 
 
 ////////////////////////////////////////////////////////////////////////////////
 Command* OpenWireResponseBuilder::buildIncomingCommand(
-    const transport::Command* cmd AMQCPP_UNUSED ){
+    const transport::Command* command ){
 
-//    const commands::ConnectCommand* connectCommand =
-//        dynamic_cast<const commands::ConnectCommand*>(cmd);
-//
-//    if( connectCommand != NULL ){
-//        commands::ConnectedCommand* resp = new commands::ConnectedCommand();
-//        resp->setCorrelationId( connectCommand->getCommandId() );
-//
-//        if( connectCommand->getClientId() == NULL )
-//        {
-//            resp->setSessionId( sessionId );
-//        }
-//        else
-//        {
-//            resp->setSessionId( connectCommand->getClientId() );
-//        }
-//
-//        return resp;
-//    }
+    // Delegate this to buildResponse
+    if( command->isResponseRequired() ) {
+        return buildResponse( command );
+    }
+
+    if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
+
+        // Return a copy of the callers own requested WireFormatInfo
+        // so they get exactly the settings they asked for.
+        return command->cloneCommand();
+    }
 
     return NULL;
 }
