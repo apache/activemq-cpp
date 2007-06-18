@@ -16,14 +16,10 @@
  */
 
 #include <activemq/transport/MockTransport.h>
-#include <activemq/support/LibraryInit.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
-
-////////////////////////////////////////////////////////////////////////////////
-MockTransport* MockTransport::instance = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
 MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
@@ -37,7 +33,6 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
     this->responseBuilder = responseBuilder;
     this->own = own;
     this->nextCommandId = 0;
-    this->instance = this;
     if( useDefOutgoing )
     {
         this->outgoingCommandListener = &defaultListener;

@@ -174,13 +174,8 @@ namespace transport{
         concurrent::Mutex commandIdMutex;
         bool own;
         InternalCommandListener defaultListener;
-        static MockTransport* instance;
 
     public:
-
-        static MockTransport* getInstance() {
-            return instance;
-        }
 
         MockTransport( ResponseBuilder* responseBuilder ,
                        bool own = false,
