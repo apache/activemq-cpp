@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -32,9 +32,9 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::read( std::vector<unsigned char>& buffer ) 
+std::size_t DataInputStream::read( std::vector<unsigned char>& buffer )
     throw ( io::IOException ) {
-        
+
     try {
         return this->read( &buffer[0], 0, buffer.size() );
     }
@@ -43,22 +43,21 @@ std::size_t DataInputStream::read( std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::read( unsigned char* buffer, 
-                          std::size_t offset, 
-                          std::size_t length ) 
-    throw ( io::IOException, exceptions::IndexOutOfBoundsException, 
-    exceptions::NullPointerException ) {
-    
+std::size_t DataInputStream::read( unsigned char* buffer,
+                                   std::size_t offset,
+                                   std::size_t length )
+    throw ( io::IOException, exceptions::IndexOutOfBoundsException,
+            exceptions::NullPointerException ) {
     try {
 
         if( buffer == NULL ) {
-            throw NullPointerException( 
+            throw NullPointerException(
                 __FILE__, __LINE__,
                 "DataInputStream::read - Buffer is null" );
         }
 
         std::size_t read = 0;
-        
+
         try {
             read = inputStream->read( &buffer[offset], length );
         } catch( io::EOFException& ex ){
@@ -68,11 +67,11 @@ std::size_t DataInputStream::read( unsigned char* buffer,
         }
 
         if( read == 0 ){
-            throw IOException( 
+            throw IOException(
                 __FILE__, __LINE__,
                 "DataInputStream::read - failed to extract data, not EOF." );
         }
-        
+
         return read;
     }
     AMQ_CATCH_RETHROW( NullPointerException )
@@ -81,10 +80,10 @@ std::size_t DataInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DataInputStream::readBoolean() 
+bool DataInputStream::readBoolean()
     throw( io::IOException, io::EOFException ) {
-
     try {
+
         char value = 0;
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value != 0 );
@@ -94,10 +93,10 @@ bool DataInputStream::readBoolean()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readByte() 
+char DataInputStream::readByte()
     throw ( io::IOException, io::EOFException ) {
-    
     try {
+
         char value = 0;
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
@@ -107,21 +106,22 @@ char DataInputStream::readByte()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataInputStream::readUnsignedByte() 
+unsigned char DataInputStream::readUnsignedByte()
     throw ( io::IOException, io::EOFException ) {
-
     try {
+
         unsigned char value = 0;
         this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned char ) );
         return (char)( value );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
-} 
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
     try {
+
         char value = 0;
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
@@ -133,13 +133,14 @@ char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
 ////////////////////////////////////////////////////////////////////////////////
 short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
     try {
+
         unsigned short value = 0;
 
         unsigned char byte1 = this->readByte();
         unsigned char byte2 = this->readByte();
-        
+
         value |= (byte1 << 8 | byte2 << 0);
-        
+
         return value;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -147,7 +148,7 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short DataInputStream::readUnsignedShort() 
+unsigned short DataInputStream::readUnsignedShort()
     throw ( io::IOException, io::EOFException ) {
     try {
 
@@ -155,9 +156,9 @@ unsigned short DataInputStream::readUnsignedShort()
 
         unsigned char byte1 = this->readByte();
         unsigned char byte2 = this->readByte();
-        
+
         value |= (byte1 << 8 | byte2 << 0);
-        
+
         return value;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -174,9 +175,9 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
         unsigned char byte2 = this->readByte();
         unsigned char byte3 = this->readByte();
         unsigned char byte4 = this->readByte();
-        
+
         value |= (byte1 << 24 | byte2 << 16 | byte3 << 8 | byte4 << 0);
-        
+
         return value;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -189,7 +190,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 
         unsigned long long lvalue = this->readLong();
         double value = 0.0;
-        memcpy( &value, &lvalue, sizeof( unsigned long long ) );        
+        memcpy( &value, &lvalue, sizeof( unsigned long long ) );
         return value;
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -235,34 +236,36 @@ long long DataInputStream::readLong()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readString() 
+std::string DataInputStream::readString()
     throw ( io::IOException, io::EOFException ) {
     try {
+
         std::string retVal;
         char temp = 0;
-        
+
         while( true ){
             temp = readChar();
-            
+
             // if null is found we are done.
             if( temp == '\0' ){
                 break;
             }
-            
+
             // Append no matter what
-            retVal += temp;            
+            retVal += temp;
         }
-        
+
         return retVal;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )    
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readUTF() 
+std::string DataInputStream::readUTF()
     throw ( io::IOException, io::EOFException ) {
     try {
+
         std::string buffer;
         unsigned short len = readUnsignedShort();
         buffer.resize(len);
@@ -270,11 +273,11 @@ std::string DataInputStream::readUTF()
         return buffer;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )    
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( std::vector< unsigned char >& buffer ) 
+void DataInputStream::readFully( std::vector<unsigned char>& buffer )
     throw ( io::IOException, io::EOFException ) {
     try {
         this->readFully( &buffer[0], 0, buffer.size() );
@@ -284,22 +287,22 @@ void DataInputStream::readFully( std::vector< unsigned char >& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataInputStream::readFully( unsigned char* buffer, 
-                                std::size_t offset, 
-                                std::size_t length ) 
-    throw ( io::IOException, 
-            io::EOFException, 
-            exceptions::IndexOutOfBoundsException, 
+void DataInputStream::readFully( unsigned char* buffer,
+                                 std::size_t offset,
+                                 std::size_t length )
+    throw ( io::IOException,
+            io::EOFException,
+            exceptions::IndexOutOfBoundsException,
             exceptions::NullPointerException )
 {
     try {
-        
+
         if( buffer == NULL ) {
-            throw NullPointerException( 
+            throw NullPointerException(
                 __FILE__, __LINE__,
                 "DataInputStream::read - Buffer is null" );
         }
-    
+
         std::size_t n = 0;
         while( n < length ) {
             std::size_t count = inputStream->read( &buffer[offset + n], (length - n) );
@@ -313,17 +316,18 @@ void DataInputStream::readFully( unsigned char* buffer,
     }
     AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCHALL_THROW( IOException )    
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::skip( std::size_t num ) 
-throw( io::IOException, exceptions::UnsupportedOperationException ) {
+std::size_t DataInputStream::skip( std::size_t num )
+    throw( io::IOException, exceptions::UnsupportedOperationException ) {
     try {
+
         std::size_t total = 0;
         std::size_t cur = 0;
 
-        while( ( total < num ) && 
+        while( ( total < num ) &&
                ( ( cur = inputStream->skip( num-total ) ) > 0 ) ) {
             total += cur;
         }
