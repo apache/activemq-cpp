@@ -38,8 +38,9 @@ namespace openwire{
 
         virtual ~OpenWireResponseBuilder(){}
 
-        virtual transport::Response* buildResponse( const transport::Command* cmd );
-        virtual transport::Command* buildIncomingCommand( const transport::Command* cmd );
+        virtual transport::Response* buildResponse( const transport::Command* command );
+        virtual void buildIncomingCommands(
+            const transport::Command* command, util::Queue<transport::Command*>& queue );
 
     };
 

@@ -74,20 +74,18 @@ Response* OpenWireResponseBuilder::buildResponse(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* OpenWireResponseBuilder::buildIncomingCommand(
-    const transport::Command* command ){
+void OpenWireResponseBuilder::buildIncomingCommands(
+    const transport::Command* command, util::Queue<transport::Command*>& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {
-        return buildResponse( command );
+        queue.push( buildResponse( command ) );
     }
 
     if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
 
         // Return a copy of the callers own requested WireFormatInfo
         // so they get exactly the settings they asked for.
-        return command->cloneCommand();
+        queue.push( command->cloneCommand() );
     }
-
-    return NULL;
 }

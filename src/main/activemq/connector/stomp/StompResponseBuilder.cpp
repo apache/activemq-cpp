@@ -40,26 +40,22 @@ Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* StompResponseBuilder::buildIncomingCommand( const transport::Command* cmd ){
+void StompResponseBuilder::buildIncomingCommands(
+    const transport::Command* command, util::Queue<transport::Command*>& queue ){
 
     const commands::ConnectCommand* connectCommand =
-        dynamic_cast<const commands::ConnectCommand*>(cmd);
+        dynamic_cast<const commands::ConnectCommand*>( command );
 
-    if( connectCommand != NULL ){
+    if( connectCommand != NULL ) {
         commands::ConnectedCommand* resp = new commands::ConnectedCommand();
         resp->setCorrelationId( connectCommand->getCommandId() );
 
-        if( connectCommand->getClientId() == NULL )
-        {
+        if( connectCommand->getClientId() == NULL ) {
             resp->setSessionId( sessionId );
-        }
-        else
-        {
+        } else {
             resp->setSessionId( connectCommand->getClientId() );
         }
 
-        return resp;
+        queue.push( resp );
     }
-
-    return NULL;
 }

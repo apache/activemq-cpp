@@ -27,6 +27,7 @@
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/util/Config.h>
+#include <activemq/util/Queue.h>
 #include <activemq/concurrent/CountDownLatch.h>
 
 namespace activemq{
@@ -55,8 +56,23 @@ namespace transport{
         public:
             virtual ~ResponseBuilder(){}
 
-            virtual Response* buildResponse( const Command* cmd ) = 0;
-            virtual Command* buildIncomingCommand( const Command* cmd ) = 0;
+            /**
+             * Given a Command, check if it requires a response and return the
+             * appropriate Response that the Broker would send for this Command
+             * @param command - The command to build a response for
+             * @return A Reponse object pointer, or NULL if no response.
+             */
+            virtual Response* buildResponse( const Command* command ) = 0;
+
+            /**
+             * When called the ResponseBuilder must construct all the
+             * Responses or Asynchronous commands that would be sent to
+             * this client by the Broker upon receipt of the passed command.
+             * @param command - The Command being sent to the Broker.
+             * @param queue - Queue of Command sent back from the broker.
+             */
+            virtual void buildIncomingCommands(
+                const Command* cmd, util::Queue<Command*>& queue ) = 0;
         };
 
         /**
@@ -74,17 +90,13 @@ namespace transport{
 
             MockTransport* transport;
             ResponseBuilder* responseBuilder;
-            concurrent::Mutex mutex;
-            Command* command;
-            Command* response;
             bool done;
             concurrent::CountDownLatch startedLatch;
+            util::Queue<Command*> inboundQueue;
 
         public:
 
             InternalCommandListener(void) : startedLatch(1) {
-                command = NULL;
-                response = NULL;
                 transport = NULL;
                 responseBuilder = NULL;
                 done = false;
@@ -95,13 +107,14 @@ namespace transport{
 
             virtual ~InternalCommandListener() {
                 done = true;
-                synchronized( &mutex )
-                {
-                    mutex.notifyAll();
+                synchronized( &inboundQueue ) {
+                    inboundQueue.notifyAll();
                 }
                 this->join();
 
-                delete response;
+                while( !inboundQueue.empty() ) {
+                    delete inboundQueue.pop();
+                }
             }
 
             void setTransport( MockTransport* transport ){
@@ -112,44 +125,38 @@ namespace transport{
                 this->responseBuilder = responseBuilder;
             }
 
-            virtual void onCommand( Command* command )
-            {
-                synchronized( &mutex )
+            virtual void onCommand( Command* command ) {
+                synchronized( &inboundQueue )
                 {
-                    this->command = command;
                     // Create a response now before the caller has a
                     // chance to destroy the command.
-                    this->response =
-                        responseBuilder->buildIncomingCommand( command );
+                    responseBuilder->buildIncomingCommands( command, inboundQueue );
 
-                    mutex.notifyAll();
+                    // Wake up the thread, messages are dispatched from there.
+                    inboundQueue.notifyAll();
                 }
             }
 
-            void run(void)
-            {
-                try
-                {
-                    synchronized( &mutex )
-                    {
-                        while( !done )
-                        {
-                            startedLatch.countDown();
-                            mutex.wait();
+            void run(void) {
+                try {
 
-                            if( command == NULL )
-                            {
+                    synchronized( &inboundQueue ) {
+
+                        while( !done ) {
+                            startedLatch.countDown();
+
+                            while( inboundQueue.empty() && !done ){
+                                inboundQueue.wait();
+                            }
+
+                            if( done || transport == NULL ) {
                                 continue;
                             }
 
                             // If we created a response then send it.
-                            if( response != NULL && transport != NULL )
-                            {
-                                transport->fireCommand( this->response );
+                            while( !inboundQueue.empty() ) {
+                                transport->fireCommand( inboundQueue.pop() );
                             }
-
-                            this->response = NULL;
-                            this->command = NULL;
                         }
                     }
                 }
