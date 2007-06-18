@@ -498,10 +498,6 @@ void ActiveMQSessionTest::setUp()
         connection = dynamic_cast< ActiveMQConnection*>(
             factory.createConnection() );
 
-        // Get the Transport and make sure we got a dummy Transport
-        dTransport = transport::MockTransport::getInstance();
-        CPPUNIT_ASSERT( dTransport != NULL );
-
         connection->setExceptionListener( &exListener );
         connection->start();
     }
