@@ -22,9 +22,11 @@ using namespace activemq::transport;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
+MockTransport* MockTransport::instance = NULL;
+
+////////////////////////////////////////////////////////////////////////////////
 MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
-                              bool own,
-                              bool useDefOutgoing ){
+                              bool own ){
 
     this->responseBuilder = NULL;
     this->commandListener = NULL;
@@ -33,12 +35,11 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
     this->responseBuilder = responseBuilder;
     this->own = own;
     this->nextCommandId = 0;
-    if( useDefOutgoing )
-    {
-        this->outgoingCommandListener = &defaultListener;
-        this->defaultListener.setTransport( this );
-        this->defaultListener.setResponseBuilder( responseBuilder );
-    }
+    this->instance = this;
+
+    // Configure the Internal Listener this is the Fake Broker.
+    this->internalListener.setTransport( this );
+    this->internalListener.setResponseBuilder( responseBuilder );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,10 @@ unsigned int MockTransport::getNextCommandId() throw ( exceptions::ActiveMQExcep
 void MockTransport::oneway( Command* command )
         throw(CommandIOException, exceptions::UnsupportedOperationException)
 {
+    // Process and send any new Commands back.
+    internalListener.onCommand( command );
+
+    // Notify external Client of command that we "sent"
     if( outgoingCommandListener != NULL ){
         outgoingCommandListener->onCommand( command );
         return;
@@ -80,6 +85,12 @@ Response* MockTransport::request( Command* command )
           exceptions::UnsupportedOperationException)
 {
     if( responseBuilder != NULL ){
+
+        // Notify external Client of command that we "sent"
+        if( outgoingCommandListener != NULL ){
+            outgoingCommandListener->onCommand( command );
+        }
+
         command->setCommandId( getNextCommandId() );
         command->setResponseRequired( true );
         return responseBuilder->buildResponse( command );

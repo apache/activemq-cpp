@@ -52,7 +52,7 @@ Transport* MockTransportFactory::createTransport(
                 "transport.sessionId", "testSessionId" ) );
     }
 
-    return new MockTransport( builder, true, true );
+    return new MockTransport( builder, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

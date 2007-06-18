@@ -173,24 +173,32 @@ namespace transport{
         unsigned int nextCommandId;
         concurrent::Mutex commandIdMutex;
         bool own;
-        InternalCommandListener defaultListener;
+        InternalCommandListener internalListener;
+        static MockTransport* instance;
 
     public:
 
         MockTransport( ResponseBuilder* responseBuilder ,
-                       bool own = false,
-                       bool useDefOutgoing = true );
+                       bool own = false );
 
         virtual ~MockTransport();
 
+        static MockTransport* getInstance() {
+            return instance;
+        }
+
+        /**
+         * Sets the ResponseBuilder that this class uses to create Responses to
+         * Commands sent.  These are either real Response Objects, or Commands that
+         * would have been sent Asynchronously be the Broker.
+         * @param responseBuilder - The ResponseBuilder to use from now on.
+         */
         void setResponseBuilder( ResponseBuilder* responseBuilder ){
             this->responseBuilder = responseBuilder;
         }
 
-        unsigned int getNextCommandId() throw (exceptions::ActiveMQException);
-
         virtual void oneway( Command* command )
-                throw(CommandIOException, exceptions::UnsupportedOperationException);
+            throw(CommandIOException, exceptions::UnsupportedOperationException);
 
         virtual Response* request( Command* command )
             throw(CommandIOException,
@@ -200,12 +208,18 @@ namespace transport{
             this->commandListener = listener;
         }
 
+        /**
+         * Sets a Command Listener that gets notified for every command that would
+         * have been sent by this transport to the Broker, this allows a client
+         * to verify that its messages are making it to the wire.
+         * @param listener - The CommandListener to notify for each message
+         */
         virtual void setOutgoingCommandListener( CommandListener* listener ){
             outgoingCommandListener = listener;
         }
 
+        // Not impl is needed in this transport for these methods.
         virtual void setCommandReader( CommandReader* reader AMQCPP_UNUSED){}
-
         virtual void setCommandWriter( CommandWriter* writer AMQCPP_UNUSED){}
 
         virtual void setTransportExceptionListener(
@@ -214,20 +228,36 @@ namespace transport{
             this->exceptionListener = listener;
         }
 
-        virtual void fireCommand( Command* cmd ){
+        /**
+         * Fires a Command back through this transport to its registered
+         * CommandListener if there is one.
+         * @param command - Command to send to the Listener.
+         */
+        virtual void fireCommand( Command* command ){
             if( commandListener != NULL ){
-                commandListener->onCommand( cmd );
+                commandListener->onCommand( command );
             }
         }
 
+        /**
+         * Fires a Exception back through this transport to its registered
+         * ExceptionListener if there is one.
+         * @param command - Command to send to the Listener.
+         */
         virtual void fireException( const exceptions::ActiveMQException& ex ){
             if( exceptionListener != NULL ){
                 exceptionListener->onTransportException( this, ex );
             }
         }
 
+        // No Impl needed for this Transport.
         virtual void start() throw (cms::CMSException){}
         virtual void close() throw (cms::CMSException){}
+
+    protected:
+
+        unsigned int getNextCommandId() throw( exceptions::ActiveMQException );
+
     };
 
 }}
