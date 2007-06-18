@@ -32,10 +32,25 @@
 namespace activemq{
 namespace transport{
 
+    /**
+     * The MockTransport defines a base level Transport class that is intended to
+     * be used in place of an a regular protocol Transport suck as TCP.  This
+     * Transport assumes that it is the base Transport in the Transports stack, and
+     * destroys any Transports that are passed to it in its constructor.
+     *
+     * This Transport defines an Interface ResponseBuilder which must be implemented
+     * by any protocol for which the Transport is used to Emulate.  The Transport
+     * hands off all outbound commands to the ResponseBuilder for processing, it is
+     * up to the builder to create appropriate responses and schedule any asynchronous
+     * messages that might result from a message sent to the Broker.
+     */
     class MockTransport : public Transport{
-
     public:
 
+        /**
+         * Interface for all Protocols to implement that defines the behavior
+         * of the Broker in response to messages of that protocol.
+         */
         class ResponseBuilder{
         public:
             virtual ~ResponseBuilder(){}
@@ -44,6 +59,13 @@ namespace transport{
             virtual Command* buildIncomingCommand( const Command* cmd ) = 0;
         };
 
+        /**
+         * Listens for Commands sent from the MockTransport.  This class
+         * processes all outbound commands and sends responses that are
+         * constructed by calling the Protocol provided ResponseBuilder
+         * and getting a set of Commands to send back into the MockTransport
+         * as imcoming Commands and Responses.
+         */
         class InternalCommandListener :
             public CommandListener,
             public concurrent::Thread
