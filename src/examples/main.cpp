@@ -157,6 +157,7 @@ class HelloWorldConsumer : public ExceptionListener,
 private:
 
     CountDownLatch latch;
+    CountDownLatch doneLatch;
     Connection* connection;
     Session* session;
     Destination* destination;
@@ -168,7 +169,10 @@ private:
 public:
 
     HelloWorldConsumer( const std::string& brokerURI,
-                        long waitMillis, bool useTopic = false ) : latch(1){
+                        long numMessages,
+                        bool useTopic = false,
+                        long waitMillis = 30000 )
+                         : latch(1), doneLatch(numMessages){
         connection = NULL;
         session = NULL;
         destination = NULL;
@@ -221,8 +225,8 @@ public:
             // Indicate we are ready for messages.
             latch.countDown();
 
-            // Sleep while asynchronous messages come in.
-            Thread::sleep( waitMillis );
+            // Wait while asynchronous messages come in.
+            doneLatch.await( waitMillis );
 
         } catch (CMSException& e) {
             e.printStackTrace();
@@ -251,6 +255,9 @@ public:
         } catch (CMSException& e) {
             e.printStackTrace();
         }
+
+        // No matter what, tag the count down latch until done.
+        doneLatch.countDown();
     }
 
     // If something bad happens you see it here as this class is also been
@@ -334,9 +341,10 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // createQueue to be used in both consumer an producer.
     //============================================================
     bool useTopics = true;
+    int numMessages = 2000;
 
-    HelloWorldProducer producer( brokerURI, 2000, useTopics );
-    HelloWorldConsumer consumer( brokerURI, 12000, useTopics );
+    HelloWorldProducer producer( brokerURI, numMessages, useTopics );
+    HelloWorldConsumer consumer( brokerURI, numMessages, useTopics );
 
     // Start the consumer thread.
     Thread consumerThread( &consumer );
