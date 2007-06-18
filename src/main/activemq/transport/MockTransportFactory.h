@@ -41,6 +41,12 @@ namespace transport{
             Transport* next = NULL,
             bool own = true ) throw ( exceptions::ActiveMQException );
 
+        /**
+         * Returns a reference to this TransportFactory
+         * @returns TransportFactory Reference
+         */
+        static TransportFactory& getInstance();
+
     };
 
 }}

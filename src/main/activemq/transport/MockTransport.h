@@ -82,7 +82,7 @@ namespace transport{
                 delete response;
             }
 
-            void setTransport( DummyTransport* transport ){
+            void setTransport( MockTransport* transport ){
                 this->transport = transport;
             }
 
@@ -145,7 +145,7 @@ namespace transport{
         concurrent::Mutex commandIdMutex;
         bool own;
         InternalCommandListener defaultListener;
-        static DummyTransport* instance;
+        static MockTransport* instance;
 
     public:
 

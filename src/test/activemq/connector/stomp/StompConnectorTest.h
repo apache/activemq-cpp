@@ -29,7 +29,7 @@
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
-#include <activemq/transport/DummyTransport.h>
+#include <activemq/transport/MockTransport.h>
 #include <activemq/util/Config.h>
 
 #include <activemq/io/ByteArrayOutputStream.h>

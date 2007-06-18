@@ -22,7 +22,7 @@
 
 namespace activemq{
 namespace connector{
-namespace stomp{
+namespace openwire{
 
     class OpenWireResponseBuilder : public transport::MockTransport::ResponseBuilder{
 

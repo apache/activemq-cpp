@@ -41,7 +41,7 @@ Response* OpenWireResponseBuilder::buildResponse( const transport::Command* cmd 
 
 ////////////////////////////////////////////////////////////////////////////////
 Command* OpenWireResponseBuilder::buildIncomingCommand(
-    const transport::Command* cmd ){
+    const transport::Command* cmd AMQCPP_UNUSED ){
 
 //    const commands::ConnectCommand* connectCommand =
 //        dynamic_cast<const commands::ConnectCommand*>(cmd);

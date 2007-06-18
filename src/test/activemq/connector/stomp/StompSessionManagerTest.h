@@ -26,7 +26,7 @@
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
-#include <activemq/transport/DummyTransport.h>
+#include <activemq/transport/MockTransport.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/SubscribeCommand.h>
 #include <activemq/transport/CommandListener.h>
@@ -111,7 +111,7 @@ namespace stomp{
         {
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
-            transport::DummyTransport transport( &responseBuilder );
+            transport::MockTransport transport( &responseBuilder );
             util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
@@ -139,7 +139,7 @@ namespace stomp{
             delete info2;
             delete info3;
             delete info4;
-            
+
             delete connector;
         }
 
@@ -147,7 +147,7 @@ namespace stomp{
         {
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
-            transport::DummyTransport transport( &responseBuilder );
+            transport::MockTransport transport( &responseBuilder );
             util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
@@ -200,7 +200,7 @@ namespace stomp{
             delete cinfo2;
             delete cinfo3;
             delete cinfo4;
-            
+
             delete connector;
         }
 
@@ -208,7 +208,7 @@ namespace stomp{
         {
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
-            transport::DummyTransport transport( &responseBuilder );
+            transport::MockTransport transport( &responseBuilder );
             util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
@@ -272,7 +272,7 @@ namespace stomp{
             delete cinfo2;
             delete cinfo3;
             delete cinfo4;
-            
+
             delete connector;
         }
 
@@ -280,7 +280,7 @@ namespace stomp{
 
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
-            transport::DummyTransport transport( &responseBuilder );
+            transport::MockTransport transport( &responseBuilder );
             util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
@@ -320,7 +320,7 @@ namespace stomp{
 
             delete cinfo1;
             delete cinfo2;
-            
+
             delete connector;
         }
 
@@ -328,7 +328,7 @@ namespace stomp{
 
             std::string connectionId = "testConnectionId";
             StompResponseBuilder responseBuilder("testConnectionId");
-            transport::DummyTransport transport( &responseBuilder );
+            transport::MockTransport transport( &responseBuilder );
             util::Properties properties;
 
             // Using a pointer for the connector so we ensure the proper destruction
@@ -363,7 +363,7 @@ namespace stomp{
 
             cmdListener.expected.clear();
             StompTopic dest1( "dummy.topic.1" );
-            
+
             consumer = manager.createConsumer( &dest1, session, "" );
             manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
@@ -378,7 +378,7 @@ namespace stomp{
             cmdListener.expected.clear();
             cmdListener.expected.push_back( retroactive );
             StompTopic dest2( "dummy.topic.1?consumer.retroactive=true" );
-            
+
             consumer = manager.createConsumer( &dest2, session, "" );
             manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
@@ -409,7 +409,7 @@ namespace stomp{
                 "consumer.selector=" + selector.second + "&" +
                 "consumer.exclusive=" + exclusive.second + "&" +
                 "consumer.priority=" + priority.second );
-            
+
             consumer = manager.createConsumer( &dest3, session, "" );
             manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
@@ -439,12 +439,12 @@ namespace stomp{
                 "consumer.selector=" + selector.second + "&" +
                 "consumer.exclusive=" + exclusive.second + "&" +
                 "consumer.priority=" + priority.second );
-            
+
             consumer = manager.createConsumer( &dest4, session, "", true );
             manager.startConsumer( consumer );
             CPPUNIT_ASSERT( consumer != NULL );
             CPPUNIT_ASSERT( cmdListener.subscribe != NULL );
-            
+
             manager.removeConsumer( consumer );
             CPPUNIT_ASSERT( cmdListener.cmd != NULL );
             delete consumer;
@@ -453,7 +453,7 @@ namespace stomp{
 
             // Done
             delete session;
-            
+
             delete connector;
 
         }

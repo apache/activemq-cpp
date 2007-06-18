@@ -18,6 +18,7 @@
 
 #include <activemq/logger/LogWriter.h>
 #include <activemq/transport/IOTransportFactory.h>
+#include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/filters/AsyncSendTransportFactory.h>
 #include <activemq/transport/filters/TcpTransportFactory.h>
 #include <activemq/transport/filters/LoggingTransportFactory.h>
@@ -43,6 +44,7 @@ InitDirector::InitDirector(void)
         transport::filters::LoggingTransportFactory::getInstance();
         transport::filters::ResponseCorrelatorFactory::getInstance();
         transport::IOTransportFactory::getInstance();
+        transport::MockTransportFactory::getInstance();
     }
 
     refCount++;

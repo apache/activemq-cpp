@@ -27,7 +27,7 @@
 #include <activemq/concurrent/Concurrent.h>
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/core/ActiveMQConnection.h>
-#include <activemq/transport/DummyTransport.h>
+#include <activemq/transport/MockTransport.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -109,7 +109,7 @@ namespace core{
         };
 
         ActiveMQConnection* connection;
-        transport::DummyTransport* dTransport;
+        transport::MockTransport* dTransport;
         MyExceptionListener exListener;
 
     public:    // CPPUNIT Method Overrides.

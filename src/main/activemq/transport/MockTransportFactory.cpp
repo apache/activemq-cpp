@@ -18,6 +18,8 @@
 #include "MockTransportFactory.h"
 #include <activemq/connector/stomp/StompResponseBuilder.h>
 #include <activemq/transport/MockTransport.h>
+#include <activemq/transport/MockTransportFactory.h>
+#include <activemq/transport/TransportFactoryMapRegistrar.h>
 
 using namespace activemq;
 using namespace activemq::transport;
@@ -47,4 +49,14 @@ Transport* MockTransportFactory::createTransport(
     }
 
     return new MockTransport( builder, true, true );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+TransportFactory& MockTransportFactory::getInstance() {
+
+    // Create the one and only instance of the registrar
+    static TransportFactoryMapRegistrar registrar(
+        "mock", new MockTransportFactory() );
+
+    return registrar.getFactory();
 }

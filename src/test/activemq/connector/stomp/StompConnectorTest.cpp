@@ -28,7 +28,7 @@ void StompConnectorTest::testSessions()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     util::Properties properties;
 
     // Using a pointer for the connector so we ensure the proper destruction
@@ -67,7 +67,7 @@ void StompConnectorTest::testConsumers()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     util::Properties properties;
 
     // Using a pointer for the connector so we ensure the proper destruction
@@ -131,7 +131,7 @@ void StompConnectorTest::testProducers()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     util::Properties properties;
 
     // Using a pointer for the connector so we ensure the proper destruction
@@ -183,7 +183,7 @@ void StompConnectorTest::testCommand()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     util::Properties properties;
 
     // Using a pointer for the connector so we ensure the proper destruction
@@ -269,7 +269,7 @@ void StompConnectorTest::testSendingCommands()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     util::Properties properties;
     StompConnector* connector =
         new StompConnector( &transport, properties );
@@ -313,7 +313,7 @@ void StompConnectorTest::testException()
 {
     std::string connectionId = "testConnectionId";
     StompResponseBuilder responseBuilder("testConnectionId");
-    transport::DummyTransport transport( &responseBuilder );
+    transport::MockTransport transport( &responseBuilder );
     MyExceptionListener exListener;
     util::Properties properties;
 

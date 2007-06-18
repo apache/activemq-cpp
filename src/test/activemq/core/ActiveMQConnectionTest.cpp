@@ -23,12 +23,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/concurrent/Thread.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/transport/DummyTransport.h>
+#include <activemq/transport/MockTransport.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/util/Properties.h>
-#include <activemq/transport/DummyTransportFactory.h>
+#include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
@@ -47,9 +47,6 @@ void ActiveMQConnectionTest::test()
 {
     try
     {
-        transport::TransportFactoryMapRegistrar registrar(
-            "dummy", new transport::DummyTransportFactory() );
-
         MyMessageListener listener;
         MyExceptionListener exListener;
         MyCommandListener cmdListener;
@@ -61,7 +58,7 @@ void ActiveMQConnectionTest::test()
 
         transport::TransportFactory* factory =
             transport::TransportFactoryMap::getInstance().lookup(
-                "dummy" );
+                "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -72,8 +69,8 @@ void ActiveMQConnectionTest::test()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::DummyTransport* dTransport =
-            dynamic_cast< transport::DummyTransport*>( transport );
+        transport::MockTransport* dTransport =
+            dynamic_cast< transport::MockTransport*>( transport );
 
         CPPUNIT_ASSERT( dTransport != NULL );
 
@@ -186,9 +183,6 @@ void ActiveMQConnectionTest::test2()
 {
     try
     {
-        transport::TransportFactoryMapRegistrar registrar(
-            "dummy", new transport::DummyTransportFactory() );
-
         MyMessageListener listener;
         MyExceptionListener exListener;
         MyCommandListener cmdListener;
@@ -200,7 +194,7 @@ void ActiveMQConnectionTest::test2()
 
         transport::TransportFactory* factory =
             transport::TransportFactoryMap::getInstance().lookup(
-                "dummy" );
+                "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -211,8 +205,8 @@ void ActiveMQConnectionTest::test2()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::DummyTransport* dTransport =
-            dynamic_cast< transport::DummyTransport*>( transport );
+        transport::MockTransport* dTransport =
+            dynamic_cast< transport::MockTransport*>( transport );
 
         CPPUNIT_ASSERT( dTransport != NULL );
 

@@ -54,6 +54,7 @@ cc_sources = \
     activemq/connector/stomp/StompConnector.cpp \
     activemq/connector/stomp/StompSelector.cpp \
     activemq/connector/stomp/StompConnectionNegotiator.cpp \
+    activemq/connector/stomp/StompResponseBuilder.cpp \
     activemq/connector/openwire/OpenWireFormat.cpp \
     activemq/connector/openwire/OpenWireFormatFactory.cpp \
     activemq/connector/openwire/OpenWireCommandReader.cpp \
@@ -61,6 +62,7 @@ cc_sources = \
     activemq/connector/openwire/OpenWireFormatNegotiator.cpp \
     activemq/connector/openwire/OpenWireConnector.cpp \
     activemq/connector/openwire/OpenWireConnectorFactory.cpp \
+    activemq/connector/openwire/OpenWireResponseBuilder.cpp \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.cpp \
     activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
@@ -80,6 +82,8 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/IOTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
+    activemq/transport/MockTransport.cpp \
+    activemq/transport/MockTransportFactory.cpp \
     activemq/transport/filters/ResponseCorrelator.cpp \
     activemq/transport/filters/ResponseCorrelatorFactory.cpp \
     activemq/transport/filters/AsyncSendTransport.cpp \
@@ -216,6 +220,7 @@ h_sources = \
     activemq/connector/stomp/StompConnector.h \
     activemq/connector/stomp/StompDestination.h \
     activemq/connector/stomp/StompTopic.h \
+    activemq/connector/stomp/StompResponseBuilder.h \
     activemq/connector/openwire/OpenWireFormat.h \
     activemq/connector/openwire/OpenWireCommandReader.h \
     activemq/connector/openwire/OpenWireCommandWriter.h \
@@ -224,6 +229,7 @@ h_sources = \
     activemq/connector/openwire/OpenWireProducerInfo.h \
     activemq/connector/openwire/OpenWireSessionInfo.h \
     activemq/connector/openwire/OpenWireTransactionInfo.h \
+    activemq/connector/openwire/OpenWireResponseBuilder.h \
     activemq/connector/openwire/BrokerException.h \
     activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/connector/openwire/utils/HexTable.h \
@@ -259,6 +265,8 @@ h_sources = \
     activemq/transport/CommandIOException.h \
     activemq/transport/IOTransportFactory.h \
     activemq/transport/IOTransport.h \
+    activemq/transport/MockTransport.h \
+    activemq/transport/MockTransportFactory.h \
     activemq/transport/filters/FutureResponse.h \
     activemq/transport/filters/ResponseCorrelator.h \
     activemq/transport/filters/ResponseCorrelatorFactory.h \

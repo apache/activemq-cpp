@@ -26,7 +26,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest )
 #include <activemq/core/ActiveMQConnection.h>
 #include <cms/Connection.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
-#include <activemq/transport/DummyTransportFactory.h>
+#include <activemq/transport/MockTransportFactory.h>
 #include <activemq/connector/Connector.h>
 
 using namespace activemq;
@@ -37,11 +37,8 @@ void ActiveMQConnectionFactoryTest::test()
 {
     try
     {
-        transport::TransportFactoryMapRegistrar registrar(
-            "dummy", new transport::DummyTransportFactory() );
-
         std::string URI =
-            "dummy://127.0.0.1:23232&wireFormat=stomp";
+            "mock://127.0.0.1:23232&wireFormat=stomp";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -65,11 +62,8 @@ void ActiveMQConnectionFactoryTest::test2()
 {
     try
     {
-        transport::TransportFactoryMapRegistrar registrar(
-            "dummy", new transport::DummyTransportFactory() );
-
         std::string URI = std::string() +
-            "dummy://127.0.0.1:23232&wireFormat=stomp?"
+            "mock://127.0.0.1:23232&wireFormat=stomp?"
             "username=" + username + "?password=" + password +
             "?client-id=" + clientId;
 

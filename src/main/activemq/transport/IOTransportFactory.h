@@ -53,7 +53,7 @@ namespace transport{
          * Returns a reference to this TransportFactory
          * @returns TransportFactory Reference
          */
-        static TransportFactory& getInstance(void);
+        static TransportFactory& getInstance();
 
     };
 

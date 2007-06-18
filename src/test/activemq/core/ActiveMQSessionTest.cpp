@@ -20,7 +20,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 
 #include <activemq/concurrent/Thread.h>
-#include <activemq/transport/DummyTransportFactory.h>
+#include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/connector/ConsumerInfo.h>
@@ -493,16 +493,13 @@ void ActiveMQSessionTest::setUp()
 {
     try
     {
-        transport::TransportFactoryMapRegistrar registrar(
-            "dummy", new transport::DummyTransportFactory() );
-
-        ActiveMQConnectionFactory factory("dummy://127.0.0.1:12345?wireFormat=stomp");
+        ActiveMQConnectionFactory factory("mock://127.0.0.1:12345?wireFormat=stomp");
 
         connection = dynamic_cast< ActiveMQConnection*>(
             factory.createConnection() );
 
         // Get the Transport and make sure we got a dummy Transport
-        dTransport = transport::DummyTransport::getInstance();
+        dTransport = transport::MockTransport::getInstance();
         CPPUNIT_ASSERT( dTransport != NULL );
 
         connection->setExceptionListener( &exListener );
