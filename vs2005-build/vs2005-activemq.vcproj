@@ -734,6 +734,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\activemq\connector\stomp\StompResponseBuilder.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\stomp\StompResponseBuilder.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\connector\stomp\StompSelector.cpp"
 						>
 					</File>
@@ -935,6 +943,14 @@
 					</File>
 					<File
 						RelativePath="..\src\main\activemq\connector\openwire\OpenWireProducerInfo.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireResponseBuilder.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\connector\openwire\OpenWireResponseBuilder.h"
 						>
 					</File>
 					<File
@@ -2448,6 +2464,22 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\transport\IOTransportFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\MockTransport.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\MockTransport.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\MockTransportFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\transport\MockTransportFactory.h"
 					>
 				</File>
 				<File
