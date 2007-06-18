@@ -38,8 +38,9 @@ namespace core{
     class ActiveMQConnectionTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( ActiveMQConnectionTest );
-        CPPUNIT_TEST( test );
-        CPPUNIT_TEST( test2 );
+        CPPUNIT_TEST( test1WithStomp );
+        CPPUNIT_TEST( test2WithStomp );
+        CPPUNIT_TEST( test2WithOpenwire );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -113,8 +114,9 @@ namespace core{
             }
         };
 
-        void test();
-        void test2();
+        void test1WithStomp();
+        void test2WithStomp();
+        void test2WithOpenwire();
 
     };
 

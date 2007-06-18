@@ -27,6 +27,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
+#include <activemq/connector/openwire/OpenWireConnector.h>
 #include <activemq/util/Properties.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
@@ -43,7 +44,7 @@ using namespace activemq;
 using namespace activemq::core;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionTest::test()
+void ActiveMQConnectionTest::test1WithStomp()
 {
     try
     {
@@ -56,9 +57,11 @@ void ActiveMQConnectionTest::test()
             new util::Properties();
         transport::Transport* transport = NULL;
 
+        // Default to Stomp
+        properties->setProperty( "wireFormat", "stomp" );
+
         transport::TransportFactory* factory =
-            transport::TransportFactoryMap::getInstance().lookup(
-                "mock" );
+            transport::TransportFactoryMap::getInstance().lookup( "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -179,7 +182,7 @@ void ActiveMQConnectionTest::test()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionTest::test2()
+void ActiveMQConnectionTest::test2WithStomp()
 {
     try
     {
@@ -192,9 +195,11 @@ void ActiveMQConnectionTest::test2()
             new util::Properties();
         transport::Transport* transport = NULL;
 
+        // Default to Stomp
+        properties->setProperty( "wireFormat", "stomp" );
+
         transport::TransportFactory* factory =
-            transport::TransportFactoryMap::getInstance().lookup(
-                "mock" );
+            transport::TransportFactoryMap::getInstance().lookup( "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -214,6 +219,63 @@ void ActiveMQConnectionTest::test2()
 
         connector::stomp::StompConnector* connector =
             new connector::stomp::StompConnector(
+                transport, *properties );
+
+        connector->start();
+
+        ActiveMQConnection connection(
+            new ActiveMQConnectionData(
+                connector, transport, properties) );
+
+        connection.getClientID();
+        connection.close();
+
+        CPPUNIT_ASSERT( connection.getClientID() == "" );
+
+    } catch( exceptions::ActiveMQException& ex ) {
+        ex.printStackTrace();
+        throw ex;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionTest::test2WithOpenwire()
+{
+    try
+    {
+        MyMessageListener listener;
+        MyExceptionListener exListener;
+        MyCommandListener cmdListener;
+        MyDispatcher msgListener;
+        std::string connectionId = "testConnectionId";
+        util::Properties* properties =
+            new util::Properties();
+        transport::Transport* transport = NULL;
+
+        // Default to Stomp
+        properties->setProperty( "wireFormat", "openwire" );
+
+        transport::TransportFactory* factory =
+            transport::TransportFactoryMap::getInstance().lookup( "mock" );
+        if( factory == NULL ){
+            CPPUNIT_ASSERT( false );
+        }
+
+        // Create the transport.
+        transport = factory->createTransport( *properties );
+        if( transport == NULL ){
+            CPPUNIT_ASSERT( false );
+        }
+
+        transport::MockTransport* dTransport =
+            dynamic_cast< transport::MockTransport*>( transport );
+
+        CPPUNIT_ASSERT( dTransport != NULL );
+
+        dTransport->setCommandListener( &cmdListener );
+
+        connector::Connector* connector =
+            new connector::openwire::OpenWireConnector(
                 transport, *properties );
 
         connector->start();
