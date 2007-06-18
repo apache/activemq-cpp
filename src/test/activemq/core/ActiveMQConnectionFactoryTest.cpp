@@ -33,7 +33,7 @@ using namespace activemq;
 using namespace activemq::core;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactoryTest::test()
+void ActiveMQConnectionFactoryTest::test1WithStomp()
 {
     try
     {
@@ -58,12 +58,77 @@ void ActiveMQConnectionFactoryTest::test()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionFactoryTest::test2()
+void ActiveMQConnectionFactoryTest::test2WithStomp()
 {
     try
     {
         std::string URI = std::string() +
             "mock://127.0.0.1:23232&wireFormat=stomp?"
+            "username=" + username + "?password=" + password +
+            "?client-id=" + clientId;
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        cms::Connection* connection =
+            connectionFactory.createConnection();
+        CPPUNIT_ASSERT( connection != NULL );
+
+        ActiveMQConnection* amqConnection =
+            dynamic_cast< ActiveMQConnection* >( connection );
+        CPPUNIT_ASSERT( amqConnection != NULL );
+
+        connector::Connector* connector =
+            dynamic_cast< connector::Connector* >(
+            amqConnection->getConnectionData()->getConnector() );
+        CPPUNIT_ASSERT( connector != NULL );
+
+        CPPUNIT_ASSERT( username == connector->getUsername() );
+        CPPUNIT_ASSERT( password == connector->getPassword() );
+        CPPUNIT_ASSERT( clientId == connector->getClientId() );
+
+        // Free the allocated connection object.
+        delete connection;
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::test1WithOpenWire()
+{
+    try
+    {
+        std::string URI =
+            "mock://127.0.0.1:23232&wireFormat=openwire";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        cms::Connection* connection =
+            connectionFactory.createConnection();
+
+        CPPUNIT_ASSERT( connection != NULL );
+
+        delete connection;
+
+        return;
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
+
+    CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::test2WithOpenWire()
+{
+    try
+    {
+        std::string URI = std::string() +
+            "mock://127.0.0.1:23232&wireFormat=openwire?"
             "username=" + username + "?password=" + password +
             "?client-id=" + clientId;
 
