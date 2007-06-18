@@ -17,6 +17,7 @@
 
 #include "MockTransportFactory.h"
 #include <activemq/connector/stomp/StompResponseBuilder.h>
+#include <activemq/connector/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/MockTransport.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
@@ -41,9 +42,12 @@ Transport* MockTransportFactory::createTransport(
 
     MockTransport::ResponseBuilder* builder = NULL;
 
-    if( wireFormat == "stomp" )
-    {
+    if( wireFormat == "stomp" ) {
         builder = new connector::stomp::StompResponseBuilder(
+            properties.getProperty(
+                "transport.sessionId", "testSessionId" ) );
+    } else if( wireFormat == "openwire" ) {
+        builder = new connector::openwire::OpenWireResponseBuilder(
             properties.getProperty(
                 "transport.sessionId", "testSessionId" ) );
     }
