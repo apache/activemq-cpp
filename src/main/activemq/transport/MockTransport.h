@@ -67,9 +67,7 @@ namespace transport{
             // unregisterConsumer whenever a Consumer is created and destroyed.
             ConsumersMap consumersMap;
 
-        public:
-
-            virtual ~ResponseBuilder(){}
+        protected:
 
             /**
              * Called by a derived class whenever a consumer is created
@@ -78,7 +76,6 @@ namespace transport{
              */
             void registerConsumer( const std::string& destination,
                                    long long consumerId ) {
-
                 consumersMap.insert( std::make_pair( destination, consumerId ) );
             }
 
@@ -87,8 +84,8 @@ namespace transport{
              * @param destination - String name of the Destination
              * @param consumerId - unique Id of the consumer.
              */
-            void removeConsumer( const std::string& destination,
-                                 long long consumerId ) {
+            void unregisterConsumer( const std::string& destination,
+                                     long long consumerId ) {
                 ConsumersMap::iterator iter =
                     consumersMap.lower_bound( destination );
 
@@ -100,13 +97,17 @@ namespace transport{
                 }
             }
 
+        public:
+
+            virtual ~ResponseBuilder(){}
+
             /**
              * Checks if the named Destination has any registered consumers
              * @param destination - Name of the Destination in question
              * @returns true if there are any consumers on this destination
              */
             bool hasConsumers( const std::string& destination ) const {
-                return consumersMap.lower_bound( destination ) != consumersMap.end();
+                return consumersMap.find( destination ) != consumersMap.end();
             }
 
             /**
@@ -158,6 +159,16 @@ namespace transport{
              */
             virtual Command* buildDisptachedMessage( const cms::Message* message,
                                                      long long consumerId ) = 0;
+
+            /**
+             * Called to allow the response builder to maintain the internal list
+             * of consumers by checking if the passed command is a register or
+             * unregister of a consumer and add or remove it from the internal map
+             * as needed.  If the passed command is not either of these actions
+             * the responseBuilder should do nothing.
+             * @param command - Transport Command to check for consumer add / remove
+             */
+            virtual void maintainConsumers( const Command* command ) = 0;
 
         };
 
@@ -218,11 +229,13 @@ namespace transport{
                     // chance to destroy the command.
                     responseBuilder->buildIncomingCommands( command, inboundQueue );
 
+                    // Allow the ResponseBuilder to add or remove consumers
+                    responseBuilder->maintainConsumers( command );
+
                     // Chech for message loop, outgoing messages get sent in to
                     // consumers on the destination they are sent to.
                     cms::Message* message = dynamic_cast<cms::Message*>( command );
                     if( message != NULL ) {
-
                         std::string destination =
                             message->getCMSDestination()->toProviderString();
 

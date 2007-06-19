@@ -36,6 +36,7 @@ namespace openwire{
         virtual transport::Command* buildDisptachedMessage(
             const cms::Message* message AMQCPP_UNUSED, long long consumerId AMQCPP_UNUSED )
         { return NULL; }
+        virtual void maintainConsumers( const transport::Command* command AMQCPP_UNUSED ) {}
 
     };
 

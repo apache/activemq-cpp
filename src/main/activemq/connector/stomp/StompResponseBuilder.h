@@ -34,8 +34,8 @@ namespace stomp{
         virtual void buildIncomingCommands(
             const transport::Command* cmd, util::Queue<transport::Command*>& queue );
         virtual transport::Command* buildDisptachedMessage(
-            const cms::Message* message AMQCPP_UNUSED, long long consumerId AMQCPP_UNUSED )
-        { return NULL; }
+            const cms::Message* message, long long consumerId );
+        virtual void maintainConsumers( const transport::Command* command );
 
     };
 
