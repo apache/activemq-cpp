@@ -33,6 +33,9 @@ namespace openwire{
         virtual transport::Response* buildResponse( const transport::Command* command );
         virtual void buildIncomingCommands(
             const transport::Command* command, util::Queue<transport::Command*>& queue );
+        virtual transport::Command* buildDisptachedMessage(
+            const cms::Message* message AMQCPP_UNUSED, long long consumerId AMQCPP_UNUSED )
+        { return NULL; }
 
     };
 
