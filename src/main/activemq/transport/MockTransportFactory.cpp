@@ -43,13 +43,9 @@ Transport* MockTransportFactory::createTransport(
     MockTransport::ResponseBuilder* builder = NULL;
 
     if( wireFormat == "stomp" ) {
-        builder = new connector::stomp::StompResponseBuilder(
-            properties.getProperty(
-                "transport.sessionId", "testSessionId" ) );
+        builder = new connector::stomp::StompResponseBuilder();
     } else if( wireFormat == "openwire" ) {
-        builder = new connector::openwire::OpenWireResponseBuilder(
-            properties.getProperty(
-                "transport.sessionId", "testSessionId" ) );
+        builder = new connector::openwire::OpenWireResponseBuilder();
     }
 
     return new MockTransport( builder, true );

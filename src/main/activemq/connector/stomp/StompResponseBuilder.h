@@ -25,17 +25,9 @@ namespace connector{
 namespace stomp{
 
     class StompResponseBuilder : public transport::MockTransport::ResponseBuilder{
-
-    private:
-
-        std::string sessionId;
-
     public:
 
-        StompResponseBuilder( const std::string& sessionId ){
-            this->sessionId = sessionId;
-        }
-
+        StompResponseBuilder(){}
         virtual ~StompResponseBuilder(){}
 
         virtual transport::Response* buildResponse( const transport::Command* cmd );

@@ -16,6 +16,7 @@
  */
 
 #include "StompConnectorTest.h"
+#include <activemq/transport/TransportFactoryMap.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompConnectorTest );
 
@@ -23,18 +24,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
+using namespace activemq::transport;
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testSessions()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
-    util::Properties properties;
-
-    // Using a pointer for the connector so we ensure the proper destruction
-    // order of objects - connector before the transport.
-    StompConnector* connector = new StompConnector( &transport, properties );
-
     connector->start();
 
     SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
@@ -57,23 +51,11 @@ void StompConnectorTest::testSessions()
     delete info2;
     delete info3;
     delete info4;
-
-    // Delete the connector here - this assures the propery order
-    // of destruction.
-    delete connector;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testConsumers()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
-    util::Properties properties;
-
-    // Using a pointer for the connector so we ensure the proper destruction
-    // order of objects - connector before the transport.
-    StompConnector* connector = new StompConnector( &transport, properties );
-
     connector->start();
 
     SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
@@ -121,23 +103,11 @@ void StompConnectorTest::testConsumers()
     delete info2;
     delete info3;
     delete info4;
-
-    // Delete the connector here - this assures the propery order
-    // of destruction.
-    delete connector;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testProducers()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
-    util::Properties properties;
-
-    // Using a pointer for the connector so we ensure the proper destruction
-    // order of objects - connector before the transport.
-    StompConnector* connector = new StompConnector( &transport, properties );
-
     connector->start();
 
     SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
@@ -173,23 +143,11 @@ void StompConnectorTest::testProducers()
     delete info2;
     delete info3;
     delete info4;
-
-    // Delete the connector here - this assures the propery order
-    // of destruction.
-    delete connector;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testCommand()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
-    util::Properties properties;
-
-    // Using a pointer for the connector so we ensure the proper destruction
-    // order of objects - connector before the transport.
-    StompConnector* connector = new StompConnector( &transport, properties );
-
     connector->start();
 
     StompTopic dest1( "dummy.topic" );
@@ -223,7 +181,7 @@ void StompConnectorTest::testCommand()
 
     commands::TextMessageCommand* msg =
         new commands::TextMessageCommand( frame ); // deleted by listener
-    transport.fireCommand( msg );
+    transport->fireCommand( msg );
 
     CPPUNIT_ASSERT( listener.consumers.size() == 2 );
     for( unsigned int ix=0; ix<listener.consumers.size(); ++ix ){
@@ -242,7 +200,7 @@ void StompConnectorTest::testCommand()
     frame->setBody( (unsigned char*)buffer, 12 );
 
     msg = new commands::TextMessageCommand( frame ); // deleted by listener
-    transport.fireCommand( msg );
+    transport->fireCommand( msg );
 
     CPPUNIT_ASSERT( listener.consumers.size() == 2 );
     for( unsigned int ix=0; ix<listener.consumers.size(); ++ix ){
@@ -259,26 +217,17 @@ void StompConnectorTest::testCommand()
     delete info2;
     delete info3;
     delete info4;
-
-    // Delete the connector here - this assures the propery order
-    // of destruction.
-    delete connector;
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testSendingCommands()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
-    util::Properties properties;
-    StompConnector* connector =
-        new StompConnector( &transport, properties );
     connector->start();
 
     StompTopic dest1( "dummy.topic.1" );
 
     MyCommandListener cmdListener;
-    transport.setOutgoingCommandListener( &cmdListener );
+    transport->setOutgoingCommandListener( &cmdListener );
 
     SessionInfo* info1 = connector->createSession( cms::Session::AUTO_ACKNOWLEDGE );
     ConsumerInfo* cinfo1 = connector->createConsumer( &dest1, info1, "" );
@@ -305,32 +254,59 @@ void StompConnectorTest::testSendingCommands()
     delete info1;
     delete info2;
 
-    delete connector;
     CPPUNIT_ASSERT( cmdListener.cmd != NULL );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testException()
 {
-    std::string connectionId = "testConnectionId";
-    StompResponseBuilder responseBuilder("testConnectionId");
-    transport::MockTransport transport( &responseBuilder );
     MyExceptionListener exListener;
-    util::Properties properties;
+
+    connector->setExceptionListener(&exListener);
+    connector->start();
+
+    // Initiate an exception from the transport->
+    transport->fireException(
+        exceptions::ActiveMQException(__FILE__, __LINE__, "test") );
+
+    CPPUNIT_ASSERT( exListener.num == 1 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void StompConnectorTest::setUp() {
+
+    this->connectionId = "testConnectionId";
+
+    activemq::util::Properties properties;
+
+    // Default to Stomp
+    properties.setProperty( "wireFormat", "stomp" );
+    properties.setProperty( "client-id", connectionId );
+
+    transport::TransportFactory* factory =
+        transport::TransportFactoryMap::getInstance().lookup( "mock" );
+    if( factory == NULL ){
+        CPPUNIT_ASSERT( false );
+    }
+
+    // Create the transport->
+    this->transport =
+        dynamic_cast<MockTransport*>( factory->createTransport( properties ) );
+    if( transport == NULL ){
+        CPPUNIT_ASSERT( false );
+    }
 
     // Using a pointer for the connector so we ensure the proper destruction
     // order of objects - connector before the transport.
-    StompConnector* connector = new StompConnector( &transport, properties );
+    this->connector = new StompConnector( transport, properties );
+}
 
-    connector->setExceptionListener(&exListener);
+////////////////////////////////////////////////////////////////////////////////
+void StompConnectorTest::tearDown() {
 
-    connector->start();
+    // Clear this before we go down so it doesn't notif an non-existant client.
+    transport->setOutgoingCommandListener( NULL );
 
-    // Initiate an exception from the transport.
-    transport.fireException( exceptions::ActiveMQException(__FILE__, __LINE__, "test") );
-
-    CPPUNIT_ASSERT( exListener.num == 1 );
-
-    // Delete the connector here - this assures the propery order
-    // of destruction.
     delete connector;
+    delete transport;
 }

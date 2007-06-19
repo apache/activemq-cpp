@@ -25,17 +25,9 @@ namespace connector{
 namespace openwire{
 
     class OpenWireResponseBuilder : public transport::MockTransport::ResponseBuilder{
-
-    private:
-
-        std::string sessionId;
-
     public:
 
-        OpenWireResponseBuilder( const std::string& sessionId ){
-            this->sessionId = sessionId;
-        }
-
+        OpenWireResponseBuilder(){}
         virtual ~OpenWireResponseBuilder(){}
 
         virtual transport::Response* buildResponse( const transport::Command* command );

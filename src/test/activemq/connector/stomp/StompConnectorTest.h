@@ -50,10 +50,19 @@ namespace stomp{
         CPPUNIT_TEST( testException );
         CPPUNIT_TEST_SUITE_END();
 
+    private:
+
+        StompConnector* connector;
+        transport::MockTransport* transport;
+        std::string connectionId;
+
     public:
 
         StompConnectorTest() {}
         virtual ~StompConnectorTest() {}
+
+        void setUp();
+        void tearDown();
 
         class MyExceptionListener : public cms::ExceptionListener{
             public:

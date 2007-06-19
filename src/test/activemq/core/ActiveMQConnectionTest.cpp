@@ -31,7 +31,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/util/Properties.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>

@@ -20,7 +20,10 @@
 #include <activemq/connector/stomp/commands/ConnectCommand.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
 
+#include <activemq/util/Guid.h>
+
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::transport;
@@ -51,7 +54,7 @@ void StompResponseBuilder::buildIncomingCommands(
         resp->setCorrelationId( connectCommand->getCommandId() );
 
         if( connectCommand->getClientId() == NULL ) {
-            resp->setSessionId( sessionId );
+            resp->setSessionId( Guid::createGUIDString() );
         } else {
             resp->setSessionId( connectCommand->getClientId() );
         }
