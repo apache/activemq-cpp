@@ -145,10 +145,10 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
     const std::string& name,
     const std::string& selector,
     bool noLocal )
-        throw ( StompConnectorException )
-{
-    try
-    {
+        throw ( StompConnectorException ) {
+
+    try {
+
         // Initialize a new Consumer info Message
         StompConsumerInfo* consumer = new StompConsumerInfo( connector );
 
@@ -167,44 +167,41 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::startConsumer(
-    connector::ConsumerInfo* consumer) throw ( StompConnectorException )
-{
-    try
-    {
+    connector::ConsumerInfo* consumer) throw ( StompConnectorException ) {
+
+    try {
+
         StompConsumerInfo* stompConsumer = dynamic_cast<StompConsumerInfo*>(consumer);
         if( stompConsumer == NULL ) {
             throw StompConnectorException(__FILE__, __LINE__,
                 "ConsumerInfo is not of type created by this connector" );
         }
-        
-        synchronized( &mutex )
-        {
+
+        synchronized( &mutex ) {
+
             const cms::Destination* destination = stompConsumer->getDestination();
-            
+
             // Find the right mapping to consumers
             ConsumerMap& consumerMap =
                 destinationMap[ destination->toProviderString() ];
 
             // We only need to send a sub request if there are no active
             // consumers on this destination.
-            if( consumerMap.empty() )
-            {
+            if( consumerMap.empty() ) {
+
                 // Send the request to the Broker
                 SubscribeCommand cmd;
 
-                if( stompConsumer->getSessionInfo()->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE )
-                {
+                if( stompConsumer->getSessionInfo()->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ) {
                     cmd.setAckMode( CommandConstants::ACK_CLIENT );
                 }
                 cmd.setDestination( destination->toProviderString() );
 
-                if( stompConsumer->getNoLocal() )
-                {
+                if( stompConsumer->getNoLocal() ) {
                     cmd.setNoLocal( stompConsumer->getNoLocal() );
                 }
 
-                if( stompConsumer->getName() != "" )
-                {
+                if( stompConsumer->getName() != "" ) {
                     cmd.setSubscriptionName( stompConsumer->getName() );
                 }
 
@@ -217,8 +214,7 @@ void StompSessionManager::startConsumer(
                 // that specifies a selector it will be ignored.  While
                 // this is not ideal, is the only way to handle the fact
                 // that activemq stomp doesn't support multiple sessions.
-                if( stompConsumer->getMessageSelector() != "" )
-                {
+                if( stompConsumer->getMessageSelector() != "" ) {
                     cmd.setMessageSelector( stompConsumer->getMessageSelector() );
                 }
 
@@ -244,17 +240,16 @@ void StompSessionManager::startConsumer(
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::removeConsumer(
     connector::ConsumerInfo* consumer )
-        throw( StompConnectorException )
-{
-    try
-    {
-        synchronized( &mutex )
-        {
+        throw( StompConnectorException ) {
+
+    try{
+
+        synchronized( &mutex ) {
+
             DestinationMap::iterator itr =
                 destinationMap.find( consumer->getDestination()->toProviderString() );
 
-            if( itr == destinationMap.end() )
-            {
+            if( itr == destinationMap.end() ) {
                 // Already removed from the map
                 return;
             }
@@ -265,8 +260,8 @@ void StompSessionManager::removeConsumer(
             consumers.erase( consumer->getConsumerId() );
 
             // If there are no more on this destination then we unsubscribe
-            if( consumers.empty() )
-            {
+            if( consumers.empty() ) {
+
                 UnsubscribeCommand cmd;
 
                 cmd.setDestination(
@@ -293,30 +288,27 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
 {
     try
     {
-        cms::Message* message = dynamic_cast< cms::Message*>( command );
+        cms::Message* message = dynamic_cast<cms::Message*>( command );
 
-        if( message == NULL )
-        {
+        if( message == NULL ) {
             throw StompConnectorException(
                 __FILE__, __LINE__,
                 "StompSessionManager::onStompCommand - Invalid Command" );
         }
 
-        if( messageListener == NULL )
-        {
+        if( messageListener == NULL ) {
             throw StompConnectorException(
                 __FILE__, __LINE__,
                 "StompSessionManager::onStompCommand - "
                 "No Message Listener Registered." );
         }
 
-        synchronized( &mutex )
-        {
+        synchronized( &mutex ) {
+
             DestinationMap::iterator itr =
                 destinationMap.find( message->getCMSDestination()->toProviderString() );
 
-            if( itr == destinationMap.end() )
-            {
+            if( itr == destinationMap.end() ) {
                 throw StompConnectorException(
                     __FILE__, __LINE__,
                     "StompSessionManager::onStompCommand - "
@@ -325,8 +317,8 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
 
             // If we only have 1 consumer, we don't need to clone the original
             // message.
-            if( itr->second.size() == 1 )
-            {
+            if( itr->second.size() == 1 ) {
+
                 ConsumerInfo* consumerInfo = itr->second.begin()->second;
 
                 if( StompSelector::isSelected(
@@ -334,7 +326,7 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
                         message ) )
                 {
                     ActiveMQMessage* msg =
-                        dynamic_cast< ActiveMQMessage* >( message );
+                        dynamic_cast<ActiveMQMessage*>( message );
                     messageListener->onConsumerMessage( consumerInfo, msg );
                 }
 
@@ -346,16 +338,16 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
             // message.
             ConsumerMap::iterator c_itr = itr->second.begin();
 
-            for( ; c_itr != itr->second.end(); ++c_itr )
-            {
+            for( ; c_itr != itr->second.end(); ++c_itr ) {
+
                 ConsumerInfo* consumerInfo = c_itr->second;
 
                 if( StompSelector::isSelected(
                         consumerInfo->getMessageSelector(),
-                        message ) )
-                {
+                        message ) ) {
+
                     ActiveMQMessage* msg =
-                        dynamic_cast< ActiveMQMessage* >( message->clone() );
+                        dynamic_cast<ActiveMQMessage*>( message->clone() );
                     messageListener->onConsumerMessage( consumerInfo, msg );
                 }
             }
@@ -370,6 +362,7 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
+////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
                                                SubscribeCommand& command )
     throw ( StompConnectorException )
