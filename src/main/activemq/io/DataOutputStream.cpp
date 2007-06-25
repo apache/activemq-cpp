@@ -16,12 +16,10 @@
  */
 
 #include "DataOutputStream.h"
-#include <activemq/util/Endian.h>
 #include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::io;
-using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataOutputStream::DataOutputStream( OutputStream* outputStream, bool own )

@@ -16,12 +16,10 @@
  */
 
 #include <activemq/io/DataInputStream.h>
-#include <activemq/util/Endian.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::io;
-using namespace activemq::util;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
