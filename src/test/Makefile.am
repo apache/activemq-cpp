@@ -82,6 +82,7 @@ cc_sources = \
   activemq/transport/TransportFactoryMapTest.cpp \
   activemq/util/BooleanTest.cpp \
   activemq/util/DateTest.cpp \
+  activemq/util/Endian.cpp \
   activemq/util/GuidTest.cpp \
   activemq/util/IntegerTest.cpp \
   activemq/util/LongTest.cpp \

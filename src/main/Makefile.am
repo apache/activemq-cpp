@@ -94,7 +94,6 @@ cc_sources = \
     activemq/transport/filters/LoggingTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \
     activemq/util/Guid.cpp \
-    activemq/util/Endian.cpp \
     activemq/util/Date.cpp \
     activemq/util/Math.cpp \
     activemq/util/Random.cpp \
@@ -276,7 +275,6 @@ h_sources = \
     activemq/transport/filters/TcpTransportFactory.h \
     activemq/transport/filters/LoggingTransport.h \
     activemq/transport/filters/LoggingTransportFactory.h \
-    activemq/util/Endian.h \
     activemq/util/Number.h \
     activemq/util/Config.h \
     activemq/util/Character.h \
