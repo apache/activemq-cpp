@@ -33,9 +33,6 @@ namespace stomp{
         virtual transport::Response* buildResponse( const transport::Command* cmd );
         virtual void buildIncomingCommands(
             const transport::Command* cmd, util::Queue<transport::Command*>& queue );
-        virtual transport::Command* buildDisptachedMessage(
-            const cms::Message* message, long long consumerId );
-        virtual void maintainConsumers( const transport::Command* command );
 
     };
 

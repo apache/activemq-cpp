@@ -64,33 +64,3 @@ void StompResponseBuilder::buildIncomingCommands(
         queue.push( resp );
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-transport::Command* StompResponseBuilder::buildDisptachedMessage(
-    const cms::Message* message, long long consumerId AMQCPP_UNUSED )
-{
-    // Just clone and return, stomp only looks at destinations, so it will
-    // find its consumers based on that.
-    return dynamic_cast<transport::Command*>( message->clone() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void StompResponseBuilder::maintainConsumers( const transport::Command* command ) {
-
-    if( typeid( *command ) == typeid( commands::SubscribeCommand ) ) {
-        const commands::SubscribeCommand* sub =
-            dynamic_cast<const commands::SubscribeCommand*>( command );
-
-        // Register it, just use -1 for Id as Stomp doesn't do anything that uses
-        // consumer Ids.
-        this->registerConsumer( sub->getDestination(), -1 );
-    }
-    else if( typeid( *command ) == typeid( commands::UnsubscribeCommand ) ) {
-        const commands::UnsubscribeCommand* unsub =
-            dynamic_cast<const commands::UnsubscribeCommand*>( command );
-
-        // Register it, just use -1 for Id as Stomp doesn't do anything that uses
-        // consumer Ids.
-        this->unregisterConsumer( unsub->getDestination(), -1 );
-    }
-}

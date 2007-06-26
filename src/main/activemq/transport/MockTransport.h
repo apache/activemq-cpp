@@ -58,77 +58,9 @@ namespace transport{
          * of the Broker in response to messages of that protocol.
          */
         class ResponseBuilder{
-        private:
-
-            typedef std::multimap< std::string, long long > ConsumersMap;
-
-            // Map of destination names to consumer Ids, this should be filled in
-            // by the implemented ResponseBuilder by calling registerConsumer and
-            // unregisterConsumer whenever a Consumer is created and destroyed.
-            ConsumersMap consumersMap;
-
-        protected:
-
-            /**
-             * Called by a derived class whenever a consumer is created
-             * @param destination - String name of Destination
-             * @param consumerId - unique Id of the consumer.
-             */
-            void registerConsumer( const std::string& destination,
-                                   long long consumerId ) {
-                consumersMap.insert(
-                    std::pair<std::string, long long>( destination, consumerId ) );
-            }
-
-            /**
-             * Called by a dervied class when a consumer is unsubscribed.
-             * @param destination - String name of the Destination
-             * @param consumerId - unique Id of the consumer.
-             */
-            void unregisterConsumer( const std::string& destination,
-                                     long long consumerId ) {
-                ConsumersMap::iterator iter =
-                    consumersMap.lower_bound( destination );
-
-                for( ; iter != consumersMap.upper_bound( destination ); ++iter ){
-                    if( iter-> second == consumerId ) {
-                        consumersMap.erase( iter );
-                        return;
-                    }
-                }
-            }
-
         public:
 
             virtual ~ResponseBuilder(){}
-
-            /**
-             * Checks if the named Destination has any registered consumers
-             * @param destination - Name of the Destination in question
-             * @returns true if there are any consumers on this destination
-             */
-            bool hasConsumers( const std::string& destination ) const {
-                return consumersMap.find( destination ) != consumersMap.end();
-            }
-
-            /**
-             * Gets the Set of consumer ids that are registered for the passed in
-             * destination name.
-             * @param destination - String name of the Destination
-             * @returns set of Consumer Ids listening on this destination
-             */
-            std::set<long long> getConsumers( const std::string& destination ) const {
-
-                std::set<long long> consumerIds;
-                ConsumersMap::const_iterator iter =
-                    consumersMap.lower_bound( destination );
-
-                for( ; iter != consumersMap.upper_bound( destination ); ++iter ){
-                    consumerIds.insert( iter->second );
-                }
-
-                return consumerIds;
-            }
 
             /**
              * Given a Command, check if it requires a response and return the
@@ -147,29 +79,6 @@ namespace transport{
              */
             virtual void buildIncomingCommands(
                 const Command* cmd, util::Queue<Command*>& queue ) = 0;
-
-            /**
-             * When called the ResponseBuilder must return a Command Object that
-             * corresponed to an incomming cms::Message sent to the Consumer
-             * specified by consumerId.  This new message should be a new instance
-             * on the passed message created with all the data necessary to route
-             * the message to the consumer.
-             * @param cms::Message - the Message to create the dispatched version from
-             * @param consumerId - the Id of the Consumer that is to reveice the message
-             * @returns new Command object that will be routed back into the transport.
-             */
-            virtual Command* buildDisptachedMessage( const cms::Message* message,
-                                                     long long consumerId ) = 0;
-
-            /**
-             * Called to allow the response builder to maintain the internal list
-             * of consumers by checking if the passed command is a register or
-             * unregister of a consumer and add or remove it from the internal map
-             * as needed.  If the passed command is not either of these actions
-             * the responseBuilder should do nothing.
-             * @param command - Transport Command to check for consumer add / remove
-             */
-            virtual void maintainConsumers( const Command* command ) = 0;
 
         };
 
@@ -229,34 +138,6 @@ namespace transport{
                     // Create a response now before the caller has a
                     // chance to destroy the command.
                     responseBuilder->buildIncomingCommands( command, inboundQueue );
-
-                    // Allow the ResponseBuilder to add or remove consumers
-                    responseBuilder->maintainConsumers( command );
-
-                    // Chech for message loop, outgoing messages get sent in to
-                    // consumers on the destination they are sent to.
-                    cms::Message* message = dynamic_cast<cms::Message*>( command );
-                    if( message != NULL ) {
-                        std::string destination =
-                            message->getCMSDestination()->toProviderString();
-
-                        if( responseBuilder->hasConsumers( destination ) ) {
-
-                            std::set<long long> consumers =
-                                responseBuilder->getConsumers( destination );
-                            std::set<long long>::const_iterator iter = consumers.begin();
-
-                            for(; iter != consumers.end(); ++iter ) {
-                                Command* dispatch =
-                                    responseBuilder->buildDisptachedMessage(
-                                        message, *iter );
-
-                                if( dispatch != NULL ) {
-                                    inboundQueue.push( dispatch );
-                                }
-                            }
-                        }
-                    }
 
                     // Wake up the thread, messages are dispatched from there.
                     inboundQueue.notifyAll();
