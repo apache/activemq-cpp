@@ -52,9 +52,10 @@ AC_CANONICAL_HOST
 
 AC_PROG_CC
 AC_PROG_CXX
-## Uncomment to use libtool for shared libs
-## AC_PROG_LIBTOOL
-AC_PROG_RANLIB
+AC_LIBTOOL_WIN32_DLL
+AC_PROG_LIBTOOL
+AC_SUBST([LIBTOOL_DEPS])
+
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
@@ -71,7 +72,6 @@ AC_CHECK_SIZEOF(float, 4)
 AC_CHECK_SIZEOF(double, 8)
 
 AC_CHECK_HEADERS([uuid.h uuid/uuid.h], [AC_DEFINE([HAVE_UUID_T], [1], [Define if uuid_t exists.])])
-# AC_CHECK_HEADERS([uuid/uuid.h])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
 AC_CHECK_HEADERS([sys/filio.h])
@@ -86,28 +86,26 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
-CXXFLAGS="$CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-LIBS="$LIBS"
+PLAT_CXXFLAGS=
+PLAT_LIBS=
 
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    CXXFLAGS="-ansi -pedantic $CXXFLAGS"
-    LIBS="$LIBS"
+    PLAT_CXXFLAGS="-ansi -pedantic"
     ;;
 
   *cygwin* ) ## Cygwin configuration
-    # LIBS="-lwinmm -lm";
-    CXXFLAGS="$CXXFLAGS -Wno-uninitialized"
-    LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
+    PLAT_CXXFLAGS="-Wno-uninitialized"
+    PLAT_LIBS="-lm -lpthread -luuid -lrpcrt4"
     ;;
 
   *solaris* ) ## Solaris configuration
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
-    LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
+    PLAT_CXXFLAGS="-ansi -pedantic"
+    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
     ;;
 
   *) ## Unix configuration
@@ -115,9 +113,12 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
-    LIBS="$LIBS -lm -lpthread -luuid"
+    PLAT_CXXFLAGS="-ansi -pedantic"
+    PLAT_LIBS="-lm -lpthread -luuid"
 esac
+
+CXXFLAGS="$CXXFLAGS $PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+LIBS="$LIBS $PLAT_LIBS"
 
 ##
 ## Not all platforms define addrinfo and related functions
@@ -155,7 +156,6 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
-
 
 ## -----------------------------------------------------
 ## configuration
