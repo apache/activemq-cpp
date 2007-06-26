@@ -76,7 +76,8 @@ namespace transport{
              */
             void registerConsumer( const std::string& destination,
                                    long long consumerId ) {
-                consumersMap.insert( std::make_pair( destination, consumerId ) );
+                consumersMap.insert(
+                    std::pair<std::string, long long>( destination, consumerId ) );
             }
 
             /**
