@@ -59,6 +59,11 @@ AC_SUBST([LIBTOOL_DEPS])
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
+AC_FUNC_MEMCMP
+AC_FUNC_VPRINTF
+AC_HEADER_STDC
+AC_C_CONST
+AC_TYPE_SIZE_T
 AC_C_BIGENDIAN
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(int)
@@ -119,6 +124,31 @@ esac
 
 CXXFLAGS="$CXXFLAGS $PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 LIBS="$LIBS $PLAT_LIBS"
+
+AC_DEFUN([AMQCPP_CHECK_VISIBILITY], [
+    AC_MSG_CHECKING([whether -fvisibility flags work])
+    OLDCXXFLAGS="$CXXFLAGS"
+    CXXFLAGS="$CXXFLAGS -Werror -fvisibility=hidden -fvisibility-inlines-hidden"
+
+    AC_TRY_COMPILE([],
+      [
+         int i = 0;
+         do {
+            i++
+         } while(0)
+      ],
+      [
+        AC_MSG_RESULT(yes)
+        AC_DEFINE([HAVE_VISIBILITY_OPTIONS],[], [define if you have -fvisibility options])
+      ],
+      [
+        AC_MSG_RESULT(no)
+      ])
+
+    CXXFLAGS="$OLDCXXFLAGS"
+])
+
+AMQCPP_CHECK_VISIBILITY
 
 ##
 ## Not all platforms define addrinfo and related functions
