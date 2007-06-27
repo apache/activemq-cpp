@@ -124,8 +124,13 @@ unsigned char DataInputStream::readUnsignedByte()
 ////////////////////////////////////////////////////////////////////////////////
 char DataInputStream::readChar() throw ( IOException, EOFException ) {
     try {
-        char value = 0;
-        this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
+        unsigned char value = 0;
+        if( inputStream->read( &value, sizeof( char ) ) < (size_t)sizeof( char ) ) {
+            throw EOFException(
+                __FILE__, __LINE__,
+                "DataInputStream::readChar - Reached EOF" );
+        }
+
         return (char)( value );
     }
     DECAF_CATCH_RETHROW( EOFException )

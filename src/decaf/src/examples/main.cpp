@@ -68,8 +68,10 @@ int main(int argc DECAF_UNUSED, char* argv[] DECAF_UNUSED) {
 
         startTime = Date::getCurrentTimeMilliseconds();
 
-        // Time a large read
-        std::string result = dis.readString();
+        char result = 0;
+        for( int iy = 0; iy < bufferSize; ++iy ){
+            result = dis.readChar();
+        }
 
         endTime = Date::getCurrentTimeMilliseconds();
 
