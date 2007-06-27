@@ -249,22 +249,31 @@ std::string DataInputStream::readString()
     throw ( io::IOException, io::EOFException ) {
     try {
 
-        std::string retVal;
-        char temp = 0;
+        size_t size = 1024;
+        std::vector<char> buffer;
+        buffer.resize( size );
+        size_t pos = 0;
 
-        while( true ){
-            temp = readChar();
+        while( true ) {
 
-            // if null is found we are done.
-            if( temp == '\0' ){
+            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 1 ) == (size_t)-1 ) {
+                throw EOFException(
+                    __FILE__, __LINE__,
+                    "DataInputStream::readString - Reached EOF" );
+            }
+
+            // if null is found we are done
+            if( buffer[pos] == '\0' ){
                 break;
             }
 
-            // Append no matter what
-            retVal += temp;
+            // Resize to hold more if we exceed current size
+            if( ++pos > size ) {
+                buffer.resize( (size *= 2) );
+            }
         }
 
-        return retVal;
+        return &buffer[0];
     }
     AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
