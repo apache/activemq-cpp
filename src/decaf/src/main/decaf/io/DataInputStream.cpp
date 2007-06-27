@@ -73,6 +73,7 @@ std::size_t DataInputStream::read( unsigned char* buffer,
 
         return read;
     }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -87,6 +88,7 @@ bool DataInputStream::readBoolean()
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value != 0 );
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -100,6 +102,7 @@ char DataInputStream::readByte()
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -113,6 +116,7 @@ unsigned char DataInputStream::readUnsignedByte()
         this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned char ) );
         return (char)( value );
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -124,6 +128,7 @@ char DataInputStream::readChar() throw ( IOException, EOFException ) {
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -140,6 +145,7 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -158,6 +164,7 @@ unsigned short DataInputStream::readUnsignedShort()
 
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -177,6 +184,7 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -190,6 +198,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
         memcpy( &value, &lvalue, sizeof( unsigned long long ) );
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -203,6 +212,7 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
         memcpy( &value, &lvalue, sizeof( unsigned int ) );
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -228,6 +238,7 @@ long long DataInputStream::readLong()
 
         return value;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -236,23 +247,34 @@ long long DataInputStream::readLong()
 std::string DataInputStream::readString()
     throw ( io::IOException, io::EOFException ) {
     try {
-        std::string retVal;
-        char temp = 0;
 
-        while( true ){
-            temp = readChar();
+        size_t size = 1024;
+        std::vector<char> buffer;
+        buffer.resize( size );
+        size_t pos = 0;
 
-            // if null is found we are done.
-            if( temp == '\0' ){
+        while( true ) {
+
+            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 1 ) == (size_t)-1 ) {
+                throw EOFException(
+                    __FILE__, __LINE__,
+                    "DataInputStream::readString - Reached EOF" );
+            }
+
+            // if null is found we are done
+            if( buffer[pos] == '\0' ){
                 break;
             }
 
-            // Append no matter what
-            retVal += temp;
+            // Resize to hold more if we exceed current size
+            if( ++pos > size ) {
+                buffer.resize( (size *= 2) );
+            }
         }
 
-        return retVal;
+        return &buffer[0];
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -267,6 +289,7 @@ std::string DataInputStream::readUTF()
         readFully( (unsigned char*)buffer.c_str(), 0, len );
         return buffer;
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -277,6 +300,7 @@ void DataInputStream::readFully( std::vector< unsigned char >& buffer )
     try {
         this->readFully( &buffer[0], 0, buffer.size() );
     }
+    DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
@@ -309,6 +333,7 @@ void DataInputStream::readFully( unsigned char* buffer,
             n += count;
         }
     }
+    DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -328,6 +353,7 @@ std::size_t DataInputStream::skip( std::size_t num )
 
         return total;
     }
+    DECAF_CATCH_RETHROW( UnsupportedOperationException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
 }
