@@ -68,9 +68,9 @@ int main(int argc DECAF_UNUSED, char* argv[] DECAF_UNUSED) {
 
         startTime = Date::getCurrentTimeMilliseconds();
 
-        char result = 0;
-        for( int iy = 0; iy < bufferSize; ++iy ){
-            result = dis.readChar();
+        long long result = 0;
+        for( int iy = 0; iy < bufferSize / sizeof( result ); ++iy ){
+            result = dis.readLong();
         }
 
         endTime = Date::getCurrentTimeMilliseconds();

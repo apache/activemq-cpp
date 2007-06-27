@@ -347,6 +347,17 @@ namespace io{
             throw( io::IOException,
                    lang::exceptions::UnsupportedOperationException );
 
+    private:
+
+        // Used internally to reliable get data from the underlying stream
+        inline void readAllData( unsigned char* buffer,
+                          std::size_t offset,
+                          std::size_t length )
+            throw ( io::IOException,
+                    io::EOFException,
+                    lang::exceptions::IndexOutOfBoundsException,
+                    lang::exceptions::NullPointerException );
+
     };
 
 }}
