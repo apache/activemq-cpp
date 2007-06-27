@@ -23,6 +23,8 @@
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/Config.h>
 #include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 #include <decaf/util/Date.h>
 
 #include <stdlib.h>
@@ -39,25 +41,35 @@ int main(int argc DECAF_UNUSED, char* argv[] DECAF_UNUSED) {
     std::cout << "=====================================================\n";
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
+    std::cout << "Testing performance of the DataInputStream:" << std::endl;
+    std::cout << "-----------------------------------------------------\n";
 
     const int bufferSize = 1024 * 2000;
     const int totalRuns = 100;
 
-    const unsigned char* buffer = new unsigned char[bufferSize];
-    unsigned char* recvBuffer = new unsigned char[bufferSize];
+    unsigned char* buffer = new unsigned char[bufferSize];
+
+    // init to full String Buffer
+    for( int ix = 0; ix < bufferSize - 1; ++ix ) {
+        buffer[ix] = 'z';
+    }
+    buffer[bufferSize-1] = '\0';
+
     long long startTime = 0LL;
     long long endTime = 0LL;
     long long totalDelta = 0LL;
     long long average = 0LL;
-
-    ByteArrayInputStream bis( buffer, bufferSize );
     std::vector<long long> deltaTs;
 
+    ByteArrayInputStream bis( buffer, bufferSize );
+    DataInputStream dis( &bis );
+
     for( int i = 0; i < totalRuns; ++i ) {
+
         startTime = Date::getCurrentTimeMilliseconds();
 
         // Time a large read
-        bis.read( recvBuffer, bufferSize );
+        std::string result = dis.readString();
 
         endTime = Date::getCurrentTimeMilliseconds();
 
@@ -78,7 +90,6 @@ int main(int argc DECAF_UNUSED, char* argv[] DECAF_UNUSED) {
               << average << " Milliseconds." << std::endl;
 
     delete [] buffer;
-    delete [] recvBuffer;
 
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example\n";
