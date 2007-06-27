@@ -72,6 +72,7 @@ std::size_t DataInputStream::read( unsigned char* buffer,
 
         return read;
     }
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
     AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
@@ -86,6 +87,7 @@ bool DataInputStream::readBoolean()
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value != 0 );
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -99,6 +101,7 @@ char DataInputStream::readByte()
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -112,6 +115,7 @@ unsigned char DataInputStream::readUnsignedByte()
         this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned char ) );
         return (char)( value );
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -124,6 +128,7 @@ char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
         this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
         return (char)( value );
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -141,6 +146,7 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -159,6 +165,7 @@ unsigned short DataInputStream::readUnsignedShort()
 
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -178,6 +185,7 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -191,6 +199,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
         memcpy( &value, &lvalue, sizeof( unsigned long long ) );
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -204,6 +213,7 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
         memcpy( &value, &lvalue, sizeof( unsigned int ) );
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -229,6 +239,7 @@ long long DataInputStream::readLong()
 
         return value;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -255,6 +266,7 @@ std::string DataInputStream::readString()
 
         return retVal;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -270,6 +282,7 @@ std::string DataInputStream::readUTF()
         readFully( (unsigned char*)buffer.c_str(), 0, len );
         return buffer;
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -280,6 +293,7 @@ void DataInputStream::readFully( std::vector<unsigned char>& buffer )
     try {
         this->readFully( &buffer[0], 0, buffer.size() );
     }
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -312,7 +326,9 @@ void DataInputStream::readFully( unsigned char* buffer,
             n += count;
         }
     }
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
     AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
@@ -332,6 +348,7 @@ std::size_t DataInputStream::skip( std::size_t num )
 
         return total;
     }
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
