@@ -85,10 +85,7 @@ bool DataInputStream::readBoolean()
 
     try {
         unsigned char value = 0;
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( &value, sizeof(value) );
-
         return (bool)( value != 0 );
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -102,10 +99,7 @@ char DataInputStream::readByte()
 
     try {
         unsigned char value = 0;
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( &value, sizeof(value) );
-
         return (char)( value );
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -119,10 +113,7 @@ unsigned char DataInputStream::readUnsignedByte()
 
     try {
         unsigned char value = 0;
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( &value, sizeof(value) );
-
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -134,10 +125,7 @@ unsigned char DataInputStream::readUnsignedByte()
 char DataInputStream::readChar() throw ( IOException, EOFException ) {
     try {
         unsigned char value = 0;
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( &value, sizeof(value) );
-
         return (char)( value );
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -150,12 +138,8 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
     try {
         short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( buffer, sizeof(value) );
-
         value |= (buffer[0] << 8 | buffer[1] << 0);
-
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -167,15 +151,10 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 unsigned short DataInputStream::readUnsignedShort()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( buffer, sizeof(value) );
-
         value |= (buffer[0] << 8 | buffer[1] << 0);
-
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -186,16 +165,11 @@ unsigned short DataInputStream::readUnsignedShort()
 ////////////////////////////////////////////////////////////////////////////////
 int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned int value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( buffer, sizeof(value) );
-
         value |= (buffer[0] << 24 | buffer[1] << 16 |
                   buffer[2] << 8 | buffer[3] << 0);
-
         return value;
     }
     DECAF_CATCH_RETHROW( EOFException )
@@ -206,7 +180,6 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 ////////////////////////////////////////////////////////////////////////////////
 double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned long long lvalue = this->readLong();
         double value = 0.0;
         memcpy( &value, &lvalue, sizeof( unsigned long long ) );
@@ -220,7 +193,6 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 ////////////////////////////////////////////////////////////////////////////////
 float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned int lvalue = this->readInt();
         float value = 0.0f;
         memcpy( &value, &lvalue, sizeof( unsigned int ) );
@@ -235,11 +207,8 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 long long DataInputStream::readLong()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned long long value = 0;
         unsigned char buffer[sizeof(value)] = {0};
-
-        // Get the data in one shot, will throw EOF or IO Exception as needed.
         readAllData( buffer, sizeof(value) );
 
         // Have to do it this way because on Solaris and Cygwin we get all
@@ -267,7 +236,6 @@ long long DataInputStream::readLong()
 std::string DataInputStream::readString()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         size_t size = 1024;
         std::vector<char> buffer;
         buffer.resize( size );
