@@ -40,6 +40,8 @@ namespace io{
 
         CPPUNIT_TEST_SUITE( DataInputStreamTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testString );
+        CPPUNIT_TEST( testUTF );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -49,6 +51,8 @@ namespace io{
         virtual void tearDown(){}
 
         void test();
+        void testString();
+        void testUTF();
 
     };
 

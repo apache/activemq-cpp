@@ -17,7 +17,7 @@
 
 #include "SocketTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 
 #include <decaf/net/TcpSocket.h>
 

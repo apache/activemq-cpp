@@ -109,3 +109,79 @@ void DataInputStreamTest::test(){
     //std::cout << "char[2] Value = " << (int)arrayVal[2] << std::endl;
     CPPUNIT_ASSERT( arrayVal[2] == 'c' );
 }
+
+void DataInputStreamTest::testString() {
+
+    std::string data1 = "This is a Test";
+    std::string data2 = "of the readString method";
+    std::string data3 = "This one should fail";
+
+    std::vector<unsigned char> buffer;
+
+    buffer.insert( buffer.begin(), data1.begin(), data1.end() );
+    buffer.push_back( '\0' );
+    buffer.insert( buffer.end(), data2.begin(), data2.end() );
+    buffer.push_back( '\0' );
+    buffer.insert( buffer.end(), data3.begin(), data3.end() );
+
+    // Create the stream with the buffer we just wrote to.
+    ByteArrayInputStream myStream( buffer );
+    DataInputStream reader( &myStream );
+
+    std::string result1 = reader.readString();
+    std::string result2 = reader.readString();
+
+    CPPUNIT_ASSERT( result1 == data1 );
+    CPPUNIT_ASSERT( result2 == data2 );
+
+    try{
+        std::string result3 = reader.readString();
+        CPPUNIT_ASSERT( false );
+    } catch(...){
+        CPPUNIT_ASSERT( true );
+    }
+}
+
+void DataInputStreamTest::testUTF() {
+
+    std::string data1 = "This is a Test";
+    std::string data2 = "of the readString method";
+    std::string data3 = "This one should fail";
+
+    char sizeData[sizeof(short)] = {0};
+    short tempShort = 0;
+
+    std::vector<unsigned char> buffer;
+
+    tempShort = util::Endian::byteSwap( ((unsigned short)data1.size()) );
+    memcpy( sizeData, (char*)&tempShort, sizeof( short ) );
+    buffer.insert( buffer.end(), sizeData, sizeData + sizeof(short) );
+    buffer.insert( buffer.end(), data1.begin(), data1.end() );
+
+    tempShort = util::Endian::byteSwap( ((unsigned short)data2.size()) );
+    memcpy( sizeData, (char*)&tempShort, sizeof( short ) );
+    buffer.insert( buffer.end(), sizeData, sizeData + sizeof(short) );
+    buffer.insert( buffer.end(), data2.begin(), data2.end() );
+
+    tempShort = util::Endian::byteSwap( (unsigned short)(data3.size() + 10 ) );
+    memcpy( sizeData, (char*)&tempShort, sizeof( short ) );
+    buffer.insert( buffer.end(), sizeData, sizeData + sizeof(short) );
+    buffer.insert( buffer.end(), data3.begin(), data3.end() );
+
+    // Create the stream with the buffer we just wrote to.
+    ByteArrayInputStream myStream( buffer );
+    DataInputStream reader( &myStream );
+
+    std::string result1 = reader.readUTF();
+    std::string result2 = reader.readUTF();
+
+    CPPUNIT_ASSERT( result1 == data1 );
+    CPPUNIT_ASSERT( result2 == data2 );
+
+    try{
+        std::string result3 = reader.readUTF();
+        CPPUNIT_ASSERT( false );
+    } catch(...){
+        CPPUNIT_ASSERT( true );
+    }
+}
