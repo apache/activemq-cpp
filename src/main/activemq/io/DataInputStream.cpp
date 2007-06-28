@@ -82,10 +82,9 @@ std::size_t DataInputStream::read( unsigned char* buffer,
 bool DataInputStream::readBoolean()
     throw( io::IOException, io::EOFException ) {
     try {
-
-        char value = 0;
-        this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
-        return (char)( value != 0 );
+        unsigned char value = 0;
+        readAllData( &value, sizeof(value) );
+        return (bool)( value != 0 );
     }
     AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
@@ -96,9 +95,8 @@ bool DataInputStream::readBoolean()
 char DataInputStream::readByte()
     throw ( io::IOException, io::EOFException ) {
     try {
-
-        char value = 0;
-        this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
+        unsigned char value = 0;
+        readAllData( &value, sizeof(value) );
         return (char)( value );
     }
     AMQ_CATCH_RETHROW( EOFException )
@@ -110,10 +108,9 @@ char DataInputStream::readByte()
 unsigned char DataInputStream::readUnsignedByte()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned char value = 0;
-        this->readFully( ( unsigned char* )&value, 0, sizeof( unsigned char ) );
-        return (char)( value );
+        readAllData( &value, sizeof(value) );
+        return value;
     }
     AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
@@ -123,9 +120,8 @@ unsigned char DataInputStream::readUnsignedByte()
 ////////////////////////////////////////////////////////////////////////////////
 char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
     try {
-
-        char value = 0;
-        this->readFully( ( unsigned char* )&value, 0, sizeof( char ) );
+        unsigned char value = 0;
+        readAllData( &value, sizeof(value) );
         return (char)( value );
     }
     AMQ_CATCH_RETHROW( EOFException )
@@ -136,14 +132,10 @@ char DataInputStream::readChar() throw ( io::IOException, io::EOFException ) {
 ////////////////////////////////////////////////////////////////////////////////
 short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
     try {
-
-        unsigned short value = 0;
-
-        unsigned char byte1 = this->readByte();
-        unsigned char byte2 = this->readByte();
-
-        value |= (byte1 << 8 | byte2 << 0);
-
+        short value = 0;
+        unsigned char buffer[sizeof(value)] = {0};
+        readAllData( buffer, sizeof(value) );
+        value |= (buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     AMQ_CATCH_RETHROW( EOFException )
@@ -155,14 +147,10 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 unsigned short DataInputStream::readUnsignedShort()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned short value = 0;
-
-        unsigned char byte1 = this->readByte();
-        unsigned char byte2 = this->readByte();
-
-        value |= (byte1 << 8 | byte2 << 0);
-
+        unsigned char buffer[sizeof(value)] = {0};
+        readAllData( buffer, sizeof(value) );
+        value |= (buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
     AMQ_CATCH_RETHROW( EOFException )
@@ -173,16 +161,11 @@ unsigned short DataInputStream::readUnsignedShort()
 ////////////////////////////////////////////////////////////////////////////////
 int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned int value = 0;
-
-        unsigned char byte1 = this->readByte();
-        unsigned char byte2 = this->readByte();
-        unsigned char byte3 = this->readByte();
-        unsigned char byte4 = this->readByte();
-
-        value |= (byte1 << 24 | byte2 << 16 | byte3 << 8 | byte4 << 0);
-
+        unsigned char buffer[sizeof(value)] = {0};
+        readAllData( buffer, sizeof(value) );
+        value |= (buffer[0] << 24 | buffer[1] << 16 |
+                  buffer[2] << 8 | buffer[3] << 0);
         return value;
     }
     AMQ_CATCH_RETHROW( EOFException )
@@ -193,7 +176,6 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 ////////////////////////////////////////////////////////////////////////////////
 double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned long long lvalue = this->readLong();
         double value = 0.0;
         memcpy( &value, &lvalue, sizeof( unsigned long long ) );
@@ -207,7 +189,6 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 ////////////////////////////////////////////////////////////////////////////////
 float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned int lvalue = this->readInt();
         float value = 0.0f;
         memcpy( &value, &lvalue, sizeof( unsigned int ) );
@@ -222,17 +203,20 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 long long DataInputStream::readLong()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         unsigned long long value = 0;
+        unsigned char buffer[sizeof(value)] = {0};
+        readAllData( buffer, sizeof(value) );
 
-        unsigned long long byte1 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte2 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte3 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte4 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte5 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte6 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte7 = this->readByte() & 0x00000000000000FFULL;
-        unsigned long long byte8 = this->readByte() & 0x00000000000000FFULL;
+        // Have to do it this way because on Solaris and Cygwin we get all
+        // kinds of warnings when shifting a byte up into a long long.
+        unsigned long long byte1 = buffer[0] & 0x00000000000000FFULL;
+        unsigned long long byte2 = buffer[1] & 0x00000000000000FFULL;
+        unsigned long long byte3 = buffer[2] & 0x00000000000000FFULL;
+        unsigned long long byte4 = buffer[3] & 0x00000000000000FFULL;
+        unsigned long long byte5 = buffer[4] & 0x00000000000000FFULL;
+        unsigned long long byte6 = buffer[5] & 0x00000000000000FFULL;
+        unsigned long long byte7 = buffer[6] & 0x00000000000000FFULL;
+        unsigned long long byte8 = buffer[7] & 0x00000000000000FFULL;
 
         value = ( byte1 << 56 | byte2 << 48 | byte3 << 40 | byte4 << 32 |
                   byte5 << 24 | byte6 << 16 | byte7 << 8  | byte8 << 0 );
@@ -248,7 +232,6 @@ long long DataInputStream::readLong()
 std::string DataInputStream::readString()
     throw ( io::IOException, io::EOFException ) {
     try {
-
         size_t size = 1024;
         std::vector<char> buffer;
         buffer.resize( size );
@@ -284,12 +267,22 @@ std::string DataInputStream::readString()
 std::string DataInputStream::readUTF()
     throw ( io::IOException, io::EOFException ) {
     try {
+        std::vector<unsigned char> buffer;
+        unsigned short length = readUnsignedShort();
+        buffer.resize(length + 1);  // Add one for a null charactor.
 
-        std::string buffer;
-        unsigned short len = readUnsignedShort();
-        buffer.resize(len);
-        readFully( (unsigned char*)buffer.c_str(), 0, len );
-        return buffer;
+        std::size_t n = 0;
+        while( n < length ) {
+            std::size_t count = inputStream->read( &buffer[n], (length - n) );
+            if( count == (std::size_t)-1 ) {
+                throw EOFException(
+                    __FILE__, __LINE__,
+                    "DataInputStream::readUTF - Reached EOF" );
+            }
+            n += count;
+        }
+
+        return (char*)&buffer[0];
     }
     AMQ_CATCH_RETHROW( EOFException )
     AMQ_CATCH_RETHROW( IOException )
