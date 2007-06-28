@@ -305,7 +305,7 @@ std::string DataInputStream::readUTF()
     try {
         std::vector<unsigned char> buffer;
         unsigned short length = readUnsignedShort();
-        buffer.resize(length);
+        buffer.resize(length + 1);  // Add one for a null charactor.
 
         std::size_t n = 0;
         while( n < length ) {
