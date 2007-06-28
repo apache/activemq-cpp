@@ -23,6 +23,7 @@
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Integer.h>
 #include <activemq/util/Config.h>
+#include <activemq/util/Date.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -343,6 +344,8 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     bool useTopics = true;
     int numMessages = 2000;
 
+    long long startTime = Date::getCurrentTimeMilliseconds();
+
     HelloWorldProducer producer( brokerURI, numMessages, useTopics );
     HelloWorldConsumer consumer( brokerURI, numMessages, useTopics );
 
@@ -361,11 +364,12 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     producerThread.join();
     consumerThread.join();
 
+    long long endTime = Date::getCurrentTimeMilliseconds();
+    double totalTime = (endTime - startTime) / 1000.0;
+
+    std::cout << "Time to completion = " << totalTime << " seconds." << std::endl;
     std::cout << "-----------------------------------------------------\n";
-    std::cout << "Finished with the example, ignore errors from this"
-              << std::endl
-              << "point on as the sockets breaks when we shutdown."
-              << std::endl;
+    std::cout << "Finished with the example." << std::endl;
     std::cout << "=====================================================\n";
 }
 
