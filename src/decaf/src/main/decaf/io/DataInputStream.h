@@ -351,12 +351,21 @@ namespace io{
 
         // Used internally to reliable get data from the underlying stream
         inline void readAllData( unsigned char* buffer,
-                          std::size_t offset,
-                          std::size_t length )
+                                 std::size_t length )
             throw ( io::IOException,
-                    io::EOFException,
-                    lang::exceptions::IndexOutOfBoundsException,
-                    lang::exceptions::NullPointerException );
+                    io::EOFException ) {
+
+            std::size_t n = 0;
+            do{
+                std::size_t count = inputStream->read( &buffer[n], length - n );
+                if( count == (std::size_t)-1 ) {
+                    throw EOFException(
+                        __FILE__, __LINE__,
+                        "DataInputStream::readLong - Reached EOF" );
+                }
+                n += count;
+            } while( n < length );
+        }
 
     };
 

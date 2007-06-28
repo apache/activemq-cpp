@@ -86,16 +86,8 @@ bool DataInputStream::readBoolean()
     try {
         unsigned char value = 0;
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &value, sizeof(value) );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readBoolean - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( &value, sizeof(value) );
 
         return (bool)( value != 0 );
     }
@@ -111,16 +103,8 @@ char DataInputStream::readByte()
     try {
         unsigned char value = 0;
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &value, sizeof(value) );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readByte - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( &value, sizeof(value) );
 
         return (char)( value );
     }
@@ -136,16 +120,8 @@ unsigned char DataInputStream::readUnsignedByte()
     try {
         unsigned char value = 0;
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &value, sizeof(value) );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readUnsignedByte - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( &value, sizeof(value) );
 
         return value;
     }
@@ -159,16 +135,8 @@ char DataInputStream::readChar() throw ( IOException, EOFException ) {
     try {
         unsigned char value = 0;
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &value, sizeof(value) );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readChar - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( &value, sizeof(value) );
 
         return (char)( value );
     }
@@ -183,16 +151,8 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
         short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &buffer[n], sizeof(value) - n );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readShort - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( buffer, sizeof(value) );
 
         value |= (buffer[0] << 8 | buffer[1] << 0);
 
@@ -211,16 +171,8 @@ unsigned short DataInputStream::readUnsignedShort()
         unsigned short value = 0;
         unsigned char buffer[sizeof(value)] = {0};
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &buffer[n], sizeof(value) - n );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readUnsignedShort - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( buffer, sizeof(value) );
 
         value |= (buffer[0] << 8 | buffer[1] << 0);
 
@@ -238,16 +190,8 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
         unsigned int value = 0;
         unsigned char buffer[sizeof(value)] = {0};
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &buffer[n], sizeof(value) - n );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readInt - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( buffer, sizeof(value) );
 
         value |= (buffer[0] << 24 | buffer[1] << 16 |
                   buffer[2] << 8 | buffer[3] << 0);
@@ -295,16 +239,8 @@ long long DataInputStream::readLong()
         unsigned long long value = 0;
         unsigned char buffer[sizeof(value)] = {0};
 
-        std::size_t n = 0;
-        do{
-            std::size_t count = inputStream->read( &buffer[n], sizeof(value) - n );
-            if( count == (std::size_t)-1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readLong - Reached EOF" );
-            }
-            n += count;
-        } while( n < sizeof( value ) );
+        // Get the data in one shot, will throw EOF or IO Exception as needed.
+        readAllData( buffer, sizeof(value) );
 
         // Have to do it this way because on Solaris and Cygwin we get all
         // kinds of warnings when shifting a byte up into a long long.
