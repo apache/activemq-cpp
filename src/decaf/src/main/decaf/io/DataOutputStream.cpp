@@ -57,6 +57,7 @@ void DataOutputStream::write( const std::vector<unsigned char>& buffer )
         }
 
         outputStream->write( &buffer[0], buffer.size() );
+        written += buffer.size();
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -68,6 +69,7 @@ void DataOutputStream::write( const unsigned char* buffer, std::size_t len )
 
     try {
         outputStream->write( buffer, len );
+        written += len;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -81,6 +83,7 @@ void DataOutputStream::write( const unsigned char* buffer,
 
     try {
         outputStream->write( buffer+offset, len );
+        written += len;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -92,7 +95,8 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
         unsigned char ivalue = 0;
         value == true ? ivalue = 1 : ivalue = 0;
 
-        this->write( ivalue );
+        outputStream->write( ivalue );
+        written++;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -101,7 +105,18 @@ void DataOutputStream::writeBoolean( bool value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
     try {
-        this->write( value );
+        outputStream->write( value );
+        written++;
+    }
+    DECAF_CATCH_RETHROW( IOException )
+    DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStream::writeChar( char value ) throw ( IOException ) {
+    try {
+        outputStream->write( value );
+        written++;
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -110,7 +125,13 @@ void DataOutputStream::writeByte( unsigned char value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeShort( short value ) throw ( IOException ) {
     try {
-        this->writeUnsignedShort( (unsigned short)value );
+        unsigned char buffer[sizeof(value)];
+
+        buffer[0] = (value & 0xFF00) >> 8;
+        buffer[1] = (value & 0x00FF) >> 0;
+
+        outputStream->write( buffer, sizeof(value) );
+        written += sizeof( value );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -121,17 +142,13 @@ void DataOutputStream::writeUnsignedShort( unsigned short value )
     throw ( IOException )
 {
     try {
-        write( (unsigned char)( (value & 0xFF00) >> 8 ) );
-        write( (unsigned char)( (value & 0x00FF) >> 0 ) );
-    }
-    DECAF_CATCH_RETHROW( IOException )
-    DECAF_CATCHALL_THROW( IOException )
-}
+        unsigned char buffer[sizeof(value)];
 
-////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeChar( char value ) throw ( IOException ) {
-    try {
-        write( value );
+        buffer[0] = (value & 0xFF00) >> 8;
+        buffer[1] = (value & 0x00FF) >> 0;
+
+        outputStream->write( buffer, sizeof(value) );
+        written += sizeof( value );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -140,10 +157,15 @@ void DataOutputStream::writeChar( char value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeInt( int value ) throw ( IOException ) {
     try {
-        this->write( (unsigned char)( (value & 0xFF000000) >> 24 ) );
-        this->write( (unsigned char)( (value & 0x00FF0000) >> 16 ) );
-        this->write( (unsigned char)( (value & 0x0000FF00) >> 8 ) );
-        this->write( (unsigned char)( (value & 0x000000FF) >> 0 ) );
+        unsigned char buffer[sizeof(value)];
+
+        buffer[0] = (value & 0xFF000000) >> 24;
+        buffer[1] = (value & 0x00FF0000) >> 16;
+        buffer[2] = (value & 0x0000FF00) >> 8;
+        buffer[3] = (value & 0x000000FF) >> 0;
+
+        outputStream->write( buffer, sizeof(value) );
+        written += sizeof( value );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -152,14 +174,19 @@ void DataOutputStream::writeInt( int value ) throw ( IOException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
     try {
-        this->write( (unsigned char)( (value & 0xFF00000000000000ULL) >> 56 ) );
-        this->write( (unsigned char)( (value & 0x00FF000000000000ULL) >> 48 ) );
-        this->write( (unsigned char)( (value & 0x0000FF0000000000ULL) >> 40 ) );
-        this->write( (unsigned char)( (value & 0x000000FF00000000ULL) >> 32 ) );
-        this->write( (unsigned char)( (value & 0x00000000FF000000ULL) >> 24 ) );
-        this->write( (unsigned char)( (value & 0x0000000000FF0000ULL) >> 16 ) );
-        this->write( (unsigned char)( (value & 0x000000000000FF00ULL) >> 8 ) );
-        this->write( (unsigned char)( (value & 0x00000000000000FFULL) >> 0 ) );
+        unsigned char buffer[sizeof(value)];
+
+        buffer[0] = (value & 0xFF00000000000000ULL) >> 56;
+        buffer[1] = (value & 0x00FF000000000000ULL) >> 48;
+        buffer[2] = (value & 0x0000FF0000000000ULL) >> 40;
+        buffer[3] = (value & 0x000000FF00000000ULL) >> 32;
+        buffer[4] = (value & 0x00000000FF000000ULL) >> 24;
+        buffer[5] = (value & 0x0000000000FF0000ULL) >> 16;
+        buffer[6] = (value & 0x000000000000FF00ULL) >> 8;
+        buffer[7] = (value & 0x00000000000000FFULL) >> 0;
+
+        outputStream->write( buffer, sizeof(value) );
+        written += sizeof( value );
     }
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
