@@ -123,7 +123,8 @@ namespace stomp{
             body.clear();
 
             // Copy data to internal buffer.
-            body.insert( body.end(), bytes, bytes + numBytes );
+            std::back_insert_iterator< std::vector<unsigned char> > iter( body );
+            std::copy( bytes, bytes + numBytes, iter );
         }
 
     private:
