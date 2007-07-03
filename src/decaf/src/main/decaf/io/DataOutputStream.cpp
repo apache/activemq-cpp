@@ -176,14 +176,14 @@ void DataOutputStream::writeLong( long long value ) throw ( IOException ) {
     try {
         unsigned char buffer[sizeof(value)];
 
-        buffer[0] = (value & 0xFF00000000000000ULL) >> 56;
-        buffer[1] = (value & 0x00FF000000000000ULL) >> 48;
-        buffer[2] = (value & 0x0000FF0000000000ULL) >> 40;
-        buffer[3] = (value & 0x000000FF00000000ULL) >> 32;
-        buffer[4] = (value & 0x00000000FF000000ULL) >> 24;
-        buffer[5] = (value & 0x0000000000FF0000ULL) >> 16;
-        buffer[6] = (value & 0x000000000000FF00ULL) >> 8;
-        buffer[7] = (value & 0x00000000000000FFULL) >> 0;
+        buffer[0] = (unsigned char)((value & 0xFF00000000000000ULL) >> 56);
+        buffer[1] = (unsigned char)((value & 0x00FF000000000000ULL) >> 48);
+        buffer[2] = (unsigned char)((value & 0x0000FF0000000000ULL) >> 40);
+        buffer[3] = (unsigned char)((value & 0x000000FF00000000ULL) >> 32);
+        buffer[4] = (unsigned char)((value & 0x00000000FF000000ULL) >> 24);
+        buffer[5] = (unsigned char)((value & 0x0000000000FF0000ULL) >> 16);
+        buffer[6] = (unsigned char)((value & 0x000000000000FF00ULL) >> 8);
+        buffer[7] = (unsigned char)((value & 0x00000000000000FFULL) >> 0);
 
         outputStream->write( buffer, sizeof(value) );
         written += sizeof( value );
