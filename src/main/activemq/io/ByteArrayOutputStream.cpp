@@ -58,6 +58,6 @@ void ByteArrayOutputStream::write( const unsigned char* buffer,
                                    std::size_t len )
    throw ( IOException )
 {
-    activeBuffer->insert( activeBuffer->end(), buffer, buffer + len );
+    std::back_insert_iterator< std::vector<unsigned char> > iter( *activeBuffer );
+    std::copy( buffer, buffer + len, iter );
 }
-

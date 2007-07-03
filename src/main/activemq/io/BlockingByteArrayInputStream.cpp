@@ -49,9 +49,11 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
 
         // Remove old data
         this->buffer.clear();
+        this->buffer.reserve( lbufferSize );
 
         // Copy data to internal buffer.
-        this->buffer.insert( this->buffer.end(), lbuffer, lbuffer + lbufferSize );
+        std::back_insert_iterator< std::vector<unsigned char> > iter( this->buffer );
+        std::copy( lbuffer, lbuffer + lbufferSize, iter );
 
         // Begin at the Beginning.
         pos = this->buffer.begin();
