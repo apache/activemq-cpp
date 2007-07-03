@@ -64,7 +64,8 @@ void ByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     defaultBuffer.reserve( lbufferSize );
 
     // Copy data to internal buffer.
-    defaultBuffer.insert( defaultBuffer.end(), lbuffer, lbuffer + lbufferSize );
+    std::back_insert_iterator< std::vector<unsigned char> > iter( defaultBuffer );
+    std::copy( buffer, buffer + len, iter );
 
     // Begin at the Beginning.
     reset();

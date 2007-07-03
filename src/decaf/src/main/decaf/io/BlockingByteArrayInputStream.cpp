@@ -48,13 +48,12 @@ void BlockingByteArrayInputStream::setByteArray( const unsigned char* lbuffer,
     synchronized( this ){
 
         // Remove old data
-        this->buffer.clear();
+        buffer.clear();
+        buffer.reserve( lbufferSize );
 
         // Copy data to internal buffer.
-        for( std::size_t ix = 0; ix < lbufferSize; ++ix )
-        {
-            this->buffer.push_back(lbuffer[ix]);
-        }
+        std::back_insert_iterator< std::vector<unsigned char> > iter( buffer );
+        std::copy( lbuffer, lbuffer + lbufferSize, iter );
 
         // Begin at the Beginning.
         pos = this->buffer.begin();
