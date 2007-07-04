@@ -302,16 +302,13 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
 
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
-
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
         try{ transport->close(); } catch( ... ){}
-
         throw OpenWireConnectorException(__FILE__, __LINE__,
             "Caught unknown exception" );
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -762,7 +759,6 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
             ex.what() );
-
     } catch( ... ) {
         delete producer;
         delete producerInfo;
@@ -1036,7 +1032,6 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-
         try{ transport->close(); } catch( ... ){}
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
@@ -1081,7 +1076,6 @@ TransactionInfo* OpenWireConnector::startTransaction(
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-
         try{ transport->close(); } catch( ... ){}
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
@@ -1119,7 +1113,6 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-
         try{ transport->close(); } catch( ... ){}
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
@@ -1157,7 +1150,6 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
         ex.setMark(__FILE__,__LINE__);
         throw ex;
     } catch( ... ) {
-
         try{ transport->close(); } catch( ... ){}
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
@@ -1171,8 +1163,7 @@ cms::Message* OpenWireConnector::createMessage(
     TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
-    try
-    {
+    try {
         return new commands::ActiveMQMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -1185,8 +1176,7 @@ cms::BytesMessage* OpenWireConnector::createBytesMessage(
     TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
-    try
-    {
+    try {
         return new commands::ActiveMQBytesMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -1199,8 +1189,7 @@ cms::TextMessage* OpenWireConnector::createTextMessage(
     TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException )
 {
-    try
-    {
+    try {
         return new commands::ActiveMQTextMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -1213,8 +1202,7 @@ cms::MapMessage* OpenWireConnector::createMapMessage(
     TransactionInfo* transaction AMQCPP_UNUSED )
         throw ( ConnectorException, UnsupportedOperationException )
 {
-    try
-    {
+    try {
         return new commands::ActiveMQMapMessage();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -1227,8 +1215,8 @@ void OpenWireConnector::unsubscribe( const std::string& name )
 {
     commands::RemoveSubscriptionInfo* rsi = NULL;
 
-    try
-    {
+    try {
+
         enforceConnected();
 
         rsi = new commands::RemoveSubscriptionInfo();
@@ -1261,8 +1249,8 @@ void OpenWireConnector::unsubscribe( const std::string& name )
 void OpenWireConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException )
 {
-    try
-    {
+    try {
+
         if( resource == NULL ) {
             return;
         }
@@ -1430,8 +1418,7 @@ void OpenWireConnector::onTransportException(
 void OpenWireConnector::oneway( Command* command )
     throw ( ConnectorException )
 {
-    try
-    {
+    try {
         transport->oneway(command);
     }
     AMQ_CATCH_EXCEPTION_CONVERT( CommandIOException, OpenWireConnectorException )
