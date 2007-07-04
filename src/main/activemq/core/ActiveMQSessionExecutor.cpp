@@ -44,7 +44,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
         // Terminate the thread.
         close();
-        
+
         // Empty the message queue and destroy any remaining messages.
         clear();
     }
@@ -53,7 +53,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::close() {
-    
+
     synchronized( &mutex ) {
 
         closed = true;
@@ -88,40 +88,40 @@ void ActiveMQSessionExecutor::executeFirst( DispatchData& data ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages( 
+vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages(
     ActiveMQConsumer* consumer )
 {
     vector<ActiveMQMessage*> retVal;
-    
+
     const connector::ConsumerInfo* consumerInfo = consumer->getConsumerInfo();
-    
+
     synchronized( &mutex ) {
-        
+
         list<DispatchData>::iterator iter = messageQueue.begin();
         while( iter != messageQueue.end() ) {
             list<DispatchData>::iterator currentIter = iter;
             DispatchData& dispatchData = *iter++;
             if( consumerInfo == dispatchData.getConsumer() ||
-                consumerInfo->getConsumerId() == dispatchData.getConsumer()->getConsumerId() ) 
+                consumerInfo->getConsumerId() == dispatchData.getConsumer()->getConsumerId() )
             {
                 retVal.push_back( dispatchData.getMessage() );
                 messageQueue.erase(currentIter);
             }
         }
     }
-    
+
     return retVal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::start() {
-    
+
     synchronized( &mutex ) {
-        
-        if( closed || started ) { 
+
+        if( closed || started ) {
             return;
         }
-    
+
         started = true;
 
         // Don't create the thread unless we need to.
@@ -136,19 +136,19 @@ void ActiveMQSessionExecutor::start() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::stop() {
-    
+
     synchronized( &mutex ) {
-        
+
         if( closed || !started ) {
             return;
         }
 
         // Set the state to stopped.
         started = false;
-        
+
         // Wakeup the thread so that it can acknowledge the stop request.
         mutex.notifyAll();
-        
+
         // Wait for the thread to notify us that it has acknowledged
         // the stop request.
         mutex.wait();
@@ -211,12 +211,12 @@ void ActiveMQSessionExecutor::run() {
             dispatchAll();
 
             synchronized( &mutex ) {
-                
+
                 // If we're closing down, exit the thread.
                 if( closed ) {
                     return;
                 }
-                
+
                 // When told to stop, the calling thread will wait for a
                 // responding notification, indicating that we have acknowledged
                 // the stop command.
@@ -246,18 +246,18 @@ void ActiveMQSessionExecutor::run() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::dispatchAll() {
-    
+
     // Take out all of the dispatch data currently in the array.
     list<DispatchData> dataList;
     synchronized( &mutex ) {
-        
+
         // When told to stop, the calling thread will wait for a
         // responding notification, indicating that we have acknowledged
         // the stop command.
         if( !started ) {
             mutex.notifyAll();
         }
-                
+
         if( !started || closed ) {
             return;
         }
@@ -265,7 +265,7 @@ void ActiveMQSessionExecutor::dispatchAll() {
         dataList = messageQueue;
         messageQueue.clear();
     }
-    
+
     // Dispatch all currently available messages.
     list<DispatchData>::iterator iter = dataList.begin();
     while( iter != dataList.end() ) {
@@ -273,5 +273,3 @@ void ActiveMQSessionExecutor::dispatchAll() {
         dispatch( data );
     }
 }
-
-
