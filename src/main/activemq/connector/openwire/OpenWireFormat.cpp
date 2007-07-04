@@ -82,7 +82,7 @@ OpenWireFormat::~OpenWireFormat()
         delete preferedWireFormatInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
-                                                           BooleanStream* bs)
+                                                           BooleanStream* bs )
     throw ( io::IOException ) {
 
     try {
@@ -386,7 +386,6 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
         } else {
             return NULL;
         }
-
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
@@ -484,5 +483,4 @@ void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
                                  preferedWireFormatInfo->isTightEncodingEnabled();
     this->sizePrefixDisabled = info->isSizePrefixDisabled() &&
                                preferedWireFormatInfo->isSizePrefixDisabled();
-
 }
