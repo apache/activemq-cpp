@@ -44,7 +44,6 @@ BooleanStream::~BooleanStream()
 bool BooleanStream::readBoolean() throw ( IOException ) {
 
     try {
-        //assert arrayPos <= arrayLimit;
         unsigned char b = data[arrayPos];
         bool rc = ( ( b >> bytePos ) & 0x01 ) != 0;
         bytePos++;
@@ -67,7 +66,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
         if( bytePos == 0 ) {
             arrayLimit++;
 
-            if( (size_t)arrayLimit >= data.capacity() ) {
+            if( (size_t)arrayLimit >= data.size() ) {
                 // re-grow the array if necessary
                 data.resize( data.size() * 2 );
             }

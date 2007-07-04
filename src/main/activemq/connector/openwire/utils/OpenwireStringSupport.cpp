@@ -30,21 +30,21 @@ using namespace activemq::connector::openwire::utils;
 ////////////////////////////////////////////////////////////////////////////////
 std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
     throw ( io::IOException ) {
-        
+
     try {
 
         short utflen = dataIn.readShort();
-        
+
         if( utflen > -1 )
         {
             // Let the stream get us all that data.
             std::vector<unsigned char> value;
             value.resize( utflen );
-            dataIn.readFully( value );            
+            dataIn.readFully( value );
 
-            int c;//, char2, char3;
+            int c = 0;
             int count = 0;
-            
+
             while( count < utflen )
             {
                 c = value[count] & 0xff;
@@ -113,11 +113,11 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
         return "";
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )        
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut, 
+void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
                                          const std::string* str )
                                             throw ( io::IOException ) {
 
@@ -129,17 +129,17 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
                 throw IOException(
                     __FILE__,
                     __LINE__,
-                    ( std::string( "OpenwireStringSupport::writeString - Cannot marshall " ) + 
+                    ( std::string( "OpenwireStringSupport::writeString - Cannot marshall " ) +
                     "string longer than: 65536 characters, supplied steing was: " +
                     Integer::toString( (int)str->size() ) + " characters long." ).c_str() );
             }
-            
+
             //short strlen = (short)str->size();
             short utflen = 0;
             int c, count = 0;
-            
+
             std::string::const_iterator iter = str->begin();
-            
+
             for(; iter != str->end(); ++iter ) {
                 c = *iter;
                 if( (c >= 0x0001) && (c <= 0x007F) ) {
@@ -150,7 +150,7 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
                     utflen += 2;
                 }
             }
-            
+
             dataOut.writeShort( utflen );
             std::vector<unsigned char> byteArr;
             byteArr.resize( utflen );
@@ -178,5 +178,5 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )        
-} 
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
