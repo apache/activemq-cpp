@@ -447,14 +447,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\util\Endian.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Endian.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\util\Guid.cpp"
 					>
 				</File>

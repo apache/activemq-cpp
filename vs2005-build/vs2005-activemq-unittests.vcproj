@@ -784,6 +784,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\test\activemq\util\Endian.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\util\Endian.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\test\activemq\util\GuidTest.cpp"
 					>
 				</File>
