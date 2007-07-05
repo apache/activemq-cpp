@@ -25,6 +25,7 @@
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Mutex.h>
 #include <time.h>
+#include <activemq/util/Random.h>
 
 namespace activemq{
 namespace concurrent{
@@ -368,6 +369,7 @@ namespace concurrent{
             bool closed;
             Mutex mutex;
             Thread* thread;
+            util::Random rand;
 
         public:
 
@@ -440,7 +442,7 @@ namespace concurrent{
 
                     while( true ) {
 
-                        Thread::sleep( 30 );
+                        Thread::sleep( rand.nextInt( 100 ) );
 
                         synchronized( &mutex ) {
 
