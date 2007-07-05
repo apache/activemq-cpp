@@ -337,3 +337,19 @@ void MutexTest::testDoubleLock() {
         ex.setMark( __FILE__, __LINE__ );
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+void MutexTest::testStressMutex(){
+    MyStoppableThread tester;
+
+    tester.start();
+
+    CPPUNIT_ASSERT( tester.isStarted() );
+
+    for( int i = 0; i < 100; ++i ) {
+        tester.stop();
+        tester.start();
+    }
+
+    CPPUNIT_ASSERT( true );
+}

@@ -39,6 +39,7 @@ namespace concurrent{
         CPPUNIT_TEST( testNotifyAll );
         CPPUNIT_TEST( testRecursiveLock );
         CPPUNIT_TEST( testDoubleLock );
+        CPPUNIT_TEST( testStressMutex );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -359,6 +360,112 @@ namespace concurrent{
             }
         };
 
+        class MyStoppableThread : public Runnable
+        {
+        public:
+
+            bool started;
+            bool closed;
+            Mutex mutex;
+            Thread* thread;
+
+        public:
+
+            MyStoppableThread() {
+                this->started = false;
+                this->closed = false;
+                this->thread = NULL;
+            }
+
+            virtual ~MyStoppableThread(){ close(); }
+
+            virtual void start(){
+                synchronized( &mutex ) {
+
+                    if( closed || started ) {
+                        return;
+                    }
+
+                    started = true;
+
+                    // Don't create the thread unless we need to.
+                    if( thread == NULL ) {
+                        thread = new Thread( this );
+                        thread->start();
+                    }
+
+                    mutex.notifyAll();
+                }
+            }
+
+            virtual void stop() {
+                synchronized( &mutex ) {
+
+                    if( closed || !started ) {
+                        return;
+                    }
+
+                    // Set the state to stopped.
+                    started = false;
+
+                    // Wakeup the thread so that it can acknowledge the stop request.
+                    mutex.notifyAll();
+
+                    // Wait for the thread to notify us that it has acknowledged
+                    // the stop request.
+                    mutex.wait();
+                }
+            }
+
+            virtual void close() {
+                synchronized( &mutex ) {
+
+                    closed = true;
+                    mutex.notifyAll();
+                }
+
+                if( thread != NULL ) {
+                    thread->join();
+                    delete thread;
+                    thread = NULL;
+                }
+            }
+
+            virtual bool isStarted() const {
+                return started;
+            }
+
+            virtual void run(){
+                try {
+
+                    while( true ) {
+
+                        Thread::sleep( 30 );
+
+                        synchronized( &mutex ) {
+
+                            // If we're closing down, exit the thread.
+                            if( closed ) {
+                                return;
+                            }
+
+                            // When told to stop, the calling thread will wait for a
+                            // responding notification, indicating that we have acknowledged
+                            // the stop command.
+                            if( !isStarted() ) {
+                                mutex.notifyAll();
+
+                                // Wait for more data or to be woken up.
+                                mutex.wait();
+                            }
+                        }
+                    }
+                } catch(...) {
+                    CPPUNIT_ASSERT( false );
+                }
+            }
+        };
+
     public:
 
         virtual ~MutexTest(){}
@@ -372,6 +479,7 @@ namespace concurrent{
         void testNotifyAll();
         void testRecursiveLock();
         void testDoubleLock();
+        void testStressMutex();
     };
 
 }}
