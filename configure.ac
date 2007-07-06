@@ -201,6 +201,7 @@ if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/Makefile)
   AC_CONFIG_FILES(src/test-integration/Makefile)
+  AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
 AC_OUTPUT
