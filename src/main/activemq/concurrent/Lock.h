@@ -36,7 +36,7 @@ namespace concurrent{
          * Flag to indicate whether or not this object has locked the
          * sync object.
          */
-        bool locked;
+        volatile bool locked;
 
         /**
          * The synchronizable object to lock/unlock.
@@ -58,8 +58,7 @@ namespace concurrent{
                 syncObject = object;
                 locked = false;
             
-                if( intiallyLocked )
-                {
+                if( intiallyLocked ) {
                     lock();
                 }
             }
@@ -73,8 +72,7 @@ namespace concurrent{
         virtual ~Lock()
         {
             try{
-                if( locked )
-                {
+                if( locked ) {
                   syncObject->unlock();
                 } 
             }
@@ -101,8 +99,7 @@ namespace concurrent{
         void unlock()
         {
             try{
-                 if(locked)
-                 {
+                 if(locked) {
                      syncObject->unlock();
                      locked = false;
                  }

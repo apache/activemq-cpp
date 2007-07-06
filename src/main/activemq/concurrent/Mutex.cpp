@@ -166,7 +166,7 @@ void Mutex::wait( unsigned long millisecs )
     if( waitEvent == NULL ) {
         throw exceptions::ActiveMQException(
             __FILE__, __LINE__,
-            "Mutex::Mutex - Failed Creating Event." );
+            "Mutex::wait - Failed Creating Event." );
     }
 
     eventQ.push_back( waitEvent );
@@ -175,7 +175,11 @@ void Mutex::wait( unsigned long millisecs )
     LeaveCriticalSection( &mutex );
 
     // Wait for a signal
-    WaitForSingleObject( waitEvent, millisecs );
+    if( WaitForSingleObject( waitEvent, millisecs ) != WAIT_OBJECT_0 && millisecs == WAIT_INFINITE ) {
+        throw exceptions::ActiveMQException(
+            __FILE__, __LINE__,
+            "Mutex::wait - Infinite wait aborted for unknown reason." );
+    }
 
     // Reaquire the Lock
     EnterCriticalSection( &mutex );
