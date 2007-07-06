@@ -33,7 +33,7 @@
     #include <pthread.h>
 #else
     #include <windows.h>
-   
+
     #if ( !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0400)
         #if ( !defined(WINVER) || WINVER < 0x0400)
             #pragma message ("Unsupported platform, Windows NT 4.0 or later required")
@@ -46,7 +46,7 @@
 
 namespace activemq{
 namespace concurrent{
-    
+
     /**
      * Creates a pthread_mutex_t object. The object is created
      * such that successive locks from the same thread is allowed
@@ -69,9 +69,9 @@ namespace concurrent{
 
             std::list<HANDLE> eventQ;
         #endif
-      
+
         // Lock Status Members
-        volatile int           lock_count;
+        volatile int lock_count;
         volatile unsigned long lock_owner;
 
     public:
@@ -85,19 +85,19 @@ namespace concurrent{
          * Destructor - destroys the mutex object.
          */
         virtual ~Mutex();
-      
+
         /**
          * Locks the object.
          * @throws ActiveMQException
          */
         virtual void lock() throw( exceptions::ActiveMQException );
-      
+
         /**
          * Unlocks the object.
          * @throws ActiveMQException
          */
         virtual void unlock() throw( exceptions::ActiveMQException );
-      
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.
@@ -113,9 +113,9 @@ namespace concurrent{
          * @param millisecs the time in milliseconds to wait.
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs ) 
+        virtual void wait( unsigned long millisecs )
             throw( exceptions::ActiveMQException );
-      
+
         /**
          * Signals a waiter on this object that it can now wake
          * up and continue.
@@ -131,7 +131,7 @@ namespace concurrent{
         virtual void notifyAll() throw( exceptions::ActiveMQException );
 
     private:
-   
+
         /**
          * Check if the calling thread is the Lock Owner
          * @retun true if the caller is the lock owner
@@ -139,7 +139,7 @@ namespace concurrent{
         bool isLockOwner(){
             return lock_owner == Thread::getId();
         }
-      
+
     };
 
 }}
