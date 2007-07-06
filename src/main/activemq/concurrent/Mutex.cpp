@@ -52,7 +52,9 @@ Mutex::~Mutex()
 ////////////////////////////////////////////////////////////////////////////////
 void Mutex::lock() throw( exceptions::ActiveMQException )
 {
-    if(isLockOwner())
+	int threadId = Thread::getId();
+	
+    if(threadId == lock_owner)
     {
         lock_count++;
     }
@@ -64,8 +66,8 @@ void Mutex::lock() throw( exceptions::ActiveMQException )
         EnterCriticalSection(&mutex);
 #endif
 
-        lock_count = 1;
-        lock_owner = Thread::getId();
+        lock_owner = threadId;
+        lock_count = 1;        
     }         
 }
   

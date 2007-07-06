@@ -71,8 +71,8 @@ namespace concurrent{
         #endif
       
         // Lock Status Members
-        int           lock_count;
-        unsigned long lock_owner;
+        volatile int           lock_count;
+        volatile unsigned long lock_owner;
 
     public:
 
@@ -134,10 +134,9 @@ namespace concurrent{
    
         /**
          * Check if the calling thread is the Lock Owner
-         * @retuns true if the caller is the lock owner
+         * @retun true if the caller is the lock owner
          */
-        bool isLockOwner()
-        {
+        bool isLockOwner(){
             return lock_owner == Thread::getId();
         }
       
