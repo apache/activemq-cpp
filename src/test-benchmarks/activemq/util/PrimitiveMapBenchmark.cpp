@@ -41,7 +41,7 @@ void PrimitiveMapBenchmark::setUp(){
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapBenchmark::run() {
 
-    int numRuns = 750;
+    int numRuns = 500;
 
     for( int i = 0; i < numRuns; ++i ){
         map.setBool( "BOOL", true );

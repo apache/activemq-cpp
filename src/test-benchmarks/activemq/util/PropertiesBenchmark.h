@@ -15,8 +15,32 @@
  * limitations under the License.
  */
 
-#include <activemq/util/PrimitiveMapBenchmark.h>
-#include <activemq/util/PropertiesBenchmark.h>
+#ifndef _ACTIVEMQ_UTIL_PROPERTIESBENCHMARK_H_
+#define _ACTIVEMQ_UTIL_PROPERTIESBENCHMARK_H_
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PropertiesBenchmark );
+#include <benchmark/BenchmarkBase.h>
+
+#include <activemq/util/Properties.h>
+
+namespace activemq{
+namespace util{
+
+    class PropertiesBenchmark :
+        public benchmark::BenchmarkBase<
+            activemq::util::PropertiesBenchmark, Properties >
+    {
+    private:
+
+        Properties properties;
+
+    public:
+
+        PropertiesBenchmark();
+        virtual ~PropertiesBenchmark() {}
+
+        virtual void run();
+    };
+
+}}
+
+#endif /*_ACTIVEMQ_UTIL_PROPERTIESBENCHMARK_H_*/
