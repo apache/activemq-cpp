@@ -134,58 +134,16 @@ AC_SUBST([AMQ_TEST_LIBS])
 AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized -I${srcdir}/../main"
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la"
 
-AC_DEFUN([AMQCPP_CHECK_VISIBILITY], [
-    AC_MSG_CHECKING([whether -fvisibility flags work])
-    OLDCXXFLAGS="$CXXFLAGS"
-    CXXFLAGS="$CXXFLAGS -Werror -fvisibility=hidden -fvisibility-inlines-hidden"
 
-    AC_TRY_COMPILE([],
-      [
-         int i = 0;
-         do {
-            i++
-         } while(0)
-      ],
-      [
-        AC_MSG_RESULT(yes)
-        AC_DEFINE([HAVE_VISIBILITY_OPTIONS],[], [define if you have -fvisibility options])
-      ],
-      [
-        AC_MSG_RESULT(no)
-      ])
+# Check to see if the compiler supports the visibility flags.
+# If so, define HAVE_VISIBILITY_OPTIONS
+CHECK_VISIBILITY()
 
-    CXXFLAGS="$OLDCXXFLAGS"
-])
+## Not all platforms define addrinfo and related functions.  If this platform
+## supports addrinfo, defines HAVE_STRUCT_ADDRINFO.
+CHECK_ADDRINFO()
 
-AMQCPP_CHECK_VISIBILITY
-
-##
-## Not all platforms define addrinfo and related functions
-##
-AC_MSG_CHECKING([whether struct addrinfo is defined])
-AC_TRY_COMPILE(
-  [ #include <stdio.h>
-    #ifdef HAVE_UNISTD_H
-    # include <unistd.h>
-    #endif
-    #include <sys/types.h>
-    #include <sys/socket.h>
-    #include <netdb.h>
-  ],
-  [
-    do {
-      struct addrinfo a;
-      (void) a.ai_flags;
-    } while(0)
-  ],
-  [
-    AC_MSG_RESULT(yes)
-    AC_DEFINE(HAVE_STRUCT_ADDRINFO,, [define if you have struct addrinfo])
-  ],
-  [
-    AC_MSG_RESULT(no)
-  ])
-
+## Execute Doxygen macros
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
 DX_CHI_FEATURE(OFF)
