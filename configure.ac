@@ -18,7 +18,7 @@
 ## --------------------------------
 ## Initialization macros.
 ## --------------------------------
-AC_INIT(activemq-cpp, 1, activemq-dev@geronimo.apache.org)
+AC_INIT(activemq-cpp, 1, dev@activemq.apache.org)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 
@@ -122,8 +122,17 @@ case "${host_os}" in
     PLAT_LIBS="-lm -lpthread -luuid"
 esac
 
-CXXFLAGS="$CXXFLAGS $PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-LIBS="$LIBS $PLAT_LIBS"
+## Flags for building the activemq-cpp library
+AC_SUBST([AMQ_CXXFLAGS])
+AC_SUBST([AMQ_LIBS])
+AMQ_CXXFLAGS="$PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+AMQ_LIBS="$PLAT_LIBS"
+
+## Flags for building the test applications.
+AC_SUBST([AMQ_TEST_CXXFLAGS])
+AC_SUBST([AMQ_TEST_LIBS])
+AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized -I${srcdir}/../main"
+AMQ_TEST_LIBS="../main/libactivemq-cpp.la"
 
 AC_DEFUN([AMQCPP_CHECK_VISIBILITY], [
     AC_MSG_CHECKING([whether -fvisibility flags work])

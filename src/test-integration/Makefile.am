@@ -43,6 +43,6 @@ check_PROGRAMS = activemq-test-integration
 ## Compiler/Linker Options
 ##
 activemq_test_integration_SOURCES = $(cc_sources)
-activemq_test_integration_CXXFLAGS = -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemq_test_integration_LDADD= ../main/libactivemq-cpp.la @CPPUNIT_LIBS@
+activemq_test_integration_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) @CPPUNIT_CFLAGS@
+activemq_test_integration_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@
 

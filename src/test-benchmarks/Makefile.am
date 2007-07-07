@@ -33,6 +33,6 @@ check_PROGRAMS = activemq-test-benchmarks
 ## Compiler/Linker Options
 ##
 activemq_test_benchmarks_SOURCES = $(cc_sources)
-activemq_test_benchmarks_CXXFLAGS = -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemq_test_benchmarks_LDADD= ../main/libactivemq-cpp.la @CPPUNIT_LIBS@
+activemq_test_benchmarks_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) @CPPUNIT_CFLAGS@
+activemq_test_benchmarks_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@
 

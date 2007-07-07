@@ -333,8 +333,9 @@ include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 ##
 lib_LTLIBRARIES= libactivemq-cpp.la
 libactivemq_cpp_la_SOURCES= $(h_sources) $(cc_sources)
+libactivemq_cpp_la_CXXFLAGS= $(AMQ_CXXFLAGS)
 libactivemq_cpp_la_LDFLAGS= -version-info $(ACTIVEMQ_LIBRARY_VERSION) -release $(ACTIVEMQ_VERSION)
-libactivemq_cpp_la_LIBADD=-lpthread -ldl -luuid
+libactivemq_cpp_la_LIBADD= $(AMQ_LIBS)
 
 ##
 ## Packaging Info
