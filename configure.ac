@@ -131,7 +131,7 @@ AMQ_LIBS="$PLAT_LIBS"
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
 AC_SUBST([AMQ_TEST_LIBS])
-AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized -I${srcdir}/../main"
+AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la"
 
 
