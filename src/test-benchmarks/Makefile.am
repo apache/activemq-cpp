@@ -18,6 +18,7 @@
 cc_sources = \
   activemq/util/PrimitiveMapBenchmark.cpp \
   activemq/util/PropertiesBenchmark.cpp \
+  activemq/util/QueueBenchmark.cpp \
   benchmark/PerformanceTimer.cpp \
   testRegistry.cpp \
   main.cpp
@@ -25,6 +26,7 @@ cc_sources = \
 hh_sources = \
   activemq/util/PrimitiveMapBenchmark.h \
   activemq/util/PropertiesBenchmark.h \
+  activemq/util/QueueBenchmark.h \
   benchmark/BenchmarkBase.h \
   benchmark/PerformanceTimer.h
 

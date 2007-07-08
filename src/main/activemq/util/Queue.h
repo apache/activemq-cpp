@@ -26,11 +26,11 @@ namespace activemq{
 namespace util{
 
     /**
-     * The Queue class accepts messages with an psuh(m) command 
-     * where m is the message to be queued.  It destructively 
+     * The Queue class accepts messages with an psuh(m) command
+     * where m is the message to be queued.  It destructively
      * returns the message with pop().  pop() returns messages in
-     * the order they were enqueued.                                               
-     *                                                              
+     * the order they were enqueued.
+     *
      * Queue is implemented with an instance of the STL queue object.
      * The interface is essentially the same as that of the STL queue
      * except that the pop method actually reaturns a reference to the
@@ -49,105 +49,154 @@ namespace util{
      * for multiple threads to be reading from and writing to the same
      * Queue.
      *
-     * Clients should consider that in a multiple threaded app it is 
+     * Clients should consider that in a multiple threaded app it is
      * possible that items could be placed on the queue faster than
      * you are taking them off, so protection should be placed in your
      * polling loop to ensure that you don't get stuck there.
      */
 
-    template <typename T> class Queue : public concurrent::Synchronizable
-    {
+    template <typename T> class Queue : public concurrent::Synchronizable {
     public:
-   
-        Queue(void);
-        virtual ~Queue(void);
+
+        Queue() {}
+        virtual ~Queue() {}
 
         /**
          * Empties this queue.
          */
-        void clear();
-        
-        /**
-         * Returns a Reference to the element at the head of the queue
-         * @return reference to a queue type object or (safe)
-         */
-        T& front(void);
+        void clear() {
+            queue.clear();
+        }
 
         /**
          * Returns a Reference to the element at the head of the queue
          * @return reference to a queue type object or (safe)
          */
-        const T& front(void) const;
+        T& front() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.front();
+        }
+
+        /**
+         * Returns a Reference to the element at the head of the queue
+         * @return reference to a queue type object or (safe)
+         */
+        const T& front() const {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.front();
+        }
 
         /**
          * Returns a Reference to the element at the tail of the queue
          * @return reference to a queue type object or (safe)
          */
-        T& back(void);
+        T& back() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.back();
+        }
 
         /**
          * Returns a Reference to the element at the tail of the queue
          * @return reference to a queue type object or (safe)
          */
-        const T& back(void) const;
+        const T& back() const {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.back();
+        }
 
         /**
          * Places a new Object at the Tail of the queue
          * @param t - Queue Object Type reference.
          */
-        void push( const T &t );
-        
+        void push( const T &t ) {
+            queue.push_back( t );
+        }
+
         /**
          * Places a new Object at the front of the queue
          * @param t - Queue Object Type reference.
          */
-        void enqueueFront( const T &t );
+        void enqueueFront( const T &t ) {
+            queue.push_front( t );
+        }
 
         /**
          * Removes and returns the element that is at the Head of the queue
          * @return reference to a queue type object or (safe)
          */
-        T pop(void);
+        T pop() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            // Pop the element into a temp, since we need to remain locked.
+            // this means getting front and then popping.
+            T temp = queue.front();
+            queue.pop_front();
+
+            return temp;
+        }
 
         /**
          * Gets the Number of elements currently in the Queue
          * @return Queue Size
          */
-        size_t size(void) const;
+        size_t size() const{
+            return queue.size();
+        }
 
         /**
          * Checks if this Queue is currently empty
          * @return boolean indicating queue emptiness
          */
-        bool empty(void) const;
-        
+        bool empty() const {
+            return queue.empty();
+        }
+
         /**
          * @return the all values in this queue as a std::vector.
          */
-        virtual std::vector<T> toArray() const;
-        
+        virtual std::vector<T> toArray() const {
+            std::vector<T> valueArray( queue.begin(), queue.end() );
+            return valueArray;
+        }
+
         /**
          * Reverses the order of the contents of this queue and stores them
          * in the target queue.
          * @param target - The target queue that will receive the contents of
          * this queue in reverse order.
          */
-        void reverse( Queue<T>& target ) const;
-   
+        void reverse( Queue<T>& target ) const {
+            target.queue.insert( target.queue.end(), queue.rbegin(), queue.rend() );
+        }
+
         /**
          * Locks the object.
          */
         virtual void lock() throw( exceptions::ActiveMQException ){
             mutex.lock();
         }
-   
+
         /**
          * Unlocks the object.
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){   
+        virtual void unlock() throw( exceptions::ActiveMQException ){
             mutex.unlock();
         }
-       
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -156,7 +205,7 @@ namespace util{
         virtual void wait() throw( exceptions::ActiveMQException ){
             mutex.wait();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -165,9 +214,9 @@ namespace util{
          * @param millisecs time to wait, or WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs ) 
+        virtual void wait( unsigned long millisecs )
             throw( exceptions::ActiveMQException ) {
-         
+
             mutex.wait(millisecs);
         }
 
@@ -179,7 +228,7 @@ namespace util{
         virtual void notify() throw( exceptions::ActiveMQException ){
             mutex.notify();
         }
-        
+
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
@@ -188,7 +237,7 @@ namespace util{
         virtual void notifyAll() throw( exceptions::ActiveMQException ){
             mutex.notifyAll();
         }
-   
+
     public:   // Statics
 
         /**
@@ -209,153 +258,11 @@ namespace util{
         // Safe value used when pop, front or back are
         // called and the queue is empty.
         static T safe;
-      
+
     };
-   
+
     //-----{ Static Init }----------------------------------------------------//
-    template <typename T>
-    T Queue<T>::safe;
-    
-    //-----{ Retrieve current length of Queue }-------------------------------//
-   
-    template <typename T> inline size_t Queue<T>::size() const
-    {
-        return queue.size();
-    }
-   
-    //-----{ Retrieve whether Queue is empty or not }-------------------------//
-   
-    template <typename T> inline bool Queue<T>::empty(void) const
-    {
-        return queue.empty();
-    }
-   
-    //-----{ Defulat Constructor }--------------------------------------------//
-   
-    template <typename T> 
-    Queue<T>::Queue()
-    {
-    }
-
-    //-----{ Default Destructor }---------------------------------------------//
-   
-    template <typename T> Queue<T>::~Queue()
-    {
-    }
-
-    template <typename T> 
-    void Queue<T>::clear()
-    {
-        queue.clear();
-    }
-    
-    //-----{ Add Elements to Back of Queue }----------------------------------//
-
-    template <typename T> 
-    void Queue<T>::push( const T &t )
-    {
-        queue.push_back( t );
-    }
-    
-    template <typename T> 
-    void Queue<T>::enqueueFront( const T &t )
-    {
-        queue.push_front( t );
-    }
-
-    //-----{ Remove Elements from Front of Queue }----------------------------//
-
-    template <typename T> 
-    T Queue<T>::pop(void)
-    {
-        if(queue.empty())
-        {   
-            return safe;
-        }
-
-        // Pop the element into a temp, since we need to remain locked.
-        // this means getting front and then popping.
-        T temp = queue.front();
-        queue.pop_front();
-   
-        return temp;
-    }
-
-    //-----{ Returnreference to element at front of Queue }-------------------//
-
-    template <typename T> 
-    T& Queue<T>::front(void)
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-         
-        return queue.front();
-    }
-   
-    //-----{ Returnreference to element at front of Queue }-------------------//
-
-    template <typename T> 
-    const T& Queue<T>::front(void) const
-    {
-        if( queue.empty() )
-        {   
-            return safe;
-        }
-
-        return queue.front();
-    }
-   
-    //-----{ Returnreference to element at back of Queue }--------------------//
-
-    template <typename T> 
-    T& Queue<T>::back(void)
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-         
-        return queue.back();
-    }
-   
-    //-----{ Returnreference to element at back of Queue }--------------------//
-
-    template <typename T> 
-    const T& Queue<T>::back(void) const
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-   
-        return queue.back();
-    }
-    
-    template <typename T> 
-    void Queue<T>::reverse( Queue<T>& target ) const 
-    {
-        typename std::list<T>::const_reverse_iterator iter;
-        iter = queue.rbegin();
-        for( ; iter != queue.rend(); ++iter ) {
-            target.push( *iter );
-        }
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    std::vector<T> Queue<T>::toArray() const{
-        std::vector<T> valueArray(queue.size());
-        
-        typename std::list<T>::const_iterator iter;
-        iter=queue.begin();
-        for( int ix=0; iter != queue.end(); ++iter, ++ix ){
-            valueArray[ix] = *iter;
-        }
-        
-        return valueArray;
-    }
+    template <typename T> T Queue<T>::safe;
 
 }}
 

@@ -17,6 +17,8 @@
 
 #include <activemq/util/PrimitiveMapBenchmark.h>
 #include <activemq/util/PropertiesBenchmark.h>
+#include <activemq/util/QueueBenchmark.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PropertiesBenchmark );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::QueueBenchmark );
