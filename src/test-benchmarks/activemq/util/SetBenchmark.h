@@ -15,12 +15,32 @@
  * limitations under the License.
  */
 
-#include <activemq/util/PrimitiveMapBenchmark.h>
-#include <activemq/util/PropertiesBenchmark.h>
-#include <activemq/util/QueueBenchmark.h>
-#include <activemq/util/SetBenchmark.h>
+#ifndef _ACTIVEMQ_UTIL_SETBENCHMARK_H_
+#define _ACTIVEMQ_UTIL_SETBENCHMARK_H_
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PropertiesBenchmark );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::QueueBenchmark );
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::SetBenchmark );
+#include <benchmark/BenchmarkBase.h>
+#include <activemq/util/Set.h>
+
+namespace activemq{
+namespace util{
+
+    class SetBenchmark :
+        public benchmark::BenchmarkBase<
+            activemq::util::SetBenchmark, Set<int> >
+    {
+    private:
+
+        Set<int> intSet;
+        Set<std::string> stringSet;
+
+    public:
+
+        SetBenchmark();
+        virtual ~SetBenchmark() {}
+
+        virtual void run();
+    };
+
+}}
+
+#endif /*_ACTIVEMQ_UTIL_SETBENCHMARK_H_*/
