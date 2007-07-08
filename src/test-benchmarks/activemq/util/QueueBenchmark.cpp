@@ -30,7 +30,7 @@ QueueBenchmark::QueueBenchmark(){
 ////////////////////////////////////////////////////////////////////////////////
 void QueueBenchmark::run(){
 
-    int numRuns = 250;
+    int numRuns = 300;
     std::string test = "test";
     std::string resultStr = "";
     int resultInt = 0;
