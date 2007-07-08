@@ -130,17 +130,6 @@ namespace util{
             std::vector< std::pair<std::string, std::string> > vec(
                     properties.begin(), properties.end() );
 
-//            // Create a vector big enough to hold all the elements in the map.
-//            std::vector< std::pair<std::string, std::string> > vec( properties.size() );
-//
-//            // Get an iterator at the beginning of the map.
-//            std::map< std::string, std::string >::const_iterator iter = properties.begin();
-//
-//            // Copy all of the elements from the map to the vector.
-//            for( int ix=0; iter != properties.end(); ++iter, ++ix ){
-//                vec[ix] = *iter;
-//            }
-
             return vec;
         }
 
