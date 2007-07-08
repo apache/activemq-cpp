@@ -92,6 +92,7 @@ namespace util{
         virtual void setProperty( const std::string& name,
                                   const std::string& value ){
             properties[name] = value;
+            //properties.insert( std::make_pair( name, value ) );
         }
 
         /**
@@ -126,15 +127,19 @@ namespace util{
         virtual std::vector< std::pair< std::string, std::string > > toArray() const{
 
             // Create a vector big enough to hold all the elements in the map.
-            std::vector< std::pair<std::string, std::string> > vec( properties.size() );
+            std::vector< std::pair<std::string, std::string> > vec(
+                    properties.begin(), properties.end() );
 
-            // Get an iterator at the beginning of the map.
-            std::map< std::string, std::string >::const_iterator iter = properties.begin();
-
-            // Copy all of the elements from the map to the vector.
-            for( int ix=0; iter != properties.end(); ++iter, ++ix ){
-                vec[ix] = *iter;
-            }
+//            // Create a vector big enough to hold all the elements in the map.
+//            std::vector< std::pair<std::string, std::string> > vec( properties.size() );
+//
+//            // Get an iterator at the beginning of the map.
+//            std::map< std::string, std::string >::const_iterator iter = properties.begin();
+//
+//            // Copy all of the elements from the map to the vector.
+//            for( int ix=0; iter != properties.end(); ++iter, ++ix ){
+//                vec[ix] = *iter;
+//            }
 
             return vec;
         }
