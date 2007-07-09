@@ -1,4 +1,77 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version includes several bugfixes, as well as some new features.  Also
+a lot of work has been done on performance and memory leaks.  One new feature that
+has been highly anticipated is that we now build both shared and static libraries.
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-104] - Enabling async send prevents program from terminating properly on Windows
+    * [AMQCPP-119] - getClientID segfaults is called after connection has been closed
+    * [AMQCPP-120] - Possible memory leak in StompConnector
+    * [AMQCPP-121] - Possible memory leak in activemq::transport::IOTransport::run
+    * [AMQCPP-122] - Crash on Windows when rapidly creating and destroying connections
+    * [AMQCPP-126] - closing ressources after an IOException crashes the app
+    * [AMQCPP-128] - Transacted session crashes or loses messages
+    * [AMQCPP-131] - StompConnector doesn't rethrow UnsupportedOperationException
+    * [AMQCPP-132] - Unsubscribe of durable subscription fails
+    * [AMQCPP-133] - Receive of plain Message with Openwire returns null
+    * [AMQCPP-134] - Compiler warnings have returned for tests on gcc
+
+Improvement
+
+    * [AMQCPP-65] - Refactor transport creation
+    * [AMQCPP-66] - Refactor the Async send to happen in an Async Transport instead of in ActiveMQSession
+    * [AMQCPP-108] - Make stomp connector more generic
+    * [AMQCPP-110] - Create activemqcpp-openwire-generator build in our pom.xml, move code to src/main/java
+    * [AMQCPP-116] - quick improvements to CMS example code
+    * [AMQCPP-118] - Provide a way to allocate and free with the same allocator
+    * [AMQCPP-123] - Link error when trying to link another shared library against AMQCPP on 64-bit Linux
+    * [AMQCPP-127] - ResponseCorrelator doesn't have a way to set max timeot from the properties uri.
+    * [AMQCPP-130] - Enhance the DummyTransport and rename it to MockTransport
+
+New Feature
+
+    * [AMQCPP-125] - Decaf: Random
+
+Task
+
+    * [AMQCPP-106] - reorganize subversion
+    * [AMQCPP-115] - Change build to create dynamic libraries
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.0.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version is a bug fix release for issues that were found in the 2.0 release
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-105] - Openwire ActiveMQMessage sets Persistant flag incorrectly
+    * [AMQCPP-107] - SocketInputStream::read() doesn't check for EINTR error
+    * [AMQCPP-109] - Exception when acknowledging null messages, originating from the receipt of an ObjectMessage
+    * [AMQCPP-112] - Openwire Experiation Integration tests fail when fixed to actually use Openwire
+
+Improvement
+
+    * [AMQCPP-101] - Add the Ability to set the TcpNoDelay flag of a TCP Socket
+    * [AMQCPP-102] - Create a Tag for CMS
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.0                                 ==
 =========================================================================
 

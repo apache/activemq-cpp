@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Decaf C++ Library
+Description: Decaf C++ Java-like API library.
+Version: @VERSION@
+Libs: -L${libdir} -l@DECAF_LIBRARY_NAME@-@DECAF_API_VERSION@ -lpthread -ldl -luuid
+Cflags: -I${includedir}/@DECAF_LIBRARY_NAME@-@DECAF_API_VERSION@ -I${libdir}/@DECAF_LIBRARY_NAME@-@DECAF_API_VERSION@/include
