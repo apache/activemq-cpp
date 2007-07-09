@@ -26,8 +26,8 @@ AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 ## Define the Version variables
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
-ACTIVEMQ_VERSION=2.1-SNAPSHOT
-ACTIVEMQ_LIBRARY_VERSION=0:0:0
+ACTIVEMQ_VERSION=2.1
+ACTIVEMQ_LIBRARY_VERSION=2:1:0
 ACTIVEMQ_RELEASE=0.0
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
@@ -168,7 +168,6 @@ if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/Makefile)
   AC_CONFIG_FILES(src/test-integration/Makefile)
-  AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
 AC_OUTPUT
