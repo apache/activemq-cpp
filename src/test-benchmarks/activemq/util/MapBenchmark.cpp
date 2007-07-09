@@ -15,58 +15,61 @@
  * limitations under the License.
  */
 
-#include "SetBenchmark.h"
-
+#include "MapBenchmark.h"
 #include <activemq/util/Integer.h>
 
 using namespace activemq;
 using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-SetBenchmark::SetBenchmark(){
+MapBenchmark::MapBenchmark() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SetBenchmark::run(){
+void MapBenchmark::run() {
 
     int numRuns = 500;
     std::string test = "test";
     std::string resultStr = "";
-    Set<std::string> stringCopy;
-    Set<int> intCopy;
+    Map<std::string, std::string> stringCopy;
+    Map<int, int> intCopy;
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringSet.add( test + Integer::toString(i) );
-        intSet.add( 100 + i );
-        stringSet.contains( test + Integer::toString(i) );
-        intSet.contains( 100 + i );
+        stringMap.setValue( test + Integer::toString(i), test + Integer::toString(i) );
+        intMap.setValue( 100 + i, 100 + i );
+        stringMap.containsKey( test + Integer::toString(i) );
+        intMap.containsKey( 100 + i );
+        stringMap.containsValue( test + Integer::toString(i) );
+        intMap.containsValue( 100 + i );
     }
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringSet.remove( test + Integer::toString(i) );
-        intSet.remove( 100 + i );
-        stringSet.contains( test + Integer::toString(i) );
-        intSet.contains( 100 + i );
+        stringMap.remove( test + Integer::toString(i) );
+        intMap.remove( 100 + i );
+        stringMap.containsKey( test + Integer::toString(i) );
+        intMap.containsKey( 100 + i );
     }
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringSet.add( test + Integer::toString(i) );
-        intSet.add( 100 + i );
+        stringMap.setValue( test + Integer::toString(i), test + Integer::toString(i) );
+        intMap.setValue( 100 + i, 100 + i );
     }
 
     std::vector<std::string> stringVec;
     std::vector<int> intVec;
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringVec = stringSet.toArray();
-        intVec = intSet.toArray();
+        stringVec = stringMap.getKeys();
+        stringVec = stringMap.getValues();
+        intVec = intMap.getKeys();
+        intVec = intMap.getValues();
     }
-//
-//    for( int i = 0; i < numRuns; ++i ) {
-//        stringCopy.copy( stringSet );
-//        stringCopy.clear();
-//        intCopy.copy( intSet );
-//        intCopy.clear();
-//    }
+
+    for( int i = 0; i < numRuns; ++i ) {
+        stringCopy.copy( stringMap );
+        stringCopy.clear();
+        intCopy.copy( intMap );
+        intCopy.clear();
+    }
 
 }
