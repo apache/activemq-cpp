@@ -32,20 +32,20 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename E> class Set : public concurrent::Synchronizable 
+    template <typename E> class Set : public concurrent::Synchronizable
     {
     private:
-    
+
         std::set<E> values;
         concurrent::Mutex mutex;
-        
+
     public:
-    
+
         /**
          * Default constructor - does nothing.
          */
         Set(){};
-        
+
         /**
          * Copy constructor - copies the content of the given set into this
          * one.
@@ -54,57 +54,84 @@ namespace util{
         Set( const Set& source ){
             copy( source );
         }
-        
+
         virtual ~Set(){};
-        
+
         /**
          * Copies the content of the source set into this set.  Erases
          * all existing data in this st.
          * @param source The source object to copy from.
          */
-        virtual void copy( const Set& source ); 
-        
+        virtual void copy( const Set& source ) {
+            // Add all of the entries to this map.
+            values = source.values;
+        }
+
         /**
          * Removes all values from this set.
          */
-        virtual void clear();
-        
+        virtual void clear() {
+            values.clear();
+        }
+
         /**
          * Indicates whether or this set contains the given value.
          * @param value The value to look up.
          * @return true if this set contains the value, otherwise false.
          */
-        virtual bool contains( const E& value ) const;
+        virtual bool contains( const E& value ) const {
+            typename std::set<E>::const_iterator iter;
+            iter = values.find( value );
+            return iter != values.end();
+        }
 
         /**
          * @return if the set contains any element or not, TRUE or FALSE
          */
-        virtual bool isEmpty() const;
+        virtual bool isEmpty() const {
+            return values.empty();
+        }
 
         /**
          * @return The number of elements in this set.
          */
-        virtual std::size_t size() const;
-            
+        virtual std::size_t size() const {
+            return values.size();
+        }
+
         /**
          * Adds the given value to the set.
          * @param value The value to add.
          */
-        virtual void add( const E& value );
+        virtual void add( const E& value ) {
+            values.insert( value );
+        }
 
         /**
          * Removes the value from the set.
          * @param value The value to be removed.
-         */        
-        virtual void remove( const E& value );
-        
+         */
+        virtual void remove( const E& value ) {
+            values.erase( value );
+        }
+
         /**
          * @return the all values in this set as a std::vector.
          */
-        virtual std::vector<E> toArray() const;
-        
+        virtual std::vector<E> toArray() const {
+            std::vector<E> valueArray( values.size() );
+
+            typename std::set<E>::const_iterator iter;
+            iter=values.begin();
+            for( int ix=0; iter != values.end(); ++iter, ++ix ){
+                valueArray[ix] = *iter;
+            }
+
+            return valueArray;
+        }
+
     public:     // Methods from Synchronizable
-    
+
         /**
          * Locks the object.
          * @throws ActiveMQException
@@ -120,7 +147,7 @@ namespace util{
         virtual void unlock() throw(exceptions::ActiveMQException) {
             mutex.unlock();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -130,19 +157,19 @@ namespace util{
         virtual void wait() throw(exceptions::ActiveMQException) {
             mutex.wait();
         }
-    
+
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.  This wait will timeout after the specified time
          * interval.
-         * @param millisecs the time in millisecsonds to wait, or 
+         * @param millisecs the time in millisecsonds to wait, or
          * WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait(unsigned long millisecs) 
+        virtual void wait( unsigned long millisecs )
             throw(exceptions::ActiveMQException) {
-            mutex.wait(millisecs);
+            mutex.wait( millisecs );
         }
 
         /**
@@ -154,7 +181,7 @@ namespace util{
         virtual void notify() throw( exceptions::ActiveMQException ) {
             mutex.notify();
         }
-    
+
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
@@ -165,66 +192,6 @@ namespace util{
             mutex.notifyAll();
         }
     };
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>    
-    void Set<E>::copy( const Set<E>& source ) {
-        
-        // Add all of the entries to this map.
-        values = source.values;        
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    void Set<E>::clear(){
-        values.clear();
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    bool Set<E>::contains(const E& value) const{
-        typename std::set<E>::const_iterator iter;
-        iter = values.find(value);
-        return iter != values.end();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    bool Set<E>::isEmpty() const{
-        return values.empty();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    std::size_t Set<E>::size() const{
-        return values.size();
-    }
-        
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    void Set<E>::add( const E& value ){
-        values.insert(value);
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    void Set<E>::remove( const E& value ){
-        values.erase(value);
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename E>
-    std::vector<E> Set<E>::toArray() const{
-        std::vector<E> valueArray(values.size());
-        
-        typename std::set<E>::const_iterator iter;
-        iter=values.begin();
-        for( int ix=0; iter != values.end(); ++iter, ++ix ){
-            valueArray[ix] = *iter;
-        }
-        
-        return valueArray;
-    }
 
 }}
 
