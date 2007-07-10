@@ -87,6 +87,7 @@ cc_sources = \
   activemq/util/IntegerTest.cpp \
   activemq/util/LongTest.cpp \
   activemq/util/MapTest.cpp \
+  activemq/util/SetTest.cpp \
   activemq/util/PrimitiveMapTest.cpp \
   activemq/util/QueueTest.cpp \
   activemq/util/StringTokenizerTest.cpp \
