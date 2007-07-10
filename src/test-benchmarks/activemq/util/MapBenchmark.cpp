@@ -58,14 +58,14 @@ void MapBenchmark::run() {
     std::vector<std::string> stringVec;
     std::vector<int> intVec;
 
-    for( int i = 0; i < numRuns; ++i ) {
+    for( int i = 0; i < numRuns / 2; ++i ) {
         stringVec = stringMap.getKeys();
         stringVec = stringMap.getValues();
         intVec = intMap.getKeys();
         intVec = intMap.getValues();
     }
 
-    for( int i = 0; i < numRuns; ++i ) {
+    for( int i = 0; i < numRuns / 2; ++i ) {
         stringCopy.copy( stringMap );
         stringCopy.clear();
         intCopy.copy( intMap );
