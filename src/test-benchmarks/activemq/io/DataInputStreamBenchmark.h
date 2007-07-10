@@ -20,6 +20,7 @@
 
 #include <benchmark/BenchmarkBase.h>
 #include <activemq/io/DataInputStream.h>
+#include <activemq/io/ByteArrayInputStream.h>
 
 namespace activemq{
 namespace io{
@@ -30,8 +31,9 @@ namespace io{
     {
     private:
 
-        const unsigned char* buffer;
-        static const int bufferSize = 2000000;
+        unsigned char* buffer;
+        static const int bufferSize = 200000;
+        ByteArrayInputStream bis;
 
     public:
 

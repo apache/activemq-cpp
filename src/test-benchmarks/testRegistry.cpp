@@ -30,5 +30,5 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::QueueBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::SetBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MapBenchmark );
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataInputStreamBenchmark );
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataOutputStreamBenchmark );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataInputStreamBenchmark );
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataOutputStreamBenchmark );

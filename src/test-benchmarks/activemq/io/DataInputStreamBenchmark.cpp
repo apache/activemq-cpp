@@ -16,7 +16,6 @@
  */
 
 #include "DataInputStreamBenchmark.h"
-#include <activemq/io/ByteArrayInputStream.h>
 
 using namespace std;
 using namespace activemq;
@@ -29,13 +28,14 @@ DataInputStreamBenchmark::DataInputStreamBenchmark(){
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamBenchmark::setUp(){
 
-//    unsigned char* buffer = new unsigned char[bufferSize];
-//
-//    // init to full String Buffer
-//    for( int ix = 0; ix < bufferSize - 1; ++ix ) {
-//        buffer[ix] = 'z';
-//    }
-//    buffer[bufferSize-1] = '\0';
+    buffer = new unsigned char[bufferSize];
+
+    // init to full String Buffer
+    for( int ix = 0; ix < bufferSize - 1; ++ix ) {
+        buffer[ix] = 65;
+    }
+    buffer[bufferSize-1] = 0;
+    bis.setByteArray( buffer, bufferSize );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,6 @@ void DataInputStreamBenchmark::tearDown(){
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStreamBenchmark::run(){
 
-    ByteArrayInputStream bis( buffer, bufferSize );
     DataInputStream dis( &bis );
 
     bool boolResult = 0;
@@ -61,51 +60,53 @@ void DataInputStreamBenchmark::run(){
     float floatResult = 0.0f;
     std::string stringResult = "";
 
-//    for( size_t iy = 0; iy < bufferSize / sizeof( boolResult ); ++iy ){
-//        boolResult = dis.readBoolean();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( charResult ); ++iy ){
-//        charResult = dis.readChar();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( byteResult ); ++iy ){
-//        byteResult = dis.readByte();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( ushortResult ); ++iy ){
-//        ushortResult = dis.readUnsignedShort();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( shortResult ); ++iy ){
-//        shortResult = dis.readShort();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( intResult ); ++iy ){
-//        intResult = dis.readInt();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( longResult ); ++iy ){
-//        longResult = dis.readLong();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( floatResult ); ++iy ){
-//        floatResult = dis.readFloat();
-//    }
-//    bis.reset();
-//
-//    for( size_t iy = 0; iy < bufferSize / sizeof( doubleResult ); ++iy ){
-//        doubleResult = dis.readDouble();
-//    }
-//    bis.reset();
-//
-//    stringResult = dis.readString();
-//    bis.reset();
+    for( size_t iy = 0; iy < bufferSize / sizeof( boolResult ); ++iy ){
+        boolResult = dis.readBoolean();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( charResult ); ++iy ){
+        charResult = dis.readChar();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( byteResult ); ++iy ){
+        byteResult = dis.readByte();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( ushortResult ); ++iy ){
+        ushortResult = dis.readUnsignedShort();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( shortResult ); ++iy ){
+        shortResult = dis.readShort();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( intResult ); ++iy ){
+        intResult = dis.readInt();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( longResult ); ++iy ){
+        longResult = dis.readLong();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( floatResult ); ++iy ){
+        floatResult = dis.readFloat();
+    }
+    bis.reset();
+
+    for( size_t iy = 0; iy < bufferSize / sizeof( doubleResult ); ++iy ){
+        doubleResult = dis.readDouble();
+    }
+    bis.reset();
+
+    for( int i = 0; i < 5; ++i ) {
+        stringResult = dis.readString();
+        bis.reset();
+    }
 }
