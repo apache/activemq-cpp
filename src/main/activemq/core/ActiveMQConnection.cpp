@@ -22,6 +22,7 @@
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/exceptions/NullPointerException.h>
 #include <activemq/util/Boolean.h>
+#include <activemq/util/Iterator.h>
 
 using namespace cms;
 using namespace activemq;
@@ -48,8 +49,7 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData)
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnection::~ActiveMQConnection()
 {
-    try
-    {
+    try {
         close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
@@ -61,8 +61,7 @@ void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer,
     Dispatcher* dispatcher )
 {
     // Add the consumer to the map.
-    synchronized( &dispatchers )
-    {
+    synchronized( &dispatchers ) {
         dispatchers.setValue( consumer->getConsumerId(), dispatcher );
     }
 }
@@ -71,8 +70,7 @@ void ActiveMQConnection::addDispatcher( connector::ConsumerInfo* consumer,
 void ActiveMQConnection::removeDispatcher( const connector::ConsumerInfo* consumer ) {
 
     // Remove the consumer from the map.
-    synchronized( &dispatchers )
-    {
+    synchronized( &dispatchers ) {
         dispatchers.remove( consumer->getConsumerId() );
     }
 }
@@ -80,8 +78,7 @@ void ActiveMQConnection::removeDispatcher( const connector::ConsumerInfo* consum
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException )
 {
-    try
-    {
+    try {
         return createSession( Session::AUTO_ACKNOWLEDGE );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -92,8 +89,8 @@ cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException )
 cms::Session* ActiveMQConnection::createSession(
     cms::Session::AcknowledgeMode ackMode ) throw ( cms::CMSException )
 {
-    try
-    {
+    try {
+
         // Create the session instance.
         ActiveMQSession* session = new ActiveMQSession(
             connectionData->getConnector()->createSession( ackMode ),
@@ -129,10 +126,9 @@ std::string ActiveMQConnection::getClientID() const
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::close() throw ( cms::CMSException )
 {
-    try
-    {
-        if( closed )
-        {
+    try {
+
+        if( closed ) {
             return;
         }
 
@@ -190,21 +186,20 @@ void ActiveMQConnection::stop() throw ( cms::CMSException )
     // new messages.
     started = false;
 
-    // Stop all the sessions.
-    std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
-    for( unsigned int ix=0; ix<sessions.size(); ++ix ) {
-        sessions[ix]->stop();
+    Iterator<ActiveMQSession*>* iter = activeSessions.iterator();
+    while( iter->hasNext() ){
+        iter->next()->stop();
     }
+    delete iter;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
                                             core::ActiveMQMessage* message )
 {
-    try
-    {
-        if( connectionData == NULL)
-        {
+    try {
+
+        if( connectionData == NULL) {
             NullPointerException ex(
                 __FILE__, __LINE__,
                 "ActiveMQConnection::onConsumerMessage - "
@@ -217,8 +212,8 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
 
         // Look up the dispatcher.
         Dispatcher* dispatcher = NULL;
-        synchronized( &dispatchers )
-        {
+        synchronized( &dispatchers ) {
+
             dispatcher = dispatchers.getValue(consumer->getConsumerId());
 
             // If we have no registered dispatcher, the consumer was probably
@@ -233,13 +228,11 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
             }
         }
     }
-    catch( exceptions::ActiveMQException& ex )
-    {
+    catch( exceptions::ActiveMQException& ex ) {
         ex.setMark( __FILE__, __LINE__ );
         fire( ex );
     }
-    catch( ... )
-    {
+    catch( ... ) {
         exceptions::ActiveMQException ex(
            __FILE__, __LINE__,
            "IOTransport::run - caught unknown exception" );
@@ -259,8 +252,8 @@ void ActiveMQConnection::onException( const CMSException& ex ){
 void ActiveMQConnection::removeSession( ActiveMQSession* session )
     throw ( cms::CMSException )
 {
-    try
-    {
+    try {
+
         // Remove this session from the set of active sessions.
         synchronized( &activeSessions ) {
             activeSessions.remove( session );
