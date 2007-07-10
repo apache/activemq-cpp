@@ -98,19 +98,19 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         stop();
 
         // Get the complete list of closeable session resources.
-        std::vector<cms::Closeable*> allResources;
+        // Get the complete list of closeable session resources.
         synchronized( &closableSessionResources ) {
-            allResources = closableSessionResources.toArray();
-        }
 
-        // Close all of the resources.
-        for( unsigned int ix=0; ix<allResources.size(); ++ix ){
-            cms::Closeable* resource = allResources[ix];
-            try{
-                resource->close();
-            } catch( cms::CMSException& ex ){
-                /* Absorb */
+            Iterator<cms::Closeable*>* iter = closableSessionResources.iterator();
+            while( iter->hasNext() ) {
+                cms::Closeable* resource = iter->next();
+                try{
+                    resource->close();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
             }
+            delete iter;
         }
 
         // Destroy the Transaction
