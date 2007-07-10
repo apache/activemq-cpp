@@ -123,17 +123,27 @@ void SetTest::testIterator(){
     set.add( "fred2" );
     set.add( "fred3" );
 
-    Iterator<string>* iterator = set.iterator();
-    CPPUNIT_ASSERT( iterator != NULL );
-    CPPUNIT_ASSERT( iterator->hasNext() == true );
+    Iterator<string>* iterator1 = set.iterator();
+    CPPUNIT_ASSERT( iterator1 != NULL );
+    CPPUNIT_ASSERT( iterator1->hasNext() == true );
 
     size_t count = 0;
-    while( iterator->hasNext() ) {
-        iterator->next();
+    while( iterator1->hasNext() ) {
+        iterator1->next();
         ++count;
     }
 
     CPPUNIT_ASSERT( count == set.size() );
 
-    delete iterator;
+    Iterator<string>* iterator2 = set.iterator();
+
+    while( iterator2->hasNext() ) {
+        iterator2->next();
+        iterator2->remove();
+    }
+
+    CPPUNIT_ASSERT( set.isEmpty() );
+
+    delete iterator1;
+    delete iterator2;
 }
