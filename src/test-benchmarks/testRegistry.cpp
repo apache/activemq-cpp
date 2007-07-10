@@ -21,8 +21,14 @@
 #include <activemq/util/SetBenchmark.h>
 #include <activemq/util/MapBenchmark.h>
 
+#include <activemq/io/DataInputStreamBenchmark.h>
+#include <activemq/io/DataOutputStreamBenchmark.h>
+
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PropertiesBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::QueueBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::SetBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MapBenchmark );
+
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataInputStreamBenchmark );
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::io::DataOutputStreamBenchmark );

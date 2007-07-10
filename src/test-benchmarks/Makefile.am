@@ -21,6 +21,8 @@ cc_sources = \
   activemq/util/QueueBenchmark.cpp \
   activemq/util/SetBenchmark.cpp \
   activemq/util/MapBenchmark.cpp \
+  activemq/io/DataInputStreamBenchmark.cpp \
+  activemq/io/DataOutputStreamBenchmark.cpp \
   benchmark/PerformanceTimer.cpp \
   testRegistry.cpp \
   main.cpp
@@ -31,6 +33,8 @@ hh_sources = \
   activemq/util/QueueBenchmark.h \
   activemq/util/SetBenchmark.h \
   activemq/util/MapBenchmark.h \
+  activemq/io/DataInputStreamBenchmark.h \
+  activemq/io/DataOutputStreamBenchmark.h \
   benchmark/BenchmarkBase.h \
   benchmark/PerformanceTimer.h
 
