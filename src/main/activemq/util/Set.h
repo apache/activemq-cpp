@@ -23,6 +23,7 @@
 #include <activemq/exceptions/NoSuchElementException.h>
 #include <activemq/concurrent/Synchronizable.h>
 #include <activemq/concurrent/Mutex.h>
+#include <activemq/util/Iterator.h>
 
 namespace activemq{
 namespace util{
@@ -39,12 +40,58 @@ namespace util{
         std::set<E> values;
         concurrent::Mutex mutex;
 
+    private:
+
+        class SetIterator : public Iterator<E> {
+        private:
+
+            typename std::set<E>::iterator current;
+            typename std::set<E>::iterator previous;
+            typename std::set<E>* set;
+
+        public:
+
+            SetIterator( typename std::set<E>* set ) {
+                this->current = set->begin();
+                this->previous = set->end();
+                this->set = set;
+            }
+            virtual ~SetIterator() {}
+
+            virtual E next() throw( exceptions::NoSuchElementException ){
+                if( this->current == set->end() ) {
+                    throw exceptions::NoSuchElementException(
+                        __FILE__, __LINE__,
+                        "Set::Iterator::next - No more elements to return" );
+                }
+
+                this->previous = this->current;
+                return *( this->current++ );
+            }
+
+            virtual bool hasNext() const {
+                return ( this->current != set->end() );
+            }
+
+            virtual void remove() throw ( exceptions::IllegalStateException,
+                                          exceptions::UnsupportedOperationException ){
+                if( this->previous == set->end() ) {
+                    throw exceptions::IllegalStateException(
+                        __FILE__, __LINE__,
+                        "Set::Iterator::remove - Invalid State to call remove" );
+                }
+
+                this->set->erase( this->previous );
+                this->previous = this->set->end();
+            }
+        };
+
     public:
 
         /**
          * Default constructor - does nothing.
          */
-        Set(){};
+        Set(){}
 
         /**
          * Copy constructor - copies the content of the given set into this
@@ -55,7 +102,17 @@ namespace util{
             copy( source );
         }
 
-        virtual ~Set(){};
+        virtual ~Set(){}
+
+        /**
+         * Returns an iterator for this collection.  The order of Iteration
+         * is in no particular order other than the natural ording of the
+         * elements in the Set class.
+         * @returns Iterator<E> for this collection
+         */
+        Iterator<E>* iterator() {
+            return new SetIterator( &values );
+        }
 
         /**
          * Copies the content of the source set into this set.  Erases
