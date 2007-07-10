@@ -18,6 +18,7 @@
 #include "SetBenchmark.h"
 
 #include <activemq/util/Integer.h>
+#include <activemq/util/Iterator.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -57,16 +58,36 @@ void SetBenchmark::run(){
     std::vector<std::string> stringVec;
     std::vector<int> intVec;
 
-    for( int i = 0; i < numRuns; ++i ) {
+    for( int i = 0; i < numRuns / 2; ++i ) {
         stringVec = stringSet.toArray();
         intVec = intSet.toArray();
     }
-//
-//    for( int i = 0; i < numRuns; ++i ) {
-//        stringCopy.copy( stringSet );
-//        stringCopy.clear();
-//        intCopy.copy( intSet );
-//        intCopy.clear();
-//    }
+
+    std::string tempStr = "";
+    int tempInt = 0;
+
+    for( int i = 0; i < numRuns / 2; ++i ) {
+
+        Iterator<std::string>* strIter = stringSet.iterator();
+        Iterator<int>* intIter = intSet.iterator();
+
+        while( strIter->hasNext() ){
+            tempStr = strIter->next();
+        }
+
+        while( intIter->hasNext() ){
+            tempInt = intIter->next();
+        }
+
+        delete strIter;
+        delete intIter;
+    }
+
+    for( int i = 0; i < numRuns / 2; ++i ) {
+        stringCopy.copy( stringSet );
+        stringCopy.clear();
+        intCopy.copy( intSet );
+        intCopy.clear();
+    }
 
 }
