@@ -26,4 +26,4 @@ INCLUDES = -I$(srcdir)/../main
 bin_PROGRAMS = example
 example_SOURCES = $(cc_sources)
 
-example_LDADD= ../main/libdecaf.a
+example_LDADD= ../main/libdecaf.la
