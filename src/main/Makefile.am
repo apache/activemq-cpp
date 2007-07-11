@@ -293,6 +293,7 @@ h_sources = \
     activemq/util/Set.h \
     activemq/util/URISupport.h \
     activemq/util/Random.h \
+    activemq/util/Iterator.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
