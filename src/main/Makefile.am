@@ -27,6 +27,8 @@ h_sources = cms/DeliveryMode.h \
     cms/Topic.h \
     cms/BytesMessage.h \
     cms/CMSException.h \
+    cms/CMSProperties.h \
+    cms/Config.h \
     cms/Session.h \
     cms/Startable.h \
     cms/Closeable.h \
