@@ -158,6 +158,7 @@ AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(decaf.pc)
 AC_CONFIG_FILES(src/main/Makefile)
 AC_CONFIG_FILES(src/examples/Makefile)
+AC_CONFIG_FILES(decaf-config)
 
 if test x$cppunit = xyes
 then
@@ -165,4 +166,4 @@ then
   AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
-AC_OUTPUT([decaf-config], [chmod a+x decaf-config])
+AC_OUTPUT

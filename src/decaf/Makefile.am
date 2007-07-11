@@ -27,6 +27,8 @@ endif
 #Distribute these directories:
 DIST_SUBDIRS = src/main
 
+bin_SCRIPTS = decaf-config
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = decaf.pc
 
