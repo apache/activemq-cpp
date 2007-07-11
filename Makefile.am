@@ -26,6 +26,8 @@ endif
 #Distribute these directories:
 DIST_SUBDIRS = src/main 
 
+bin_SCRIPTS = activemqcpp-config 
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = activemq-cpp.pc
 
