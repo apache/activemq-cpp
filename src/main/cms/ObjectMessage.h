@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _CMS_OBJECTMESSAGE_H_
 #define _CMS_OBJECTMESSAGE_H_
 
+#include <cms/Config.h>
 #include <cms/Message.h>
 
 namespace cms{
 
-    class ObjectMessage : Message
+    class CMS_API ObjectMessage : public Message
     {
     public:
-    
+
         virtual ~ObjectMessage() {}
 
     };

@@ -24,13 +24,15 @@
 #include <iostream>
 #include <exception>
 
+#include <cms/Config.h>
+
 namespace cms{
     
     /**
      * This class represents an error that has occurred in 
      * cms.
      */
-    class CMSException : public std::exception {
+    class CMS_API CMSException : public std::exception {
         
     public:
         

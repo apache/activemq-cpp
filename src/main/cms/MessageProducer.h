@@ -18,6 +18,7 @@
 #ifndef _CMS_MESSAGEPRODUCER_H_
 #define _CMS_MESSAGEPRODUCER_H_
 
+#include <cms/Config.h>
 #include <cms/Message.h>
 #include <cms/Destination.h>
 #include <cms/Closeable.h>
@@ -31,7 +32,7 @@ namespace cms
      * by all MessageProducer derivations.  This class defines the JMS
      * spec'd interface for a MessageProducer.
      */
-    class MessageProducer : public Closeable
+    class CMS_API MessageProducer : public Closeable
     {
     public:
 

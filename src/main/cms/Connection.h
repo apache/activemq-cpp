@@ -18,6 +18,7 @@
 #ifndef _CMS_CONNECTION_H_
 #define _CMS_CONNECTION_H_
 
+#include <cms/Config.h>
 #include <cms/Startable.h>
 #include <cms/Stoppable.h>
 #include <cms/Closeable.h>
@@ -27,7 +28,7 @@ namespace cms
 {
     class ExceptionListener;
    
-    class Connection :
+    class CMS_API Connection :
         public Startable,
         public Stoppable,
         public Closeable

@@ -17,7 +17,8 @@
 
 #ifndef _CMS_TEXTMESSAGE_H_
 #define _CMS_TEXTMESSAGE_H_
- 
+
+#include <cms/Config.h>
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
@@ -26,7 +27,7 @@ namespace cms{
     /**
      * Interface for a text message.
      */
-    class TextMessage : public Message{
+    class CMS_API TextMessage : public Message{
 
     public:
 

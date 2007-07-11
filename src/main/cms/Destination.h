@@ -18,7 +18,8 @@
 #ifndef _CMS_DESTINATION_H_
 #define _CMS_DESTINATION_H_
 
-#include <activemq/util/Properties.h>
+#include <cms/CMSProperties.h>
+#include <cms/Config.h>
 
 #include <string>
 
@@ -27,7 +28,7 @@ namespace cms{
     /**
      * A Destination object encapsulates a provider-specific address. 
      */
-    class Destination{
+    class CMS_API Destination{
     public:
    
         enum DestinationType
@@ -80,7 +81,7 @@ namespace cms{
          * but necessary due to C++ restrictions.  
          * @return const reference to a properties object.
          */
-        virtual const activemq::util::Properties& getProperties() const = 0;
+        virtual const CMSProperties& getCMSProperties() const = 0;
         
     };
 }

@@ -17,6 +17,7 @@
 #ifndef _CMS_CONNECTIONFACTORY_H_
 #define _CMS_CONNECTIONFACTORY_H_
 
+#include <cms/Config.h>
 #include <cms/Connection.h>
 #include <cms/CMSException.h>
 
@@ -28,7 +29,7 @@ namespace cms
     /**
      * Defines the interface for a factory that creates connection objects
      */
-    class ConnectionFactory
+    class CMS_API ConnectionFactory
     {
     public:
 

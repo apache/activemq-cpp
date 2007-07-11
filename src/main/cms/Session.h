@@ -17,6 +17,7 @@
 #ifndef _CMS_SESSION_H_
 #define _CMS_SESSION_H_
 
+#include <cms/Config.h>
 #include <cms/Closeable.h>
 #include <cms/Message.h>
 #include <cms/TextMessage.h>
@@ -33,7 +34,7 @@
 namespace cms
 {
 
-    class Session : public Closeable
+    class CMS_API Session : public Closeable
     {
     public:
 
