@@ -165,4 +165,4 @@ then
   AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
-AC_OUTPUT
+AC_OUTPUT([decaf-config], [chmod a+x decaf-config])
