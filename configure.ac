@@ -171,4 +171,4 @@ then
   AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
-AC_OUTPUT
+AC_OUTPUT([activemqcpp-config], [chmod a+x activemqcpp-config])
