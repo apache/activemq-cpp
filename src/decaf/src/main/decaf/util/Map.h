@@ -149,7 +149,7 @@ namespace util{
             typename std::map<K,V>::const_iterator iter;
             iter = valueMap.find(key);
             if( iter == valueMap.end() ){
-                throw activemq::exceptions::NoSuchElementException( __FILE__,
+                throw lang::exceptions::NoSuchElementException( __FILE__,
                     __LINE__,
                     "Key does not exist in map" );
             }

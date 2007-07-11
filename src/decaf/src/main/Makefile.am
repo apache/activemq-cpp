@@ -135,18 +135,17 @@ h_sources = \
 ##
 ## Compiler / Linker Info
 ##
-
 lib_LIBRARIES= libdecaf.a
 libdecaf_a_SOURCES= $(h_sources) $(cc_sources)
 
 ##
-## Uncomment to build a shared lib
+## LibTool build step
 ##
-##lib_LTLIBRARIES= libactivemq-cpp.la
-##libdecaf_la_SOURCES= $(h_sources) $(cc_sources)
-##libdecaf_la_LDFLAGS= -version-info $(DECAF_LIBRARY_VERSION) -release $(DECAF_VERSION)
-##libdecaf_la_LIBADD=-lpthread -ldl -luuid
-
+lib_LTLIBRARIES= libdecaf.la
+libdecaf_la_SOURCES= $(h_sources) $(cc_sources)
+libdecaf_la_CXXFLAGS= $(DECAF_CXXFLAGS)
+libdecaf_la_LDFLAGS= -version-info $(DECAF_LIBRARY_VERSION) -release $(DECAF_VERSION)
+libdecaf_la_LIBADD= $(DECAF_LIBS)
 
 ##
 ## Packaging Info

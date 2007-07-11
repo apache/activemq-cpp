@@ -25,7 +25,7 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
 
-namespace activemq{
+namespace decaf{
 namespace util{
 
     /**
@@ -33,12 +33,12 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename E> class DECAF_API Set : public concurrent::Synchronizable
+    template <typename E> class DECAF_API Set : public util::concurrent::Synchronizable
     {
     private:
 
         std::set<E> values;
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
     private:
 
@@ -60,7 +60,7 @@ namespace util{
 
             virtual E next() throw( lang::exceptions::NoSuchElementException ){
                 if( this->current == set->end() ) {
-                    throw exceptions::NoSuchElementException(
+                    throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
                         "Set::Iterator::next - No more elements to return" );
                 }
@@ -191,7 +191,7 @@ namespace util{
 
         /**
          * Locks the object.
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void lock() throw( lang::Exception ) {
             mutex.lock();
@@ -199,7 +199,7 @@ namespace util{
 
         /**
          * Unlocks the object.
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void unlock() throw( lang::Exception ) {
             mutex.unlock();
@@ -209,7 +209,7 @@ namespace util{
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void wait() throw( lang::Exception ) {
             mutex.wait();
@@ -222,7 +222,7 @@ namespace util{
          * interval.
          * @param millisecs the time in millisecsonds to wait, or
          * WAIT_INIFINITE
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void wait( unsigned long millisecs )
             throw( lang::Exception ) {
@@ -233,7 +233,7 @@ namespace util{
          * Signals a waiter on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void notify() throw(  lang::Exception  ) {
             mutex.notify();
@@ -243,7 +243,7 @@ namespace util{
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
-         * @throws ActiveMQException
+         * @throws Exception
          */
         virtual void notifyAll() throw(  lang::Exception  ) {
             mutex.notifyAll();
