@@ -33,6 +33,9 @@ cc_sources = \
   decaf/util/DateTest.cpp \
   decaf/util/GuidTest.cpp \
   decaf/util/RandomTest.cpp \
+  decaf/util/MapTest.cpp \
+  decaf/util/QueueTest.cpp \
+  decaf/util/SetTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
@@ -56,6 +59,9 @@ h_sources = \
   decaf/util/DateTest.h \
   decaf/util/GuidTest.h \
   decaf/util/RandomTest.h \
+  decaf/util/MapTest.h \
+  decaf/util/QueueTest.h \
+  decaf/util/SetTest.h \
   decaf/util/concurrent/CountDownLatchTest.h \
   decaf/util/concurrent/MutexTest.h \
   decaf/util/concurrent/ThreadPoolTest.h
@@ -68,8 +74,6 @@ TESTS = $(check_PROGRAMS)
 ## 
 ## Compiler/Linker Options
 ##
-CXXFLAGS = @CXXFLAGS@ -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized
 decaf_test_SOURCES = $(cc_sources)
-decaf_test_CXXFLAGS = -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-decaf_test_LDADD= ../main/libdecaf.a @CPPUNIT_LIBS@
-
+decaf_test_CXXFLAGS = $(DECAF_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
+decaf_test_LDADD= $(DECAF_TEST_LIBS) @CPPUNIT_LIBS@ 
