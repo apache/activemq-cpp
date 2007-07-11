@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_UTIL_CONCURRENT_MUTEX_H_
-#define _DECAF_UTIL_CONCURRENT_MUTEX_H_
+#ifndef _DECAF_CONCURRENT_MUTEX_H_
+#define _DECAF_CONCURRENT_MUTEX_H_
 
 // Includes.
 #include <decaf/util/concurrent/Synchronizable.h>
@@ -72,8 +72,8 @@ namespace concurrent{
         #endif
 
         // Lock Status Members
-        int           lock_count;
-        unsigned long lock_owner;
+        volatile int lock_count;
+        volatile unsigned long lock_owner;
 
     public:
 
@@ -135,10 +135,9 @@ namespace concurrent{
 
         /**
          * Check if the calling thread is the Lock Owner
-         * @retuns true if the caller is the lock owner
+         * @retun true if the caller is the lock owner
          */
-        bool isLockOwner()
-        {
+        bool isLockOwner(){
             return lock_owner == lang::Thread::getId();
         }
 
@@ -146,4 +145,4 @@ namespace concurrent{
 
 }}}
 
-#endif // _DECAF_UTIL_CONCURRENT_MUTEX_H_
+#endif /*_DECAF_CONCURRENT_MUTEX_H_*/

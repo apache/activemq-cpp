@@ -22,7 +22,6 @@
 #include <vector>
 #include <string>
 #include <sstream>
-
 #include <decaf/util/Config.h>
 
 namespace decaf{
@@ -94,6 +93,7 @@ namespace util{
         virtual void setProperty( const std::string& name,
                                   const std::string& value ){
             properties[name] = value;
+            //properties.insert( std::make_pair( name, value ) );
         }
 
         /**
@@ -128,15 +128,8 @@ namespace util{
         virtual std::vector< std::pair< std::string, std::string > > toArray() const{
 
             // Create a vector big enough to hold all the elements in the map.
-            std::vector< std::pair<std::string, std::string> > vec( properties.size() );
-
-            // Get an iterator at the beginning of the map.
-            std::map< std::string, std::string >::const_iterator iter = properties.begin();
-
-            // Copy all of the elements from the map to the vector.
-            for( int ix=0; iter != properties.end(); ++iter, ++ix ){
-                vec[ix] = *iter;
-            }
+            std::vector< std::pair<std::string, std::string> > vec(
+                    properties.begin(), properties.end() );
 
             return vec;
         }
@@ -148,12 +141,7 @@ namespace util{
         virtual void copy( const Properties* source ){
 
             clear();
-
-            std::vector< std::pair< std::string, std::string > > vec =
-                source->toArray();
-            for( unsigned int ix=0; ix<vec.size(); ++ix ){
-                properties[vec[ix].first] = vec[ix].second;
-            }
+            this->properties = source->properties;
         }
 
         /**
@@ -186,14 +174,14 @@ namespace util{
             std::ostringstream stream;
             std::map< std::string, std::string >::const_iterator iter;
 
-            stream << "Begin Class decaf::util::Properties:" << std::endl;
+            stream << "Begin Class activemq::util::Properties:" << std::endl;
 
             for( iter = properties.begin(); iter != properties.end(); ++iter ){
                 stream << " properties[" << iter->first << "] = "
                        << iter->second << std::endl;
             }
 
-            stream << "End Class decaf::util::Properties:" << std::endl;
+            stream << "End Class activemq::util::Properties:" << std::endl;
 
             return stream.str();
         }

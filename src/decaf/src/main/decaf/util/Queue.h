@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_UTIL_QUEUE_H
-#define _DECAF_UTIL_QUEUE_H
+#ifndef _DECAF_UTIL_QUEUE_H_
+#define _DECAF_UTIL_QUEUE_H_
 
 #include <list>
 #include <vector>
@@ -55,76 +55,123 @@ namespace util{
      * polling loop to ensure that you don't get stuck there.
      */
 
-    template <typename T> class DECAF_API Queue : public concurrent::Synchronizable
-    {
+    template <typename T> class DECAF_API Queue : public concurrent::Synchronizable {
     public:
 
-        Queue();
-        virtual ~Queue();
+        Queue() {}
+        virtual ~Queue() {}
 
         /**
          * Empties this queue.
          */
-        void clear();
+        void clear() {
+            queue.clear();
+        }
 
         /**
          * Returns a Reference to the element at the head of the queue
          * @return reference to a queue type object or (safe)
          */
-        T& front();
+        T& front() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.front();
+        }
 
         /**
          * Returns a Reference to the element at the head of the queue
          * @return reference to a queue type object or (safe)
          */
-        const T& front() const;
+        const T& front() const {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.front();
+        }
 
         /**
          * Returns a Reference to the element at the tail of the queue
          * @return reference to a queue type object or (safe)
          */
-        T& back();
+        T& back() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.back();
+        }
 
         /**
          * Returns a Reference to the element at the tail of the queue
          * @return reference to a queue type object or (safe)
          */
-        const T& back() const;
+        const T& back() const {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            return queue.back();
+        }
 
         /**
          * Places a new Object at the Tail of the queue
          * @param t - Queue Object Type reference.
          */
-        void push( const T &t );
+        void push( const T &t ) {
+            queue.push_back( t );
+        }
 
         /**
          * Places a new Object at the front of the queue
          * @param t - Queue Object Type reference.
          */
-        void enqueueFront( const T &t );
+        void enqueueFront( const T &t ) {
+            queue.push_front( t );
+        }
 
         /**
          * Removes and returns the element that is at the Head of the queue
          * @return reference to a queue type object or (safe)
          */
-        T pop();
+        T pop() {
+            if( queue.empty() ) {
+                return safe;
+            }
+
+            // Pop the element into a temp, since we need to remain locked.
+            // this means getting front and then popping.
+            T temp = queue.front();
+            queue.pop_front();
+
+            return temp;
+        }
 
         /**
          * Gets the Number of elements currently in the Queue
          * @return Queue Size
          */
-        size_t size() const;
+        size_t size() const{
+            return queue.size();
+        }
 
         /**
          * Checks if this Queue is currently empty
          * @return boolean indicating queue emptiness
          */
-        bool empty() const;
+        bool empty() const {
+            return queue.empty();
+        }
 
         /**
          * @return the all values in this queue as a std::vector.
          */
-        virtual std::vector<T> toArray() const;
+        virtual std::vector<T> toArray() const {
+            std::vector<T> valueArray( queue.begin(), queue.end() );
+            return valueArray;
+        }
 
         /**
          * Reverses the order of the contents of this queue and stores them
@@ -132,7 +179,9 @@ namespace util{
          * @param target - The target queue that will receive the contents of
          * this queue in reverse order.
          */
-        void reverse( Queue<T>& target ) const;
+        void reverse( Queue<T>& target ) const {
+            target.queue.insert( target.queue.end(), queue.rbegin(), queue.rend() );
+        }
 
         /**
          * Locks the object.
@@ -204,7 +253,7 @@ namespace util{
         std::list<T> queue;
 
         // Object used for sync
-        concurrent::Mutex mutex;
+        util::concurrent::Mutex mutex;
 
         // Safe value used when pop, front or back are
         // called and the queue is empty.
@@ -213,150 +262,8 @@ namespace util{
     };
 
     //-----{ Static Init }----------------------------------------------------//
-    template <typename T>
-    T Queue<T>::safe;
-
-    //-----{ Retrieve current length of Queue }-------------------------------//
-
-    template <typename T> inline size_t Queue<T>::size() const
-    {
-        return queue.size();
-    }
-
-    //-----{ Retrieve whether Queue is empty or not }-------------------------//
-
-    template <typename T> inline bool Queue<T>::empty() const
-    {
-        return queue.empty();
-    }
-
-    //-----{ Defulat Constructor }--------------------------------------------//
-
-    template <typename T>
-    Queue<T>::Queue()
-    {
-    }
-
-    //-----{ Default Destructor }---------------------------------------------//
-
-    template <typename T> Queue<T>::~Queue()
-    {
-    }
-
-    template <typename T>
-    void Queue<T>::clear()
-    {
-        queue.clear();
-    }
-
-    //-----{ Add Elements to Back of Queue }----------------------------------//
-
-    template <typename T>
-    void Queue<T>::push( const T &t )
-    {
-        queue.push_back( t );
-    }
-
-    template <typename T>
-    void Queue<T>::enqueueFront( const T &t )
-    {
-        queue.push_front( t );
-    }
-
-    //-----{ Remove Elements from Front of Queue }----------------------------//
-
-    template <typename T>
-    T Queue<T>::pop()
-    {
-        if(queue.empty())
-        {
-            return safe;
-        }
-
-        // Pop the element into a temp, since we need to remain locked.
-        // this means getting front and then popping.
-        T temp = queue.front();
-        queue.pop_front();
-
-        return temp;
-    }
-
-    //-----{ Returnreference to element at front of Queue }-------------------//
-
-    template <typename T>
-    T& Queue<T>::front()
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-
-        return queue.front();
-    }
-
-    //-----{ Returnreference to element at front of Queue }-------------------//
-
-    template <typename T>
-    const T& Queue<T>::front() const
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-
-        return queue.front();
-    }
-
-    //-----{ Returnreference to element at back of Queue }--------------------//
-
-    template <typename T>
-    T& Queue<T>::back()
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-
-        return queue.back();
-    }
-
-    //-----{ Returnreference to element at back of Queue }--------------------//
-
-    template <typename T>
-    const T& Queue<T>::back() const
-    {
-        if( queue.empty() )
-        {
-            return safe;
-        }
-
-        return queue.back();
-    }
-
-    template <typename T>
-    void Queue<T>::reverse( Queue<T>& target ) const
-    {
-        typename std::list<T>::const_reverse_iterator iter;
-        iter = queue.rbegin();
-        for( ; iter != queue.rend(); ++iter ) {
-            target.push( *iter );
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    template <typename T>
-    std::vector<T> Queue<T>::toArray() const{
-        std::vector<T> valueArray(queue.size());
-
-        typename std::list<T>::const_iterator iter;
-        iter=queue.begin();
-        for( int ix=0; iter != queue.end(); ++iter, ++ix ){
-            valueArray[ix] = *iter;
-        }
-
-        return valueArray;
-    }
+    template <typename T> T Queue<T>::safe;
 
 }}
 
-#endif /* _DECAF_UTIL_QUEUE_H */
+#endif /*_DECAF_UTIL_QUEUE_H_*/
