@@ -21,6 +21,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src/main src/examples
 if BUILD_CPPUNIT_TESTS
   SUBDIRS += src/test
+  SUBDIRS += src/test-benchmarks
 endif
 
 #Distribute these directories:

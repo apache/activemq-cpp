@@ -26,9 +26,9 @@ AC_CONFIG_SRCDIR(src/main/decaf/lang/Thread.cpp)
 ## Define the Version variables
 ## -----------------------------------------------
 DECAF_LIBRARY_NAME=decaf
-DECAF_VERSION=0.1-SNAPSHOT
-DECAF_LIBRARY_VERSION=0:0:0
-DECAF_RELEASE=0.0
+DECAF_VERSION=1.0-SNAPSHOT
+DECAF_LIBRARY_VERSION=1:0:0
+DECAF_RELEASE=1.0
 DECAF_API_VERSION=${DECAF_VERSION}
 
 AC_SUBST(DECAF_LIBRARY_NAME)
@@ -52,9 +52,10 @@ AC_CANONICAL_HOST
 
 AC_PROG_CC
 AC_PROG_CXX
-## Uncomment to use libtool for shared libs
-## AM_PROG_LIBTOOL
-AC_PROG_RANLIB
+AC_LIBTOOL_WIN32_DLL
+AC_PROG_LIBTOOL
+AC_SUBST([LIBTOOL_DEPS])
+
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
@@ -86,28 +87,26 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
-CXXFLAGS="$CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-LIBS="$LIBS"
+PLAT_CXXFLAGS=
+PLAT_LIBS=
 
 case "${host_os}" in
 
   *darwin* ) ## Mac OS X configuration
-    CXXFLAGS="-ansi -pedantic $CXXFLAGS"
-    LIBS="$LIBS"
+    PLAT_CXXFLAGS="-ansi -pedantic"
     ;;
 
   *cygwin* ) ## Cygwin configuration
-    # LIBS="-lwinmm -lm";
-    CXXFLAGS="$CXXFLAGS -Wno-uninitialized"
-    LIBS="$LIBS -lm -lpthread -luuid -lrpcrt4"
+    PLAT_CXXFLAGS="-Wno-uninitialized"
+    PLAT_LIBS="-lm -lpthread -luuid -lrpcrt4"
     ;;
 
   *solaris* ) ## Solaris configuration
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
-    LIBS="$LIBS -lm -lpthread -luuid -lsocket -lrt"
+    PLAT_CXXFLAGS="-ansi -pedantic"
+    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
     ;;
 
   *) ## Unix configuration
@@ -115,37 +114,31 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    CXXFLAGS="-ansi -pedantic  $CXXFLAGS"
-    LIBS="$LIBS -lm -lpthread -luuid"
+    PLAT_CXXFLAGS="-ansi -pedantic"
+    PLAT_LIBS="-lm -lpthread -luuid"
 esac
 
-##
-## Not all platforms define addrinfo and related functions
-##
-AC_MSG_CHECKING([whether struct addrinfo is defined])
-AC_TRY_COMPILE(
-  [ #include <stdio.h>
-    #ifdef HAVE_UNISTD_H
-    # include <unistd.h>
-    #endif
-    #include <sys/types.h>
-    #include <sys/socket.h>
-    #include <netdb.h>
-  ],
-  [
-    do {
-      struct addrinfo a;
-      (void) a.ai_flags;
-    } while(0)
-  ],
-  [
-    AC_MSG_RESULT(yes)
-    AC_DEFINE(HAVE_STRUCT_ADDRINFO,, [define if you have struct addrinfo])
-  ],
-  [
-    AC_MSG_RESULT(no)
-  ])
+## Flags for building the decaf cpp library
+AC_SUBST([DECAF_CXXFLAGS])
+AC_SUBST([DECAF_LIBS])
+DECAF_CXXFLAGS="$PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+DECAF_LIBS="$PLAT_LIBS"
 
+## Flags for building the test applications.
+AC_SUBST([DECAF_TEST_CXXFLAGS])
+AC_SUBST([DECAF_TEST_LIBS])
+DECAF_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+DECAF_TEST_LIBS="../main/libdecaf.la"
+
+# Check to see if the compiler supports the visibility flags.
+# If so, define HAVE_VISIBILITY_OPTIONS
+CHECK_VISIBILITY()
+
+## Not all platforms define addrinfo and related functions.  If this platform
+## supports addrinfo, defines HAVE_STRUCT_ADDRINFO.
+CHECK_ADDRINFO()
+
+## Execute Doxygen macros
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
 DX_CHI_FEATURE(OFF)
@@ -155,7 +148,6 @@ DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
 DX_INIT_DOXYGEN(decaf, doxygen.cfg, doc)
-
 
 ## -----------------------------------------------------
 ## configuration
@@ -170,6 +162,7 @@ AC_CONFIG_FILES(src/examples/Makefile)
 if test x$cppunit = xyes
 then
   AC_CONFIG_FILES(src/test/Makefile)
+  AC_CONFIG_FILES(src/test-benchmarks/Makefile)
 fi
 
 AC_OUTPUT
