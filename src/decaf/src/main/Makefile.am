@@ -133,12 +133,6 @@ h_sources = \
    decaf/util/logging/PropertiesChangeListener.h
 
 ##
-## Compiler / Linker Info
-##
-lib_LIBRARIES= libdecaf.a
-libdecaf_a_SOURCES= $(h_sources) $(cc_sources)
-
-##
 ## LibTool build step
 ##
 lib_LTLIBRARIES= libdecaf.la
