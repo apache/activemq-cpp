@@ -63,7 +63,7 @@ namespace util{
                          const std::string& delim = " \t\n\r\f",
                          bool returnDelims = false);
 
-        virtual ~StringTokenizer(void);
+        virtual ~StringTokenizer();
 
         /**
          * Calculates the number of times that this tokenizer's nextToken
@@ -71,21 +71,21 @@ namespace util{
          * position is not advanced.
          * @return Count of remaining tokens
          */
-        virtual int countTokens(void) const;
+        virtual int countTokens() const;
 
         /**
          * Tests if there are more tokens available from this tokenizer's
          * string.
          * @return true if there are more tokens remaining
          */
-        virtual bool hasMoreTokens(void) const;
+        virtual bool hasMoreTokens() const;
 
         /**
          * Returns the next token from this string tokenizer.
          * @return string value of next token
          * @thorws NoSuchElementException
          */
-        virtual std::string nextToken(void)
+        virtual std::string nextToken()
             throw ( lang::exceptions::NoSuchElementException );
 
         /**
@@ -100,7 +100,7 @@ namespace util{
          * @return next string in the token list
          * @throw NoSuchElementException
          */
-        virtual std::string nextToken(const std::string& delim)
+        virtual std::string nextToken( const std::string& delim )
             throw ( lang::exceptions::NoSuchElementException );
 
         /**
@@ -128,7 +128,7 @@ namespace util{
          */
         virtual void reset( const std::string& str = "",
                             const std::string& delim = "",
-                            bool returnDelims = false);
+                            bool returnDelims = false );
 
     };
 
