@@ -25,8 +25,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 StringTokenizer::StringTokenizer( const std::string& str,
                                   const std::string& delim,
-                                  bool returnDelims )
-{
+                                  bool returnDelims ) {
     // store off the data
     this->str = str;
     this->delim = delim;
@@ -45,9 +44,9 @@ int StringTokenizer::countTokens() const
 {
     int count = 0;
     string::size_type localPos = pos;
-    string::size_type lastPos  = pos;
+    string::size_type lastPos = pos;
 
-    while(localPos != string::npos) {
+    while( localPos != string::npos ) {
 
         if( returnDelims && str.find_first_of( delim, localPos ) == localPos ) {
             count += 1;
@@ -58,10 +57,10 @@ int StringTokenizer::countTokens() const
         // Find first token by spanning the fist non-delimiter, to the
         // next delimiter, skipping any delimiters that are at the curret
         // location.
-        lastPos = str.find_first_not_of(delim, localPos);
-        localPos = str.find_first_of(delim, lastPos);
+        lastPos = str.find_first_not_of( delim, localPos );
+        localPos = str.find_first_of( delim, lastPos );
 
-        if(lastPos != string::npos) {
+        if( lastPos != string::npos ) {
             count++;
         }
     }
@@ -73,8 +72,8 @@ int StringTokenizer::countTokens() const
 bool StringTokenizer::hasMoreTokens() const
 {
     string::size_type nextpos =
-        returnDelims ? str.find_first_of(delim, pos) :
-                       str.find_first_not_of(delim, pos);
+        returnDelims ? str.find_first_of( delim, pos ) :
+                       str.find_first_not_of( delim, pos );
 
     return ( nextpos != string::npos );
 }
@@ -84,7 +83,6 @@ std::string StringTokenizer::nextToken()
    throw ( lang::exceptions::NoSuchElementException )
 {
     if( pos == string::npos ) {
-
         throw NoSuchElementException(
             __FILE__, __LINE__,
             "StringTokenizer::nextToken - No more Tokens available");
