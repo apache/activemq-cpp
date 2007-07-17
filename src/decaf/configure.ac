@@ -72,7 +72,6 @@ AC_CHECK_SIZEOF(float, 4)
 AC_CHECK_SIZEOF(double, 8)
 
 AC_CHECK_HEADERS([uuid.h uuid/uuid.h], [AC_DEFINE([HAVE_UUID_T], [1], [Define if uuid_t exists.])])
-# AC_CHECK_HEADERS([uuid/uuid.h])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
 AC_CHECK_HEADERS([sys/filio.h])
@@ -86,6 +85,11 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
+
+APR_FIND_APR([], [], 1, 1)
+if test $apr_found = "no"; then
+  AC_MSG_ERROR([APR not found])
+fi
 
 PLAT_CXXFLAGS=
 PLAT_LIBS=
@@ -127,7 +131,7 @@ DECAF_LIBS="$PLAT_LIBS"
 ## Flags for building the test applications.
 AC_SUBST([DECAF_TEST_CXXFLAGS])
 AC_SUBST([DECAF_TEST_LIBS])
-DECAF_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+DECAF_TEST_CXXFLAGS="PLAT_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 DECAF_TEST_LIBS="../main/libdecaf.la"
 
 # Check to see if the compiler supports the visibility flags.
