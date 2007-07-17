@@ -13,7 +13,7 @@ dnl distributed under the License is distributed on an "AS IS" BASIS,
 dnl WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 dnl See the License for the specific language governing permissions and
 dnl limitations under the License.
-
+dnl -------------------------------------------------------- -*- autoconf -*-
 dnl
 dnl find_apr.m4 : locate the APR include files and libraries
 dnl

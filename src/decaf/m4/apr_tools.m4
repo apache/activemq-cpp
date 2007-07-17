@@ -51,8 +51,6 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     AC_MSG_ERROR([apr-config --ldflags failed])
   fi
 
-  dnl When APR stores the dependent libs in the .la file, we don't need
-  dnl --libs.
   APR_LIBS="`$apr_config --link-libtool --libs`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --link-libtool --libs failed])
@@ -69,5 +67,5 @@ AC_DEFUN([DECAF_DOWNLOAD_APR],
   echo "Please install APR on this system and supply the appropriate"
   echo "--with-apr option to 'configure'"
 
-  AC_MSG_ERROR([no suitable apr found])
+  AC_MSG_ERROR([no suitable APR found])
 ])
