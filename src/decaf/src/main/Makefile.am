@@ -139,7 +139,7 @@ lib_LTLIBRARIES= libdecaf.la
 libdecaf_la_SOURCES= $(h_sources) $(cc_sources)
 libdecaf_la_CXXFLAGS= $(DECAF_CXXFLAGS)
 libdecaf_la_LDFLAGS= -version-info $(DECAF_LIBRARY_VERSION) -release $(DECAF_VERSION)
-libdecaf_la_LIBADD= $(DECAF_LIBS)
+libdecaf_la_LIBADD= $(DECAF_LIBS) $(APR_LIBS)
 
 ##
 ## Packaging Info
