@@ -27,11 +27,17 @@ dnl
 AC_DEFUN([DECAF_CONFIGURE_APR],
 [
   AC_MSG_NOTICE([Apache Portable Runtime (APR) library configuration])
-  APR_FIND_APR(["$srcdir/apr"], ["./apr"], 1, [0 1])
+  APR_FIND_APR([], [], 1, [0 1])
+  APR_FIND_APU([], [], 1, [0 1])
 
   if test $apr_found = "no"; then
     AC_MSG_WARN([APR not found])
     DECAF_DOWNLOAD_APR
+  fi
+
+  if test $apu_found = "no"; then
+    AC_MSG_WARN([APR Utils not found])
+    DECAF_DOWNLOAD_APU
   fi
 
   dnl Get build information from APR
@@ -50,10 +56,18 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --ldflags failed])
   fi
+  LDFLAGS="$LDFLAGS `$apu_config --ldflags`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([apu-config --ldflags failed])
+  fi
 
   APR_LIBS="`$apr_config --link-libtool --libs`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --link-libtool --libs failed])
+  fi
+  APR_LIBS="`$apu_config --link-libtool --libs`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([apu-config --link-libtool --libs failed])
   fi
 
   AC_SUBST([APR_LIBS])
@@ -68,4 +82,15 @@ AC_DEFUN([DECAF_DOWNLOAD_APR],
   echo "--with-apr option to 'configure'"
 
   AC_MSG_ERROR([no suitable APR found])
+])
+
+dnl DECAF_DOWNLOAD_APU()
+dnl no apr-utils found, print out a message telling the user what to do
+AC_DEFUN([DECAF_DOWNLOAD_APU],
+[
+  echo "The Apache Portable Runtime (APR) Utils library cannot be found."
+  echo "Please install APR Utils on this system and supply the appropriate"
+  echo "--with-apr option to 'configure'"
+
+  AC_MSG_ERROR([no suitable APR Utils found])
 ])
