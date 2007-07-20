@@ -19,6 +19,10 @@
 #define _DECAF_UTIL_COLLECTION_H_
 
 #include <decaf/util/Config.h>
+#include <devaf/lang/exceptions/UnsupportedOperationException.h>
+#include <devaf/lang/exceptions/NullPointerException.h>
+#include <devaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Iterator.h>
 
 namespace decaf{
 namespace util{
@@ -64,6 +68,83 @@ namespace util{
     public:
 
         virtual ~Collection() {}
+
+        /**
+         * Returns true if this collection changed as a result of the call.
+         * (Returns false if this collection does not permit duplicates and
+         * already contains the specified element.)
+         *
+         * Collections that support this operation may place limitations on
+         * what elements may be added to this collection. In particular,
+         * some collections will refuse to add null elements, and others
+         * will impose restrictions on the type of elements that may be
+         * added. Collection classes should clearly specify in their
+         * documentation any restrictions on what elements may be added.
+         *
+         * If a collection refuses to add a particular element for any
+         * reason other than that it already contains the element, it must
+         * throw an exception (rather than returning false). This preserves
+         * the invariant that a collection always contains the specified
+         * element after this call returns.
+         *
+         * For non-pointer values, i.e. class instances or string's the object
+         * will be copied into the collection, thus the object must support
+         * being copied, must not hide the copy constructor and assignment
+         * operator.
+         *
+         * @param value - reference to the element to add.
+         * @returns true if the element was added
+         * @throw UnsupportedOperationException
+         * @throw NullPointerException
+         * @throw IllegalArgumentException
+         */
+        virtual bool add( const E& value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::NullPointerException,
+                    lang::exceptions::IllegalArgumentException ) = 0;
+
+        /**
+         * Removes a single instance of the specified element from the
+         * collection.  More formally, removes an element e such that
+         * (o==null ? e==null : o.equals(e)), if this collection contains one
+         * or more such elements. Returns true if this collection contained
+         * the specified element (or equivalently, if this collection changed
+         * as a result of the call).
+         * @param value - reference to the element to remove.
+         * @returns true if the collection was changed
+         * @throw UnsupportedOperationException
+         * @throw NullPointerException
+         */
+        virtual bool remove( const E& value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::NullPointerException ) = 0;
+
+        /**
+         * Returns true if this collection contains all of the elements in
+         * the specified collection.
+         * @param source - Collection to compare to this one.
+         * @thorw Exception
+         */
+        virtual bool containsAll( const Collection<E>& source )
+            throw ( lang::Exception ) = 0;
+
+        /**
+         * Adds all of the elements in the specified collection to this
+         * collection. The behavior of this operation is undefined if the
+         * specified collection is modified while the operation is in progress.
+         * (This implies that the behavior of this call is undefined if the
+         * specified collection is this collection, and this collection is
+         * nonempty.)
+         * @param source - Collection whose elements are added to this one.
+         * @return true if this collection changed as a result of the call
+         * @throw UnsupportedOperationException
+         * @throw NullPointerException
+         * @throw IllegalArgumentException
+         */
+        virtual bool addAll( const Collection<E>& source )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::NullPointerException,
+                    lang::exceptions::IllegalArgumentException ) = 0;
 
     };
 
