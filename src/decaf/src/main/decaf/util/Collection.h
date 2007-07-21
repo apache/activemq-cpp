@@ -70,6 +70,49 @@ namespace util{
         virtual ~Collection() {}
 
         /**
+         * Returns the number of elements in this collection. If this collection
+         * contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
+         * @returns the number of elements in this collection
+         */
+        virtual int size() = 0;
+
+        /**
+         * @returns true if this collection contains no elements.
+         */
+        virtual bool isEmpty() = 0;
+
+        /**
+         * Returns true if this collection contains the specified element. More
+         * formally, returns true if and only if this collection contains at
+         * least one element e such that (o==null ? e==null : o.equals(e)).
+         * @param value - value to check for presence in the collection
+         * @returns true if there is at least one of the elements in the collection
+         * @thorws NullPointerException
+         */
+        virtual bool contains( const E& value )
+            throw ( lang::exceptions::NullPointerException ) = 0;
+
+        /**
+         * Returns an iterator over the elements in this collection. There are
+         * no guarantees concerning the order in which the elements are
+         * returned (unless this collection is an instance of some class that
+         * provides a guarantee).
+         * @returns an Iterator over the elements in this collection
+         */
+        virtual Iterator<E>* iterator() = 0;
+
+        /**
+         * Returns an array containing all of the elements in this collection. If
+         * the collection makes any guarantees as to what order its elements are
+         * returned by its iterator, this method must return the elements in the
+         * same order.
+         *
+         * This method acts as bridge between array-based and collection-based APIs.
+         * @returns an array of the elements in this collection.
+         */
+        virtual std::vector<E> toArray() = 0;
+
+        /**
          * Returns true if this collection changed as a result of the call.
          * (Returns false if this collection does not permit duplicates and
          * already contains the specified element.)
@@ -145,6 +188,55 @@ namespace util{
             throw ( lang::exceptions::UnsupportedOperationException,
                     lang::exceptions::NullPointerException,
                     lang::exceptions::IllegalArgumentException ) = 0;
+
+        /**
+         * Removes all this collection's elements that are also contained in
+         * the specified collection (optional operation). After this call returns,
+         * this collection will contain no elements in common with the specified
+         * collection.
+         * @param value - The Collection whose elements are to be removed
+         * @returns true if the collection changed as a result of this call
+         * @throw UnsupportedOperationException
+         * @throw NullPointerException
+         * @throw IllegalArgumentException
+         */
+        virtual bool removeAll( const Collection<E>& value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::NullPointerException,
+                    lang::exceptions::IllegalArgumentException ) = 0;
+
+        /**
+         * Retains only the elements in this collection that are contained in the
+         * specified collection (optional operation). In other words, removes from
+         * this collection all of its elements that are not contained in the
+         * specified collection.
+         * @param value - The Collection whose elements are to be retained
+         * @returns true if the collection changed as a result of this call
+         * @throw UnsupportedOperationException
+         * @throw NullPointerException
+         * @throw IllegalArgumentException
+         */
+        virtual bool retainAll( const Collection<E> value )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::NullPointerException,
+                    lang::exceptions::IllegalArgumentException ) = 0;
+
+        /**
+         * Removes all of the elements from this collection (optional operation).
+         * This collection will be empty after this method returns unless it throws
+         * an exception.
+         * @throw UnsupportedOperationException
+         */
+        virtual void clear()
+            throw ( lang::exceptions::UnsupportedOperationException ) = 0;
+
+        /**
+         * Compares the passed collection to this one, if they contain the
+         * same elements, i.e. all their elements are equivalent, then it
+         * returns true.
+         * @returns true if the Collections contain the same elements.
+         */
+        virtual bool equals( const Collection<E>& value ) = 0;
 
     };
 
