@@ -131,7 +131,7 @@ DECAF_LIBS="$PLAT_LIBS"
 ## Flags for building the test applications.
 AC_SUBST([DECAF_TEST_CXXFLAGS])
 AC_SUBST([DECAF_TEST_LIBS])
-DECAF_TEST_CXXFLAGS="$PLAT_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+DECAF_TEST_CXXFLAGS="$DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 DECAF_TEST_LIBS="../main/libdecaf.la"
 
 # Check to see if the compiler supports the visibility flags.
