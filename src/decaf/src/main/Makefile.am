@@ -109,6 +109,7 @@ h_sources = \
    decaf/util/Date.h \
    decaf/util/Guid.h \
    decaf/util/Iterator.h \
+   decaf/util/Collection.h \
    decaf/util/Map.h \
    decaf/util/Properties.h \
    decaf/util/Queue.h \
