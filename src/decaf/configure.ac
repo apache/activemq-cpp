@@ -86,9 +86,7 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
-## find and configure the APR, if not installed check if we have
-## the source under our source tree and setup the scripts and
-## makefile variables to build it.
+## find and configure the APR, and ARP Utils
 DECAF_CONFIGURE_APR
 
 PLAT_CXXFLAGS=
