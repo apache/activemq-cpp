@@ -42,12 +42,12 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
 
   dnl Get build information from APR
 
-  CPPFLAGS="$CPPFLAGS `$apr_config --cppflags`"
+  CPPFLAGS="$CPPFLAGS `$apr_config --cppflags --includes`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --cppflags failed])
   fi
 
-  CFLAGS="$CFLAGS `$apr_config --cflags`"
+  CFLAGS="$CFLAGS `$apr_config --cflags --includes`"
   if test $? -ne 0; then
     AC_MSG_ERROR([apr-config --cflags failed])
   fi
