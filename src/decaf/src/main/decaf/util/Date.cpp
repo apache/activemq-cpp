@@ -17,16 +17,9 @@
 
 #include <decaf/util/Date.h>
 #include <decaf/util/Config.h>
-
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-
-#ifdef HAVE_SYS_TIMEB_H
-#include <sys/timeb.h>
-#endif
-
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
+
+#include <apr_time.h>
 
 using namespace std;
 using namespace decaf;
@@ -35,23 +28,5 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 long long Date::getCurrentTimeMilliseconds(){
-
-#if defined (HAVE_GETTIMEOFDAY)
-    timeval tv;
-    gettimeofday (&tv, NULL);
-    return (tv.tv_sec * 1000LL) + (tv.tv_usec / 1000LL);
-#elif defined (HAVE_TIME)
-    return time (NULL) * 1000LL;
-#elif defined (HAVE_FTIME)
-    struct timeb t;
-    ftime (&t);
-    return (t.time * 1000LL) + t.millitm;
-#else
-
-    // This platform doesn't support any of the standard time methods
-    // ... should never get here.
-    #error "No current time function available on the local platform";
-
-#endif
+    return apr_time_now() / 1000;
 }
-
