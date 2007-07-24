@@ -89,31 +89,20 @@
 
 // Define a class to hanlde APR initialization and termination, then declare a global
 // static instance that will cause the library to only be initialized once.
+#include <apr.h>
 #include <apr_general.h>
 #include <apr_pools.h>
 
 class _APR_LIBRARY {
-private:
-
-    // Global APR memory pool
-    apr_pool_t* memoryPool;
-
 public:
 
     _APR_LIBRARY() {
         apr_initialize();
-        apr_pool_create( &memoryPool, NULL );
     }
 
     ~_APR_LIBRARY() {
-        apr_pool_destroy( memoryPool );
         apr_terminate();
     }
-
-    apr_pool_t* getMemoryPool() const{
-        return memoryPool;
-    }
-
 };
 
 static _APR_LIBRARY _decaf_apr;
