@@ -23,11 +23,8 @@
 #include <stdexcept>
 #include <assert.h>
 
-#ifdef HAVE_PTHREAD_H
-    #include <pthread.h>
-#else
-    #include <windows.h>
-#endif
+#include <apr_pools.h>
+#include <apr_thread_proc.h>
 
 namespace decaf{
 namespace lang{
@@ -47,12 +44,15 @@ namespace lang{
          */
         Runnable* task;
 
-        #ifdef HAVE_PTHREAD_H
-            pthread_attr_t attributes;
-            pthread_t threadHandle;
-        #else
-            HANDLE threadHandle;
-        #endif
+        /**
+         * APR Pool to allocate thread from
+         */
+        apr_pool_t* pool;
+
+        /**
+         * APR Thread Handle
+         */
+        apr_thread_t* threadHandle;
 
         /**
          * Started state of this thread.
@@ -116,16 +116,12 @@ namespace lang{
          * Obtains the Thread Id of the current thread
          * @return Thread Id
          */
-        static unsigned long getId(void);
+        static unsigned long getId();
 
     private:
 
         // Internal thread handling
-        #ifdef HAVE_PTHREAD_H
-            static void* runCallback (void* param);
-        #else
-            static unsigned int WINAPI runCallback (void* param);
-        #endif
+        static void* APR_THREAD_FUNC runCallback( apr_thread_t* self, void* param );
 
     };
 

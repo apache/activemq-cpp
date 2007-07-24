@@ -17,11 +17,8 @@
 
 #include "Thread.h"
 
-#ifdef HAVE_PTHREAD_H
-    #include <errno.h>
-#else
-    #include <process.h> // _endthreadex
-#endif
+#include <apr_time.h>
+#include <apr_portable.h>
 
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
@@ -31,59 +28,52 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread()
-{
-    task = this;
-    started = false;
-    joined = false;
+Thread::Thread() {
+    this->task = this;
+    this->started = false;
+    this->joined = false;
+    this->pool = NULL;
+    this->threadHandle = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::Thread( Runnable* task )
-{
+Thread::Thread( Runnable* task ) {
     this->task = task;
-    started = false;
-    joined = false;
+    this->started = false;
+    this->joined = false;
+    this->pool = NULL;
+    this->threadHandle = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Thread::~Thread()
-{
+Thread::~Thread(){
+    if( pool != NULL ) {
+        apr_pool_destroy( pool );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::start() throw ( Exception )
 {
-    if (this->started) {
-        throw Exception( __FILE__, __LINE__,
-            "Thread already started");
+    if( this->started ) {
+        throw Exception(
+            __FILE__, __LINE__,
+            "Thread::start - Thread already started");
     }
 
-#ifdef HAVE_PTHREAD_H
-
-    ::pthread_attr_init (&attributes);
-    ::pthread_attr_setdetachstate (&attributes, PTHREAD_CREATE_JOINABLE);
-    int err = ::pthread_create (
+    apr_pool_create( &pool, NULL );
+    apr_status_t err = apr_thread_create(
         &this->threadHandle,
-        &attributes,
+        NULL,
         runCallback,
-        this);
-    if (err != 0) {
-        throw Exception( __FILE__, __LINE__,
-            "Coud not start thread");
+        this,
+        pool );
+
+    if( err != APR_SUCCESS ) {
+        throw Exception(
+            __FILE__, __LINE__,
+            "Thread::start - Coud not start thread");
     }
-
-#else
-
-    unsigned int threadId = 0;
-    this->threadHandle =
-        (HANDLE)::_beginthreadex(NULL, 0, runCallback, this, 0, &threadId);
-    if (this->threadHandle == NULL) {
-        throw Exception( __FILE__, __LINE__,
-            "Coud not start thread");
-    }
-
-#endif
 
     // Mark the thread as started.
     started = true;
@@ -92,58 +82,34 @@ void Thread::start() throw ( Exception )
 ////////////////////////////////////////////////////////////////////////////////
 void Thread::join() throw( Exception )
 {
-    if (!this->started) {
+    if( !this->started ) {
         throw Exception( __FILE__, __LINE__,
             "Thread::join() called without having called Thread::start()");
     }
-    if (!this->joined) {
 
-#ifdef HAVE_PTHREAD_H
-        ::pthread_join(this->threadHandle, NULL);
-#else
-        ::WaitForSingleObject (this->threadHandle, INFINITE);
-#endif
-
+    if( !this->joined ) {
+        apr_status_t threadReturn;
+        if( apr_thread_join( &threadReturn, this->threadHandle ) != APR_SUCCESS ) {
+            throw Exception( __FILE__, __LINE__,
+                "Thread::join() - Failed to Join the Thread");
+        }
     }
     this->joined = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::sleep( int millisecs )
-{
-#ifdef HAVE_PTHREAD_H
-    struct timespec rec, rem;
-    rec.tv_sec = millisecs / 1000;
-    rec.tv_nsec = (millisecs % 1000) * 1000000;
-    while( nanosleep( &rec, &rem ) == -1 ){
-        if( errno != EINTR ){
-            break;
-        }
-    }
-
-#else
-    ::Sleep (millisecs);
-#endif
+void Thread::sleep( int millisecs ) {
+    apr_sleep( (apr_interval_time_t)(millisecs * 1000) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned long Thread::getId(void)
-{
-   #ifdef HAVE_PTHREAD_H
-      return (long)(pthread_self());
-   #else
-      return GetCurrentThreadId();
-   #endif
+unsigned long Thread::getId() {
+    return (long)( apr_os_thread_current() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef HAVE_PTHREAD_H
-    void*
-#else
-    unsigned int WINAPI
-#endif
-Thread::runCallback( void* param )
-{
+void* APR_THREAD_FUNC Thread::runCallback( apr_thread_t* self, void* param ) {
+
     // Get the instance.
     Thread* thread = (Thread*)param;
 
@@ -151,22 +117,13 @@ Thread::runCallback( void* param )
     try{
         thread->task->run();
     } catch( ... ){
-        RuntimeException ex(__FILE__, __LINE__, "unhandled exception bubbled up to Thread::run");
+        RuntimeException ex(
+            __FILE__, __LINE__,
+            "unhandled exception bubbled up to Thread::run");
         ex.printStackTrace();
     }
 
-#ifdef HAVE_PTHREAD_H
-    ::pthread_attr_destroy( &thread->attributes );
+    // Indicate we are done.
+    apr_thread_exit( self, APR_SUCCESS );
     return NULL;
-#else
-
-    // Needed when using threads and CRT in Windows. Otherwise memleak can appear.
-    ::_endthreadex(0);
-
-    // _endthreadex (unlike _endthread) does not automatically close the thread handle
-    // so we need to do this manually.
-    ::CloseHandle(thread->threadHandle);
-
-    return 0;
-#endif
 }

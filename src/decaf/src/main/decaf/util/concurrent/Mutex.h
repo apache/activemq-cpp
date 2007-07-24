@@ -18,21 +18,16 @@
 #ifndef _DECAF_CONCURRENT_MUTEX_H_
 #define _DECAF_CONCURRENT_MUTEX_H_
 
-// Includes.
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Config.h>
-#include <list>
 
 #include <apr_pools.h>
 #include <apr_thread_mutex.h>
 #include <apr_thread_cond.h>
 
-#ifdef HAVE_SYS_TIME_H
-    #include <sys/time.h>
-#endif
-
+#include <list>
 #include <assert.h>
 
 namespace decaf{
