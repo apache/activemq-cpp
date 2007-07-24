@@ -19,15 +19,13 @@
 #include <decaf/util/logging/LoggerDefines.h>
 #include <sstream>
 
+#include <apr_pools.h>
+#include <apr_strings.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util::logging;
-
-// For supporting older versions of msvc (<=2003)
-#if defined(_MSC_VER) && (_MSC_VER < 1400)
-    #define vsnprintf _vsnprintf
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 Exception::Exception() throw(){
@@ -40,7 +38,7 @@ Exception::Exception( const Exception& ex ) throw() : Throwable() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Exception::Exception( const char* file, const int lineNumber,
-                   const char* msg, ... ) throw() {
+                      const char* msg, ... ) throw() {
     va_list vargs;
     va_start( vargs, msg ) ;
     buildMessage( msg, vargs );
@@ -56,42 +54,28 @@ Exception::~Exception() throw(){
 ////////////////////////////////////////////////////////////////////////////////
 void Exception::setMessage( const char* msg, ... ){
     va_list vargs;
-    va_start(vargs, msg);
-    buildMessage(msg, vargs);
+    va_start( vargs, msg );
+    buildMessage( msg, vargs );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Exception::buildMessage(const char* format, va_list& vargs) {
+void Exception::buildMessage( const char* format, va_list& vargs ) {
 
     // Allocate buffer with a guess of it's size
-    int size = 128;
+    apr_pool_t* pool = NULL;
+    apr_pool_create( &pool, NULL );
 
-    // Format string
-    while( true ){
+    // Allocate a buffer of the specified size.
+    char* buffer = apr_pvsprintf( pool, format, vargs );
 
-        // Allocate a buffer of the specified size.
-        char* buffer = new char[size];
+    // Guessed size was enough. Assign the string.
+    message.assign( buffer, strlen( buffer ) );
 
-        int written = vsnprintf(buffer, size, format, vargs);
-        if (written > -1 && written < size-1) {
+    // assign isn't passing ownership, just copying, delete
+    // the allocated buffer.
+    apr_pool_destroy( pool );
 
-            // Guessed size was enough. Assign the string.
-            message.assign (buffer, written);
-
-            // assign isn't passing ownership, just copying, delete
-            // the allocated buffer.
-            delete [] buffer;
-
-            break;
-        }
-
-        // Our buffer wasn't big enough - destroy the old buffer,
-        // double the size and try again.
-        delete [] buffer;
-        size *= 2;
-    }
-
-    //activemq::logger::SimpleLogger logger("com.yadda1");
+    //decaf::util::logger::SimpleLogger logger("com.yadda1");
     //logger.log( message );
 }
 
@@ -105,7 +89,7 @@ void Exception::setMark( const char* file, const int lineNumber ) {
     stream << "\tFILE: " << stackTrace[stackTrace.size()-1].first;
     stream << ", LINE: " << stackTrace[stackTrace.size()-1].second;
 
-    //activemq::logger::SimpleLogger logger("com.yadda2");
+    //decaf::util::logger::SimpleLogger logger("com.yadda2");
     //logger.log( stream.str() );
 }
 
