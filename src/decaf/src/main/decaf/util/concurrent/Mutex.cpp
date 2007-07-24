@@ -17,62 +17,49 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 
+#include <apr_errno.h>
+#include <apr_time.h>
+
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-Mutex::Mutex()
-{
-#ifdef HAVE_PTHREAD_H
-    pthread_mutexattr_t attr;
-    pthread_mutexattr_init( &attr );
-    pthread_mutex_init( &mutex, &attr );
-    pthread_mutexattr_destroy( &attr );
-#else
-    InitializeCriticalSection( &mutex );
-#endif
+Mutex::Mutex() {
 
-    lock_owner = 0;
-    lock_count = 0;
+    apr_pool_create( &pool, NULL );
+    apr_thread_mutex_create( &mutex, APR_THREAD_MUTEX_NESTED, pool );
+    this->lock_owner = 0;
+    this->lock_count = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Mutex::~Mutex()
-{
+Mutex::~Mutex() {
+
     // Unlock the mutex.
     unlock();
 
-#ifdef HAVE_PTHREAD_H
-    pthread_mutex_destroy( &mutex );
-#else
-    DeleteCriticalSection( &mutex );
-#endif
+    apr_thread_mutex_destroy( mutex );
+    apr_pool_destroy( pool );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::lock() throw( lang::Exception )
-{
+void Mutex::lock() throw( lang::Exception ) {
+
     unsigned long threadId = lang::Thread::getId();
 
     if( threadId == lock_owner ) {
         lock_count++;
     } else {
-
-#ifdef HAVE_PTHREAD_H
-        pthread_mutex_lock( &mutex );
-#else
-        EnterCriticalSection( &mutex );
-#endif
-
+        apr_thread_mutex_lock( mutex );
         lock_owner = threadId;
         lock_count = 1;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Mutex::unlock() throw( lang::Exception )
-{
+void Mutex::unlock() throw( lang::Exception ) {
+
     if( lock_owner == 0 ) {
         return;
     }
@@ -87,12 +74,7 @@ void Mutex::unlock() throw( lang::Exception )
 
     if(lock_count == 0) {
         lock_owner = 0;
-
-#ifdef HAVE_PTHREAD_H
-        pthread_mutex_unlock( &mutex );
-#else
-        LeaveCriticalSection( &mutex );
-#endif
+        apr_thread_mutex_unlock( mutex );
     }
 }
 
@@ -113,90 +95,37 @@ void Mutex::wait( unsigned long millisecs )
             "Mutex::wait - Failed, not Lock Owner!");
     }
 
-    // Save the current owner and Lock count as we are going to
-    // unlock and release for someone else to lock on potentially.
-    // When we come back and re-lock we want to restore to the
-    // state we were in before.
+    // Save the current owner as we are going to unlock and release for
+    // someone else to lock on potentially.  When we come back and
+    // re-lock we want to restore to the state we were in before.
     unsigned long lock_owner = this->lock_owner;
-    int lock_count = this->lock_count;
 
-    this->lock_count = 0;
     this->lock_owner = 0;
 
-#ifdef HAVE_PTHREAD_H
-
     // Create this threads wait event
-    pthread_cond_t waitEvent;
-    pthread_cond_init( &waitEvent, NULL );
+    apr_thread_cond_t* waitEvent = NULL;
+    apr_thread_cond_create( &waitEvent, pool );
 
     // Store the event in the queue so that a notify can
     // call it and wake up the thread.
-    eventQ.push_back( &waitEvent );
+    eventQ.push_back( waitEvent );
 
-    int returnValue = 0;
     if( millisecs != WAIT_INFINITE ) {
-        timeval now = {0,0};
-        gettimeofday( &now, NULL );
-
-        timespec wait = {0,0};
-        wait.tv_sec = now.tv_sec + (millisecs / 1000);
-        wait.tv_nsec = (now.tv_usec * 1000) + ((millisecs % 1000) * 1000000);
-
-        if( wait.tv_nsec > 1000000000 ) {
-            wait.tv_sec++;
-            wait.tv_nsec -= 1000000000;
-        }
-
-        returnValue = pthread_cond_timedwait( &waitEvent, &mutex, &wait );
+        apr_interval_time_t wait = millisecs * 1000;
+        apr_thread_cond_timedwait( waitEvent, mutex, wait );
     } else {
-        returnValue = pthread_cond_wait( &waitEvent, &mutex );
+        apr_thread_cond_wait( waitEvent, mutex );
     }
 
     // Be Sure that the event is now removed
-    eventQ.remove( &waitEvent );
+    eventQ.remove( waitEvent );
 
     // Destroy our wait event now, the notify method will have removed it
     // from the event queue.
-    pthread_cond_destroy( &waitEvent );
-
-#else // !defined(HAVE_PTHREAD_H)
-
-    // Create the event to wait on
-    HANDLE waitEvent = CreateEvent( NULL, false, false, NULL );
-
-    if( waitEvent == NULL ) {
-        throw lang::Exception(
-            __FILE__, __LINE__,
-            "Mutex::wait - Failed Creating Event." );
-    }
-
-    eventQ.push_back( waitEvent );
-
-    // Release the Lock
-    LeaveCriticalSection( &mutex );
-
-    // Wait for a signal
-    if( WaitForSingleObject( waitEvent, millisecs ) != WAIT_OBJECT_0 && millisecs == WAIT_INFINITE ) {
-        throw lang::Exception(
-            __FILE__, __LINE__,
-            "Mutex::wait - Infinite wait aborted for unknown reason." );
-    }
-
-    // Reaquire the Lock
-    EnterCriticalSection( &mutex );
-
-    // Remove the event no matter what
-    eventQ.remove( waitEvent );
-
-    // Clean up the event, the notif methods will have
-    // already poped it from the queue.
-    CloseHandle( waitEvent );
-
-#endif // !defined(HAVE_PTHREAD_H)
+    apr_thread_cond_destroy( waitEvent );
 
     // restore the owner
     this->lock_owner = lock_owner;
-    this->lock_count = lock_count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,15 +138,9 @@ void Mutex::notify() throw( lang::Exception )
     }
 
     if( !eventQ.empty() ) {
-#ifdef HAVE_PTHREAD_H
-        pthread_cond_t* event = eventQ.front();
+        apr_thread_cond_t* event = eventQ.front();
         eventQ.remove( event );
-        pthread_cond_signal( event );
-#else
-        HANDLE event = eventQ.front();
-        eventQ.remove( event );
-        SetEvent( event );
-#endif
+        apr_thread_cond_signal( event );
     }
 }
 
@@ -230,16 +153,9 @@ void Mutex::notifyAll() throw( lang::Exception )
             "Mutex::NotifyAll - Failed, not Lock Owner!" );
     }
 
-
     while( !eventQ.empty() ) {
-#ifdef HAVE_PTHREAD_H
-        pthread_cond_t* event = eventQ.front();
+        apr_thread_cond_t* event = eventQ.front();
         eventQ.remove( event );
-        pthread_cond_signal( event );
-#else
-        HANDLE event = eventQ.front();
-        eventQ.remove( event );
-        SetEvent( event );
-#endif
+        apr_thread_cond_signal( event );
     }
 }

@@ -25,21 +25,12 @@
 #include <decaf/util/Config.h>
 #include <list>
 
+#include <apr_pools.h>
+#include <apr_thread_mutex.h>
+#include <apr_thread_cond.h>
+
 #ifdef HAVE_SYS_TIME_H
     #include <sys/time.h>
-#endif
-
-#ifdef HAVE_PTHREAD_H
-    #include <pthread.h>
-#else
-    #include <windows.h>
-
-    #if ( !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0400)
-        #if ( !defined(WINVER) || WINVER < 0x0400)
-            #pragma message ("Unsupported platform, Windows NT 4.0 or later required")
-        #endif
-    #endif
-
 #endif
 
 #include <assert.h>
@@ -54,26 +45,21 @@ namespace concurrent{
      * and will be successful.
      * @see  pthread_mutex_t
      */
-    class DECAF_API Mutex : public Synchronizable
-    {
-    private:       // Data
+    class DECAF_API Mutex : public Synchronizable {
+    private:
 
-        /**
-         * The mutex object.
-         */
-        #ifdef HAVE_PTHREAD_H
-            pthread_mutex_t mutex;
+        // APR Pool Allocator
+        apr_pool_t* pool;
 
-            std::list<pthread_cond_t*> eventQ;
-        #else
-            CRITICAL_SECTION mutex;
+        // The mutex object.
+        apr_thread_mutex_t* mutex;
 
-            std::list<HANDLE> eventQ;
-        #endif
+        // List of waiting threads
+        std::list<apr_thread_cond_t*> eventQ;
 
         // Lock Status Members
-        volatile int lock_count;
         volatile unsigned long lock_owner;
+        volatile unsigned long lock_count;
 
     public:
 
