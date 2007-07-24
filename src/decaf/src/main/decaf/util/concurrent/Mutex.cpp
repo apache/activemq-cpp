@@ -99,8 +99,10 @@ void Mutex::wait( unsigned long millisecs )
     // someone else to lock on potentially.  When we come back and
     // re-lock we want to restore to the state we were in before.
     unsigned long lock_owner = this->lock_owner;
+    unsigned long lock_count = this->lock_count;
 
     this->lock_owner = 0;
+    this->lock_count = 0;
 
     // Create this threads wait event
     apr_thread_cond_t* waitEvent = NULL;
@@ -126,6 +128,7 @@ void Mutex::wait( unsigned long millisecs )
 
     // restore the owner
     this->lock_owner = lock_owner;
+    this->lock_count = lock_count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
