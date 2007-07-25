@@ -47,7 +47,8 @@ cc_sources = \
    decaf/util/logging/Logger.cpp \
    decaf/util/logging/LogWriter.cpp \
    decaf/util/logging/SimpleLogger.cpp \
-   decaf/util/logging/LogManager.cpp
+   decaf/util/logging/LogManager.cpp \
+   decaf/util/Config.cpp
 
 h_sources = \
    decaf/net/BufferedSocket.h \

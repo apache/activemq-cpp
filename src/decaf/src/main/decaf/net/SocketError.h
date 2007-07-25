@@ -32,13 +32,6 @@ namespace net{
     public:
 
         /**
-         * Indicates that a socket operation was interrupted by a signal.
-         */
-        static const int INTERRUPTED;
-
-    public:
-
-        /**
          * Gets the last error appropriate for the platform.
          */
         static int getErrorCode();

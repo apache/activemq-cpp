@@ -44,6 +44,8 @@
 #include <stdio.h>
 #include <iostream>
 
+#include <apr_portable.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
@@ -52,8 +54,7 @@ using namespace decaf::lang;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket )
-{
+SocketInputStream::SocketInputStream( net::Socket::SocketHandle socket ) {
     this->socket = socket;
     this->closed = false;
 }
@@ -69,12 +70,16 @@ void SocketInputStream::close() throw( lang::Exception ){
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::available() const throw ( io::IOException ){
 
+    // Convert to an OS level socket.
+    apr_os_sock_t* oss = NULL;
+    apr_os_sock_get( oss, socket );
+
 // The windows version
 #if defined(HAVE_WINSOCK2_H)
 
     unsigned long numBytes = 0;
 
-    if (::ioctlsocket (socket, FIONREAD, &numBytes) == SOCKET_ERROR){
+    if( ::ioctlsocket( *oss, FIONREAD, &numBytes ) == SOCKET_ERROR ){
         throw SocketException( __FILE__, __LINE__, "ioctlsocket failed" );
     }
 
@@ -87,7 +92,7 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
     #if defined(FIONREAD)
 
         std::size_t numBytes = 0;
-        if( ::ioctl (socket, FIONREAD, &numBytes) != -1 ){
+        if( ::ioctl( *oss, FIONREAD, &numBytes ) != -1 ){
             return numBytes;
         }
 
@@ -100,15 +105,17 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
 
         fd_set rd;
         FD_ZERO(&rd);
-        FD_SET( socket, &rd );
+        FD_SET( *oss, &rd );
         struct timeval tv;
         tv.tv_sec = 0;
         tv.tv_usec = 0;
-        int returnCode = ::select(socket+1, &rd, NULL, NULL, &tv);
-        if(returnCode == -1){
-            throw IOException(__FILE__, __LINE__, SocketError::getErrorString().c_str() );
+        int returnCode = ::select( *oss+1, &rd, NULL, NULL, &tv );
+        if( returnCode == -1 ){
+            throw IOException(
+                __FILE__, __LINE__,
+                SocketError::getErrorString().c_str() );
         }
-        return (returnCode == 0)? 0 : 1;
+        return (returnCode == 0) ? 0 : 1;
 
     #else
 
@@ -116,16 +123,19 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
 
     #endif /* HAVE_SELECT */
 
-
 #endif // !defined(HAVE_WINSOCK2_H)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char SocketInputStream::read() throw ( IOException ){
 
-    unsigned char c;
-    std::size_t len = read( &c, 1 );
-    if( len != sizeof(c)  && !closed ){
+    apr_status_t result = APR_SUCCESS;
+    char c;
+    apr_size_t size = 1;
+
+    result = apr_socket_recv( socket, &c, &size );
+
+    if( ( size != sizeof(c) && !closed ) || result != APR_SUCCESS ){
         throw IOException( __FILE__, __LINE__,
             "activemq::io::SocketInputStream::read - failed reading a byte");
     }
@@ -137,39 +147,38 @@ unsigned char SocketInputStream::read() throw ( IOException ){
 std::size_t SocketInputStream::read( unsigned char* buffer,
                                      std::size_t bufferSize ) throw ( IOException )
 {
-    int len = 0;
+    apr_size_t size = (apr_size_t)bufferSize;
+    apr_status_t result = APR_SUCCESS;
 
-    // Loop to ignore any signal interruptions that occur during the read.
-    do {
+    // Read data from the socket, size on input is size of buffer, when done
+    // size is the number of bytes actually read, can be <= bufferSize.
+    result = apr_socket_recv( socket, (char*)buffer, &size );
 
-        // Read data from the socket.
-        len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
-
-        // Check for a closed socket.
-        if( len == 0 && closed ){
-            throw IOException( __FILE__, __LINE__,
-                "activemq::io::SocketInputStream::read - The connection is broken" );
-        }
-
-    } while( !closed && len == -1 &&
-             SocketError::getErrorCode() == SocketError::INTERRUPTED );
-
-    // Check for error.
-    if( len == -1 ){
-
-        // Otherwise, this was a bad error - throw an exception.
-        throw IOException( __FILE__, __LINE__,
-                "activemq::io::SocketInputStream::read - %s", SocketError::getErrorString().c_str() );
+    // Check for a closed socket.
+    if( size == 0 || closed || APR_STATUS_IS_EOF( result ) ){
+        throw IOException(
+            __FILE__, __LINE__,
+            "activemq::io::SocketInputStream::read - The connection is broken" );
     }
 
-    return len;
+    // Check for error.
+    if( result != APR_SUCCESS ){
+        // Otherwise, this was a bad error - throw an exception.
+        throw IOException(
+            __FILE__, __LINE__,
+            "decaf::net::SocketInputStream::read - %s",
+            SocketError::getErrorString().c_str() );
+    }
+
+    return size;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::skip( std::size_t num DECAF_UNUSED )
-throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+    throw ( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+
     throw lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,
-        "skip() method is not supported");
+        "SocketInputStream::skip() method is not supported");
 }
 

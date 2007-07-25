@@ -21,8 +21,9 @@
 #include <decaf/net/Socket.h>
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
-
 #include <decaf/util/Config.h>
+
+#include <apr_pools.h>
 
 namespace decaf{
 namespace net{
@@ -34,24 +35,33 @@ namespace net{
     /**
      * Platform-independent implementation of the socket interface.
      */
-    class DECAF_API TcpSocket : public Socket
-    {
+    class DECAF_API TcpSocket : public Socket {
     private:
+
+        /**
+         * APR Socket Pool to allocate from
+         */
+        apr_pool_t* apr_pool;
 
         /**
          * The handle for this socket.
          */
-         SocketHandle socketHandle;
+        SocketHandle socketHandle;
 
-         /**
-          * The input stream for reading this socket.
-          */
-         SocketInputStream* inputStream;
+        /**
+         * The Address info for this Socket
+         */
+        SocketAddress socketAddress;
 
-         /**
-          * The output stream for writing to this socket.
-          */
-         SocketOutputStream* outputStream;
+        /**
+         * The input stream for reading this socket.
+         */
+        SocketInputStream* inputStream;
+
+        /**
+         * The output stream for writing to this socket.
+         */
+        SocketOutputStream* outputStream;
 
     public:
 
@@ -60,7 +70,7 @@ namespace net{
          * @throws SocketException thrown one windows if the static initialization
          * call to WSAStartup was not successful.
          */
-        TcpSocket() throw (SocketException);
+        TcpSocket() throw ( SocketException );
 
         /**
          * Construct a connected or bound socket based on given
@@ -221,36 +231,7 @@ namespace net{
 
     protected:
 
-        #if defined(HAVE_WINSOCK2_H)
-
-            // WINDOWS needs initialization of winsock
-            class StaticSocketInitializer {
-            private:
-
-                SocketException* socketInitError;
-
-                void clear(){
-                    if( socketInitError != NULL ){
-                        delete socketInitError;
-                    }
-                    socketInitError = NULL;
-                }
-
-            public:
-
-                SocketException* getSocketInitError() {
-                    return socketInitError;
-                }
-
-                StaticSocketInitializer();
-                virtual ~StaticSocketInitializer();
-
-            };
-
-            static StaticSocketInitializer staticSocketInitializer;
-        #endif
-
-        void checkResult( int value ) const throw (SocketException);
+        void checkResult( apr_status_t value ) const throw (SocketException);
 
     };
 

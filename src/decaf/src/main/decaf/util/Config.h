@@ -103,8 +103,11 @@ public:
     ~_APR_LIBRARY() {
         apr_terminate();
     }
-};
 
-static _APR_LIBRARY _decaf_apr;
+private:
+
+    static _APR_LIBRARY self;
+
+};
 
 #endif /*_DECAF_UTIL_CONFIG_H_*/

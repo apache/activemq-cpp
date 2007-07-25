@@ -21,6 +21,9 @@
 #include <decaf/net/SocketException.h>
 #include <decaf/util/Config.h>
 
+#include <apr_pools.h>
+#include <apr_network_io.h>
+
 namespace decaf{
 namespace net{
 
@@ -31,11 +34,14 @@ namespace net{
     {
     public:
 
-        typedef Socket::SocketHandle SocketHandle;
+        typedef apr_socket_t* SocketHandle;
+        typedef apr_sockaddr_t* SocketAddress;
 
     private:
 
         SocketHandle socketHandle;
+        SocketAddress socketAddress;
+        apr_pool_t* apr_pool;
 
     public:
 
@@ -85,35 +91,6 @@ namespace net{
          * @return true of the server socket is bound.
          */
         virtual bool isBound() const;
-
-   protected:
-
-      #ifdef HAVE_WINSOCK2_H
-
-          // WINDOWS needs initialization of winsock
-          class StaticServerSocketInitializer {
-          private:
-
-              SocketException* socketInitError;
-
-              void clear(){
-                  if( socketInitError != NULL ){
-                      delete socketInitError;
-                  }
-                  socketInitError = NULL;
-              }
-
-          public:
-
-              SocketException* getSocketInitError() {
-                  return socketInitError;
-              }
-              StaticServerSocketInitializer();
-              virtual ~StaticServerSocketInitializer();
-
-          };
-          static StaticServerSocketInitializer staticSocketInitializer;
-      #endif
 
    };
 

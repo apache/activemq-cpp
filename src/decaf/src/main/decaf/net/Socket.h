@@ -23,9 +23,7 @@
 #include <decaf/io/Closeable.h>
 #include <decaf/util/Config.h>
 
-#if defined(HAVE_WINSOCK2_H)
-#include <Winsock2.h> // SOCKET
-#endif
+#include <apr_network_io.h>
 
 namespace decaf{
 namespace net{
@@ -34,17 +32,20 @@ namespace net{
     {
     public:
 
-        // Define the SocketHandle type.
-        #if !defined(HAVE_WINSOCK2_H)
-            typedef int SocketHandle;
-        #else
-            typedef SOCKET SocketHandle;
-        #endif
+        /**
+         * Define the SocketHandle type.
+         */
+        typedef apr_socket_t* SocketHandle;
+
+        /**
+         * Define the SocketAddress type
+         */
+        typedef apr_sockaddr_t* SocketAddress;
 
         /**
          * Defines a constant for an invalid socket handle.
          */
-        static const SocketHandle INVALID_SOCKET_HANDLE = (SocketHandle) -1;
+        static const int INVALID_SOCKET_HANDLE = 0;
 
     public:
 

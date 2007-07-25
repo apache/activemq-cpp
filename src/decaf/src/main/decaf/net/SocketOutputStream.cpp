@@ -20,25 +20,6 @@
 #include <decaf/lang/Character.h>
 #include "SocketError.h"
 
-#ifdef HAVE_WINSOCK2_H
-    #include <Winsock2.h>
-#else
-    #include <sys/socket.h>
-#endif
-
-#include <errno.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-
-#if defined(SOCKET_NOSIGNAL)
-    #define AMQ_SEND_OPTS SOCKET_NOSIGNAL
-#elif defined(MSG_NOSIGNAL)
-    #define AMQ_SEND_OPTS MSG_NOSIGNAL
-#else
-    #define AMQ_SEND_OPTS 0
-#endif
-
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
@@ -46,8 +27,7 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket )
-{
+SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket ) {
     this->socket = socket;
     this->closed = false;
 }
@@ -63,28 +43,31 @@ void SocketOutputStream::close() throw( lang::Exception ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( unsigned char c ) throw (IOException)
-{
+void SocketOutputStream::write( unsigned char c ) throw ( IOException ) {
     write( &c, 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
-    throw (IOException)
-{
-    std::size_t remaining = len;
-    int sendOpts = AMQ_SEND_OPTS;
+    throw ( IOException ) {
 
-    while( remaining > 0 && !closed )
-    {
-        int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );
-        if( length == -1 || closed ){
-            throw IOException( __FILE__, __LINE__,
-                "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
+    apr_size_t remaining = (apr_size_t)len;
+    apr_status_t result = APR_SUCCESS;
+
+    while( remaining > 0 && !closed ) {
+        // On input remaining is the bytes to send, after return remaining
+        // is the amount actually sent.
+        result = apr_socket_send( socket, (const char*)buffer, &remaining );
+
+        if( result != APR_SUCCESS || closed ) {
+            throw IOException(
+                __FILE__, __LINE__,
+                "decaf::net::SocketOutputStream::write - %s",
+                SocketError::getErrorString().c_str() );
         }
 
-        buffer+=length;
-        remaining -= length;
+        // move us to next position to write, or maybe end.
+        buffer += remaining;
+        remaining = len - remaining;
     }
 }
-

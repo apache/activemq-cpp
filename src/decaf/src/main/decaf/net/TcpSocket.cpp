@@ -16,33 +16,6 @@
  */
 #include <decaf/util/Config.h>
 
-#if defined(HAVE_WINSOCK2_H)
-    #include <Winsock2.h>
-    #include <Ws2tcpip.h>
-    #include <sys/stat.h>
-    #define stat _stat
-#else
-    #include <unistd.h>
-    #include <netdb.h>
-    #include <fcntl.h>
-    #include <sys/file.h>
-    #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
-    #include <string.h>
-    #include <netinet/tcp.h>
-#endif
-
-#ifndef SHUT_RDWR
-    #define SHUT_RDWR 2 // Winsock2 doesn't seem to define this
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <sys/types.h>
-
 #include "TcpSocket.h"
 #include "SocketInputStream.h"
 #include "SocketOutputStream.h"
@@ -53,48 +26,11 @@ using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
 
-#if defined(HAVE_WINSOCK2_H)
-
-    // Static socket initializer needed for winsock
-
-    TcpSocket::StaticSocketInitializer::StaticSocketInitializer() {
-        socketInitError = NULL;
-        const WORD version_needed = MAKEWORD(2,2); // lo-order byte: major version
-        WSAData temp;
-        if( WSAStartup( version_needed, &temp ) ){
-           clear();
-           socketInitError = new SocketException ( __FILE__, __LINE__,
-               "winsock.dll was not found");
-        }
-    }
-    TcpSocket::StaticSocketInitializer::~StaticSocketInitializer() {
-        clear();
-        WSACleanup();
-    }
-
-    // Create static instance of the socket initializer.
-    TcpSocket::StaticSocketInitializer TcpSocket::staticSocketInitializer;
-
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket() throw (SocketException)
-:
-    socketHandle( INVALID_SOCKET_HANDLE ),
+TcpSocket::TcpSocket() throw ( SocketException )
+  : socketHandle( INVALID_SOCKET_HANDLE ),
     inputStream( NULL ),
-    outputStream( NULL )
-{
-
-    try {
-
-#if defined(HAVE_WINSOCK2_H)
-        if( staticSocketInitializer.getSocketInitError() != NULL ) {
-            throw *staticSocketInitializer.getSocketInitError();
-        }
-#endif
-    }
-    DECAF_CATCH_RETHROW( SocketException )
-    DECAF_CATCHALL_THROW( SocketException )
+    outputStream( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,15 +38,9 @@ TcpSocket::TcpSocket( SocketHandle socketHandle )
 :
     socketHandle( INVALID_SOCKET_HANDLE ),
     inputStream( NULL ),
-    outputStream( NULL )
-{
-    try {
+    outputStream( NULL ) {
 
-#if defined(HAVE_WINSOCK2_H)
-        if( staticSocketInitializer.getSocketInitError() != NULL ) {
-            throw *staticSocketInitializer.getSocketInitError();
-        }
-#endif
+    try {
 
         this->socketHandle = socketHandle;
         this->inputStream = new SocketInputStream( socketHandle );
@@ -121,8 +51,7 @@ TcpSocket::TcpSocket( SocketHandle socketHandle )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::~TcpSocket()
-{
+TcpSocket::~TcpSocket() {
     // No shutdown, just close - dont want blocking destructor.
     close();
 }
@@ -138,8 +67,8 @@ OutputStream* TcpSocket::getOutputStream(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::connect(const char* host, int port) throw ( SocketException )
-{
+void TcpSocket::connect(const char* host, int port) throw ( SocketException ) {
+
     try{
 
         if( isConnected() ) {
@@ -147,70 +76,44 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
                 "Socket::connect - Socket already connected.  host: %s, port: %d", host, port );
         }
 
-        // Create the socket.
-        checkResult( (int)(socketHandle = ::socket(AF_INET, SOCK_STREAM, 0)) );
+        // Create the APR Pool
+        apr_pool_create( &apr_pool, NULL );
 
-        // Check port value.
-        if (port <= 0 || port > 65535) {
-            close();
-            throw SocketException ( __FILE__, __LINE__,
-                "Socket::connect- Port out of range: %d", port );
-        }
+        // Create the Address data
+        checkResult( apr_sockaddr_info_get(
+            &socketAddress, host, APR_INET, port, 0, apr_pool ) );
 
-#ifdef SO_NOSIGPIPE // Don't want to get a SIGPIPE on FreeBSD and Mac OS X
+        // Create the actual socket.
+        checkResult( apr_socket_create(
+            &socketHandle, socketAddress->family, SOCK_STREAM, APR_PROTO_TCP, apr_pool ) );
 
-        int optval = 1;
-        checkResult( ::setsockopt( socketHandle, SOL_SOCKET, SO_NOSIGPIPE, (char*)&optval, sizeof(optval)) );
+        // it is a good idea to specify socket options explicitly. in this
+        // case, we make a blocking socket with timeout, this should allow us
+        // the time needed to connect to the socket before returning, but not
+        // block us forever waiting if there isn't anyone there..
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 1 );
+        apr_socket_timeout_set( socketHandle, 1000 );
 
-#endif
+        checkResult( apr_socket_connect( socketHandle, socketAddress ) );
 
-        sockaddr_in target_addr;
-        target_addr.sin_family = AF_INET;
-        target_addr.sin_port = htons( ( short ) port );
-        target_addr.sin_addr.s_addr = 0; // To be set later down...
-        memset( &target_addr.sin_zero, 0, sizeof( target_addr.sin_zero ) );
-
-        // Resolve name
-#if defined(HAVE_STRUCT_ADDRINFO)
-        addrinfo hints;
-        memset(&hints, 0, sizeof(addrinfo));
-        hints.ai_family = PF_INET;
-        struct addrinfo *res_ptr = NULL;
-
-        checkResult( ::getaddrinfo( host, NULL, &hints, &res_ptr ) );
-
-        assert(res_ptr->ai_addr->sa_family == AF_INET);
-        // Porting: On both 32bit and 64 bit systems that we compile to soo far, sin_addr
-        // is a 32 bit value, not an unsigned long.
-        assert( sizeof( ( ( sockaddr_in* )res_ptr->ai_addr )->sin_addr.s_addr ) == 4 );
-        target_addr.sin_addr.s_addr = ( ( sockaddr_in* )res_ptr->ai_addr )->sin_addr.s_addr;
-        freeaddrinfo( res_ptr );
-#else
-        struct ::hostent *he = ::gethostbyname(host);
-        if( he == NULL ) {
-            throw SocketException( __FILE__, __LINE__, "Failed to resolve hostname" );
-        }
-        target_addr.sin_addr.s_addr = *((in_addr_t *)he->h_addr);
-#endif
-
-        // Attempt the connection to the server.
-        checkResult( ::connect( socketHandle,
-                            ( const sockaddr * )&target_addr,
-                            sizeof( target_addr ) ) );
+        // Now that we are connected, we want to set ourself up as a blocking
+        // socket by default.
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
+        apr_socket_timeout_set( socketHandle, -1 );
 
         // Create an input/output stream for this socket.
         inputStream = new SocketInputStream( socketHandle );
         outputStream = new SocketOutputStream( socketHandle );
 
-    }
-    catch( SocketException& ex ) {
+    } catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
         throw ex;
-    }
-    catch( ... ){
+    } catch( ... ) {
         try{ close(); } catch( lang::Exception& cx){ /* Absorb */ }
-        throw SocketException( __FILE__, __LINE__, "connect() caught unknown exception");
+        throw SocketException(
+            __FILE__, __LINE__,
+            "TcpSocket::connect() - caught unknown exception" );
     }
 }
 
@@ -229,17 +132,18 @@ void TcpSocket::close() throw( lang::Exception )
         outputStream = NULL;
     }
 
-    if( isConnected() )
-    {
-        ::shutdown( socketHandle, SHUT_RDWR );
+    // When connected we first shutdown, which breaks our reads and writes
+    // then we close to free APR resources.
+    if( isConnected() ) {
+        apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READWRITE );
+        apr_socket_close( socketHandle );
+        socketHandle = INVALID_SOCKET_HANDLE;
+    }
 
-        #if !defined(HAVE_WINSOCK2_H)
-            ::close( socketHandle );
-        #else
-           ::closesocket( socketHandle );
-        #endif
-
-       socketHandle = INVALID_SOCKET_HANDLE;
+    // Destroy the APR Pool
+    if( apr_pool != NULL ) {
+        apr_pool_destroy( apr_pool );
+        apr_pool = NULL;
     }
 }
 
@@ -247,11 +151,9 @@ void TcpSocket::close() throw( lang::Exception )
 int TcpSocket::getSoLinger() const throw( SocketException ){
 
    try{
-        linger value;
-        socklen_t length = sizeof( value );
-        checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_LINGER, (char*)&value, &length ));
-
-        return value.l_onoff? value.l_linger : 0;
+        int value = 0;
+        checkResult( apr_socket_opt_get( socketHandle, APR_SO_LINGER, &value ) );
+        return value;
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -261,10 +163,7 @@ int TcpSocket::getSoLinger() const throw( SocketException ){
 void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
 
     try{
-        linger value;
-        value.l_onoff = dolinger != 0;
-        value.l_linger = dolinger;
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_LINGER, (char*)&value, sizeof(value) ));
+        checkResult( apr_socket_opt_set( socketHandle, APR_SO_LINGER, dolinger ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -274,9 +173,8 @@ void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
 bool TcpSocket::getKeepAlive() const throw( SocketException ){
 
     try{
-        int value;
-        socklen_t length = sizeof( int );
-        checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, &length ));
+        int value = 0;
+        checkResult( apr_socket_opt_get( socketHandle, APR_SO_KEEPALIVE, &value ) );
         return value != 0;
     }
     DECAF_CATCH_RETHROW( SocketException )
@@ -287,8 +185,8 @@ bool TcpSocket::getKeepAlive() const throw( SocketException ){
 void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
 
     try{
-        int value = keepAlive? 1 : 0;
-        checkResult(::setsockopt(socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, sizeof(int)) );
+        int value = keepAlive ? 1 : 0;
+        checkResult( apr_socket_opt_set( socketHandle, APR_SO_KEEPALIVE, value ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -299,8 +197,7 @@ int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
 
     try{
         int value;
-        socklen_t length = sizeof( value );
-        checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&value, &length ));
+        checkResult( apr_socket_opt_get( socketHandle, APR_SO_RCVBUF, &value ) );
         return value;
     }
     DECAF_CATCH_RETHROW( SocketException )
@@ -311,7 +208,7 @@ int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
 void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
 
     try{
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&size, sizeof(size) ));
+        checkResult( apr_socket_opt_set( socketHandle, APR_SO_RCVBUF, size ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -322,8 +219,7 @@ bool TcpSocket::getReuseAddress() const throw( SocketException ){
 
     try{
         int value;
-        socklen_t length = sizeof( int );
-        checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, &length ));
+        checkResult( apr_socket_opt_get( socketHandle, APR_SO_REUSEADDR, &value ) );
         return value != 0;
     }
     DECAF_CATCH_RETHROW( SocketException )
@@ -334,8 +230,8 @@ bool TcpSocket::getReuseAddress() const throw( SocketException ){
 void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
 
     try{
-        int value = reuse? 1 : 0;
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) ));
+        int value = reuse ? 1 : 0;
+        checkResult( apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, value ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -346,8 +242,7 @@ int TcpSocket::getSendBufferSize() const throw( SocketException ){
 
     try{
         int value;
-        socklen_t length = sizeof( value );
-        checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&value, &length ));
+        checkResult( apr_socket_opt_get( socketHandle, APR_SO_SNDBUF, &value ) );
         return value;
     }
     DECAF_CATCH_RETHROW( SocketException )
@@ -358,7 +253,7 @@ int TcpSocket::getSendBufferSize() const throw( SocketException ){
 void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
 
     try{
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&size, sizeof(size) ));
+        checkResult( apr_socket_opt_set( socketHandle, APR_SO_SNDBUF, size ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -368,17 +263,8 @@ void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
 void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
 {
     try{
-
-#if !defined(HAVE_WINSOCK2_H)
-        timeval timot;
-        timot.tv_sec = millisecs / 1000;
-        timot.tv_usec = (millisecs % 1000) * 1000;
-#else
-        int timot = millisecs;
-#endif
-
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timot, sizeof (timot) ));
-        checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_SNDTIMEO, (const char*) &timot, sizeof (timot) ));
+        // Time is in microseconds so multiply by 1000.
+        checkResult( apr_socket_timeout_set( socketHandle, millisecs * 1000 ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
@@ -388,29 +274,13 @@ void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
 int TcpSocket::getSoTimeout() const throw( SocketException )
 {
     try{
-
-#if !defined(HAVE_WINSOCK2_H)
-        timeval timot;
-        timot.tv_sec = 0;
-        timot.tv_usec = 0;
-        socklen_t size = sizeof(timot);
-#else
-        int timot = 0;
-        int size = sizeof(timot);
-#endif
-
-        checkResult(::getsockopt(socketHandle, SOL_SOCKET, SO_RCVTIMEO, (char*) &timot, &size));
-
-#if !defined(HAVE_WINSOCK2_H)
-        return (timot.tv_sec * 1000) + (timot.tv_usec / 1000);
-#else
-        return timot;
-#endif
-
+        // Time is in microseconds so divide by 1000.
+        apr_interval_time_t value = 0;
+        checkResult( apr_socket_timeout_get( socketHandle, &value ) );
+        return value / 1000;
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -418,8 +288,7 @@ bool TcpSocket::getTcpNoDelay() const throw ( lang::Exception ) {
 
     try{
         int value;
-        socklen_t length = sizeof( int );
-        checkResult(::getsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&value, &length ));
+        checkResult( apr_socket_opt_get( socketHandle, APR_TCP_NODELAY, &value ) );
         return value != 0;
     }
     DECAF_CATCH_RETHROW( SocketException )
@@ -431,19 +300,18 @@ void TcpSocket::setTcpNoDelay( bool value ) throw ( lang::Exception ) {
 
     try{
         int ivalue = value ? 1 : 0;
-        checkResult(::setsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&ivalue, sizeof(int) ));
+        checkResult( apr_socket_opt_set( socketHandle, APR_TCP_NODELAY, ivalue ) );
     }
     DECAF_CATCH_RETHROW( SocketException )
     DECAF_CATCHALL_THROW( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::checkResult( int value ) const throw (SocketException) {
+void TcpSocket::checkResult( apr_status_t value ) const throw (SocketException) {
 
-    if( value < 0 ){
-        throw SocketException( __FILE__, __LINE__,
+    if( value != APR_SUCCESS ){
+        throw SocketException(
+            __FILE__, __LINE__,
             SocketError::getErrorString().c_str() );
     }
 }
-
-

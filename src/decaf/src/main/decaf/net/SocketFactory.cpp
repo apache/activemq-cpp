@@ -31,13 +31,12 @@ using namespace decaf::lang::exceptions;
 Socket* SocketFactory::createSocket(
     const std::string& uri,
     const Properties& properties)
-        throw ( SocketException )
-{
-    try
-    {
+        throw ( SocketException ) {
+
+    try {
+
         // Ensure something is actually passed in for the URI
-        if( uri == "" )
-        {
+        if( uri == "" ) {
             throw SocketException( __FILE__, __LINE__,
                 "SocketTransport::start() - uri not provided" );
         }
@@ -46,16 +45,14 @@ Socket* SocketFactory::createSocket(
 
         // Extract the port.
         std::size_t portIx = dummy.find( ':' );
-        if( portIx == string::npos )
-        {
+        if( portIx == string::npos ) {
             throw SocketException( __FILE__, __LINE__,
                 "SocketTransport::start() - uri malformed - port not specified: %s", uri.c_str() );
         }
         string host = dummy.substr( 0, portIx );
         string portString = dummy.substr( portIx + 1 );
         int port;
-        if( sscanf( portString.c_str(), "%d", &port) != 1 )
-        {
+        if( sscanf( portString.c_str(), "%d", &port) != 1 ) {
             throw SocketException( __FILE__, __LINE__,
                "SocketTransport::start() - unable to extract port from uri: %s", uri.c_str() );
         }
@@ -100,8 +97,8 @@ Socket* SocketFactory::createSocket(
         // clean it up when it is cleaned up.
         TcpSocket* tcpSocket = new TcpSocket();
 
-        try
-        {
+        try {
+
             // Connect the socket.
             tcpSocket->connect( host.c_str(), port );
 
@@ -117,10 +114,7 @@ Socket* SocketFactory::createSocket(
             if( soSendBufferSize > 0 ){
                 tcpSocket->setSendBufferSize( soSendBufferSize );
             }
-
-        }
-        catch ( SocketException& ex )
-        {
+        } catch ( SocketException& ex ) {
             ex.setMark( __FILE__, __LINE__ );
             try{
                 delete tcpSocket;

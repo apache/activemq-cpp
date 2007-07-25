@@ -37,8 +37,7 @@ BufferedSocket::BufferedSocket( Socket* socket,
     inputBufferSize(0),
     outputBufferSize(0)
 {
-    if(inputBufferSize < 0 || outputBufferSize < 0 )
-    {
+    if(inputBufferSize < 0 || outputBufferSize < 0 ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "BufferedSocket::BufferedSocket - buffer sizes must be >=0! "
@@ -47,8 +46,7 @@ BufferedSocket::BufferedSocket( Socket* socket,
             outputBufferSize );
     }
 
-    if(socket == NULL)
-    {
+    if(socket == NULL) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "BufferedSocket::BufferedSocket - Constructed with NULL Socket");
@@ -61,10 +59,8 @@ BufferedSocket::BufferedSocket( Socket* socket,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BufferedSocket::~BufferedSocket()
-{
-    try
-    {
+BufferedSocket::~BufferedSocket() {
+    try {
         close();
     }
     DECAF_CATCH_NOTHROW( Exception )
@@ -73,12 +69,11 @@ BufferedSocket::~BufferedSocket()
 
 ////////////////////////////////////////////////////////////////////////////////
 void BufferedSocket::connect( const char* host, int port )
-    throw( SocketException )
-{
-    try
-    {
-        if( socket->isConnected() )
-        {
+    throw( SocketException ) {
+
+    try {
+
+        if( socket->isConnected() ) {
             throw SocketException( __FILE__, __LINE__,
                  "BufferedSocket::connect() - socket already connected" );
         }
@@ -98,12 +93,11 @@ void BufferedSocket::connect( const char* host, int port )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BufferedSocket::close() throw( lang::Exception )
-{
-    try
-    {
-        if( outputStream != NULL )
-        {
+void BufferedSocket::close() throw( lang::Exception ) {
+
+    try {
+
+        if( outputStream != NULL ) {
             // Ensure all data is written
             outputStream->flush();
 

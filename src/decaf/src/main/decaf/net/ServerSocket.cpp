@@ -18,22 +18,6 @@
 #include "ServerSocket.h"
 #include "SocketError.h"
 
-#ifdef HAVE_WINSOCK2_H
-    #include <Winsock2.h>
-    #include <Ws2tcpip.h>
-    #include <sys/stat.h>
-    #define stat _stat
-#else
-    #include <unistd.h>
-    #include <netdb.h>
-    #include <fcntl.h>
-    #include <sys/file.h>
-    #include <sys/socket.h>
-    #include <netinet/in.h>
-    #include <arpa/inet.h>
-    #include <string.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -45,127 +29,93 @@
 using namespace decaf;
 using namespace decaf::net;
 
-#ifdef HAVE_WINSOCK2_H
-
-    // Static socket initializer needed for winsock
-
-    ServerSocket::StaticServerSocketInitializer::StaticServerSocketInitializer () {
-        socketInitError = NULL;
-        const WORD version_needed = MAKEWORD(2,2); // lo-order byte: major version
-        WSAData temp;
-        if( WSAStartup(version_needed, &temp )){
-           clear();
-               socketInitError = new SocketException ( __FILE__, __LINE__,
-                   "winsock.dll was not found");
-        }
-    }
-    ServerSocket::StaticServerSocketInitializer::~StaticServerSocketInitializer () {
-        clear();
-        WSACleanup();
-    }
-
-    // Create static instance of the socket initializer.
-    ServerSocket::StaticServerSocketInitializer
-        ServerSocket::staticSocketInitializer;
-
-#endif
-
-
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::ServerSocket()
-{
-    socketHandle = Socket::INVALID_SOCKET_HANDLE;
-
-#if defined(HAVE_WINSOCK2_H)
-    if( ServerSocket::staticSocketInitializer.getSocketInitError() != NULL ) {
-        throw *ServerSocket::staticSocketInitializer.getSocketInitError();
-    }
-#endif
+ServerSocket::ServerSocket() {
+    socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+    apr_pool_create( &apr_pool, NULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ServerSocket::~ServerSocket()
-{
+ServerSocket::~ServerSocket() {
     // No shutdown, just close - dont want blocking destructor.
     close();
+
+    // Free up the APR pool, this will release any remaining data we
+    // allocated but have deallocated.
+    apr_pool_destroy( apr_pool );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ServerSocket::bind( const char* host, int port ) throw ( SocketException )
-{
-    bind (host, port, SOMAXCONN);
+void ServerSocket::bind( const char* host, int port ) throw ( SocketException ) {
+    this->bind( host, port, SOMAXCONN );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ServerSocket::bind( const char* host,
                          int port,
-                         int backlog ) throw ( SocketException )
-{
-    if(isBound()) {
+                         int backlog ) throw ( SocketException ) {
+
+    apr_status_t result = APR_SUCCESS;
+
+    if( isBound() ) {
         throw SocketException ( __FILE__, __LINE__,
             "ServerSocket::bind - Socket already bound" );
     }
 
-    // Create the socket.
-    socketHandle = ::socket(AF_INET, SOCK_STREAM, 0 );
-    if( socketHandle < 0) {
-        socketHandle = Socket::INVALID_SOCKET_HANDLE;
-            throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str());
-    }
-
     // Verify the port value.
     if( port <= 0 || port > 65535 ) {
-        throw SocketException( __FILE__, __LINE__,
+        throw SocketException(
+            __FILE__, __LINE__,
             "ServerSocket::bind - Port out of range: %d", port );
     }
 
-    sockaddr_in bind_addr;
-    bind_addr.sin_family = AF_INET;
-    bind_addr.sin_port = htons((short)port);
-    bind_addr.sin_addr.s_addr = 0; // To be set later down...
-    memset(&bind_addr.sin_zero, 0, sizeof(bind_addr.sin_zero));
-    int status;
+    // Create the Address Info for the Socket
+    result = apr_sockaddr_info_get(
+        &socketAddress, host, APR_INET, port, 0, apr_pool );
 
-    // Resolve name
-#if defined(HAVE_STRUCT_ADDRINFO)
-    ::addrinfo hints;
-    memset(&hints, 0, sizeof(addrinfo));
-    hints.ai_family = PF_INET;
-    struct addrinfo *res_ptr = NULL;
-    status = ::getaddrinfo(host, NULL, &hints, &res_ptr);
-    if( status != 0 || res_ptr == NULL) {
-        throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
+    if( result != APR_SUCCESS ) {
+        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+        throw SocketException(
+              __FILE__, __LINE__,
+              SocketError::getErrorString().c_str() );
     }
-    assert(res_ptr->ai_addr->sa_family == AF_INET);
-    // Porting: On both 32bit and 64 bit systems that we compile to soo far, sin_addr is a 32 bit value, not an unsigned long.
-    assert(sizeof(((sockaddr_in*)res_ptr->ai_addr)->sin_addr.s_addr) == 4);
-    bind_addr.sin_addr.s_addr = ((sockaddr_in*)res_ptr->ai_addr)->sin_addr.s_addr;
-    freeaddrinfo(res_ptr);
-#else
-    struct ::hostent *he = ::gethostbyname(host);
-    if( he == NULL ) {
-        throw SocketException( __FILE__, __LINE__, "Failed to resolve hostname" );
+
+    // Create the socket.
+    result = apr_socket_create(
+        &socketHandle, APR_INET, SOCK_STREAM, APR_PROTO_TCP, apr_pool );
+
+    if( result != APR_SUCCESS ) {
+        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
+        throw SocketException(
+              __FILE__, __LINE__,
+              SocketError::getErrorString().c_str() );
     }
-    bind_addr.sin_addr.s_addr = *((in_addr_t *)he->h_addr);
-#endif
 
+    // Set the socket to reuse the address and default as blocking
+    apr_socket_opt_set( socketHandle, APR_SO_REUSEADDR, 1 );
+    apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0);
+    apr_socket_timeout_set( socketHandle, -1 );
 
-    // Set the socket to reuse the address.
-    int value = 1;
-    ::setsockopt(socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) );
+    // Bind to the Socket, this may be where we find out if the port is in use.
+    result = apr_socket_bind( socketHandle, socketAddress );
 
-    status = ::bind(socketHandle,
-             reinterpret_cast<sockaddr*>(&bind_addr), sizeof( bind_addr ));
-
-    if( status < 0 ){
+    if( result != APR_SUCCESS ) {
         close();
-        throw SocketException ( __FILE__, __LINE__,
-            "ServerSocket::bind - %s", SocketError::getErrorString().c_str() );
+        throw SocketException(
+              __FILE__, __LINE__,
+              "ServerSocket::bind - %s",
+              SocketError::getErrorString().c_str() );
     }
-    status = ::listen( socketHandle, (int)backlog );
-    if( status < 0 ) {
+
+    // Setup the listen for incoming connection requests
+    result = apr_socket_listen( socketHandle, backlog );
+
+    if( result != APR_SUCCESS ) {
         close();
-        throw SocketException( __FILE__, __LINE__, SocketError::getErrorString().c_str() );
+        throw SocketException(
+              __FILE__, __LINE__,
+              "ServerSocket::bind - %s",
+              SocketError::getErrorString().c_str() );
     }
 }
 
@@ -173,50 +123,34 @@ void ServerSocket::bind( const char* host,
 void ServerSocket::close() throw ( lang::Exception ){
 
     if( isBound() ) {
-
-        #if !defined(HAVE_WINSOCK2_H)
-            ::close( socketHandle );
-        #else
-            ::closesocket( socketHandle );
-        #endif
-
-        socketHandle = Socket::INVALID_SOCKET_HANDLE;
+        apr_socket_close( socketHandle );
+        socketHandle = (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool ServerSocket::isBound() const {
-    return this->socketHandle != Socket::INVALID_SOCKET_HANDLE;
+    return this->socketHandle != (apr_socket_t*)Socket::INVALID_SOCKET_HANDLE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Socket* ServerSocket::accept() throw (SocketException)
 {
-    struct sockaddr_in temp;
-
-    #if !defined(HAVE_WINSOCK2_H)
-        socklen_t temp_len = sizeof( sockaddr_in );
-    #else
-        int temp_len = sizeof( sockaddr_in );
-    #endif
-
-    SocketHandle ss_socket_handle = NULL;
+    SocketHandle incoming = NULL;
+    apr_status_t result = APR_SUCCESS;
 
     // Loop to ignore any signal interruptions that occur during the operation.
     do {
+        result = apr_socket_accept( &incoming, socketHandle, apr_pool );
+    } while( result == APR_EINTR );
 
-        ss_socket_handle = ::accept( socketHandle,
-                                     reinterpret_cast<struct sockaddr*>(&temp),
-                                     &temp_len );
-
-    } while( ss_socket_handle < 0 &&
-             SocketError::getErrorCode() == SocketError::INTERRUPTED );
-
-    if( ss_socket_handle < 0 ) {
-        throw SocketException( __FILE__, __LINE__,
-            "ServerSocket::accept- %s", SocketError::getErrorString().c_str() );
+    if( result != APR_SUCCESS ) {
+        std::cout << "Failed to accept New Connection:" << std::endl;
+        throw SocketException(
+              __FILE__, __LINE__,
+              "ServerSocket::accept - %s",
+              SocketError::getErrorString().c_str() );
     }
 
-    return new TcpSocket( ss_socket_handle );
+    return new TcpSocket( incoming );
 }
-
