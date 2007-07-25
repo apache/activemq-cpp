@@ -17,8 +17,6 @@
 
 #include "DataOutputStreamTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

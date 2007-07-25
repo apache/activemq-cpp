@@ -17,8 +17,6 @@
 
 #include "LongTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

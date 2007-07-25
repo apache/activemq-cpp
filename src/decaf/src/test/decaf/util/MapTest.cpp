@@ -18,8 +18,6 @@
 #include "MapTest.h"
 #include <string>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;

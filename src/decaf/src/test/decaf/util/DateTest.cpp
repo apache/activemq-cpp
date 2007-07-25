@@ -20,8 +20,6 @@
 #include <decaf/util/Date.h>
 #include <decaf/lang/Thread.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;

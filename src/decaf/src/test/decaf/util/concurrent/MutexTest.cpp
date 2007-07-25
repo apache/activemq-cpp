@@ -17,8 +17,6 @@
 
 #include "MutexTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::MutexTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

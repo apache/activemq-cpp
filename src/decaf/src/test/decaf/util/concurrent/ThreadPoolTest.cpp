@@ -17,8 +17,6 @@
 
 #include "ThreadPoolTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

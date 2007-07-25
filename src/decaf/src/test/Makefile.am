@@ -40,6 +40,7 @@ cc_sources = \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
+  testRegistry.cpp \
   main.cpp
 
 h_sources = \

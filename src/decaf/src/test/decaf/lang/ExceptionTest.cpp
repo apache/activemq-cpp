@@ -17,8 +17,6 @@
 
 #include "ExceptionTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

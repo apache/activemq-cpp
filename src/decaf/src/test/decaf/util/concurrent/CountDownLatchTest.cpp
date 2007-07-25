@@ -17,8 +17,6 @@
 
 #include "CountDownLatchTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
-
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;

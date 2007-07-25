@@ -17,8 +17,6 @@
 
 #include "SetTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;

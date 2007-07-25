@@ -19,8 +19,6 @@
 
 #include <decaf/util/Guid.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::GuidTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;

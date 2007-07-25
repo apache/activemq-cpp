@@ -17,8 +17,6 @@
 
 #include "SocketFactoryTest.h"
 
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
-
 #include <decaf/util/Properties.h>
 #include <decaf/net/SocketFactory.h>
 #include <decaf/net/TcpSocket.h>

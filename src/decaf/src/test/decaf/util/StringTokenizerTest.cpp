@@ -16,9 +16,6 @@
  */
 
 #include "StringTokenizerTest.h"
-
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StringTokenizerTest );
-
 #include <decaf/util/StringTokenizer.h>
 
 using namespace std;

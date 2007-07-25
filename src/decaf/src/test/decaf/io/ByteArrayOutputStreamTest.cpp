@@ -17,8 +17,6 @@
 
 #include "ByteArrayOutputStreamTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::ByteArrayOutputStreamTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

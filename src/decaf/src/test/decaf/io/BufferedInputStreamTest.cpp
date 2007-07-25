@@ -17,8 +17,6 @@
 
 #include "BufferedInputStreamTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

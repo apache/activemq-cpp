@@ -17,8 +17,6 @@
 
 #include "ThreadTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;

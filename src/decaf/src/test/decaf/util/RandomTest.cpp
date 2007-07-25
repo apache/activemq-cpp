@@ -17,8 +17,6 @@
 
 #include "RandomTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::RandomTest );
-
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
