@@ -33,7 +33,7 @@ void SocketFactoryTest::test()
     try
     {
         MyServerThread serverThread;
-        serverThread.start();
+//        serverThread.start();
 
         Thread::sleep( 500 );
 
