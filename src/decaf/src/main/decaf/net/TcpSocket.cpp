@@ -88,11 +88,14 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException ) {
             &socketHandle, socketAddress->family, SOCK_STREAM, APR_PROTO_TCP, apr_pool ) );
 
         // it is a good idea to specify socket options explicitly. in this
-        // case, we make a blocking socket with timeout, this should allow us
+        // case, we make a blocking socket with system timeout, this should allow us
         // the time needed to connect to the socket before returning, but not
-        // block us forever waiting if there isn't anyone there..
-        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 1 );
-        apr_socket_timeout_set( socketHandle, 1000 );
+        // block us forever waiting if there isn't anyone there.  Some poeple
+        // say that you shouldn't use this mode as its an OS timeout that is not
+        // controllable, if this becomes an issue, we should decide on what a
+        // reasonable timeout should be and set it here.
+        apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, 0 );
+        apr_socket_timeout_set( socketHandle, -1 );
 
         checkResult( apr_socket_connect( socketHandle, socketAddress ) );
 
