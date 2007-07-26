@@ -34,10 +34,11 @@ namespace net{
     class SocketTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( SocketTest );
-        CPPUNIT_TEST( testConnect );
-        CPPUNIT_TEST( testTx );
-        CPPUNIT_TEST( testTrx );
-        CPPUNIT_TEST( testTrxNoDelay );
+//        CPPUNIT_TEST( testConnect );
+//        CPPUNIT_TEST( testTx );
+//        CPPUNIT_TEST( testTrx );
+//        CPPUNIT_TEST( testTrxNoDelay );
+        CPPUNIT_TEST( testRxFail );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -153,6 +154,7 @@ namespace net{
         void testConnect();
         void testTx();
         void testTrx();
+        void testRxFail();
         void testTrxNoDelay();
 
     };

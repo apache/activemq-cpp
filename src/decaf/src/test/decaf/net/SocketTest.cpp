@@ -177,6 +177,54 @@ void SocketTest::testTrx() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void SocketTest::testRxFail() {
+
+    try{
+
+        MyServerThread serverThread;
+        serverThread.start();
+
+        Thread::sleep( 10 );
+
+        TcpSocket client;
+
+        client.connect("127.0.0.1", port);
+        client.setSoLinger( false );
+
+        synchronized(&serverThread.mutex)
+        {
+           if(serverThread.getNumClients() != 1)
+           {
+              serverThread.mutex.wait(1000);
+           }
+        }
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 1 );
+
+        // Give it a chance to get to its read call
+        Thread::sleep( 100 );
+
+        client.close();
+
+        synchronized(&serverThread.mutex)
+        {
+           if(serverThread.getNumClients() != 0)
+           {
+              serverThread.mutex.wait(1000);
+           }
+        }
+
+        CPPUNIT_ASSERT( serverThread.getNumClients() == 0 );
+
+        serverThread.stop();
+        serverThread.join();
+
+    }catch( io::IOException& ex ){
+        printf( "%s\n", ex.getMessage().c_str() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void SocketTest::testTrxNoDelay() {
 
     try{
