@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include <decaf/util/BooleanBenchmark.h>
+#include <decaf/lang/BooleanBenchmark.h>
 
 #include <decaf/util/PropertiesBenchmark.h>
 #include <decaf/util/QueueBenchmark.h>
