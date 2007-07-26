@@ -98,7 +98,7 @@ namespace io{
          * until the requested number of bytes are available.
          * @param buffer (out) the target buffer.
          * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read.
+         * @return The number of bytes read or -1 if EOF
          * @throws IOException thrown if an error occurs.
          */
         virtual int read( unsigned char* buffer, std::size_t bufferSize )
@@ -134,9 +134,10 @@ namespace io{
         /**
          * Populates the buffer with as much data as possible
          * from the target input stream.
+         * @returns total bytes read, or -1 if EOF.
          * @throws CMSException
          */
-        void bufferData() throw ( IOException );
+        int bufferData() throw ( IOException );
 
         /**
          * Returns the number of bytes that are currently unused
