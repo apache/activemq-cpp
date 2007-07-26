@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+#include <decaf/util/BooleanBenchmark.h>
+
 #include <decaf/util/PropertiesBenchmark.h>
 #include <decaf/util/QueueBenchmark.h>
 #include <decaf/util/SetBenchmark.h>
@@ -22,6 +24,8 @@
 
 #include <decaf/io/DataInputStreamBenchmark.h>
 #include <decaf/io/DataOutputStreamBenchmark.h>
+
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::BooleanBenchmark );
 
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::PropertiesBenchmark );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueBenchmark );
