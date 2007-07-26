@@ -96,12 +96,16 @@ int ByteArrayInputStream::read( unsigned char* buffer,
                                    throw ( IOException ){
     std::size_t ix = 0;
 
-    if( (std::size_t)distance( pos, activeBuffer->end() ) < bufferSize ) {
-        // We don't have enough data to fulfill the request.
-        throw IOException(
-            __FILE__, __LINE__,
-            "Reached the end of the buffer" );
+    if( pos == activeBuffer->end() ) {
+        return -1;
     }
+
+    // How far are we from end
+    std::size_t remaining = (std::size_t)distance( pos, activeBuffer->end() );
+
+    // We only read as much as is left if the amount remaining is less than
+    // the amount of data asked for.
+    bufferSize = remaining < bufferSize ? remaining : bufferSize;
 
     for( ; ix < bufferSize; ++ix, ++pos) {
         buffer[ix] = *(pos);
