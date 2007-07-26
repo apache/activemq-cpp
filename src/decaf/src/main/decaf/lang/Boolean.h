@@ -24,8 +24,7 @@
 namespace decaf{
 namespace lang{
 
-    class DECAF_API Boolean : public Number,
-                              public Comparable<Boolean> {
+    class DECAF_API Boolean : public Comparable<Boolean> {
     private:
 
         // This objects boolean value
