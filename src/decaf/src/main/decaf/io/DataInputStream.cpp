@@ -56,22 +56,7 @@ int DataInputStream::read( unsigned char* buffer,
                 "DataInputStream::read - Buffer is null" );
         }
 
-        std::size_t read = 0;
-
-        try {
-            read = inputStream->read( &buffer[offset], length );
-        } catch( EOFException& ex ){
-            if( read == 0 )
-                return -1;
-        }
-
-        if( read == 0 ){
-            throw IOException(
-                __FILE__, __LINE__,
-                "DataInputStream::read - failed to extract data, not EOF." );
-        }
-
-        return read;
+        return inputStream->read( &buffer[offset], length );
     }
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_RETHROW( NullPointerException )
@@ -243,7 +228,7 @@ std::string DataInputStream::readString()
 
         while( true ) {
 
-            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 1 ) == (size_t)-1 ) {
+            if( inputStream->read( (unsigned char*)( &buffer[pos] ), 1 ) == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readString - Reached EOF" );
@@ -277,8 +262,8 @@ std::string DataInputStream::readUTF()
 
         std::size_t n = 0;
         while( n < length ) {
-            std::size_t count = inputStream->read( &buffer[n], (length - n) );
-            if( count == (std::size_t)-1 ) {
+            int count = inputStream->read( &buffer[n], (length - n) );
+            if( count == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readUTF - Reached EOF" );
@@ -323,8 +308,8 @@ void DataInputStream::readFully( unsigned char* buffer,
 
         std::size_t n = 0;
         while( n < length ) {
-            std::size_t count = inputStream->read( &buffer[offset + n], (length - n) );
-            if( count == (std::size_t)-1 ) {
+            int count = inputStream->read( &buffer[offset + n], (length - n) );
+            if( count == -1 ) {
                 throw EOFException(
                     __FILE__, __LINE__,
                     "DataInputStream::readFully - Reached EOF" );

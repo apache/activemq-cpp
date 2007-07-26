@@ -105,7 +105,7 @@ namespace io{
          * This method simply performs in.read(b, len) and returns the result.
          * @param buffer (out) the target buffer.
          * @param bufferSize the size of the output buffer.
-         * @return The number of bytes read or -1 if EOS is detected
+         * @return The number of bytes read or -1 if EOF is detected
          * @throws IOException thrown if an error occurs.
          */
         virtual int read( unsigned char* buffer, std::size_t bufferSize )

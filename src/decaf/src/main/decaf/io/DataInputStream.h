@@ -357,8 +357,8 @@ namespace io{
 
             std::size_t n = 0;
             do{
-                std::size_t count = inputStream->read( &buffer[n], length - n );
-                if( count == (std::size_t)-1 ) {
+                int count = inputStream->read( &buffer[n], length - n );
+                if( count == -1 ) {
                     throw EOFException(
                         __FILE__, __LINE__,
                         "DataInputStream::readLong - Reached EOF" );
