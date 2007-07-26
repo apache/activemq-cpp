@@ -101,9 +101,9 @@ unsigned char BlockingByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BlockingByteArrayInputStream::read( unsigned char* buffer,
-                                                std::size_t bufferSize )
-                                                throw ( IOException ){
+int BlockingByteArrayInputStream::read( unsigned char* buffer,
+                                        std::size_t bufferSize )
+                                            throw ( IOException ){
     synchronized( this ){
 
         std::size_t ix = 0;

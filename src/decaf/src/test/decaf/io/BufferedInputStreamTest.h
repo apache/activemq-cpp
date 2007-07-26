@@ -59,7 +59,7 @@ namespace io{
 
                 return data.c_str()[pos++];
             }
-            virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) throw (IOException){
+            virtual int read( unsigned char* buffer, std::size_t bufferSize ) throw (IOException){
                 std::size_t numToRead = std::min( bufferSize, available() );
 
                 const char* str = data.c_str();

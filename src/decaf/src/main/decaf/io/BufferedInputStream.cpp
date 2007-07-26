@@ -85,8 +85,8 @@ unsigned char BufferedInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t BufferedInputStream::read( unsigned char* targetBuffer,
-    std::size_t targetBufferSize ) throw ( IOException ){
+int BufferedInputStream::read( unsigned char* targetBuffer,
+                               std::size_t targetBufferSize ) throw ( IOException ){
 
     try{
         // If there's no data left, reset to pointers to the beginning of the

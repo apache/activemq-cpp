@@ -135,8 +135,8 @@ namespace net{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual std::size_t read( unsigned char* buffer,
-                                  std::size_t bufferSize )
+        virtual int read( unsigned char* buffer,
+                          std::size_t bufferSize )
             throw ( io::IOException );
 
         /**

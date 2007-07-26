@@ -171,10 +171,10 @@ namespace io{
          * in the buffer via a call to setByteArray.
          * @param buffer (out) the target buffer
          * @param bufferSize the size of the output buffer.
-         * @return the number of bytes read.
+         * @return the number of bytes read. or -1 if EOF
          * @throws IOException f an error occurs.
          */
-        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize )
+        virtual int read( unsigned char* buffer, std::size_t bufferSize )
             throw ( IOException );
 
         /**

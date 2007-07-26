@@ -86,7 +86,7 @@ namespace io{
          *          more data because the stream is EOF.
          * @throws IOException
          */
-        virtual std::size_t read( std::vector< unsigned char >& buffer )
+        virtual int read( std::vector< unsigned char >& buffer )
             throw ( io::IOException );
 
         /**
@@ -130,9 +130,9 @@ namespace io{
          *          more data because the stream is EOF.
          * @throws IOException
          */
-        virtual std::size_t read( unsigned char* buffer,
-                                  std::size_t offset,
-                                  std::size_t length )
+        virtual int read( unsigned char* buffer,
+                          std::size_t offset,
+                          std::size_t length )
             throw ( io::IOException,
                     lang::exceptions::IndexOutOfBoundsException,
                     lang::exceptions::NullPointerException );

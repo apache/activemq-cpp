@@ -91,8 +91,8 @@ unsigned char ByteArrayInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ByteArrayInputStream::read( unsigned char* buffer,
-                                        std::size_t bufferSize )
+int ByteArrayInputStream::read( unsigned char* buffer,
+                                std::size_t bufferSize )
                                    throw ( IOException ){
     std::size_t ix = 0;
 

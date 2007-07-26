@@ -32,7 +32,7 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::read( std::vector<unsigned char>& buffer )
+int DataInputStream::read( std::vector<unsigned char>& buffer )
     throw ( io::IOException ) {
 
     try {
@@ -43,9 +43,9 @@ std::size_t DataInputStream::read( std::vector<unsigned char>& buffer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t DataInputStream::read( unsigned char* buffer,
-                                   std::size_t offset,
-                                   std::size_t length )
+int DataInputStream::read( unsigned char* buffer,
+                           std::size_t offset,
+                           std::size_t length )
     throw ( IOException, IndexOutOfBoundsException, NullPointerException ) {
 
     try {

@@ -103,7 +103,11 @@ namespace net{
 
                         memset( buf, 0, 1000 );
                         try{
-                            stream->read( buf, 1000 );
+
+                            if( stream->read( buf, 1000 ) == -1 ) {
+                                done = true;
+                                continue;
+                            }
 
                             lastMessage = (char*)buf;
 

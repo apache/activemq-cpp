@@ -144,8 +144,8 @@ unsigned char SocketInputStream::read() throw ( IOException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::read( unsigned char* buffer,
-                                     std::size_t bufferSize ) throw ( IOException )
+int SocketInputStream::read( unsigned char* buffer,
+                             std::size_t bufferSize ) throw ( IOException )
 {
     apr_size_t size = (apr_size_t)bufferSize;
     apr_status_t result = APR_SUCCESS;
@@ -154,8 +154,15 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
     // size is the number of bytes actually read, can be <= bufferSize.
     result = apr_socket_recv( socket, (char*)buffer, &size );
 
-    // Check for a closed socket.
-    if( size == 0 || closed || APR_STATUS_IS_EOF( result ) ){
+    // Check for EOF, on windows we only get size==0 so check that to, if we
+    // were closed though then we throw an IOException so the caller knows we
+    // aren't usable anymore.
+    if( ( APR_STATUS_IS_EOF( result ) || size == 0 ) && !closed ) {
+        return -1;
+    }
+
+    // Check for a closed call from socket class, if closed then this read fails.
+    if( closed ){
         throw IOException(
             __FILE__, __LINE__,
             "activemq::io::SocketInputStream::read - The connection is broken" );
@@ -163,7 +170,6 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
 
     // Check for error.
     if( result != APR_SUCCESS ){
-        // Otherwise, this was a bad error - throw an exception.
         throw IOException(
             __FILE__, __LINE__,
             "decaf::net::SocketInputStream::read - %s",
