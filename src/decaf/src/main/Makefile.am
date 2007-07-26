@@ -26,8 +26,11 @@ cc_sources = \
    decaf/lang/Exception.cpp \
    decaf/lang/Thread.cpp \
    decaf/lang/Boolean.cpp \
+   decaf/lang/Short.cpp \
    decaf/lang/Integer.cpp \
    decaf/lang/Long.cpp \
+   decaf/lang/Float.cpp \
+   decaf/lang/Double.cpp \
    decaf/io/BufferedOutputStream.cpp \
    decaf/io/BufferedInputStream.cpp \
    decaf/io/ByteArrayInputStream.cpp \
@@ -60,14 +63,18 @@ h_sources = \
    decaf/net/SocketInputStream.h \
    decaf/net/ServerSocket.h \
    decaf/net/SocketFactory.h \
-   decaf/lang/Boolean.h \
    decaf/lang/Throwable.h \
    decaf/lang/Exception.h \
    decaf/lang/Character.h \
+   decaf/lang/Short.h \
    decaf/lang/Integer.h \
+   decaf/lang/Long.h \
+   decaf/lang/Float.h \
+   decaf/lang/Double.h \
    decaf/lang/Thread.h \
    decaf/lang/Number.h \
    decaf/lang/Runnable.h \
+   decaf/lang/Math.h \
    decaf/lang/exceptions/NoSuchElementException.h \
    decaf/lang/exceptions/RuntimeException.h \
    decaf/lang/exceptions/IndexOutOfBoundsException.h \
@@ -79,8 +86,6 @@ h_sources = \
    decaf/lang/exceptions/IllegalArgumentException.h \
    decaf/lang/exceptions/UnsupportedOperationException.h \
    decaf/lang/exceptions/InterruptedException.h \
-   decaf/lang/Math.h \
-   decaf/lang/Long.h \
    decaf/io/BufferedOutputStream.h \
    decaf/io/StandardErrorOutputStream.h \
    decaf/io/OutputStream.h \
