@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+  decaf/lang/BooleanBenchmark.cpp \
   decaf/util/PropertiesBenchmark.cpp \
   decaf/util/QueueBenchmark.cpp \
   decaf/util/SetBenchmark.cpp \
@@ -27,6 +28,7 @@ cc_sources = \
   main.cpp
 
 hh_sources = \
+  decaf/lang/BooleanBenchmark.h \
   decaf/util/PropertiesBenchmark.h \
   decaf/util/QueueBenchmark.h \
   decaf/util/SetBenchmark.h \
