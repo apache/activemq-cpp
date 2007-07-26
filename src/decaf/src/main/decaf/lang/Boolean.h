@@ -19,16 +19,84 @@
 #define _DECAF_LANG_BOOLEAN_H_
 
 #include <decaf/lang/Number.h>
+#include <decaf/lang/Comparable.h>
 
 namespace decaf{
 namespace lang{
 
-    class DECAF_API Boolean : public Number
-    {
+    class DECAF_API Boolean : public Number,
+                              public Comparable<Boolean> {
+    private:
+
+        // This objects boolean value
+        bool value;
+
     public:
 
-        Boolean() {}
+        /**
+         * The Class object representing the primitive false boolean.
+         */
+        static const Boolean _FALSE;
+
+        /**
+         * The Class object representing the primitive type boolean.
+         */
+        static const Boolean _TRUE;
+
+    public:
+
+        /**
+         * @param value - primitive boolean to wrap.
+         */
+        Boolean( bool value );
+
+        /**
+         * @param value - String value to convert to a boolean.
+         */
+        Boolean( const std::string& value );
+
         virtual ~Boolean() {}
+
+        /**
+         * @returns the primitive boolean value of this object
+         */
+        bool booleanValue() const {
+            return value;
+        }
+
+        /**
+         * @returns the string representation of this Booleans value.
+         */
+        std::string toString() const;
+
+        /**
+         * Compares this Boolean instance with another.
+         * @param b - the Boolean instance to be compared
+         * @return zero if this object represents the same boolean value as the
+         * argument; a positive value if this object represents true and the
+         * argument represents false; and a negative value if this object
+         * represents false and the argument represents true
+         */
+        virtual int compareTo( const Boolean& b ) const;
+
+        /**
+         * @returns true if the two Boolean Objects have the same value.
+         */
+        bool equals( const Boolean& b ) const {
+            return this->value == b.value;
+        }
+
+    public:  // Statics
+
+        /**
+         * @returns a Boolean instance of the primitive boolean value
+         */
+        static Boolean valueOf( bool value );
+
+        /**
+         * @returns a Boolean instance of the string value
+         */
+        static Boolean valueOf( const std::string& value );
 
         /**
          * Parses the String passed and extracts an bool.

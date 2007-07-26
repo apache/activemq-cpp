@@ -10,7 +10,7 @@ namespace lang{
      * ordering, and the class's compareTo method is referred to as its natural
      * comparison method.
      */
-    tempalte< typename T >
+    template< typename T >
     class Comparable{
     public:
 
@@ -44,7 +44,7 @@ namespace lang{
          * @returns a negative integer, zero, or a positive integer as this
          * object is less than, equal to, or greater than the specified object.
          */
-        virtual int compareTo( const T& value ) = 0;
+        virtual int compareTo( const T& value ) const = 0;
 
     };
 

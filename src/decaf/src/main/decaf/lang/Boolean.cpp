@@ -17,11 +17,53 @@
 
 #include "Boolean.h"
 
+using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-bool Boolean::parseBoolean( const std::string& value )
-{
+const Boolean Boolean::_FALSE( false );
+const Boolean Boolean::_TRUE( true );
+
+////////////////////////////////////////////////////////////////////////////////
+Boolean::Boolean( bool value ) {
+    this->value = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Boolean::Boolean( const std::string& value ) {
+    this->value = parseBoolean( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Boolean::compareTo( const Boolean& b ) const {
+    if( this->value == b.value ) {
+        return 0;
+    } else if( this->value && !b.value ) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Boolean::toString() const {
+    std::ostringstream ostream;
+    ostream << std::boolalpha << this->value;
+    return ostream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Boolean Boolean::valueOf( const std::string& value ) {
+    return Boolean( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Boolean Boolean::valueOf( bool value ) {
+    return Boolean( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Boolean::parseBoolean( const std::string& value ) {
     bool ret = 0;
     std::istringstream istream(value);
     istream.clear();
@@ -30,8 +72,7 @@ bool Boolean::parseBoolean( const std::string& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Boolean::toString( bool value )
-{
+std::string Boolean::toString( bool value ) {
     std::ostringstream ostream;
     ostream << std::boolalpha << value;
     return ostream.str();
