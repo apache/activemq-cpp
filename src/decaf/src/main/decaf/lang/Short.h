@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_LANG_INTEGER_H_
-#define _DECAF_LANG_INTEGER_H_
+#ifndef _DECAF_LANG_SHORT_H_
+#define _DECAF_LANG_SHORT_H_
 
 #include <decaf/lang/Number.h>
 #include <string>
@@ -24,29 +24,14 @@
 namespace decaf{
 namespace lang{
 
-    class DECAF_API Integer : public Number {
+    class Short : public Number {
     public:
 
-        Integer() {}
-
-        virtual ~Integer() {}
-
-        /**
-         * Parses the String passed and extracts an int.
-         * @param String to parse
-         * @return int value
-         */
-        static int parseInt( const std::string& value );
-
-        /**
-         * Converts the int to a String representation
-         * @param int to convert
-         * @return string representation
-         */
-        static std::string toString( int value );
+        Short();
+        virtual ~Short() {}
 
     };
 
 }}
 
-#endif /*_DECAF_LANG_INTEGER_H_*/
+#endif /*_DECAF_LANG_SHORT_H_*/

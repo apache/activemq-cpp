@@ -64,7 +64,7 @@ Boolean Boolean::valueOf( bool value ) {
 ////////////////////////////////////////////////////////////////////////////////
 bool Boolean::parseBoolean( const std::string& value ) {
     bool ret = 0;
-    std::istringstream istream(value);
+    std::istringstream istream( value );
     istream.clear();
     istream >> std::boolalpha >> ret;
     return ret;
