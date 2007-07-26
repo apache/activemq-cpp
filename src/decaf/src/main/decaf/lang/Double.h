@@ -19,6 +19,7 @@
 #define _DECAF_LANG_DOUBLE_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/Comparable.h>
 #include <decaf/lang/Number.h>
 #include <string>
 

@@ -63,9 +63,9 @@ namespace lang{
 
         /**
          * Answers the long value which the receiver represents
-         * @return long the value of the receiver.
+         * @return long long the value of the receiver.
          */
-        virtual long longValue() const = 0;
+        virtual long long longValue() const = 0;
 
         /**
          * Answers the short value which the receiver represents

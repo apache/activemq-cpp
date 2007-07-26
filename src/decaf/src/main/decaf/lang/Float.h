@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Number.h>
+#include <decaf/lang/Comparable.h>
 #include <string>
 
 namespace decaf{

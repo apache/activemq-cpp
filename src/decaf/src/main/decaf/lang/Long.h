@@ -19,6 +19,7 @@
 #define _DECAF_LANG_LONG_H_
 
 #include <decaf/lang/Number.h>
+#include <decaf/lang/Comparable.h>
 #include <string>
 
 namespace decaf{

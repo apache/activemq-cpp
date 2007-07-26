@@ -18,7 +18,9 @@
 #ifndef _DECAF_LANG_INTEGER_H_
 #define _DECAF_LANG_INTEGER_H_
 
+#include <decaf/util/Config.h>
 #include <decaf/lang/Number.h>
+#include <decaf/lang/Comparable.h>
 #include <string>
 
 namespace decaf{

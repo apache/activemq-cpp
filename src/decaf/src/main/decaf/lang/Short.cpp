@@ -21,5 +21,16 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Short::Short() {
+Short::Short( short value ) {
+    this->value = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Short::Short( const std::string& value ) {
+    this->value = value.size(); //Short::parseShort( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Short::compareTo( const Short& b ) const {
+    return value == b.value ? 0 : ( value > b.value ? 1 : -1 );
 }
