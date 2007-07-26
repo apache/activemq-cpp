@@ -18,8 +18,9 @@
 #ifndef _DECAF_LANG_BOOLEAN_H_
 #define _DECAF_LANG_BOOLEAN_H_
 
-#include <decaf/lang/Number.h>
+#include <string>
 #include <decaf/lang/Comparable.h>
+#include <decaf/util/Config.h>
 
 namespace decaf{
 namespace lang{

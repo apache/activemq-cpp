@@ -16,7 +16,9 @@
  */
 
 #include "Long.h"
+#include <sstream>
 
+using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -18,7 +18,6 @@
 #ifndef _DECAF_LANG_NUMBER_H_
 #define _DECAF_LANG_NUMBER_H_
 
-#include <sstream>
 #include <decaf/util/Config.h>
 
 namespace decaf{
@@ -35,6 +34,46 @@ namespace lang{
     public:
 
         virtual ~Number() {}
+
+        /**
+         * Answers the byte value which the receiver represents
+         * @return byte the value of the receiver.
+         */
+        virtual unsigned char byteValue() const {
+            return (unsigned char)intValue();
+        }
+
+        /**
+         * Answers the double value which the receiver represents
+         * @return double the value of the receiver.
+         */
+        virtual double doubleValue() const = 0;
+
+        /**
+         * Answers the float value which the receiver represents
+         * @return float the value of the receiver.
+         */
+        virtual float floatValue() const = 0;
+
+        /**
+         * Answers the int value which the receiver represents
+         * @return int the value of the receiver.
+         */
+        virtual int intValue() const = 0;
+
+        /**
+         * Answers the long value which the receiver represents
+         * @return long the value of the receiver.
+         */
+        virtual long longValue() const = 0;
+
+        /**
+         * Answers the short value which the receiver represents
+         * @return short the value of the receiver.
+         */
+        virtual short shortValue()  const {
+            return (short) intValue();
+        }
 
     };
 

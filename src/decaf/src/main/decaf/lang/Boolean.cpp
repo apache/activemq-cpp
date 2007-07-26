@@ -16,6 +16,7 @@
  */
 
 #include "Boolean.h"
+#include <sstream>
 
 using namespace decaf;
 using namespace decaf::lang;

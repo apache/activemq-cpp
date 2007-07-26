@@ -19,6 +19,7 @@
 #define _DECAF_LANG_INTEGER_H_
 
 #include <decaf/lang/Number.h>
+#include <string>
 
 namespace decaf{
 namespace lang{
