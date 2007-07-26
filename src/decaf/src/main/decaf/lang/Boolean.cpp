@@ -48,9 +48,7 @@ int Boolean::compareTo( const Boolean& b ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Boolean::toString() const {
-    std::ostringstream ostream;
-    ostream << std::boolalpha << this->value;
-    return ostream.str();
+    return this->value ? "true" : "false";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +72,5 @@ bool Boolean::parseBoolean( const std::string& value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Boolean::toString( bool value ) {
-    std::ostringstream ostream;
-    ostream << std::boolalpha << value;
-    return ostream.str();
+    return value ? "true" : "false";
 }
