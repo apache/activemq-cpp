@@ -39,4 +39,7 @@ void BooleanTest::test(void)
     CPPUNIT_ASSERT( y1 == "true" );
     CPPUNIT_ASSERT( z1 == "false" );
 
+    Boolean b( true );
+    CPPUNIT_ASSERT( b.booleanValue() == true );
+
 }
