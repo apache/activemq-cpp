@@ -28,14 +28,15 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
-  : socketHandle( INVALID_SOCKET_HANDLE ),
+  : apr_pool( NULL ),
+    socketHandle( INVALID_SOCKET_HANDLE ),
     inputStream( NULL ),
     outputStream( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket( SocketHandle socketHandle )
-:
+ :  apr_pool( NULL ),
     socketHandle( INVALID_SOCKET_HANDLE ),
     inputStream( NULL ),
     outputStream( NULL ) {
@@ -138,7 +139,6 @@ void TcpSocket::close() throw( lang::Exception )
     // When connected we first shutdown, which breaks our reads and writes
     // then we close to free APR resources.
     if( isConnected() ) {
-        apr_socket_shutdown( socketHandle, APR_SHUTDOWN_READWRITE );
         apr_socket_close( socketHandle );
         socketHandle = INVALID_SOCKET_HANDLE;
     }
