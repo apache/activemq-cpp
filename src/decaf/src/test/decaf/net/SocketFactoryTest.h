@@ -36,7 +36,7 @@ namespace net{
     {
         CPPUNIT_TEST_SUITE( SocketFactoryTest );
         CPPUNIT_TEST( test );
-        //CPPUNIT_TEST( testNoDelay );
+        CPPUNIT_TEST( testNoDelay );
         CPPUNIT_TEST_SUITE_END();
 
         static const int port = 23232;

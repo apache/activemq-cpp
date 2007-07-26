@@ -52,7 +52,7 @@ void SocketFactoryTest::test()
         {
             if(serverThread.getNumClients() != 1)
             {
-                serverThread.mutex.wait(1000);
+                serverThread.mutex.wait(10000);
             }
         }
 
@@ -66,7 +66,7 @@ void SocketFactoryTest::test()
         {
             if(serverThread.getNumClients() != 0)
             {
-                serverThread.mutex.wait(1000);
+                serverThread.mutex.wait(10000);
             }
         }
 
