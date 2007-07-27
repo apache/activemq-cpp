@@ -30,7 +30,15 @@ void ShortTest::test() {
 
     Short short1( 65 );
 
+    CPPUNIT_ASSERT( short1.byteValue() == 65 );
     CPPUNIT_ASSERT( short1.shortValue() == 65 );
+    CPPUNIT_ASSERT( short1.intValue() == 65 );
+    CPPUNIT_ASSERT( short1.longValue() == 65 );
+    CPPUNIT_ASSERT( short1.floatValue() == 65.0f );
+    CPPUNIT_ASSERT( short1.doubleValue() == 65.0 );
+
+    //CPPUNIT_ASSERT( short1.toString() == "65" );
+    //CPPUNIT_ASSERT( short1.toString( 99 ) == "99" );
 
 }
 

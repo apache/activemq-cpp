@@ -83,6 +83,11 @@ namespace lang{
         }
 
         /**
+         * @returns this Short Object as a String Representation
+         */
+        std::string toString() const;
+
+        /**
          * Answers the double value which the receiver represents
          * @return double the value of the receiver.
          */
@@ -132,6 +137,11 @@ namespace lang{
 
     public:   // statics
 
+    	/**
+    	 * @returns a string representing the primitive value as Base 10
+    	 */
+    	static std::string toString( short value );
+    	
         /**
          * Decodes a String into a Short. Accepts decimal, hexadecimal, and octal
          * numbers given by the following grammar:
