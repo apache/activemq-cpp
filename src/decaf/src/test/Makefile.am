@@ -17,6 +17,7 @@
 
 cc_sources = \
   decaf/lang/BooleanTest.cpp \
+  decaf/lang/ShortTest.cpp \
   decaf/lang/IntegerTest.cpp \
   decaf/lang/LongTest.cpp \
   decaf/lang/ThreadTest.cpp \
@@ -45,6 +46,7 @@ cc_sources = \
 
 h_sources = \
   decaf/lang/BooleanTest.h \
+  decaf/lang/ShortTest.h \
   decaf/lang/IntegerTest.h \
   decaf/lang/LongTest.h \
   decaf/lang/ThreadTest.h \
