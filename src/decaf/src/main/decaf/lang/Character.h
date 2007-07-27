@@ -24,8 +24,45 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API Character{
+    private:
+
+        // The primitive Char value
+        char value;
 
     public:
+
+        /** The minimum radix available for conversion to and from strings. */
+        static const int MIN_RADIX = 2;
+
+        /** The maximum radix available for conversion to and from strings. */
+        static const int MAX_RADIX = 36;
+
+        /** The minimum value that a signed char can take on. */
+        static const int MIN_VALUE = (-(1 << sizeof(char)));
+
+        /** The maximum value that a signed char can take on. */
+        static const int MAX_VALUE = (1 << sizeof(char) - 1);
+
+        /** The size of the primitive charactor in bits. */
+        static const int SIZE = sizeof( char ) * 8;
+
+    public:
+
+        /**
+         * @param value - char to wrap.
+         */
+        Character( char value );
+
+    public:    // statics
+
+        /**
+         * Returns a Character instance representing the specified char value.
+         * @param value - the primitive char to wrap.
+         * @returns a new Charactor instance that wraps this value.
+         */
+        static Character valueOf( char value ) {
+            return Character( value );
+        }
 
         /**
          * Indicates whether or not the given character is considered

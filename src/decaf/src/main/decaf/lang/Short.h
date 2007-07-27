@@ -35,21 +35,14 @@ namespace lang{
 
     public:
 
-        /**
-         * Max Value for this Object's primitive type
-         */
+        /** Max Value for this Object's primitive type */
         static const short MAX_VALUE = ((1 << sizeof(short)) - 1);
 
-        /**
-         * Max Value for this Object's primitive type
-         */
+        /** Max Value for this Object's primitive type */
         static const short MIN_VALUE = (-(1 << sizeof(short)));
 
-        /**
-         * Size of this objects primitive type
-         */
-        static const int SIZE = sizeof( short );
-
+        /** Size of this objects primitive type in bits */
+        static const int SIZE = sizeof( short ) * 8;
 
     public:
 
@@ -137,11 +130,11 @@ namespace lang{
 
     public:   // statics
 
-    	/**
-    	 * @returns a string representing the primitive value as Base 10
-    	 */
-    	static std::string toString( short value );
-    	
+        /**
+         * @returns a string representing the primitive value as Base 10
+         */
+        static std::string toString( short value );
+
         /**
          * Decodes a String into a Short. Accepts decimal, hexadecimal, and octal
          * numbers given by the following grammar:
