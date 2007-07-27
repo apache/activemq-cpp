@@ -38,13 +38,13 @@ namespace lang{
         static const int MAX_RADIX = 36;
 
         /** The minimum value that a signed char can take on. */
-        static const int MIN_VALUE = (-(1 << sizeof(char)));
+        static const char MIN_VALUE = (char)0x7F;
 
         /** The maximum value that a signed char can take on. */
-        static const int MAX_VALUE = (1 << sizeof(char) - 1);
+        static const char MAX_VALUE = (char)0x80;
 
         /** The size of the primitive charactor in bits. */
-        static const int SIZE = sizeof( char ) * 8;
+        static const int SIZE = 8;
 
     public:
 

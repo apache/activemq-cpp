@@ -35,14 +35,14 @@ namespace lang{
 
     public:
 
-        /** Max Value for this Object's primitive type */
-        static const short MAX_VALUE = ((1 << sizeof(short)) - 1);
-
-        /** Max Value for this Object's primitive type */
-        static const short MIN_VALUE = (-(1 << sizeof(short)));
-
         /** Size of this objects primitive type in bits */
-        static const int SIZE = sizeof( short ) * 8;
+        static const int SIZE = 16;
+
+        /** Max Value for this Object's primitive type */
+        static const short MAX_VALUE = (short)0x7FFF;
+
+        /** Max Value for this Object's primitive type */
+        static const short MIN_VALUE = (short)0x8000;
 
     public:
 

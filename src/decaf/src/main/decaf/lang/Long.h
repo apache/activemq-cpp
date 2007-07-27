@@ -26,6 +26,22 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API Long : public Number{
+    private:
+
+        // The primitive long long value
+        long long value;
+
+    public:
+
+        /** The size in bits of the primitive long long type */
+        static const int SIZE = 64;
+
+        /** The maximum value that the primitive type can hold */
+        static const long long MAX_VALUE = (long long)0x7FFFFFFFFFFFFFFFLL;
+
+        /** The minimum value that the primitive type can hold */
+        static const long long MIN_VALUE = (long long)0x8000000000000000LL;
+
     public:
 
         Long() {}

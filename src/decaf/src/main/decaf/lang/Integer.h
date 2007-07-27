@@ -27,11 +27,29 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API Integer : public Number {
+    private:
+
+        // The primitve Integer value.
+        int value;
+
+    public:
+
+        /** The size in bits of the primitive int type */
+        static const int SIZE = 32;
+
+        /** The maximum value that the primitive type can hold */
+        static const int MAX_VALUE = (int)0x7FFFFFFF;
+
+        /** The minimum value that the primitive type can hold */
+        static const int MIN_VALUE = (int)0x80000000;
+
     public:
 
         Integer() {}
 
         virtual ~Integer() {}
+
+    public:  // Statics
 
         /**
          * Parses the String passed and extracts an int.
