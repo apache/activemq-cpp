@@ -25,3 +25,13 @@ using namespace decaf::lang;
 Character::Character( char value ) {
     this->value = value;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int Character::compareTo( const Character& c ) const {
+    return value < c.value ? -1 : (value > c.value) ? -1 : 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Character::toString() const {
+    return ""; // TODO
+}

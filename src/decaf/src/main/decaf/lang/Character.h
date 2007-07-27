@@ -19,11 +19,15 @@
 #define _DECAF_LANG_CHARACTER_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/lang/Number.h>
+#include <decaf/lang/Comparable.h>
+#include <string>
 
 namespace decaf{
 namespace lang{
 
-    class DECAF_API Character{
+    class DECAF_API Character : public Number,
+                                public Comparable<Character> {
     private:
 
         // The primitive Char value
@@ -52,6 +56,76 @@ namespace lang{
          * @param value - char to wrap.
          */
         Character( char value );
+
+        /**
+         * Compares this Character instance with another.
+         * @param c - the Character instance to be compared
+         * @return zero if this object represents the same char value as the
+         * argument; a positive value if this object represents a value greater
+         * than the passed in value, and -1 if this object repesents a value
+         * less than the passed in value.
+         */
+        virtual int compareTo( const Character& c ) const;
+
+        /**
+         * @returns true if the two Character Objects have the same value.
+         */
+        bool equals( const Character& c ) const {
+            return this->value == c.value;
+        }
+
+        /**
+         * @returns this Character Object as a String Representation
+         */
+        std::string toString() const;
+
+        /**
+         * Answers the double value which the receiver represents
+         * @return double the value of the receiver.
+         */
+        virtual double doubleValue() const {
+            return (double)this->value;
+        }
+
+        /**
+         * Answers the float value which the receiver represents
+         * @return float the value of the receiver.
+         */
+        virtual float floatValue() const {
+            return (float)this->value;
+        }
+
+        /**
+         * Answers the byte value which the receiver represents
+         * @return int the value of the receiver.
+         */
+        virtual unsigned char byteValue() const {
+            return (unsigned char)this->value;
+        }
+
+        /**
+         * Answers the short value which the receiver represents
+         * @return int the value of the receiver.
+         */
+        virtual short shortValue() const {
+            return (short)this->value;
+        }
+
+        /**
+         * Answers the int value which the receiver represents
+         * @return int the value of the receiver.
+         */
+        virtual int intValue() const {
+            return (int)this->value;
+        }
+
+        /**
+         * Answers the long value which the receiver represents
+         * @return long the value of the receiver.
+         */
+        virtual long long longValue() const {
+            return (long long)this->value;
+        }
 
     public:    // statics
 
