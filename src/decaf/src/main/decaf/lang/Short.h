@@ -20,7 +20,7 @@
 
 #include <decaf/lang/Number.h>
 #include <decaf/lang/Comparable.h>
-//#include <decaf/lang/exceptions/NumberFormatException.h>
+#include <decaf/lang/exceptions/NumberFormatException.h>
 #include <string>
 
 namespace decaf{
@@ -32,6 +32,24 @@ namespace lang{
 
         // The short value
         short value;
+
+    public:
+
+        /**
+         * Max Value for this Object's primitive type
+         */
+        static const short MAX_VALUE = ((1 << sizeof(short)) - 1);
+
+        /**
+         * Max Value for this Object's primitive type
+         */
+        static const short MIN_VALUE = (-(1 << sizeof(short)));
+
+        /**
+         * Size of this objects primitive type
+         */
+        static const int SIZE = sizeof( short );
+
 
     public:
 
@@ -115,6 +133,30 @@ namespace lang{
     public:   // statics
 
         /**
+         * Decodes a String into a Short. Accepts decimal, hexadecimal, and octal
+         * numbers given by the following grammar:
+         *
+         * The sequence of characters following an (optional) negative sign and/or
+         * radix specifier ("0x", "0X", "#", or leading zero) is parsed as by the
+         * Short.parseShort method with the indicated radix (10, 16, or 8). This
+         * sequence of characters must represent a positive value or a
+         * NumberFormatException will be thrown. The result is negated if first
+         * character of the specified String is the minus sign. No whitespace
+         * characters are permitted in the string.
+         * @param value - The string to decode
+         * @returns a Short object containing the decoded value
+         * @throws NumberFomatException if the string is not formatted correctly.
+         */
+        static Short decode( const std::string& value )
+            throw ( exceptions::NumberFormatException );
+
+        /**
+         * Returns the value obtained by reversing the order of the bytes in the
+         * two's complement representation of the specified short value.
+         */
+        static short reverseBytes( short value );
+
+        /**
          * Parses the string argument as a signed short in the radix specified by
          * the second argument. The characters in the string must all be digits,
          * of the specified radix (as determined by whether
@@ -137,8 +179,8 @@ namespace lang{
          * @return the short represented by the string argument in the specified radix.
          * @throws NumberFormatException - If String does not contain a parsable short.
          */
-//        static short parseShort( const std::string& s, int radix )
-//            throw ( exceptions::NumberFormatException );
+        static short parseShort( const std::string& s, int radix )
+            throw ( exceptions::NumberFormatException );
 
         /**
          * Parses the string argument as a signed decimal short. The characters
@@ -151,8 +193,43 @@ namespace lang{
          * @returns the converted short value
          * @throws NumberFormatException if the string is not a short.
          */
-//        static short parseShort( const std::string& s )
-//            throw ( exceptions::NumberFormatException );
+        static short parseShort( const std::string& s )
+            throw ( exceptions::NumberFormatException );
+
+        /**
+         * Returns a Short instance representing the specified short value.
+         * @param value - the short to wrap
+         * @return the new Short object wrapping value.
+         */
+        static Short valueOf( short value );
+
+        /**
+         * Returns a Short object holding the value given by the specified std::string.
+         * The argument is interpreted as representing a signed decimal short,
+         * exactly as if the argument were given to the parseShort( std::string )
+         * method. The result is a Short object that represents the short value
+         * specified by the string.
+         * @param value - std::string to parse as base 10
+         * @return new Short Object wrapping the primitive
+         * @throws NumberFormatException if the string is not a decimal short.
+         */
+        static Short valueOf( const std::string& value )
+            throw ( exceptions::NumberFormatException );
+
+        /**
+         * Returns a Short object holding the value extracted from the specified
+         * std::string when parsed with the radix given by the second argument.
+         * The first argument is interpreted as representing a signed short in the
+         * radix specified by the second argument, exactly as if the argument were
+         * given to the parseShort( std::string, int ) method. The result is a
+         * Short object that represents the short value specified by the string.
+         * @param value - std::string to parse as base ( radix )
+         * @param radix - base of the string to parse.
+         * @return new Short Object wrapping the primitive
+         * @throws NumberFormatException if the string is not a valid short.
+         */
+        static Short valueOf( const std::string& value, int radix )
+            throw ( exceptions::NumberFormatException );
 
     };
 

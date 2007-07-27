@@ -34,3 +34,56 @@ Short::Short( const std::string& value ) {
 int Short::compareTo( const Short& b ) const {
     return value == b.value ? 0 : ( value > b.value ? 1 : -1 );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+short Short::parseShort( const std::string& s, int radix )
+    throw ( exceptions::NumberFormatException ) {
+
+    // TODO
+    return s.size() + radix;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+short Short::parseShort( const std::string& s )
+    throw ( exceptions::NumberFormatException ) {
+    return parseShort( s, 10 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Short Short::decode( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    // TODO
+    return Short( value.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+short Short::reverseBytes( short value ) {
+
+    short temp = value;
+
+    // TODO
+    //temp += ( value & 0xF0 ) >> 8;
+    //temp += ( value & 0x0F ) << 8;
+
+    return temp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Short Short::valueOf( short value ) {
+    return Short( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Short Short::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    return Short( parseShort( value, 10 ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Short Short::valueOf( const std::string& value, int radix )
+    throw ( exceptions::NumberFormatException ) {
+
+    return Short( parseShort( value, radix ) );
+}
