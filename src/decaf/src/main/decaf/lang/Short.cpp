@@ -17,6 +17,8 @@
 
 #include "Short.h"
 
+#include <sstream>
+
 using namespace decaf;
 using namespace decaf::lang;
 
@@ -37,14 +39,14 @@ int Short::compareTo( const Short& b ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Short::toString() const {
-    // TODO
-    return "";
+    return toString( this->value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Short::toString( short value ) {
-    // TODO
-    return "";
+    std::ostringstream oss;
+    oss << value;
+    return oss.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,13 +73,8 @@ Short Short::decode( const std::string& value )
 
 ////////////////////////////////////////////////////////////////////////////////
 short Short::reverseBytes( short value ) {
-
     short temp = value;
-
-    // TODO
-    //temp += ( value & 0xF0 ) >> 8;
-    //temp += ( value & 0x0F ) << 8;
-
+    temp = ( ( value & 0xFF00 ) >> 8 ) | ( ( value & 0x00FF ) << 8 );
     return temp;
 }
 

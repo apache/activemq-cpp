@@ -37,8 +37,13 @@ void ShortTest::test() {
     CPPUNIT_ASSERT( short1.floatValue() == 65.0f );
     CPPUNIT_ASSERT( short1.doubleValue() == 65.0 );
 
-    //CPPUNIT_ASSERT( short1.toString() == "65" );
-    //CPPUNIT_ASSERT( short1.toString( 99 ) == "99" );
+    CPPUNIT_ASSERT( short1.toString() == "65" );
+    CPPUNIT_ASSERT( short1.toString( 99 ) == "99" );
+
+    CPPUNIT_ASSERT( Short::reverseBytes( (short)0xFF00 ) == (short)0x00FF );
+    CPPUNIT_ASSERT( Short::reverseBytes( (short)0x0F00 ) == (short)0x000F );
+    CPPUNIT_ASSERT( Short::reverseBytes( (short)0xDE00 ) == (short)0x00DE );
+    CPPUNIT_ASSERT( Short::reverseBytes( (short)0x00AB ) == (short)0xAB00 );
 
 }
 
