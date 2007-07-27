@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_LANG_EXCEPTIONS_NULLPOINTERENTEXCEPTION_H_
-#define _DECAF_LANG_EXCEPTIONS_NULLPOINTERENTEXCEPTION_H_
+#ifndef _DECAF_LANG_EXCEPTIONS_NUMBERFORMATEXCEPTION_H_
+#define _DECAF_LANG_EXCEPTIONS_NUMBERFORMATEXCEPTION_H_
 
 #include <decaf/lang/Exception.h>
 
@@ -25,33 +25,32 @@ namespace lang{
 namespace exceptions{
 
     /*
-     * Thrown when an error occurs that involves a pointer being NULL
+     * Thrown when an error occurs that involves a conversion to a Number from
+     * a string and the string is not a valid number.
      */
-    class DECAF_API NullPointerException : public Exception
+    class NumberFormatException : public Exception
     {
     public:
 
         /**
          * Default Constructor
          */
-        NullPointerException() throw() {};
+        NumberFormatException() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
-        NullPointerException( const Exception& ex ) throw()
-        : Exception()
-        {
+        NumberFormatException( const Exception& ex ) throw()
+        : Exception() {
             *(Exception*)this = ex;
         }
 
         /**
          * Copy Constructor
          */
-        NullPointerException(const NullPointerException& ex) throw()
-        : Exception()
-        {
+        NumberFormatException(const NumberFormatException& ex) throw()
+        : Exception() {
             *(Exception*)this = ex;
         }
 
@@ -64,11 +63,10 @@ namespace exceptions{
          * @param message to report
          * @param list of primitives that are formatted into the message
          */
-        NullPointerException( const char* file,
-                              const int lineNumber,
-                              const char* msg, ... ) throw()
-        : Exception()
-        {
+        NumberFormatException( const char* file,
+                               const int lineNumber,
+                               const char* msg, ... ) throw()
+        : Exception() {
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -82,14 +80,14 @@ namespace exceptions{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual NullPointerException* clone() const{
-            return new NullPointerException( *this );
+        virtual NumberFormatException* clone() const {
+            return new NumberFormatException( *this );
         }
 
-        virtual ~NullPointerException() throw() {}
+        virtual ~NumberFormatException() throw () {}
 
     };
 
 }}}
 
-#endif /*_DECAF_LANG_EXCEPTIONS_NULLPOINTERENTEXCEPTION_H_*/
+#endif /*_DECAF_LANG_EXCEPTIONS_NUMBERFORMATEXCEPTION_H_*/
