@@ -22,13 +22,23 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::parseInt( const std::string& value )
-{
-    int ret = 0;
-    std::istringstream istream(value);
-    istream.clear();
-    istream >> ret;
-    return ret;
+Integer::Integer( int value ) {
+    this->value = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Integer::Integer( const std::string& value ) {
+    this->value = parseInt( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::compareTo( const Integer& n ) const {
+    return this->value < n.value ? -1 : this->value == n.value ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::bitCount( int value ) {
+    return value; //TODO
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,4 +47,15 @@ std::string Integer::toString( int value )
     std::ostringstream ostream;
     ostream << value;
     return ostream.str();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::parseInt( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    int ret = 0;
+    std::istringstream istream(value);
+    istream.clear();
+    istream >> ret;
+    return ret;
 }
