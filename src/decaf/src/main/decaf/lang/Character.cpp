@@ -33,5 +33,5 @@ int Character::compareTo( const Character& c ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Character::toString() const {
-    return ""; // TODO
+    return string( 1, this->value );
 }
