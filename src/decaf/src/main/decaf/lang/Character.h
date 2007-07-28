@@ -195,6 +195,7 @@ namespace lang{
         static bool isLetterOrDigit( char c ){
             return isLetter(c) || isDigit(c);
         }
+
     };
 
 }}
