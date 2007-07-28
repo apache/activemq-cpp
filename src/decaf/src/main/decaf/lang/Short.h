@@ -156,6 +156,8 @@ namespace lang{
         /**
          * Returns the value obtained by reversing the order of the bytes in the
          * two's complement representation of the specified short value.
+         * @param value - the short whose bytes we are to reverse
+         * @return the reversed short.
          */
         static short reverseBytes( short value );
 
