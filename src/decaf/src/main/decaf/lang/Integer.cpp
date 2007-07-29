@@ -59,6 +59,7 @@ int Integer::bitCount( int value ) {
 ////////////////////////////////////////////////////////////////////////////////
 std::string Integer::toString( int value )
 {
+    //TODO
     std::ostringstream ostream;
     ostream << value;
     return ostream.str();
@@ -68,11 +69,103 @@ std::string Integer::toString( int value )
 int Integer::parseInt( const std::string& value )
     throw ( exceptions::NumberFormatException ) {
 
-    int ret = 0;
-    std::istringstream istream(value);
-    istream.clear();
-    istream >> ret;
-    return ret;
+    return Integer::parseInt( value, 10 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::parseInt( const std::string& value, int radix )
+    throw ( exceptions::NumberFormatException ) {
+
+    if( radix < Character::MIN_RADIX ||
+        radix > Character::MAX_RADIX ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Integer:decode - Invalid radix" );
+    }
+
+    int length = value.length(), i = 0;
+    if( length == 0 ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Integer:decode - Invalid: zero length string");
+    }
+
+    bool negative = value[i] == '-';
+    if( negative && ++i == length ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Integer:decode - Invalid only a minus sign given");
+    }
+
+    return Integer::parse( value, i, radix, negative );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Integer Integer::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    return Integer( Integer::parseInt( value ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Integer Integer::valueOf( const std::string& value, int radix )
+    throw ( exceptions::NumberFormatException ) {
+
+    return Integer( Integer::parseInt( value, radix ) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Integer Integer::decode( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    int length = value.length(), i = 0;
+    if( length == 0 ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Integer:decode - Invalid zero size string");
+    }
+
+    char firstDigit = value[i];
+    bool negative = firstDigit == '-';
+    if( negative ) {
+        if( length == 1 ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer:decode - Invalid zero string, minus only");
+        }
+
+        firstDigit = value[++i];
+    }
+
+    int base = 10;
+    if( firstDigit == '0' ) {
+        if( ++i == length ) {
+            return valueOf( 0 );
+        }
+
+        if( ( firstDigit = value[i] ) == 'x' || firstDigit == 'X' ) {
+            if( i == length ) {
+                throw NumberFormatException(
+                    __FILE__, __LINE__,
+                    "Integer:decode - Invalid zero string, minus only");
+            }
+            i++;
+            base = 16;
+        } else {
+            base = 8;
+        }
+    } else if( firstDigit == '#' ) {
+        if( i == length ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer:decode - Invalid zero string, minus only");
+        }
+        i++;
+        base = 16;
+    }
+
+    int result = parse( value, i, base, negative );
+    return valueOf( result );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +177,6 @@ int Integer::parse( const std::string& value, int offset,
     int result = 0, length = value.size();
 
     while( offset < length ) {
-        //TODO
         int digit = Character::digit( value[offset++], radix );
         if( digit == -1 ) {
             throw NumberFormatException(

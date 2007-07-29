@@ -203,14 +203,16 @@ namespace lang{
          * @param value - the int to wrap
          * @return the new Integer object wrapping value.
          */
-        static Integer valueOf( int value );
+        static Integer valueOf( int value ) {
+            return Integer( value );
+        }
 
         /**
-         * Returns a Integer object holding the value given by the specified std::string.
-         * The argument is interpreted as representing a signed decimal int,
-         * exactly as if the argument were given to the parseInteger( std::string )
-         * method. The result is a Integer object that represents the int value
-         * specified by the string.
+         * Returns a Integer object holding the value given by the specified
+         * std::string.  The argument is interpreted as representing a signed
+         * decimal int, exactly as if the argument were given to the
+         * parseInt( std::string ) method. The result is a Integer object that
+         * represents the int value specified by the string.
          * @param value - std::string to parse as base 10
          * @return new Integer Object wrapping the primitive
          * @throws NumberFormatException if the string is not a decimal int.
@@ -223,7 +225,7 @@ namespace lang{
          * std::string when parsed with the radix given by the second argument.
          * The first argument is interpreted as representing a signed int in the
          * radix specified by the second argument, exactly as if the argument were
-         * given to the parseInteger( std::string, int ) method. The result is a
+         * given to the parseInt( std::string, int ) method. The result is a
          * Integer object that represents the int value specified by the string.
          * @param value - std::string to parse as base ( radix )
          * @param radix - base of the string to parse.
