@@ -20,6 +20,7 @@
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Integer::Integer( int value ) {
@@ -38,7 +39,20 @@ int Integer::compareTo( const Integer& n ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::bitCount( int value ) {
-    return value; //TODO
+
+    if( value == 0 ) {
+        return 0;
+    }
+
+    // 32-bit recursive reduction using SWAR...
+    // but first step is mapping 2-bit values
+    // into sum of 2 1-bit values in sneaky way
+    value -= ((value >> 1) & 0x55555555);
+    value = (((value >> 2) & 0x33333333) + (value & 0x33333333));
+    value = (((value >> 4) + value) & 0x0F0F0F0F);
+    value += (value >> 8);
+    value += (value >> 16);
+    return(value & 0x0000003F);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,4 +72,48 @@ int Integer::parseInt( const std::string& value )
     istream.clear();
     istream >> ret;
     return ret;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::parse( const std::string& value, int offset,
+                    int radix, bool negative )
+    throw ( exceptions::NumberFormatException ) {
+
+    int max = Integer::MIN_VALUE / radix;
+    int result = 0, length = value.size();
+
+    while( offset < length ) {
+        //TODO
+        int digit = 0;//Character.digit(string.charAt(offset++), radix);
+        if( digit == -1 ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer::parse - number string is invalid: ",
+                value.c_str() );
+        }
+        if( max > result ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer::parse - number string is invalid: ",
+                value.c_str() );
+        }
+        int next = result * radix - digit;
+        if( next > result ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer::parse - number string is invalid: ",
+                value.c_str() );
+        }
+        result = next;
+    }
+    if( !negative ) {
+        result = -result;
+        if( result < 0 ) {
+            throw NumberFormatException(
+                __FILE__, __LINE__,
+                "Integer::parse - number string is invalid: ",
+                value.c_str() );
+        }
+    }
+    return result;
 }

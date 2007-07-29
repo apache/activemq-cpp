@@ -275,6 +275,12 @@ namespace lang{
          */
         static std::string toString( int value, int radix );
 
+    private:
+
+        static int parse( const std::string& value, int offset,
+                          int radix, bool negative )
+            throw ( exceptions::NumberFormatException );
+
     };
 
 }}
