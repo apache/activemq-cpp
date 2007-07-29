@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-#include "Integer.h"
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Character.h>
 #include <sstream>
 
 using namespace decaf;
@@ -84,7 +85,7 @@ int Integer::parse( const std::string& value, int offset,
 
     while( offset < length ) {
         //TODO
-        int digit = 0;//Character.digit(string.charAt(offset++), radix);
+        int digit = Character::digit( value[offset++], radix );
         if( digit == -1 ) {
             throw NumberFormatException(
                 __FILE__, __LINE__,

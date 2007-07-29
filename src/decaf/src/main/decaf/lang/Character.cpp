@@ -35,3 +35,19 @@ int Character::compareTo( const Character& c ) const {
 std::string Character::toString() const {
     return string( 1, this->value );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+int Character::digit( char c, int radix ) {
+    if( radix >= MIN_RADIX && radix <= MAX_RADIX ) {
+        int result = -1;
+        if( '0' <= c && c <= '9' ) {
+            result = c - '0';
+        } else if( 'a' <= c && c <= 'z' ) {
+            result = c - ('a' - 10);
+        } else if( 'A' <= c && c <= 'Z' ) {
+            result = c - ('A' - 10);
+        }
+        return result < radix ? result : -1;
+    }
+    return -1;
+}
