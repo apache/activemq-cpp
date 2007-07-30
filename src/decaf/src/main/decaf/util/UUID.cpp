@@ -16,27 +16,104 @@
  */
 
 #include "UUID.h"
+#include <apr_strings.h>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Uuid::Uuid() {
+UUID::UUID( long long mostSigBits, long long leastSigBits ) {
+
+    memcpy( &apr_uuid.data[0], &leastSigBits, sizeof( long long ) );
+    memcpy( &apr_uuid.data[sizeof(long long)], &mostSigBits, sizeof(long long ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Uuid::~Uuid() {
+UUID::~UUID() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Uuid::compareTo( const UUID& value ) {
+int UUID::compareTo( const UUID& value ) const {
+    return apr_strnatcmp( (const char*)this->apr_uuid.data,
+                          (const char*)value.apr_uuid.data );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long Uuid::getLeastSignificantBits() const {
+bool UUID::equals( const UUID& value ) const {
+    return apr_strnatcmp( (const char*)this->apr_uuid.data,
+                          (const char*)value.apr_uuid.data ) == 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long Uuid::getMostSignificantBits() const {
+std::string UUID::toString() const {
+    char buffer[APR_UUID_FORMATTED_LENGTH+1] = {0};
+    apr_uuid_format( &buffer[0], &apr_uuid );
+    return &buffer[0];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::getLeastSignificantBits() const {
+    long long result = 0;
+    memcpy( &result, &this->apr_uuid.data[0], sizeof(long long) );
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::getMostSignificantBits() const {
+    long long result = 0;
+    memcpy( &result, &this->apr_uuid.data[sizeof(long long)], sizeof(long long) );
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return 0; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return 0; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return 0; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return 0; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long UUID::version() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return 0; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+UUID UUID::randomUUID() {
+    return UUID( 0, 0); //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+UUID UUID::nameUUIDFromBytes( const char* name DECAF_UNUSED ) {
+    return UUID( 0, 0); //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+UUID UUID::fromString( const std::string& name )
+    throw ( lang::exceptions::IllegalArgumentException ){
+
+    UUID result( 0, 0 );
+
+    if( apr_uuid_parse( &(result.apr_uuid), name.c_str() ) != APR_SUCCESS ) {
+        throw lang::exceptions::IllegalArgumentException(
+            __FILE__, __LINE__,
+            "UUID::fromString - Invalid UUID String: ",
+            name.c_str() );
+    }
+
+    return result;
 }
