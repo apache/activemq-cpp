@@ -57,12 +57,78 @@ int Integer::bitCount( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string Integer::toString( int value )
-{
-    //TODO
-    std::ostringstream ostream;
-    ostream << value;
-    return ostream.str();
+int Integer::reverseBytes( int value ) {
+    int b3 = value >> 24;
+    int b2 = (value >> 8) & 0xFF00;
+    int b1 = (value & 0xFF00) << 8;
+    int b0 = value << 24;
+    return (b0 | b1 | b2 | b3);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::reverse( int value ) {
+    value = (((value & 0xAAAAAAAA) >> 1) | ((value & 0x55555555) << 1));
+    value = (((value & 0xCCCCCCCC) >> 2) | ((value & 0x33333333) << 2));
+    value = (((value & 0xF0F0F0F0) >> 4) | ((value & 0x0F0F0F0F) << 4));
+    value = (((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8));
+    return ((value >> 16) | (value << 16));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Integer::toString() const {
+    return Integer::toString( this->value, 10 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Integer::toString( int value ) {
+    return Integer::toString( value, 10 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Integer::toString( int value, int radix ) {
+
+    std::string result = "";
+
+    if( radix < Character::MIN_RADIX || radix > Character::MAX_RADIX ) {
+        radix = 10;
+    }
+
+    if( value == 0 ) {
+        return "0";
+    }
+
+    int count = 2, j = value;
+    bool negative = value < 0;
+    if( !negative ) {
+        count = 1;
+        j = -value;
+    }
+
+    while( (value /= radix) != 0 ) {
+        count++;
+    }
+
+    char* buffer = new char[count];
+    const int length = count;
+
+    do {
+        int ch = 0 - ( j % radix );
+        if( ch > 9 ) {
+            ch = ch - 10 + 'a';
+        } else {
+            ch += '0';
+        }
+        buffer[--count] = (char)ch;
+    } while( (j /= radix) != 0 );
+
+    if( negative ) {
+        buffer[0] = '-';
+    }
+
+    result.append( &buffer[0], length );
+    delete buffer;
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

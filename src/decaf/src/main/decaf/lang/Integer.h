@@ -159,6 +159,14 @@ namespace lang{
         static int reverseBytes( int value );
 
         /**
+         * Returns the value obtained by reversing the order of the bits in the
+         * two's complement binary representation of the specified int  value.
+         * @param value - the value whose bits are to be reversed
+         * @returns the reversed bits int.
+         */
+        static int reverse( int value );
+
+        /**
          * Parses the string argument as a signed int in the radix specified by
          * the second argument. The characters in the string must all be digits,
          * of the specified radix (as determined by whether
