@@ -24,11 +24,11 @@ using namespace decaf::lang;
 void IntegerTest::test(void)
 {
     int x = Integer::parseInt("12");
-    int y = Integer::parseInt("12.1");
-    int z = Integer::parseInt("42 24");
+    int y = Integer::parseInt("FF", 16);
+    int z = Integer::parseInt("42");
 
     CPPUNIT_ASSERT( x == 12 );
-    CPPUNIT_ASSERT( y == 12 );
+    CPPUNIT_ASSERT( y == 255 );
     CPPUNIT_ASSERT( z == 42 );
 
     std::string x1 = Integer::toString( x );
@@ -36,7 +36,7 @@ void IntegerTest::test(void)
     std::string z1 = Integer::toString( z );
 
     CPPUNIT_ASSERT( x1 == "12" );
-    CPPUNIT_ASSERT( y1 == "12" );
+    CPPUNIT_ASSERT( y1 == "255" );
     CPPUNIT_ASSERT( z1 == "42" );
 
 }
