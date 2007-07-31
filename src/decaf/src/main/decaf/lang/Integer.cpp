@@ -87,8 +87,6 @@ std::string Integer::toString( int value ) {
 ////////////////////////////////////////////////////////////////////////////////
 std::string Integer::toString( int value, int radix ) {
 
-    std::string result = "";
-
     if( radix < Character::MIN_RADIX || radix > Character::MAX_RADIX ) {
         radix = 10;
     }
@@ -108,8 +106,10 @@ std::string Integer::toString( int value, int radix ) {
         count++;
     }
 
-    char* buffer = new char[count];
-    const int length = count;
+    // Save length and allocate a new buffer for the string, add one
+    // more for the null character.
+    int length = count;
+    char* buffer = new char[length + 1];
 
     do {
         int ch = 0 - ( j % radix );
@@ -125,8 +125,111 @@ std::string Integer::toString( int value, int radix ) {
         buffer[0] = '-';
     }
 
-    result.append( &buffer[0], length );
-    delete buffer;
+    // Ensure there's a null
+    buffer[length] = 0;
+    std::string result( &buffer[0] );
+    delete [] buffer;
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string toBinaryString( int value ) {
+
+    int count = 1;
+    int j = value;
+
+    if( value < 0 ) {
+        count = 32;
+    } else {
+        while ( (j >>= 1) != 0) {
+            count++;
+        }
+    }
+
+    // Save length and allocate a new buffer for the string, add one
+    // more for the null character.
+    int length = count;
+    char* buffer = new char[length + 1];
+
+    do {
+        buffer[--count] = (char)( (value & 1) + '0' );
+        value >>= 1;
+    } while( count > 0 );
+
+    // Ensure there's a null
+    buffer[length] = 0;
+    std::string result( &buffer[0] );
+    delete [] buffer;
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string toOctalString( int value ) {
+
+    int count = 1, j = value;
+
+    if( value < 0 ) {
+        count = 11;
+    } else {
+        while ( (j >>= 3) != 0 ) {
+            count++;
+        }
+    }
+
+    // Save length and allocate a new buffer for the string, add one
+    // more for the null character.
+    int length = count;
+    char* buffer = new char[length + 1];
+
+    do {
+        buffer[--count] = (char)( (value & 7) + '0' );
+        value >>= 3;
+    } while( count > 0 );
+
+    // Ensure there's a null
+    buffer[length] = 0;
+    std::string result( &buffer[0] );
+    delete [] buffer;
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string toHexString( int value ) {
+
+    int count = 1;
+    int j = value;
+
+    if( value < 0 ) {
+        count = 8;
+    } else {
+        while( (j >>= 4) != 0 ) {
+            count++;
+        }
+    }
+
+    // Save length and allocate a new buffer for the string, add one
+    // more for the null character.
+    int length = count;
+    char* buffer = new char[length + 1];
+
+    do {
+        int t = value & 15;
+        if( t > 9 ) {
+            t = t - 10 + 'a';
+        } else {
+            t += '0';
+        }
+        buffer[--count] = (char)t;
+        value >>= 4;
+    } while( count > 0 );
+
+    // Ensure there's a null
+    buffer[length] = 0;
+    std::string result( &buffer[0] );
+    delete [] buffer;
 
     return result;
 }
@@ -275,4 +378,51 @@ int Integer::parse( const std::string& value, int offset,
         }
     }
     return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::highestOneBit( int value ) {
+
+    value |= (value >> 1);
+    value |= (value >> 2);
+    value |= (value >> 4);
+    value |= (value >> 8);
+    value |= (value >> 16);
+    return ( value & ~(value >> 1));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::lowestOneBit( int value ) {
+    return ( value & (-value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::numberOfLeadingZeros( int value ) {
+
+    value |= value >> 1;
+    value |= value >> 2;
+    value |= value >> 4;
+    value |= value >> 8;
+    value |= value >> 16;
+    return Integer::bitCount( ~value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::numberOfTrailingZeros( int value ) {
+    return bitCount( (value & -value) - 1 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::rotateLeft( int value ) {
+    return value; // TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::rotateRight( int value ) {
+    return value; // TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::signum( int value ) {
+    return ( value == 0 ? 0 : ( value < 0 ? -1 : 1 ) );
 }

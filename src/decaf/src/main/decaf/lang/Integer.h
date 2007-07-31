@@ -285,6 +285,162 @@ namespace lang{
          */
         static std::string toString( int value, int radix );
 
+        /**
+         * Returns a string representation of the integer argument as an unsigned
+         * integer in base 16.
+         *
+         * The unsigned integer value is the argument plus 2^32 if the argument is
+         * negative; otherwise, it is equal to the argument. This value is converted
+         * to a string of ASCII digits in hexadecimal (base 16) with no extra leading
+         * 0s. If the unsigned magnitude is zero, it is represented by a single zero
+         * character '0'; otherwise, the first character of the representation of the
+         * unsigned magnitude will not be the zero character. The following characters
+         * are used as hexadecimal digits:
+         *
+         * 		0123456789abcdef
+         *
+         * If uppercase letters are desired, the toUpperCase() method may be called
+         * on the result:
+         * @param value - the int to be translated to an Octal string
+         * @returns the unsigned int value as a Octal string
+         */
+        static std::string toHexString( int value );
+
+        /**
+         * Returns a string representation of the integer argument as an unsigned
+         * integer in base 8.
+         *
+         * The unsigned integer value is the argument plus 2^32 if the argument is
+         * negative; otherwise, it is equal to the argument. This value is converted
+         * to a string of ASCII digits in octal (base 8) with no extra leading 0s.
+         *
+         * If the unsigned magnitude is zero, it is represented by a single zero
+         * character '0'; otherwise, the first character of the representation
+         * of the unsigned magnitude will not be the zero character. The following
+         * characters are used as octal digits:
+         *
+         *      01234567
+         *
+         * @param value - the int to be translated to an Octal string
+         * @returns the unsigned int value as a Octal string
+         */
+        static std::string toOctalString( int value );
+
+        /**
+         * Returns a string representation of the integer argument as an unsigned
+         * integer in base 2.
+         *
+         * The unsigned integer value is the argument plus 2^32 if the argument is
+         * negative; otherwise it is equal to the argument. This value is converted
+         * to a string of ASCII digits in binary (base 2) with no extra leading 0s.
+         * If the unsigned magnitude is zero, it is represented by a single zero
+         * character '0' ('\u0030'); otherwise, the first character of the
+         * representation of the unsigned magnitude will not be the zero character.
+         * The characters '0' ('\u0030') and '1' ('\u0031') are used as binary
+         * digits.
+         * @param value - the int to be translated to a binary string
+         * @returns the unsigned int value as a binary string
+         */
+        static std::string toBinaryString( int value );
+
+        /**
+         * Returns an int value with at most a single one-bit, in the position of
+         * the highest-order ("leftmost") one-bit in the specified int value.
+         * Returns zero if the specified value has no one-bits in its two's
+         * complement binary representation, that is, if it is equal to zero.
+         * @param value - the int to be inspected
+         * @return an int value with a single one-bit, in the position of the
+         * highest-order one-bit in the specified value, or zero if the specified
+         * value is itself equal to zero.
+         */
+        static int highestOneBit( int value );
+
+        /**
+         * Returns an int value with at most a single one-bit, in the position of
+         * the lowest-order ("rightmost") one-bit in the specified int value.
+         * Returns zero if the specified value has no one-bits in its two's
+         * complement binary representation, that is, if it is equal to zero.
+         * @param value - the int to be inspected
+         * @return an int value with a single one-bit, in the position of the
+         * lowest-order one-bit in the specified value, or zero if the specified
+         * value is itself equal to zero.
+         */
+        static int lowestOneBit( int value );
+
+        /**
+         * Returns the number of zero bits preceding the highest-order ("leftmost")
+         * one-bit in the two's complement binary representation of the specified
+         * int value. Returns 32 if the specified value has no one-bits in its two's
+         * complement representation, in other words if it is equal to zero.
+         *
+         * Note that this method is closely related to the logarithm base 2. For
+         * all positive int values x:
+         *
+         *     * floor( log2(x)) = 31 - numberOfLeadingZeros(x)
+         *     * ceil( log2(x)) = 32 - numberOfLeadingZeros(x - 1)
+         *
+         * @param value - the int to be inspected
+         * @return the number of zero bits preceding the highest-order ("leftmost")
+         * one-bit in the two's complement binary representation of the specified
+         * int value, or 32 if the value is equal to zero.
+         */
+        static int numberOfLeadingZeros( int value );
+
+        /**
+         * Returns the number of zero bits following the lowest-order ("rightmost")
+         * one-bit in the two's complement binary representation of the specified
+         * int value. Returns 32 if the specified value has no one-bits in its
+         * two's complement representation, in other words if it is equal to zero.
+         * @param value - the int to be inspected
+         * @return the number of zero bits following the lowest-order ("rightmost")
+         * one-bit in the two's complement binary representation of the specified
+         * int value, or 32 if the value is equal to zero.
+         */
+        static int numberOfTrailingZeros( int value );
+
+        /**
+         * Returns the value obtained by rotating the two's complement binary
+         * representation of the specified int value left by the specified number
+         * of bits. (Bits shifted out of the left hand, or high-order, side reenter
+         * on the right, or low-order.)
+         *
+         * Note that left rotation with a negative distance is equivalent to right
+         * rotation: rotateLeft(val, -distance) == rotateRight(val, distance). Note
+         * also that rotation by any multiple of 32 is a no-op, so all but the last
+         * five bits of the rotation distance can be ignored, even if the distance
+         * is negative: rotateLeft(val, distance) == rotateLeft(val, distance & 0x1F).
+         * @param value - the int to be inspected
+         * @return
+         */
+        static int rotateLeft( int value );
+
+        /**
+         * Returns the value obtained by rotating the two's complement binary
+         * representation of the specified int value right by the specified number
+         * of bits. (Bits shifted out of the right hand, or low-order, side reenter
+         * on the left, or high-order.)
+         *
+         * Note that right rotation with a negative distance is equivalent to left
+         * rotation: rotateRight(val, -distance) == rotateLeft(val, distance). Note
+         * also that rotation by any multiple of 32 is a no-op, so all but the last
+         * five bits of the rotation distance can be ignored, even if the distance is
+         * negative: rotateRight(val, distance) == rotateRight(val, distance & 0x1F).
+         * @param value - the int to be inspected
+         * @return the value obtained by rotating the two's complement binary
+         * representation of the specified int value right by the specified number
+         * of bits.
+         */
+        static int rotateRight( int value );
+
+        /**
+         * Returns the signum function of the specified int value. (The return value
+         * is -1 if the specified value is negative; 0 if the specified value is zero;
+         * and 1 if the specified value is positive.)
+         * @param value - the int to be inspected
+         * @return the signum function of the specified int value.
+         */
+        static int signum( int value );
+
     private:
 
         static int parse( const std::string& value, int offset,
