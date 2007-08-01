@@ -134,7 +134,7 @@ std::string Integer::toString( int value, int radix ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string toBinaryString( int value ) {
+std::string Integer::toBinaryString( int value ) {
 
     int count = 1;
     int j = value;
@@ -166,7 +166,7 @@ std::string toBinaryString( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string toOctalString( int value ) {
+std::string Integer::toOctalString( int value ) {
 
     int count = 1, j = value;
 
@@ -197,7 +197,7 @@ std::string toOctalString( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string toHexString( int value ) {
+std::string Integer::toHexString( int value ) {
 
     int count = 1;
     int j = value;
@@ -413,13 +413,17 @@ int Integer::numberOfTrailingZeros( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::rotateLeft( int value ) {
-    return value; // TODO
+int Integer::rotateLeft( int value, int distance ) {
+    unsigned int i = (unsigned int)value;
+    int j = distance & 0x1F;
+    return ( i << j ) | ( i >> (-j & 0x1F ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::rotateRight( int value ) {
-    return value; // TODO
+int Integer::rotateRight( int value, int distance ) {
+    unsigned int i = (unsigned int)value;
+    int j = distance & 0x1F;
+    return ( i >> j ) | ( i << (-j & 0x1F ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

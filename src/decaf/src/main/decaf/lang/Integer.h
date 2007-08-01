@@ -410,9 +410,10 @@ namespace lang{
          * five bits of the rotation distance can be ignored, even if the distance
          * is negative: rotateLeft(val, distance) == rotateLeft(val, distance & 0x1F).
          * @param value - the int to be inspected
+         * @param distance - the number of bits to rotate
          * @return
          */
-        static int rotateLeft( int value );
+        static int rotateLeft( int value, int distance );
 
         /**
          * Returns the value obtained by rotating the two's complement binary
@@ -426,11 +427,12 @@ namespace lang{
          * five bits of the rotation distance can be ignored, even if the distance is
          * negative: rotateRight(val, distance) == rotateRight(val, distance & 0x1F).
          * @param value - the int to be inspected
+         * @param distance - the number of bits to rotate
          * @return the value obtained by rotating the two's complement binary
          * representation of the specified int value right by the specified number
          * of bits.
          */
-        static int rotateRight( int value );
+        static int rotateRight( int value, int distance );
 
         /**
          * Returns the signum function of the specified int value. (The return value
