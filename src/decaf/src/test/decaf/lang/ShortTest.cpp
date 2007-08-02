@@ -45,5 +45,36 @@ void ShortTest::test() {
     CPPUNIT_ASSERT( Short::reverseBytes( (short)0xDE00 ) == (short)0x00DE );
     CPPUNIT_ASSERT( Short::reverseBytes( (short)0x00AB ) == (short)0xAB00 );
 
+    Short short2( 255 );
+
+    // Comparison functions
+    CPPUNIT_ASSERT( short2.compareTo( 256 ) == -1 );
+    CPPUNIT_ASSERT( short2.compareTo( 255 ) == 0 );
+    CPPUNIT_ASSERT( short2.compareTo( 254 ) == 1 );
+    CPPUNIT_ASSERT( short2.equals( Short( 255 ) ) == true );
+    CPPUNIT_ASSERT( short2.compareTo( Short( 255 ) ) == 0 );
+    CPPUNIT_ASSERT( short2 == Short( 255 ) );
+
+    // decode
+    CPPUNIT_ASSERT( short2 == Short::decode( "255" ) );
+    CPPUNIT_ASSERT( short2 == Short::decode( "0xFF" ) );
+    CPPUNIT_ASSERT( short2 == Short::decode( "255" ) );
+    CPPUNIT_ASSERT( Short::decode( "-255" ) == -255 );
+
+    // parseInt
+    CPPUNIT_ASSERT( Short::parseShort( "255") == 255 );
+    CPPUNIT_ASSERT( Short::parseShort( "255", 10 ) == 255 );
+    CPPUNIT_ASSERT( Short::parseShort( "255", 11 ) != 255 );
+    CPPUNIT_ASSERT( Short::parseShort( "FF", 16 ) == 255 );
+
+    // valueOf
+    CPPUNIT_ASSERT( Short::valueOf( 255 ) == 255 );
+    CPPUNIT_ASSERT( Short::valueOf( "255" ) == 255 );
+    CPPUNIT_ASSERT( Short::valueOf( "255", 10 ) == 255 );
+    CPPUNIT_ASSERT( (Short::valueOf( "255", 11 )).shortValue() != 255 );
+    CPPUNIT_ASSERT( Short::valueOf( "FF", 16 ) == 255 );
+
+    CPPUNIT_ASSERT( Short::toString( 255 ) == "255" );
+
 }
 
