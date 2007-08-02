@@ -228,8 +228,8 @@ namespace lang{
          * the second argument. The characters in the string must all be digits,
          * of the specified radix (as determined by whether
          * Character.digit(char, int) returns a nonnegative value) except that the
-         * first character may be an ASCII minus sign '-'  ('\u002D') to indicate
-         * a negative value. The resulting byte value is returned.
+         * first character may be an ASCII minus sign '-' to indicate a negative
+         * value. The resulting byte value is returned.
          *
          * An exception of type NumberFormatException is thrown if any of the
          * following situations occurs:
@@ -325,12 +325,12 @@ namespace lang{
          * Character.MAX_RADIX, then the radix 10 is used instead.
          *
          * If the first argument is negative, the first element of the result is
-         * the ASCII minus character '-' ('\u002D'). If the first argument is not
+         * the ASCII minus character '-'. If the first argument is not
          * negative, no sign character appears in the result.
          *
          * The remaining characters of the result represent the magnitude of the
          * first argument. If the magnitude is zero, it is represented by a single
-         *  zero character '0' ('\u0030'); otherwise, the first character of the
+         *  zero character '0'; otherwise, the first character of the
          * representation of the magnitude will not be the zero character. The
          * following ASCII characters are used as digits:
          *

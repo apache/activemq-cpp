@@ -30,6 +30,7 @@ namespace lang{
     {
         CPPUNIT_TEST_SUITE( IntegerTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -37,7 +38,8 @@ namespace lang{
         IntegerTest(void) {}
         virtual ~IntegerTest(void) {}
 
-        virtual void test(void);
+        virtual void test();
+        virtual void test2();
 
     };
 

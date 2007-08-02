@@ -21,6 +21,7 @@ using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 
+////////////////////////////////////////////////////////////////////////////////
 void IntegerTest::test(void)
 {
     int x = Integer::parseInt("12");
@@ -39,4 +40,70 @@ void IntegerTest::test(void)
     CPPUNIT_ASSERT( y1 == "255" );
     CPPUNIT_ASSERT( z1 == "42" );
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IntegerTest::test2() {
+    Integer integer( 255 );
+
+    // Test cast functions
+    CPPUNIT_ASSERT( integer.byteValue() == 255 );
+    CPPUNIT_ASSERT( integer.shortValue() ==  255 );
+    CPPUNIT_ASSERT( integer.intValue() == 255 );
+    CPPUNIT_ASSERT( integer.longValue() == 255 );
+    CPPUNIT_ASSERT( integer.floatValue() == 255.0f );
+    CPPUNIT_ASSERT( integer.doubleValue() == 255.0 );
+
+    // Comparison functions
+    CPPUNIT_ASSERT( integer.compareTo( 256 ) == -1 );
+    CPPUNIT_ASSERT( integer.compareTo( 255 ) == 0 );
+    CPPUNIT_ASSERT( integer.compareTo( 254 ) == 1 );
+    CPPUNIT_ASSERT( integer.equals( Integer( 255 ) ) == true );
+    CPPUNIT_ASSERT( integer.compareTo( Integer( 255 ) ) == 0 );
+    CPPUNIT_ASSERT( integer == Integer( 255 ) );
+
+    // decode
+    CPPUNIT_ASSERT( integer == Integer::decode( "255" ) );
+    CPPUNIT_ASSERT( integer == Integer::decode( "0xFF" ) );
+    CPPUNIT_ASSERT( integer == Integer::decode( "255" ) );
+    CPPUNIT_ASSERT( Integer::decode( "-255" ) == -255 );
+
+    // reverseBytes
+    CPPUNIT_ASSERT( (int)0xFF000000 == Integer::reverseBytes( 255 ) );
+
+    // reverse
+    CPPUNIT_ASSERT( Integer::reverse( Integer::reverse( 255 ) ) == 255 );
+
+    // parseInt
+    CPPUNIT_ASSERT( Integer::parseInt( "255") == 255 );
+    CPPUNIT_ASSERT( Integer::parseInt( "255", 10 ) == 255 );
+    CPPUNIT_ASSERT( Integer::parseInt( "255", 11 ) != 255 );
+    CPPUNIT_ASSERT( Integer::parseInt( "FF", 16 ) == 255 );
+
+    // valueOf
+    CPPUNIT_ASSERT( Integer::valueOf( 255 ) == 255 );
+    CPPUNIT_ASSERT( Integer::valueOf( "255" ) == 255 );
+    CPPUNIT_ASSERT( Integer::valueOf( "255", 10 ) == 255 );
+    CPPUNIT_ASSERT( (Integer::valueOf( "255", 11 )).intValue() != 255 );
+    CPPUNIT_ASSERT( Integer::valueOf( "FF", 16 ) == 255 );
+
+    // bitCount
+    CPPUNIT_ASSERT( Integer::bitCount( 255 ) == 8 );
+    CPPUNIT_ASSERT( Integer::bitCount( 0xFFFFFFFF ) == 32 );
+
+    //toXXXString
+    CPPUNIT_ASSERT( Integer::toString( 255 ) == "255" );
+    CPPUNIT_ASSERT( Integer::toString( 255, 16 ) == "ff" );
+    CPPUNIT_ASSERT( Integer::toHexString( 255 ) == "ff" );
+    CPPUNIT_ASSERT( Integer::toOctalString( 255 ) == "377" );
+    CPPUNIT_ASSERT( Integer::toBinaryString( 255 ) == "11111111" );
+    CPPUNIT_ASSERT( Integer::toString( 255255 ) == "255255" );
+
+    // highestOneBit
+    CPPUNIT_ASSERT( Integer::highestOneBit( 255 ) == 128 );
+    CPPUNIT_ASSERT( Integer::highestOneBit( 0xFF000000 ) == (int)0x80000000 );
+
+    // lowestOneBit
+    CPPUNIT_ASSERT( Integer::lowestOneBit( 255 ) == 1 );
+    CPPUNIT_ASSERT( Integer::lowestOneBit( 0xFF000000 ) == (int)0x01000000 );
 }
