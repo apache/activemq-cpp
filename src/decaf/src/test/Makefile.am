@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+  decaf/lang/CharacterTest.cpp \
   decaf/lang/BooleanTest.cpp \
   decaf/lang/ShortTest.cpp \
   decaf/lang/IntegerTest.cpp \
@@ -45,6 +46,7 @@ cc_sources = \
   main.cpp
 
 h_sources = \
+  decaf/lang/CharacterTest.h \
   decaf/lang/BooleanTest.h \
   decaf/lang/ShortTest.h \
   decaf/lang/IntegerTest.h \

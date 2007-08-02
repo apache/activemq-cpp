@@ -31,6 +31,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
 #include <decaf/io/DataOutputStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamTest );
 
+#include <decaf/lang/CharacterTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::CharacterTest );
 #include <decaf/lang/BooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanTest );
 #include <decaf/lang/ExceptionTest.h>
