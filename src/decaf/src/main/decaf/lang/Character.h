@@ -67,7 +67,7 @@ namespace lang{
          * less than the passed in value.
          */
         virtual int compareTo( const Character& c ) const {
-            return this->value < c.value ? -1 : (this->value > c.value) ? -1 : 0;
+            return this->value < c.value ? -1 : (this->value > c.value) ? 1 : 0;
         }
 
         /**
@@ -98,7 +98,7 @@ namespace lang{
          * less than the passed in value.
          */
         virtual int compareTo( const char& c ) const {
-            return this->value < c ? -1 : (this->value > c) ? -1 : 0;
+            return this->value < c ? -1 : (this->value > c) ? 1 : 0;
         }
 
         /**
