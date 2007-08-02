@@ -47,6 +47,16 @@ bool UUID::equals( const UUID& value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool UUID::operator==( const UUID& value ) const {
+    return this->equals( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool UUID::operator<( const UUID& value ) const {
+    return this->compareTo( value ) == -1 ? true : false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string UUID::toString() const {
     char buffer[APR_UUID_FORMATTED_LENGTH+1] = {0};
     apr_uuid_format( &buffer[0], &apr_uuid );

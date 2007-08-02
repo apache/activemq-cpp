@@ -27,7 +27,8 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API Character : public Number,
-                                public Comparable<Character> {
+                                public Comparable<Character>,
+                                public Comparable<char> {
     private:
 
         // The primitive Char value
@@ -65,13 +66,72 @@ namespace lang{
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Character& c ) const;
+        virtual int compareTo( const Character& c ) const {
+            return this->value < c.value ? -1 : (this->value > c.value) ? -1 : 0;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param c - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const Character& c ) const {
+            return this->value == c.value;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param c - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const Character& c ) const {
+            return this->value < c.value;
+        }
+
+        /**
+         * Compares this Character instance with a char type.
+         * @param c - the char instance to be compared
+         * @return zero if this object represents the same char value as the
+         * argument; a positive value if this object represents a value greater
+         * than the passed in value, and -1 if this object repesents a value
+         * less than the passed in value.
+         */
+        virtual int compareTo( const char& c ) const {
+            return this->value < c ? -1 : (this->value > c) ? -1 : 0;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param c - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const char& c ) const {
+            return this->value == c;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param c - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const char& c ) const {
+            return this->value < c;
+        }
 
         /**
          * @returns true if the two Character Objects have the same value.
          */
         bool equals( const Character& c ) const {
             return this->value == c.value;
+        }
+
+        /**
+         * @returns true if the two Characters have the same value.
+         */
+        bool equals( const char& c ) const {
+            return this->value == c;
         }
 
         /**

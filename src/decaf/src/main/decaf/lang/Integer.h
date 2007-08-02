@@ -28,7 +28,8 @@ namespace decaf{
 namespace lang{
 
     class DECAF_API Integer : public Number,
-                              public Comparable<Integer> {
+                              public Comparable<Integer>,
+                              public Comparable<int> {
     private:
 
         // The primitve Integer value.
@@ -61,20 +62,76 @@ namespace lang{
 
         /**
          * Compares this Integer instance with another.
-         * @param b - the Integer instance to be compared
+         * @param i - the Integer instance to be compared
          * @return zero if this object represents the same integer value as the
          * argument; a positive value if this object represents a value greater
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Integer& n ) const;
+        virtual int compareTo( const Integer& i ) const;
 
         /**
-         * @param the Integer object to compare against.
+         * @param i - the Integer object to compare against.
          * @returns true if the two Integer Objects have the same value.
          */
-        bool equals( const Integer& n ) const {
-            return this->value == n.value;
+        bool equals( const Integer& i ) const {
+            return this->value == i.value;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param i - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const Integer& i ) const {
+            return this->value == i.value;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param i - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const Integer& i ) const {
+            return this->value < i.value;
+        }
+
+        /**
+         * Compares this Integer instance with another.
+         * @param i - the Integer instance to be compared
+         * @return zero if this object represents the same integer value as the
+         * argument; a positive value if this object represents a value greater
+         * than the passed in value, and -1 if this object repesents a value
+         * less than the passed in value.
+         */
+        virtual int compareTo( const int& i ) const;
+
+        /**
+         * @param i - the Integer object to compare against.
+         * @returns true if the two Integer Objects have the same value.
+         */
+        bool equals( const int& i ) const {
+            return this->value == i;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param i - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const int& i ) const {
+            return this->value == i;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param i - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const int& i ) const {
+            return this->value < i;
         }
 
         /**

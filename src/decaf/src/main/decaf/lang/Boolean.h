@@ -25,7 +25,8 @@
 namespace decaf{
 namespace lang{
 
-    class DECAF_API Boolean : public Comparable<Boolean> {
+    class DECAF_API Boolean : public Comparable<Boolean>,
+                              public Comparable<bool> {
     private:
 
         // This objects boolean value
@@ -80,10 +81,57 @@ namespace lang{
         virtual int compareTo( const Boolean& b ) const;
 
         /**
+         * Compares equality between this object and the one passed.
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const Boolean& value ) const;
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const Boolean& value ) const;
+
+        /**
          * @returns true if the two Boolean Objects have the same value.
          */
         bool equals( const Boolean& b ) const {
             return this->value == b.value;
+        }
+
+        /**
+         * Compares this Boolean instance with another.
+         * @param b - the Boolean instance to be compared
+         * @return zero if this object represents the same boolean value as the
+         * argument; a positive value if this object represents true and the
+         * argument represents false; and a negative value if this object
+         * represents false and the argument represents true
+         */
+        virtual int compareTo( const bool& b ) const;
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const bool& value ) const;
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const bool& value ) const;
+
+        /**
+         * @returns true if the two Boolean Objects have the same value.
+         */
+        bool equals( const bool& b ) const {
+            return this->value == b;
         }
 
     public:  // Statics

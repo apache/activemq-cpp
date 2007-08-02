@@ -47,6 +47,37 @@ int Boolean::compareTo( const Boolean& b ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool Boolean::operator==( const Boolean& b ) const {
+    return this->value == b.value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Boolean::operator<( const Boolean& b ) const {
+    return this->value < b.value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Boolean::compareTo( const bool& b ) const {
+    if( this->value == b ) {
+        return 0;
+    } else if( this->value && !b ) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Boolean::operator==( const bool& b ) const {
+    return this->value == b;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Boolean::operator<( const bool& b ) const {
+    return this->value < b;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string Boolean::toString() const {
     return this->value ? "true" : "false";
 }

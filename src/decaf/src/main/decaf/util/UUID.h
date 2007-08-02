@@ -124,6 +124,21 @@ namespace util{
         virtual bool equals( const UUID& value ) const;
 
         /**
+         * Compares equality between this object and the one passed.
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const UUID& value ) const;
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param value - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const UUID& value ) const;
+
+        /**
          * Returns a String object representing this UUID.  UUID's are formatted
          * as: 00112233-4455-6677-8899-AABBCCDDEEFF whose length is 36.
          * @returns formatted string for this UUID

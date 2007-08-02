@@ -27,7 +27,8 @@ namespace decaf{
 namespace lang{
 
     class Short : public Number,
-                  public Comparable<Short> {
+                  public Comparable<Short>,
+                  public Comparable<short> {
     private:
 
         // The short value
@@ -60,19 +61,74 @@ namespace lang{
 
         /**
          * Compares this Short instance with another.
-         * @param b - the Short instance to be compared
+         * @param s - the Short instance to be compared
          * @return zero if this object represents the same short value as the
          * argument; a positive value if this object represents a value greater
          * than the passed in value, and -1 if this object repesents a value
          * less than the passed in value.
          */
-        virtual int compareTo( const Short& b ) const;
+        virtual int compareTo( const Short& s ) const;
 
         /**
          * @returns true if the two Short Objects have the same value.
          */
         bool equals( const Short& s ) const {
             return this->value == s.value;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param s - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const Short& s ) const {
+            return this->value == s.value;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param s - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const Short& s ) const {
+            return this->value < s.value;
+        }
+
+        /**
+         * Compares this Short instance with another.
+         * @param s - the Short instance to be compared
+         * @return zero if this object represents the same short value as the
+         * argument; a positive value if this object represents a value greater
+         * than the passed in value, and -1 if this object repesents a value
+         * less than the passed in value.
+         */
+        virtual int compareTo( const short& s ) const;
+
+        /**
+         * @returns true if the two Short Objects have the same value.
+         */
+        bool equals( const short& s ) const {
+            return this->value == s;
+        }
+
+        /**
+         * Compares equality between this object and the one passed.
+         * @param s - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator==( const short& s ) const {
+            return this->value == s;
+        }
+
+        /**
+         * Compares this object to another and returns true if this object
+         * is considered to be less than the one passed.  This
+         * @param s - the value to be compared to this one.
+         * @return true if this object is equal to the one passed.
+         */
+        virtual bool operator<( const short& s ) const {
+            return this->value < s;
         }
 
         /**

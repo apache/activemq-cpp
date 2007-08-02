@@ -34,8 +34,13 @@ Integer::Integer( const std::string& value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Integer::compareTo( const Integer& n ) const {
-    return this->value < n.value ? -1 : this->value == n.value ? 0 : 1;
+int Integer::compareTo( const Integer& i ) const {
+    return this->value < i.value ? -1 : this->value == i.value ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Integer::compareTo( const int& i ) const {
+    return this->value < i ? -1 : this->value == i ? 0 : 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

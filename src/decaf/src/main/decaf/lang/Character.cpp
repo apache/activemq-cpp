@@ -27,11 +27,6 @@ Character::Character( char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Character::compareTo( const Character& c ) const {
-    return value < c.value ? -1 : (value > c.value) ? -1 : 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 std::string Character::toString() const {
     return string( 1, this->value );
 }

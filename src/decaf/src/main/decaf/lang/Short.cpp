@@ -16,11 +16,13 @@
  */
 
 #include "Short.h"
+#include "Integer.h"
 
 #include <sstream>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Short::Short( short value ) {
@@ -33,8 +35,13 @@ Short::Short( const std::string& value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int Short::compareTo( const Short& b ) const {
-    return value == b.value ? 0 : ( value > b.value ? 1 : -1 );
+int Short::compareTo( const Short& s ) const {
+    return value == s.value ? 0 : ( value > s.value ? 1 : -1 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Short::compareTo( const short& s ) const {
+    return value == s ? 0 : ( value > s ? 1 : -1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +60,15 @@ std::string Short::toString( short value ) {
 short Short::parseShort( const std::string& s, int radix )
     throw ( exceptions::NumberFormatException ) {
 
-    // TODO
-    return s.size() + radix;
+    int intValue = Integer::parseInt( s, radix );
+    short result = (short)intValue;
+    if( result != intValue ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Short::parseShort - Not a valid short encoded string.");
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,14 +81,21 @@ short Short::parseShort( const std::string& s )
 Short Short::decode( const std::string& value )
     throw ( exceptions::NumberFormatException ) {
 
-    // TODO
-    return Short( value.size() );
+    int intValue = Integer::decode( value ).intValue();
+    short result = (short)intValue;
+    if( result != intValue ) {
+        throw NumberFormatException(
+            __FILE__, __LINE__,
+            "Short::decode - Not a valid short encoded string.");
+    }
+
+    return Short( result );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 short Short::reverseBytes( short value ) {
-    short temp = value;
-    temp = ( ( value & 0xFF00 ) >> 8 ) | ( ( value & 0x00FF ) << 8 );
+    unsigned short temp = value;
+    temp = ( ( temp & 0xFF00 ) >> 8 ) | ( ( temp & 0x00FF ) << 8 );
     return temp;
 }
 
