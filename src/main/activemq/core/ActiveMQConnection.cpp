@@ -76,6 +76,20 @@ void ActiveMQConnection::removeDispatcher( const connector::ConsumerInfo* consum
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+const cms::ConnectionMetaData& ActiveMQConnection::getMetaData() const
+    throw ( cms::CMSException ) {
+
+    if( closed ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "ActiveMQConnection::getMetaData - "
+            "Can't get data on closed Connection" );
+    }
+
+    return connectionMetaData;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException )
 {
     try {

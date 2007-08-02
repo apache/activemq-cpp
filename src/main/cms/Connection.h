@@ -23,11 +23,12 @@
 #include <cms/Stoppable.h>
 #include <cms/Closeable.h>
 #include <cms/Session.h>
+#include <cms/ConnectionMetaData.h>
 
 namespace cms
 {
     class ExceptionListener;
-   
+
     class CMS_API Connection :
         public Startable,
         public Stoppable,
@@ -38,33 +39,40 @@ namespace cms
         virtual ~Connection() {}
 
         /**
-         * Closes this connection as well as any Sessions 
+         * Closes this connection as well as any Sessions
          * created from it (and those Sessions' consumers and
          * producers).
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
 
-		/**
+        /**
+         * @eturns the a ConnectionMata object for this connection
+         * @throws CMSException on failure to get ConnectionMetaData
+         */
+        virtual const ConnectionMetaData& getMetaData() const
+            throw ( cms::CMSException ) = 0;
+
+        /**
          * Creates an AUTO_ACKNOWLEDGE Session.
          * @throws CMSException
          */
         virtual Session* createSession() throw ( CMSException ) = 0;
-				
+
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
          * @param the Acknowledgement Mode to use.
          * @throws CMSException
          */
-        virtual Session* createSession( Session::AcknowledgeMode ackMode ) 
+        virtual Session* createSession( Session::AcknowledgeMode ackMode )
             throw ( CMSException ) = 0;
 
         /**
          * Get the Client Id for this session
          * @return Client Id String
          */
-        virtual std::string getClientID() const = 0;      
+        virtual std::string getClientID() const = 0;
 
         /**
          * Gets the registered Exception Listener for this connection

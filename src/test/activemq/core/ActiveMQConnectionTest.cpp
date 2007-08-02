@@ -283,6 +283,10 @@ void ActiveMQConnectionTest::test2WithOpenwire()
             new ActiveMQConnectionData(
                 connector, transport, properties) );
 
+        CPPUNIT_ASSERT( connection.getMetaData().getCMSVersion() != "" );
+        CPPUNIT_ASSERT( connection.getMetaData().getCMSProviderName() != "" );
+
+
         connection.getClientID();
         connection.close();
 

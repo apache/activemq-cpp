@@ -27,15 +27,16 @@
 #include <activemq/util/Properties.h>
 #include <activemq/util/Map.h>
 #include <activemq/util/Set.h>
+#include <activemq/core/ActiveMQConnectionMetaData.h>
 
 #include <string>
 
 namespace activemq{
-    
+
     namespace connector {
         class ConsumerInfo;
     }
-    
+
 namespace core{
 
     class cms::Session;
@@ -84,6 +85,11 @@ namespace core{
          */
         util::Set<ActiveMQSession*> activeSessions;
 
+        /**
+         * The Meta Data for this Connection
+         */
+        ActiveMQConnectionMetaData connectionMetaData;
+
     public:
 
         /**
@@ -100,14 +106,14 @@ namespace core{
          * @param session The session to be unregistered from this connection.
          */
         virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
-        
+
         /**
          * Adds a dispatcher for a consumer.
          * @param consumer - The consumer for which to register a dispatcher.
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          */
         virtual void addDispatcher( connector::ConsumerInfo* consumer, Dispatcher* dispatcher );
-        
+
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
@@ -115,6 +121,13 @@ namespace core{
         virtual void removeDispatcher( const connector::ConsumerInfo* consumer );
 
     public:   // Connection Interface Methods
+
+        /**
+         * @eturns the a ConnectionMata object for this connection
+         * @throws CMSException
+         */
+        virtual const cms::ConnectionMetaData& getMetaData() const
+            throw ( cms::CMSException );
 
         /**
          * Creates a new Session to work for this Connection
