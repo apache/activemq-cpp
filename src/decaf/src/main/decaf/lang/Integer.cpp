@@ -45,33 +45,49 @@ int Integer::bitCount( int value ) {
         return 0;
     }
 
+    unsigned int uvalue = (unsigned int)value;
+
     // 32-bit recursive reduction using SWAR...
     // but first step is mapping 2-bit values
     // into sum of 2 1-bit values in sneaky way
-    value -= ((value >> 1) & 0x55555555);
-    value = (((value >> 2) & 0x33333333) + (value & 0x33333333));
-    value = (((value >> 4) + value) & 0x0F0F0F0F);
-    value += (value >> 8);
-    value += (value >> 16);
-    return(value & 0x0000003F);
+    uvalue -= ((uvalue >> 1) & 0x55555555);
+    uvalue = (((uvalue >> 2) & 0x33333333) + (uvalue & 0x33333333));
+    uvalue = (((uvalue >> 4) + uvalue) & 0x0F0F0F0F);
+    uvalue += (uvalue >> 8);
+    uvalue += (uvalue >> 16);
+    return(uvalue & 0x0000003F);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::reverseBytes( int value ) {
-    int b3 = value >> 24;
-    int b2 = (value >> 8) & 0xFF00;
-    int b1 = (value & 0xFF00) << 8;
-    int b0 = value << 24;
+
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
+
+    unsigned int b3 = uvalue >> 24;
+    unsigned int b2 = (uvalue >> 8) & 0xFF00;
+    unsigned int b1 = (uvalue & 0xFF00) << 8;
+    unsigned int b0 = uvalue << 24;
     return (b0 | b1 | b2 | b3);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::reverse( int value ) {
-    value = (((value & 0xAAAAAAAA) >> 1) | ((value & 0x55555555) << 1));
-    value = (((value & 0xCCCCCCCC) >> 2) | ((value & 0x33333333) << 2));
-    value = (((value & 0xF0F0F0F0) >> 4) | ((value & 0x0F0F0F0F) << 4));
-    value = (((value & 0xFF00FF00) >> 8) | ((value & 0x00FF00FF) << 8));
-    return ((value >> 16) | (value << 16));
+
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
+
+    uvalue = (((uvalue & 0xAAAAAAAA) >> 1) | ((uvalue & 0x55555555) << 1));
+    uvalue = (((uvalue & 0xCCCCCCCC) >> 2) | ((uvalue & 0x33333333) << 2));
+    uvalue = (((uvalue & 0xF0F0F0F0) >> 4) | ((uvalue & 0x0F0F0F0F) << 4));
+    uvalue = (((uvalue & 0xFF00FF00) >> 8) | ((uvalue & 0x00FF00FF) << 8));
+    return ((uvalue >> 16) | (uvalue << 16));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -383,33 +399,55 @@ int Integer::parse( const std::string& value, int offset,
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::highestOneBit( int value ) {
 
-    value |= (value >> 1);
-    value |= (value >> 2);
-    value |= (value >> 4);
-    value |= (value >> 8);
-    value |= (value >> 16);
-    return ( value & ~(value >> 1));
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
+
+    uvalue |= (uvalue >> 1);
+    uvalue |= (uvalue >> 2);
+    uvalue |= (uvalue >> 4);
+    uvalue |= (uvalue >> 8);
+    uvalue |= (uvalue >> 16);
+    return ( uvalue & ~(uvalue >> 1));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::lowestOneBit( int value ) {
-    return ( value & (-value) );
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
+    return ( uvalue & (-uvalue) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::numberOfLeadingZeros( int value ) {
+
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
 
     value |= value >> 1;
     value |= value >> 2;
     value |= value >> 4;
     value |= value >> 8;
     value |= value >> 16;
-    return Integer::bitCount( ~value );
+    return Integer::bitCount( ~uvalue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Integer::numberOfTrailingZeros( int value ) {
-    return bitCount( (value & -value) - 1 );
+    if( value == 0 ) {
+        return 0;
+    }
+
+    unsigned int uvalue = (unsigned int)value;
+    return bitCount( (uvalue & -uvalue) - 1 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
