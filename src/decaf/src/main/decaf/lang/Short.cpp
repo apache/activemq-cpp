@@ -46,14 +46,12 @@ int Short::compareTo( const short& s ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Short::toString() const {
-    return toString( this->value );
+    return Integer::toString( this->value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Short::toString( short value ) {
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
+    return Integer::toString( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
