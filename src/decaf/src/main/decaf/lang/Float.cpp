@@ -41,24 +41,22 @@ Float::Float( double value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 Float::Float( const std::string& value ) throw( exceptions::NumberFormatException ) {
-    //TODO this->value = Float::parseFloat( value );
+    this->value = Float::parseFloat( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Float::compareTo( const Float& f ) const {
-    // TODO
-    return this->value < f.value ? -1 : this->value == f.value ? 0 : 1;
+    return Float::compare( this->value, f.value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Float::compareTo( const float& f ) const {
-    // TODO
-    return this->value < f ? -1 : this->value == f ? 0 : 1;
+    return Float::compare( this->value, f );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Float::toString() const {
-    return ""; //TODO Float::toString( this->value, 10 );
+    return Float::toString( this->value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +67,35 @@ bool Float::isInfinite() const {
 ////////////////////////////////////////////////////////////////////////////////
 bool Float::isNaN() const {
     return Float::isNaN( this->value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Float::compare( float f1, float f2 ) {
+
+    int i1, i2 = 0;
+    long NaNbits = Float::floatToIntBits( Float::NaN );
+
+    if( ( i1 = Float::floatToIntBits( f1 ) ) == NaNbits ) {
+        if( Float::floatToIntBits( f2 ) == NaNbits ) {
+            return 0;
+        }
+        return 1;
+    }
+
+    if( ( i2 = Float::floatToIntBits( f2 ) ) == NaNbits ) {
+        return -1;
+    }
+
+    if( f1 == f2 ) {
+        if( i1 == i2 ) {
+            return 0;
+        }
+
+        // check for -0
+        return i1 > i2 ? 1 : -1;
+    }
+
+    return f1 > f2 ? 1 : -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +121,14 @@ int Float::floatToRawIntBits( float value ) {
     int intValue = 0;
     memcpy( &intValue, &value, sizeof( float ) );
     return intValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float Float::intBitsToFloat( int bits ) {
+
+    float floatValue = 0;
+    memcpy( &floatValue, &bits, sizeof( int ) );
+    return floatValue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -213,6 +213,18 @@ namespace lang{
     public:   // Statics
 
         /**
+         * Compares the two specified double values. The sign of the integer value
+         * returned is the same as that of the integer that would be returned by the
+         * call: Float( f1 ).compareTo( Float( f2) )
+         * @param f1 - the first double to compare
+         * @param f2 - the second double to compare
+         * @returns the value 0 if d1 is numerically equal to f2; a value less than
+         * 0 if f1 is numerically less than f2; and a value greater than 0  if f1 is
+         * numerically greater than f2.
+         */
+        static int compare( float f1, float f2 );
+
+        /**
          * Returns a representation of the specified floating-point value according
          * to the IEEE 754 floating-point "single format" bit layout.
          *
@@ -282,7 +294,7 @@ namespace lang{
 
         /**
          * @param value - The float to check.
-         * @returns true if the float is equal to positive infinity.
+         * @returns true if the float is equal to infinity.
          */
         static bool isInfinite( float value );
 
