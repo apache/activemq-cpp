@@ -29,7 +29,7 @@ Integer::Integer( int value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Integer::Integer( const std::string& value ) {
+Integer::Integer( const std::string& value ) throw( exceptions::NumberFormatException ) {
     this->value = parseInt( value );
 }
 

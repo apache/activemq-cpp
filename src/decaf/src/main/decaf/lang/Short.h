@@ -54,8 +54,9 @@ namespace lang{
 
         /**
          * @param value - string value to convert to short and wrap
+         * @throws NumberFormatException
          */
-        Short( const std::string& value );
+        Short( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Short() {}
 

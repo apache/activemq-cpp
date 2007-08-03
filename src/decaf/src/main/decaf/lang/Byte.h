@@ -27,9 +27,9 @@
 namespace decaf{
 namespace lang{
 
-    class Byte : public Number,
-                 public Comparable<Byte>,
-                 public Comparable<unsigned char> {
+    class DECAF_API Byte : public Number,
+                           public Comparable<Byte>,
+                           public Comparable<unsigned char> {
     private:
 
         unsigned char value;
@@ -54,8 +54,9 @@ namespace lang{
 
         /**
          * @param value - the string to convert to an unsigned char
+         * @throws NumberFormatException
          */
-        Byte( const std::string& value );
+        Byte( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Byte() {}
 

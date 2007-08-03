@@ -55,8 +55,9 @@ namespace lang{
 
         /**
          * @param the base 10 encoded string to decode to sn int and wrap.
+         * @throws NumberFormatException
          */
-        Integer( const std::string& value );
+        Integer( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Integer() {}
 

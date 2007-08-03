@@ -17,9 +17,38 @@
 
 #include "Double.h"
 
+using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Double::Double() {
+const double Double::MAX_VALUE = 1.7976931348623157e+308;
+const double Double::MIN_VALUE = 2.2250738585072014e-308;
+
+////////////////////////////////////////////////////////////////////////////////
+Double::Double( double value ) {
+    this->value = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Double::Double( const std::string& value ) throw( exceptions::NumberFormatException ) {
+    //TODO this->value = Double::parseFloat( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Double::compareTo( const Double& d ) const {
+    // TODO
+    return this->value < d.value ? -1 : this->value == d.value ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Double::compareTo( const double& d ) const {
+    // TODO
+    return this->value < d ? -1 : this->value == d ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Double::toString() const {
+    return ""; //TODO Float::toString( this->value, 10 );
 }

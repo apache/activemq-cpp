@@ -28,7 +28,7 @@ Long::Long( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Long::Long( const std::string& value ) {
+Long::Long( const std::string& value ) throw( exceptions::NumberFormatException ) {
     this->value = parseLong( value );
 }
 

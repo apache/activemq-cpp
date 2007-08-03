@@ -29,7 +29,7 @@ Byte::Byte( unsigned char value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Byte::Byte( const std::string& value ) {
+Byte::Byte( const std::string& value ) throw( exceptions::NumberFormatException ) {
     this->value = parseByte( value );
 }
 

@@ -17,9 +17,43 @@
 
 #include "Float.h"
 
+using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Float::Float() {
+const float Float::MAX_VALUE = 3.40282347e+38F;
+const float Float::MIN_VALUE = 1.17549435e-38F;
+
+////////////////////////////////////////////////////////////////////////////////
+Float::Float( float value ) {
+    this->value = value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Float::Float( double value ) {
+    this->value = (float)value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Float::Float( const std::string& value ) throw( exceptions::NumberFormatException ) {
+    //TODO this->value = Float::parseFloat( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Float::compareTo( const Float& f ) const {
+    // TODO
+    return this->value < f.value ? -1 : this->value == f.value ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Float::compareTo( const float& f ) const {
+    // TODO
+    return this->value < f ? -1 : this->value == f ? 0 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Float::toString() const {
+    return ""; //TODO Float::toString( this->value, 10 );
 }

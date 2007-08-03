@@ -54,8 +54,9 @@ namespace lang{
 
         /**
          * @param value - the long long formated string to wrap
+         * @thorw NumberFormatException
          */
-        Long( const std::string& value );
+        Long( const std::string& value ) throw( exceptions::NumberFormatException );
 
         virtual ~Long() {}
 
