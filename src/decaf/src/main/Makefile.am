@@ -25,6 +25,7 @@ cc_sources = \
    decaf/net/SocketFactory.cpp \
    decaf/lang/Exception.cpp \
    decaf/lang/Thread.cpp \
+   decaf/lang/Byte.cpp \
    decaf/lang/Character.cpp \
    decaf/lang/Boolean.cpp \
    decaf/lang/Short.cpp \
@@ -67,6 +68,7 @@ h_sources = \
    decaf/net/SocketFactory.h \
    decaf/lang/Throwable.h \
    decaf/lang/Exception.h \
+   decaf/lang/Byte.h \
    decaf/lang/Character.h \
    decaf/lang/Short.h \
    decaf/lang/Integer.h \
