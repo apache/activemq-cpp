@@ -17,7 +17,7 @@
 
 // All CPP Unit tests are registered in here so we can disable them and
 // enable them easily in one place.
-//
+
 #include <decaf/io/BufferedInputStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::BufferedInputStreamTest );
 #include <decaf/io/BufferedOutputStreamTest.h>
@@ -31,6 +31,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamTest );
 #include <decaf/io/DataOutputStreamTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamTest );
 
+#include <decaf/lang/ByteTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ByteTest );
 #include <decaf/lang/CharacterTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::CharacterTest );
 #include <decaf/lang/BooleanTest.h>
