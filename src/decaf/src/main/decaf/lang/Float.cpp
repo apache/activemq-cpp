@@ -16,6 +16,7 @@
  */
 
 #include "Float.h"
+#include <decaf/lang/Integer.h>
 
 using namespace std;
 using namespace decaf;
@@ -150,7 +151,86 @@ float Float::parseFloat( const std::string& value )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Float::toHexString( float value ) {
-    return ""; //TODO
+    /*
+     * Reference: http://en.wikipedia.org/wiki/IEEE_754
+     */
+    if( value != value ) {
+        return "NaN";
+    }
+    if( value == POSITIVE_INFINITY ) {
+        return "Infinity";
+    }
+    if( value == NEGATIVE_INFINITY ) {
+        return "-Infinity";
+    }
+
+    unsigned int bitValue = Float::floatToIntBits( value );
+
+    bool negative = ( bitValue & 0x80000000 ) != 0;
+    // mask exponent bits and shift down
+    unsigned int exponent = ( bitValue & 0x7f800000 ) >> 23;
+    // mask significand bits and shift up
+    // significand is 23-bits, so we shift to treat it like 24-bits
+    unsigned int significand = ( bitValue & 0x007FFFFF ) << 1;
+
+    if( exponent == 0 && significand == 0 ) {
+        return ( negative ? "-0x0.0p0" : "0x0.0p0" );
+    }
+
+    // Start with the correct sign and Hex indicator
+    std::string hexString( negative ? "-0x" : "0x" );
+
+    if( exponent == 0 ) {
+        // denormal (subnormal) value
+        hexString.append( "0." );
+        // significand is 23-bits, so there can be 6 hex digits
+        unsigned int fractionDigits = 6;
+        // remove trailing hex zeros, so Integer.toHexString() won't print
+        // them
+        while( ( significand != 0 ) && ( ( significand & 0xF ) == 0 ) ) {
+            significand >>= 4;
+            fractionDigits--;
+        }
+        // this assumes Integer.toHexString() returns lowercase characters
+        std::string hexSignificand = Integer::toHexString( significand );
+
+        // if there are digits left, then insert some '0' chars first
+        if( significand != 0 && fractionDigits > hexSignificand.length() ) {
+            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            while( digitDiff-- != 0 ) {
+                hexString.append( "0" );
+            }
+        }
+        hexString.append( hexSignificand );
+        hexString.append( "p-126" );
+    } else {
+        // normal value
+        hexString.append( "1." );
+        // significand is 23-bits, so there can be 6 hex digits
+        unsigned int fractionDigits = 6;
+        // remove trailing hex zeros, so Integer.toHexString() won't print
+        // them
+        while( (significand != 0) && ((significand & 0xF ) == 0 ) ) {
+            significand >>= 4;
+            fractionDigits--;
+        }
+        // this assumes Integer.toHexString() returns lowercase characters
+        std::string hexSignificand = Integer::toHexString( significand );
+
+        // if there are digits left, then insert some '0' chars first
+        if( significand != 0 && fractionDigits > hexSignificand.length() ) {
+            unsigned int digitDiff = fractionDigits - hexSignificand.length();
+            while( digitDiff-- != 0 ) {
+                hexString.append( "0" );
+            }
+        }
+        hexString.append( hexSignificand );
+        hexString.append( "p" );
+        // remove exponent's 'bias' and convert to a string
+        hexString.append( Integer::toString( exponent - 127 ) );
+    }
+
+    return hexString;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
