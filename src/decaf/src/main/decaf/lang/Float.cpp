@@ -25,6 +25,9 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 const float Float::MAX_VALUE = 3.40282347e+38F;
 const float Float::MIN_VALUE = 1.17549435e-38F;
+const float Float::NaN = 0.0f / 0.0f;
+const float Float::POSITIVE_INFINITY = 1.0f / 0.0f;
+const float Float::NEGATIVE_INFINITY = -1.0f / 0.0f;
 
 ////////////////////////////////////////////////////////////////////////////////
 Float::Float( float value ) {
@@ -56,4 +59,78 @@ int Float::compareTo( const float& f ) const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string Float::toString() const {
     return ""; //TODO Float::toString( this->value, 10 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Float::isInfinite() const {
+    return Float::isInfinite( this->value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Float::isNaN() const {
+    return Float::isNaN( this->value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Float::floatToIntBits( float value ) {
+
+    int intValue = 0;
+    memcpy( &intValue, &value, sizeof( float ) );
+
+    if( ( intValue & SINGLE_EXPONENT_MASK ) == SINGLE_EXPONENT_MASK )
+    {
+        if( intValue & SINGLE_MANTISSA_MASK )
+        {
+            return SINGLE_NAN_BITS;
+        }
+    }
+
+    return intValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int Float::floatToRawIntBits( float value ) {
+
+    int intValue = 0;
+    memcpy( &intValue, &value, sizeof( float ) );
+    return intValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Float::isInfinite( float value ) {
+    return ( value == POSITIVE_INFINITY ) || ( value == NEGATIVE_INFINITY );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool Float::isNaN( float value ) {
+    return value != value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float Float::parseFloat( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    return 0.0; // TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Float::toHexString( float value ) {
+    return ""; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string Float::toString( float value ) {
+    return ""; //TODO
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Float Float::valueOf( float value ) {
+    return Float( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Float Float::valueOf( const std::string& value )
+    throw ( exceptions::NumberFormatException ) {
+
+    return valueOf( parseFloat( value ) );
 }
