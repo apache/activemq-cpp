@@ -37,14 +37,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ByteTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::CharacterTest );
 #include <decaf/lang/BooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanTest );
-#include <decaf/lang/ExceptionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 #include <decaf/lang/ShortTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ShortTest );
 #include <decaf/lang/IntegerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::IntegerTest );
 #include <decaf/lang/LongTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
+#include <decaf/lang/ExceptionTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 #include <decaf/lang/ThreadTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
 
@@ -64,6 +64,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 #include <decaf/util/GuidTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::GuidTest );
+#include <decaf/util/UUIDTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
 #include <decaf/util/MapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
 #include <decaf/util/QueueTest.h>

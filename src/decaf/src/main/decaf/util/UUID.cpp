@@ -152,7 +152,7 @@ UUID UUID::randomUUID() {
 
     apr_uuid_t temp;
     // Generate some random bytes.
-    apr_generate_random_bytes( temp.data, 16 );
+    apr_uuid_get( &temp );
 
     long long mostSigBits = 0;
     long long leastSigBits = 0;

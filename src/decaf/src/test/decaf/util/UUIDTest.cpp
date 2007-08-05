@@ -28,4 +28,14 @@ UUIDTest::UUIDTest() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void UUIDTest::test() {
+
+    UUID randId = UUID::randomUUID();
+    UUID bytesId = UUID::nameUUIDFromBytes( "ASDASFSADGSDGSDASFA" );
+
+    CPPUNIT_ASSERT( !( randId == bytesId ) );
+    CPPUNIT_ASSERT( !( randId.equals( bytesId ) ) );
+    CPPUNIT_ASSERT( randId.compareTo( bytesId ) != 0 );
+
+    CPPUNIT_ASSERT( randId.variant() == 2 );
+
 }
