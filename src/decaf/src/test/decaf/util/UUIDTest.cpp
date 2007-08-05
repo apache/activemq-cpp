@@ -36,6 +36,12 @@ void UUIDTest::test() {
     CPPUNIT_ASSERT( !( randId.equals( bytesId ) ) );
     CPPUNIT_ASSERT( randId.compareTo( bytesId ) != 0 );
 
+    std::string uuidStr = randId.toString();
+
+    UUID strId = UUID::fromString( uuidStr );
+
+    CPPUNIT_ASSERT( randId == strId );
+
     CPPUNIT_ASSERT( randId.variant() == 2 );
 
 }
