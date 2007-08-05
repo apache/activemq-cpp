@@ -28,6 +28,12 @@ UUID::UUID( long long mostSigBits, long long leastSigBits ) {
 
     memcpy( &apr_uuid.data[0], &leastSigBits, sizeof( long long ) );
     memcpy( &apr_uuid.data[sizeof(long long)], &mostSigBits, sizeof(long long ) );
+
+    this->mostSigBits = mostSigBits;
+    this->leastSigBits = leastSigBits;
+
+    // Version indicator, set when a UUID is generated
+    this->uuidVersion = (int)( mostSigBits & 0x000000000000F000LL ) >> 12;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,37 +85,95 @@ long long UUID::getMostSignificantBits() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::node() throw ( lang::exceptions::UnsupportedOperationException ) {
-    return 0; //TODO
+
+    if( this->version() != 1 ) {
+        throw exceptions::UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "UUID::node - Only a Version 1 UUID supports this operation." );
+    }
+
+    return ( this->leastSigBits & 0x0000FFFFFFFFFFFFULL );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::timestamp() throw ( lang::exceptions::UnsupportedOperationException ) {
-    return 0; //TODO
+
+    if( this->version() != 1 ) {
+        throw exceptions::UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "UUID::node - Only a Version 1 UUID supports this operation." );
+    }
+
+    // Mask out the version and shift values around to make time.
+    long long timeLow  = ( mostSigBits & 0xFFFFFFFF00000000ULL) >> 32;
+    long long timeMid  = ( mostSigBits & 0x00000000FFFF0000ULL) << 16;
+    long long timeHigh = ( mostSigBits & 0x0000000000000FFFULL) << 48;
+
+    return timeLow | timeMid | timeHigh;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationException ) {
-    return 0; //TODO
+int UUID::clockSequence() throw ( lang::exceptions::UnsupportedOperationException ) {
+
+    if( this->version() != 1 ) {
+        throw exceptions::UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "UUID::node - Only a Version 1 UUID supports this operation." );
+    }
+
+    return (int)( ( this->leastSigBits & 0x3FFF000000000000ULL ) >> 48 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
-    return 0; //TODO
+int UUID::variant() throw ( lang::exceptions::UnsupportedOperationException ) {
+
+    // determine variant field
+    if( ( this->leastSigBits & 0x8000000000000000ULL ) == 0 ) {
+        // MSB0 not set, NCS backwards compatibility variant
+        return 0;
+    } else if( ( this->leastSigBits & 0x4000000000000000ULL ) != 0 ) {
+        // MSB1 set, either MS reserved or future reserved
+        return (int)( ( this->leastSigBits & 0xE000000000000000ULL ) >> 61 );
+    }
+
+    // MSB1 not set, RFC 4122 variant
+    return 2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long UUID::version() throw ( lang::exceptions::UnsupportedOperationException ) {
-    return 0; //TODO
+int UUID::version() throw ( lang::exceptions::UnsupportedOperationException ) {
+    return this->uuidVersion;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 UUID UUID::randomUUID() {
-    return UUID( 0, 0); //TODO
+
+    apr_uuid_t temp;
+    // Generate some random bytes.
+    apr_generate_random_bytes( temp.data, 16 );
+
+    long long mostSigBits = 0;
+    long long leastSigBits = 0;
+
+    // Extract to data from the uuid data
+    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
+    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+
+    // Set the variant and version fields, could compact but want to be clear
+    // on what is being set.
+    mostSigBits &= ( 0xFFFFFFFFFFFF0FFFULL | ( 0x4ULL << 12 ) );
+    leastSigBits &= ( 0x3FFFFFFFFFFFFFFFULL | ( 0x2ULL << 62 ) );
+
+    return UUID( mostSigBits, leastSigBits );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID UUID::nameUUIDFromBytes( const char* name DECAF_UNUSED ) {
-    return UUID( 0, 0); //TODO
+UUID UUID::nameUUIDFromBytes( const std::string& name DECAF_UNUSED ) {
+
+    long long mostSigBits = 0;
+    long long leastSigBits = 0;
+
+    return UUID( mostSigBits, leastSigBits ); //TODO
 }
 
 ////////////////////////////////////////////////////////////////////////////////

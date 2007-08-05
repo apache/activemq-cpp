@@ -69,6 +69,15 @@ namespace util{
         // APR Uuid Type
         apr_uuid_t apr_uuid;
 
+        // Copy of the High part of the data
+        unsigned long long mostSigBits;
+
+        // Copy of the Low part of the data
+        unsigned long long leastSigBits;
+
+        // Version indicator, set when a UUID is generated
+        int uuidVersion;
+
     public:
 
         /**
@@ -85,7 +94,7 @@ namespace util{
          * @param name - a byte array to be used to construct a UUID.
          * @return type 3 UUID
          */
-        static UUID nameUUIDFromBytes( const char* name );
+        static UUID nameUUIDFromBytes( const std::string& name );
 
         /**
          * Creates a UUID from the string standard representation as described
@@ -200,7 +209,7 @@ namespace util{
          * @returns the clockSequeunce associated with a V1 UUID
          * @throws UnsupportedOperationException
          */
-        virtual long long clockSequence()
+        virtual int clockSequence()
             throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -212,10 +221,10 @@ namespace util{
          *     * 6 Reserved, Microsoft Corporation backward compatibility
          *     * 7 Reserved for future definition
          *
-         * @returns the clockSequeunce associated with a V1 UUID
+         * @returns the variant associated with a V1 UUID
          * @throws UnsupportedOperationException
          */
-        virtual long long variant()
+        virtual int variant()
             throw ( lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -227,10 +236,10 @@ namespace util{
          *     * 3 Name-based UUID
          *     * 4 Randomly generated UUID
          *
-         * @returns the clockSequeunce associated with a V1 UUID
+         * @returns the version associated with a V1 UUID
          * @throws UnsupportedOperationException
          */
-        virtual long long version()
+        virtual int version()
             throw ( lang::exceptions::UnsupportedOperationException );
 
     };
