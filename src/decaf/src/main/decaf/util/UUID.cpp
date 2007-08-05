@@ -17,6 +17,8 @@
 
 #include "UUID.h"
 #include <apr_strings.h>
+#include <apr_md5.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
 
 using namespace std;
 using namespace decaf;
@@ -170,24 +172,48 @@ UUID UUID::randomUUID() {
 ////////////////////////////////////////////////////////////////////////////////
 UUID UUID::nameUUIDFromBytes( const std::string& name DECAF_UNUSED ) {
 
+    apr_uuid_t temp;
+
+    if( apr_md5( &temp.data[0], name.c_str(), name.size() ) != APR_SUCCESS ) {
+        throw exceptions::RuntimeException(
+            __FILE__, __LINE__,
+            "UUID::nameUUIDFromBytes - Failed to run MD5 encoder." );
+    }
+
     long long mostSigBits = 0;
     long long leastSigBits = 0;
 
-    return UUID( mostSigBits, leastSigBits ); //TODO
+    // Extract to data from the uuid data
+    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
+    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+
+    // Set the variant and version fields, could compact but want to be clear
+    // on what is being set.
+    mostSigBits &= ( 0xFFFFFFFFFFFF0FFFULL | ( 0x3ULL << 12 ) );
+    leastSigBits &= ( 0x3FFFFFFFFFFFFFFFULL | ( 0x2ULL << 62 ) );
+
+    return UUID( mostSigBits, leastSigBits );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 UUID UUID::fromString( const std::string& name )
     throw ( lang::exceptions::IllegalArgumentException ){
 
-    UUID result( 0, 0 );
+    apr_uuid_t temp;
 
-    if( apr_uuid_parse( &(result.apr_uuid), name.c_str() ) != APR_SUCCESS ) {
+    if( apr_uuid_parse( &temp, name.c_str() ) != APR_SUCCESS ) {
         throw lang::exceptions::IllegalArgumentException(
             __FILE__, __LINE__,
             "UUID::fromString - Invalid UUID String: ",
             name.c_str() );
     }
 
-    return result;
+    long long mostSigBits = 0;
+    long long leastSigBits = 0;
+
+    // Extract to data from the uuid data
+    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
+    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+
+    return UUID( mostSigBits, leastSigBits );
 }
