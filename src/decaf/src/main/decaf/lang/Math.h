@@ -96,6 +96,20 @@ namespace lang{
             return ( a >= b ? a : b );
         }
 
+        /**
+         * Returns the natural logarithm (base e) of a double  value. Special cases:
+         *
+         *  o If the argument is NaN or less than zero, then the result is NaN.
+         *  o If the argument is positive infinity, then the result is
+         *    positive infinity.
+         *  o If the argument is positive zero or negative zero, then the result
+         *    is negative infinity.
+         *
+         * @param value the value to compute the natural log of.
+         * @returns the natural log of value.
+         */
+        static double log( double value );
+
     };
 
 }}

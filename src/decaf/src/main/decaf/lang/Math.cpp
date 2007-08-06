@@ -17,10 +17,31 @@
 
 #include "Math.h"
 
+#include <decaf/lang/Double.h>
+#include <decaf/lang/Float.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
+
 using namespace decaf;
 using namespace decaf::lang;
+
+#include <cmath>
+#include <cstdlib>
 
 ////////////////////////////////////////////////////////////////////////////////
 const double Math::E = 2.718281828459045;
 const double Math::PI = 3.141592653589793;
 
+////////////////////////////////////////////////////////////////////////////////
+double Math::log( double value ) {
+
+    if( value != value || value < 0.0 ) {
+        return Double::NaN;
+    } else if( value == Double::POSITIVE_INFINITY ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return Double::NEGATIVE_INFINITY;
+    }
+
+    return std::log( value );
+}
