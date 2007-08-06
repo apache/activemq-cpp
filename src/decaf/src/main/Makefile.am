@@ -33,6 +33,7 @@ cc_sources = \
    decaf/lang/Long.cpp \
    decaf/lang/Float.cpp \
    decaf/lang/Double.cpp \
+   decaf/lang/Math.cpp \
    decaf/io/BufferedOutputStream.cpp \
    decaf/io/BufferedInputStream.cpp \
    decaf/io/ByteArrayInputStream.cpp \

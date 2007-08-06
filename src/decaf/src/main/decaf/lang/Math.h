@@ -18,6 +18,8 @@
 #ifndef _DECAF_LANG_MATH_H_
 #define _DECAF_LANG_MATH_H_
 
+#include <decaf/util/Config.h>
+
 #undef min
 #undef max
 
@@ -29,12 +31,16 @@ namespace lang{
      * numeric operations such as the elementary exponential, logarithm,
      * square root, and trigonometric functions.
      */
-    class DECAF_API Math
-    {
+    class DECAF_API Math {
     public:
 
-        Math();
-        virtual ~Math();
+        static const double E;
+        static const double PI;
+
+    public:
+
+        Math() {}
+        virtual ~Math() {}
 
     public:
 
