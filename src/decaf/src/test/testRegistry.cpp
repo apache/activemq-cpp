@@ -43,6 +43,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ShortTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::IntegerTest );
 #include <decaf/lang/LongTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
+#include <decaf/lang/FloatTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::FloatTest );
+#include <decaf/lang/DoubleTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::DoubleTest );
 #include <decaf/lang/ExceptionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 #include <decaf/lang/ThreadTest.h>
