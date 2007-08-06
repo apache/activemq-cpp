@@ -51,36 +51,46 @@ NumberConverter::NumberConverter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string NumberConverter::convertD( double inputNumber ) {
-    int p = 1023 + 52; // the power offset (precision)
-    long signMask = 0x8000000000000000L; // the mask to get the sign of
-    // the number
-    long eMask = 0x7FF0000000000000L; // the mask to get the power bits
-    long fMask = 0x000FFFFFFFFFFFFFL; // the mask to get the significand
-    // bits
+std::string NumberConverter::convertD( double value ) {
 
-    long inputNumberBits = Double.doubleToLongBits(inputNumber);
+    unsigned int p = 1023 + 52; // the power offset (precision)
+
+    // the mask to get the sign of the number
+    unsigned long long signMask = 0x8000000000000000L;
+    // the mask to get the power bits
+    unsigned long long eMask = 0x7FF0000000000000L;
+    // the mask to get the significand bits
+    unsigned long long fMask = 0x000FFFFFFFFFFFFFL;
+
+    unsigned long long inputNumberBits = Double::doubleToLongBits(value);
     // the value of the sign... 0 is positive, ~0 is negative
-    std::string signString = (inputNumberBits & signMask) == 0 ? "" : "-";
-    // the value of the 'power bits' of the inputNumber
-    int e = (int) ((inputNumberBits & eMask) >> 52);
-    // the value of the 'significand bits' of the inputNumber
-    long f = inputNumberBits & fMask;
-    bool mantissaIsZero = f == 0;
-    int pow = 0, numBits = 52;
+    std::string signString = ( inputNumberBits & signMask ) == 0 ? "" : "-";
+    // the value of the 'power bits' of the value
+    unsigned int e = (int)(( inputNumberBits & eMask ) >> 52 );
+    // the value of the 'significand bits' of the value
+    unsigned long long f = inputNumberBits & fMask;
+    bool mantissaIsZero = (f == 0);
+    unsigned int pow = 0, numBits = 52;
 
-    if (e == 2047)
+    if( e == 2047 ) {
         return mantissaIsZero ? signString + "Infinity" : "NaN";
-    if (e == 0) {
-        if (mantissaIsZero)
+    }
+
+    if( e == 0 ) {
+
+        if( mantissaIsZero ) {
             return signString + "0.0";
-        if (f == 1)
+        }
+
+        if( f == 1 ) {
             // special case to increase precision even though 2 *
-            // Double.MIN_VALUE is 1.0e-323
+            // Double::MIN_VALUE is 1.0e-323
             return signString + "4.9E-324";
+        }
+
         pow = 1 - p; // a denormalized number
-        long ff = f;
-        while ((ff & 0x0010000000000000L) == 0) {
+        long long ff = f;
+        while( (ff & 0x0010000000000000L) == 0 ) {
             ff = ff << 1;
             numBits--;
         }
@@ -91,47 +101,55 @@ std::string NumberConverter::convertD( double inputNumber ) {
         pow = e - p;
     }
 
-    if (-59 < pow && pow < 6 || (pow == -59 && !mantissaIsZero))
-        longDigitGenerator(f, pow, e == 0, mantissaIsZero, numBits);
-    else
-        bigIntDigitGeneratorInstImpl(f, pow, e == 0, mantissaIsZero,
-                numBits);
+    if( -59 < pow && pow < 6 || (pow == -59 && !mantissaIsZero) ) {
+        longDigitGenerator( f, pow, e == 0, mantissaIsZero, numBits );
+    } else {
+        bigIntDigitGeneratorInstImpl( f, pow, e == 0, mantissaIsZero, numBits );
+    }
 
-    if (inputNumber >= 1e7D || inputNumber <= -1e7D
-            || (inputNumber > -1e-3D && inputNumber < 1e-3D))
+    if( value >= 1e7D || value <= -1e7D ||
+        ( value > -1e-3D && value < 1e-3D ) ) {
         return signString + freeFormatExponential();
+    }
 
     return signString + freeFormat();
 }
 
-std::string NumberConverter::convertF(float inputNumber) {
-    int p = 127 + 23; // the power offset (precision)
-    int signMask = 0x80000000; // the mask to get the sign of the number
-    int eMask = 0x7F800000; // the mask to get the power bits
-    int fMask = 0x007FFFFF; // the mask to get the significand bits
+////////////////////////////////////////////////////////////////////////////////
+std::string NumberConverter::convertF(float value) {
 
-    int inputNumberBits = Float.floatToIntBits(inputNumber);
+    unsigned int p = 127 + 23; // the power offset (precision)
+    unsigned int signMask = 0x80000000; // the mask to get the sign of the number
+    unsigned int eMask = 0x7F800000; // the mask to get the power bits
+    unsigned int fMask = 0x007FFFFF; // the mask to get the significand bits
+
+    unsigned int inputNumberBits = Float::floatToIntBits(value);
     // the value of the sign... 0 is positive, ~0 is negative
     std::string signString = (inputNumberBits & signMask) == 0 ? "" : "-";
-    // the value of the 'power bits' of the inputNumber
-    int e = (inputNumberBits & eMask) >> 23;
-    // the value of the 'significand bits' of the inputNumber
-    int f = inputNumberBits & fMask;
-    bool mantissaIsZero = f == 0;
-    int pow = 0, numBits = 23;
+    // the value of the 'power bits' of the value
+    unsigned int e = (inputNumberBits & eMask) >> 23;
+    // the value of the 'significand bits' of the value
+    unsigned int f = inputNumberBits & fMask;
+    bool mantissaIsZero = ( f == 0 );
+    unsigned int pow = 0, numBits = 23;
 
-    if (e == 255)
+    if( e == 255 ) {
         return mantissaIsZero ? signString + "Infinity" : "NaN";
-    if (e == 0) {
-        if (mantissaIsZero)
+    }
+
+    if( e == 0 ) {
+
+        if( mantissaIsZero ) {
             return signString + "0.0";
+        }
+
         pow = 1 - p; // a denormalized number
-        if (f < 8) { // want more precision with smallest values
+        if( f < 8 ) { // want more precision with smallest values
             f = f << 2;
             pow -= 2;
         }
         int ff = f;
-        while ((ff & 0x00800000) == 0) {
+        while( (ff & 0x00800000) == 0) {
             ff = ff << 1;
             numBits--;
         }
@@ -142,22 +160,26 @@ std::string NumberConverter::convertF(float inputNumber) {
         pow = e - p;
     }
 
-    if (-59 < pow && pow < 35 || (pow == -59 && !mantissaIsZero))
-        longDigitGenerator(f, pow, e == 0, mantissaIsZero, numBits);
-    else
-        bigIntDigitGeneratorInstImpl(f, pow, e == 0, mantissaIsZero,
-                numBits);
-    if (inputNumber >= 1e7f || inputNumber <= -1e7f
-            || (inputNumber > -1e-3f && inputNumber < 1e-3f))
+    if( -59 < pow && pow < 35 || (pow == -59 && !mantissaIsZero) ) {
+        longDigitGenerator( f, pow, e == 0, mantissaIsZero, numBits );
+    } else {
+        bigIntDigitGeneratorInstImpl( f, pow, e == 0, mantissaIsZero, numBits);
+    }
+
+    if( value >= 1e7f || value <= -1e7f ||
+        ( value > -1e-3f && value < 1e-3f ) ) {
         return signString + freeFormatExponential();
+    }
 
     return signString + freeFormat();
 }
 
+////////////////////////////////////////////////////////////////////////////////
 std::string NumberConverter::freeFormatExponential() {
+
     // corresponds to process "Free-Format Exponential"
-    char[] formattedDecimal = new char[25];
-    formattedDecimal[0] = (char) ('0' + uArray[getCount++]);
+    char[25] formattedDecimal = {0};
+    formattedDecimal[0] = (char)( '0' + uArray[getCount++] );
     formattedDecimal[1] = '.';
     // the position the next character is to be inserted into
     // formattedDecimal
@@ -165,61 +187,242 @@ std::string NumberConverter::freeFormatExponential() {
 
     int k = firstK;
     int expt = k;
-    while (true) {
+    while( true ) {
         k--;
-        if (getCount >= setCount)
+        if( getCount >= setCount) {
             break;
+        }
 
-        formattedDecimal[charPos++] = (char) ('0' + uArray[getCount++]);
+        formattedDecimal[charPos++] = (char)( '0' + uArray[getCount++] );
     }
 
-    if (k == expt - 1)
+    if( k == expt - 1 ) {
         formattedDecimal[charPos++] = '0';
+    }
     formattedDecimal[charPos++] = 'E';
-    return new std::string(formattedDecimal, 0, charPos)
-            + Integer.toString(expt);
+
+    return std::string( formattedDecimal, 0, charPos ) + Integer::toString( expt );
 }
 
+////////////////////////////////////////////////////////////////////////////////
 std::string NumberConverter::freeFormat() {
+
     // corresponds to process "Free-Format"
-    char[] formattedDecimal = new char[25];
+    char[25] formattedDecimal = {0};
     // the position the next character is to be inserted into
     // formattedDecimal
     int charPos = 0;
     int k = firstK;
-    if (k < 0) {
+    if( k < 0 ) {
         formattedDecimal[0] = '0';
         formattedDecimal[1] = '.';
         charPos += 2;
-        for (int i = k + 1; i < 0; i++)
+        for( int i = k + 1; i < 0; i++ ) {
             formattedDecimal[charPos++] = '0';
+        }
     }
 
     int U = uArray[getCount++];
-    do {
-        if (U != -1)
+    do{
+        if( U != -1 ) {
             formattedDecimal[charPos++] = (char) ('0' + U);
-        else if (k >= -1)
+        } else if (k >= -1) {
             formattedDecimal[charPos++] = '0';
+        }
 
-        if (k == 0)
+        if( k == 0 ) {
             formattedDecimal[charPos++] = '.';
+        }
 
         k--;
         U = getCount < setCount ? uArray[getCount++] : -1;
-    } while (U != -1 || k >= -1);
-    return new std::string(formattedDecimal, 0, charPos);
+
+    } while( U != -1 || k >= -1 );
+
+    return std::string( formattedDecimal, 0, charPos );
 }
 
-void NumberConverter::bigIntDigitGeneratorInstImpl(long f, int e,
-        bool isDenormalized, bool mantissaIsZero, int p);
+////////////////////////////////////////////////////////////////////////////////
+void NumberConverter::bigIntDigitGeneratorInstImpl(
+    long long f, int e, bool isDenormalized, bool mantissaIsZero, int p ) {
 
-void NumberConverter::longDigitGenerator(long f, int e, bool isDenormalized,
-        bool mantissaIsZero, int p) {
-    long R, S, M;
-    if (e >= 0) {
+    static std::size_t RM_SIZE 21;
+    static std::size_t STemp_SIZE 22;
+
+    unsigned int RLength, SLength, TempLength, mplus_Length, mminus_Length;
+    int high, low, i;
+    int k, U;
+
+    unsigned long long R[RM_SIZE] = {0};
+    unsigned long long S[STemp_SIZE] = {0};
+    unsigned long long mplus[RM_SIZE] = {0};
+    unsigned long long mminus[RM_SIZE] = {0};
+    unsigned long long Temp[STemp_SIZE] = {0};
+
+    if( e >= 0 ) {
+
+        *R = f;
+        *mplus = *mminus = 1;
+        simpleShiftLeftHighPrecision( mminus, RM_SIZE, e );
+
+        if( f != (2 << (p - 1)) ) {
+
+            simpleShiftLeftHighPrecision( R, RM_SIZE, e + 1 );
+            *S = 2;
+
+            /*
+             * m+ = m+ << e results in 1.0e23 to be printed as
+             * 0.9999999999999999E23
+             * m+ = m+ << e+1 results in 1.0e23 to be printed as
+             * 1.0e23 (caused too much rounding)
+             *      470fffffffffffff = 2.0769187434139308E34
+             *      4710000000000000 = 2.076918743413931E34
+             */
+            simpleShiftLeftHighPrecision(mplus, RM_SIZE, e);
+
+        } else {
+
+            simpleShiftLeftHighPrecision( R, RM_SIZE, e + 2 );
+            *S = 4;
+            simpleShiftLeftHighPrecision( mplus, RM_SIZE, e + 1 );
+        }
+
+    } else {
+
+        if( isDenormalized || (f != (2 << (p - 1))) ) {
+
+            *R = f << 1;
+            *S = 1;
+            simpleShiftLeftHighPrecision( S, STemp_SIZE, 1 - e );
+            *mplus = *mminus = 1;
+
+        } else {
+
+            *R = f << 2;
+            *S = 1;
+            simpleShiftLeftHighPrecision( S, STemp_SIZE, 2 - e );
+            *mplus = 2;
+            *mminus = 1;
+        }
+    }
+
+    k = (int) ceil ((e + p - 1) * INV_LOG_OF_TEN_BASE_2 - 1e-10);
+
+    if( k > 0 ) {
+        timesTenToTheEHighPrecision( S, STemp_SIZE, k );
+    } else {
+      timesTenToTheEHighPrecision( R, RM_SIZE, -k );
+      timesTenToTheEHighPrecision( mplus, RM_SIZE, -k );
+      timesTenToTheEHighPrecision( mminus, RM_SIZE, -k );
+    }
+
+    RLength = mplus_Length = mminus_Length = RM_SIZE;
+    SLength = TempLength = STemp_SIZE;
+
+    memset( Temp + RM_SIZE, 0, (STemp_SIZE - RM_SIZE) * sizeof (U_64) );
+    memcpy( Temp, R, RM_SIZE * sizeof (U_64) );
+
+    while( RLength > 1 && R[RLength - 1] == 0 ) {
+        --RLength;
+    }
+    while( mplus_Length > 1 && mplus[mplus_Length - 1] == 0 ) {
+        --mplus_Length;
+    }
+    while( mminus_Length > 1 && mminus[mminus_Length - 1] == 0 ) {
+        --mminus_Length;
+    }
+    while( SLength > 1 && S[SLength - 1] == 0 ) {
+        --SLength;
+    }
+
+    TempLength = (RLength > mplus_Length ? RLength : mplus_Length) + 1;
+    addHighPrecision( Temp, TempLength, mplus, mplus_Length );
+
+    if( compareHighPrecision (Temp, TempLength, S, SLength) >= 0 ) {
+        firstK = k;
+    } else {
+
+        firstK = k - 1;
+        simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
+        simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
+        simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
+        while( RLength > 1 && R[RLength - 1] == 0 ) {
+            --RLength;
+        }
+        while( mplus_Length > 1 && mplus[mplus_Length - 1] == 0 ) {
+            --mplus_Length;
+        }
+        while( mminus_Length > 1 && mminus[mminus_Length - 1] == 0 ) {
+            --mminus_Length;
+        }
+    }
+
+    getCount = setCount = 0;
+    do{
+
+        U = 0;
+        for( i = 3; i >= 0; --i ) {
+            TempLength = SLength + 1;
+            Temp[SLength] = 0;
+            memcpy (Temp, S, SLength * sizeof (U_64));
+            simpleShiftLeftHighPrecision( Temp, TempLength, i );
+            if( compareHighPrecision( R, RLength, Temp, TempLength ) >= 0 ) {
+                subtractHighPrecision( R, RLength, Temp, TempLength );
+                U += 1 << i;
+            }
+        }
+
+        low = compareHighPrecision( R, RLength, mminus, mminus_Length ) <= 0;
+
+        memset( Temp + RLength, 0, (STemp_SIZE - RLength) * sizeof(U_64) );
+        memcpy( Temp, R, RLength * sizeof(U_64) );
+        TempLength = (RLength > mplus_Length ? RLength : mplus_Length) + 1;
+        addHighPrecision( Temp, TempLength, mplus, mplus_Length );
+
+        high = compareHighPrecision( Temp, TempLength, S, SLength ) >= 0;
+
+        if( low || high ) {
+            break;
+        }
+
+        simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
+        simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
+        simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
+        while( RLength > 1 && R[RLength - 1] == 0 ) {
+            --RLength;
+        }
+        while( mplus_Length > 1 && mplus[mplus_Length - 1] == 0 ) {
+            --mplus_Length;
+        }
+        while( mminus_Length > 1 && mminus[mminus_Length - 1] == 0 ) {
+            --mminus_Length;
+        }
+        uArray[setCount++] = U;
+    }
+    while( true );
+
+    simpleShiftLeftHighPrecision( R, ++RLength, 1 );
+
+    if( low && !high ) {
+        uArray[setCount++] = U;
+    } else if( high && !low ) {
+        uArray[setCount++] = U + 1;
+    } else if( compareHighPrecision( R, RLength, S, SLength) < 0 ) {
+        uArray[setCount++] = U;
+    } else {
+        uArray[setCount++] = U + 1;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NumberConverter::longDigitGenerator(
+    long long f, int e, bool isDenormalized, bool mantissaIsZero, int p ) {
+
+    unsigned long long R, S, M;
+
+    if( e >= 0 ) {
         M = 1l << e;
-        if (!mantissaIsZero) {
+        if( !mantissaIsZero ) {
             R = f << (e + 1);
             S = 2;
         } else {
@@ -228,7 +431,7 @@ void NumberConverter::longDigitGenerator(long f, int e, bool isDenormalized,
         }
     } else {
         M = 1;
-        if (isDenormalized || !mantissaIsZero) {
+        if( isDenormalized || !mantissaIsZero ) {
             R = f << 1;
             S = 1l << (1 - e);
         } else {
@@ -237,17 +440,17 @@ void NumberConverter::longDigitGenerator(long f, int e, bool isDenormalized,
         }
     }
 
-    int k = (int) Math.ceil((e + p - 1) * invLogOfTenBaseTwo - 1e-10);
+    int k = (int)Math::ceil( (e + p - 1) * invLogOfTenBaseTwo - 1e-10 );
 
-    if (k > 0) {
+    if( k > 0 ) {
         S = S * TEN_TO_THE[k];
-    } else if (k < 0) {
-        long scale = TEN_TO_THE[-k];
+    } else if( k < 0 ) {
+        long long scale = TEN_TO_THE[-k];
         R = R * scale;
         M = M == 1 ? scale : M * scale;
     }
 
-    if (R + M > S) { // was M_plus
+    if( R + M > S ) { // was M_plus
         firstK = k;
     } else {
         firstK = k - 1;
@@ -258,17 +461,17 @@ void NumberConverter::longDigitGenerator(long f, int e, bool isDenormalized,
     getCount = setCount = 0; // reset indices
     bool low, high;
     int U;
-    long[] Si = new long[] { S, S << 1, S << 2, S << 3 };
-    while (true) {
+    long long[] Si = new long long[] { S, S << 1, S << 2, S << 3 };
+    while( true ) {
         // set U to be floor (R / S) and R to be the remainder
         // using a kind of "binary search" to find the answer.
         // It's a lot quicker than actually dividing since we know
         // the answer will be between 0 and 10
         U = 0;
-        long remainder;
-        for (int i = 3; i >= 0; i--) {
+        long long remainder;
+        for( int i = 3; i >= 0; i-- ) {
             remainder = R - Si[i];
-            if (remainder >= 0) {
+            if( remainder >= 0 ) {
                 R = remainder;
                 U += 1 << i;
             }
@@ -277,19 +480,22 @@ void NumberConverter::longDigitGenerator(long f, int e, bool isDenormalized,
         low = R < M; // was M_minus
         high = R + M > S; // was M_plus
 
-        if (low || high)
+        if( low || high ) {
             break;
+        }
 
         R = R * 10;
         M = M * 10;
         uArray[setCount++] = U;
     }
-    if (low && !high)
+
+    if( low && !high ) {
         uArray[setCount++] = U;
-    else if (high && !low)
+    } else if( high && !low ) {
         uArray[setCount++] = U + 1;
-    else if ((R << 1) < S)
+    } else if( ( R << 1 ) < S ) {
         uArray[setCount++] = U;
-    else
+    } else {
         uArray[setCount++] = U + 1;
+    }
 }
