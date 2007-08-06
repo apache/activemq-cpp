@@ -17,49 +17,44 @@
 
 #include "NumberConverter.h"
 
+#include <decaf/lang/Math.h>
+
 using namespace decaf;
+using namespace decaf::lang;
 using namespace decaf::internal;
 using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
+const double NumberConverter::invLogOfTenBaseTwo =
+    Math::log(2.0) / Math::log(10.0);
+NumberConverter::StaticInitializer NumberConverter::init;
+
+////////////////////////////////////////////////////////////////////////////////
+NumberConverter::StaticInitializer::StaticInitializer() {
+
+    NumberConverter::TEN_TO_THE.resize(20);
+    NumberConverter::TEN_TO_THE[0] = 1L;
+
+    for( int i = 1; i < TEN_TO_THE.length; ++i ) {
+        long long previous = TEN_TO_THE[i - 1];
+        TEN_TO_THE[i] = ( previous << 1 ) + ( previous << 3 );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 NumberConverter::NumberConverter() {
+
+    this->getCount = 0;
+    this->setCount = 0;
+    this->firstK = 0;
+    this->uArray.resize(64);
 }
 
 
 public final class NumberConverter {
 
-    private int setCount; // number of times u and k have been gotten
 
-    private int getCount; // number of times u and k have been set
 
-    private int[] uArray = new int[64];
-
-    private int firstK;
-
-    private final static double invLogOfTenBaseTwo = Math.log(2.0)
-            / Math.log(10.0);
-
-    private final static long[] TEN_TO_THE = new long[20];
-
-    static {
-        TEN_TO_THE[0] = 1L;
-        for (int i = 1; i < TEN_TO_THE.length; ++i) {
-            long previous = TEN_TO_THE[i - 1];
-            TEN_TO_THE[i] = (previous << 1) + (previous << 3);
-        }
-    }
-
-    private static NumberConverter getConverter() {
-        return new NumberConverter();
-    }
-
-    public static String convert(double input) {
-        return getConverter().convertD(input);
-    }
-
-    public static String convert(float input) {
-        return getConverter().convertF(input);
-    }
 
     public String convertD(double inputNumber) {
         int p = 1023 + 52; // the power offset (precision)

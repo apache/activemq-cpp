@@ -25,12 +25,65 @@ namespace util{
     class NumberConverter {
     private:
 
+        int setCount;
+        int getCount;
+        int firstK;
+        std::vector<int> uArray;
+
+        static std::vector<long long> TEN_TO_THE;
+        static const double invLogOfTenBaseTwo;
+
+        // Internal class used to init static arrays
+        struct StaticInitializer {
+            StaticInitializer();
+        };
+
+        static StaticInitializer init;
+
     public:
 
         NumberConverter();
         virtual ~NumberConverter() {}
 
+        /**
+         * @param value - the double to convert
+         * @returns the string representation of value
+         */
+        std::string convertD( double value );
+
+        /**
+         * @param value - the float to convert
+         * @returns the string representation of value
+         */
+        std::string convertF( float value );
+
     public:   // Statics
+
+        /**
+         * @param value to convert to a string
+         * @returns the value converted to a string
+         */
+        static std::string convert( double value ) {
+            return NumberConverter().convertD( value );
+        }
+
+        /**
+         * @param value to convert to a string
+         * @returns the value converted to a string
+         */
+        static std::string convert( float value ) {
+            return NumberConverter().convertF( value );
+        }
+
+    private:
+
+        std::string freeFormatExponential();
+        std::string freeFormat();
+
+        void bigIntDigitGeneratorInstImpl(
+            long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
+        void longDigitGenerator(
+            long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
 
     };
 
