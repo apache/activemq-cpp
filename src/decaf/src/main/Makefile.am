@@ -55,6 +55,9 @@ cc_sources = \
    decaf/util/logging/SimpleLogger.cpp \
    decaf/util/logging/LogManager.cpp \
    decaf/util/Config.cpp
+   
+##   decaf/internal/util/FloatingPointParser.cpp \
+##   decaf/internal/util/HexStringParser.cpp
 
 h_sources = \
    decaf/net/BufferedSocket.h \
@@ -143,7 +146,9 @@ h_sources = \
    decaf/util/logging/LogRecord.h \
    decaf/util/logging/LogWriter.h \
    decaf/util/logging/SimpleLogger.h \
-   decaf/util/logging/PropertiesChangeListener.h
+   decaf/util/logging/PropertiesChangeListener.h \
+   decaf/internal/util/FloatingPointParser.h \
+   decaf/internal/util/HexStringParser.h
 
 ##
 ## LibTool build step
