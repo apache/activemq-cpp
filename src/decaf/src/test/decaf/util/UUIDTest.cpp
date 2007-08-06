@@ -29,8 +29,10 @@ UUIDTest::UUIDTest() {
 ////////////////////////////////////////////////////////////////////////////////
 void UUIDTest::test() {
 
+    std::string bytes = "ASDASFSADGSDGSDASFA";
+
     UUID randId = UUID::randomUUID();
-    UUID bytesId = UUID::nameUUIDFromBytes( "ASDASFSADGSDGSDASFA" );
+    UUID bytesId = UUID::nameUUIDFromBytes( bytes.c_str(), bytes.size() );
 
     CPPUNIT_ASSERT( !( randId == bytesId ) );
     CPPUNIT_ASSERT( !( randId.equals( bytesId ) ) );
@@ -44,4 +46,8 @@ void UUIDTest::test() {
 
     CPPUNIT_ASSERT( randId.variant() == 2 );
 
+    UUID fromBits( randId.getMostSignificantBits(),
+                   randId.getLeastSignificantBits() );
+
+    CPPUNIT_ASSERT( randId.compareTo( fromBits) == 0 );
 }

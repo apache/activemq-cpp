@@ -94,7 +94,16 @@ namespace util{
          * @param name - a byte array to be used to construct a UUID.
          * @return type 3 UUID
          */
-        static UUID nameUUIDFromBytes( const std::string& name );
+        static UUID nameUUIDFromBytes( const std::vector<char>& name );
+
+        /**
+         * Static factory to retrieve a type 3 (name based) UUID based on the
+         * specified byte array.
+         * @param name - a byte array to be used to construct a UUID.
+         * @param size - the size of the byte array, or number of bytes to use.
+         * @return type 3 UUID
+         */
+        static UUID nameUUIDFromBytes( const char* name, std::size_t size );
 
         /**
          * Creates a UUID from the string standard representation as described

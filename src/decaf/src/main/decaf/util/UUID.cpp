@@ -179,11 +179,16 @@ UUID UUID::randomUUID() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-UUID UUID::nameUUIDFromBytes( const std::string& name DECAF_UNUSED ) {
+UUID UUID::nameUUIDFromBytes( const std::vector<char>& name ) {
+    return UUID::nameUUIDFromBytes( &name[0], name.size() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+UUID UUID::nameUUIDFromBytes( const char* name, std::size_t size ) {
 
     apr_uuid_t temp;
 
-    if( apr_md5( &temp.data[0], name.c_str(), name.size() ) != APR_SUCCESS ) {
+    if( apr_md5( &temp.data[0], name, size ) != APR_SUCCESS ) {
         throw exceptions::RuntimeException(
             __FILE__, __LINE__,
             "UUID::nameUUIDFromBytes - Failed to run MD5 encoder." );
