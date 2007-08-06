@@ -28,8 +28,8 @@ using namespace decaf::lang;
 ////////////////////////////////////////////////////////////////////////////////
 UUID::UUID( long long mostSigBits, long long leastSigBits ) {
 
-    memcpy( &apr_uuid.data[0], &leastSigBits, sizeof( long long ) );
-    memcpy( &apr_uuid.data[sizeof(long long)], &mostSigBits, sizeof(long long ) );
+    memcpy( &apr_uuid.data[0], &mostSigBits, sizeof( long long ) );
+    memcpy( &apr_uuid.data[sizeof(long long)], &leastSigBits, sizeof(long long ) );
 
     this->mostSigBits = mostSigBits;
     this->leastSigBits = leastSigBits;
@@ -73,16 +73,14 @@ std::string UUID::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::getLeastSignificantBits() const {
-    long long result = 0;
-    memcpy( &result, &this->apr_uuid.data[0], sizeof(long long) );
-    return result;
+    return this->leastSigBits;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 long long UUID::getMostSignificantBits() const {
     long long result = 0;
     memcpy( &result, &this->apr_uuid.data[sizeof(long long)], sizeof(long long) );
-    return result;
+    return this->mostSigBits;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,19 +152,30 @@ UUID UUID::randomUUID() {
     // Generate some random bytes.
     apr_uuid_get( &temp );
 
-    long long mostSigBits = 0;
-    long long leastSigBits = 0;
+    long long msb = 0;
+    long long lsb = 0;
 
-    // Extract to data from the uuid data
-    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
-    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+    msb = (temp.data[0] & 0xFFLL) << 56;
+    msb |= (temp.data[1] & 0xFFLL) << 48;
+    msb |= (temp.data[2] & 0xFFLL) << 40;
+    msb |= (temp.data[3] & 0xFFLL) << 32;
+    msb |= (temp.data[4] & 0xFFLL) << 24;
+    msb |= (temp.data[5] & 0xFFLL) << 16;
+    msb |= (temp.data[6] & 0x0FLL) << 8;
+    msb |= (0x4LL << 12); // set the version to 4
+    msb |= (temp.data[7] & 0xFFLL);
 
-    // Set the variant and version fields, could compact but want to be clear
-    // on what is being set.
-    mostSigBits &= ( 0xFFFFFFFFFFFF0FFFULL | ( 0x4ULL << 12 ) );
-    leastSigBits &= ( 0x3FFFFFFFFFFFFFFFULL | ( 0x2ULL << 62 ) );
+    lsb = (temp.data[8] & 0x3FLL) << 56;
+    lsb |= (0x2LL << 62); // set the variant to bits 01
+    lsb |= (temp.data[9] & 0xFFLL) << 48;
+    lsb |= (temp.data[10] & 0xFFLL) << 40;
+    lsb |= (temp.data[11] & 0xFFLL) << 32;
+    lsb |= (temp.data[12] & 0xFFLL) << 24;
+    lsb |= (temp.data[13] & 0xFFLL) << 16;
+    lsb |= (temp.data[14] & 0xFFLL) << 8;
+    lsb |= (temp.data[15] & 0xFFLL);
 
-    return UUID( mostSigBits, leastSigBits );
+    return UUID( msb, lsb );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,19 +189,30 @@ UUID UUID::nameUUIDFromBytes( const std::string& name DECAF_UNUSED ) {
             "UUID::nameUUIDFromBytes - Failed to run MD5 encoder." );
     }
 
-    long long mostSigBits = 0;
-    long long leastSigBits = 0;
+    long long msb = 0;
+    long long lsb = 0;
 
-    // Extract to data from the uuid data
-    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
-    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+    msb = (temp.data[0] & 0xFFLL) << 56;
+    msb |= (temp.data[1] & 0xFFLL) << 48;
+    msb |= (temp.data[2] & 0xFFLL) << 40;
+    msb |= (temp.data[3] & 0xFFLL) << 32;
+    msb |= (temp.data[4] & 0xFFLL) << 24;
+    msb |= (temp.data[5] & 0xFFLL) << 16;
+    msb |= (temp.data[6] & 0x0FLL) << 8;
+    msb |= (0x3LL << 12); // set the version to 3
+    msb |= (temp.data[7] & 0xFFLL);
 
-    // Set the variant and version fields, could compact but want to be clear
-    // on what is being set.
-    mostSigBits &= ( 0xFFFFFFFFFFFF0FFFULL | ( 0x3ULL << 12 ) );
-    leastSigBits &= ( 0x3FFFFFFFFFFFFFFFULL | ( 0x2ULL << 62 ) );
+    lsb = (temp.data[8] & 0x3FLL) << 56;
+    lsb |= (0x2LL << 62); // set the variant to bits 01
+    lsb |= (temp.data[9] & 0xFFLL) << 48;
+    lsb |= (temp.data[10] & 0xFFLL) << 40;
+    lsb |= (temp.data[11] & 0xFFLL) << 32;
+    lsb |= (temp.data[12] & 0xFFLL) << 24;
+    lsb |= (temp.data[13] & 0xFFLL) << 16;
+    lsb |= (temp.data[14] & 0xFFLL) << 8;
+    lsb |= (temp.data[15] & 0xFFLL);
 
-    return UUID( mostSigBits, leastSigBits );
+    return UUID( msb, lsb );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,8 +232,8 @@ UUID UUID::fromString( const std::string& name )
     long long leastSigBits = 0;
 
     // Extract to data from the uuid data
-    memcpy( &leastSigBits, &temp.data[0], sizeof(long long) );
-    memcpy( &mostSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
+    memcpy( &mostSigBits, &temp.data[0], sizeof(long long) );
+    memcpy( &leastSigBits, &temp.data[sizeof(long long)], sizeof(long long) );
 
     return UUID( mostSigBits, leastSigBits );
 }
