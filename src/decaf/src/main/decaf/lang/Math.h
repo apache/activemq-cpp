@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 
+// On some systems there is a min and max macro defined.
 #undef min
 #undef max
 
@@ -102,6 +103,89 @@ namespace lang{
          * @returns the value if positive, otherwise the negative of value
          */
         static double abs( double value );
+
+        /**
+         * Returns the arc cosine of an angle, in the range of 0.0 through pi.
+         * Special case:
+         *
+         *  o If the argument is NaN or its absolute value is greater than 1, then
+         *    the result is NaN.
+         *
+         * @param value - the value to return the arc cosine of.
+         * @returns arc cosine of value in radians.
+         */
+        static double acos( double value );
+
+        /**
+         * Returns the arc sine of an angle, in the range of -pi/2 through pi/2.
+         * Special cases:
+         *
+         *  o If the argument is NaN or its absolute value is greater than 1, then
+         *    the result is NaN.
+         *  o If the argument is zero, then the result is a zero with the same sign
+         *    as the argument.
+         *
+         * @param value - the value to return the arc cosine of.
+         * @returns arc cosine of value in radians.
+         */
+        static double asin( double value );
+
+        /**
+         * Returns the arc tangent of an angle, in the range of -pi/2 through pi/2.
+         * Special cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is zero, then the result is a zero with the same sign
+         *    as the argument.
+         *
+         * @param value - the value to return the arc cosine of.
+         * @returns arc tangent of value in radians.
+         */
+        static double atan( double value );
+
+        /**
+         * Converts rectangular coordinates (x, y) to polar (r, theta). This method
+         * computes the phase theta by computing an arc tangent of y/x in the range
+         * of -pi to pi. Special cases:
+         *
+         *  o If either argument is NaN, then the result is NaN.
+         *  o If the first argument is positive zero and the second argument is
+         *    positive, or the first argument is positive and finite and the second
+         *    argument is positive infinity, then the result is positive zero.
+         *  o If the first argument is negative zero and the second argument is
+         *    positive, or the first argument is negative and finite and the second
+         *    argument is positive infinity, then the result is negative zero.
+         *  o If the first argument is positive zero and the second argument is
+         *    negative, or the first argument is positive and finite and the second
+         *    argument is negative infinity, then the result is the double value
+         *    closest to pi.
+         *  o If the first argument is negative zero and the second argument is
+         *    negative, or the first argument is negative and finite and the second
+         *    argument is negative infinity, then the result is the double value
+         *    closest to -pi.
+         *  o If the first argument is positive and the second argument is positive
+         *    zero or negative zero, or the first argument is positive infinity and
+         *    the second argument is finite, then the result is the double value
+         *    closest to pi/2.
+         *  o If the first argument is negative and the second argument is positive
+         *    zero or negative zero, or the first argument is negative infinity and
+         *    the second argument is finite, then the result is the double value
+         *    closest to -pi/2.
+         *  o If both arguments are positive infinity, then the result is the double
+         *    value closest to pi/4.
+         *  o If the first argument is positive infinity and the second argument is
+         *    negative infinity, then the result is the double value closest to 3*pi/4.
+         *  o If the first argument is negative infinity and the second argument is
+         *    positive infinity, then the result is the double value closest to -pi/4.
+         *  o If both arguments are negative infinity, then the result is the double
+         *    value closest to -3*pi/4.
+         *
+         * @param y - the ordinate coordinate
+         * @param x - the abscissa coordinate
+         * @returns the theta component of the point (r, theta) in polar coordinates
+         * that corresponds to the point (x, y) in Cartesian coordinates.
+         */
+        static double atan2( double x, double y );
 
         /**
          * Returns the smaller of two <code>short</code> values. That is,
@@ -358,6 +442,24 @@ namespace lang{
          * @returns the value of the argument rounded to the nearest integral value.
          */
         static long long round( double value );
+
+        /**
+         * Returns a double value with a positive sign, greater than or equal to 0.0
+         * and less than 1.0. Returned values are chosen pseudorandomly with
+         * (approximately) uniform distribution from that range.
+         *
+         * When this method is first called, it creates a single new pseudorandom-number
+         * generator; This new pseudorandom-number generator is used thereafter for all
+         * calls to this method and is used nowhere else.
+         *
+         * This method is properly synchronized to allow correct use by more than
+         * one thread. However, if many threads need to generate pseudorandom numbers
+         * at a great rate, it may reduce contention for each thread to have its
+         * own pseudorandom-number generator.
+         * @returns a pseudorandom double greater than or equal to 0.0 and
+         * less than 1.0.
+         */
+        static double random();
 
     };
 
