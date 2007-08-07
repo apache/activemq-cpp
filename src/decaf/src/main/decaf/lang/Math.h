@@ -110,6 +110,43 @@ namespace lang{
          */
         static double log( double value );
 
+        /**
+         * Returns the smallest (closest to negative infinity) double value that is
+         * greater than or equal to the argument and is equal to a mathematical
+         * integer. Special cases:
+         *
+         *   o If the argument value is already equal to a mathematical integer,
+         *     then the result is the same as the argument.
+         *   o If the argument is NaN or an infinity or positive zero or negative
+         *     zero, then the result is the same as the argument.
+         *   o If the argument value is less than zero but greater than -1.0, then
+         *     the result is negative zero.
+         *
+         * Note that the value of Math.ceil(x) is exactly the value of -Math.floor(-x).
+         * @param value - the value to find the ceiling of
+         * @returns the smallest (closest to negative infinity) floating-point value
+         * that is greater than or equal to the argument and is equal to a
+         * mathematical integer.
+         */
+        static double ceil( double value );
+
+        /**
+         * Returns the largest (closest to positive infinity) double value that is
+         * less than or equal to the argument and is equal to a mathematical integer.
+         * Special cases:
+         *
+         *    o If the argument value is already equal to a mathematical integer,
+         *      then the result is the same as the argument.
+         *    o If the argument is NaN or an infinity or positive zero or negative
+         *      zero, then the result is the same as the argument.
+         *
+         * @param value - the value to find the floor of
+         * @returns the largest (closest to positive infinity) floating-point value
+         * that less than or equal to the argument and is equal to a mathematical
+         * integer.
+         */
+        static double floor( double value );
+
     };
 
 }}

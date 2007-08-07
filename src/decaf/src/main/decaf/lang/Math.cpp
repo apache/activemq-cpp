@@ -45,3 +45,29 @@ double Math::log( double value ) {
 
     return std::log( value );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::ceil( double value ) {
+
+    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+        return value;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    } else if( -1.0 <= value <= 0.0 ) {
+        return -0.0;
+    }
+
+    return std::ceil( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::floor( double value ) {
+
+    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+        return value;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return std::floor( value );
+}
