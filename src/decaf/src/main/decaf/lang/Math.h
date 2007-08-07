@@ -45,6 +45,65 @@ namespace lang{
     public:
 
         /**
+         * Returns the absolute value of an int value. If the argument is not
+         * negative, the argument is returned. If the argument is negative, the
+         * negation of the argument is returned.
+         * @param value - the value to return the abs of
+         * @returns the value if positive, otherwise the negative of value
+         */
+        static int abs( int value ) {
+            return value < 0 ? -value : value;
+        }
+
+        /**
+         * Returns the absolute value of an long long value. If the argument is not
+         * negative, the argument is returned. If the argument is negative, the
+         * negation of the argument is returned.
+         * @param value - the value to return the abs of
+         * @returns the value if positive, otherwise the negative of value
+         */
+        static long long abs( long long value ) {
+            return value < 0 ? -value : value;
+        }
+
+        /**
+         * Returns the absolute value of a float value. If the argument is not
+         * negative, the argument is returned. If the argument is negative,
+         * the negation of the argument is returned. Special cases:
+         *
+         * o If the argument is positive zero or negative zero, the result is
+         *   positive zero.
+         * o If the argument is infinite, the result is positive infinity.
+         * o If the argument is NaN, the result is NaN.
+         *
+         * In other words, the result is the same as the value of the expression:
+         *    Float::intBitsToFloat( 0x7fffffff & Float::floatToIntBits( value ) )
+         *
+         * @param value - the value to return the abs of
+         * @returns the value if positive, otherwise the negative of value
+         */
+        static float abs( float value );
+
+        /**
+         * Returns the absolute value of a double value. If the argument is not
+         * negative, the argument is returned. If the argument is negative,
+         * the negation of the argument is returned. Special cases:
+         *
+         * o If the argument is positive zero or negative zero, the result is
+         *   positive zero.
+         * o If the argument is infinite, the result is positive infinity.
+         * o If the argument is NaN, the result is NaN.
+         *
+         * In other words, the result is the same as the value of the expression:
+         *    Double::longBitsToDouble( 0x7fffffffffffffffULL &
+         *                              Double::doubleToLongBits( value ) )
+         *
+         * @param value - the value to return the abs of
+         * @returns the value if positive, otherwise the negative of value
+         */
+        static double abs( double value );
+
+        /**
          * Returns the smaller of two <code>short</code> values. That is,
          * the result the argument closer to the value of
          * <code>Short::MIN_VALUE</code>.  If the arguments have the same
@@ -69,6 +128,47 @@ namespace lang{
         static int min( int a, int b ) {
             return ( a <= b ? a : b );
         }
+
+        /**
+         * Returns the smaller of two <code>long long</code> values. That is,
+         * the result the argument closer to the value of
+         * <code>Long::MIN_VALUE</code>.  If the arguments have the same
+         * value, the result is that same value.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the smaller of <code>a</code> and <code>b</code>.
+         */
+        static long long min( long long a, long long b ) {
+            return ( a <= b ? a : b );
+        }
+
+        /**
+         * Returns the smaller of two float values. That is, the result is the
+         * value closer to negative infinity. If the arguments have the same value,
+         * the result is that same value. If either value is NaN, then the result
+         * is NaN. Unlike the numerical comparison operators, this method considers
+         * negative zero to be strictly smaller than positive zero. If one argument
+         * is positive zero and the other is negative zero, the result is negative
+         * zero.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the smaller of <code>a</code> and <code>b</code>.
+         */
+        static float min( float a, float b );
+
+        /**
+         * Returns the smaller of two double values. That is, the result is the
+         * value closer to negative infinity. If the arguments have the same value,
+         * the result is that same value. If either value is NaN, then the result
+         * is NaN. Unlike the numerical comparison operators, this method considers
+         * negative zero to be strictly smaller than positive zero. If one argument
+         * is positive zero and the other is negative zero, the result is negative
+         * zero.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the smaller of <code>a</code> and <code>b</code>.
+         */
+        static double min( double a, double b );
 
         /**
          * Returns the larger of two <code>short</code> values. That is,
@@ -97,6 +197,46 @@ namespace lang{
         }
 
         /**
+         * Returns the larger of two <code>long long</code> values. That is,
+         * the result the argument closer to the value of
+         * <code>Long::MAX_VALUE</code>.  If the arguments have the same
+         * value, the result is that same value.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the larger of <code>a</code> and <code>b</code>.
+         */
+        static long long max( long long a, long long b ) {
+            return ( a >= b ? a : b );
+        }
+
+        /**
+         * Returns the greater of two float values. That is, the result is the
+         * argument closer to positive infinity. If the arguments have the same
+         * value, the result is that same value. If either value is NaN, then the
+         * result is NaN. Unlike the numerical comparison operators, this method
+         * considers negative zero to be strictly smaller than positive zero. If
+         * one argument is positive zero and the other negative zero, the result
+         * is positive zero.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the larger of <code>a</code> and <code>b</code>.
+         */
+        static float max( float a, float b );
+
+        /**
+         * Returns the greater of two double values. That is, the result is the
+         * argument closer to positive infinity. If the arguments have the same value,
+         * the result is that same value. If either value is NaN, then the result is
+         * NaN. Unlike the numerical comparison operators, this method considers
+         * negative zero to be strictly smaller than positive zero. If one argument
+         * is positive zero and the other negative zero, the result is positive zero.
+         * @param a - an argument.
+         * @param b - another argument.
+         * @return the larger of <code>a</code> and <code>b</code>.
+         */
+        static double max( double a, double b );
+
+        /**
          * Returns the natural logarithm (base e) of a double  value. Special cases:
          *
          *  o If the argument is NaN or less than zero, then the result is NaN.
@@ -109,6 +249,40 @@ namespace lang{
          * @returns the natural log of value.
          */
         static double log( double value );
+
+        /**
+         * Returns the base 10 logarithm of a double value. Special cases:
+         *
+         *   o If the argument is NaN or less than zero, then the result is NaN.
+         *   o If the argument is positive infinity, then the result is positive
+         *     infinity.
+         *   o If the argument is positive zero or negative zero, then the result is
+         *     negative infinity.
+         *   o If the argument is equal to 10n for integer n, then the result is n.
+         *
+         * @param value - the value to operate on
+         * @returns the long base 10 of value
+         */
+        static double log10( double value );
+
+        /**
+         * Returns the natural logarithm of the sum of the argument and 1. Note that
+         * for small values x, the result of log1p(x) is much closer to the true
+         * result of ln(1 + x) than the floating-point evaluation of log(1.0+x).
+         *
+         * Special cases:
+         *
+         *   o If the argument is NaN or less than -1, then the result is NaN.
+         *   o If the argument is positive infinity, then the result is positive
+         *     infinity.
+         *   o If the argument is negative one, then the result is negative infinity.
+         *   o If the argument is zero, then the result is a zero with the same sign
+         *     as the argument.
+         *
+         * @param value - the value to operate on
+         * @returns the the value ln(x + 1), the natural log of x + 1
+         */
+        static double log1p( double value );
 
         /**
          * Returns the smallest (closest to negative infinity) double value that is
@@ -146,6 +320,44 @@ namespace lang{
          * integer.
          */
         static double floor( double value );
+
+        /**
+         * Returns the closest int to the argument. The result is rounded to an
+         * integer by adding 1/2, taking the floor of the result, and casting the
+         * result to type int. In other words, the result is equal to the value
+         * of the expression:  (int)Math.floor( a + 0.5f )
+         *
+         *   o If the argument is NaN, the result is 0.
+         *   o If the argument is negative infinity or any value less than or equal
+         *     to the value of Integer::MIN_VALUE, the result is equal to the value of
+         *     Integer::MIN_VALUE.
+         *   o If the argument is positive infinity or any value greater than or equal
+         *     to the value of Integer::MAX_VALUE, the result is equal to the value of
+         *     Integer::MAX_VALUE.
+         *
+         * @param value - the value to round
+         * @returns the value of the argument rounded to the nearest integral value.
+         */
+        static int round( float value );
+
+        /**
+         * Returns the closest long long to the argument. The result is rounded to
+         * an integer by adding 1/2, taking the floor of the result, and casting the
+         * result to type long long. In other words, the result is equal to the value
+         * of the expression:  (long long)Math.floor(a + 0.5d)
+         *
+         *   o If the argument is NaN, the result is 0.
+         *   o If the argument is negative infinity or any value less than or equal
+         *     to the value of Long::MIN_VALUE, the result is equal to the value of
+         *     Long::MIN_VALUE.
+         *   o If the argument is positive infinity or any value greater than or equal
+         *     to the value of Long::MAX_VALUE, the result is equal to the value of
+         *     Long::MAX_VALUE.
+         *
+         * @param value - the value to round
+         * @returns the value of the argument rounded to the nearest integral value.
+         */
+        static long long round( double value );
 
     };
 
