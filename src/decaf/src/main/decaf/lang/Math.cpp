@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-#include "Math.h"
-
+#include <decaf/lang/Math.h>
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Float.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
+#include <decaf/util/Random.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -64,7 +64,136 @@ double Math::atan2( double x, double y ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 double Math::random() {
-    return 0.0
+    static util::Random random;
+    return random.nextDouble();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::cbrt( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    }
+
+    return cbrt( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::cos( double value ) {
+
+    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+        return Double::NaN;
+    }
+
+    return std::cos( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::cosh( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    } else if( Double::isInfinite( value ) ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == 0.0 ) {
+        return 1.0;
+    }
+
+    return std::cosh( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::sin( double value ) {
+
+    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+        return Double::NaN;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return std::sin( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::sinh( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    } else if( Double::isInfinite( value ) ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return std::sinh( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::tan( double value ) {
+
+    if( Double::isNaN( value ) || value < -1.0 ) {
+        return Double::NaN;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return std::tan( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::tanh( double value ) {
+
+    if( Double::isNaN( value ) || value < -1.0 ) {
+        return Double::NaN;
+    } else if( value == Double::POSITIVE_INFINITY ) {
+        return 1.0;
+    } else if( value == Double::NEGATIVE_INFINITY ) {
+        return -1.0;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return std::tanh( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::sqrt( double value ) {
+
+    if( Double::isNaN( value ) || value < 0.0 ) {
+        return Double::NaN;
+    } else if( value == Double::POSITIVE_INFINITY ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return Double::NEGATIVE_INFINITY;
+    }
+
+    return std::sqrt( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::rint( double value ) {
+
+    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+        return value;
+    } else if( value == 0.0 || value == -0.0 ) {
+        return value;
+    }
+
+    return rint( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::exp( double value ) {
+
+    if( Double::isNaN( value ) || value < -1.0 ) {
+        return Double::NaN;
+    } else if( value == Double::POSITIVE_INFINITY ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == Double::NEGATIVE_INFINITY ) {
+        return 0.0;
+    }
+
+    return std::exp( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

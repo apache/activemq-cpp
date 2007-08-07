@@ -188,6 +188,135 @@ namespace lang{
         static double atan2( double x, double y );
 
         /**
+         * Returns the cube root of a double value. For positive finite x,
+         * cbrt(-x) == -cbrt(x); that is, the cube root of a negative value is the
+         * negative of the cube root of that value's magnitude. Special cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is infinite, then the result is an infinity with the
+         *    same sign as the argument.
+         *  o If the argument is zero, then the result is a zero with the same sign
+         *    as the argument.
+         *
+         * @param value - the double to compute the cube root of
+         * @returns the cube root of value
+         */
+        static double cbrt( double value );
+
+        /**
+         * Returns the trigonometric cosine of an angle. Special cases:
+         *
+         *   o If the argument is NaN or an infinity, then the result is NaN.
+         *
+         * @param value - an value in radians
+         * @returns the cosine of the argument.
+         */
+        static double cos( double value );
+
+        /**
+         * Returns the hyperbolic cosine of a double value. The hyperbolic cosine
+         * of x is defined to be (ex + e-x)/2 where e is Euler's number.
+         * Special cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is infinite, then the result is positive infinity.
+         *  o If the argument is zero, then the result is 1.0.
+         *
+         * @param value - the number whose hyperbolic cosine is to be found
+         * @return the hyperbolic cosine of value
+         */
+        static double cosh( double value );
+
+        /**
+         * Returns the trigonometric sine of an angle. Special case:
+         *
+         *  o If the argument is NaN or an infinity, then the result is NaN.
+         *  o If the argument is zero, then the result is a zero with the same sign
+         *    as the argument.
+         *
+         * @param value - the number whose sin is to be found
+         * @return the sine of value
+         */
+        static double sin( double value );
+
+        /**
+         * Returns the hyperbolic sine of a double value. The hyperbolic sine of x
+         * is defined to be (ex - e-x)/2 where e is Euler's number.
+         * Special cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is infinite, then the result is an infinity with
+         *    the same sign as the argument.
+         *  o If the argument is zero, then the result is a zero with the same
+         *    sign as the argument.
+         *
+         * @param value - the number whose hyperbolic sin is to be found
+         * @return the hyperbolic sine of value
+         */
+        static double sinh( double value );
+
+        /**
+         * Returns the trigonometric tangent of an angle. Special cases:
+         *
+         *  o If the argument is NaN or an infinity, then the result is NaN.
+         *  o If the argument is zero, then the result is a zero with the same
+         *    sign as the argument.
+         *
+         * @param value - the number whose tangent is to be found
+         * @return the tangent of value
+         */
+        static double tan( double value );
+
+        /**
+         * Returns the hyperbolic tangent of a double value. The hyperbolic
+         * tangent of x is defined to be (ex - e-x)/(ex + e-x), in other words,
+         * sinh(x)/cosh(x). Note that the absolute value of the exact tanh is
+         * always less than 1. Special cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is zero, then the result is a zero with the same
+         *    sign as the argument.
+         *  o If the argument is positive infinity, then the result is +1.0.
+         *  o If the argument is negative infinity, then the result is -1.0.
+         *
+         * @param value - the number whose hyperbolic tangent is to be found
+         * @return the hyperbolic cosine of value
+         */
+        static double tanh( double value );
+
+        /**
+         * Returns the correctly rounded positive square root of a double value.
+         * Special cases:
+         *
+         *  o If the argument is NaN or less than zero, then the result is NaN.
+         *  o If the argument is positive infinity, then the result is positive infinity.
+         *  o If the argument is positive zero or negative zero, then the result is
+         *    the same as the argument.
+         *
+         * Otherwise, the result is the double value closest to the true mathematical
+         * square root of the argument value.
+         * @param value - the value to find the square root of
+         * @param the square root of the argument.
+         */
+        static double sqrt( double value );
+
+        /**
+         * Returns the double value that is closest in value to the argument and
+         * is equal to a mathematical integer. If two double values that are
+         * mathematical integers are equally close, the result is the integer
+         * value that is even. Special cases:
+         *
+         *  o If the argument value is already equal to a mathematical integer,
+         *    then the result is the same as the argument.
+         *  o If the argument is NaN or an infinity or positive zero or negative
+         *    zero, then the result is the same as the argument.
+         *
+         * @param value - the value to round to the nearest integer
+         * @returns the rounded value
+         */
+        static double rint( double value );
+
+        /**
          * Returns the smaller of two <code>short</code> values. That is,
          * the result the argument closer to the value of
          * <code>Short::MIN_VALUE</code>.  If the arguments have the same
@@ -460,6 +589,37 @@ namespace lang{
          * less than 1.0.
          */
         static double random();
+
+        /**
+         * Returns Euler's number e raised to the power of a double value.
+         * Special cases:
+         *
+         *  o If the argument is NaN, the result is NaN.
+         *  o If the argument is positive infinity, then the result is positive infinity.
+         *  o If the argument is negative infinity, then the result is positive zero.
+         *
+         * @param value - the exponent to raise e to
+         * @returns the value e^a, where e is the base of the natural logarithms.
+         */
+        static double exp( double value );
+
+        /**
+         * Returns the measure in radians of the supplied degree angle
+         * @param angdeg - an angle in degrees
+         * @return the radian measure of the angle.
+         */
+        static double toRadians( double angdeg ) {
+            return angdeg / 180 * PI;
+        }
+
+        /**
+         * Returns the measure in degrees of the supplied radian angle
+         * @param angrad -  an angle in radians
+         * @return the degree measure of the angle.
+         */
+        double toDegrees( double angrad ) {
+            return angrad * 180 / PI;
+        }
 
     };
 

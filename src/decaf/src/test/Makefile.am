@@ -84,7 +84,7 @@ h_sources = \
 ## Compile this as part of make check
 check_PROGRAMS = decaf-test
 ## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
+## TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options
