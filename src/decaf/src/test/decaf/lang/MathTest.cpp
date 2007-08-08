@@ -121,15 +121,11 @@ void MathTest::test_cbrt_D() {
                           Double::doubleToLongBits(Math::cbrt(-0.0)));
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 3.0", Math::cbrt(27.0), 3.0);
-//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 23.1119931725587",
-//            23.1119931725587, Math::cbrt(12345.6));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.643803094122362E102",
             5.643803094122362E102, Math::cbrt(Double::MAX_VALUE));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.01", 0.01, Math::cbrt(0.000001));
 
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -3.0", -3.0, Math::cbrt(-27.0));
-//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -23.111993172558684",
-//            -23.111993172558684, Math::cbrt(-12345.6));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.7031839360032603E-108",
             1.7031839360032603E-108, Math::cbrt(Double::MIN_VALUE));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -0.01", -0.01, Math::cbrt(-0.000001));
@@ -277,6 +273,10 @@ void MathTest::test_logD() {
     // Test for method double decaf.lang.Math::log(double)
     for( double d = 10; d >= -10; d -= 0.5 ) {
         double answer = Math::log( Math::exp(d) );
+
+        std::cout << "d: " << d << std::endl;
+        std::cout << "answer: " << answer << std::endl;
+
         CPPUNIT_ASSERT_MESSAGE(
                 "Answer does not equal expected answer for d",
                 Math::abs( answer - d ) <= Math::abs(d * 0.00000001) );
@@ -532,8 +532,8 @@ void MathTest::test_sinh_D() {
             1.0000000000001666E-6, Math::sinh(0.000001));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0000000000001666E-6",
             -1.0000000000001666E-6, Math::sinh(-0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.115386441963859", 5.115386441963859,
-            Math::sinh(2.33482));
+    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.11538644196386",
+             5.11538644196386, Math::sinh( 2.33482 ) );
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
             Double::POSITIVE_INFINITY, Math::sinh(Double::MAX_VALUE));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
@@ -580,6 +580,7 @@ void MathTest::test_tanh_D() {
             Math::tanh(2.33482));
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0",
             1.0, Math::tanh(Double::MAX_VALUE));
+
     CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
             Math::tanh(Double::MIN_VALUE));
 }
