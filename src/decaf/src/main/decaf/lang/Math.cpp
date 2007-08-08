@@ -73,9 +73,13 @@ double Math::cbrt( double value ) {
 
     if( Double::isNaN( value ) ) {
         return Double::NaN;
+    } else if( Double::isInfinite( value ) ) {
+        return value;
+    } else if( !( value < 0 || value > 0 ) ) {
+        return value;
     }
 
-    return cbrt( value );
+    return ::cbrt( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +124,7 @@ double Math::sinh( double value ) {
     if( Double::isNaN( value ) ) {
         return Double::NaN;
     } else if( Double::isInfinite( value ) ) {
-        return Double::POSITIVE_INFINITY;
+        return value;
     } else if( value == 0.0 || value == -0.0 ) {
         return value;
     }
@@ -143,13 +147,13 @@ double Math::tan( double value ) {
 ////////////////////////////////////////////////////////////////////////////////
 double Math::tanh( double value ) {
 
-    if( Double::isNaN( value ) || value < -1.0 ) {
+    if( Double::isNaN( value ) ) {
         return Double::NaN;
     } else if( value == Double::POSITIVE_INFINITY ) {
         return 1.0;
     } else if( value == Double::NEGATIVE_INFINITY ) {
         return -1.0;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
     }
 
@@ -179,7 +183,7 @@ double Math::rint( double value ) {
         return value;
     }
 
-    return rint( value );
+    return ::rint( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,12 +209,11 @@ double Math::expm1( double value ) {
         return Double::POSITIVE_INFINITY;
     } else if( value == Double::NEGATIVE_INFINITY ) {
         return -1.0;
-    } else if( value > 0 || value < 0 ) {
-        return expm1( value );
+    } else if( !( value > 0 || value < 0 ) ) {
+        return value;
     }
 
-    // +-0.0
-    return value;
+    return ::expm1( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -323,11 +326,11 @@ double Math::log( double value ) {
 ////////////////////////////////////////////////////////////////////////////////
 double Math::log10( double value ) {
 
-    if( Double::isNaN( value ) || value < 0.0 ) {
+    if( Double::isNaN( value ) || value < 0 ) {
         return Double::NaN;
     } else if( value == Double::POSITIVE_INFINITY ) {
         return Double::POSITIVE_INFINITY;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return Double::NEGATIVE_INFINITY;
     }
 
@@ -347,7 +350,7 @@ double Math::log1p( double value ) {
         return value;
     }
 
-    return log1p( value );
+    return ::log1p( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -355,9 +358,9 @@ double Math::ceil( double value ) {
 
     if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
         return value;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
-    } else if( -1.0 <= value <= 0.0 ) {
+    } else if( value > -1.0 && value < 0.0 ) {
         return -0.0;
     }
 
@@ -407,7 +410,7 @@ double Math::IEEEremainder( double f1, double f2 ) {
         return f1;
     }
 
-    return remainder( f1, f2 );
+    return ::remainder( f1, f2 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -447,7 +450,7 @@ double Math::hypot( double x, double y ) {
         return Double::NaN;
     }
 
-    return hypot( x, y );
+    return ::hypot( x, y );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -473,10 +476,12 @@ float Math::ulp( float value ) {
         return Float::POSITIVE_INFINITY;
     } else if( value == Float::MAX_VALUE || value == -Float::MAX_VALUE ) {
         return (float)pow( 2, 104 );
+    } else if( !( value < 0 || value > 0 ) ) {
+        return Float::MIN_VALUE;
     }
 
     value = abs( value );
-    return nextafterf( value, Float::MAX_VALUE ) - value;
+    return ::nextafterf( value, Float::MAX_VALUE ) - value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -488,8 +493,10 @@ double Math::ulp( double value ) {
         return Double::POSITIVE_INFINITY;
     } else if( value == Double::MAX_VALUE || value == -Double::MAX_VALUE ) {
         return pow( 2, 971 );
+    } else if( !( value < 0 || value > 0 ) ) {
+        return Double::MIN_VALUE;
     }
 
     value = abs( value );
-    return nextafterf( value, Double::MAX_VALUE ) - value;
+    return ::nextafterf( value, Double::MAX_VALUE ) - value;
 }
