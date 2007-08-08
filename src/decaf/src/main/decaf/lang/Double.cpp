@@ -25,7 +25,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const double Double::MAX_VALUE = 1.7976931348623157e+308;
-const double Double::MIN_VALUE = 2.2250738585072014e-308;
+const double Double::MIN_VALUE = 5e-324;
 const double Double::NaN = 0.0f / 0.0f;
 const double Double::POSITIVE_INFINITY = 1.0f / 0.0f;
 const double Double::NEGATIVE_INFINITY = -1.0f / 0.0f;

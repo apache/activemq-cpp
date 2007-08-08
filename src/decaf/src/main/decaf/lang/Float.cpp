@@ -24,8 +24,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const float Float::MAX_VALUE = 3.40282347e+38F;
-const float Float::MIN_VALUE = 1.17549435e-38F;
+const float Float::MAX_VALUE = 3.40282346638528860e+38f;
+const float Float::MIN_VALUE = 1.40129846432481707e-45f;
 const float Float::NaN = 0.0f / 0.0f;
 const float Float::POSITIVE_INFINITY = 1.0f / 0.0f;
 const float Float::NEGATIVE_INFINITY = -1.0f / 0.0f;

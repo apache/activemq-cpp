@@ -111,7 +111,7 @@ double Math::sin( double value ) {
 
     if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
         return Double::NaN;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
     }
 
@@ -125,7 +125,7 @@ double Math::sinh( double value ) {
         return Double::NaN;
     } else if( Double::isInfinite( value ) ) {
         return value;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
     }
 
@@ -137,7 +137,7 @@ double Math::tan( double value ) {
 
     if( Double::isNaN( value ) || value < -1.0 ) {
         return Double::NaN;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
     }
 
@@ -189,7 +189,7 @@ double Math::rint( double value ) {
 ////////////////////////////////////////////////////////////////////////////////
 double Math::exp( double value ) {
 
-    if( Double::isNaN( value ) || value < -1.0 ) {
+    if( Double::isNaN( value ) ) {
         return Double::NaN;
     } else if( value == Double::POSITIVE_INFINITY ) {
         return Double::POSITIVE_INFINITY;
@@ -316,7 +316,7 @@ double Math::log( double value ) {
         return Double::NaN;
     } else if( value == Double::POSITIVE_INFINITY ) {
         return Double::POSITIVE_INFINITY;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return Double::NEGATIVE_INFINITY;
     }
 
@@ -346,7 +346,7 @@ double Math::log1p( double value ) {
         return Double::POSITIVE_INFINITY;
     } else if( value == -1.0 ) {
         return Double::NEGATIVE_INFINITY;
-    } else if( value == 0.0 || value == -0.0 ) {
+    } else if( !( value < 0 || value > 0 ) ) {
         return value;
     }
 
@@ -498,5 +498,5 @@ double Math::ulp( double value ) {
     }
 
     value = abs( value );
-    return ::nextafterf( value, Double::MAX_VALUE ) - value;
+    return ::nextafter( value, Double::MAX_VALUE ) - value;
 }
