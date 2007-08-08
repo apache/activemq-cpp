@@ -197,6 +197,23 @@ double Math::exp( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+double Math::expm1( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    } else if( value == Double::POSITIVE_INFINITY ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == Double::NEGATIVE_INFINITY ) {
+        return -1.0;
+    } else if( value > 0 || value < 0 ) {
+        return expm1( value );
+    }
+
+    // +-0.0
+    return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 float Math::min( float a, float b ) {
 
     if( a > b ) {
@@ -352,15 +369,17 @@ double Math::floor( double value ) {
 
     if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
         return value;
-    } else if( value == 0.0 || value == -0.0 ) {
-        return value;
+    } else if( value > 0 || value < 0 ) {
+        return std::floor( value );
     }
 
-    return std::floor( value );
+    // +-0.0
+    return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 int Math::round( float value ) {
+
     if( Float::isNaN( value ) ) {
         return 0;
     }
@@ -376,4 +395,101 @@ long long Math::round( double value ) {
     }
 
     return (long long)Math::floor( value + 0.5 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::IEEEremainder( double f1, double f2 ) {
+
+    if( Double::isNaN( f1 ) || Double::isNaN( f2 ) ||
+        Double::isInfinite( f1 ) || !( f2 < 0 || f2 > 0 ) ) {
+        return Double::NaN;
+    } else if( Double::isInfinite( f2 ) ) {
+        return f1;
+    }
+
+    return remainder( f1, f2 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float Math::signum( float value ) {
+
+    if( Float::isNaN( value ) ) {
+        return Float::NaN;
+    } else if( value > 0 ) {
+        return 1.0;
+    } else if( value < 0 ) {
+        return -1.0;
+    }
+
+    return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::signum( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    } else if( value > 0 ) {
+        return 1.0;
+    } else if( value < 0 ) {
+        return -1.0;
+    }
+
+    return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::hypot( double x, double y ) {
+
+    if( Double::isInfinite( x ) || Double::isInfinite( y ) ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( Double::isNaN( x ) || Double::isNaN( y ) ) {
+        return Double::NaN;
+    }
+
+    return hypot( x, y );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::pow( double base, double exp ) {
+
+    if( !( exp < 0 || exp > 0 ) ) {
+        return 1.0;
+    } else if( Double::isNaN( exp ) ) {
+        return Double::NaN;
+    } else if( Double::isNaN( base ) && ( exp < 0 || exp > 0 ) ) {
+        return Double::NaN;
+    }
+
+    return std::pow( base, exp );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float Math::ulp( float value ) {
+
+    if( Float::isNaN( value ) ) {
+        return Float::NaN;
+    } else if( Float::isInfinite( value ) ) {
+        return Float::POSITIVE_INFINITY;
+    } else if( value == Float::MAX_VALUE || value == -Float::MAX_VALUE ) {
+        return (float)pow( 2, 104 );
+    }
+
+    value = abs( value );
+    return nextafterf( value, Float::MAX_VALUE ) - value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double Math::ulp( double value ) {
+
+    if( Double::isNaN( value ) ) {
+        return Double::NaN;
+    } else if( Double::isInfinite( value ) ) {
+        return Double::POSITIVE_INFINITY;
+    } else if( value == Double::MAX_VALUE || value == -Double::MAX_VALUE ) {
+        return pow( 2, 971 );
+    }
+
+    value = abs( value );
+    return nextafterf( value, Double::MAX_VALUE ) - value;
 }

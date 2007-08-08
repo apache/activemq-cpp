@@ -301,6 +301,24 @@ namespace lang{
         static double sqrt( double value );
 
         /**
+         * Returns the value of the first argument raised to the power of the second
+         * argument. Special cases:
+         *
+         *  o If the second argument is positive or negative zero, then the result
+         *    is 1.0.
+         *  o If the second argument is 1.0, then the result is the same as the first
+         *    argument.
+         *  o If the second argument is NaN, then the result is NaN.
+         *  o If the first argument is NaN and the second argument is nonzero,
+         *    then the result is NaN.
+         *
+         * @param base - the base
+         * @param exp - the exponent
+         * @return the base raised to the power of exp.
+         */
+        static double pow( double base, double exp );
+
+        /**
          * Returns the double value that is closest in value to the argument and
          * is equal to a mathematical integer. If two double values that are
          * mathematical integers are equally close, the result is the integer
@@ -573,6 +591,27 @@ namespace lang{
         static long long round( double value );
 
         /**
+         * Computes the remainder operation on two arguments as prescribed by the
+         * IEEE 754 standard. The remainder value is mathematically equal to
+         * f1 - f2 × n, where n is the mathematical integer closest to the exact
+         * mathematical value of the quotient f1/f2, and if two mathematical
+         * integers are equally close to f1/f2, then n is the integer that is even.
+         * If the remainder is zero, its sign is the same as the sign of the first
+         * argument. Special cases:
+         *
+         *  o If either argument is NaN, or the first argument is infinite, or the
+         *    second argument is positive zero or negative zero, then the result is
+         *    NaN.
+         *  o If the first argument is finite and the second argument is infinite,
+         *    then the result is the same as the first argument.
+         *
+         * @param f1 - the dividend.
+         * @param f2 - the divisor
+         * @return the IEEE remainder of value
+         */
+        static double IEEEremainder( double f1, double f2 );
+
+        /**
          * Returns a double value with a positive sign, greater than or equal to 0.0
          * and less than 1.0. Returned values are chosen pseudorandomly with
          * (approximately) uniform distribution from that range.
@@ -604,6 +643,64 @@ namespace lang{
         static double exp( double value );
 
         /**
+         * Returns e^x - 1. Note that for values of x near 0, the exact sum of
+         * expm1(x) + 1 is much closer to the true result of ex than exp(x).
+         * Special cases:
+         *
+         *  o If the argument is NaN, the result is NaN.
+         *  o If the argument is positive infinity, then the result is positive infinity.
+         *  o If the argument is negative infinity, then the result is -1.0.
+         *  o If the argument is zero, then the result is a zero with the same sign as
+         *    the argument.
+         *
+         * @param the value to raise e^x - 1
+         * @returns the value ex - 1.
+         */
+        static double expm1( double value );
+
+        /**
+         * Returns sqrt(x^2 + y^2) without intermediate overflow or underflow.
+         * Special cases:
+         *
+         * If either argument is infinite, then the result is positive infinity.
+         * If either argument is NaN and neither argument is infinite, then the
+         * result is NaN.
+         *
+         * @param x - an argument
+         * @param y - another argument
+         * @returns the sqrt(x^2 + y^2) without intermediate overflow or underflow
+         */
+        static double hypot( double x, double y );
+
+        /**
+         * Returns the signum function of the argument; zero if the argument is zero,
+         * 1.0f if the argument is greater than zero, -1.0f if the argument is less
+         * than zero.  Special Cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is positive zero or negative zero, then the result is
+         *    the same as the argument.
+         *
+         * @param value - the floating-point value whose signum is to be returned
+         * @returns the signum function of the argument
+         */
+        static float signum( float value );
+
+        /**
+         * Returns the signum function of the argument; zero if the argument is zero,
+         * 1.0f if the argument is greater than zero, -1.0f if the argument is less
+         * than zero.  Special Cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is positive zero or negative zero, then the result is
+         *    the same as the argument.
+         *
+         * @param value - the floating-point value whose signum is to be returned
+         * @returns the signum function of the argument
+         */
+        static double signum( double value );
+
+        /**
          * Returns the measure in radians of the supplied degree angle
          * @param angdeg - an angle in degrees
          * @return the radian measure of the angle.
@@ -617,9 +714,45 @@ namespace lang{
          * @param angrad -  an angle in radians
          * @return the degree measure of the angle.
          */
-        double toDegrees( double angrad ) {
+        static double toDegrees( double angrad ) {
             return angrad * 180 / PI;
         }
+
+        /**
+         * Returns the size of an ulp of the argument. An ulp of a float value is
+         * the positive distance between this floating-point value and the float
+         * value next larger in magnitude. Note that for non-NaN x, ulp(-x) == ulp(x).
+         * Special Cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is positive or negative infinity, then the result is
+         *    positive infinity.
+         *  o If the argument is positive or negative zero, then the result is
+         *    Float::MIN_VALUE.
+         *  o If the argument is ±Float::MAX_VALUE, then the result is equal to 2^104.
+         *
+         * @param value - the floating-point value whose ulp is to be returned
+         * @returns the size of an ulp of the argument
+         */
+        static float ulp( float value );
+
+        /**
+         * Returns the size of an ulp of the argument. An ulp of a double value is
+         * the positive distance between this floating-point value and the double
+         * value next larger in magnitude. Note that for non-NaN x, ulp(-x) == ulp(x).
+         * Special Cases:
+         *
+         *  o If the argument is NaN, then the result is NaN.
+         *  o If the argument is positive or negative infinity, then the result is
+         *    positive infinity.
+         *  o If the argument is positive or negative zero, then the result is
+         *    Double::MIN_VALUE.
+         *  o If the argument is ±Float::MAX_VALUE, then the result is equal to 2^971.
+         *
+         * @param value - the floating-point value whose ulp is to be returned
+         * @returns the size of an ulp of the argument
+         */
+        static double ulp( double value );
 
     };
 
