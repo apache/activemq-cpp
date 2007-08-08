@@ -26,6 +26,7 @@ cc_sources = \
   decaf/lang/DoubleTest.cpp \
   decaf/lang/ThreadTest.cpp \
   decaf/lang/ExceptionTest.cpp \
+  decaf/lang/MathTest.cpp \
   decaf/io/BufferedInputStreamTest.cpp \
   decaf/io/BufferedOutputStreamTest.cpp \
   decaf/io/ByteArrayInputStreamTest.cpp \
@@ -60,6 +61,7 @@ h_sources = \
   decaf/lang/DoubleTest.h \
   decaf/lang/ThreadTest.h \
   decaf/lang/ExceptionTest.h \
+  decaf/lang/MathTest.h \
   decaf/io/BufferedInputStreamTest.h \
   decaf/io/BufferedOutputStreamTest.h \
   decaf/io/ByteArrayInputStreamTest.h \
