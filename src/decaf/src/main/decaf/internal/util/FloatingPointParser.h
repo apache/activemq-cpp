@@ -49,6 +49,7 @@ namespace util{
 
         static const int MAX_ACCURACY_WIDTH = 17;
         static const int DEFAULT_WIDTH = MAX_ACCURACY_WIDTH;
+        static const int LOG5_OF_TWO_TO_THE_N = 11;
 
     public:
 
@@ -75,6 +76,10 @@ namespace util{
             throw ( lang::exceptions::NumberFormatException );
 
     private:
+
+        static int sizeOfTenToTheE( int e) {
+            return ( e / 19 ) + 1;
+        }
 
         /**
          * Takes a String and an integer exponent. The String should hold a positive
@@ -152,6 +157,42 @@ namespace util{
          * @param returns a reference to the string passed for chaining
          */
         static std::string& toLowerCase( std::string& value );
+
+        /**
+         * Create a float from the given string and exponent
+         */
+        static float createFloat( const std::string& s, int exp );
+
+        /**
+         * Create a float from the given long long array and exponent
+         */
+        static float createFloat1( unsigned long long* f, int length, int exp );
+
+        /**
+         * The algorithm for the function floatAlgorithm() below can be found
+         * in:
+         *
+         *      "How to Read Floating-Point Numbers Accurately", William D.
+         *      Clinger, Proceedings of the ACM SIGPLAN '90 Conference on
+         *      Programming Language Design and Implementation, June 20-22,
+         *      1990, pp. 92-101.
+         *
+         * There is a possibility that the function will end up in an endless
+         * loop if the given approximating floating-point number (a very small
+         * floating-point whose value is very close to zero) straddles between
+         * two approximating integer values. We modified the algorithm slightly
+         * to detect the case where it oscillates back and forth between
+         * incrementing and decrementing the floating-point approximation. It
+         * is currently set such that if the oscillation occurs more than twice
+         * then return the original approximation.
+         * @returns a newly parse float.
+         */
+        static float floatAlgorithm( unsigned long long* f, int length,
+                                     int e, float z );
+
+//		static IS_DENORMAL_DBL_PTR(dblptr) {
+//			(((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_EXPONENT_MASK_HI) == 0) && ((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_MANTISSA_MASK_HI) != 0 || (LOW_U32_FROM_DBL_PTR(dblptr) != 0)))
+//		}
 
     };
 

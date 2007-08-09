@@ -63,6 +63,9 @@ namespace util{
         static const int E_OFFSET = 1075;
 
         static const long long INFINITE_LONGBITS = 0x7FF0000000000000LL;
+        static const int INFINITE_INTBITS = 0x7F800000;
+        static const int MINIMUM_INTBITS = 1;
+
         static const unsigned long long MANTISSA_MASK = 0x000FFFFFFFFFFFFFULL;
         static const unsigned long long EXPONENT_MASK = 0x7FF0000000000000ULL;
         static const unsigned long long NORMAL_MASK = 0x0010000000000000ULL;

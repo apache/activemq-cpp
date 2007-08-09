@@ -40,22 +40,16 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 
     // assumes s is a null terminated string with at least one
     // character in it
-    unsigned long long def[17];
-    unsigned long long defBackup[17];
-    unsigned long long* f;
-    unsigned long long* fNoOverflow;
-    unsigned long long* g;
-    unsigned long long* tempBackup;
+    unsigned long long def[17] = {0};
+    unsigned long long defBackup[17] = {0};
+    unsigned long long* f = def;
+    unsigned long long* fNoOverflow = defBackup;
+    unsigned long long* tempBackup = NULL;
     unsigned int overflow = 0;
     unsigned long long result = 0;
     int index = 1;
     int unprocessedDigits = 0;
     std::string::const_iterator valItr = value.begin();
-
-    f = def;
-    fNoOverflow = defBackup;
-    (*f) = 0;
-    tempBackup = g = 0;
 
     do {
 
@@ -450,3 +444,382 @@ std::string& FloatingPointParser::toLowerCase( std::string& value ) {
 
     return value;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+float FloatingPointParser::createFloat( const std::string&s, int exp ) {
+
+    // assumes s is a null terminated string with at least one
+    // character in it
+    unsigned long long def[DEFAULT_WIDTH] = {0};
+    unsigned long long defBackup[DEFAULT_WIDTH] = {0};
+    unsigned long long* f = def;
+    unsigned long long* fNoOverflow = defBackup;
+    unsigned long long* tempBackup = NULL;
+    unsigned int overflow;
+    unsigned int result;
+    int index = 1;
+    int unprocessedDigits = 0;
+    std::string::const_iterator sIter = s.begin();
+
+    do {
+
+        if( *sIter >= '0' && *sIter <= '9' ) {
+
+            /* Make a back up of f before appending, so that we can
+             * back out of it if there is no more room, i.e. index >
+             * MAX_ACCURACY_WIDTH.
+             */
+            memcpy( fNoOverflow, f, sizeof(unsigned long long)* index );
+            overflow = BigInt::simpleAppendDecimalDigitHighPrecision(
+                    f, index, *sIter - '0' );
+
+            if( overflow ) {
+
+                f[index++] = overflow;
+
+                // There is an overflow, but there is no more room
+                // to store the result. We really only need the top 52
+                // bits anyway, so we must back out of the overflow,
+                // and ignore the rest of the string.
+                if( index >= MAX_ACCURACY_WIDTH ) {
+                    index--;
+                    memcpy( f, fNoOverflow, sizeof(unsigned long long)* index );
+                    break;
+                }
+
+                if( tempBackup ) {
+                  fNoOverflow = tempBackup;
+                }
+            }
+
+        } else {
+            index = -1;
+        }
+    }
+    while( index > 0 && *(++sIter) != '\0' );
+
+    // We've broken out of the parse loop either because we've reached
+    // the end of the string or we've overflowed the maximum accuracy
+    // limit of a double. If we still have unprocessed digits in the
+    // given string, then there are three possible results:
+    //   1. (unprocessed digits + e) == 0, in which case we simply
+    //      convert the existing bits that are already parsed
+    //   2. (unprocessed digits + e) < 0, in which case we simply
+    //      convert the existing bits that are already parsed along
+    //      with the given e
+    //   3. (unprocessed digits + e) > 0 indicates that the value is
+    //      simply too big to be stored as a double, so return Infinity
+
+    if( ( unprocessedDigits = s.size() ) > 0 ) {
+
+        exp += unprocessedDigits;
+        if( index > -1 ) {
+            if( exp <= 0 ) {
+                return createFloat1( f, index, exp );
+            } else {
+                result = BitOps::INFINITE_INTBITS;
+            }
+        } else {
+            result = index;
+        }
+    } else {
+
+        if( index > -1 ) {
+            return createFloat1( f, index, exp );
+        } else {
+            result = index;
+        }
+    }
+
+    return Float::intBitsToFloat( result );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float FloatingPointParser::createFloat1( unsigned long long* f, int length, int exp ) {
+
+    int numBits = BigInt::highestSetBitHighPrecision (f, length) + 1;
+    double dresult;
+    int result;
+
+    numBits -= BigInt::lowestSetBitHighPrecision( f, length );
+
+    if( numBits < 25 && exp >= 0 && exp < LOG5_OF_TWO_TO_THE_N ) {
+        return ((float) LOW_I32_FROM_PTR (f)) * tenToTheE (exp);
+    } else if( numBits < 25 && exp < 0 && (-exp) < LOG5_OF_TWO_TO_THE_N ) {
+        return ((float) LOW_I32_FROM_PTR (f)) / tenToTheE (-exp);
+    } else if (exp >= 0 && exp < 39) {
+        result = (float) (BigInt::toDoubleHighPrecision (f, length) * pow (10.0, exp));
+    } else if( exp >= 39 ) {
+        // Convert the partial result to make sure that the
+        // non-exponential part is not zero. This check fixes the case
+        // where the user enters 0.0e309! */
+        dresult = BigInt::toDoubleHighPrecision( f, length );
+
+        if( dresult == 0.0 ) {
+            result = BitOps::MINIMUM_INTBITS;
+        } else {
+            result = BitOps::INFINITE_INTBITS;
+        }
+
+    } else if( exp > -309 ) {
+
+        int dexp;
+        unsigned int fmant, fovfl;
+        unsigned long long dmant;
+        dresult = BigInt::toDoubleHighPrecision( f, length ) / Math::pow( 10.0, -exp );
+        if( IS_DENORMAL_DBL( dresult ) ) {
+            return 0.0f;
+        }
+
+        dexp = BigInt::doubleExponent( dresult ) + 51;
+        dmant = BigInt::doubleMantissa( dresult );
+
+        // Is it too small to be represented by a single-precision
+        // float?
+        if( dexp <= -155 ) {
+            return 0.0f;
+        }
+
+        // Is it a denormalized single-precision float?
+        if( (dexp <= -127) && (dexp > -155) ) {
+
+            // Only interested in 24 msb bits of the 53-bit double mantissa
+            fmant = (unsigned int) (dmant >> 29);
+            fovfl = ((unsigned int) (dmant & 0x1FFFFFFF)) << 3;
+
+            while( (dexp < -127) && ((fmant | fovfl) != 0) ) {
+                if( (fmant & 1) != 0 ) {
+                    fovfl |= 0x80000000;
+                }
+                fovfl >>= 1;
+                fmant >>= 1;
+                dexp++;
+            }
+
+            if( (fovfl & 0x80000000) != 0) {
+                if( (fovfl & 0x7FFFFFFC) != 0 ) {
+                    fmant++;
+                } else if( (fmant & 1) != 0 ) {
+                    fmant++;
+                }
+            } else if( (fovfl & 0x40000000) != 0 ) {
+
+                if( (fovfl & 0x3FFFFFFC) != 0 ) {
+                    fmant++;
+                }
+            }
+
+            result = fmant;
+        }
+        else
+        {
+            result = dresult;
+        }
+    }
+
+    // Don't go straight to zero as the fact that x*0 = 0 independent
+    // of x might cause the algorithm to produce an incorrect result.
+    // Instead try the min  value first and let it fall to zero if need be.
+    if( exp <= -309 || result == 0 ) {
+        result = BitOps::MINIMUM_INTBITS;
+    }
+
+    return floatAlgorithm( f, length, exp, Float::intBitsToFloat( result ) );
+}
+
+/* The algorithm for the function floatAlgorithm() below can be found
+ * in:
+ *
+ *      "How to Read Floating-Point Numbers Accurately", William D.
+ *      Clinger, Proceedings of the ACM SIGPLAN '90 Conference on
+ *      Programming Language Design and Implementation, June 20-22,
+ *      1990, pp. 92-101.
+ *
+ * There is a possibility that the function will end up in an endless
+ * loop if the given approximating floating-point number (a very small
+ * floating-point whose value is very close to zero) straddles between
+ * two approximating integer values. We modified the algorithm slightly
+ * to detect the case where it oscillates back and forth between
+ * incrementing and decrementing the floating-point approximation. It
+ * is currently set such that if the oscillation occurs more than twice
+ * then return the original approximation.
+ */
+////////////////////////////////////////////////////////////////////////////////
+float FloatingPointParser::floatAlgorithm(
+    unsigned long long* f, int length, int exp, float z ) {
+
+    unsigned long long m;
+    int k = 0;
+    int comparison = 0;
+    int comparison2 = 0;
+    unsigned long long* x = NULL;
+    unsigned long long* y = NULL;
+    unsigned long long* D = NULL;
+    unsigned long long* D2 = NULL;
+    int xLength = 0;
+    int yLength = 0;
+    int DLength = 0;
+    int D2Length = 0;
+    int decApproxCount = 0;
+    int incApproxCount = 0;
+
+      do {
+
+          m = BigInt::floatMantissa (z);
+          k = BigInt::floatExponent (z);
+
+          if( exp >= 0 && k >= 0 ) {
+
+              xLength = sizeOfTenToTheE( exp ) + length;
+              x = new unsigned long long[xLength];
+              memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
+              memcpy( x, f, sizeof(unsigned long long) * length );
+              BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
+
+              yLength = (k >> 6) + 2;
+              y = new unsigned long long[yLength];
+              memset( y + 1, 0, sizeof(unsigned long long) * (yLength - 1) );
+              *y = m;
+              BigInt::simpleShiftLeftHighPrecision (y, yLength, k);
+
+        } else if( exp >= 0 ) {
+
+            xLength = sizeOfTenToTheE (exp) + length + ((-k) >> 6) + 1;
+              x = new unsigned long long[xLength];
+              memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
+              memcpy( x, f, sizeof(unsigned long long) * length );
+              BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
+              BigInt::simpleShiftLeftHighPrecision( x, xLength, -k );
+
+              yLength = 1;
+              y = new unsigned long long[yLength];
+              *y = m;
+
+        } else if( k >= 0 ) {
+
+            xLength = length;
+            x = f;
+
+            yLength = sizeOfTenToTheE( -exp ) + 2 + ( k >> 6 );
+            y = new unsigned long long[yLength];
+            memset( y + 1, 0, sizeof(unsigned long long) * (yLength - 1)) ;
+            *y = m;
+            BigInt::timesTenToTheEHighPrecision( y, yLength, -exp );
+            BigInt::simpleShiftLeftHighPrecision( y, yLength, k );
+
+        } else {
+
+            xLength = length + ((-k) >> 6) + 1;
+            x = new unsigned long long[xLength];
+            memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
+            memcpy( x, f, sizeof (unsigned long long) * length );
+            BigInt::simpleShiftLeftHighPrecision( x, xLength, -k );
+
+            yLength = sizeOfTenToTheE( -exp ) + 1;
+            y = new unsigned long long[yLength];
+            memset( y + 1, 0, sizeof(unsigned long long) * (yLength - 1) );
+            *y = m;
+            BigInt::timesTenToTheEHighPrecision( y, yLength, -exp );
+        }
+
+        comparison = BigInt::compareHighPrecision( x, xLength, y, yLength );
+        if( comparison > 0 ) {
+            // x > y
+            DLength = xLength;
+            D = new unsigned long long[DLength];
+            memcpy( D, x, DLength * sizeof(unsigned long long) );
+            BigInt::subtractHighPrecision( D, DLength, y, yLength );
+        } else if( comparison ) {
+            // y > x
+            DLength = yLength;
+            D = new unsigned long long[DLength];
+            memcpy (D, y, DLength * sizeof (unsigned long long));
+            BigInt::subtractHighPrecision (D, DLength, x, xLength);
+        } else {
+            /* y == x */
+            DLength = 1;
+            D = new unsigned long long[DLength];
+            *D = 0;
+        }
+
+        D2Length = DLength + 1;
+        allocateU64 (D2, D2Length);
+        m <<= 1;
+        BigInt::multiplyHighPrecision (D, DLength, &m, 1, D2, D2Length);
+        m >>= 1;
+
+        comparison2 = BigInt::compareHighPrecision (D2, D2Length, y, yLength);
+        if( comparison2 < 0 ) {
+            if( comparison < 0 && m == NORMAL_MASK ) {
+
+                BigInt::simpleShiftLeftHighPrecision (D2, D2Length, 1);
+                if( BigInt::compareHighPrecision (D2, D2Length, y, yLength) > 0 ) {
+                    DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                } else {
+                    break;
+                }
+            } else {
+                break;
+            }
+        } else if (comparison2 == 0) {
+
+            if ((m & 1) == 0) {
+                if (comparison < 0 && m == NORMAL_MASK) {
+                    DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                } else {
+                    break;
+                }
+            } else if (comparison < 0) {
+                DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                break;
+            } else {
+                INCREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                break;
+            }
+        } else if (comparison < 0) {
+          DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+        } else {
+              if (FLOAT_TO_INTBITS (z) == EXPONENT_MASK)
+                  break;
+              INCREMENT_FLOAT (z, decApproxCount, incApproxCount);
+        }
+    }
+    while (1);
+
+    delete x;
+    delete y;
+    delete D;
+    delete D2;
+
+    return z;
+}
+
+
+/**
+#define INCREMENT_FLOAT(_x, _decCount, _incCount) \
+    { \
+        ++FLOAT_TO_INTBITS(_x); \
+        _incCount++; \
+        if( (_incCount > 2) && (_decCount > 2) ) { \
+            if( _decCount > _incCount ) { \
+                FLOAT_TO_INTBITS(_x) += _decCount - _incCount; \
+            } else if( _incCount > _decCount ) { \
+                FLOAT_TO_INTBITS(_x) -= _incCount - _decCount; \
+            } \
+            break; \
+        } \
+    }
+#define DECREMENT_FLOAT(_x, _decCount, _incCount) \
+    { \
+        --FLOAT_TO_INTBITS(_x); \
+        _decCount++; \
+        if( (_incCount > 2) && (_decCount > 2) ) { \
+            if( _decCount > _incCount ) { \
+                FLOAT_TO_INTBITS(_x) += _decCount - _incCount; \
+            } else if( _incCount > _decCount ) { \
+                FLOAT_TO_INTBITS(_x) -= _incCount - _decCount; \
+            } \
+            break; \
+        } \
+    }
+*/
