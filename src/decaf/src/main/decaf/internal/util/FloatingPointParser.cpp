@@ -25,6 +25,7 @@
 #include <decaf/internal/util/HexStringParser.h>
 #include <decaf/internal/util/BigInt.h>
 #include <decaf/internal/util/BitOps.h>
+#include <decaf/lang/exceptions/NumberFormatException.h>
 #include <apr_lib.h>
 
 using namespace std;
@@ -141,6 +142,17 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 ////////////////////////////////////////////////////////////////////////////////
 float FloatingPointParser::parseFltImpl( const std::string& value, int exp )
     throw ( exceptions::NumberFormatException ) {
+
+    float flt = (float)exp; // TODO - FloatOps::createFloat( str, exp );
+
+    if( Float::floatToIntBits( flt ) >= 0 ) {
+        return flt;
+    } else if( Float::floatToIntBits( flt ) == -1 ) {
+      throw exceptions::NumberFormatException(
+          __FILE__, __LINE__,
+          "FloatingPointParser::parseFltImpl - Not a valid float string",
+          value.c_str() );
+    }
 
     return 0.0f;
 }

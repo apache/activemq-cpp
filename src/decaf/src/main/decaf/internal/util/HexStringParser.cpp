@@ -22,9 +22,11 @@
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Float.h>
+#include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
@@ -130,10 +132,13 @@ void HexStringParser::parseExponent(const std::string& exponentStr) {
 ////////////////////////////////////////////////////////////////////////////////
 void HexStringParser::parseMantissa(const std::string& significantStr) {
 
-    //TODO
-    std::string* strings = significantStr.split("\\.");
+    StringTokenizer tokenizer( significantStr, "\\." );
+    std::vector<std::string> strings;
+
+    tokenizer.toArray( strings );
+
     std::string strIntegerPart = strings[0];
-    std::string strDecimalPart = strings.length > 1 ? strings[1] : "";
+    std::string strDecimalPart = strings.size() > 1 ? strings[1] : "";
 
     std::string significand =
         getNormalizedSignificand( strIntegerPart, strDecimalPart) ;
@@ -222,13 +227,11 @@ void HexStringParser::discardTrailingBits( long long num ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/*
- * The value is rounded up or down to the nearest infinitely precise result.
- * If the value is exactly halfway between two infinitely precise results,
- * then it should be rounded up to the nearest infinitely precise even.
- */
 void HexStringParser::round() {
-    std::string result = abandonedNumber.replaceAll( "0+", "" );
+
+    std::string result = abandonedNumber;
+    replaceAll( result, "0+", "" );
+
     bool moreThanZero = ( result.length() > 0 ? true : false );
 
     int lastDiscardedBit = (int)( mantissa & 1L );
@@ -257,7 +260,7 @@ std::string HexStringParser::getNormalizedSignificand(
     replaceFirst( significand, "^0x", "" );
 
     if( significand.length() == 0 ) {
-        significand = "0"; //$NON-NLS-1$
+        significand = "0";
     }
     return significand;
 }
