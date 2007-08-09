@@ -55,10 +55,11 @@ cc_sources = \
    decaf/util/logging/LogWriter.cpp \
    decaf/util/logging/SimpleLogger.cpp \
    decaf/util/logging/LogManager.cpp \
-   decaf/util/Config.cpp
-   
-##   decaf/internal/util/FloatingPointParser.cpp \
-##   decaf/internal/util/HexStringParser.cpp
+   decaf/util/Config.cpp \
+   decaf/internal/util/BigInt.cpp \
+   decaf/internal/util/BitOps.cpp \
+   decaf/internal/util/FloatingPointParser.cpp \
+   decaf/internal/util/HexStringParser.cpp
 
 h_sources = \
    decaf/net/BufferedSocket.h \
@@ -149,7 +150,9 @@ h_sources = \
    decaf/util/logging/SimpleLogger.h \
    decaf/util/logging/PropertiesChangeListener.h \
    decaf/internal/util/FloatingPointParser.h \
-   decaf/internal/util/HexStringParser.h
+   decaf/internal/util/HexStringParser.h \
+   decaf/internal/util/BitOps.h \
+   decaf/internal/util/BigInt.h
 
 ##
 ## LibTool build step
