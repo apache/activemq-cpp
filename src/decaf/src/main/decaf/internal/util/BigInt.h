@@ -56,6 +56,8 @@ namespace util{
 
         static const int E_OFFSET = 1075;
 
+        static const unsigned long long LONG_HI_MASK = 0xFFFFFFFF00000000ULL;
+        static const unsigned long long LONG_LO_MASK = 0x00000000FFFFFFFFULL;
         static const unsigned long long MANTISSA_MASK = 0x000FFFFFFFFFFFFFULL;
         static const unsigned long long EXPONENT_MASK = 0x7FF0000000000000ULL;
         static const unsigned long long NORMAL_MASK = 0x0010000000000000ULL;
@@ -136,6 +138,57 @@ namespace util{
                                            unsigned long long arg2 );
 
         static int floatExponent( float z );
+
+    private:
+
+        static unsigned int TIMES_TEN( unsigned int x ) {
+            return ((x) << 3) + ((x) << 1);
+        }
+
+        static unsigned long long TIMES_TEN( unsigned long long x ) {
+            return ((x) << 3) + ((x) << 1);
+        }
+
+        static unsigned long long CREATE_DOUBLE_BITS(
+            unsigned long long normalizedM, unsigned long long e ) {
+
+            return ( normalizedM & MANTISSA_MASK ) | ( ( e + E_OFFSET ) << 52 );
+        }
+
+        static unsigned long long bitSection(
+            unsigned long long x, unsigned long long mask, int shift ) {
+
+            return ( x & mask ) >> shift;
+        }
+        static unsigned int bitSection(
+            unsigned int x, unsigned int mask, int shift ) {
+
+            return ( x & mask ) >> shift;
+        }
+
+        static unsigned int LOW_U32_FROM_LONG64( unsigned long long long64 ) {
+            return LOW_U32_FROM_LONG64_PTR( &long64 );
+        }
+
+        static unsigned int HIGH_U32_FROM_LONG64( unsigned long long long64 ) {
+            return HIGH_U32_FROM_LONG64_PTR( &long64 );
+        }
+
+        static unsigned int& LOW_U32_FROM_LONG64_PTR( unsigned long long* long64ptr ) {
+            return ( (LONG_UNION*)long64ptr )->intValue[LoWord];
+        }
+
+        static unsigned int& HIGH_U32_FROM_LONG64_PTR( unsigned long long* long64ptr ) {
+            return ( (LONG_UNION*)long64ptr )->intValue[HiWord];
+        }
+
+        static unsigned int at( unsigned int i ) {
+            #ifdef APR_IS_BIGENDIAN
+                return i^1;
+            #else
+                return i;
+            #endif
+        }
 
     };
 
