@@ -186,18 +186,20 @@ namespace util{
             if( ( pos = target.find_first_of( find, 0 ) ) != std::string::npos ) {
                 return target.replace( pos, find.length(), replace );
             }
+
+            return target;
         }
 
-        // TODO
         std::string& replaceAll( std::string& target,
                                  const std::string& find,
                                  const std::string& replace ) {
 
             std::string::size_type pos = std::string::npos;
-
-            if( ( pos = target.find_first_of( find, 0 ) ) != std::string::npos ) {
-                return target.replace( pos, find.length(), replace );
+            while( ( pos = target.find( find ) ) != std::string::npos ) {
+                target.replace( pos, find.length(), replace );
             }
+
+            return target;
         }
 
     };

@@ -24,6 +24,8 @@
 #include <decaf/lang/Float.h>
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
+#include <apr_pools.h>
+#include <apr_strmatch.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -90,6 +92,15 @@ long long HexStringParser::parse( const std::string& hexString ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string* HexStringParser::getSegmentsFromHexString( const std::string& hexString ) {
+
+//    apr_pool_t* thePool = NULL;
+//    apr_pool_create( &thePool, NULL );
+//    apr_strmatch_pattern* pattern =
+//        apr_strmatch_precompile( thePool, HEX_PATTERN.c_str(), 0 );
+//
+//    std::vector<std::string> hexSegments;
+//
+
 
     // TODO
 //    Matcher matcher = PATTERN.matcher(hexString);
