@@ -177,6 +177,16 @@ namespace util{
          */
         static std::string* getSegmentsFromHexString( const std::string& hexString );
 
+        std::string& replaceFirst( std::string& target,
+                                   const std::string& find,
+                                   const std::string& replace ) {
+
+            std::string::size_type pos = std::string::npos;
+
+            if( ( pos = target.find_first_of( find, 0 ) ) != std::string::npos ) {
+                return target.replace( pos, find.length(), replace );
+            }
+        }
     };
 
 }}}

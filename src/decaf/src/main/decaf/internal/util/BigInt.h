@@ -26,47 +26,6 @@ namespace internal{
 namespace util{
 
     class BigInt {
-    private:
-
-        // Used to make masking easier
-        typedef union {
-            unsigned long long longValue;
-            unsigned int intValue[2];
-            double doubleValue;
-        } LONG_UNION;
-
-        #ifdef APR_IS_BIGENDIAN
-            static const int HiWord = 0;
-            static const int LoWord = 1;
-        #else
-            static const int HiWord = 1;
-            static const int LoWord = 0;
-        #endif
-
-        static const long long TEN_E1 = 0xALL;
-        static const long long TEN_E2 = 0x64LL;
-        static const long long TEN_E3 = 0x3E8LL;
-        static const long long TEN_E4 = 0x2710LL;
-        static const long long TEN_E5 = 0x186A0LL;
-        static const long long TEN_E6 = 0xF4240LL;
-        static const long long TEN_E7 = 0x989680LL;
-        static const long long TEN_E8 = 0x5F5E100LL;
-        static const long long TEN_E9 = 0x3B9ACA00LL;
-        static const long long TEN_E19 = 0x8AC7230489E80000LL;
-
-        static const int E_OFFSET = 1075;
-
-        static const unsigned long long LONG_HI_MASK = 0xFFFFFFFF00000000ULL;
-        static const unsigned long long LONG_LO_MASK = 0x00000000FFFFFFFFULL;
-        static const unsigned long long MANTISSA_MASK = 0x000FFFFFFFFFFFFFULL;
-        static const unsigned long long EXPONENT_MASK = 0x7FF0000000000000ULL;
-        static const unsigned long long NORMAL_MASK = 0x0010000000000000ULL;
-        static const unsigned long long SIGN_MASK = 0x8000000000000000ULL;
-        static const unsigned int FLOAT_MANTISSA_MASK = 0x007FFFFF;
-        static const unsigned int FLOAT_EXPONENT_MASK = 0x7F800000;
-        static const unsigned int FLOAT_NORMAL_MASK = 0x00800000;
-        static const unsigned int FLOAT_E_OFFSET = 150;
-
     public:
 
         BigInt();
@@ -138,57 +97,6 @@ namespace util{
                                            unsigned long long arg2 );
 
         static int floatExponent( float z );
-
-    private:
-
-        static unsigned int TIMES_TEN( unsigned int x ) {
-            return ((x) << 3) + ((x) << 1);
-        }
-
-        static unsigned long long TIMES_TEN( unsigned long long x ) {
-            return ((x) << 3) + ((x) << 1);
-        }
-
-        static unsigned long long CREATE_DOUBLE_BITS(
-            unsigned long long normalizedM, unsigned long long e ) {
-
-            return ( normalizedM & MANTISSA_MASK ) | ( ( e + E_OFFSET ) << 52 );
-        }
-
-        static unsigned long long bitSection(
-            unsigned long long x, unsigned long long mask, int shift ) {
-
-            return ( x & mask ) >> shift;
-        }
-        static unsigned int bitSection(
-            unsigned int x, unsigned int mask, int shift ) {
-
-            return ( x & mask ) >> shift;
-        }
-
-        static unsigned int LOW_U32_FROM_LONG64( unsigned long long long64 ) {
-            return LOW_U32_FROM_LONG64_PTR( &long64 );
-        }
-
-        static unsigned int HIGH_U32_FROM_LONG64( unsigned long long long64 ) {
-            return HIGH_U32_FROM_LONG64_PTR( &long64 );
-        }
-
-        static unsigned int& LOW_U32_FROM_LONG64_PTR( unsigned long long* long64ptr ) {
-            return ( (LONG_UNION*)long64ptr )->intValue[LoWord];
-        }
-
-        static unsigned int& HIGH_U32_FROM_LONG64_PTR( unsigned long long* long64ptr ) {
-            return ( (LONG_UNION*)long64ptr )->intValue[HiWord];
-        }
-
-        static unsigned int at( unsigned int i ) {
-            #ifdef APR_IS_BIGENDIAN
-                return i^1;
-            #else
-                return i;
-            #endif
-        }
 
     };
 

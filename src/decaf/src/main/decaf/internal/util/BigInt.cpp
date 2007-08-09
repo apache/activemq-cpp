@@ -19,14 +19,12 @@
 
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Float.h>
+#include <decaf/internal/util/BitOps.h>
 
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::internal;
 using namespace decaf::internal::util;
-
-#define HIGH_IN_U64(u64) ((u64) >> 32)
-#define LOW_IN_U64(u64) ((u64) & 0x00000000FFFFFFFFLL)
 
 ////////////////////////////////////////////////////////////////////////////////
 BigInt::BigInt() {
@@ -61,7 +59,7 @@ void BigInt::multiplyHighPrecision( unsigned long long* arg1,
     index = -1;
     for( count = 0; count < length2; ++count ) {
         simpleMultiplyAddHighPrecision( arg1, length1,
-                                        arg2[count] & LONG_LO_MASK,
+                                        arg2[count] & BitOps::LONG_LO_MASK,
                                         resultIn32 + (++index) );
         simpleMultiplyAddHighPrecision( arg1, length1,
                                         ( arg2[count] >> 32 ),
@@ -80,17 +78,19 @@ unsigned int BigInt::simpleAppendDecimalDigitHighPrecision(
       digit <<= 32;
       do
         {
-          arg = arg1[index] & LONG_LO_MASK;
-          digit = ( digit >> 32 ) + TIMES_TEN( arg );
-          LOW_U32_FROM_LONG64_PTR( arg1 + index ) = LOW_U32_FROM_LONG64( digit );
+          arg = arg1[index] & BitOps::LONG_LO_MASK;
+          digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
+          BitOps::LOW_U32_FROM_LONG64_PTR( arg1 + index ) =
+              BitOps::LOW_U32_FROM_LONG64( digit );
 
           arg = arg1[index] >> 32;
-          digit = ( digit >> 32 ) + TIMES_TEN( arg );
-          HIGH_U32_FROM_LONG64_PTR( arg1 + index ) = LOW_U32_FROM_LONG64( digit );
+          digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
+          BitOps::HIGH_U32_FROM_LONG64_PTR( arg1 + index ) =
+              BitOps::LOW_U32_FROM_LONG64( digit );
         }
       while (++index < length);
 
-      return HIGH_U32_FROM_LONG64( digit );
+      return BitOps::HIGH_U32_FROM_LONG64( digit );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,21 +109,21 @@ double BigInt::toDoubleHighPrecision( unsigned long long* arg, int length ) {
     if( length == 0 ) {
         return 0.0;
     } else if( length > 16 ) {
-        result = EXPONENT_MASK;
+        result = BitOps::EXPONENT_MASK;
     } else if( length == 1 ) {
 
         highBit = highestSetBit (arg);
         if( highBit <= 53 ) {
             highBit = 53 - highBit;
             mantissa = *arg << highBit;
-            result = CREATE_DOUBLE_BITS( mantissa, -highBit );
+            result = BitOps::CREATE_DOUBLE_BITS( mantissa, -highBit );
         } else {
             highBit -= 53;
             mantissa = *arg >> highBit;
-            result = CREATE_DOUBLE_BITS( mantissa, highBit );
+            result = BitOps::CREATE_DOUBLE_BITS( mantissa, highBit );
 
             // perform rounding, round to even in case of tie
-            test = ( LOW_U32_FROM_LONG64_PTR( arg ) << ( 11 - highBit ) ) & 0x7FF;
+            test = ( BitOps::LOW_U32_FROM_LONG64_PTR( arg ) << ( 11 - highBit ) ) & 0x7FF;
             if( test > 0x400 || ((test == 0x400) && (mantissa & 1)) ) {
                 result = result + 1;
             }
@@ -138,13 +138,13 @@ double BigInt::toDoubleHighPrecision( unsigned long long* arg, int length ) {
             } else {
                 mantissa = arg[length];
             }
-            result = CREATE_DOUBLE_BITS( mantissa, length * 64 - highBit );
+            result = BitOps::CREATE_DOUBLE_BITS( mantissa, length * 64 - highBit );
 
             // perform rounding, round to even in case of tie
             test64 = arg[--length] << highBit;
-            if( test64 > SIGN_MASK || ((test64 == SIGN_MASK) && (mantissa & 1)) ) {
+            if( test64 > BitOps::SIGN_MASK || ((test64 == BitOps::SIGN_MASK) && (mantissa & 1)) ) {
                 result = result + 1;
-            } else if( test64 == SIGN_MASK ) {
+            } else if( test64 == BitOps::SIGN_MASK ) {
                 while( --length >= 0 ) {
                     if( arg[length] != 0 ) {
                         result = result + 1;
@@ -155,10 +155,10 @@ double BigInt::toDoubleHighPrecision( unsigned long long* arg, int length ) {
         } else {
             highBit -= 53;
             mantissa = arg[length] >> highBit;
-            result = CREATE_DOUBLE_BITS( mantissa, length * 64 + highBit );
+            result = BitOps::CREATE_DOUBLE_BITS( mantissa, length * 64 + highBit );
 
             // perform rounding, round to even in case of tie
-            test = ( LOW_U32_FROM_LONG64_PTR( arg + length ) << ( 11 - highBit ) ) & 0x7FF;
+            test = ( BitOps::LOW_U32_FROM_LONG64_PTR( arg + length ) << ( 11 - highBit ) ) & 0x7FF;
             if( test > 0x400 || ((test == 0x400) && (mantissa & 1)) ) {
                 result = result + 1;
             } else if( test == 0x400 ) {
@@ -202,10 +202,10 @@ unsigned long long BigInt::doubleMantissa( double z ) {
 
       unsigned long long m = Double::doubleToLongBits( z );
 
-      if ((m & EXPONENT_MASK) != 0)
-        m = (m & MANTISSA_MASK) | NORMAL_MASK;
+      if ((m & BitOps::EXPONENT_MASK) != 0)
+        m = (m & BitOps::MANTISSA_MASK) | BitOps::NORMAL_MASK;
       else
-        m = (m & MANTISSA_MASK);
+        m = (m & BitOps::MANTISSA_MASK);
 
       return m;
 }
@@ -284,9 +284,9 @@ int BigInt::doubleExponent( double z ) {
     int k = ( (unsigned long long )Double::doubleToLongBits( z ) >> 52 );
 
     if( k ) {
-        k -= E_OFFSET;
+        k -= BitOps::E_OFFSET;
     } else {
-        k = 1 - E_OFFSET;
+        k = 1 - BitOps::E_OFFSET;
     }
 
     return k;
@@ -302,11 +302,11 @@ unsigned int BigInt::simpleMultiplyHighPrecision(
 
     do {
 
-        product = ( product >> 32 ) + arg2 * LOW_U32_FROM_LONG64_PTR( arg1 + index );
-        LOW_U32_FROM_LONG64_PTR( arg1 + index ) = LOW_U32_FROM_LONG64( product );
+        product = ( product >> 32 ) + arg2 * BitOps::LOW_U32_FROM_LONG64_PTR( arg1 + index );
+        BitOps::LOW_U32_FROM_LONG64_PTR( arg1 + index ) = BitOps::LOW_U32_FROM_LONG64( product );
 
-        product = ( product >> 32 ) + arg2 * HIGH_U32_FROM_LONG64_PTR( arg1 + index );
-        HIGH_U32_FROM_LONG64_PTR( arg1 + index ) = LOW_U32_FROM_LONG64( product );
+        product = ( product >> 32 ) + arg2 * BitOps::HIGH_U32_FROM_LONG64_PTR( arg1 + index );
+        BitOps::HIGH_U32_FROM_LONG64_PTR( arg1 + index ) = BitOps::LOW_U32_FROM_LONG64( product );
 
     } while( ++index < length );
 
@@ -375,24 +375,24 @@ int BigInt::lowestSetBit( unsigned long long* y ) {
     }
 
     if( *y & 0x00000000FFFFFFFFULL ) {
-      x = LOW_U32_FROM_LONG64_PTR( y );
+      x = BitOps::LOW_U32_FROM_LONG64_PTR( y );
       result = 0;
     } else {
-      x = HIGH_U32_FROM_LONG64_PTR( y );
+      x = BitOps::HIGH_U32_FROM_LONG64_PTR( y );
       result = 32;
     }
 
     if( !( x & 0xFFFF ) ) {
-      x = bitSection( x, 0xFFFF0000, 16 );
+      x = BitOps::bitSection( x, 0xFFFF0000, 16 );
       result += 16;
     }
 
     if( !( x & 0xFF) ) {
-      x = bitSection( x, 0xFF00, 8 );
+      x = BitOps::bitSection( x, 0xFF00, 8 );
       result += 8;
     }
     if( !( x & 0xF ) ) {
-      x = bitSection( x, 0xF0, 4 );
+      x = BitOps::bitSection( x, 0xF0, 4 );
       result += 4;
     }
 
@@ -428,7 +428,7 @@ int BigInt::timesTenToTheEHighPrecision(
     // simpleAappendDecimalDigit() so just pick 10e3 as that point for
     // now.
     while( exp10 >= 19 ) {
-        overflow = simpleMultiplyHighPrecision64( result, length, TEN_E19 );
+        overflow = simpleMultiplyHighPrecision64( result, length, BitOps::TEN_E19 );
         if( overflow ) {
             result[length++] = overflow;
         }
@@ -436,7 +436,7 @@ int BigInt::timesTenToTheEHighPrecision(
     }
 
     while( exp10 >= 9 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E9 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E9 );
         if( overflow ) {
               result[length++] = overflow;
         }
@@ -460,32 +460,32 @@ int BigInt::timesTenToTheEHighPrecision(
             result[length++] = overflow;
         }
     } else if( exp10 == 3 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E3 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E3 );
         if( overflow ) {
             result[length++] = overflow;
         }
     } else if( exp10 == 4 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E4 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E4 );
         if( overflow ) {
             result[length++] = overflow;
         }
     } else if( exp10 == 5 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E5 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E5 );
         if( overflow ) {
             result[length++] = overflow;
         }
     } else if( exp10 == 6 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E6);
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E6);
         if( overflow ) {
             result[length++] = overflow;
         }
     } else if( exp10 == 7 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E7 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E7 );
         if( overflow ) {
             result[length++] = overflow;
         }
     } else if( exp10 == 8 ) {
-        overflow = simpleMultiplyHighPrecision( result, length, TEN_E8 );
+        overflow = simpleMultiplyHighPrecision( result, length, BitOps::TEN_E8 );
         if( overflow ) {
             result[length++] = overflow;
         }
@@ -508,24 +508,24 @@ void BigInt::simpleMultiplyAddHighPrecision(
     do {
 
         product =
-            ( product >> 32 ) + result[at( resultIndex )] +
-            arg2 * LOW_U32_FROM_LONG64_PTR( arg1 + index );
-        result[at( resultIndex )] = LOW_U32_FROM_LONG64( product );
+            ( product >> 32 ) + result[BitOps::at( resultIndex )] +
+            arg2 * BitOps::LOW_U32_FROM_LONG64_PTR( arg1 + index );
+        result[BitOps::at( resultIndex )] = BitOps::LOW_U32_FROM_LONG64( product );
         ++resultIndex;
 
         product =
-            ( product >> 32 ) + result[at( resultIndex )] +
-            arg2 * HIGH_U32_FROM_LONG64_PTR( arg1 + index );
-        result[at( resultIndex )] = LOW_U32_FROM_LONG64( product );
+            ( product >> 32 ) + result[BitOps::at( resultIndex )] +
+            arg2 * BitOps::HIGH_U32_FROM_LONG64_PTR( arg1 + index );
+        result[BitOps::at( resultIndex )] = BitOps::LOW_U32_FROM_LONG64( product );
         ++resultIndex;
 
     } while( ++index < length );
 
-    result[at( resultIndex )] += HIGH_U32_FROM_LONG64( product );
-    if( result[at( resultIndex )] < HIGH_U32_FROM_LONG64( product ) ) {
+    result[BitOps::at( resultIndex )] += BitOps::HIGH_U32_FROM_LONG64( product );
+    if( result[BitOps::at( resultIndex )] < BitOps::HIGH_U32_FROM_LONG64( product ) ) {
         // must be careful with ++ operator and macro expansion
         ++resultIndex;
-        while( ++result[at( resultIndex )] == 0 ) {
+        while( ++result[BitOps::at( resultIndex )] == 0 ) {
             ++resultIndex;
         }
     }
@@ -542,26 +542,26 @@ int BigInt::highestSetBit(unsigned long long* y ) {
     }
 
     if( *y & 0xFFFFFFFF00000000LL ) {
-        x = HIGH_U32_FROM_LONG64_PTR(y);
+        x = BitOps::HIGH_U32_FROM_LONG64_PTR(y);
         result = 32;
     } else {
-        x = LOW_U32_FROM_LONG64_PTR(y);
+        x = BitOps::LOW_U32_FROM_LONG64_PTR(y);
         result = 0;
     }
 
     if( x & 0xFFFF0000 )
     {
-        x = bitSection( x, 0xFFFF0000, 16 );
+        x = BitOps::bitSection( x, 0xFFFF0000, 16 );
         result += 16;
     }
 
     if( x & 0xFF00 ) {
-        x = bitSection( x, 0xFF00, 8 );
+        x = BitOps::bitSection( x, 0xFF00, 8 );
         result += 8;
     }
 
     if( x & 0xF0 ) {
-        x = bitSection( x, 0xF0, 4 );
+        x = BitOps::bitSection( x, 0xF0, 4 );
         result += 4;
     }
 
@@ -630,10 +630,10 @@ unsigned int BigInt::floatMantissa( float z ) {
 
     unsigned int m = (unsigned int)Float::floatToIntBits( z );
 
-    if( ( m & FLOAT_EXPONENT_MASK ) != 0 )
-        m = ( m & FLOAT_MANTISSA_MASK ) | FLOAT_NORMAL_MASK;
+    if( ( m & BitOps::FLOAT_EXPONENT_MASK ) != 0 )
+        m = ( m & BitOps::FLOAT_MANTISSA_MASK ) | BitOps::FLOAT_NORMAL_MASK;
     else
-        m = ( m & FLOAT_MANTISSA_MASK );
+        m = ( m & BitOps::FLOAT_MANTISSA_MASK );
 
     return m;
 }
@@ -659,8 +659,8 @@ unsigned long long BigInt::simpleMultiplyHighPrecision64(
 
         if( (*pArg1 != 0) || (intermediate != 0) ) {
 
-            prod1 = (unsigned long long)LOW_U32_FROM_LONG64(arg2) *
-                    (unsigned long long)LOW_U32_FROM_LONG64_PTR(pArg1);
+            prod1 = (unsigned long long)BitOps::LOW_U32_FROM_LONG64(arg2) *
+                    (unsigned long long)BitOps::LOW_U32_FROM_LONG64_PTR(pArg1);
 
             sum = intermediate + prod1;
             if( (sum < prod1) || (sum < intermediate) ) {
@@ -669,10 +669,10 @@ unsigned long long BigInt::simpleMultiplyHighPrecision64(
                 carry1 = 0;
             }
 
-            prod1 = (unsigned long long)LOW_U32_FROM_LONG64(arg2) *
-                    (unsigned long long)HIGH_U32_FROM_LONG64_PTR(pArg1);
-            prod2 = (unsigned long long)HIGH_U32_FROM_LONG64(arg2) *
-                    (unsigned long long)LOW_U32_FROM_LONG64_PTR(pArg1);
+            prod1 = (unsigned long long)BitOps::LOW_U32_FROM_LONG64(arg2) *
+                    (unsigned long long)BitOps::HIGH_U32_FROM_LONG64_PTR(pArg1);
+            prod2 = (unsigned long long)BitOps::HIGH_U32_FROM_LONG64(arg2) *
+                    (unsigned long long)BitOps::LOW_U32_FROM_LONG64_PTR(pArg1);
 
             intermediate = carry2 + ( sum >> 32 ) + prod1 + prod2;
 
@@ -682,11 +682,11 @@ unsigned long long BigInt::simpleMultiplyHighPrecision64(
                 carry2 = 0;
             }
 
-            LOW_U32_FROM_LONG64_PTR(pArg1) = LOW_U32_FROM_LONG64(sum);
-            buf32 = HIGH_U32_FROM_LONG64_PTR (pArg1);
-            HIGH_U32_FROM_LONG64_PTR(pArg1) = LOW_U32_FROM_LONG64(intermediate);
+            BitOps::LOW_U32_FROM_LONG64_PTR(pArg1) = BitOps::LOW_U32_FROM_LONG64(sum);
+            buf32 = BitOps::HIGH_U32_FROM_LONG64_PTR (pArg1);
+            BitOps::HIGH_U32_FROM_LONG64_PTR(pArg1) = BitOps::LOW_U32_FROM_LONG64(intermediate);
             intermediate = carry1 + ( intermediate >> 32 ) +
-                           (unsigned long long)HIGH_U32_FROM_LONG64 (arg2) *
+                           (unsigned long long)BitOps::HIGH_U32_FROM_LONG64 (arg2) *
                            (unsigned long long)buf32;
         }
 
@@ -724,9 +724,9 @@ int BigInt::floatExponent( float z ) {
     int k = Float::floatToIntBits( z ) >> 23;
 
     if( k ) {
-        k -= FLOAT_E_OFFSET;
+        k -= BitOps::FLOAT_E_OFFSET;
     } else {
-        k = 1 - FLOAT_E_OFFSET;
+        k = 1 - BitOps::FLOAT_E_OFFSET;
     }
 
     return k;

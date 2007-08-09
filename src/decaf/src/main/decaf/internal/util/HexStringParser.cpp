@@ -253,7 +253,9 @@ std::string HexStringParser::getNormalizedSignificand(
     const std::string& strIntegerPart, const std::string& strDecimalPart ) {
 
     std::string significand = strIntegerPart + strDecimalPart;
-    significand = significand.replaceFirst( "^0+", "" );
+
+    replaceFirst( significand, "^0x", "" );
+
     if( significand.length() == 0 ) {
         significand = "0"; //$NON-NLS-1$
     }
@@ -264,7 +266,9 @@ std::string HexStringParser::getNormalizedSignificand(
 int HexStringParser::getOffset(
     const std::string& strIntegerPart, const std::string& strDecimalPart ) {
 
-    strIntegerPart = strIntegerPart.replaceFirst( "^0+", "" );
+    std::string strIntegerPart2 = strIntegerPart;
+
+    replaceFirst( strIntegerPart2, "^0+", "" );
 
     //If the Interger part is a nonzero number.
     if( strIntegerPart.length() != 0 ) {
@@ -275,9 +279,9 @@ int HexStringParser::getOffset(
 
     //If the Interger part is a zero number.
     int i;
-    for( i = 0; i < strDecimalPart.length() && strDecimalPart.at(i) == '0'; i++ );
+    for( i = 0; (std::size_t)i < strDecimalPart.length() && strDecimalPart.at(i) == '0'; i++ );
 
-    if( i == strDecimalPart.length() ) {
+    if( (std::size_t)i == strDecimalPart.length() ) {
         return 0;
     }
 

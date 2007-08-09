@@ -47,12 +47,8 @@ namespace util{
             }
         };
 
-        // Used to make masking easier
-        typedef union {
-            unsigned long long longValue;
-            unsigned int intValue[2];
-            double doubleValue;
-        } LONG_UNION;
+        static const int MAX_ACCURACY_WIDTH = 17;
+        static const int DEFAULT_WIDTH = MAX_ACCURACY_WIDTH;
 
     public:
 

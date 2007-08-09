@@ -23,6 +23,8 @@
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Character.h>
 #include <decaf/internal/util/HexStringParser.h>
+#include <decaf/internal/util/BigInt.h>
+#include <decaf/internal/util/BitOps.h>
 #include <apr_lib.h>
 
 using namespace std;
@@ -37,21 +39,21 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 
     // assumes s is a null terminated string with at least one
     // character in it
-    LONG_UNION def[17];
-    LONG_UNION defBackup[17];
-    LONG_UNION* f;
-    LONG_UNION* fNoOverflow;
+    unsigned long long def[17];
+    unsigned long long defBackup[17];
+    unsigned long long* f;
+    unsigned long long* fNoOverflow;
     unsigned long long* g;
     unsigned long long* tempBackup;
     unsigned int overflow = 0;
-    double result = 0.0;
+    unsigned long long result = 0;
     int index = 1;
     int unprocessedDigits = 0;
     std::string::const_iterator valItr = value.begin();
 
     f = def;
     fNoOverflow = defBackup;
-    (*f).longValue = 0;
+    (*f) = 0;
     tempBackup = g = 0;
 
     do {
@@ -63,75 +65,77 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
             // MAX_ACCURACY_WIDTH.
 
             memcpy( fNoOverflow, f, sizeof(unsigned long long) * index );
-            overflow = simpleAppendDecimalDigitHighPrecision( f, index, *valItr - '0' );
-//            if( overflow ) {
-//                f[index++] = overflow;
-//                /* There is an overflow, but there is no more room
-//                 * to store the result. We really only need the top 52
-//                 * bits anyway, so we must back out of the overflow,
-//                 * and ignore the rest of the string.
-//                 */
-//                if (index >= MAX_ACCURACY_WIDTH) {
-//                  index--;
-//                  memcpy (f, fNoOverflow, sizeof (U_64) * index);
-//                  break;
-//                }
-//
-//                if (tempBackup) {
-//                  fNoOverflow = tempBackup;
-//                }
-//            }
-//        } else {
-//            index = -1;
-//        }
+            overflow = BigInt::simpleAppendDecimalDigitHighPrecision(
+                    f, index, *valItr - '0' );
+
+            if( overflow ) {
+                f[index++] = overflow;
+                /* There is an overflow, but there is no more room
+                 * to store the result. We really only need the top 52
+                 * bits anyway, so we must back out of the overflow,
+                 * and ignore the rest of the string.
+                 */
+                if( index >= MAX_ACCURACY_WIDTH ) {
+                    index--;
+                    memcpy( f, fNoOverflow, sizeof(unsigned long long) * index);
+                    break;
+                }
+
+                if( tempBackup ) {
+                    fNoOverflow = tempBackup;
+                }
+            }
+        } else {
+            index = -1;
+        }
 
     } while( index > 0 && *(++valItr) != '\0' );
-//
-//    /* We've broken out of the parse loop either because we've reached
-//     * the end of the string or we've overflowed the maximum accuracy
-//     * limit of a double. If we still have unprocessed digits in the
-//     * given string, then there are three possible results:
-//     *   1. (unprocessed digits + e) == 0, in which case we simply
-//     *      convert the existing bits that are already parsed
-//     *   2. (unprocessed digits + e) < 0, in which case we simply
-//     *      convert the existing bits that are already parsed along
-//     *      with the given e
-//     *   3. (unprocessed digits + e) > 0 indicates that the value is
-//     *      simply too big to be stored as a double, so return Infinity
-//     */
-//    if( ( unprocessedDigits = strlen (s) ) > 0 ) {
-//
-//        e += unprocessedDigits;
-//        if( index > -1 ) {
-//
-//            if (e == 0) {
-//                result = toDoubleHighPrecision (f, index);
-//            }
-//            else if (e < 0) {
-//                result = createDouble1 (env, f, index, e);
-//            } else {
-//                DOUBLE_TO_LONGBITS (result) = INFINITE_LONGBITS;
-//            }
-//        } else {
-//
-//            LOW_I32_FROM_VAR( result ) = -1;
-//            HIGH_I32_FROM_VAR( result ) = -1;
-//        }
-//    } else {
-//
-//        if( index > -1 ) {
-//            if( e == 0 ) {
-//                result = toDoubleHighPrecision( f, index );
-//            } else {
-//                result = createDouble1( env, f, index, e );
-//            } else {
-//                LOW_I32_FROM_VAR( result ) = -1;
-//                HIGH_I32_FROM_VAR( result ) = -1;
-//            }
-//        }
-//    }
 
-    return result;
+    /* We've broken out of the parse loop either because we've reached
+     * the end of the string or we've overflowed the maximum accuracy
+     * limit of a double. If we still have unprocessed digits in the
+     * given string, then there are three possible results:
+     *   1. (unprocessed digits + e) == 0, in which case we simply
+     *      convert the existing bits that are already parsed
+     *   2. (unprocessed digits + e) < 0, in which case we simply
+     *      convert the existing bits that are already parsed along
+     *      with the given e
+     *   3. (unprocessed digits + e) > 0 indicates that the value is
+     *      simply too big to be stored as a double, so return Infinity
+     */
+    if( ( unprocessedDigits = value.length() ) > 0 ) {
+
+        exp += unprocessedDigits;
+        if( index > -1 ) {
+
+            if( exp == 0 ) {
+                return BigInt::toDoubleHighPrecision( f, index );
+            } else if( exp < 0 ) {
+                return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
+            } else {
+                result = BitOps::INFINITE_LONGBITS;
+            }
+
+        } else {
+
+            BitOps::LOW_I32_FROM_LONG64( result ) = -1;
+            BitOps::HIGH_I32_FROM_LONG64( result ) = -1;
+        }
+    } else {
+
+        if( index > -1 ) {
+            if( exp == 0 ) {
+                return BigInt::toDoubleHighPrecision( f, index );
+            } else {
+                return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
+            }
+        } else {
+            BitOps::LOW_I32_FROM_LONG64( result ) = -1;
+            BitOps::HIGH_I32_FROM_LONG64( result ) = -1;
+        }
+    }
+
+    return Double::longBitsToDouble( result );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,28 +437,4 @@ std::string& FloatingPointParser::toLowerCase( std::string& value ) {
     }
 
     return value;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned int FloatingPointParser::simpleAppendDecimalDigitHighPrecision(
-    LONG_UNION* arg1, int length, unsigned long long digit )
-{
-    // assumes digit is less than 32 bits
-    unsigned long long arg;
-    IDATA index = 0;
-
-    digit <<= 32;
-
-    do {
-        arg = LOW_IN_U64 (arg1[index]);
-        digit = HIGH_IN_U64 (digit) + TIMES_TEN (arg);
-        LOW_U32_FROM_PTR (arg1 + index) = LOW_U32_FROM_VAR (digit);
-
-        arg = HIGH_IN_U64 (arg1[index]);
-        digit = HIGH_IN_U64 (digit) + TIMES_TEN (arg);
-        HIGH_U32_FROM_PTR (arg1 + index) = LOW_U32_FROM_VAR (digit);
-    }
-    while( ++index < length );
-
-    return HIGH_U32_FROM_VAR( digit );
 }
