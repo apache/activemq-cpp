@@ -29,5 +29,15 @@ FloatTest::FloatTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FloatTest::test() {
+void FloatTest::test_ConstructorF() {
+    // Test for method decaf.lang.Float(float)
+    Float f( 900.89f );
+    CPPUNIT_ASSERT_MESSAGE( "Created incorrect float", f.floatValue() == 900.89f );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FloatTest::test_ConstructorString() {
+    // Test for method decaf.lang.Float(decaf.lang.String)
+    Float f( "900.89" );
+    CPPUNIT_ASSERT_MESSAGE("Created incorrect Float", f.floatValue() == 900.89f);
 }

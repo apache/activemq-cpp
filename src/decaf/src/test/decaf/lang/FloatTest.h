@@ -27,7 +27,8 @@ namespace lang{
     class FloatTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( FloatTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test_ConstructorF );
+        CPPUNIT_TEST( test_ConstructorString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +36,8 @@ namespace lang{
         FloatTest();
         virtual ~FloatTest() {}
 
-        virtual void test();
+        void test_ConstructorF();
+        void test_ConstructorString();
 
     };
 

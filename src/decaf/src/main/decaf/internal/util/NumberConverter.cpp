@@ -18,6 +18,12 @@
 #include "NumberConverter.h"
 
 #include <decaf/lang/Math.h>
+#include <decaf/lang/Float.h>
+#include <decaf/lang/Double.h>
+#include <decaf/lang/Integer.h>
+
+#include <decaf/internal/util/BigInt.h>
+#include <decaf/internal/util/BitOps.h>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -28,6 +34,7 @@ using namespace decaf::internal::util;
 const double NumberConverter::invLogOfTenBaseTwo =
     Math::log(2.0) / Math::log(10.0);
 NumberConverter::StaticInitializer NumberConverter::init;
+std::vector<long long> NumberConverter::TEN_TO_THE;
 
 ////////////////////////////////////////////////////////////////////////////////
 NumberConverter::StaticInitializer::StaticInitializer() {
@@ -35,7 +42,7 @@ NumberConverter::StaticInitializer::StaticInitializer() {
     NumberConverter::TEN_TO_THE.resize(20);
     NumberConverter::TEN_TO_THE[0] = 1L;
 
-    for( int i = 1; i < TEN_TO_THE.length; ++i ) {
+    for( std::size_t i = 1; i < TEN_TO_THE.size(); ++i ) {
         long long previous = TEN_TO_THE[i - 1];
         TEN_TO_THE[i] = ( previous << 1 ) + ( previous << 3 );
     }
@@ -56,13 +63,13 @@ std::string NumberConverter::convertD( double value ) {
     unsigned int p = 1023 + 52; // the power offset (precision)
 
     // the mask to get the sign of the number
-    unsigned long long signMask = 0x8000000000000000L;
+    unsigned long long signMask = 0x8000000000000000ULL;
     // the mask to get the power bits
-    unsigned long long eMask = 0x7FF0000000000000L;
+    unsigned long long eMask = 0x7FF0000000000000ULL;
     // the mask to get the significand bits
-    unsigned long long fMask = 0x000FFFFFFFFFFFFFL;
+    unsigned long long fMask = 0x000FFFFFFFFFFFFFULL;
 
-    unsigned long long inputNumberBits = Double::doubleToLongBits(value);
+    unsigned long long inputNumberBits = Double::doubleToLongBits( value );
     // the value of the sign... 0 is positive, ~0 is negative
     std::string signString = ( inputNumberBits & signMask ) == 0 ? "" : "-";
     // the value of the 'power bits' of the value
@@ -70,7 +77,7 @@ std::string NumberConverter::convertD( double value ) {
     // the value of the 'significand bits' of the value
     unsigned long long f = inputNumberBits & fMask;
     bool mantissaIsZero = (f == 0);
-    unsigned int pow = 0, numBits = 52;
+    int pow = 0, numBits = 52;
 
     if( e == 2047 ) {
         return mantissaIsZero ? signString + "Infinity" : "NaN";
@@ -90,14 +97,14 @@ std::string NumberConverter::convertD( double value ) {
 
         pow = 1 - p; // a denormalized number
         long long ff = f;
-        while( (ff & 0x0010000000000000L) == 0 ) {
+        while( (ff & 0x0010000000000000ULL ) == 0 ) {
             ff = ff << 1;
             numBits--;
         }
     } else {
         // 0 < e < 2047
         // a "normalized" number
-        f = f | 0x0010000000000000L;
+        f = f | 0x0010000000000000ULL;
         pow = e - p;
     }
 
@@ -107,8 +114,8 @@ std::string NumberConverter::convertD( double value ) {
         bigIntDigitGeneratorInstImpl( f, pow, e == 0, mantissaIsZero, numBits );
     }
 
-    if( value >= 1e7D || value <= -1e7D ||
-        ( value > -1e-3D && value < 1e-3D ) ) {
+    if( value >= 1e7 || value <= -1e7 ||
+        ( value > -1e-3 && value < 1e-3 ) ) {
         return signString + freeFormatExponential();
     }
 
@@ -131,7 +138,7 @@ std::string NumberConverter::convertF(float value) {
     // the value of the 'significand bits' of the value
     unsigned int f = inputNumberBits & fMask;
     bool mantissaIsZero = ( f == 0 );
-    unsigned int pow = 0, numBits = 23;
+    int pow = 0, numBits = 23;
 
     if( e == 255 ) {
         return mantissaIsZero ? signString + "Infinity" : "NaN";
@@ -178,7 +185,7 @@ std::string NumberConverter::convertF(float value) {
 std::string NumberConverter::freeFormatExponential() {
 
     // corresponds to process "Free-Format Exponential"
-    char[25] formattedDecimal = {0};
+    char formattedDecimal[25] = {0};
     formattedDecimal[0] = (char)( '0' + uArray[getCount++] );
     formattedDecimal[1] = '.';
     // the position the next character is to be inserted into
@@ -208,7 +215,7 @@ std::string NumberConverter::freeFormatExponential() {
 std::string NumberConverter::freeFormat() {
 
     // corresponds to process "Free-Format"
-    char[25] formattedDecimal = {0};
+    char formattedDecimal[25] = {0};
     // the position the next character is to be inserted into
     // formattedDecimal
     int charPos = 0;
@@ -246,8 +253,8 @@ std::string NumberConverter::freeFormat() {
 void NumberConverter::bigIntDigitGeneratorInstImpl(
     long long f, int e, bool isDenormalized, bool mantissaIsZero, int p ) {
 
-    static std::size_t RM_SIZE 21;
-    static std::size_t STemp_SIZE 22;
+    static const std::size_t RM_SIZE = 21;
+    static const std::size_t STemp_SIZE = 22;
 
     unsigned int RLength, SLength, TempLength, mplus_Length, mminus_Length;
     int high, low, i;
@@ -263,11 +270,11 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
 
         *R = f;
         *mplus = *mminus = 1;
-        simpleShiftLeftHighPrecision( mminus, RM_SIZE, e );
+        BigInt::simpleShiftLeftHighPrecision( mminus, RM_SIZE, e );
 
         if( f != (2 << (p - 1)) ) {
 
-            simpleShiftLeftHighPrecision( R, RM_SIZE, e + 1 );
+            BigInt::simpleShiftLeftHighPrecision( R, RM_SIZE, e + 1 );
             *S = 2;
 
             /*
@@ -278,13 +285,13 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
              *      470fffffffffffff = 2.0769187434139308E34
              *      4710000000000000 = 2.076918743413931E34
              */
-            simpleShiftLeftHighPrecision(mplus, RM_SIZE, e);
+            BigInt::simpleShiftLeftHighPrecision(mplus, RM_SIZE, e);
 
         } else {
 
-            simpleShiftLeftHighPrecision( R, RM_SIZE, e + 2 );
+            BigInt::simpleShiftLeftHighPrecision( R, RM_SIZE, e + 2 );
             *S = 4;
-            simpleShiftLeftHighPrecision( mplus, RM_SIZE, e + 1 );
+            BigInt::simpleShiftLeftHighPrecision( mplus, RM_SIZE, e + 1 );
         }
 
     } else {
@@ -293,34 +300,34 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
 
             *R = f << 1;
             *S = 1;
-            simpleShiftLeftHighPrecision( S, STemp_SIZE, 1 - e );
+            BigInt::simpleShiftLeftHighPrecision( S, STemp_SIZE, 1 - e );
             *mplus = *mminus = 1;
 
         } else {
 
             *R = f << 2;
             *S = 1;
-            simpleShiftLeftHighPrecision( S, STemp_SIZE, 2 - e );
+            BigInt::simpleShiftLeftHighPrecision( S, STemp_SIZE, 2 - e );
             *mplus = 2;
             *mminus = 1;
         }
     }
 
-    k = (int) ceil ((e + p - 1) * INV_LOG_OF_TEN_BASE_2 - 1e-10);
+    k = (int)Math::ceil( (e + p - 1) * invLogOfTenBaseTwo - 1e-10 );
 
     if( k > 0 ) {
-        timesTenToTheEHighPrecision( S, STemp_SIZE, k );
+        BigInt::timesTenToTheEHighPrecision( S, STemp_SIZE, k );
     } else {
-      timesTenToTheEHighPrecision( R, RM_SIZE, -k );
-      timesTenToTheEHighPrecision( mplus, RM_SIZE, -k );
-      timesTenToTheEHighPrecision( mminus, RM_SIZE, -k );
+        BigInt::timesTenToTheEHighPrecision( R, RM_SIZE, -k );
+        BigInt::timesTenToTheEHighPrecision( mplus, RM_SIZE, -k );
+        BigInt::timesTenToTheEHighPrecision( mminus, RM_SIZE, -k );
     }
 
     RLength = mplus_Length = mminus_Length = RM_SIZE;
     SLength = TempLength = STemp_SIZE;
 
-    memset( Temp + RM_SIZE, 0, (STemp_SIZE - RM_SIZE) * sizeof (U_64) );
-    memcpy( Temp, R, RM_SIZE * sizeof (U_64) );
+    memset( Temp + RM_SIZE, 0, (STemp_SIZE - RM_SIZE) * sizeof (unsigned long long) );
+    memcpy( Temp, R, RM_SIZE * sizeof (unsigned long long) );
 
     while( RLength > 1 && R[RLength - 1] == 0 ) {
         --RLength;
@@ -336,16 +343,16 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
     }
 
     TempLength = (RLength > mplus_Length ? RLength : mplus_Length) + 1;
-    addHighPrecision( Temp, TempLength, mplus, mplus_Length );
+    BigInt::addHighPrecision( Temp, TempLength, mplus, mplus_Length );
 
-    if( compareHighPrecision (Temp, TempLength, S, SLength) >= 0 ) {
+    if( BigInt::compareHighPrecision (Temp, TempLength, S, SLength) >= 0 ) {
         firstK = k;
     } else {
 
         firstK = k - 1;
-        simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
-        simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
-        simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
         while( RLength > 1 && R[RLength - 1] == 0 ) {
             --RLength;
         }
@@ -364,30 +371,30 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
         for( i = 3; i >= 0; --i ) {
             TempLength = SLength + 1;
             Temp[SLength] = 0;
-            memcpy (Temp, S, SLength * sizeof (U_64));
-            simpleShiftLeftHighPrecision( Temp, TempLength, i );
-            if( compareHighPrecision( R, RLength, Temp, TempLength ) >= 0 ) {
-                subtractHighPrecision( R, RLength, Temp, TempLength );
+            memcpy( Temp, S, SLength * sizeof(unsigned long long) );
+            BigInt::simpleShiftLeftHighPrecision( Temp, TempLength, i );
+            if( BigInt::compareHighPrecision( R, RLength, Temp, TempLength ) >= 0 ) {
+                BigInt::subtractHighPrecision( R, RLength, Temp, TempLength );
                 U += 1 << i;
             }
         }
 
-        low = compareHighPrecision( R, RLength, mminus, mminus_Length ) <= 0;
+        low = BigInt::compareHighPrecision( R, RLength, mminus, mminus_Length ) <= 0;
 
-        memset( Temp + RLength, 0, (STemp_SIZE - RLength) * sizeof(U_64) );
-        memcpy( Temp, R, RLength * sizeof(U_64) );
+        memset( Temp + RLength, 0, (STemp_SIZE - RLength) * sizeof(unsigned long long) );
+        memcpy( Temp, R, RLength * sizeof(unsigned long long) );
         TempLength = (RLength > mplus_Length ? RLength : mplus_Length) + 1;
-        addHighPrecision( Temp, TempLength, mplus, mplus_Length );
+        BigInt::addHighPrecision( Temp, TempLength, mplus, mplus_Length );
 
-        high = compareHighPrecision( Temp, TempLength, S, SLength ) >= 0;
+        high = BigInt::compareHighPrecision( Temp, TempLength, S, SLength ) >= 0;
 
         if( low || high ) {
             break;
         }
 
-        simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
-        simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
-        simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( R, ++RLength, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( mplus, ++mplus_Length, 0 );
+        BigInt::simpleAppendDecimalDigitHighPrecision( mminus, ++mminus_Length, 0 );
         while( RLength > 1 && R[RLength - 1] == 0 ) {
             --RLength;
         }
@@ -401,13 +408,13 @@ void NumberConverter::bigIntDigitGeneratorInstImpl(
     }
     while( true );
 
-    simpleShiftLeftHighPrecision( R, ++RLength, 1 );
+    BigInt::simpleShiftLeftHighPrecision( R, ++RLength, 1 );
 
     if( low && !high ) {
         uArray[setCount++] = U;
     } else if( high && !low ) {
         uArray[setCount++] = U + 1;
-    } else if( compareHighPrecision( R, RLength, S, SLength) < 0 ) {
+    } else if( BigInt::compareHighPrecision( R, RLength, S, SLength) < 0 ) {
         uArray[setCount++] = U;
     } else {
         uArray[setCount++] = U + 1;
@@ -461,7 +468,7 @@ void NumberConverter::longDigitGenerator(
     getCount = setCount = 0; // reset indices
     bool low, high;
     int U;
-    long long[] Si = new long long[] { S, S << 1, S << 2, S << 3 };
+    long long Si[4] = { S, S << 1, S << 2, S << 3 };
     while( true ) {
         // set U to be floor (R / S) and R to be the remainder
         // using a kind of "binary search" to find the answer.

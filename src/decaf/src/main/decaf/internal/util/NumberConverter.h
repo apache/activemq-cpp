@@ -18,6 +18,10 @@
 #ifndef _DECAF_INTERNAL_UTIL_NUMBERCONVERTER_H_
 #define _DECAF_INTERNAL_UTIL_NUMBERCONVERTER_H_
 
+#include <decaf/util/Config.h>
+#include <vector>
+#include <string>
+
 namespace decaf{
 namespace internal{
 namespace util{
@@ -81,9 +85,9 @@ namespace util{
         std::string freeFormat();
 
         void bigIntDigitGeneratorInstImpl(
-            long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
+            long long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
         void longDigitGenerator(
-            long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
+            long long f, int e, bool isDenormalized, bool mantissaIsZero, int p );
 
     };
 

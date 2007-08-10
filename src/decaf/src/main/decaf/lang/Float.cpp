@@ -17,6 +17,8 @@
 
 #include "Float.h"
 #include <decaf/lang/Integer.h>
+#include <decaf/internal/util/FloatingPointParser.h>
+#include <decaf/internal/util/NumberConverter.h>
 
 using namespace std;
 using namespace decaf;
@@ -146,7 +148,7 @@ bool Float::isNaN( float value ) {
 float Float::parseFloat( const std::string& value )
     throw ( exceptions::NumberFormatException ) {
 
-    return 0.0; // TODO
+    return internal::util::FloatingPointParser::parseFloat( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -235,7 +237,7 @@ std::string Float::toHexString( float value ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string Float::toString( float value ) {
-    return ""; //TODO
+    return internal::util::NumberConverter::convert( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
