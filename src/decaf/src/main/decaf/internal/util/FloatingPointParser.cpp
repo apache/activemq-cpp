@@ -470,8 +470,8 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
     unsigned long long* f = def;
     unsigned long long* fNoOverflow = defBackup;
     unsigned long long* tempBackup = NULL;
-    unsigned int overflow;
-    unsigned int result;
+    unsigned int overflow = 0;
+    unsigned int result = 0;
     int index = 1;
     int unprocessedDigits = 0;
     std::string::const_iterator sIter = s.begin();

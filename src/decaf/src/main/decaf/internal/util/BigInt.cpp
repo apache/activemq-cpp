@@ -71,26 +71,25 @@ void BigInt::multiplyHighPrecision( unsigned long long* arg1,
 unsigned int BigInt::simpleAppendDecimalDigitHighPrecision(
     unsigned long long* arg1, int length, unsigned long long digit ) {
 
-      // assumes digit is less than 32 bits
-      unsigned long long arg;
-      int index = 0;
+    // assumes digit is less than 32 bits
+    unsigned long long arg;
+    int index = 0;
 
-      digit <<= 32;
-      do
-        {
-          arg = arg1[index] & BitOps::LONG_LO_MASK;
-          digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
-          BitOps::LOW_U32_FROM_LONG64_PTR( arg1 + index ) =
-              BitOps::LOW_U32_FROM_LONG64( digit );
+    digit <<= 32;
+    do {
+        arg = arg1[index] & BitOps::LONG_LO_MASK;
+        digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
+        ((BitOps::LONG_UNION*)(arg1 + index ))->intValue[BitOps::LoWord] =
+            (int)digit & BitOps::LONG_LO_MASK;
 
-          arg = arg1[index] >> 32;
-          digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
-          BitOps::HIGH_U32_FROM_LONG64_PTR( arg1 + index ) =
-              BitOps::LOW_U32_FROM_LONG64( digit );
-        }
-      while (++index < length);
+        arg = arg1[index] >> 32;
+        digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
+        ((BitOps::LONG_UNION*)(arg1 + index ))->intValue[BitOps::HiWord] =
+            (int)digit & BitOps::LONG_LO_MASK;
 
-      return BitOps::HIGH_U32_FROM_LONG64( digit );
+    } while( ++index < length );
+
+    return digit >> 32;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
