@@ -35,6 +35,21 @@ using namespace decaf::internal;
 using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
+const int FloatingPointParser::tens[11] = {
+  0x3f800000,
+  0x41200000,
+  0x42c80000,
+  0x447a0000,
+  0x461c4000,
+  0x47c35000,
+  0x49742400,
+  0x4b189680,
+  0x4cbebc20,
+  0x4e6e6b28,
+  0x501502f9                    /* 10 ^ 10 in float */
+};
+
+////////////////////////////////////////////////////////////////////////////////
 double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
     throw ( exceptions::NumberFormatException ) {
 
@@ -137,7 +152,7 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 float FloatingPointParser::parseFltImpl( const std::string& value, int exp )
     throw ( exceptions::NumberFormatException ) {
 
-    float flt = (float)exp; // TODO - FloatOps::createFloat( str, exp );
+    float flt = FloatingPointParser::createFloat( value, exp );
 
     if( Float::floatToIntBits( flt ) >= 0 ) {
         return flt;
@@ -537,22 +552,25 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
 ////////////////////////////////////////////////////////////////////////////////
 float FloatingPointParser::createFloat1( unsigned long long* f, int length, int exp ) {
 
-    int numBits = BigInt::highestSetBitHighPrecision (f, length) + 1;
-    double dresult;
-    int result;
+    int numBits = BigInt::highestSetBitHighPrecision( f, length ) + 1;
+    double dresult = 0.0;
+    int result = 0;
 
     numBits -= BigInt::lowestSetBitHighPrecision( f, length );
 
     if( numBits < 25 && exp >= 0 && exp < LOG5_OF_TWO_TO_THE_N ) {
-        return ((float) LOW_I32_FROM_PTR (f)) * tenToTheE (exp);
+        return Float::intBitsToFloat( BitOps::LOW_I32_FROM_LONG64_PTR( f ) ) *
+               Float::intBitsToFloat( tenToTheE( exp ) );
     } else if( numBits < 25 && exp < 0 && (-exp) < LOG5_OF_TWO_TO_THE_N ) {
-        return ((float) LOW_I32_FROM_PTR (f)) / tenToTheE (-exp);
+        return Float::intBitsToFloat( BitOps::LOW_I32_FROM_LONG64_PTR( f ) ) *
+               Float::intBitsToFloat( tenToTheE( -exp ) );
     } else if (exp >= 0 && exp < 39) {
-        result = (float) (BigInt::toDoubleHighPrecision (f, length) * pow (10.0, exp));
+        result = Float::floatToIntBits(
+            (float)( BigInt::toDoubleHighPrecision( f, length ) * Math::pow( 10.0, exp ) ) );
     } else if( exp >= 39 ) {
         // Convert the partial result to make sure that the
         // non-exponential part is not zero. This check fixes the case
-        // where the user enters 0.0e309! */
+        // where the user enters 0.0e309!
         dresult = BigInt::toDoubleHighPrecision( f, length );
 
         if( dresult == 0.0 ) {
@@ -567,7 +585,8 @@ float FloatingPointParser::createFloat1( unsigned long long* f, int length, int 
         unsigned int fmant, fovfl;
         unsigned long long dmant;
         dresult = BigInt::toDoubleHighPrecision( f, length ) / Math::pow( 10.0, -exp );
-        if( IS_DENORMAL_DBL( dresult ) ) {
+
+        if( BitOps::IS_DENORMAL_DBL( dresult ) ) {
             return 0.0f;
         }
 
@@ -610,10 +629,8 @@ float FloatingPointParser::createFloat1( unsigned long long* f, int length, int 
             }
 
             result = fmant;
-        }
-        else
-        {
-            result = dresult;
+        } else {
+            result = Float::floatToIntBits( (float)dresult );
         }
     }
 
@@ -627,28 +644,11 @@ float FloatingPointParser::createFloat1( unsigned long long* f, int length, int 
     return floatAlgorithm( f, length, exp, Float::intBitsToFloat( result ) );
 }
 
-/* The algorithm for the function floatAlgorithm() below can be found
- * in:
- *
- *      "How to Read Floating-Point Numbers Accurately", William D.
- *      Clinger, Proceedings of the ACM SIGPLAN '90 Conference on
- *      Programming Language Design and Implementation, June 20-22,
- *      1990, pp. 92-101.
- *
- * There is a possibility that the function will end up in an endless
- * loop if the given approximating floating-point number (a very small
- * floating-point whose value is very close to zero) straddles between
- * two approximating integer values. We modified the algorithm slightly
- * to detect the case where it oscillates back and forth between
- * incrementing and decrementing the floating-point approximation. It
- * is currently set such that if the oscillation occurs more than twice
- * then return the original approximation.
- */
 ////////////////////////////////////////////////////////////////////////////////
 float FloatingPointParser::floatAlgorithm(
     unsigned long long* f, int length, int exp, float z ) {
 
-    unsigned long long m;
+    unsigned long long m = 0;
     int k = 0;
     int comparison = 0;
     int comparison2 = 0;
@@ -662,38 +662,39 @@ float FloatingPointParser::floatAlgorithm(
     int D2Length = 0;
     int decApproxCount = 0;
     int incApproxCount = 0;
+    int result = Float::floatToIntBits( z );
 
-      do {
+    do {
 
-          m = BigInt::floatMantissa (z);
-          k = BigInt::floatExponent (z);
+        m = BigInt::floatMantissa( z );
+        k = BigInt::floatExponent( z );
 
-          if( exp >= 0 && k >= 0 ) {
+        if( exp >= 0 && k >= 0 ) {
 
-              xLength = sizeOfTenToTheE( exp ) + length;
-              x = new unsigned long long[xLength];
-              memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
-              memcpy( x, f, sizeof(unsigned long long) * length );
-              BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
+            xLength = sizeOfTenToTheE( exp ) + length;
+            x = new unsigned long long[xLength];
+            memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
+            memcpy( x, f, sizeof(unsigned long long) * length );
+            BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
 
-              yLength = (k >> 6) + 2;
-              y = new unsigned long long[yLength];
-              memset( y + 1, 0, sizeof(unsigned long long) * (yLength - 1) );
-              *y = m;
-              BigInt::simpleShiftLeftHighPrecision (y, yLength, k);
+            yLength = (k >> 6) + 2;
+            y = new unsigned long long[yLength];
+            memset( y + 1, 0, sizeof(unsigned long long) * (yLength - 1) );
+            *y = m;
+            BigInt::simpleShiftLeftHighPrecision (y, yLength, k);
 
         } else if( exp >= 0 ) {
 
             xLength = sizeOfTenToTheE (exp) + length + ((-k) >> 6) + 1;
-              x = new unsigned long long[xLength];
-              memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
-              memcpy( x, f, sizeof(unsigned long long) * length );
-              BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
-              BigInt::simpleShiftLeftHighPrecision( x, xLength, -k );
+            x = new unsigned long long[xLength];
+            memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
+            memcpy( x, f, sizeof(unsigned long long) * length );
+            BigInt::timesTenToTheEHighPrecision( x, xLength, exp );
+            BigInt::simpleShiftLeftHighPrecision( x, xLength, -k );
 
-              yLength = 1;
-              y = new unsigned long long[yLength];
-              *y = m;
+            yLength = 1;
+            y = new unsigned long long[yLength];
+            *y = m;
 
         } else if( k >= 0 ) {
 
@@ -712,7 +713,7 @@ float FloatingPointParser::floatAlgorithm(
             xLength = length + ((-k) >> 6) + 1;
             x = new unsigned long long[xLength];
             memset( x + length, 0, sizeof(unsigned long long) * (xLength - length) );
-            memcpy( x, f, sizeof (unsigned long long) * length );
+            memcpy( x, f, sizeof(unsigned long long) * length );
             BigInt::simpleShiftLeftHighPrecision( x, xLength, -k );
 
             yLength = sizeOfTenToTheE( -exp ) + 1;
@@ -734,7 +735,7 @@ float FloatingPointParser::floatAlgorithm(
             DLength = yLength;
             D = new unsigned long long[DLength];
             memcpy (D, y, DLength * sizeof (unsigned long long));
-            BigInt::subtractHighPrecision (D, DLength, x, xLength);
+            BigInt::subtractHighPrecision( D, DLength, x, xLength );
         } else {
             /* y == x */
             DLength = 1;
@@ -743,83 +744,106 @@ float FloatingPointParser::floatAlgorithm(
         }
 
         D2Length = DLength + 1;
-        allocateU64 (D2, D2Length);
+        D = new unsigned long long[DLength];
         m <<= 1;
-        BigInt::multiplyHighPrecision (D, DLength, &m, 1, D2, D2Length);
+        BigInt::multiplyHighPrecision( D, DLength, &m, 1, D2, D2Length );
         m >>= 1;
 
-        comparison2 = BigInt::compareHighPrecision (D2, D2Length, y, yLength);
+        comparison2 = BigInt::compareHighPrecision( D2, D2Length, y, yLength );
         if( comparison2 < 0 ) {
-            if( comparison < 0 && m == NORMAL_MASK ) {
+            if( comparison < 0 && m == BitOps::NORMAL_MASK ) {
 
-                BigInt::simpleShiftLeftHighPrecision (D2, D2Length, 1);
-                if( BigInt::compareHighPrecision (D2, D2Length, y, yLength) > 0 ) {
-                    DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                BigInt::simpleShiftLeftHighPrecision( D2, D2Length, 1 );
+                if( BigInt::compareHighPrecision( D2, D2Length, y, yLength) > 0 ) {
+                    --result;
+                    decApproxCount++;
+                    if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                        if( decApproxCount > incApproxCount ) {
+                            result += decApproxCount - incApproxCount;
+                        } else if( incApproxCount > decApproxCount ) {
+                            result -= incApproxCount - decApproxCount;
+                        }
+                        break;
+                    }
                 } else {
                     break;
                 }
             } else {
                 break;
             }
-        } else if (comparison2 == 0) {
+        } else if( comparison2 == 0 ) {
 
-            if ((m & 1) == 0) {
-                if (comparison < 0 && m == NORMAL_MASK) {
-                    DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+            if( (m & 1) == 0 ) {
+                if( comparison < 0 && m == BitOps::NORMAL_MASK ) {
+                    --result;
+                    decApproxCount++;
+                    if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                        if( decApproxCount > incApproxCount ) {
+                            result += decApproxCount - incApproxCount;
+                        } else if( incApproxCount > decApproxCount ) {
+                            result -= incApproxCount - decApproxCount;
+                        }
+                        break;
+                    }
                 } else {
                     break;
                 }
-            } else if (comparison < 0) {
-                DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+            } else if( comparison < 0 ) {
+                --result;
+                decApproxCount++;
+                if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                    if( decApproxCount > incApproxCount ) {
+                        result += decApproxCount - incApproxCount;
+                    } else if( incApproxCount > decApproxCount ) {
+                        result -= incApproxCount - decApproxCount;
+                    }
+                    break;
+                }
                 break;
             } else {
-                INCREMENT_FLOAT (z, decApproxCount, incApproxCount);
+                ++result;
+                incApproxCount++;
+                if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                    if( decApproxCount > incApproxCount ) {
+                        result += decApproxCount - incApproxCount;
+                    } else if( incApproxCount > decApproxCount ) {
+                        result -= incApproxCount - decApproxCount;
+                    }
+                }
                 break;
             }
-        } else if (comparison < 0) {
-          DECREMENT_FLOAT (z, decApproxCount, incApproxCount);
+        } else if( comparison < 0 ) {
+            --result;
+            decApproxCount++;
+            if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                if( decApproxCount > incApproxCount ) {
+                    result += decApproxCount - incApproxCount;
+                } else if( incApproxCount > decApproxCount ) {
+                    result -= incApproxCount - decApproxCount;
+                }
+                break;
+            }
         } else {
-              if (FLOAT_TO_INTBITS (z) == EXPONENT_MASK)
+              if( (unsigned int)result == BitOps::FLOAT_EXPONENT_MASK ) {
                   break;
-              INCREMENT_FLOAT (z, decApproxCount, incApproxCount);
+              }
+
+              if( ( incApproxCount > 2 ) && ( decApproxCount > 2 ) ) {
+                  if( decApproxCount > incApproxCount ) {
+                      result += decApproxCount - incApproxCount;
+                  } else if( incApproxCount > decApproxCount ) {
+                      result -= incApproxCount - decApproxCount;
+                  }
+                  break;
+              }
         }
     }
-    while (1);
+    while( true );
 
     delete x;
     delete y;
     delete D;
     delete D2;
 
-    return z;
+    return Float::intBitsToFloat( result );
 }
-
-
-/**
-#define INCREMENT_FLOAT(_x, _decCount, _incCount) \
-    { \
-        ++FLOAT_TO_INTBITS(_x); \
-        _incCount++; \
-        if( (_incCount > 2) && (_decCount > 2) ) { \
-            if( _decCount > _incCount ) { \
-                FLOAT_TO_INTBITS(_x) += _decCount - _incCount; \
-            } else if( _incCount > _decCount ) { \
-                FLOAT_TO_INTBITS(_x) -= _incCount - _decCount; \
-            } \
-            break; \
-        } \
-    }
-#define DECREMENT_FLOAT(_x, _decCount, _incCount) \
-    { \
-        --FLOAT_TO_INTBITS(_x); \
-        _decCount++; \
-        if( (_incCount > 2) && (_decCount > 2) ) { \
-            if( _decCount > _incCount ) { \
-                FLOAT_TO_INTBITS(_x) += _decCount - _incCount; \
-            } else if( _incCount > _decCount ) { \
-                FLOAT_TO_INTBITS(_x) -= _incCount - _decCount; \
-            } \
-            break; \
-        } \
-    }
-*/

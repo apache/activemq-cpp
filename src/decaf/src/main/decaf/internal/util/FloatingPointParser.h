@@ -51,6 +51,8 @@ namespace util{
         static const int DEFAULT_WIDTH = MAX_ACCURACY_WIDTH;
         static const int LOG5_OF_TWO_TO_THE_N = 11;
 
+        static const int tens[11];
+
     public:
 
         virtual ~FloatingPointParser() {}
@@ -193,6 +195,10 @@ namespace util{
 //		static IS_DENORMAL_DBL_PTR(dblptr) {
 //			(((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_EXPONENT_MASK_HI) == 0) && ((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_MANTISSA_MASK_HI) != 0 || (LOW_U32_FROM_DBL_PTR(dblptr) != 0)))
 //		}
+
+        static int tenToTheE( int exp ) {
+            return *(tens + exp);
+        }
 
     };
 

@@ -66,6 +66,15 @@ namespace util{
         static const int INFINITE_INTBITS = 0x7F800000;
         static const int MINIMUM_INTBITS = 1;
 
+        static const unsigned int DOUBLE_SIGN_MASK_HI = 0x80000000;
+        static const unsigned int DOUBLE_EXPONENT_MASK_HI = 0x7FF00000;
+        static const unsigned int DOUBLE_MANTISSA_MASK_LO = 0xFFFFFFFF;
+        static const unsigned int DOUBLE_MANTISSA_MASK_HI = 0x000FFFFF;
+        static const unsigned int SINGLE_SIGN_MASK = 0x80000000;
+        static const unsigned int SINGLE_EXPONENT_MASK	= 0x7F800000;
+        static const unsigned int SINGLE_MANTISSA_MASK	= 0x007FFFFF;
+        static const unsigned int SINGLE_NAN_BITS = (SINGLE_EXPONENT_MASK | 0x00400000);
+
         static const unsigned long long MANTISSA_MASK = 0x000FFFFFFFFFFFFFULL;
         static const unsigned long long EXPONENT_MASK = 0x7FF0000000000000ULL;
         static const unsigned long long NORMAL_MASK = 0x0010000000000000ULL;
@@ -143,6 +152,48 @@ namespace util{
 
         static int& HIGH_I32_FROM_LONG64_PTR( unsigned long long* long64ptr ) {
             return ( (LONG_UNION*)long64ptr )->sintValue[HiWord];
+        }
+
+        static bool IS_DENORMAL_DBL( double dbl ) {
+            return IS_DENORMAL_DBL_PTR( &dbl );
+        }
+
+        static bool IS_DENORMAL_DBL_PTR(double* dblptr ) {
+            return (((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_EXPONENT_MASK_HI) == 0) &&
+                    ((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_MANTISSA_MASK_HI) != 0 ||
+                    (LOW_U32_FROM_DBL_PTR(dblptr) != 0)));
+        }
+
+        static unsigned int& LOW_U32_FROM_DBL_PTR( double* dblptr ) {
+            return ( ( (LONG_UNION*)dblptr )->intValue[LoWord] );
+        }
+
+        static unsigned int& HIGH_U32_FROM_DBL_PTR( double* dblptr ) {
+            return ( ( (LONG_UNION*)dblptr )->intValue[HiWord] );
+        }
+
+        static int& LOW_I32_FROM_DBL_PTR( double* dblptr ) {
+            return ( ( (LONG_UNION*)dblptr )->sintValue[LoWord] );
+        }
+
+        static int& HIGH_I32_FROM_DBL_PTR( double* dblptr ) {
+            return ( ( (LONG_UNION*)dblptr )->sintValue[HiWord] );
+        }
+
+        static unsigned int& LOW_U32_FROM_DBL( double dbl ) {
+            return LOW_U32_FROM_DBL_PTR( &dbl );
+        }
+
+        static unsigned int& HIGH_U32_FROM_DBL( double dbl ) {
+            return HIGH_U32_FROM_DBL_PTR( &dbl );
+        }
+
+        static int& LOW_I32_FROM_DBL( double dbl ) {
+            return LOW_I32_FROM_DBL_PTR( &dbl );
+        }
+
+        static int& HIGH_I32_FROM_DBL( double dbl ) {
+            return HIGH_I32_FROM_DBL_PTR( &dbl );
         }
 
         static unsigned int at( unsigned int i ) {
