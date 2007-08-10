@@ -311,11 +311,11 @@ double FloatingPointParser::parseDblName(
 
     bool negative = namedDouble.at(0) == '-' ? true : false;
 
-    if( namedDouble.find_first_of( "Infinity" ) != string::npos ) {
+    if( namedDouble.find( "Infinity" ) != string::npos ) {
         return negative ? Double::NEGATIVE_INFINITY : Float::POSITIVE_INFINITY;
     }
 
-    if( namedDouble.find_first_of( "NaN" ) != string::npos ) {
+    if( namedDouble.find( "NaN" ) != string::npos ) {
         return Double::NaN;
     }
 
@@ -341,11 +341,11 @@ float FloatingPointParser::parseFltName(
 
     bool negative = namedFloat.at(0) == '-' ? true : false;
 
-    if( namedFloat.find_first_of( "Infinitiy" ) != string::npos ) {
+    if( namedFloat.find( "Infinitiy" ) != string::npos ) {
         return negative ? Float::NEGATIVE_INFINITY : Float::POSITIVE_INFINITY;
     }
 
-    if( namedFloat.find_first_of( "NaN" ) != string::npos ) {
+    if( namedFloat.find( "NaN" ) != string::npos ) {
         return Float::NaN;
     }
 
@@ -378,7 +378,7 @@ double FloatingPointParser::parseDouble( const std::string& value )
     }
 
     // See if it could be a hexadecimal representation
-    if( toLowerCase( newValue ).find_first_of( "0x" ) != string::npos ) {
+    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
         return HexStringParser::parseDouble(value);
     }
 
@@ -416,7 +416,7 @@ float FloatingPointParser::parseFloat( const std::string& value )
     }
 
     // See if it could be a hexadecimal representation
-    if( toLowerCase( newValue ).find_first_of( "0x" ) != string::npos ) {
+    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
         return HexStringParser::parseFloat( newValue );
     }
 
@@ -525,7 +525,7 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
     //   3. (unprocessed digits + e) > 0 indicates that the value is
     //      simply too big to be stored as a double, so return Infinity
 
-    if( ( unprocessedDigits = s.size() ) > 0 ) {
+    if( ( unprocessedDigits = std::distance( sIter, s.end() ) ) > 0 ) {
 
         exp += unprocessedDigits;
         if( index > -1 ) {
