@@ -197,7 +197,7 @@ FloatingPointParser::StringExponentPair FloatingPointParser::initialParse(
     end = Math::max( (int)newValue.find_first_of( 'E' ),
                      (int)newValue.find_first_of( 'e' ) );
 
-    if( end > -1 ) {
+    if( (std::size_t)end != string::npos ) {
 
         if( end + 1 == length ) {
             if( length == 0 ) {
