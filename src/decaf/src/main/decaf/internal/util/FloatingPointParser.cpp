@@ -434,14 +434,16 @@ float FloatingPointParser::parseFloat( const std::string& value )
         throw exceptions::NumberFormatException(
             __FILE__, __LINE__,
             "FloatingPointParser::parseFloat - "
-            "invalid length string", value.c_str() );
+            "invalid float value string, out of range",
+            value.c_str() );
     }
 
     if( endptr == value.c_str() ) {
         throw exceptions::NumberFormatException(
             __FILE__, __LINE__,
             "FloatingPointParser::parseFloat - "
-            "invalid length string", value.c_str() );
+            "invalid numeric formatted string",
+            value.c_str() );
     }
 
     return result;
