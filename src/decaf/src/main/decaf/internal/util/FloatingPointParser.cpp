@@ -27,6 +27,7 @@
 #include <decaf/internal/util/BitOps.h>
 #include <decaf/lang/exceptions/NumberFormatException.h>
 #include <apr_lib.h>
+#include <errno.h>
 
 using namespace std;
 using namespace decaf;
@@ -359,75 +360,123 @@ float FloatingPointParser::parseFltName(
 double FloatingPointParser::parseDouble( const std::string& value )
     throw( exceptions::NumberFormatException ) {
 
-    std::string newValue = value;
-    FloatingPointParser::trim( newValue );
-    int length = newValue.length();
+    errno = 0;
 
-    if( length == 0 ) {
-        throw exceptions::NumberFormatException(
-            __FILE__, __LINE__,
-            "FloatingPointParser::parseDouble - "
-            "invalid length string", value.c_str() );
-    }
+    char* endptr = NULL;
+    double result = strtod( value.c_str(), &endptr );
 
-    // See if this could be a named double
-    char last = newValue[length - 1];
+    // Check for various possible errors
+    if( ( errno == ERANGE && ( result == LONG_MAX || result == LONG_MIN ) ) ||
+        ( errno != 0 && result == 0 ) ) {
 
-    if( (last == 'y') || (last == 'N') ) {
-        return parseDblName( newValue, length );
-    }
-
-    // See if it could be a hexadecimal representation
-    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
-        return HexStringParser::parseDouble(value);
-    }
-
-    StringExponentPair info = initialParse(value, length);
-
-    double result = parseDblImpl( info.value, info.exp );
-
-    if( info.negative ) {
-        result = -result;
-    }
-
-    return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-float FloatingPointParser::parseFloat( const std::string& value )
-    throw( exceptions::NumberFormatException ) {
-
-    std::string newValue = value;
-    FloatingPointParser::trim( newValue );
-
-    int length = newValue.length();
-
-    if( length == 0 ) {
         throw exceptions::NumberFormatException(
             __FILE__, __LINE__,
             "FloatingPointParser::parseFloat - "
             "invalid length string", value.c_str() );
     }
 
-    // See if this could be a named float
-    char last = newValue[length - 1];
-    if( (last == 'y') || (last == 'N') ) {
-        return parseFltName( value, length );
-    }
-
-    // See if it could be a hexadecimal representation
-    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
-        return HexStringParser::parseFloat( newValue );
-    }
-
-    StringExponentPair info = initialParse( newValue, length );
-
-    float result = parseFltImpl( info.value, info.exp );
-    if( info.negative ) {
-        result = -result;
+    if( endptr == value.c_str() ) {
+        throw exceptions::NumberFormatException(
+            __FILE__, __LINE__,
+            "FloatingPointParser::parseFloat - "
+            "invalid length string", value.c_str() );
     }
 
     return result;
+
+//    std::string newValue = value;
+//    FloatingPointParser::trim( newValue );
+//    int length = newValue.length();
+//
+//    if( length == 0 ) {
+//        throw exceptions::NumberFormatException(
+//            __FILE__, __LINE__,
+//            "FloatingPointParser::parseDouble - "
+//            "invalid length string", value.c_str() );
+//    }
+//
+//    // See if this could be a named double
+//    char last = newValue[length - 1];
+//
+//    if( (last == 'y') || (last == 'N') ) {
+//        return parseDblName( newValue, length );
+//    }
+//
+//    // See if it could be a hexadecimal representation
+//    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
+//        return HexStringParser::parseDouble(value);
+//    }
+//
+//    StringExponentPair info = initialParse(value, length);
+//
+//    double result = parseDblImpl( info.value, info.exp );
+//
+//    if( info.negative ) {
+//        result = -result;
+//    }
+//
+//    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+float FloatingPointParser::parseFloat( const std::string& value )
+    throw( exceptions::NumberFormatException ) {
+
+    errno = 0;
+
+    char* endptr = NULL;
+    float result = strtof( value.c_str(), &endptr );
+
+    // Check for various possible errors
+    if( ( errno == ERANGE && ( result == LONG_MAX || result == LONG_MIN ) ) ||
+        ( errno != 0 && result == 0 ) ) {
+
+        throw exceptions::NumberFormatException(
+            __FILE__, __LINE__,
+            "FloatingPointParser::parseFloat - "
+            "invalid length string", value.c_str() );
+    }
+
+    if( endptr == value.c_str() ) {
+        throw exceptions::NumberFormatException(
+            __FILE__, __LINE__,
+            "FloatingPointParser::parseFloat - "
+            "invalid length string", value.c_str() );
+    }
+
+    return result;
+
+//    std::string newValue = value;
+//    FloatingPointParser::trim( newValue );
+//
+//    int length = newValue.length();
+//
+//    if( length == 0 ) {
+//        throw exceptions::NumberFormatException(
+//            __FILE__, __LINE__,
+//            "FloatingPointParser::parseFloat - "
+//            "invalid length string", value.c_str() );
+//    }
+//
+//    // See if this could be a named float
+//    char last = newValue[length - 1];
+//    if( (last == 'y') || (last == 'N') ) {
+//        return parseFltName( value, length );
+//    }
+//
+//    // See if it could be a hexadecimal representation
+//    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
+//        return HexStringParser::parseFloat( newValue );
+//    }
+//
+//    StringExponentPair info = initialParse( newValue, length );
+//
+//    float result = parseFltImpl( info.value, info.exp );
+//    if( info.negative ) {
+//        result = -result;
+//    }
+//
+//    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
