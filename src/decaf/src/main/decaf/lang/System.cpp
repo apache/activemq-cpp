@@ -18,11 +18,13 @@
 #include "System.h"
 
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/util/Date.h>
 #include <apr_errno.h>
 #include <apr_env.h>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::util;
 using namespace decaf::internal;
 using namespace decaf::lang::exceptions;
 
@@ -61,4 +63,30 @@ std::string System::getenv( const std::string& name ) throw ( Exception ) {
     aprPool.cleanup();
 
     return value;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void System::setenv( const std::string& name, const std::string& value )
+    throw ( lang::Exception ) {
+
+    apr_status_t result = APR_SUCCESS;
+
+    // Write the value, errors are thrown out as an exception
+    result = apr_env_set( name.c_str(), value.c_str(), aprPool.getAprPool() );
+    aprPool.cleanup();
+
+    if( result != APR_SUCCESS ) {
+
+        char buffer[256] = {0};
+
+        throw NullPointerException(
+            __FILE__, __LINE__,
+            "System::getenv - ",
+            apr_strerror( result, buffer, 255 ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long System::currentTimeMillis() {
+    return Date::getCurrentTimeMilliseconds();
 }

@@ -48,6 +48,20 @@ namespace lang{
         static std::string getenv( const std::string& name )
             throw ( lang::Exception );
 
+        /**
+         * Sets the specified system property to the value given
+         * @param name - name of the env val to set
+         * @param value - value to assign to name
+         * @throws an Exception if an error occurs
+         */
+        static void setenv( const std::string& name, const std::string& value )
+            throw ( lang::Exception );
+
+        /**
+         * @returns the current system time in Milliseconds
+         */
+        static long long currentTimeMillis();
+
     };
 
 }}
