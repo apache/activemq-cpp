@@ -192,10 +192,6 @@ namespace util{
         static float floatAlgorithm( unsigned long long* f, int length,
                                      int e, float z );
 
-//		static IS_DENORMAL_DBL_PTR(dblptr) {
-//			(((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_EXPONENT_MASK_HI) == 0) && ((HIGH_U32_FROM_DBL_PTR(dblptr) & DOUBLE_MANTISSA_MASK_HI) != 0 || (LOW_U32_FROM_DBL_PTR(dblptr) != 0)))
-//		}
-
         static int tenToTheE( int exp ) {
             return *(tens + exp);
         }

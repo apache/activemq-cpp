@@ -69,7 +69,7 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 
     do {
 
-        if( *valItr >= '0' && *valItr <= '9' ) {
+        if( Character::isDigit( *valItr ) ) {
 
             // Make a back up of f before appending, so that we can
             // back out of it if there is no more room, i.e. index >
@@ -97,52 +97,42 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
                 }
             }
         } else {
-            index = -1;
+            // Bad chars in the string
+            BitOps::LOW_I32_FROM_LONG64( result ) = -1;
+            BitOps::HIGH_I32_FROM_LONG64( result ) = -1;
+            return Double::longBitsToDouble( result );
         }
 
-    } while( index > 0 && *(++valItr) != '\0' );
+    } while( ++valItr != value.end() );
 
-    /* We've broken out of the parse loop either because we've reached
-     * the end of the string or we've overflowed the maximum accuracy
-     * limit of a double. If we still have unprocessed digits in the
-     * given string, then there are three possible results:
-     *   1. (unprocessed digits + e) == 0, in which case we simply
-     *      convert the existing bits that are already parsed
-     *   2. (unprocessed digits + e) < 0, in which case we simply
-     *      convert the existing bits that are already parsed along
-     *      with the given e
-     *   3. (unprocessed digits + e) > 0 indicates that the value is
-     *      simply too big to be stored as a double, so return Infinity
-     */
+    // We've broken out of the parse loop either because we've reached
+    // the end of the string or we've overflowed the maximum accuracy
+    // limit of a double. If we still have unprocessed digits in the
+    // given string, then there are three possible results:
+    //   1. (unprocessed digits + e) == 0, in which case we simply
+    //      convert the existing bits that are already parsed
+    //   2. (unprocessed digits + e) < 0, in which case we simply
+    //      convert the existing bits that are already parsed along
+    //      with the given e
+    //   3. (unprocessed digits + e) > 0 indicates that the value is
+    //      simply too big to be stored as a double, so return Infinity
     if( ( unprocessedDigits = value.length() ) > 0 ) {
 
         exp += unprocessedDigits;
-        if( index > -1 ) {
-
-            if( exp == 0 ) {
-                return BigInt::toDoubleHighPrecision( f, index );
-            } else if( exp < 0 ) {
-                return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
-            } else {
-                result = BitOps::INFINITE_LONGBITS;
-            }
-
+        if( exp == 0 ) {
+            return BigInt::toDoubleHighPrecision( f, index );
+        } else if( exp < 0 ) {
+            return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
         } else {
-
-            BitOps::LOW_I32_FROM_LONG64( result ) = -1;
-            BitOps::HIGH_I32_FROM_LONG64( result ) = -1;
+            result = BitOps::INFINITE_LONGBITS;
         }
+
     } else {
 
-        if( index > -1 ) {
-            if( exp == 0 ) {
-                return BigInt::toDoubleHighPrecision( f, index );
-            } else {
-                return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
-            }
+        if( exp == 0 ) {
+            return BigInt::toDoubleHighPrecision( f, index );
         } else {
-            BitOps::LOW_I32_FROM_LONG64( result ) = -1;
-            BitOps::HIGH_I32_FROM_LONG64( result ) = -1;
+            return BitOps::CREATE_DOUBLE_BITS( f, index, exp );
         }
     }
 
@@ -153,18 +143,22 @@ double FloatingPointParser::parseDblImpl( const std::string& value, int exp )
 float FloatingPointParser::parseFltImpl( const std::string& value, int exp )
     throw ( exceptions::NumberFormatException ) {
 
-    float flt = FloatingPointParser::createFloat( value, exp );
+    float result = FloatingPointParser::createFloat( value, exp );
 
-    if( Float::floatToIntBits( flt ) >= 0 ) {
-        return flt;
-    } else if( Float::floatToIntBits( flt ) == -1 ) {
+std::cout << std::endl
+          << "DEBUG - FloatingPointParser::parseFltImpl - "
+          << "createFloat returned = " << result << std::endl;
+
+    if( Float::floatToIntBits( result ) >= 0 ) {
+        return result;
+    } else if( Float::floatToIntBits( result ) == -1 ) {
       throw exceptions::NumberFormatException(
           __FILE__, __LINE__,
           "FloatingPointParser::parseFltImpl - Not a valid float string",
           value.c_str() );
     }
 
-    return 0.0f;
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,138 +354,90 @@ float FloatingPointParser::parseFltName(
 double FloatingPointParser::parseDouble( const std::string& value )
     throw( exceptions::NumberFormatException ) {
 
-    errno = 0;
+    std::string newValue = value;
+    FloatingPointParser::trim( newValue );
+    int length = newValue.length();
 
-    char* endptr = NULL;
-    double result = strtod( value.c_str(), &endptr );
-
-    // Check for various possible errors
-    if( ( errno == ERANGE && ( result == LONG_MAX || result == LONG_MIN ) ) ||
-        ( errno != 0 && result == 0 ) ) {
-
+    if( length == 0 ) {
         throw exceptions::NumberFormatException(
             __FILE__, __LINE__,
-            "FloatingPointParser::parseFloat - "
+            "FloatingPointParser::parseDouble - "
             "invalid length string", value.c_str() );
     }
 
-    if( endptr == value.c_str() ) {
-        throw exceptions::NumberFormatException(
-            __FILE__, __LINE__,
-            "FloatingPointParser::parseFloat - "
-            "invalid length string", value.c_str() );
+    // See if this could be a named double
+    char last = newValue[length - 1];
+
+    if( (last == 'y') || (last == 'N') ) {
+        return parseDblName( newValue, length );
+    }
+
+    // See if it could be a hexadecimal representation
+    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
+        return HexStringParser::parseDouble(value);
+    }
+
+    StringExponentPair info = initialParse(value, length);
+
+    double result = parseDblImpl( info.value, info.exp );
+
+    if( info.negative ) {
+        result = -result;
     }
 
     return result;
-
-//    std::string newValue = value;
-//    FloatingPointParser::trim( newValue );
-//    int length = newValue.length();
-//
-//    if( length == 0 ) {
-//        throw exceptions::NumberFormatException(
-//            __FILE__, __LINE__,
-//            "FloatingPointParser::parseDouble - "
-//            "invalid length string", value.c_str() );
-//    }
-//
-//    // See if this could be a named double
-//    char last = newValue[length - 1];
-//
-//    if( (last == 'y') || (last == 'N') ) {
-//        return parseDblName( newValue, length );
-//    }
-//
-//    // See if it could be a hexadecimal representation
-//    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
-//        return HexStringParser::parseDouble(value);
-//    }
-//
-//    StringExponentPair info = initialParse(value, length);
-//
-//    double result = parseDblImpl( info.value, info.exp );
-//
-//    if( info.negative ) {
-//        result = -result;
-//    }
-//
-//    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 float FloatingPointParser::parseFloat( const std::string& value )
     throw( exceptions::NumberFormatException ) {
 
-    errno = 0;
+    std::string newValue = value;
+    FloatingPointParser::trim( newValue );
 
-    char* endptr = NULL;
-    float result = strtof( value.c_str(), &endptr );
+    int length = newValue.length();
 
-    // Check for various possible errors
-    if( ( errno == ERANGE && ( result == LONG_MAX || result == LONG_MIN ) ) ||
-        ( errno != 0 && result == 0 ) ) {
-
+    if( length == 0 ) {
         throw exceptions::NumberFormatException(
             __FILE__, __LINE__,
             "FloatingPointParser::parseFloat - "
-            "invalid float value string, out of range",
-            value.c_str() );
+            "invalid length string", value.c_str() );
     }
 
-    if( endptr == value.c_str() ) {
-        throw exceptions::NumberFormatException(
-            __FILE__, __LINE__,
-            "FloatingPointParser::parseFloat - "
-            "invalid numeric formatted string",
-            value.c_str() );
+    // See if this could be a named float
+    char last = newValue[length - 1];
+    if( (last == 'y') || (last == 'N') ) {
+        return parseFltName( value, length );
+    }
+
+    // See if it could be a hexadecimal representation
+    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
+        return HexStringParser::parseFloat( newValue );
+    }
+
+    StringExponentPair info = initialParse( newValue, length );
+
+std::cout << std::endl
+          << "DEBUG - FloatingPointParser::parseFloat - "
+          << "newValue = " << newValue << ", length = " << length;
+
+    float result = parseFltImpl( info.value, info.exp );
+    if( info.negative ) {
+        result = -result;
     }
 
     return result;
-
-//    std::string newValue = value;
-//    FloatingPointParser::trim( newValue );
-//
-//    int length = newValue.length();
-//
-//    if( length == 0 ) {
-//        throw exceptions::NumberFormatException(
-//            __FILE__, __LINE__,
-//            "FloatingPointParser::parseFloat - "
-//            "invalid length string", value.c_str() );
-//    }
-//
-//    // See if this could be a named float
-//    char last = newValue[length - 1];
-//    if( (last == 'y') || (last == 'N') ) {
-//        return parseFltName( value, length );
-//    }
-//
-//    // See if it could be a hexadecimal representation
-//    if( toLowerCase( newValue ).find( "0x" ) != string::npos ) {
-//        return HexStringParser::parseFloat( newValue );
-//    }
-//
-//    StringExponentPair info = initialParse( newValue, length );
-//
-//    float result = parseFltImpl( info.value, info.exp );
-//    if( info.negative ) {
-//        result = -result;
-//    }
-//
-//    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string& FloatingPointParser::trim( std::string& value ) {
 
-    char const* delims = " \t\r\n";
-
     // trim leading whitespace
-    string::size_type notwhite = value.find_first_not_of( delims );
+    string::size_type notwhite = value.find_first_not_of( " \t\r\n" );
     value.erase( 0, notwhite );
 
     // trim trailing whitespace
-    notwhite = value.find_last_not_of( delims );
+    notwhite = value.find_last_not_of( " \t\r\n" );
     value.erase( notwhite+1 );
 
     return value;
@@ -529,15 +475,24 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
 
     do {
 
-        if( *sIter >= '0' && *sIter <= '9' ) {
+        if( Character::isDigit( *sIter ) ) {
 
-            /* Make a back up of f before appending, so that we can
-             * back out of it if there is no more room, i.e. index >
-             * MAX_ACCURACY_WIDTH.
-             */
-            memcpy( fNoOverflow, f, sizeof(unsigned long long)* index );
+std::cout << std::endl
+          << "DEBUG - FloatingPointParser::createFloat - "
+          << "current digint ASCII = " << *sIter
+          << ", value = " << *sIter - '0';
+
+            // Make a back up of f before appending, so that we can
+            // back out of it if there is no more room, i.e. index >
+            // MAX_ACCURACY_WIDTH.
+            memcpy( fNoOverflow, f, sizeof(unsigned long long) * index );
             overflow = BigInt::simpleAppendDecimalDigitHighPrecision(
                     f, index, *sIter - '0' );
+
+std::cout << std::endl
+          << "DEBUG - FloatingPointParser::createFloat - "
+          << "f[index] = " << f[index]
+          << ", overflow ? = " << overflow;
 
             if( overflow ) {
 
@@ -557,12 +512,11 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
                   fNoOverflow = tempBackup;
                 }
             }
-
         } else {
-            index = -1;
+            // String contained invalid characters
+            return -1;
         }
-    }
-    while( index > 0 && *(++sIter) != '\0' );
+    } while( ++sIter != s.end() );
 
     // We've broken out of the parse loop either because we've reached
     // the end of the string or we've overflowed the maximum accuracy
@@ -575,26 +529,18 @@ float FloatingPointParser::createFloat( const std::string&s, int exp ) {
     //      with the given e
     //   3. (unprocessed digits + e) > 0 indicates that the value is
     //      simply too big to be stored as a double, so return Infinity
-
     if( ( unprocessedDigits = std::distance( sIter, s.end() ) ) > 0 ) {
 
         exp += unprocessedDigits;
-        if( index > -1 ) {
-            if( exp <= 0 ) {
-                return createFloat1( f, index, exp );
-            } else {
-                result = BitOps::INFINITE_INTBITS;
-            }
-        } else {
-            result = index;
-        }
-    } else {
 
-        if( index > -1 ) {
+        if( exp <= 0 ) {
             return createFloat1( f, index, exp );
         } else {
-            result = index;
+            result = BitOps::INFINITE_INTBITS;
         }
+
+    } else {
+        return createFloat1( f, index, exp );
     }
 
     return Float::intBitsToFloat( result );

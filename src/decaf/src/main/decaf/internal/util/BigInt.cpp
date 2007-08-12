@@ -72,26 +72,50 @@ unsigned int BigInt::simpleAppendDecimalDigitHighPrecision(
     unsigned long long* arg1, int length, unsigned long long digit ) {
 
     // assumes digit is less than 32 bits
-    unsigned long long arg;
+    unsigned long long arg = 0;
     int index = 0;
 
     digit <<= 32;
     do {
+
         arg = arg1[index] & BitOps::LONG_LO_MASK;
         digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
-        ((BitOps::LONG_UNION*)(arg1 + index ))->intValue[BitOps::LoWord] =
-            (int)digit & BitOps::LONG_LO_MASK;
+        arg1[index] = ( arg1[index] & BitOps::LONG_LO_MASK ) |
+                      ( digit & BitOps::LONG_LO_MASK );
 
         arg = arg1[index] >> 32;
         digit = ( digit >> 32 ) + BitOps::TIMES_TEN( arg );
-        ((BitOps::LONG_UNION*)(arg1 + index ))->intValue[BitOps::HiWord] =
-            (int)digit & BitOps::LONG_LO_MASK;
+        arg1[index] = ( arg1[index] & BitOps::LONG_HI_MASK ) |
+                      ( digit & BitOps::LONG_LO_MASK );
 
     } while( ++index < length );
 
     return digit >> 32;
 }
 
+/*
+U_32 simpleAppendDecimalDigitHighPrecision (U_64 * arg1, IDATA length, U_64 digit)
+{
+  // assumes digit is less than 32 bits
+  U_64 arg;
+  IDATA index = 0;
+
+  digit <<= 32;
+  do
+    {
+      arg = LOW_IN_U64 (arg1[index]);
+      digit = HIGH_IN_U64 (digit) + TIMES_TEN (arg);
+      LOW_U32_FROM_PTR (arg1 + index) = LOW_U32_FROM_VAR (digit);
+
+      arg = HIGH_IN_U64 (arg1[index]);
+      digit = HIGH_IN_U64 (digit) + TIMES_TEN (arg);
+      HIGH_U32_FROM_PTR (arg1 + index) = LOW_U32_FROM_VAR (digit);
+    }
+  while (++index < length);
+
+  return HIGH_U32_FROM_VAR (digit);
+}
+*/
 ////////////////////////////////////////////////////////////////////////////////
 double BigInt::toDoubleHighPrecision( unsigned long long* arg, int length ) {
 
