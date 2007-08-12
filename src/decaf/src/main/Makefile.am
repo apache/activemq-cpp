@@ -34,6 +34,7 @@ cc_sources = \
    decaf/lang/Float.cpp \
    decaf/lang/Double.cpp \
    decaf/lang/Math.cpp \
+   decaf/lang/System.cpp \
    decaf/io/BufferedOutputStream.cpp \
    decaf/io/BufferedInputStream.cpp \
    decaf/io/ByteArrayInputStream.cpp \
@@ -86,6 +87,7 @@ h_sources = \
    decaf/lang/Number.h \
    decaf/lang/Runnable.h \
    decaf/lang/Math.h \
+   decaf/lang/System.h \
    decaf/lang/exceptions/NoSuchElementException.h \
    decaf/lang/exceptions/RuntimeException.h \
    decaf/lang/exceptions/IndexOutOfBoundsException.h \

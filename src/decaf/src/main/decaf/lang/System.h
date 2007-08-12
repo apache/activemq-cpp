@@ -15,47 +15,41 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_APRPOOL_H_
-#define _DECAF_INTERNAL_APRPOOL_H_
+#ifndef _DECAF_LANG_SYSTEM_H_
+#define _DECAF_LANG_SYSTEM_H_
 
 #include <decaf/util/Config.h>
-#include <apr_pools.h>
+#include <decaf/lang/Exception.h>
+#include <decaf/internal/AprPool.h>
+#include <string>
 
 namespace decaf{
-namespace internal{
+namespace lang{
 
-    /**
-     * Wraps an APR pool object so that classes in decaf can create a static
-     * member for use in static methods where apr function calls that need a pool
-     * are made.
-     */
-    class AprPool {
+    class DECAF_API System {
     private:
 
-        apr_pool_t* aprPool;
+        static internal::AprPool aprPool;
 
     public:
 
-        AprPool();
-        virtual ~AprPool();
+        System();
+        virtual ~System() {}
+
+    public:  // Static Methods
 
         /**
-         * Gets the internal APR Pool.
-         * @returns the internal APR pool
+         * Reads an environment value from the system and returns it as a
+         * string object
+         * @param name - the env var to read
+         * @return a string with the value from the var or ""
+         * @throws an Exception if an error occurs while reading the Env.
          */
-        apr_pool_t* getAprPool() const {
-            return aprPool;
-        }
-
-        /**
-         * Clears data that was allocated by this pool.  Users should call this
-         * after getting the data from the APR functions and copying it to
-         * someplace safe.
-         */
-        void cleanup();
+        static std::string getenv( const std::string& name )
+            throw ( lang::Exception );
 
     };
 
 }}
 
-#endif /*_DECAF_INTERNAL_APRPOOL_H_*/
+#endif /*_DECAF_LANG_SYSTEM_H_*/
