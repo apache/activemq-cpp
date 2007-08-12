@@ -56,6 +56,7 @@ cc_sources = \
    decaf/util/logging/SimpleLogger.cpp \
    decaf/util/logging/LogManager.cpp \
    decaf/util/Config.cpp \
+   decaf/internal/AprPool.cpp \
    decaf/internal/util/BigInt.cpp \
    decaf/internal/util/BitOps.cpp \
    decaf/internal/util/NumberConverter.cpp \
@@ -150,6 +151,7 @@ h_sources = \
    decaf/util/logging/LogWriter.h \
    decaf/util/logging/SimpleLogger.h \
    decaf/util/logging/PropertiesChangeListener.h \
+   decaf/internal/AprPool.h \
    decaf/internal/util/NumberConverter.h \
    decaf/internal/util/FloatingPointParser.h \
    decaf/internal/util/HexStringParser.h \
