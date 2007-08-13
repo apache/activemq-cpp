@@ -39,7 +39,6 @@ cc_sources = \
   decaf/util/StringTokenizerTest.cpp \
   decaf/util/Endian.cpp \
   decaf/util/DateTest.cpp \
-  decaf/util/GuidTest.cpp \
   decaf/util/UUIDTest.cpp \
   decaf/util/RandomTest.cpp \
   decaf/util/MapTest.cpp \
@@ -75,7 +74,6 @@ h_sources = \
   decaf/util/StringTokenizerTest.h \
   decaf/util/Endian.h \
   decaf/util/DateTest.h \
-  decaf/util/GuidTest.h \
   decaf/util/UUIDTest.h \
   decaf/util/RandomTest.h \
   decaf/util/MapTest.h \

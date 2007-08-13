@@ -70,8 +70,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
 //
 //#include <decaf/util/DateTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
-//#include <decaf/util/GuidTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::GuidTest );
 //#include <decaf/util/UUIDTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
 //#include <decaf/util/MapTest.h>

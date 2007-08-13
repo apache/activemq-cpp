@@ -47,7 +47,6 @@ cc_sources = \
    decaf/util/concurrent/PooledThread.cpp \
    decaf/util/concurrent/ThreadPool.cpp \
    decaf/util/Date.cpp \
-   decaf/util/Guid.cpp \
    decaf/util/UUID.cpp \
    decaf/util/StringTokenizer.cpp \
    decaf/util/Random.cpp \
@@ -126,7 +125,6 @@ h_sources = \
    decaf/util/concurrent/TaskListener.h \
    decaf/util/concurrent/ThreadPool.h \
    decaf/util/Date.h \
-   decaf/util/Guid.h \
    decaf/util/UUID.h \
    decaf/util/Iterator.h \
    decaf/util/Collection.h \
