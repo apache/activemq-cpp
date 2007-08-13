@@ -276,12 +276,12 @@ void FloatTest::test_longValue() {
 ////////////////////////////////////////////////////////////////////////////////
 void FloatTest::test_parseFloatLDecaf_lang_String() {
 
-//    CPPUNIT_ASSERT_MESSAGE( "Incorrect float returned, expected zero.",
-//            0.0 == Float::parseFloat("7.0064923216240853546186479164495e-46"));
-//    CPPUNIT_ASSERT_MESSAGE("Incorrect float returned, expected minimum float.",
-//            Float::MIN_VALUE ==
-//            Float::parseFloat("7.0064923216240853546186479164496e-46") );
-//
+    CPPUNIT_ASSERT_MESSAGE( "Incorrect float returned, expected zero.",
+            0.0 == Float::parseFloat("7.0064923216240853546186479164495e-46"));
+    CPPUNIT_ASSERT_MESSAGE("Incorrect float returned, expected minimum float.",
+            Float::MIN_VALUE ==
+            Float::parseFloat("7.0064923216240853546186479164496e-46") );
+
 //    doTestCompareRawBits(
 //            "0.000000000000000000000000000000000000011754942807573642917278829910357665133228589927589904276829631184250030649651730385585324256680905818939208984375",
 //            0x800000, "1.17549435E-38");
@@ -351,25 +351,26 @@ void FloatTest::test_parseFloatLDecaf_lang_String() {
 //            expectedStringFor1_17eN38To38[38 + 5]);
 //    doTestCompareRawBits("-1.1754943508222875e+6", rawBitsFor1_17eN38To38[38 + 6],
 //            expectedStringFor1_17eN38To38[38 + 6]);
-//
-//    for (int i = 7; i < 39; i++) {
+
+//    for( int i = 7; i < 39; i++ ) {
 //        std::string testString;
-//        testString = "-1.1754943508222875e+" + i;
-//        doTestCompareRawBits(testString, rawBitsFor1_17eN38To38[38 + i],
-//                expectedStringFor1_17eN38To38[38 + i]);
+//        testString = "-1.1754943508222875e+" + Integer::toString( i );
+//        doTestCompareRawBits( testString,
+//                              rawBitsFor1_17eN38To38[38 + i],
+//                              expectedStringFor1_17eN38To38[38 + i] );
 //    }
-//
+
     // Test denormalized floats (floats with exponents <= -38
-//    doTestCompareRawBits("1.1012984643248170E-45", 1, "1.4E-45");
-//    doTestCompareRawBits("-1.1012984643248170E-45", 0x80000001, "-1.4E-45");
-//    doTestCompareRawBits("1.0E-45", 1, "1.4E-45");
-//    doTestCompareRawBits("-1.0E-45", 0x80000001, "-1.4E-45");
-//    doTestCompareRawBits("0.9E-45", 1, "1.4E-45");
-//    doTestCompareRawBits("-0.9E-45", 0x80000001, "-1.4E-45");
-//    doTestCompareRawBits("4.203895392974451e-45", 3, "4.2E-45");
-//    doTestCompareRawBits("-4.203895392974451e-45", 0x80000003, "-4.2E-45");
-//    doTestCompareRawBits("0.004E-45", 0, "0.0");
-//    doTestCompareRawBits("-0.004E-45", 0x80000000, "-0.0");
+    doTestCompareRawBits("1.1012984643248170E-45", 1, "1.4E-45");
+    doTestCompareRawBits("-1.1012984643248170E-45", 0x80000001, "-1.4E-45");
+    doTestCompareRawBits("1.0E-45", 1, "1.4E-45");
+    doTestCompareRawBits("-1.0E-45", 0x80000001, "-1.4E-45");
+    doTestCompareRawBits("0.9E-45", 1, "1.4E-45");
+    doTestCompareRawBits("-0.9E-45", 0x80000001, "-1.4E-45");
+    doTestCompareRawBits("4.203895392974451e-45", 3, "4.2E-45");
+    doTestCompareRawBits("-4.203895392974451e-45", 0x80000003, "-4.2E-45");
+    doTestCompareRawBits("0.004E-45", 0, "0.0");
+    doTestCompareRawBits("-0.004E-45", 0x80000000, "-0.0");
 
     // Test for large floats close to and greater than 3.4028235E38 and
     // -3.4028235E38

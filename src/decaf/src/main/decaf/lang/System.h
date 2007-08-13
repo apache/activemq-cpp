@@ -19,6 +19,7 @@
 #define _DECAF_LANG_SYSTEM_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/util/Map.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/internal/AprPool.h>
 #include <string>
@@ -39,6 +40,15 @@ namespace lang{
     public:  // Static Methods
 
         /**
+         * Enumerates the system environment and returns a map of env variable
+         * names to the string values they hold.
+         * @return A Map of all environment variables.
+         * @throw Exception if an error occurs
+         */
+        static util::Map<std::string, std::string> getenv()
+            throw ( lang::Exception );
+
+        /**
          * Reads an environment value from the system and returns it as a
          * string object
          * @param name - the env var to read
@@ -46,6 +56,14 @@ namespace lang{
          * @throws an Exception if an error occurs while reading the Env.
          */
         static std::string getenv( const std::string& name )
+            throw ( lang::Exception );
+
+        /**
+         * Clears a set env value if one is set.
+         * @param name - the env var to clear
+         * @throws an Exception if an error occurs while reading the Env.
+         */
+        static void unsetenv( const std::string& name )
             throw ( lang::Exception );
 
         /**
@@ -61,6 +79,16 @@ namespace lang{
          * @returns the current system time in Milliseconds
          */
         static long long currentTimeMillis();
+
+    private:
+
+        /**
+         * Enumerates the environment and return an array of strings
+         * with the values.  Caller owns the array.  The array is terminated
+         * by an element that holds the value NULL
+         * @returns caller owned array of env name=value paris.
+         */
+        static char** getEnvArray();
 
     };
 

@@ -45,14 +45,16 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::IntegerTest );
 //#include <decaf/lang/LongTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::LongTest );
-#include <decaf/lang/FloatTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::FloatTest );
-#include <decaf/lang/DoubleTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::DoubleTest );
+//#include <decaf/lang/FloatTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::FloatTest );
+//#include <decaf/lang/DoubleTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::DoubleTest );
 //#include <decaf/lang/ExceptionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 //#include <decaf/lang/ThreadTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
+#include <decaf/lang/SystemTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
 //
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
