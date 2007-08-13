@@ -66,6 +66,7 @@ cc_sources = \
 h_sources = \
    decaf/net/BufferedSocket.h \
    decaf/net/SocketException.h \
+   decaf/net/URISyntaxException.h \
    decaf/net/TcpSocket.h \
    decaf/net/SocketError.h \
    decaf/net/SocketOutputStream.h \

@@ -34,6 +34,53 @@ namespace net{
          */
         URI( const std::string& uri );
 
+        /**
+         * Constructs a URI from the given components.
+         * @param scheme - the uri scheme
+         * @param ssp - Scheme specific part
+         * @param fragment - Fragment
+         */
+        URI( const std::string& scheme,
+             const std::string& ssp,
+             const std::string& fragment);
+
+        /**
+         * Constructs a URI from the given components.
+         * @param scheme - Scheme name
+         * @param userInfo - User name and authorization information
+         * @param host - Host name
+         * @param port - Port number
+         * @param path - Path
+         * @param query - Query
+         * @param fragment - Fragment
+         */
+        URI( const std::string& scheme, const std::string& userInfo,
+             const std::string& host, int port,
+             const std::string& path, const std::string& query,
+             const std::string& fragment );
+
+        /**
+         * Constructs a URI from the given components.
+         * @param scheme - Scheme name
+         * @param host - Host name
+         * @param path - Path
+         * @param fragment - Fragment
+         */
+        URI( const std::string& scheme, const std::string& host,
+             const std::string& path, const std::string& fragment );
+
+        /**
+         * Constructs a URI from the given components.
+         * @param scheme - Scheme name
+         * @param authority - Authority
+         * @param path - Path
+         * @param query - Query
+         * @param fragment - Fragment
+         */
+        URI( const std::string& scheme, const std::string& authority,
+             const std::string& path, const std::string& query,
+             const std::string& fragment );
+
         virtual ~URI() {}
 
         /**
