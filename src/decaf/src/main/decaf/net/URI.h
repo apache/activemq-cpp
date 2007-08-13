@@ -20,19 +20,27 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/Comparable.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/net/URISyntaxException.h>
 #include <string>
 
 namespace decaf{
 namespace net{
 
     class DECAF_API URI : public lang::Comparable<URI> {
+    private:
+
+        std::string authority;
+        std::string fragment;
+        std::string host;
+
     public:
 
         /**
          * Constructs a URI from the given string
          * @param uri - string uri to parse.
          */
-        URI( const std::string& uri );
+        URI( const std::string& uri ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -42,7 +50,7 @@ namespace net{
          */
         URI( const std::string& scheme,
              const std::string& ssp,
-             const std::string& fragment);
+             const std::string& fragment) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -57,7 +65,7 @@ namespace net{
         URI( const std::string& scheme, const std::string& userInfo,
              const std::string& host, int port,
              const std::string& path, const std::string& query,
-             const std::string& fragment );
+             const std::string& fragment ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -67,7 +75,8 @@ namespace net{
          * @param fragment - Fragment
          */
         URI( const std::string& scheme, const std::string& host,
-             const std::string& path, const std::string& fragment );
+             const std::string& path, const std::string& fragment )
+                 throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -79,7 +88,7 @@ namespace net{
          */
         URI( const std::string& scheme, const std::string& authority,
              const std::string& path, const std::string& query,
-             const std::string& fragment );
+             const std::string& fragment ) throw ( URISyntaxException);
 
         virtual ~URI() {}
 
@@ -111,6 +120,40 @@ namespace net{
          * @return true if this object is equal to the one passed.
          */
         virtual bool operator<( const URI& value ) const;
+
+        /**
+         * @eturns the decoded authority component of this URI.
+         */
+        std::string getAuthority() const {
+            return this->authority;
+        }
+
+        /**
+         * @returns the decoded fragment component of this URI.
+         */
+        std::string getFragment() const {
+            return this->fragment;
+        }
+
+        /**
+         * @returns the host component of this URI.
+         */
+        std::string getHost() const {
+            return this->host;
+        }
+
+    public:   // Static Methods
+
+        /**
+         * Creates a URI by parsing the given string.
+         * This convenience factory method works as if by invoking the URI(string)
+         * constructor; any URISyntaxException thrown by the constructor is caught
+         * and wrapped in a new IllegalArgumentException object, which is then thrown.
+         * @param uri - URI string to parse
+         * @throws IllegalArgumentException
+         */
+        static URI create( const std::string uri )
+            throw ( lang::exceptions::IllegalArgumentException );
 
     };
 

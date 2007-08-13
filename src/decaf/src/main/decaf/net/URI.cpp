@@ -22,7 +22,36 @@ using namespace decaf::net;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-URI::URI( const std::string& uri ) {
+URI::URI( const std::string& uri ) throw ( URISyntaxException) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI::URI( const std::string& scheme,
+          const std::string& ssp,
+          const std::string& fragment ) throw ( URISyntaxException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI::URI( const std::string& scheme, const std::string& userInfo,
+          const std::string& host, int port,
+          const std::string& path, const std::string& query,
+          const std::string& fragment ) throw ( URISyntaxException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI::URI( const std::string& scheme, const std::string& host,
+          const std::string& path, const std::string& fragment )
+            throw ( URISyntaxException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI::URI( const std::string& scheme, const std::string& authority,
+          const std::string& path, const std::string& query,
+          const std::string& fragment ) throw ( URISyntaxException ) {
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,5 +71,11 @@ bool URI::operator==( const URI& value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URI::operator<( const URI& value ) const {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URI URI::create( const std::string uri )
+    throw ( lang::exceptions::IllegalArgumentException ) {
 
 }
