@@ -25,6 +25,8 @@
 #include <decaf/net/MalformedURLException.h>
 #include <decaf/net/URL.h>
 #include <string>
+#include <apr_uri.h>
+#include <decaf/internal/AprPool.h>
 
 namespace decaf{
 namespace net{
@@ -35,14 +37,12 @@ namespace net{
     class DECAF_API URI : public lang::Comparable<URI> {
     private:
 
-        std::string scheme;
-        std::string authority;
-        std::string fragment;
-        std::string host;
-        std::string path;
-        std::string userInfo;
-        int port;
-        std::string query;
+        // Apr Data for parsing the uri.
+        apr_uri_t uri;
+        AprPool pool;
+
+        // The original string entered from URI( string ), empty if not set.
+        std::string uri;
 
     public:
 
@@ -135,56 +135,56 @@ namespace net{
          * @eturns the decoded authority component of this URI.
          */
         std::string getAuthority() const {
-            return this->authority;
+            return this->uri.hostinfo;
         }
 
         /**
          * @returns the decoded fragment component of this URI.
          */
         std::string getFragment() const {
-            return this->fragment;
+            return this->uri.fragment;
         }
 
         /**
          * @returns the host component of this URI.
          */
         std::string getHost() const {
-            return this->host;
+            return this->uri.host;
         }
 
         /**
          * @returns the path component of this URI.
          */
         std::string getPath() const {
-            return this->path;
+            return this->uri.path;
         }
 
         /**
          * @returns the port component of this URI.
          */
         int getPort() const {
-            return this->port;
+            return this->uri.port;
         }
 
         /**
          * @returns the query component of this URI.
          */
         std::string getQuery() const {
-            return this->query;
+            return this->uri.query;
         }
 
         /**
          * @returns the scheme component of this URI
          */
         std::string getScheme() const {
-            return this->scheme;
+            return this->uri.scheme;
         }
 
         /**
          * @returns the user info component of this URI
          */
         std::string getUserInfo() const {
-            return this->userInfo;
+            return this->uri.username;
         }
 
         /**

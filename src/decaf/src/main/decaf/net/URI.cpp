@@ -56,26 +56,31 @@ URI::URI( const std::string& scheme, const std::string& authority,
 
 ////////////////////////////////////////////////////////////////////////////////
 int URI::compareTo( const URI& value ) const {
-
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URI::equals( const URI& value ) const {
-
+    return compareTo( value ) == 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URI::operator==( const URI& value ) const {
-
+    return compareTo( value ) == 0 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool URI::operator<( const URI& value ) const {
-
+    return compareTo( value ) == -1 ? true : false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 URI URI::create( const std::string uri )
     throw ( lang::exceptions::IllegalArgumentException ) {
 
+    try {
+        return URI( uri );
+    } catch( URISyntaxException& e ) {
+        throw IllegalArgumentException( e );
+    }
 }
