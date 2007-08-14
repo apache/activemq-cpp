@@ -64,9 +64,19 @@ cc_sources = \
    decaf/internal/util/HexStringParser.cpp
 
 h_sources = \
-   decaf/net/BufferedSocket.h \
+   decaf/net/BindException.h \
+   decaf/net/ConnectException.h \
+   decaf/net/HttpRetryException.h \
+   decaf/net/MalformedURLException.h \
+   decaf/net/NoRouteToHostException.h \
+   decaf/net/PortUnreachableException.h \
+   decaf/net/ProtocolException.h \
    decaf/net/SocketException.h \
+   decaf/net/SocketTimeoutException.h \
+   decaf/net/UnknownHostException.h \
+   decaf/net/UnknownServiceException.h \
    decaf/net/URISyntaxException.h \
+   decaf/net/BufferedSocket.h \
    decaf/net/TcpSocket.h \
    decaf/net/SocketError.h \
    decaf/net/SocketOutputStream.h \
@@ -116,6 +126,7 @@ h_sources = \
    decaf/io/BufferedInputStream.h \
    decaf/io/InputStream.h \
    decaf/io/IOException.h \
+   decaf/io/InterruptedIOException.h \
    decaf/util/concurrent/Lock.h \
    decaf/util/concurrent/Concurrent.h \
    decaf/util/concurrent/CountDownLatch.h \
