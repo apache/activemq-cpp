@@ -39,10 +39,16 @@ namespace net{
 
         // Apr Data for parsing the uri.
         apr_uri_t uri;
-        AprPool pool;
+        internal::AprPool pool;
 
         // The original string entered from URI( string ), empty if not set.
-        std::string uri;
+        const char* uriString;
+
+        static const std::string unreserved;
+        static const std::string punct;
+        static const std::string reserved;
+        static const std::string someLegal;
+        static const std::string allLegal;
 
     public:
 
@@ -134,58 +140,42 @@ namespace net{
         /**
          * @eturns the decoded authority component of this URI.
          */
-        std::string getAuthority() const {
-            return this->uri.hostinfo;
-        }
+        std::string getAuthority() const;
 
         /**
          * @returns the decoded fragment component of this URI.
          */
-        std::string getFragment() const {
-            return this->uri.fragment;
-        }
+        std::string getFragment() const;
 
         /**
          * @returns the host component of this URI.
          */
-        std::string getHost() const {
-            return this->uri.host;
-        }
+        std::string getHost() const;
 
         /**
          * @returns the path component of this URI.
          */
-        std::string getPath() const {
-            return this->uri.path;
-        }
+        std::string getPath() const;
 
         /**
          * @returns the port component of this URI.
          */
-        int getPort() const {
-            return this->uri.port;
-        }
+        int getPort() const;
 
         /**
          * @returns the query component of this URI.
          */
-        std::string getQuery() const {
-            return this->uri.query;
-        }
+        std::string getQuery() const;
 
         /**
          * @returns the scheme component of this URI
          */
-        std::string getScheme() const {
-            return this->uri.scheme;
-        }
+        std::string getScheme() const;
 
         /**
          * @returns the user info component of this URI
          */
-        std::string getUserInfo() const {
-            return this->uri.username;
-        }
+        std::string getUserInfo() const;
 
         /**
          * Returns the raw authority component of this URI.
@@ -248,7 +238,7 @@ namespace net{
          * characters in the unreserved, punct, escaped, and other categories.
          * @returns the raw user-information component of the URI
          */
-        std::string getRawUserInfo()() const;
+        std::string getRawUserInfo() const;
 
         /**
          * Tells whether or not this URI is absolute.  A URI is absolute if,
@@ -419,6 +409,22 @@ namespace net{
          */
         static URI create( const std::string uri )
             throw ( lang::exceptions::IllegalArgumentException );
+
+    private:
+
+        // Parses a URI string and fills in the member data, throws a
+        // URISyntaxException if things fail
+        void parseURI( const std::string& uri ) throw ( URISyntaxException );
+
+        /*
+         * Quote illegal chars for each component, but not the others
+         *
+         * @param component java.lang.String the component to be converted @param
+         * legalset java.lang.String the legal character set allowed in the
+         * component s @return java.lang.String the converted string
+         */
+        std::string quoteComponent( const std::string& component,
+                                    const std::string& legalset );
 
     };
 

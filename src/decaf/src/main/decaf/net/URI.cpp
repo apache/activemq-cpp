@@ -17,12 +17,26 @@
 
 #include "URI.h"
 
+#include <apr_strings.h>
+#include <decaf/lang/Integer.h>
+
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string URI::unreserved = "_-!.~\'()*";
+const std::string URI::punct = ",;:$&+=";
+const std::string URI::reserved = punct + "?/[]@";
+const std::string URI::someLegal = unreserved + punct;
+const std::string URI::allLegal = unreserved + reserved;
 
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& uri ) throw ( URISyntaxException) {
+
+    this->uriString = NULL;
+    this->parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +44,26 @@ URI::URI( const std::string& scheme,
           const std::string& ssp,
           const std::string& fragment ) throw ( URISyntaxException ) {
 
+    std::string uri = "";
+
+    if( scheme != "" ) {
+        uri.append( scheme );
+        uri.append( ":" );
+    }
+
+    if( ssp != "" ) {
+        // QUOTE ILLEGAL CHARACTERS
+        uri.append( quoteComponent( ssp, allLegal ) );
+    }
+
+    if( fragment != "" ) {
+        uri.append( "#" );
+        // QUOTE ILLEGAL CHARACTERS
+        uri.append( quoteComponent( fragment, allLegal ) );
+    }
+
+    // Now hand of to the main parse function.
+    parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +72,77 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
           const std::string& path, const std::string& query,
           const std::string& fragment ) throw ( URISyntaxException ) {
 
+    this->uriString = NULL;
+
+    if( scheme == "" && userInfo == "" && host == "" &&
+        path == "" && query == "" && fragment == "" ) {
+
+        this->uri.path = "";
+        return;
+    }
+
+    if( scheme != "" && path.length() > 0 && path.at(0) != '/') {
+
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            "URI::URI - Path string: %s starts with invalid char '/'",
+            path.c_str() );
+    }
+
+    std::string uri = "";
+    if( scheme != "" ) {
+        uri.append( scheme );
+        uri.append( ":" );
+    }
+
+    if( userInfo != "" || host != "" || port != -1 ) {
+        uri.append( "//" );
+    }
+
+    if( userInfo != "" ) {
+        // QUOTE ILLEGAL CHARACTERS in userinfo
+        uri.append(quoteComponent( userInfo, someLegal ) );
+        uri.append( "@" );
+    }
+
+    if( host != "" ) {
+        std::string newHost = host;
+
+        // check for ipv6 addresses that hasn't been enclosed
+        // in square brackets
+        if( host.find( ":" ) != std::string::npos &&
+            host.find( "]" ) == std::string::npos &&
+            host.find( "[" ) == std::string::npos ) {
+
+            newHost = std::string( "[" ) + host + "]";
+        }
+
+        uri.append( newHost );
+    }
+
+    if( port != -1 ) {
+        uri.append( ":" );
+        uri.append( Integer::toString( port ) );
+    }
+
+    if( path != "" ) {
+        // QUOTE ILLEGAL CHARS
+        uri.append( quoteComponent( path, "/@" + someLegal ) );
+    }
+
+    if( query != "" ) {
+        uri.append( "?" );
+        // QUOTE ILLEGAL CHARS
+        uri.append( quoteComponent( query, allLegal ) );
+    }
+
+    if( fragment != "" ) {
+        // QUOTE ILLEGAL CHARS
+        uri.append( "#" );
+        uri.append( quoteComponent( fragment, allLegal ) );
+    }
+
+    parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,12 +150,31 @@ URI::URI( const std::string& scheme, const std::string& host,
           const std::string& path, const std::string& fragment )
             throw ( URISyntaxException ) {
 
+    this->uriString = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& scheme, const std::string& authority,
           const std::string& path, const std::string& query,
           const std::string& fragment ) throw ( URISyntaxException ) {
+
+    this->uriString = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URI::parseURI( const std::string& uri ) throw ( URISyntaxException ) {
+
+    // Use APR to perform the main parse.
+    apr_status_t result = apr_uri_parse( pool.getAprPool(),
+        uri.c_str(), &this->uri );
+
+    if( result != APR_SUCCESS ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            "URI::praseURI - URI String %s invalid.",
+            uri.c_str() );
+    }
+
 
 }
 
@@ -83,4 +207,20 @@ URI URI::create( const std::string uri )
     } catch( URISyntaxException& e ) {
         throw IllegalArgumentException( e );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string URI::quoteComponent( const std::string& component,
+                                 const std::string& legalset ) {
+//    try {
+        /*
+         * Use a different encoder than URLEncoder since: 1. chars like "/",
+         * "#", "@" etc needs to be preserved instead of being encoded, 2.
+         * UTF-8 char set needs to be used for encoding instead of default
+         * platform one
+         */
+//        return URIEncoderDecoder.quoteIllegal(component, legalset);
+//    } catch( UnsupportedEncodingException e ) {
+//        throw RuntimeException( e );
+//    }
 }

@@ -18,7 +18,7 @@
 #include "URL.h"
 
 using namespace decaf;
-using namespace decaf::net
+using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
 URL::URL() {

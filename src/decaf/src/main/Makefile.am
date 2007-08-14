@@ -23,6 +23,10 @@ cc_sources = \
    decaf/net/SocketError.cpp \
    decaf/net/TcpSocket.cpp \
    decaf/net/SocketFactory.cpp \
+   decaf/net/URI.cpp \
+   decaf/net/URL.cpp \
+   decaf/net/URLEncoder.cpp \
+   decaf/net/URLDecoder.cpp \
    decaf/lang/Exception.cpp \
    decaf/lang/Thread.cpp \
    decaf/lang/Byte.cpp \
@@ -84,6 +88,10 @@ h_sources = \
    decaf/net/SocketInputStream.h \
    decaf/net/ServerSocket.h \
    decaf/net/SocketFactory.h \
+   decaf/net/URI.h \
+   decaf/net/URL.h \
+   decaf/net/URLEncoder.h \
+   decaf/net/URLDecoder.h \
    decaf/lang/Throwable.h \
    decaf/lang/Exception.h \
    decaf/lang/Byte.h \
