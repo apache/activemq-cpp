@@ -15,29 +15,29 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_URISYNTAXEXCEPTION_H_
-#define _DECAF_NET_URISYNTAXEXCEPTION_H_
+#ifndef _DECAF_NET_BINDEXCEPTION_H_
+#define _DECAF_NET_BINDEXCEPTION_H_
 
 #include <decaf/util/Config.h>
-#include <decaf/lang/Exception.h>
+#include <decaf/net/SocketException.h>
 
 namespace decaf{
 namespace net{
 
-    class DECAF_API URISyntaxException : public lang::Exception {
+    class DECAF_API BindException : public SocketException {
     public:
 
         /**
          * Default Constructor
          */
-        URISyntaxException() throw() {}
+        BindException() throw() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
-        URISyntaxException( const Exception& ex ) throw()
-        : Exception()
+        BindException( const Exception& ex ) throw()
+        : SocketException()
         {
             *(Exception*)this = ex;
         }
@@ -45,8 +45,8 @@ namespace net{
         /**
          * Copy Constructor
          */
-        URISyntaxException( const URISyntaxException& ex ) throw()
-        : Exception()
+        BindException( const BindException& ex ) throw()
+        : SocketException()
         {
             *(Exception*)this = ex;
         }
@@ -60,9 +60,9 @@ namespace net{
          * @param message to report
          * @param list of primitives that are formatted into the message
          */
-        URISyntaxException( const char* file, const int lineNumber,
+        BindException( const char* file, const int lineNumber,
                             const char* msg, ... ) throw ()
-        : Exception()
+        : SocketException()
         {
             va_list vargs ;
             va_start( vargs, msg );
@@ -77,17 +77,17 @@ namespace net{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual URISyntaxException* clone() const {
-            return new URISyntaxException( *this );
+        virtual BindException* clone() const {
+            return new BindException( *this );
         }
 
         /**
          * Destructor
          */
-        virtual ~URISyntaxException() throw() {}
+        virtual ~BindException() throw() {}
 
     };
 
 }}
 
-#endif /*_DECAF_NET_URISYNTAXEXCEPTION_H_*/
+#endif /*_DECAF_NET_BINDEXCEPTION_H_*/

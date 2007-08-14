@@ -30,23 +30,23 @@ namespace net{
     public:
 
         SocketException() throw() {}
+
         SocketException( const lang::Exception& ex ) throw()
-        : io::IOException()
-        {
+        : io::IOException() {
             *(lang::Exception*)this = ex;
         }
+
         SocketException( const SocketException& ex ) throw()
-        : io::IOException()
-        {
+        : io::IOException() {
             *(lang::Exception*)this = ex;
         }
+
         SocketException( const char* file, const int lineNumber,
                          const char* msg, ...) throw()
-        : io::IOException()
-        {
+        : io::IOException() {
             va_list vargs;
-            va_start(vargs, msg);
-            buildMessage(msg, vargs);
+            va_start( vargs, msg );
+            buildMessage( msg, vargs );
 
             // Set the first mark for this exception.
             setMark( file, lineNumber );
@@ -57,7 +57,7 @@ namespace net{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual SocketException* clone() const{
+        virtual SocketException* clone() const {
             return new SocketException( *this );
         }
 

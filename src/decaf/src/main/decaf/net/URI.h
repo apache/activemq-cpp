@@ -22,6 +22,8 @@
 #include <decaf/lang/Comparable.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/net/URISyntaxException.h>
+#include <decaf/net/MalformedURLException.h>
+#include <decaf/net/URL.h>
 #include <string>
 
 namespace decaf{
@@ -402,9 +404,8 @@ namespace net{
          * @throws MalformedURLException - If a protocol handler for the URL could not
          * be found, or if some other error occurred while constructing the URL
          */
-// TODO
-//        URL toURL() const
-//            throw ( MalformedURLException, lang::exceptions::IllegalArgumentException );
+        URL toURL() const
+            throw ( MalformedURLException, lang::exceptions::IllegalArgumentException );
 
     public:   // Static Methods
 

@@ -15,29 +15,29 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_NET_URISYNTAXEXCEPTION_H_
-#define _DECAF_NET_URISYNTAXEXCEPTION_H_
+#ifndef _DECAF_NET_MALFORMEDURLEXCEPTION_H_
+#define _DECAF_NET_MALFORMEDURLEXCEPTION_H_
 
 #include <decaf/util/Config.h>
-#include <decaf/lang/Exception.h>
+#include <decaf/io/IOException.h>
 
 namespace decaf{
 namespace net{
 
-    class DECAF_API URISyntaxException : public lang::Exception {
+    class DECAF_API MalformedURLException  : public io::IOException {
     public:
 
         /**
          * Default Constructor
          */
-        URISyntaxException() throw() {}
+        MalformedURLException() throw() {}
 
         /**
          * Conversion Constructor from some other Exception
          * @param An exception that should become this type of Exception
          */
-        URISyntaxException( const Exception& ex ) throw()
-        : Exception()
+        MalformedURLException( const Exception& ex ) throw()
+        : io::IOException()
         {
             *(Exception*)this = ex;
         }
@@ -45,8 +45,8 @@ namespace net{
         /**
          * Copy Constructor
          */
-        URISyntaxException( const URISyntaxException& ex ) throw()
-        : Exception()
+        MalformedURLException( const MalformedURLException& ex ) throw()
+        : io::IOException()
         {
             *(Exception*)this = ex;
         }
@@ -60,9 +60,9 @@ namespace net{
          * @param message to report
          * @param list of primitives that are formatted into the message
          */
-        URISyntaxException( const char* file, const int lineNumber,
-                            const char* msg, ... ) throw ()
-        : Exception()
+        MalformedURLException( const char* file, const int lineNumber,
+                               const char* msg, ... ) throw ()
+        : io::IOException()
         {
             va_list vargs ;
             va_start( vargs, msg );
@@ -77,17 +77,17 @@ namespace net{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual URISyntaxException* clone() const {
-            return new URISyntaxException( *this );
+        virtual MalformedURLException* clone() const {
+            return new MalformedURLException( *this );
         }
 
         /**
          * Destructor
          */
-        virtual ~URISyntaxException() throw() {}
+        virtual ~MalformedURLException() throw() {}
 
     };
 
 }}
 
-#endif /*_DECAF_NET_URISYNTAXEXCEPTION_H_*/
+#endif /*_DECAF_NET_MALFORMEDURLEXCEPTION_H_*/

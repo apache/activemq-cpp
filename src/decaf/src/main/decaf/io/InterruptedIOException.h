@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_IO_IOEXCEPTION_H
-#define _DECAF_IO_IOEXCEPTION_H
+#ifndef _DECAF_IO_INTERRUPTEDIOEXCEPTION_H
+#define _DECAF_IO_INTERRUPTEDIOEXCEPTION_H
 
 #include <decaf/lang/Exception.h>
+#include <decaf/io/IOException.h>
 
 namespace decaf{
 namespace io{
@@ -25,20 +26,20 @@ namespace io{
     /*
      * Signals that an I/O exception of some sort has occurred.
      */
-    class DECAF_API IOException : public lang::Exception {
+    class DECAF_API InterruptedIOException : public io::IOException {
     public:
 
         /**
          * Default Constructor
          */
-        IOException() throw() {}
+        InterruptedIOException() throw() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
-        IOException( const lang::Exception& ex ) throw()
-        : lang::Exception() {
+        InterruptedIOException( const lang::Exception& ex ) throw()
+        : IOException() {
             *(lang::Exception*)this = ex;
         }
 
@@ -46,8 +47,8 @@ namespace io{
          * Copy Constructor
          * @param ex the exception to copy, which is an instance of this type
          */
-        IOException( const IOException& ex ) throw()
-        : lang::Exception() {
+        InterruptedIOException( const InterruptedIOException& ex ) throw()
+        : IOException() {
             *(lang::Exception*)this = ex;
         }
 
@@ -57,9 +58,9 @@ namespace io{
          * @param lineNumber line where the exception occured
          * @param msg the message that was generated
          */
-        IOException( const char* file, const int lineNumber,
-                     const char* msg, ... ) throw()
-        : lang::Exception() {
+        InterruptedIOException( const char* file, const int lineNumber,
+                                const char* msg, ... ) throw()
+        : IOException() {
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -73,14 +74,14 @@ namespace io{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual IOException* clone() const {
+        virtual InterruptedIOException* clone() const {
             return new IOException( *this );
         }
 
-        virtual ~IOException() throw() {}
+        virtual ~InterruptedIOException() throw() {}
 
     };
 
 }}
 
-#endif /*_DECAF_IO_IOEXCEPTION_H*/
+#endif /*_DECAF_IO_INTERRUPTEDIOEXCEPTION_H*/
