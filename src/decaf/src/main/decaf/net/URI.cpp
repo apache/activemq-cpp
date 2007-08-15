@@ -84,9 +84,8 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
     if( scheme != "" && path.length() > 0 && path.at(0) != '/') {
 
         throw URISyntaxException(
-            __FILE__, __LINE__,
-            "URI::URI - Path string: %s starts with invalid char '/'",
-            path.c_str() );
+            __FILE__, __LINE__, path,
+            "URI::URI - Path string: %s starts with invalid char '/'" );
     }
 
     std::string uri = "";
@@ -164,9 +163,8 @@ URI::URI( const std::string& scheme, const std::string& authority,
 
     if( scheme != "" && path.length() > 0 && path.at(0) != '/' ) {
          throw URISyntaxException(
-            __FILE__, __LINE__,
-            "URI::URI - Path String %s must start with a '/'",
-            path.c_str() );
+            __FILE__, __LINE__, path,
+            "URI::URI - Path String %s must start with a '/'" );
      }
 
      std::string uri = "";
@@ -207,10 +205,35 @@ void URI::parseURI( const std::string& uri ) throw ( URISyntaxException ) {
 
     if( result != APR_SUCCESS ) {
         throw URISyntaxException(
-            __FILE__, __LINE__,
-            "URI::praseURI - URI String %s invalid.",
-            uri.c_str() );
+            __FILE__, __LINE__, uri,
+            "URI::praseURI - URI String %s invalid." );
     }
+
+    std::cout << "\n";
+    std::cout << "Original URI String: " << uri << std::endl;
+    std::cout << "\n";
+    std::cout << "Scheme: "
+              << ( this->uri.scheme ? this->uri.scheme : "" ) << std::endl;
+    std::cout << "Host: "
+              << ( this->uri.hostinfo ? this->uri.hostinfo : "" ) << std::endl;
+    std::cout << "User: "
+              << ( this->uri.user ? this->uri.user : "" ) << std::endl;
+    std::cout << "Passwrod: "
+              << ( this->uri.password ? this->uri.password : "" ) << std::endl;
+    std::cout << "Host Name: "
+              << ( this->uri.hostname ? this->uri.hostname : "" ) << std::endl;
+    std::cout << "Port Str: "
+              << ( this->uri.port_str ? this->uri.port_str : "" ) << std::endl;
+    std::cout << "Path: "
+              << ( this->uri.path ? this->uri.path : "" ) << std::endl;
+    std::cout << "Query: "
+              << ( this->uri.query ? this->uri.query : "" ) << std::endl;
+    std::cout << "Fragment: "
+              << ( this->uri.fragment ? this->uri.fragment : "" ) << std::endl;
+    std::cout << "Port: " << this->uri.port << std::endl;
+    std::cout << "Is Initialized: " << this->uri.is_initialized << std::endl;
+    std::cout << "DNS Looked Up: " << this->uri.dns_looked_up << std::endl;
+    std::cout << "DNS Resolved: " << this->uri.dns_resolved << std::endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
