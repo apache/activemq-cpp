@@ -18,6 +18,10 @@
 #ifndef _DECAF_INTERNAL_NET_URIENCODERDECODER_H_
 #define _DECAF_INTERNAL_NET_URIENCODERDECODER_H_
 
+#include <decaf/util/Config.h>
+#include <decaf/net/URISyntaxException>
+#include <string>
+
 namespace decaf{
 namespace internal{
 namespace net{
@@ -27,6 +31,33 @@ namespace net{
 
         URIEncoderDecoder();
         virtual ~URIEncoderDecoder() {}
+
+        /**
+         * Validate a string by checking if it contains any characters other than:
+         *
+         * 1. letters ('a'..'z', 'A'..'Z')
+         * 2. numbers ('0'..'9')
+         * 3. characters in the legalset parameter
+         * 4. characters that are not ISO Control or are not ISO Space characters)
+         *
+         * @param s - the string to be validated
+         * @param legal - the characters allowed in the string s
+         */
+        static void validate( const std::string& s, const std::string& legal )
+            throw ( URISyntaxException );
+
+        /**
+         * Validate a string by checking if it contains any characters other than:
+         *
+         * 1. letters ('a'..'z', 'A'..'Z')
+         * 2. numbers ('0'..'9')
+         * 3. characters in the legalset parameter
+         *
+         * @param s - the string to be validated
+         * @param legal - the characters allowed in the string s
+         */
+        static void validateSimple( const std::string& s, const std::string& legal )
+            throw ( URISyntaxException );
 
     };
 
