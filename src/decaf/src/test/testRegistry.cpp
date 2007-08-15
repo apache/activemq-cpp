@@ -62,6 +62,8 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 #include <decaf/net/URITest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
+#include <decaf/net/URISyntaxExceptionTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URISyntaxExceptionTest );
 //
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );

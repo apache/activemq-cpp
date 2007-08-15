@@ -37,6 +37,7 @@ cc_sources = \
   decaf/net/SocketFactoryTest.cpp \
   decaf/net/SocketTest.cpp \
   decaf/net/URITest.cpp \
+  decaf/net/URISyntaxExceptionTest.cpp \
   decaf/util/StringTokenizerTest.cpp \
   decaf/util/Endian.cpp \
   decaf/util/DateTest.cpp \
@@ -73,6 +74,7 @@ h_sources = \
   decaf/net/SocketFactoryTest.h \
   decaf/net/SocketTest.h \
   decaf/net/URITest.h \
+  decaf/net/URISyntaxExceptionTest.h \
   decaf/util/StringTokenizerTest.h \
   decaf/util/Endian.h \
   decaf/util/DateTest.h \
