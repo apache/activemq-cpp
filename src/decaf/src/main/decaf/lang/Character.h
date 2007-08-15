@@ -257,6 +257,17 @@ namespace lang{
         }
 
         /**
+         * Answers whether the character is an ISO control character, which
+         * is a char that lays in the range of 0 to 1f and 7f to 9f
+         * @param c - the character, including supplementary characters
+         * @return true if the char is an ISO control character
+         */
+        static bool isISOControl( char c ) {
+            return ( c >= 0 && c <= 0x1f ) ||
+                   ( (unsigned char)c >= 0x7f && (unsigned char)c <= 0x9f );
+        }
+
+        /**
          * Returns the numeric value of the character ch in the specified radix.
          *
          * If the radix is not in the range MIN_RADIX <= radix <= MAX_RADIX or if
