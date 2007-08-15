@@ -27,6 +27,10 @@ namespace internal{
 namespace net{
 
     class URIEncoderDecoder {
+    private:
+
+        static const std::string digits;
+
     public:
 
         URIEncoderDecoder();
@@ -58,6 +62,48 @@ namespace net{
          */
         static void validateSimple( const std::string& s, const std::string& legal )
             throw ( URISyntaxException );
+
+        /**
+         * All characters except letters ('a'..'z', 'A'..'Z') and numbers ('0'..'9')
+         * and legal characters are converted into their hexidecimal value prepended
+         * by '%'.
+         * <p>
+         * For example: '#' -> %23
+         * <p>
+         * Other characters, which are chars that are not US-ASCII, and are
+         * not ISO Control or are not ISO Space chars, are preserved.
+         * @param s - the string to be converted
+         * @param legal - the characters allowed to be preserved in the string s
+         * @return converted string
+         */
+        static std::string quoteIllegal( const std::string& s,
+                                         const std::string& legal );
+
+        /**
+         * Other characters, which are chars that are not US-ASCII, and are
+         * not ISO Control or are not ISO Space chars are not preserved. They are
+         * converted into their hexidecimal value prepended by '%'.
+         * <p>
+         * For example: Euro currency symbol -> "%E2%82%AC".
+         * @param s - the string to be converted
+         * @return the converted string
+         */
+        static std::string encodeOthers( const std::string& s );
+
+        /**
+         * Decodes the string argument which is assumed to be encoded in the
+         * <code>x-www-form-urlencoded</code> MIME content type using the UTF-8
+         * encoding scheme.
+         * <p>
+         * '%' and two following hex digit characters are converted to the
+         * equivalent byte value. All other characters are passed through
+         * unmodified.
+         * <p>
+         * e.g. "A%20B%20C %24%25" -> "A B C $%"
+         * @param s - The encoded string.
+         * @return The decoded version.
+         */
+        static std::string decode( const std::string& s );
 
     };
 
