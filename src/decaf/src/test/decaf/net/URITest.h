@@ -27,7 +27,7 @@ namespace net{
     class URITest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( URITest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test_Constructor_String );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +35,7 @@ namespace net{
         URITest();
         virtual ~URITest() {}
 
-        void test();
+        void test_Constructor_String();
 
     };
 
