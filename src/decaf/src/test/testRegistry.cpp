@@ -53,13 +53,15 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ExceptionTest );
 //#include <decaf/lang/ThreadTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
-#include <decaf/lang/SystemTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
+//#include <decaf/lang/SystemTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
 //
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
 //#include <decaf/net/SocketTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
+#include <decaf/net/URITest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );

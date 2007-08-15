@@ -63,7 +63,7 @@ URI::URI( const std::string& scheme,
     }
 
     // Now hand of to the main parse function.
-    parseURI( uri );
+    this->parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
         uri.append( quoteComponent( fragment, allLegal ) );
     }
 
-    parseURI( uri );
+    this->parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,8 @@ URI::URI( const std::string& scheme, const std::string& host,
             throw ( URISyntaxException ) {
 
     this->uriString = NULL;
+
+    URI::URI( scheme, "", host, -1, path, "", fragment );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +161,41 @@ URI::URI( const std::string& scheme, const std::string& authority,
           const std::string& fragment ) throw ( URISyntaxException ) {
 
     this->uriString = NULL;
+
+    if( scheme != "" && path.length() > 0 && path.at(0) != '/' ) {
+         throw URISyntaxException(
+            __FILE__, __LINE__,
+            "URI::URI - Path String %s must start with a '/'",
+            path.c_str() );
+     }
+
+     std::string uri = "";
+     if( scheme != "" ) {
+         uri.append( scheme );
+         uri.append( ":" );
+     }
+     if( authority != "" ) {
+         uri.append("//");
+         // QUOTE ILLEGAL CHARS
+         uri.append( quoteComponent( authority, "@[]" + someLegal ) );
+     }
+
+     if( path != "" ) {
+         // QUOTE ILLEGAL CHARS
+         uri.append( quoteComponent( path, "/@" + someLegal ) );
+     }
+     if( query != "" ) {
+         // QUOTE ILLEGAL CHARS
+         uri.append( "?" );
+         uri.append( quoteComponent( query, allLegal ) );
+     }
+     if( fragment != "" ) {
+         // QUOTE ILLEGAL CHARS
+         uri.append( "#" );
+         uri.append( quoteComponent( fragment, allLegal ) );
+     }
+
+     this->parseURI( uri );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,8 +211,6 @@ void URI::parseURI( const std::string& uri ) throw ( URISyntaxException ) {
             "URI::praseURI - URI String %s invalid.",
             uri.c_str() );
     }
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
