@@ -46,7 +46,7 @@ unsigned char ActiveMQTextMessage::getDataStructureType() const
 std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
     try{
-        if( getContent().size() < 4 ) {
+        if( getContent().size() <= 4 ) {
             return "";
         }
 
