@@ -144,7 +144,8 @@ Response* ResponseCorrelator::request( Command* command )
         if( response == NULL ){
 
             throw CommandIOException( __FILE__, __LINE__,
-                "response from futureResponse was invalid" );
+                "No valid response received for command: %s, check broker.",
+                command->toString().c_str() );
         }
 
         return response;
