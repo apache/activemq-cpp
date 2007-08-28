@@ -23,7 +23,6 @@
 #include <cms/Stoppable.h>
 #include <cms/Closeable.h>
 #include <cms/Session.h>
-#include <cms/ConnectionMetaData.h>
 
 namespace cms
 {
@@ -45,13 +44,6 @@ namespace cms
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
-
-        /**
-         * @eturns the a ConnectionMata object for this connection
-         * @throws CMSException on failure to get ConnectionMetaData
-         */
-        virtual const ConnectionMetaData& getMetaData() const
-            throw ( cms::CMSException ) = 0;
 
         /**
          * Creates an AUTO_ACKNOWLEDGE Session.

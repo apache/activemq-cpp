@@ -27,7 +27,6 @@
 #include <activemq/util/Properties.h>
 #include <activemq/util/Map.h>
 #include <activemq/util/Set.h>
-#include <activemq/core/ActiveMQConnectionMetaData.h>
 
 #include <string>
 
@@ -85,11 +84,6 @@ namespace core{
          */
         util::Set<ActiveMQSession*> activeSessions;
 
-        /**
-         * The Meta Data for this Connection
-         */
-        ActiveMQConnectionMetaData connectionMetaData;
-
     public:
 
         /**
@@ -121,13 +115,6 @@ namespace core{
         virtual void removeDispatcher( const connector::ConsumerInfo* consumer );
 
     public:   // Connection Interface Methods
-
-        /**
-         * @eturns the a ConnectionMata object for this connection
-         * @throws CMSException
-         */
-        virtual const cms::ConnectionMetaData& getMetaData() const
-            throw ( cms::CMSException );
 
         /**
          * Creates a new Session to work for this Connection
