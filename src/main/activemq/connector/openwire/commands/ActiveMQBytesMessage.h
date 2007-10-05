@@ -164,7 +164,7 @@ namespace commands{
          * @returns boolean value from stream
          * @throws CMSException
          */
-        virtual bool readBoolean() throw ( cms::CMSException );
+        virtual bool readBoolean() const throw ( cms::CMSException );
 
         /**
          * Writes a boolean to the bytes message stream as a 1-byte value.
@@ -180,7 +180,7 @@ namespace commands{
          * @returns unsigned char value from stream
          * @throws CMSException
          */
-        virtual unsigned char readByte() throw ( cms::CMSException );
+        virtual unsigned char readByte() const throw ( cms::CMSException );
 
         /**
          * Writes a byte to the bytes message stream as a 1-byte value
@@ -209,7 +209,7 @@ namespace commands{
          *          been reached
          * @throws CMSException if an error occurs.
          */
-        virtual std::size_t readBytes( std::vector<unsigned char>& value )
+        virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
             throw ( cms::CMSException );
 
         /**
@@ -245,7 +245,7 @@ namespace commands{
          *          been reached
          * @throws CMSException
          */
-        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length )
+        virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) const
             throw ( cms::CMSException );
 
         /**
@@ -265,7 +265,7 @@ namespace commands{
          * @returns char value from stream
          * @throws CMSException
          */
-        virtual char readChar() throw ( cms::CMSException );
+        virtual char readChar() const throw ( cms::CMSException );
 
         /**
          * Writes a char to the bytes message stream as a 1-byte value
@@ -279,7 +279,7 @@ namespace commands{
          * @returns double value from stream
          * @throws CMSException
          */
-        virtual float readFloat() throw ( cms::CMSException );
+        virtual float readFloat() const throw ( cms::CMSException );
 
         /**
          * Writes a float to the bytes message stream as a 4 byte value
@@ -293,7 +293,7 @@ namespace commands{
          * @returns double value from stream
          * @throws CMSException
          */
-        virtual double readDouble() throw ( cms::CMSException );
+        virtual double readDouble() const throw ( cms::CMSException );
 
         /**
          * Writes a double to the bytes message stream as a 8 byte value
@@ -307,7 +307,7 @@ namespace commands{
          * @returns short value from stream
          * @throws CMSException
          */
-        virtual short readShort() throw ( cms::CMSException );
+        virtual short readShort() const throw ( cms::CMSException );
 
         /**
          * Writes a signed short to the bytes message stream as a 2 byte value
@@ -321,7 +321,7 @@ namespace commands{
          * @returns unsigned short value from stream
          * @throws CMSException
          */
-        virtual unsigned short readUnsignedShort() throw ( cms::CMSException );
+        virtual unsigned short readUnsignedShort() const throw ( cms::CMSException );
 
         /**
          * Writes a unsigned short to the bytes message stream as a 2 byte value
@@ -335,7 +335,7 @@ namespace commands{
          * @returns int value from stream
          * @throws CMSException
          */
-        virtual int readInt() throw ( cms::CMSException );
+        virtual int readInt() const throw ( cms::CMSException );
 
         /**
          * Writes a signed int to the bytes message stream as a 4 byte value
@@ -349,7 +349,7 @@ namespace commands{
          * @returns long long value from stream
          * @throws CMSException
          */
-        virtual long long readLong() throw ( cms::CMSException );
+        virtual long long readLong() const throw ( cms::CMSException );
 
         /**
          * Writes a long long to the bytes message stream as a 8 byte value
@@ -363,7 +363,7 @@ namespace commands{
          * @returns String from stream
          * @throws CMSException
          */
-        virtual std::string readString() throw ( cms::CMSException );
+        virtual std::string readString() const throw ( cms::CMSException );
 
         /**
          * Writes an ASCII String to the Bytes message stream
@@ -377,7 +377,7 @@ namespace commands{
          * @returns String from stream
          * @throws CMSException
          */
-        virtual std::string readUTF() throw ( cms::CMSException );
+        virtual std::string readUTF() const throw ( cms::CMSException );
 
         /**
          * Writes an UTF String to the BytesMessage stream
@@ -392,7 +392,7 @@ namespace commands{
          * Throws an exception if not in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnly() throw (cms::CMSException){
+        void checkWriteOnly() const throw (cms::CMSException){
             if( readOnly ){
                 throw exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
@@ -403,7 +403,7 @@ namespace commands{
          * Throws an exception if not in read-only mode.
          * @throws CMSException
          */
-        void checkReadOnly() throw (cms::CMSException){
+        void checkReadOnly() const throw (cms::CMSException){
             if( !readOnly ){
                 throw exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
@@ -423,7 +423,7 @@ namespace commands{
          * InputStream that wraps around the command's content when in
          * read-only mode.
          */
-        io::ByteArrayInputStream inputStream;
+        mutable io::ByteArrayInputStream inputStream;
 
         /**
          * OutputStream that wraps around the command's content when in
@@ -434,7 +434,7 @@ namespace commands{
         /**
          * DataInputStream wrapper around the input stream.
          */
-        io::DataInputStream dataInputStream;
+        mutable io::DataInputStream dataInputStream;
 
         /**
          * DataOutputStream wrapper around the output stream.

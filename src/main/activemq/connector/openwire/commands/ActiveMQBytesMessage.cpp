@@ -94,7 +94,7 @@ void ActiveMQBytesMessage::reset() throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQBytesMessage::readBoolean() throw ( cms::CMSException ) {
+bool ActiveMQBytesMessage::readBoolean() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -116,7 +116,7 @@ void ActiveMQBytesMessage::writeBoolean( bool value ) throw ( cms::CMSException 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQBytesMessage::readByte() throw ( cms::CMSException ) {
+unsigned char ActiveMQBytesMessage::readByte() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -138,7 +138,7 @@ void ActiveMQBytesMessage::writeByte( unsigned char value ) throw ( cms::CMSExce
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value )
+std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value ) const
     throw ( cms::CMSException ) {
 
     try{
@@ -161,7 +161,7 @@ void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t length )
+std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t length ) const
     throw ( cms::CMSException ) {
 
     try{
@@ -186,7 +186,7 @@ void ActiveMQBytesMessage::writeBytes( const unsigned char* value,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char ActiveMQBytesMessage::readChar() throw ( cms::CMSException ) {
+char ActiveMQBytesMessage::readChar() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -208,7 +208,7 @@ void ActiveMQBytesMessage::writeChar( char value ) throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-float ActiveMQBytesMessage::readFloat() throw ( cms::CMSException ) {
+float ActiveMQBytesMessage::readFloat() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -230,7 +230,7 @@ void ActiveMQBytesMessage::writeFloat( float value ) throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double ActiveMQBytesMessage::readDouble() throw ( cms::CMSException ) {
+double ActiveMQBytesMessage::readDouble() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -252,7 +252,7 @@ void ActiveMQBytesMessage::writeDouble( double value ) throw ( cms::CMSException
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-short ActiveMQBytesMessage::readShort() throw ( cms::CMSException ) {
+short ActiveMQBytesMessage::readShort() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -274,7 +274,7 @@ void ActiveMQBytesMessage::writeShort( short value ) throw ( cms::CMSException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short ActiveMQBytesMessage::readUnsignedShort() throw ( cms::CMSException ) {
+unsigned short ActiveMQBytesMessage::readUnsignedShort() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -296,7 +296,7 @@ void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value ) throw ( cm
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int ActiveMQBytesMessage::readInt() throw ( cms::CMSException ) {
+int ActiveMQBytesMessage::readInt() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -318,7 +318,7 @@ void ActiveMQBytesMessage::writeInt( int value ) throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long ActiveMQBytesMessage::readLong() throw ( cms::CMSException ) {
+long long ActiveMQBytesMessage::readLong() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -340,7 +340,7 @@ void ActiveMQBytesMessage::writeLong( long long value ) throw ( cms::CMSExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readString() throw ( cms::CMSException ) {
+std::string ActiveMQBytesMessage::readString() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
@@ -362,7 +362,7 @@ void ActiveMQBytesMessage::writeString( const std::string& value ) throw ( cms::
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string ActiveMQBytesMessage::readUTF() throw ( cms::CMSException ) {
+std::string ActiveMQBytesMessage::readUTF() const throw ( cms::CMSException ) {
 
     try{
         checkReadOnly();
