@@ -51,7 +51,7 @@ namespace util{
          * one.
          * @param source The source map.
          */
-        Map( const Map& source ) {
+        Map( const Map& source ) : concurrent::Synchronizable() {
             copy( source );
         }
 
