@@ -39,6 +39,10 @@ using namespace decaf::util;
 using namespace decaf::internal;
 using namespace decaf::lang::exceptions;
 
+#if !defined(_WIN32)
+    extern char** environ;
+#endif 
+
 ////////////////////////////////////////////////////////////////////////////////
 AprPool System::aprPool;
 
@@ -216,9 +220,6 @@ char** System::getEnvArray() {
 
 #else
 
-////////////////////////////////////////////////////////////////////////////////
-// Defined here for OSX
-extern char** environ;
 
 ////////////////////////////////////////////////////////////////////////////////
 char** System::getEnvArray() {
