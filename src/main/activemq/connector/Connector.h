@@ -52,6 +52,17 @@ namespace connector{
         public cms::Startable,
         public cms::Closeable
     {
+    protected:
+
+        // Flags the state we are in for connection to broker.
+        enum connectionState
+        {
+            DISCONNECTED,
+            CONNECTION_ERROR,
+            CONNECTING,
+            CONNECTED
+        };
+
     public:    // Connector Types
 
         enum AckType

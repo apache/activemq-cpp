@@ -73,14 +73,6 @@ namespace openwire{
     {
     private:
 
-        // Flags the state we are in for connection to broker.
-        enum connectionState
-        {
-            DISCONNECTED,
-            CONNECTING,
-            CONNECTED
-        };
-
         // Enumeration of Transaction State flags
         enum TransactionType
         {

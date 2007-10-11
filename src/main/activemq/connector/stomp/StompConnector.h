@@ -52,14 +52,6 @@ namespace stomp{
 
     private:
 
-        // Flags the state we are in for connection to broker.
-        enum connectionState
-        {
-            DISCONNECTED,
-            CONNECTING,
-            CONNECTED
-        };
-
         // Maps Command Ids to listener that are interested
         typedef std::map< commands::CommandConstants::CommandId,
                           StompCommandListener* > CmdListenerMap;

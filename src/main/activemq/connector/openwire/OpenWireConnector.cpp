@@ -1251,7 +1251,9 @@ void OpenWireConnector::closeResource( ConnectorResource* resource )
 {
     try {
 
-        if( resource == NULL ) {
+        // if we don't get a resource or we aren't connected then we can't do
+        // anything so we return quickly.
+        if( resource == NULL || state != CONNECTED ) {
             return;
         }
 
@@ -1406,6 +1408,9 @@ void OpenWireConnector::onTransportException(
 
         // We were not closing - log the stack trace.
         //LOGCMS_WARN( logger, ex.getStackTraceString() );
+
+        // Mark the fact that we are in an error state
+        state = CONNECTION_ERROR;
 
         // Inform the user of the error.
         fire( ex );
