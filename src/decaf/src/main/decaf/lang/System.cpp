@@ -39,10 +39,6 @@ using namespace decaf::util;
 using namespace decaf::internal;
 using namespace decaf::lang::exceptions;
 
-#if !defined(_WIN32)
-    extern char** environ;
-#endif 
-
 ////////////////////////////////////////////////////////////////////////////////
 AprPool System::aprPool;
 
@@ -134,16 +130,10 @@ Map<string, string> System::getenv() throw ( Exception ) {
     string key = "";
     string value = "";
     int tokens = 0;
-    char** env = getEnvArray();
-    if( env == NULL ) {
-        throw RuntimeException(
-            __FILE__, __LINE__,
-            "System::getenv - Failed to enumerate the environment." );
-    }
+    std::vector<std::string> env = getEnvArray();
 
-    for( int i = 0; *(env + i); i++ ){
+    for( std::size_t i = 0; i < env.size(); i++ ){
         tokenizer.reset( env[i], "=" );
-        delete env[i];  // Clean them as we go
 
         tokens = tokenizer.countTokens();
 
@@ -154,16 +144,15 @@ Map<string, string> System::getenv() throw ( Exception ) {
         } else if( tokens > 2 ) {
             // special case: first equals delimits the key value, the rest are
             // part of the variable
-            std::string envVal( environ[i] );
-            int pos = envVal.find( "=" );
-            key = envVal.substr( 0, pos );
-            value = envVal.substr( pos + 1, string::npos );
+            int pos = env[i].find( "=" );
+            key = env[i].substr( 0, pos );
+            value = env[i].substr( pos + 1, string::npos );
         } else if( tokens == 0 ) {
             // Odd case, got a string with no equals sign.
             throw IllegalArgumentException(
                 __FILE__, __LINE__,
                 "System::getenv - Invalid env string. %s",
-                environ[i] );
+                env[i].c_str() );
         } else {
             // Normal case.
             key = tokenizer.nextToken();
@@ -174,9 +163,6 @@ Map<string, string> System::getenv() throw ( Exception ) {
         values.setValue( key, value );
     }
 
-    // cleanup
-    delete [] env;
-
     return values;
 }
 
@@ -185,9 +171,9 @@ Map<string, string> System::getenv() throw ( Exception ) {
 #include <windows.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-char** System::getEnvArray() {
+std::vector<std::string> System::getEnvArray() {
 
-    char** buffer = NULL;
+    std::vector<std::string> buffer;
     int count = 0;
     LPTSTR lpszVars;
     LPVOID lpvEnv;
@@ -203,14 +189,10 @@ char** System::getEnvArray() {
         lpszVars += strlen(lpszVars)+1;
     }
 
-    // allocate buffer first dimension
-    buffer = new char*[count+1];
-    buffer[count] = NULL;
-
     lpszVars = (LPTSTR)lpvEnv;
     int index = 0;
     while( *lpszVars != NULL ) {
-        buffer[++index] = strdup( lpszVars );
+        buffer.push_back( lpszVars );
         lpszVars += strlen(lpszVars)+1;
     }
 
@@ -220,23 +202,21 @@ char** System::getEnvArray() {
 
 #else
 
+////////////////////////////////////////////////////////////////////////////////
+extern char** environ;
 
 ////////////////////////////////////////////////////////////////////////////////
-char** System::getEnvArray() {
+std::vector<std::string> System::getEnvArray() {
 
-    char** buffer = NULL;
+    std::vector<std::string> buffer;
     int count = 0;
 
     for( int i = 0; *(environ + i); i++ ){
         count++;
     }
 
-    // allocate buffer first dimension
-    buffer = new char*[count+1];
-    buffer[count] = NULL;
-
     for( int i = 0; *(environ + i); i++ ){
-        buffer[i] = strdup( environ[i] );
+        buffer.push_back( environ[i] );
     }
 
     return buffer;

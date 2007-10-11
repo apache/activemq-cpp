@@ -86,9 +86,9 @@ namespace lang{
          * Enumerates the environment and return an array of strings
          * with the values.  Caller owns the array.  The array is terminated
          * by an element that holds the value NULL
-         * @returns caller owned array of env name=value paris.
+         * @returns a vector of env name=value paris.
          */
-        static char** getEnvArray();
+        static std::vector< std::string > getEnvArray();
 
     };
 
