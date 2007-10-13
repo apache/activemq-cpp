@@ -293,7 +293,7 @@ void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
                         session->getSessionInfo(),
                         consumer->getConsumerInfo(),
                         dynamic_cast< Message* >( message ),
-                        Connector::PoisonAck );
+                        Connector::ACK_TYPE_POISON );
 
                 // Won't redeliver this so we kill it here.
                 delete message;

@@ -66,7 +66,7 @@ namespace stomp{
         /**
          * Flag to indicate the start state of the connector.
          */
-        connectionState state;
+        ConnectionState state;
 
         /**
          * Sync object.
@@ -363,7 +363,7 @@ namespace stomp{
         virtual void acknowledge( const SessionInfo* session,
                                   const ConsumerInfo* consumer,
                                   const cms::Message* message,
-                                  AckType ackType = ConsumedAck)
+                                  AckType ackType = ACK_TYPE_CONSUMED)
             throw ( ConnectorException );
 
         /**

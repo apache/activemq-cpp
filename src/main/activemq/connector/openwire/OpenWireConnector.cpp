@@ -79,7 +79,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     // Create our WireFormatFactory on the stack, only need it once.
     OpenWireFormatFactory wireFormatFactory;
 
-    this->state = DISCONNECTED;
+    this->state = CONNECTION_STATE_DISCONNECTED;
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->brokerInfo = NULL;
@@ -193,7 +193,7 @@ long long OpenWireConnector::getNextTempDestinationId()
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::enforceConnected() throw ( ConnectorException )
 {
-    if( state != CONNECTED )
+    if( state != CONNECTION_STATE_CONNECTED )
     {
         throw OpenWireConnectorException(
             __FILE__, __LINE__,
@@ -208,7 +208,7 @@ void OpenWireConnector::start() throw( cms::CMSException )
     {
         synchronized( &mutex )
         {
-            if( state == CONNECTED )
+            if( state == CONNECTION_STATE_CONNECTED )
             {
                 throw ActiveMQException(
                     __FILE__, __LINE__,
@@ -233,7 +233,7 @@ void OpenWireConnector::close() throw( cms::CMSException ){
     {
         synchronized( &mutex )
         {
-            if( state == CONNECTED )
+            if( state == CONNECTION_STATE_CONNECTED )
             {
                 // Send the disconnect message to the broker.
                 disconnect();
@@ -253,7 +253,7 @@ void OpenWireConnector::connect() throw (ConnectorException)
     try
     {
         // Mark this connector as started.
-        state = CONNECTING;
+        state = CONNECTION_STATE_CONNECTING;
 
         // Fill in our connection info.
         connectionInfo.setUserName( getUsername() );
@@ -276,7 +276,7 @@ void OpenWireConnector::connect() throw (ConnectorException)
         Response* response = syncRequest( &connectionInfo );
 
         // Tag us in the Connected State now.
-        state = CONNECTED;
+        state = CONNECTION_STATE_CONNECTED;
 
         // Clean up the ack
         delete response;
@@ -291,7 +291,7 @@ void OpenWireConnector::disconnect() throw (ConnectorException)
     try
     {
         // Mark state as no longer connected.
-        state = DISCONNECTED;
+        state = CONNECTION_STATE_DISCONNECTED;
 
         // Remove our ConnectionId from the Broker
         disposeOf( connectionInfo.getConnectionId() );
@@ -1063,7 +1063,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
             dynamic_cast<commands::ConnectionId*>(
                 connectionInfo.getConnectionId()->cloneDataStructure() ) );
         info->setTransactionId( createLocalTransactionId() );
-        info->setType( (int)TRANSACTION_BEGIN );
+        info->setType( (int)TRANSACTION_STATE_BEGIN );
 
         oneway( info );
 
@@ -1105,7 +1105,7 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
         commands::TransactionInfo* info =
             transactionInfo->getTransactionInfo();
 
-        info->setType( (int)TRANSACTION_COMMITONEPHASE );
+        info->setType( (int)TRANSACTION_STATE_COMMITONEPHASE );
 
         oneway( info );
     } catch( ConnectorException& ex ){
@@ -1142,7 +1142,7 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
         commands::TransactionInfo* info =
             transactionInfo->getTransactionInfo();
 
-        info->setType( (int)TRANSACTION_ROLLBACK );
+        info->setType( (int)TRANSACTION_STATE_ROLLBACK );
 
         oneway( info );
     } catch( ConnectorException& ex ){
@@ -1253,7 +1253,7 @@ void OpenWireConnector::closeResource( ConnectorResource* resource )
 
         // if we don't get a resource or we aren't connected then we can't do
         // anything so we return quickly.
-        if( resource == NULL || state != CONNECTED ) {
+        if( resource == NULL || state != CONNECTION_STATE_CONNECTED ) {
             return;
         }
 
@@ -1373,7 +1373,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
         } else if( typeid( *command ) == typeid( commands::ShutdownInfo ) ) {
 
             try {
-                if( state != DISCONNECTED ) {
+                if( state != CONNECTION_STATE_DISCONNECTED ) {
                     fire( CommandIOException(
                         __FILE__,
                         __LINE__,
@@ -1402,15 +1402,12 @@ void OpenWireConnector::onTransportException(
     try
     {
         // We're disconnected - the asynchronous error is expected.
-        if( state == DISCONNECTED ){
+        if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
 
-        // We were not closing - log the stack trace.
-        //LOGCMS_WARN( logger, ex.getStackTraceString() );
-
         // Mark the fact that we are in an error state
-        state = CONNECTION_ERROR;
+        state = CONNECTION_STATE_ERROR;
 
         // Inform the user of the error.
         fire( ex );

@@ -55,22 +55,22 @@ namespace connector{
     protected:
 
         // Flags the state we are in for connection to broker.
-        enum connectionState
+        enum ConnectionState
         {
-            DISCONNECTED,
-            CONNECTION_ERROR,
-            CONNECTING,
-            CONNECTED
+            CONNECTION_STATE_DISCONNECTED,
+            CONNECTION_STATE_ERROR,
+            CONNECTION_STATE_CONNECTING,
+            CONNECTION_STATE_CONNECTED
         };
 
     public:    // Connector Types
 
         enum AckType
         {
-            DeliveredAck = 0,  // Message delivered but not consumed
-            PoisonAck    = 1,  // Message could not be processed due to
-                               // poison pill but discard anyway
-            ConsumedAck  = 2   // Message consumed, discard
+            ACK_TYPE_DELIVERED = 0,  // Message delivered but not consumed
+            ACK_TYPE_POISON    = 1,  // Message could not be processed due to
+                                     // poison pill but discard anyway
+            ACK_TYPE_CONSUMED  = 2   // Message consumed, discard
         };
 
     public:
@@ -250,7 +250,7 @@ namespace connector{
         virtual void acknowledge( const SessionInfo* session,
                                   const ConsumerInfo* consumer,
                                   const cms::Message* message,
-                                  AckType ackType = ConsumedAck)
+                                  AckType ackType = ACK_TYPE_CONSUMED)
             throw ( ConnectorException ) = 0;
 
         /**

@@ -74,16 +74,15 @@ namespace openwire{
     private:
 
         // Enumeration of Transaction State flags
-        enum TransactionType
-        {
-            TRANSACTION_BEGIN = 0,
-            TRANSACTION_PREPARE = 1,
-            TRANSACTION_COMMITONEPHASE = 2,
-            TRANSACTION_COMMITTWOPHASE = 3,
-            TRANSACTION_ROLLBACK = 4,
-            TRANSACTION_RECOVER = 5,
-            TRANSACTION_FORGET = 6,
-            TRANSACTION_END = 7
+        enum TransactionState {
+            TRANSACTION_STATE_BEGIN = 0,
+            TRANSACTION_STATE_PREPARE = 1,
+            TRANSACTION_STATE_COMMITONEPHASE = 2,
+            TRANSACTION_STATE_COMMITTWOPHASE = 3,
+            TRANSACTION_STATE_ROLLBACK = 4,
+            TRANSACTION_STATE_RECOVER = 5,
+            TRANSACTION_STATE_FORGET = 6,
+            TRANSACTION_STATE_END = 7
         };
 
     private:
@@ -117,7 +116,7 @@ namespace openwire{
         /**
          * Flag to indicate the start state of the connector.
          */
-        connectionState state;
+        ConnectionState state;
 
         /**
          * Sync object.

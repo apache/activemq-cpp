@@ -60,7 +60,7 @@ StompConnector::StompConnector( Transport* transport,
             "StompConnector::StompConnector - Transport cannot be NULL");
     }
 
-    this->state = DISCONNECTED;
+    this->state = CONNECTION_STATE_DISCONNECTED;
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->sessionManager = NULL;
@@ -122,7 +122,7 @@ long long StompConnector::getNextTransactionId()
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::enforceConnected() throw ( ConnectorException )
 {
-    if( state != CONNECTED )
+    if( state != CONNECTION_STATE_CONNECTED )
     {
         throw StompConnectorException(
             __FILE__, __LINE__,
@@ -152,7 +152,7 @@ void StompConnector::start() throw( cms::CMSException )
     {
         synchronized( &mutex )
         {
-            if( state == CONNECTED )
+            if( state == CONNECTION_STATE_CONNECTED )
             {
                 throw ActiveMQException(
                     __FILE__, __LINE__,
@@ -175,7 +175,7 @@ void StompConnector::close() throw( cms::CMSException ){
 
     try
     {
-        if( state == DISCONNECTED ){
+        if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
 
@@ -197,7 +197,7 @@ void StompConnector::connect()
     try
     {
         // Mark this connector as started.
-        state = CONNECTING;
+        state = CONNECTION_STATE_CONNECTING;
 
         // Send the connect command to the broker
         ConnectCommand cmd;
@@ -252,7 +252,7 @@ void StompConnector::connect()
             connected->getSessionId() );
 
         // Tag us in the Connected State now.
-        state = CONNECTED;
+        state = CONNECTION_STATE_CONNECTED;
 
         // Clean up
         delete response;
@@ -267,7 +267,7 @@ void StompConnector::disconnect()
     try
     {
         // Mark state as no longer connected.
-        state = DISCONNECTED;
+        state = CONNECTION_STATE_DISCONNECTED;
 
         // Send the disconnect command to the broker.
         DisconnectCommand cmd;
@@ -828,7 +828,7 @@ void StompConnector::onTransportException(
     try
     {
         // We're disconnected - the asynchronous error is expected.
-        if( state == DISCONNECTED ){
+        if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
 
