@@ -198,8 +198,7 @@ void StompConnector::connect()
         ConnectedCommand* connected =
             dynamic_cast< ConnectedCommand* >( response );
 
-        if( connected == NULL )
-        {
+        if( connected == NULL ) {
             delete response;
 
             throw StompConnectorException(
@@ -241,8 +240,8 @@ void StompConnector::connect()
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::disconnect()
 {
-    try
-    {
+    try {
+
         // Mark state as no longer connected.
         state = CONNECTION_STATE_DISCONNECTED;
 
@@ -263,10 +262,8 @@ SessionInfo* StompConnector::createSession(
     cms::Session::AcknowledgeMode ackMode )
         throw( ConnectorException )
 {
-    try
-    {
+    try {
         enforceConnected();
-
         return sessionManager->createSession( ackMode );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -296,10 +293,8 @@ ConsumerInfo* StompConnector::createConsumer(
 void StompConnector::startConsumer(ConsumerInfo* consumer )
         throw ( ConnectorException )
 {
-    try
-    {
+    try {
         enforceConnected();
-
         return sessionManager->startConsumer(consumer);
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -353,10 +348,8 @@ cms::Topic* StompConnector::createTopic( const std::string& name,
                                          SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
-    try
-    {
+    try {
         enforceConnected();
-
         return new StompTopic( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -368,10 +361,8 @@ cms::Queue* StompConnector::createQueue( const std::string& name,
                                          SessionInfo* session AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
-    try
-    {
+    try {
         enforceConnected();
-
         return new StompQueue( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -383,8 +374,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
     SessionInfo* session AMQCPP_UNUSED)
         throw ( ConnectorException, UnsupportedOperationException )
 {
-    try
-    {
+    try {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "StompConnector::createTemporaryTopic - No Stomp Support");
@@ -400,8 +390,7 @@ cms::TemporaryQueue* StompConnector::createTemporaryQueue(
     SessionInfo* session AMQCPP_UNUSED)
         throw ( ConnectorException, UnsupportedOperationException )
 {
-    try
-    {
+    try {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "StompConnector::createTemporaryQueue - No Stomp Support");
@@ -473,8 +462,7 @@ void StompConnector::send( std::list<cms::Message*>& messages,
 
         list< cms::Message* >::const_iterator itr = messages.begin();
 
-        for( ; itr != messages.end(); ++itr )
-        {
+        for( ; itr != messages.end(); ++itr ) {
             this->send( *itr, producerInfo );
         }
     }
@@ -489,19 +477,17 @@ void StompConnector::acknowledge( const SessionInfo* session,
                                   AckType ackType AMQCPP_UNUSED)
     throw ( ConnectorException )
 {
-    try
-    {
+    try {
+
         enforceConnected();
 
         // Auto to Stomp means don't do anything, so we drop it here
         // for client acknowledge we have to send and ack.
-        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE /*||
-            session->getAckMode() == cms::Session::SESSION_TRANSACTED*/ )
-        {
+        if( session->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE ) {
+
             AckCommand cmd;
 
-            if( message->getCMSMessageID() == "" )
-            {
+            if( message->getCMSMessageID() == "" ) {
                 throw StompConnectorException(
                     __FILE__, __LINE__,
                     "StompConnector::send - "
@@ -509,14 +495,6 @@ void StompConnector::acknowledge( const SessionInfo* session,
             }
 
             cmd.setMessageId( message->getCMSMessageID() );
-
-            /*if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
-            {
-                cmd.setTransactionId(
-                    Integer::toString(
-                        session->getTransactionInfo()->getTransactionId() ) );
-            }*/
-
             transport->oneway( &cmd );
         }
     }
