@@ -48,6 +48,7 @@
 #include <activemq/concurrent/Mutex.h>
 #include <activemq/util/Properties.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/util/LongSequenceGenerator.h>
 
 #include <activemq/connector/openwire/OpenWireCommandReader.h>
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
@@ -147,32 +148,32 @@ namespace openwire{
         /**
          * Next avaliable Producer Id
          */
-        long long nextProducerId;
+        util::LongSequenceGenerator producerIds;
 
         /**
          * Next avaliable Producer Sequence Id
          */
-        long long nextProducerSequenceId;
+        util::LongSequenceGenerator producerSequenceIds;
 
         /**
          * Next avaliable Consumer Id
          */
-        long long nextConsumerId;
+        util::LongSequenceGenerator consumerIds;
 
         /**
          * Next avaliable Transaction Id
          */
-        long long nextTransactionId;
+        util::LongSequenceGenerator transactionIds;
 
         /**
          * Next available Session Id.
          */
-        long long nextSessionId;
+        util::LongSequenceGenerator sessionIds;
 
         /**
          * Next Temporary Destination Id
          */
-        long long nextTempDestinationId;
+        util::LongSequenceGenerator tempDestinationIds;
 
         /**
          * Properties for the connector.
@@ -579,13 +580,6 @@ namespace openwire{
             const exceptions::ActiveMQException& ex );
 
     private:
-
-        long long getNextConsumerId();
-        long long getNextProducerId();
-        long long getNextTransactionId();
-        long long getNextSessionId();
-        long long getNextTempDestinationId();
-        long long getNextProducerSequenceId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );

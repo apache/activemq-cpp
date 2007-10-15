@@ -32,6 +32,7 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/exceptions/IllegalArgumentException.h>
 #include <activemq/logger/LoggerDefines.h>
+#include <activemq/util/LongSequenceGenerator.h>
 
 namespace activemq{
 namespace connector{
@@ -107,12 +108,12 @@ namespace stomp{
         /**
          * Next avaliable Producer Id
          */
-        long long nextProducerId;
+        util::LongSequenceGenerator producerIds;
 
         /**
          * Next avaliable Transaction Id
          */
-        long long nextTransactionId;
+        util::LongSequenceGenerator transactionIds;
 
         /**
          * Properties for the connector.
@@ -532,9 +533,6 @@ namespace stomp{
             commands::CommandConstants::CommandId commandId );
 
     private:
-
-        long long getNextProducerId();
-        long long getNextTransactionId();
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );

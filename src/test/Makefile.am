@@ -92,6 +92,7 @@ cc_sources = \
   activemq/util/QueueTest.cpp \
   activemq/util/StringTokenizerTest.cpp \
   activemq/util/URISupportTest.cpp \
+  activemq/util/LongSequenceGeneratorTest.cpp \
   activemq/util/RandomTest.cpp \
   main.cpp
 

@@ -84,12 +84,6 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->messageListener = NULL;
     this->brokerInfo = NULL;
     this->brokerWireFormatInfo = NULL;
-    this->nextConsumerId = 1;
-    this->nextProducerId = 1;
-    this->nextProducerSequenceId = 1;
-    this->nextTransactionId = 1;
-    this->nextSessionId = 1;
-    this->nextTempDestinationId = 1;
     this->properties.copy( &properties );
     this->wireFormat = dynamic_cast<OpenWireFormat*>(
         wireFormatFactory.createWireFormat( properties ) );
@@ -111,8 +105,8 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireConnector::~OpenWireConnector()
 {
-    try
-    {
+    try {
+
         close();
 
         delete transport;
@@ -122,72 +116,6 @@ OpenWireConnector::~OpenWireConnector()
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextConsumerId()
-{
-    synchronized( &mutex )
-    {
-        return nextConsumerId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextProducerId()
-{
-    synchronized( &mutex )
-    {
-        return nextProducerId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextProducerSequenceId()
-{
-    synchronized( &mutex )
-    {
-        return nextProducerSequenceId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextTransactionId()
-{
-    synchronized( &mutex )
-    {
-        return nextTransactionId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextSessionId()
-{
-    synchronized( &mutex )
-    {
-        return nextSessionId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long OpenWireConnector::getNextTempDestinationId()
-{
-    synchronized( &mutex )
-    {
-        return nextTempDestinationId++;
-    }
-
-    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -231,16 +159,17 @@ void OpenWireConnector::close() throw( cms::CMSException ){
 
     try
     {
-        synchronized( &mutex )
-        {
-            if( state == CONNECTION_STATE_CONNECTED )
-            {
-                // Send the disconnect message to the broker.
-                disconnect();
+        if( state == CONNECTION_STATE_DISCONNECTED ){
+            return;
+        }
 
-                // Close the transport.
-                transport->close();
-            }
+        synchronized( &mutex ) {
+
+            // Send the disconnect message to the broker.
+            disconnect();
+
+            // Close the transport now that we've sent the last messages..
+            transport->close();
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -324,7 +253,7 @@ connector::SessionInfo* OpenWireConnector::createSession(
         commands::SessionInfo* info = new commands::SessionInfo();
         commands::SessionId* sessionId = new commands::SessionId();
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
-        sessionId->setValue( getNextSessionId() );
+        sessionId->setValue( sessionIds.getNextSequenceId() );
         info->setSessionId( sessionId );
         OpenWireSessionInfo* session = new OpenWireSessionInfo( this );
 
@@ -613,7 +542,7 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
 
         consumerId->setConnectionId( session->getConnectionId() );
         consumerId->setSessionId( session->getSessionId() );
-        consumerId->setValue( getNextConsumerId() );
+        consumerId->setValue( consumerIds.getNextSequenceId() );
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
@@ -714,7 +643,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         producerId->setConnectionId( session->getConnectionId() );
         producerId->setSessionId( session->getSessionId() );
-        producerId->setValue( getNextProducerId() );
+        producerId->setValue( producerIds.getNextSequenceId() );
 
         // Producers are allowed to have NULL destinations.  In this case, the
         // destination is specified by the messages as they are sent.
@@ -883,7 +812,7 @@ void OpenWireConnector::send( cms::Message* message,
             dynamic_cast<commands::ProducerId*>(
                 producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
 
-        id->setProducerSequenceId( getNextProducerSequenceId() );
+        id->setProducerSequenceId( producerSequenceIds.getNextSequenceId() );
 
         amqMessage->setMessageId( id );
 
@@ -1534,7 +1463,7 @@ std::string OpenWireConnector::createTemporaryDestinationName()
 {
     try {
         return connectionInfo.getConnectionId()->getValue() + ":" +
-               util::Long::toString( getNextTempDestinationId() );
+               util::Long::toString( tempDestinationIds.getNextSequenceId() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )
@@ -1549,7 +1478,7 @@ commands::TransactionId* OpenWireConnector::createLocalTransactionId()
     id->setConnectionId(
         dynamic_cast<commands::ConnectionId*>(
             connectionInfo.getConnectionId()->cloneDataStructure() ) );
-    id->setValue( getNextTransactionId() );
+    id->setValue( transactionIds.getNextSequenceId() );
 
     return id;
 }

@@ -98,6 +98,7 @@ cc_sources = \
     activemq/util/Math.cpp \
     activemq/util/Random.cpp \
     activemq/util/PrimitiveMap.cpp \
+    activemq/util/LongSequenceGenerator.cpp \    
     activemq/util/URISupport.cpp
 
 h_sources = \
@@ -289,6 +290,7 @@ h_sources = \
     activemq/util/Date.h \
     activemq/util/Map.h \
     activemq/util/Math.h \
+    activemq/util/LongSequenceGenerator.h \    
     activemq/util/PrimitiveMap.h \
     activemq/util/Set.h \
     activemq/util/URISupport.h \

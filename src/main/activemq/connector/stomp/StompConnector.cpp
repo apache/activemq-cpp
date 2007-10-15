@@ -64,8 +64,6 @@ StompConnector::StompConnector( Transport* transport,
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->sessionManager = NULL;
-    this->nextProducerId = 1;
-    this->nextTransactionId = 1;
     this->properties.copy( &properties );
 
     // Create the connection negotiator and wrap our transport
@@ -95,28 +93,6 @@ StompConnector::~StompConnector()
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long StompConnector::getNextProducerId()
-{
-    synchronized( &mutex )
-    {
-        return nextProducerId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long StompConnector::getNextTransactionId()
-{
-    synchronized( &mutex )
-    {
-        return nextTransactionId++;
-    }
-
-    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -179,11 +155,12 @@ void StompConnector::close() throw( cms::CMSException ){
             return;
         }
 
-        synchronized( &mutex )
-        {
+        synchronized( &mutex ) {
+
             // Send the disconnect message to the broker.
             disconnect();
 
+            // Close the transport now that we've sent the last messages..
             transport->close();
         }
     }
@@ -362,7 +339,7 @@ ProducerInfo* StompConnector::createProducer(
         ProducerInfo* producer = new StompProducerInfo( this );
 
         producer->setDestination( destination );
-        producer->setProducerId( getNextProducerId() );
+        producer->setProducerId( producerIds.getNextSequenceId() );
         producer->setSessionInfo( session );
 
         return producer;
@@ -563,7 +540,7 @@ TransactionInfo* StompConnector::startTransaction(
 
         TransactionInfo* transaction = new StompTransactionInfo( this );
 
-        transaction->setTransactionId( getNextTransactionId() );
+        transaction->setTransactionId( transactionIds.getNextSequenceId() );
 
         session->setTransactionInfo( transaction );
 
