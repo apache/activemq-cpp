@@ -42,6 +42,8 @@ public class AmqCppTestMarshallingClassesGenerator extends AmqCppTestMarshalling
     protected void generateFile(PrintWriter out) throws Exception {
         generateLicence(out);
 
+        String target = super.getClassName();
+
 out.println("");
 out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+className+".h>");
 out.println("");
@@ -74,8 +76,15 @@ out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::test() {");
 out.println("");
-out.println("    "+ super.getClassName() + " myMarshaller;");
+out.println("    "+ target + " myMarshaller;");
 out.println("    "+ jclass.getSimpleName() + " myCommand;");
+out.println("    "+ jclass.getSimpleName() + "* myCommand2;");
+out.println("");
+out.println("    CPPUNIT_ASSERT( myMarshaller.getDataStructureType() == myCommand.getDataStructureType() );");
+out.println("    myCommand2 = myMarshaller.createObject();");
+out.println("    CPPUNIT_ASSERT( myCommand2 != NULL );");
+out.println("    delete myCommand2;");
+out.println("");
 out.println("}");
     }
 
