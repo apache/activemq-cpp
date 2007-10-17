@@ -45,7 +45,7 @@ FlushCommand::~FlushCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* FlushCommand::cloneDataStructure() const {
+FlushCommand* FlushCommand::cloneDataStructure() const {
     FlushCommand* flushCommand = new FlushCommand();
 
     // Copy the data from the base class or classes

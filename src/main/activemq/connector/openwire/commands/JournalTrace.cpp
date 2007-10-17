@@ -46,7 +46,7 @@ JournalTrace::~JournalTrace()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* JournalTrace::cloneDataStructure() const {
+JournalTrace* JournalTrace::cloneDataStructure() const {
     JournalTrace* journalTrace = new JournalTrace();
 
     // Copy the data from the base class or classes

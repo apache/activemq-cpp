@@ -50,7 +50,7 @@ SubscriptionInfo::~SubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* SubscriptionInfo::cloneDataStructure() const {
+SubscriptionInfo* SubscriptionInfo::cloneDataStructure() const {
     SubscriptionInfo* subscriptionInfo = new SubscriptionInfo();
 
     // Copy the data from the base class or classes

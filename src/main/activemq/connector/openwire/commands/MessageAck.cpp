@@ -57,7 +57,7 @@ MessageAck::~MessageAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* MessageAck::cloneDataStructure() const {
+MessageAck* MessageAck::cloneDataStructure() const {
     MessageAck* messageAck = new MessageAck();
 
     // Copy the data from the base class or classes

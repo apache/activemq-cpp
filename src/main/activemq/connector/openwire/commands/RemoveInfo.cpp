@@ -47,7 +47,7 @@ RemoveInfo::~RemoveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* RemoveInfo::cloneDataStructure() const {
+RemoveInfo* RemoveInfo::cloneDataStructure() const {
     RemoveInfo* removeInfo = new RemoveInfo();
 
     // Copy the data from the base class or classes

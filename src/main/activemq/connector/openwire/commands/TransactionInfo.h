@@ -73,7 +73,7 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const;
+        virtual TransactionInfo* cloneDataStructure() const;
 
         /**
          * Copy the contents of the passed object into this object's

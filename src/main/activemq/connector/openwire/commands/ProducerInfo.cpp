@@ -53,7 +53,7 @@ ProducerInfo::~ProducerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ProducerInfo::cloneDataStructure() const {
+ProducerInfo* ProducerInfo::cloneDataStructure() const {
     ProducerInfo* producerInfo = new ProducerInfo();
 
     // Copy the data from the base class or classes

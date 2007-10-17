@@ -50,7 +50,7 @@ MessagePull::~MessagePull()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* MessagePull::cloneDataStructure() const {
+MessagePull* MessagePull::cloneDataStructure() const {
     MessagePull* messagePull = new MessagePull();
 
     // Copy the data from the base class or classes

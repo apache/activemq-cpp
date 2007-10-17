@@ -48,7 +48,7 @@ ConsumerId::~ConsumerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConsumerId::cloneDataStructure() const {
+ConsumerId* ConsumerId::cloneDataStructure() const {
     ConsumerId* consumerId = new ConsumerId();
 
     // Copy the data from the base class or classes

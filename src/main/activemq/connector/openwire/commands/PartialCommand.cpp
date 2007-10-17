@@ -46,7 +46,7 @@ PartialCommand::~PartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* PartialCommand::cloneDataStructure() const {
+PartialCommand* PartialCommand::cloneDataStructure() const {
     PartialCommand* partialCommand = new PartialCommand();
 
     // Copy the data from the base class or classes

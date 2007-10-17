@@ -48,7 +48,7 @@ ProducerId::~ProducerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ProducerId::cloneDataStructure() const {
+ProducerId* ProducerId::cloneDataStructure() const {
     ProducerId* producerId = new ProducerId();
 
     // Copy the data from the base class or classes

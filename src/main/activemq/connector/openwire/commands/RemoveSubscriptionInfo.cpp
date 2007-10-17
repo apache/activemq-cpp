@@ -49,7 +49,7 @@ RemoveSubscriptionInfo::~RemoveSubscriptionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* RemoveSubscriptionInfo::cloneDataStructure() const {
+RemoveSubscriptionInfo* RemoveSubscriptionInfo::cloneDataStructure() const {
     RemoveSubscriptionInfo* removeSubscriptionInfo = new RemoveSubscriptionInfo();
 
     // Copy the data from the base class or classes

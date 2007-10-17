@@ -56,7 +56,7 @@ ConnectionInfo::~ConnectionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConnectionInfo::cloneDataStructure() const {
+ConnectionInfo* ConnectionInfo::cloneDataStructure() const {
     ConnectionInfo* connectionInfo = new ConnectionInfo();
 
     // Copy the data from the base class or classes

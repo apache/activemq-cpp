@@ -46,7 +46,7 @@ ControlCommand::~ControlCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ControlCommand::cloneDataStructure() const {
+ControlCommand* ControlCommand::cloneDataStructure() const {
     ControlCommand* controlCommand = new ControlCommand();
 
     // Copy the data from the base class or classes

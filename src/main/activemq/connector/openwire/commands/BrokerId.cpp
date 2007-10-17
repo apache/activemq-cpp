@@ -46,7 +46,7 @@ BrokerId::~BrokerId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* BrokerId::cloneDataStructure() const {
+BrokerId* BrokerId::cloneDataStructure() const {
     BrokerId* brokerId = new BrokerId();
 
     // Copy the data from the base class or classes

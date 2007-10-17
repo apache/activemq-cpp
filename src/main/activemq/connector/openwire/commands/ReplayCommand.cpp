@@ -47,7 +47,7 @@ ReplayCommand::~ReplayCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ReplayCommand::cloneDataStructure() const {
+ReplayCommand* ReplayCommand::cloneDataStructure() const {
     ReplayCommand* replayCommand = new ReplayCommand();
 
     // Copy the data from the base class or classes

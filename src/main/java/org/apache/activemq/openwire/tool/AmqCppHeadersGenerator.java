@@ -135,7 +135,7 @@ out.println("         * Clone this object and return a new instance that the");
 out.println("         * caller now owns, this will be an exact copy of this one");
 out.println("         * @returns new copy of this object.");
 out.println("         */");
-out.println("        virtual DataStructure* cloneDataStructure() const;");
+out.println("        virtual "+className+"* cloneDataStructure() const;");
 out.println("");
 out.println("        /**");
 out.println("         * Copy the contents of the passed object into this object's");

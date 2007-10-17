@@ -45,7 +45,7 @@ TransactionId::~TransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* TransactionId::cloneDataStructure() const {
+TransactionId* TransactionId::cloneDataStructure() const {
     TransactionId* transactionId = new TransactionId();
 
     // Copy the data from the base class or classes

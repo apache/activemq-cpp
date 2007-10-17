@@ -45,7 +45,7 @@ KeepAliveInfo::~KeepAliveInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* KeepAliveInfo::cloneDataStructure() const {
+KeepAliveInfo* KeepAliveInfo::cloneDataStructure() const {
     KeepAliveInfo* keepAliveInfo = new KeepAliveInfo();
 
     // Copy the data from the base class or classes

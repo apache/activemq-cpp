@@ -45,7 +45,7 @@ LastPartialCommand::~LastPartialCommand()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* LastPartialCommand::cloneDataStructure() const {
+LastPartialCommand* LastPartialCommand::cloneDataStructure() const {
     LastPartialCommand* lastPartialCommand = new LastPartialCommand();
 
     // Copy the data from the base class or classes

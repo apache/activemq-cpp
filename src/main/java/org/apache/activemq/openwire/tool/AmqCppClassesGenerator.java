@@ -210,7 +210,7 @@ out.println("}");
 
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println("DataStructure* "+className+"::cloneDataStructure() const {");
+out.println(className+"* "+className+"::cloneDataStructure() const {");
 
     String newInstance = decapitalize( className );
 

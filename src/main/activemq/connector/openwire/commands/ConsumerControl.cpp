@@ -52,7 +52,7 @@ ConsumerControl::~ConsumerControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConsumerControl::cloneDataStructure() const {
+ConsumerControl* ConsumerControl::cloneDataStructure() const {
     ConsumerControl* consumerControl = new ConsumerControl();
 
     // Copy the data from the base class or classes

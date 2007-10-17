@@ -47,7 +47,7 @@ SessionInfo::~SessionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* SessionInfo::cloneDataStructure() const {
+SessionInfo* SessionInfo::cloneDataStructure() const {
     SessionInfo* sessionInfo = new SessionInfo();
 
     // Copy the data from the base class or classes

@@ -67,7 +67,7 @@ ConsumerInfo::~ConsumerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConsumerInfo::cloneDataStructure() const {
+ConsumerInfo* ConsumerInfo::cloneDataStructure() const {
     ConsumerInfo* consumerInfo = new ConsumerInfo();
 
     // Copy the data from the base class or classes

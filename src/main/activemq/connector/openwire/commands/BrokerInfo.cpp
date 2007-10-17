@@ -58,7 +58,7 @@ BrokerInfo::~BrokerInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* BrokerInfo::cloneDataStructure() const {
+BrokerInfo* BrokerInfo::cloneDataStructure() const {
     BrokerInfo* brokerInfo = new BrokerInfo();
 
     // Copy the data from the base class or classes

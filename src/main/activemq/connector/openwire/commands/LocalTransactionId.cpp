@@ -48,7 +48,7 @@ LocalTransactionId::~LocalTransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* LocalTransactionId::cloneDataStructure() const {
+LocalTransactionId* LocalTransactionId::cloneDataStructure() const {
     LocalTransactionId* localTransactionId = new LocalTransactionId();
 
     // Copy the data from the base class or classes

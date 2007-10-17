@@ -45,7 +45,7 @@ ShutdownInfo::~ShutdownInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ShutdownInfo::cloneDataStructure() const {
+ShutdownInfo* ShutdownInfo::cloneDataStructure() const {
     ShutdownInfo* shutdownInfo = new ShutdownInfo();
 
     // Copy the data from the base class or classes

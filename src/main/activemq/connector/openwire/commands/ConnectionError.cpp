@@ -49,7 +49,7 @@ ConnectionError::~ConnectionError()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConnectionError::cloneDataStructure() const {
+ConnectionError* ConnectionError::cloneDataStructure() const {
     ConnectionError* connectionError = new ConnectionError();
 
     // Copy the data from the base class or classes

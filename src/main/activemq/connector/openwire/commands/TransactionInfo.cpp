@@ -50,7 +50,7 @@ TransactionInfo::~TransactionInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* TransactionInfo::cloneDataStructure() const {
+TransactionInfo* TransactionInfo::cloneDataStructure() const {
     TransactionInfo* transactionInfo = new TransactionInfo();
 
     // Copy the data from the base class or classes

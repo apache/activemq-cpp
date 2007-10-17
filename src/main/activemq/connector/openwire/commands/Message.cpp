@@ -80,7 +80,7 @@ Message::~Message()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* Message::cloneDataStructure() const {
+Message* Message::cloneDataStructure() const {
     Message* message = new Message();
 
     // Copy the data from the base class or classes

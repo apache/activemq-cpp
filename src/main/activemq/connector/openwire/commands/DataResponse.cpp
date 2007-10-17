@@ -47,7 +47,7 @@ DataResponse::~DataResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* DataResponse::cloneDataStructure() const {
+DataResponse* DataResponse::cloneDataStructure() const {
     DataResponse* dataResponse = new DataResponse();
 
     // Copy the data from the base class or classes

@@ -50,7 +50,7 @@ ConnectionControl::~ConnectionControl()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConnectionControl::cloneDataStructure() const {
+ConnectionControl* ConnectionControl::cloneDataStructure() const {
     ConnectionControl* connectionControl = new ConnectionControl();
 
     // Copy the data from the base class or classes

@@ -54,7 +54,7 @@ DestinationInfo::~DestinationInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* DestinationInfo::cloneDataStructure() const {
+DestinationInfo* DestinationInfo::cloneDataStructure() const {
     DestinationInfo* destinationInfo = new DestinationInfo();
 
     // Copy the data from the base class or classes

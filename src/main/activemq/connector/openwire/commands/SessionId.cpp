@@ -47,7 +47,7 @@ SessionId::~SessionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* SessionId::cloneDataStructure() const {
+SessionId* SessionId::cloneDataStructure() const {
     SessionId* sessionId = new SessionId();
 
     // Copy the data from the base class or classes

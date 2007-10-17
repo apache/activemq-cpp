@@ -52,7 +52,7 @@ MessageDispatch::~MessageDispatch()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* MessageDispatch::cloneDataStructure() const {
+MessageDispatch* MessageDispatch::cloneDataStructure() const {
     MessageDispatch* messageDispatch = new MessageDispatch();
 
     // Copy the data from the base class or classes

@@ -47,7 +47,7 @@ DiscoveryEvent::~DiscoveryEvent()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* DiscoveryEvent::cloneDataStructure() const {
+DiscoveryEvent* DiscoveryEvent::cloneDataStructure() const {
     DiscoveryEvent* discoveryEvent = new DiscoveryEvent();
 
     // Copy the data from the base class or classes

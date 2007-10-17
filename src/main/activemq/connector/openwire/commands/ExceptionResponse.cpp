@@ -47,7 +47,7 @@ ExceptionResponse::~ExceptionResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ExceptionResponse::cloneDataStructure() const {
+ExceptionResponse* ExceptionResponse::cloneDataStructure() const {
     ExceptionResponse* exceptionResponse = new ExceptionResponse();
 
     // Copy the data from the base class or classes

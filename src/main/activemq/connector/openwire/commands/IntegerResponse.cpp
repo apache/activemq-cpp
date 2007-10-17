@@ -46,7 +46,7 @@ IntegerResponse::~IntegerResponse()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* IntegerResponse::cloneDataStructure() const {
+IntegerResponse* IntegerResponse::cloneDataStructure() const {
     IntegerResponse* integerResponse = new IntegerResponse();
 
     // Copy the data from the base class or classes

@@ -48,7 +48,7 @@ NetworkBridgeFilter::~NetworkBridgeFilter()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* NetworkBridgeFilter::cloneDataStructure() const {
+NetworkBridgeFilter* NetworkBridgeFilter::cloneDataStructure() const {
     NetworkBridgeFilter* networkBridgeFilter = new NetworkBridgeFilter();
 
     // Copy the data from the base class or classes

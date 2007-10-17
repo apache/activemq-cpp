@@ -49,7 +49,7 @@ JournalQueueAck::~JournalQueueAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* JournalQueueAck::cloneDataStructure() const {
+JournalQueueAck* JournalQueueAck::cloneDataStructure() const {
     JournalQueueAck* journalQueueAck = new JournalQueueAck();
 
     // Copy the data from the base class or classes

@@ -46,7 +46,7 @@ ConnectionId::~ConnectionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* ConnectionId::cloneDataStructure() const {
+ConnectionId* ConnectionId::cloneDataStructure() const {
     ConnectionId* connectionId = new ConnectionId();
 
     // Copy the data from the base class or classes

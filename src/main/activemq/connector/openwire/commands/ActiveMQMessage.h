@@ -53,7 +53,7 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const {
+        virtual ActiveMQMessage* cloneDataStructure() const {
             ActiveMQMessage* message = new ActiveMQMessage();
             message->copyDataStructure( this );
             return message;

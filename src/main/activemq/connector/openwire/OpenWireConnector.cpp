@@ -554,9 +554,7 @@ commands::ConsumerInfo* OpenWireConnector::createConsumerInfo(
                 "Destination was either NULL or not created by this OpenWireConnector" );
         }
 
-        consumerInfo->setDestination(
-            dynamic_cast<commands::ActiveMQDestination*>(
-                amqDestination->cloneDataStructure()) );
+        consumerInfo->setDestination( amqDestination->cloneDataStructure() );
 
         return consumerInfo;
 
@@ -652,7 +650,7 @@ ProducerInfo* OpenWireConnector::createProducer(
             // Cast the destination to an OpenWire destination, so we can
             // get all the goodies.
             const commands::ActiveMQDestination* amqDestination =
-                dynamic_cast<const commands::ActiveMQDestination*>(destination);
+                dynamic_cast<const commands::ActiveMQDestination*>( destination );
             if( amqDestination == NULL ) {
                 throw ConnectorException( __FILE__, __LINE__,
                     "Destination was not created by this OpenWireConnector" );
@@ -660,8 +658,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 
             // Get any options specified in the destination and apply them to the
             // ProducerInfo object.
-            producerInfo->setDestination( dynamic_cast<commands::ActiveMQDestination*>(
-                amqDestination->cloneDataStructure()) );
+            producerInfo->setDestination( amqDestination->cloneDataStructure() );
             const ActiveMQProperties& options = amqDestination->getOptions();
             producerInfo->setDispatchAsync( Boolean::parseBoolean(
                 options.getProperty( "producer.dispatchAsync", "false" )) );
@@ -809,16 +806,14 @@ void OpenWireConnector::send( cms::Message* message,
         // flag.  Not adding a message ID will cause an NPE at the broker.
         commands::MessageId* id = new commands::MessageId();
         id->setProducerId(
-            dynamic_cast<commands::ProducerId*>(
-                producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
+            producer->getProducerInfo()->getProducerId()->cloneDataStructure() );
 
         id->setProducerSequenceId( producerSequenceIds.getNextSequenceId() );
 
         amqMessage->setMessageId( id );
 
         amqMessage->setProducerId(
-            dynamic_cast<commands::ProducerId*>(
-                producer->getProducerInfo()->getProducerId()->cloneDataStructure() ) );
+            producer->getProducerInfo()->getProducerId()->cloneDataStructure() );
 
         if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
 
@@ -834,9 +829,8 @@ void OpenWireConnector::send( cms::Message* message,
             }
 
             amqMessage->setTransactionId(
-                dynamic_cast<commands::TransactionId*>(
-                    transactionInfo->getTransactionInfo()->
-                        getTransactionId()->cloneDataStructure() ) );
+                transactionInfo->getTransactionInfo()->
+                    getTransactionId()->cloneDataStructure() );
         }
 
         // Send the message to the broker.
@@ -913,18 +907,10 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
         commands::MessageAck ack;
         ack.setAckType( (int)ackType );
         ack.setConsumerId(
-            dynamic_cast<commands::ConsumerId*>(
-                consumerInfo->getConsumerInfo()->
-                    getConsumerId()->cloneDataStructure() ) );
-        ack.setDestination(
-            dynamic_cast<commands::ActiveMQDestination*>(
-                amqMessage->getDestination()->cloneDataStructure() ) );
-        ack.setFirstMessageId(
-            dynamic_cast<commands::MessageId*>(
-                amqMessage->getMessageId()->cloneDataStructure() ) );
-        ack.setLastMessageId(
-            dynamic_cast<commands::MessageId*>(
-                amqMessage->getMessageId()->cloneDataStructure() ) );
+            consumerInfo->getConsumerInfo()->getConsumerId()->cloneDataStructure() );
+        ack.setDestination( amqMessage->getDestination()->cloneDataStructure() );
+        ack.setFirstMessageId( amqMessage->getMessageId()->cloneDataStructure() );
+        ack.setLastMessageId( amqMessage->getMessageId()->cloneDataStructure() );
         ack.setMessageCount( 1 );
 
         if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
@@ -947,8 +933,7 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
                     transactionInfo->getTransactionInfo()->getTransactionId() );
 
             commands::TransactionId* clonedTransactionId =
-                dynamic_cast<commands::TransactionId*>(
-                    transactionId->cloneDataStructure() );
+                transactionId->cloneDataStructure();
 
             ack.setTransactionId( clonedTransactionId );
         }
@@ -988,9 +973,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
         // Prepare and send the Transaction command
         commands::TransactionInfo* info = new commands::TransactionInfo();
 
-        info->setConnectionId(
-            dynamic_cast<commands::ConnectionId*>(
-                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+        info->setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
         info->setTransactionId( createLocalTransactionId() );
         info->setType( (int)TRANSACTION_STATE_BEGIN );
 
@@ -1149,10 +1132,9 @@ void OpenWireConnector::unsubscribe( const std::string& name )
         enforceConnected();
 
         rsi = new commands::RemoveSubscriptionInfo();
-        rsi->setConnectionId( dynamic_cast<commands::ConnectionId*>(
-            connectionInfo.getConnectionId()->cloneDataStructure()) );
-        rsi->setSubcriptionName(name);
-        rsi->setClientId(connectionInfo.getClientId());
+        rsi->setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
+        rsi->setSubcriptionName( name );
+        rsi->setClientId( connectionInfo.getClientId() );
 
         // Send the message to the broker.
         Response* response = syncRequest(rsi);
@@ -1189,12 +1171,12 @@ void OpenWireConnector::closeResource( ConnectorResource* resource )
         commands::DataStructure* dataStructure = NULL;
 
         commands::ActiveMQTempDestination* tempDestination =
-            dynamic_cast<commands::ActiveMQTempDestination*>(resource);
+            dynamic_cast<commands::ActiveMQTempDestination*>( resource );
 
         if( typeid( *resource ) == typeid( OpenWireConsumerInfo ) ) {
 
             OpenWireConsumerInfo* consumer =
-                dynamic_cast<OpenWireConsumerInfo*>(resource);
+                dynamic_cast<OpenWireConsumerInfo*>( resource );
 
             // Remove this consumer from the consumer info map
             synchronized( &consumerInfoMap ) {
@@ -1363,13 +1345,16 @@ Response* OpenWireConnector::syncRequest( Command* command )
 {
     try
     {
-        Response* response = transport->request(command);
+        Response* response = transport->request( command );
 
-        commands::ExceptionResponse* exceptionResponse = dynamic_cast<commands::ExceptionResponse*>(response);
+        commands::ExceptionResponse* exceptionResponse =
+            dynamic_cast<commands::ExceptionResponse*>( response );
         if( exceptionResponse != NULL )
         {
             // Create an exception to hold the error information.
-            commands::BrokerError* brokerError = dynamic_cast<commands::BrokerError*>(exceptionResponse->getException());
+            commands::BrokerError* brokerError =
+                dynamic_cast<commands::BrokerError*>(
+                        exceptionResponse->getException() );
             BrokerException exception( __FILE__, __LINE__, brokerError );
 
             // Free the response command.
@@ -1410,12 +1395,9 @@ void OpenWireConnector::createTemporaryDestination(
 
         commands::DestinationInfo command;
         command.setConnectionId(
-            dynamic_cast<commands::ConnectionId*>(
-                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+            connectionInfo.getConnectionId()->cloneDataStructure() );
         command.setOperationType( 0 ); // 0 is add
-        command.setDestination(
-            dynamic_cast<commands::ActiveMQDestination*>(
-                tempDestination->cloneDataStructure() ) );
+        command.setDestination( tempDestination->cloneDataStructure() );
 
         // Send the message to the broker.
         Response* response = syncRequest(&command);
@@ -1439,12 +1421,10 @@ void OpenWireConnector::destroyTemporaryDestination(
 
         commands::DestinationInfo command;
         command.setConnectionId(
-            dynamic_cast<commands::ConnectionId*>(
-                connectionInfo.getConnectionId()->cloneDataStructure() ) );
+            connectionInfo.getConnectionId()->cloneDataStructure() );
         command.setOperationType( 1 ); // 1 is remove
         command.setDestination(
-            dynamic_cast<commands::ActiveMQDestination*>(
-                tempDestination->cloneDataStructure() ) );
+            tempDestination->cloneDataStructure() );
 
         // Send the message to the broker.
         Response* response = syncRequest(&command);
@@ -1475,9 +1455,7 @@ commands::TransactionId* OpenWireConnector::createLocalTransactionId()
 
     commands::LocalTransactionId* id = new commands::LocalTransactionId();
 
-    id->setConnectionId(
-        dynamic_cast<commands::ConnectionId*>(
-            connectionInfo.getConnectionId()->cloneDataStructure() ) );
+    id->setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
     id->setValue( transactionIds.getNextSequenceId() );
 
     return id;

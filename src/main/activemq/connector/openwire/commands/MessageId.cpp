@@ -49,7 +49,7 @@ MessageId::~MessageId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* MessageId::cloneDataStructure() const {
+MessageId* MessageId::cloneDataStructure() const {
     MessageId* messageId = new MessageId();
 
     // Copy the data from the base class or classes

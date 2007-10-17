@@ -29,15 +29,15 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQDestinationTest : public CppUnit::TestFixture {
-        
+
         CPPUNIT_TEST_SUITE( ActiveMQDestinationTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST( testOptions );
         CPPUNIT_TEST_SUITE_END();
 
-        class MyDestination : public ActiveMQDestination {    
+        class MyDestination : public ActiveMQDestination {
         public:
-        
+
             /**
              * Returns the Type of Destination that this object represents
              * @returns int type qualifier.
@@ -51,9 +51,9 @@ namespace commands{
              * caller now owns, this will be an exact copy of this one
              * @returns new copy of this object.
              */
-            virtual DataStructure* cloneDataStructure() const { 
+            virtual MyDestination* cloneDataStructure() const {
                 MyDestination* message = new MyDestination();
-                message->copyDataStructure( this );            
+                message->copyDataStructure( this );
                 return message;
             }
 
@@ -66,7 +66,7 @@ namespace commands{
                 ActiveMQDestination::copyDataStructure( src );
             }
         };
-        
+
         class MyTempDestination : public MyDestination {
         public:
 
@@ -81,10 +81,10 @@ namespace commands{
         };
 
     public:
-    
-    	ActiveMQDestinationTest() {}
-    	virtual ~ActiveMQDestinationTest() {}
-        
+
+        ActiveMQDestinationTest() {}
+        virtual ~ActiveMQDestinationTest() {}
+
         virtual void test();
         virtual void testOptions();
 

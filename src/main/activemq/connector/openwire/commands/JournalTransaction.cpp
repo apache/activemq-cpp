@@ -49,7 +49,7 @@ JournalTransaction::~JournalTransaction()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* JournalTransaction::cloneDataStructure() const {
+JournalTransaction* JournalTransaction::cloneDataStructure() const {
     JournalTransaction* journalTransaction = new JournalTransaction();
 
     // Copy the data from the base class or classes

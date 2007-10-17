@@ -54,7 +54,7 @@ JournalTopicAck::~JournalTopicAck()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* JournalTopicAck::cloneDataStructure() const {
+JournalTopicAck* JournalTopicAck::cloneDataStructure() const {
     JournalTopicAck* journalTopicAck = new JournalTopicAck();
 
     // Copy the data from the base class or classes

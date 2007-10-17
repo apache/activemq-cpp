@@ -46,7 +46,7 @@ XATransactionId::~XATransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* XATransactionId::cloneDataStructure() const {
+XATransactionId* XATransactionId::cloneDataStructure() const {
     XATransactionId* xATransactionId = new XATransactionId();
 
     // Copy the data from the base class or classes

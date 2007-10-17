@@ -46,7 +46,7 @@ Response::~Response()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* Response::cloneDataStructure() const {
+Response* Response::cloneDataStructure() const {
     Response* response = new Response();
 
     // Copy the data from the base class or classes
