@@ -322,7 +322,7 @@ h_sources = \
     cms/Config.h
 
 include activemq/connector/openwire/commands/srcmakefile.mk
-## include activemq/connector/openwire/marshal/v1/srcmakefile.mk
+include activemq/connector/openwire/marshal/v1/srcmakefile.mk
 include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ##
