@@ -40,7 +40,7 @@ AC_SUBST(ACTIVEMQ_API_VERSION)
 PACKAGE=$ACTIVEMQ_LIBRARY_NAME
 VERSION=$ACTIVEMQ_VERSION
 
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AM_INIT_AUTOMAKE([subdir-objects])
 AM_CONFIG_HEADER(config.h)
 
 # Gives us access to the host_os environment variable
