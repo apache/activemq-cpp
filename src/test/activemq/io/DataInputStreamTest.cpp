@@ -139,6 +139,15 @@ void DataInputStreamTest::testString() {
     } catch(...){
         CPPUNIT_ASSERT( true );
     }
+
+    std::vector<unsigned char> buffer2;
+    buffer2.resize( 0 );
+    try{
+        reader.readFully( buffer2 );
+    } catch(...){
+        CPPUNIT_ASSERT( false );
+    }
+
 }
 
 void DataInputStreamTest::testUTF() {
