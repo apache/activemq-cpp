@@ -21,6 +21,7 @@
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/io/DataOutputStream.h>
 #include <activemq/io/DataInputStream.h>
+#include <activemq/io/IOException.h>
 
 namespace activemq{
 namespace connector{
@@ -77,7 +78,7 @@ namespace marshal{
          */
         static void marshalPrimitive( io::DataOutputStream& dataOut,
                                       util::PrimitiveMap::ValueNode& value )
-                                        throw ( cms::CMSException );
+                                        throw ( io::IOException );
 
         /**
          * Unmarshals a Primitive Type from the stream, and returns it as a
@@ -90,7 +91,7 @@ namespace marshal{
         static void unmarshalPrimitive( io::DataInputStream& dataIn,
                                         const std::string& key,
                                         util::PrimitiveMap& map )
-                                            throw ( cms::CMSException );
+                                            throw ( io::IOException );
 
     };
 

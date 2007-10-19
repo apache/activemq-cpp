@@ -60,38 +60,10 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
                     case 7:
                         /* 0xxxxxxx */
                         count++;
-//                        str.Append((char) c);
                         break;
                     case 12:
                     case 13:
-//                        /* 110x xxxx 10xx xxxx */
-//                        count += 2;
-//                        if (count > utflen)
-//                        {
-//                            throw CreateDataFormatException();
-//                        }
-//                        char2 = bytearr[count - 1];
-//                        if ((char2 & 0xC0) != 0x80)
-//                        {
-//                            throw CreateDataFormatException();
-//                        }
-//                        str.Append((char) (((c & 0x1F) << 6) | (char2 & 0x3F)));
-//                        break;
                     case 14:
-//                        /* 1110 xxxx 10xx xxxx 10xx xxxx */
-//                        count += 3;
-//                        if (count > utflen)
-//                        {
-//                            throw CreateDataFormatException();
-//                        }
-//                        char2 = bytearr[count - 2];
-//                        char3 = bytearr[count - 1];
-//                        if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80))
-//                        {
-//                            throw CreateDataFormatException();
-//                        }
-//                        str.Append((char) (((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0)));
-//                        break;
                     default :
                     {
                         /* 10xx xxxx, 1111 xxxx */
@@ -112,8 +84,9 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
 
         return "";
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +150,7 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
             dataOut.writeShort( (short)-1 );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }

@@ -42,12 +42,9 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
         ByteArrayOutputStream bytesOut( dest );
         DataOutputStream dataOut( &bytesOut );
 
-        if( map == NULL )
-        {
+        if( map == NULL ) {
             dataOut.writeInt( -1 );
-        }
-        else
-        {
+        } else {
             dataOut.writeInt( (int)map->size() );
 
             std::vector<std::string> keys = map->getKeys();
@@ -77,12 +74,10 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 
         int size = dataIn.readInt();
 
-        if( size > 0 )
-        {
+        if( size > 0 ) {
             PrimitiveMap* map = new PrimitiveMap;
 
-            for( int i=0; i < size; i++ )
-            {
+            for( int i=0; i < size; i++ ) {
                 std::string key = OpenwireStringSupport::readString( dataIn );
                 unmarshalPrimitive( dataIn, key, *map );
             }
@@ -91,8 +86,8 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
         }
 
         return NULL;
-
     }
+    AMQ_CATCH_EXCEPTION_CONVERT( io::IOException, ActiveMQException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
@@ -116,15 +111,14 @@ void PrimitiveMapMarshaller::unmarshal(
 
         int size = dataIn.readInt();
 
-        if( size > 0 )
-        {
-            for( int i=0; i < size; i++ )
-            {
+        if( size > 0 ) {
+            for( int i=0; i < size; i++ ) {
                 std::string key = OpenwireStringSupport::readString( dataIn );
                 unmarshalPrimitive( dataIn, key, *map );
             }
         }
     }
+    AMQ_CATCH_EXCEPTION_CONVERT( io::IOException, ActiveMQException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
@@ -132,7 +126,7 @@ void PrimitiveMapMarshaller::unmarshal(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                                                util::PrimitiveMap::ValueNode& value )
-                                                    throw ( cms::CMSException ) {
+                                                    throw ( io::IOException ) {
 
     try {
 
@@ -198,16 +192,6 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
             OpenwireStringSupport::writeString( dataOut, &data );
         }
-//        else if( value is IDictionary )
-//        {
-//            dataOut.Write( MAP_TYPE );
-//            MarshalPrimitiveMap((IDictionary) value, dataOut);
-//        }
-//        else if( value is IList )
-//        {
-//            dataOut.Write( LIST_TYPE );
-//            MarshalPrimitiveList((IList) value, dataOut);
-//        }
         else
         {
             throw IOException(
@@ -216,15 +200,16 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                 "Object is not a primitive: ");
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                                                  const std::string& key,
                                                  util::PrimitiveMap& map )
-                                                    throw ( cms::CMSException ) {
+                                                    throw ( io::IOException ) {
 
     try {
 
@@ -271,12 +256,6 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                     key,
                     OpenwireStringSupport::readString( dataIn ) );
                 break;
-//            case PrimitiveMap::MAP_TYPE:
-//                value = UnmarshalPrimitiveMap(dataIn);
-//                break;
-//            case PrimitiveMap::LIST_TYPE:
-//                value = UnmarshalPrimitiveList(dataIn);
-//                break;
             default:
                 throw IOException(
                     __FILE__,
@@ -285,30 +264,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                     "Unsupported data type: ");
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
 }
-
-/*
-
-        public static void MarshalPrimitiveList(IList list, BinaryWriter dataOut)
-        {
-            dataOut.Write((int) list.Count);
-            foreach (Object element in list)
-            {
-                MarshalPrimitive(dataOut, element);
-            }
-        }
-
-        public static IList UnmarshalPrimitiveList(BinaryReader dataIn)
-        {
-            int size = dataIn.ReadInt32();
-            IList answer = new ArrayList(size);
-            while (size-- > 0) {
-                answer.Add(UnmarshalPrimitive(dataIn));
-            }
-            return answer;
-        }
-
-
-*/
