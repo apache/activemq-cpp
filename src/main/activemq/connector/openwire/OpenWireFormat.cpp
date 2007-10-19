@@ -29,6 +29,7 @@
 #include <activemq/connector/openwire/marshal/MarshalAware.h>
 #include <activemq/connector/openwire/marshal/DataStreamMarshaller.h>
 #include <activemq/connector/openwire/marshal/v2/MarshallerFactory.h>
+#include <activemq/connector/openwire/marshal/v1/MarshallerFactory.h>
 
 using namespace std;
 using namespace activemq;
@@ -41,7 +42,6 @@ using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
-using namespace activemq::connector::openwire::marshal::v2;
 using namespace activemq::connector::openwire::utils;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,33 +56,73 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
 
     // Fill in that DataStreamMarshallers collection
     dataMarshallers.resize( 256 );
-    MarshallerFactory().configure( this );
 
     // Generate an ID
     this->id = Guid::createGUIDString();
 
     // Set defaults for initial WireFormat negotiation
+    this->version = 0;
     this->stackTraceEnabled = false;
     this->cacheEnabled = false;
     this->tcpNoDelayEnabled = false;
     this->tightEncodingEnabled = false;
     this->sizePrefixDisabled = false;
+
+    // Set to Default as lowest common denominator, then we will try
+    // and move up to the prefered when the wireformat is negotiated.
+    this->setVersion( DEFAULT_VERSION );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormat::~OpenWireFormat()
 {
     try {
-
-        for( size_t i = 0; i < dataMarshallers.size(); ++i )
-        {
-            delete dataMarshallers[i];
-        }
-
+        this->destroyMarshalers();
         delete preferedWireFormatInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireFormat::destroyMarshalers() {
+    try {
+        for( size_t i = 0; i < dataMarshallers.size(); ++i ) {
+            delete dataMarshallers[i];
+            dataMarshallers[i] = NULL;
+        }
+    }
+    AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
+
+    std::cout << "OpenWireFormat::setVersion - called for with V" << version << std::endl;
+    if( version == this->getVersion() ){
+        return;
+    }
+
+    // Clear old marshalers in preperation for the new set.
+    this->destroyMarshalers();
+    this->version = version;
+
+    switch( this->version ){
+    case 1:
+        v1::MarshallerFactory().configure( this );
+        std::cout << "setting to V1" << std::endl;
+        break;
+    case 2:
+        v2::MarshallerFactory().configure( this );
+        std::cout << "setting to V2" << std::endl;
+        break;
+    default:
+        throw IllegalArgumentException(
+            __FILE__, __LINE__,
+            "OpenWireFormat::setVersion - "
+            "Given Version: %d , is not supported", version );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +215,7 @@ void OpenWireFormat::marshal( transport::Command* command,
 transport::Command* OpenWireFormat::unmarshal( io::DataInputStream* dis )
     throw ( io::IOException ) {
 
-    try{
+    try {
 
         if( !sizePrefixDisabled ) {
             dis->readInt();

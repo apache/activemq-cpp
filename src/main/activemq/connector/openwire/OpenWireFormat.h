@@ -24,6 +24,7 @@
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/util/Properties.h>
 #include <activemq/exceptions/IllegalStateException.h>
+#include <activemq/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
 namespace connector{
@@ -31,8 +32,7 @@ namespace openwire{
 
     class DataStreamMarshaller;
 
-    class OpenWireFormat : public wireformat::WireFormat
-    {
+    class OpenWireFormat : public wireformat::WireFormat {
     public:
 
         /**
@@ -198,9 +198,7 @@ namespace openwire{
          * Set the current Wireformat Version
          * @param version - int that identifies the version
          */
-        void setVersion( int version ) {
-            this->version = version;
-        }
+        void setVersion( int version ) throw ( exceptions::IllegalArgumentException );
 
         /**
          * Checks if the cacheEnabled flag is on
@@ -264,10 +262,20 @@ namespace openwire{
         commands::DataStructure* doUnmarshal( io::DataInputStream* dis )
             throw ( io::IOException );
 
+        /**
+         * Cleans up all registered Marshallers and empties the dataMarshallers
+         * vector.  This should be called before a reconfiguration of the version
+         * marshallers, or on destruction of this object
+         */
+        void destroyMarshalers();
+
     protected:
 
         // Declared here to make life easier.
         static const unsigned char NULL_TYPE;
+
+        // V1 if the default version we start at.
+        static const int DEFAULT_VERSION = 1;
 
     private:
 
