@@ -19,6 +19,7 @@
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
 #include <activemq/util/Boolean.h>
+#include <activemq/util/Integer.h>
 
 using namespace std;
 using namespace activemq;
@@ -38,7 +39,8 @@ WireFormat* OpenWireFormatFactory::createWireFormat(
     WireFormatInfo* info = new WireFormatInfo();
 
     // Configure the version to use
-    info->setVersion( 2 );
+    info->setVersion( Integer::parseInt(
+            properties.getProperty( "wireFormat.version", "2" ) ) );
 
     // parse params out of the properties
     info->setStackTraceEnabled( Boolean::parseBoolean(
