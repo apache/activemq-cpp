@@ -282,6 +282,9 @@ std::string DataInputStream::readUTF()
 void DataInputStream::readFully( std::vector< unsigned char >& buffer )
     throw ( io::IOException, io::EOFException ) {
     try {
+        if( buffer.empty() ) {
+            return;
+        }
         this->readFully( &buffer[0], 0, buffer.size() );
     }
     DECAF_CATCH_RETHROW( EOFException )
