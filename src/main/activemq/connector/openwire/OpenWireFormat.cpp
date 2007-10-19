@@ -99,7 +99,6 @@ void OpenWireFormat::destroyMarshalers() {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
 
-    std::cout << "OpenWireFormat::setVersion - called for with V" << version << std::endl;
     if( version == this->getVersion() ){
         return;
     }
@@ -111,11 +110,9 @@ void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException 
     switch( this->version ){
     case 1:
         v1::MarshallerFactory().configure( this );
-        std::cout << "setting to V1" << std::endl;
         break;
     case 2:
         v2::MarshallerFactory().configure( this );
-        std::cout << "setting to V2" << std::endl;
         break;
     default:
         throw IllegalArgumentException(
