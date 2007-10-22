@@ -79,28 +79,28 @@ public class AmqCppGeneratorTask extends Task {
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/main");
                 script.setOpenwireVersion(version);
-                script.run();
+//                script.run();
             }
             {
                 AmqCppHeadersGenerator script = new AmqCppHeadersGenerator();
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/main");
                 script.setOpenwireVersion(version);
-                script.run();
+//                script.run();
             }
             {
                 AmqCppMarshallingHeadersGenerator script = new AmqCppMarshallingHeadersGenerator();
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/main");
                 script.setOpenwireVersion(version);
-                script.run();
+//                script.run();
             }
             {
                 AmqCppMarshallingClassesGenerator script = new AmqCppMarshallingClassesGenerator();
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/main");
                 script.setOpenwireVersion(version);
-                script.run();
+//                script.run();
             }
             {
                 AmqCppTestMarshallingHeadersGenerator script = new AmqCppTestMarshallingHeadersGenerator();

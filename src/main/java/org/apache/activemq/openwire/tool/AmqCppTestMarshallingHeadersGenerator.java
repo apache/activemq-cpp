@@ -52,6 +52,10 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
         return super.getClassName(jclass) + "Test";
     }
 
+    protected String getTargetClassName(JClass jclass) {
+        return super.getClassName(jclass);
+    }
+
     protected String getFilePostFix() {
         return ".h";
     }
@@ -150,6 +154,8 @@ out.println("    class "+className+" : public CppUnit::TestFixture {" );
 out.println("");
 out.println("        CPPUNIT_TEST_SUITE( "+className+" );");
 out.println("        CPPUNIT_TEST( test );");
+out.println("        CPPUNIT_TEST( testLooseMarshal );");
+out.println("        CPPUNIT_TEST( testTightMarshal );");
 out.println("        CPPUNIT_TEST_SUITE_END();");
 out.println("");
 out.println("    public:");
@@ -161,6 +167,8 @@ out.println("        /**");
 out.println("         * Test the marshaller and its marshalled type.");
 out.println("         */");
 out.println("        virtual void test();");
+out.println("        virtual void testLooseMarshal();");
+out.println("        virtual void testTightMarshal();");
 out.println("");
 out.println("    };");
 out.println("");
