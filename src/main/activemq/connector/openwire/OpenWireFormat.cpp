@@ -322,8 +322,7 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
                 "No valid data structure type for object of this type");
         }
 
-        DataStreamMarshaller* dsm =
-            dynamic_cast< DataStreamMarshaller* >( dataMarshallers[type & 0xFF] );
+        DataStreamMarshaller* dsm = dataMarshallers[type & 0xFF];
 
         if( dsm == NULL ) {
             throw IOException(
@@ -363,8 +362,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
         } else {
 
-            DataStreamMarshaller* dsm =
-                dynamic_cast< DataStreamMarshaller* >( dataMarshallers[type & 0xFF] );
+            DataStreamMarshaller* dsm = dataMarshallers[type & 0xFF];
 
             if( dsm == NULL ) {
                 throw IOException(
@@ -374,7 +372,6 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
             }
 
             dsm->tightMarshal2( this, o, ds, bs );
-
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -393,9 +390,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
 
             const unsigned char dataType = dis->readByte();
 
-            DataStreamMarshaller* dsm =
-                dynamic_cast< DataStreamMarshaller* >(
-                    dataMarshallers[dataType & 0xFF] );
+            DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
             if( dsm == NULL ) {
                 throw IOException(
@@ -439,9 +434,7 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( io::DataInputStream* 
 
             unsigned char dataType = dis->readByte();
 
-            DataStreamMarshaller* dsm =
-                dynamic_cast< DataStreamMarshaller* >(
-                    dataMarshallers[dataType & 0xFF] );
+            DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
             if( dsm == NULL ) {
                 throw IOException(
@@ -478,9 +471,7 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 
             dataOut->writeByte( dataType );
 
-            DataStreamMarshaller* dsm =
-                dynamic_cast< DataStreamMarshaller* >(
-                    dataMarshallers[dataType & 0xFF] );
+            DataStreamMarshaller* dsm = dataMarshallers[dataType & 0xFF];
 
             if( dsm == NULL ) {
                 throw IOException(
