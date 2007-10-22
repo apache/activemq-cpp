@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.codehaus.jam.JClass;
 import org.codehaus.jam.JProperty;
@@ -32,6 +33,17 @@ import org.codehaus.jam.JProperty;
 public class AmqCppClassesGenerator extends MultiSourceGenerator {
 
     protected String targetDir="./src/main";
+    protected ArrayList<String> filesProcessed = new ArrayList<String>();
+
+    protected void processClass(JClass jclass) {
+
+        super.processClass( jclass );
+        filesProcessed.add( getClassName() + getFilePostFix() );
+    }
+
+    public ArrayList<String> getFilesProcessed() {
+        return filesProcessed;
+    }
 
     public Object run() {
         filePostFix = getFilePostFix();

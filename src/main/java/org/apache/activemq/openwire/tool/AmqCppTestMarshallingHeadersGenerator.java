@@ -19,6 +19,7 @@ package org.apache.activemq.openwire.tool;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import org.codehaus.jam.JClass;
 
@@ -29,6 +30,7 @@ import org.codehaus.jam.JClass;
 public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenerator {
 
     protected String targetDir="./src/main";
+    protected ArrayList<String> filesProcessed = new ArrayList<String>();
 
     protected void processClass(JClass jclass) {
 
@@ -37,6 +39,8 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
         }
 
         super.processClass( jclass );
+
+        filesProcessed.add( getClassName() + getFilePostFix() );
     }
 
     public Object run() {
@@ -46,6 +50,10 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
             destDir = new File(targetDir+"/activemq/connector/openwire/marshal/v"+getOpenwireVersion());
         }
         return super.run();
+    }
+
+    public ArrayList<String> getFilesProcessed() {
+        return filesProcessed;
     }
 
     protected String getClassName(JClass jclass) {
