@@ -15,8 +15,6 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-cc_sources = 
-
 h_sources = cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
@@ -41,21 +39,6 @@ h_sources = cms/DeliveryMode.h \
     cms/MessageProducer.h \
     cms/Message.h \
     cms/MessageConsumer.h
-
-##
-## Compiler / Linker Info
-##
-
-lib_LIBRARIES=libcms.a
-libcms_a_SOURCES= $(h_sources) $(cc_sources)
-
-##
-## Uncomment to build a shared lib
-##
-##lib_LTLIBRARIES= libactivemq-cpp.la
-##libcms_la_SOURCES= $(h_sources) $(cc_sources)
-##libcms_la_LDFLAGS= -version-info $(CMS_LIBRARY_VERSION) -release $(CMS_VERSION)
-##libcms_la_LIBADD=-ldl
 
 
 ##

@@ -43,18 +43,12 @@ VERSION=$CMS_VERSION
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
 AM_CONFIG_HEADER(config.h)
 
-# Gives us access to the host_os environment variable
-AC_CANONICAL_HOST
-
 ## -----------------------------------------------
 ## Checks for programs.
 ## -----------------------------------------------
 
 AC_PROG_CC
 AC_PROG_CXX
-## Uncomment to use libtool for shared libs
-## AM_PROG_LIBTOOL
-AC_PROG_RANLIB
 AM_SANITY_CHECK
 AC_LANG_CPLUSPLUS
 
@@ -69,9 +63,6 @@ AC_CHECK_SIZEOF(int, 4)
 AC_CHECK_SIZEOF(long long, 8)
 AC_CHECK_SIZEOF(float, 4)
 AC_CHECK_SIZEOF(double, 8)
-
-CXXFLAGS="$CXXFLAGS -ansi -pedantic -W -Wall"
-LIBS="$LIBS"
 
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)
