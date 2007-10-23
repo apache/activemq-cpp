@@ -1,8 +1,19 @@
 =========================================================================
+==  Release Notes for CMS 1.2                                          ==
+=========================================================================
+
+== Overview ==
+
+This version makes the read methods on the BytesMessage const.  For
+asynchronous consumers, the onMessage method in the MessageListener
+interface is passed a const Message.  Having the read methods const
+allows the user to use the message without having to do a const_cast.
+
+=========================================================================
 ==  Release Notes for CMS 1.1                                          ==
 =========================================================================
 
-== Changes since 1.0 ==
+== Overview ==
 
 This version adds a new interface CMSProperties, which hides the
 implementation of the class used for Properties operations.  Also the

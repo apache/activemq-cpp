@@ -26,7 +26,7 @@ AC_CONFIG_SRCDIR(src/main/cms/BytesMessage.h)
 ## Define the Version variables
 ## -----------------------------------------------
 CMS_LIBRARY_NAME=cms
-CMS_VERSION=1.1
+CMS_VERSION=1.2
 CMS_LIBRARY_VERSION=0:0:0
 CMS_RELEASE=0.0
 CMS_API_VERSION=${CMS_VERSION}
