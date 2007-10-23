@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.codehaus.jam.JClass;
 import org.codehaus.jam.JProperty;
@@ -33,16 +34,9 @@ import org.codehaus.jam.JProperty;
 public class AmqCppClassesGenerator extends MultiSourceGenerator {
 
     protected String targetDir="./src/main";
-    protected ArrayList<String> filesProcessed = new ArrayList<String>();
 
     protected void processClass(JClass jclass) {
-
         super.processClass( jclass );
-        filesProcessed.add( getClassName() + getFilePostFix() );
-    }
-
-    public ArrayList<String> getFilesProcessed() {
-        return filesProcessed;
     }
 
     public Object run() {
@@ -51,6 +45,7 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
             destDir = new File(
                 targetDir+"/activemq/connector/openwire/commands");
         }
+
         return super.run();
     }
 

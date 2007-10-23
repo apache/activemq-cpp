@@ -30,7 +30,6 @@ import org.codehaus.jam.JClass;
 public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenerator {
 
     protected String targetDir="./src/main";
-    protected ArrayList<String> filesProcessed = new ArrayList<String>();
 
     protected void processClass(JClass jclass) {
 
@@ -39,9 +38,9 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
         }
 
         super.processClass( jclass );
-
-        filesProcessed.add( getClassName() + getFilePostFix() );
     }
+
+    protected void processFactory() {}
 
     public Object run() {
 
@@ -50,10 +49,6 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
             destDir = new File(targetDir+"/activemq/connector/openwire/marshal/v"+getOpenwireVersion());
         }
         return super.run();
-    }
-
-    public ArrayList<String> getFilesProcessed() {
-        return filesProcessed;
     }
 
     protected String getClassName(JClass jclass) {

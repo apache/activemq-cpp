@@ -30,7 +30,6 @@ import org.codehaus.jam.JClass;
 public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator {
 
     protected String targetDir="./src/main";
-    protected ArrayList<String> filesProcessed = new ArrayList<String>();
 
     public Object run() {
         filePostFix = getFilePostFix();
@@ -41,13 +40,7 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
     }
 
     protected void processClass(JClass jclass) {
-
         super.processClass( jclass );
-        filesProcessed.add( getClassName() + getFilePostFix() );
-    }
-
-    public ArrayList<String> getFilesProcessed() {
-        return filesProcessed;
     }
 
     protected String getBaseClassName(JClass jclass) {

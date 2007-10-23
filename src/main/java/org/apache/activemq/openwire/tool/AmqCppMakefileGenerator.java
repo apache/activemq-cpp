@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.FixCRLF;
@@ -30,16 +31,21 @@ import org.apache.tools.ant.taskdefs.FixCRLF;
 *
 * @version $Revision: 379734 $
 */
-public abstract class AmqCppMakefileGenerator {
+public class AmqCppMakefileGenerator {
 
     protected String targetDir="./src/main";
+    protected String targetPath;
 
-    protected ArrayList<String> sources = null;
-    protected ArrayList<String> headers = null;
+    private ArrayList<String> sources = new ArrayList<String>();
+    private ArrayList<String> headers = new ArrayList<String>();
 
-    protected File destDir;
-    protected File destFile;
-    protected StringBuffer buffer;
+    private File destDir;
+    private File destFile;
+    private StringBuffer buffer;
+
+    public AmqCppMakefileGenerator( String targetPath ) {
+        this.targetPath = targetPath;
+    }
 
     protected String getFilePostFix() {
         return ".mk";
@@ -49,10 +55,40 @@ public abstract class AmqCppMakefileGenerator {
         return "srcmakefile";
     }
 
+    public String getTargetDir() {
+        return targetDir;
+    }
+
+    public void setTargetDir( String targetDir ) {
+        this.targetDir = targetDir;
+    }
+
     /**
      * Derived classes provide the location of the Makefile.
      */
-    abstract protected File getDestDir();
+    protected File getDestDir() {
+        return new File( targetDir + "/" + targetPath );
+    }
+
+
+    private void processDirectory( File destDir ) {
+        if( destDir == null ) {
+            throw new IllegalArgumentException("No destDir defined!");
+        }
+
+        File[] files = destDir.listFiles();
+
+        for( File file : files ) {
+
+            if( file.getName().endsWith("cpp") ) {
+                sources.add( file.getName() );
+            }
+
+            if( file.getName().endsWith("h") ) {
+                headers.add( file.getName() );
+            }
+        }
+    }
 
     public void run() {
 
@@ -62,9 +98,8 @@ public abstract class AmqCppMakefileGenerator {
             throw new IllegalArgumentException("No destDir defined!");
         }
 
-        if( sources == null || headers == null ) {
-            throw new IllegalStateException("File lists not initialized.");
-        }
+        // Get all the sources from the dir.
+        processDirectory( destDir );
 
         System.out.println(getClass().getName() + " generating files in: " + destDir);
         destDir.mkdirs();
@@ -117,35 +152,27 @@ public abstract class AmqCppMakefileGenerator {
     protected void generateFile(PrintWriter out) {
         generateLicence(out);
 
+        // Put the file lists in alphabetical order.
+        Collections.sort( sources );
+        Collections.sort( headers );
+
         out.println("");
-        out.print("cc_sources += ");
+        out.print("cc_sources +=");
 
         for( String source : sources ) {
             out.println(" \\");
-            out.print("    " + source);
+            out.print("    " + targetPath + "/" + source);
         }
 
         out.println("");
-        out.print("h_sources += ");
+        out.println("");
+        out.print("h_sources +=");
 
         for( String header : headers ) {
             out.println(" \\");
-            out.print("    " + header);
+            out.print("    " + targetPath + "/" + header);
         }
 
         out.println("");
     }
-
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
-    }
-
-    public File getDestFile() {
-        return destFile;
-    }
-
-    public void setDestFile(File destFile) {
-        this.destFile = destFile;
-    }
-
 }
