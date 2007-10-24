@@ -43,12 +43,12 @@ namespace util{
         /**
          * @returns the next id in the sequence.
          */
-        int getNextSequenceId();
+        long long getNextSequenceId();
 
         /**
          * @returns the last id that was generated.
          */
-        int getLastSequenceId();
+        long long getLastSequenceId();
 
     };
 
