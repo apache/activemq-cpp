@@ -217,6 +217,9 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
 
         switch( type )
         {
+            case PrimitiveMap::NULL_TYPE:
+                map.setString( key, "" );
+                break;
             case PrimitiveMap::BYTE_TYPE:
                 map.setByte( key, dataIn.readByte() );
                 break;
