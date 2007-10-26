@@ -209,7 +209,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // customize where the consumer listens, to have the consumer
     // use a topic or queue set the 'useTopics' flag.
     //============================================================
-    std::string destURI = "TEST.FOO";
+    std::string destURI = "TEST.FOO"; //?consumer.prefetchSize=1";
 
     //============================================================
     // set to true to use topics instead of queues

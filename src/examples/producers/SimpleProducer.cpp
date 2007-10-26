@@ -90,9 +90,9 @@ public:
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
-                destination = session->createTopic( "TEST.FOO" );
+                destination = session->createTopic( destURI );
             } else {
-                destination = session->createQueue( "TEST.FOO" );
+                destination = session->createQueue( destURI );
             }
 
             // Create a MessageProducer from the Session to the Topic or Queue
@@ -189,7 +189,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     // Total number of messages for this producer to send.
     //============================================================
-    unsigned int numMessages = 2000;
+    unsigned int numMessages = 32730;
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to
