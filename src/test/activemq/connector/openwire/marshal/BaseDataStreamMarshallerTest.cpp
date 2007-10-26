@@ -71,6 +71,11 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
     CPPUNIT_ASSERT( ds.cachedChild->charValue == dataStructure->cachedChild->charValue );
     CPPUNIT_ASSERT( ds.cachedChild->shortValue == dataStructure->cachedChild->shortValue );
     CPPUNIT_ASSERT( ds.cachedChild->intValue == dataStructure->cachedChild->intValue );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue1 == dataStructure->cachedChild->longValue1 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue2 == dataStructure->cachedChild->longValue2 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue3 == dataStructure->cachedChild->longValue3 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue4 == dataStructure->cachedChild->longValue4 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue5 == dataStructure->cachedChild->longValue5 );
     CPPUNIT_ASSERT( ds.cachedChild->floatValue == dataStructure->cachedChild->floatValue );
     CPPUNIT_ASSERT( ds.cachedChild->doubleValue == dataStructure->cachedChild->doubleValue );
     CPPUNIT_ASSERT( ds.cachedChild->stringValue == dataStructure->cachedChild->stringValue );
@@ -119,6 +124,11 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     CPPUNIT_ASSERT( ds.cachedChild->charValue == dataStructure->cachedChild->charValue );
     CPPUNIT_ASSERT( ds.cachedChild->shortValue == dataStructure->cachedChild->shortValue );
     CPPUNIT_ASSERT( ds.cachedChild->intValue == dataStructure->cachedChild->intValue );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue1 == dataStructure->cachedChild->longValue1 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue2 == dataStructure->cachedChild->longValue2 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue3 == dataStructure->cachedChild->longValue3 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue4 == dataStructure->cachedChild->longValue4 );
+    CPPUNIT_ASSERT( ds.cachedChild->longValue5 == dataStructure->cachedChild->longValue5 );
     CPPUNIT_ASSERT( ds.cachedChild->floatValue == dataStructure->cachedChild->floatValue );
     CPPUNIT_ASSERT( ds.cachedChild->doubleValue == dataStructure->cachedChild->doubleValue );
     CPPUNIT_ASSERT( ds.cachedChild->stringValue == dataStructure->cachedChild->stringValue );
