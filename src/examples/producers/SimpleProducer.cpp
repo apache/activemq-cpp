@@ -40,136 +40,118 @@ using namespace cms;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-class SimpleAsyncConsumer : public ExceptionListener,
-                            public MessageListener {
+class SimpleProducer : public Runnable {
 private:
 
     Connection* connection;
     Session* session;
     Destination* destination;
-    MessageConsumer* consumer;
+    MessageProducer* producer;
     bool useTopic;
+    unsigned int numMessages;
     std::string brokerURI;
     std::string destURI;
 
 public:
 
-    SimpleAsyncConsumer( const std::string& brokerURI,
-                         const std::string& destURI,
-                         bool useTopic = false ) {
+    SimpleProducer( const std::string& brokerURI,
+                    unsigned int numMessages,
+                    const std::string& destURI,
+                    bool useTopic = false ){
         connection = NULL;
         session = NULL;
         destination = NULL;
-        consumer = NULL;
+        producer = NULL;
+        this->numMessages = numMessages;
         this->useTopic = useTopic;
         this->brokerURI = brokerURI;
         this->destURI = destURI;
     }
 
-    virtual ~SimpleAsyncConsumer(){
+    virtual ~SimpleProducer(){
         cleanup();
     }
 
-    void runConsumer() {
-
+    virtual void run() {
         try {
-
             // Create a ConnectionFactory
             ActiveMQConnectionFactory* connectionFactory =
                 new ActiveMQConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
-            delete connectionFactory;
             connection->start();
 
-            connection->setExceptionListener(this);
+            // free the factory, we are done with it.
+            delete connectionFactory;
 
             // Create a Session
             session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
-                destination = session->createTopic( destURI );
+                destination = session->createTopic( "TEST.FOO" );
             } else {
-                destination = session->createQueue( destURI );
+                destination = session->createQueue( "TEST.FOO" );
             }
 
-            // Create a MessageConsumer from the Session to the Topic or Queue
-            consumer = session->createConsumer( destination );
-            consumer->setMessageListener( this );
+            // Create a MessageProducer from the Session to the Topic or Queue
+            producer = session->createProducer( destination );
+            producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
-        } catch (CMSException& e) {
-            e.printStackTrace();
-        }
-    }
+            // Create the Thread Id String
+            string threadIdStr = Integer::toString( Thread::getId() );
 
-    // Called from the consumer since this class is a registered MessageListener.
-    virtual void onMessage( const Message* message ){
+            // Create a messages
+            string text = (string)"Hello world! from thread " + threadIdStr;
 
-        static int count = 0;
+            for( int ix=0; ix<numMessages; ++ix ){
+                TextMessage* message = session->createTextMessage( text );
 
-        try
-        {
-            count++;
-            const TextMessage* textMessage =
-                dynamic_cast< const TextMessage* >( message );
-            string text = "";
+                message->setIntProperty( "Integer", ix );
 
-            if( textMessage != NULL ) {
-                text = textMessage->getText();
-            } else {
-                text = "NOT A TEXTMESSAGE!";
+                // Tell the producer to send the message
+                printf( "Sent message #%d from thread %s\n", ix+1, threadIdStr.c_str() );
+                producer->send( message );
+
+                delete message;
             }
 
-            printf( "Message #%d Received: %s\n", count, text.c_str() );
-        } catch (CMSException& e) {
+        }catch ( CMSException& e ) {
             e.printStackTrace();
         }
-    }
-
-    // If something bad happens you see it here as this class is also been
-    // registered as an ExceptionListener with the connection.
-    virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
-        printf("CMS Exception occured.  Shutting down client.\n");
     }
 
 private:
 
     void cleanup(){
 
-        //*************************************************
-        // Always close destination, consumers and producers before
-        // you destroy their sessions and connection.
-        //*************************************************
+            // Destroy resources.
+            try{
+                if( destination != NULL ) delete destination;
+            }catch ( CMSException& e ) { e.printStackTrace(); }
+            destination = NULL;
 
-        // Destroy resources.
-        try{
-            if( destination != NULL ) delete destination;
-        }catch (CMSException& e) { e.printStackTrace(); }
-        destination = NULL;
+            try{
+                if( producer != NULL ) delete producer;
+            }catch ( CMSException& e ) { e.printStackTrace(); }
+            producer = NULL;
 
-        try{
-            if( consumer != NULL ) delete consumer;
-        }catch (CMSException& e) { e.printStackTrace(); }
-        consumer = NULL;
+            // Close open resources.
+            try{
+                if( session != NULL ) session->close();
+                if( connection != NULL ) connection->close();
+            }catch ( CMSException& e ) { e.printStackTrace(); }
 
-        // Close open resources.
-        try{
-            if( session != NULL ) session->close();
-            if( connection != NULL ) connection->close();
-        }catch (CMSException& e) { e.printStackTrace(); }
+            try{
+                if( session != NULL ) delete session;
+            }catch ( CMSException& e ) { e.printStackTrace(); }
+            session = NULL;
 
-        // Now Destroy them
-        try{
-            if( session != NULL ) delete session;
-        }catch (CMSException& e) { e.printStackTrace(); }
-        session = NULL;
-
-        try{
-            if( connection != NULL ) delete connection;
-        }catch (CMSException& e) { e.printStackTrace(); }
-        connection = NULL;
+            try{
+                if( connection != NULL ) delete connection;
+            }catch ( CMSException& e ) { e.printStackTrace(); }
+            connection = NULL;
     }
 };
 
@@ -205,8 +187,13 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 //        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
+    // Total number of messages for this producer to send.
+    //============================================================
+    unsigned int numMessages = 2000;
+
+    //============================================================
     // This is the Destination Name and URI options.  Use this to
-    // customize where the consumer listens, to have the consumer
+    // customize where the Producer produces, to have the producer
     // use a topic or queue set the 'useTopics' flag.
     //============================================================
     std::string destURI = "TEST.FOO";
@@ -214,19 +201,13 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     // set to true to use topics instead of queues
     // Note in the code above that this causes createTopic or
-    // createQueue to be used in the consumer.
+    // createQueue to be used in the producer.
     //============================================================
     bool useTopics = true;
 
-    // Create the consumer
-    SimpleAsyncConsumer consumer( brokerURI, destURI, useTopics );
-
-    // Start it up and it will listen forever.
-    consumer.runConsumer();
-
-    // Wait to exit.
-    std::cout << "Press 'q' to quit" << std::endl;
-    while( std::cin.get() != 'q') {}
+    // Create the producer and run it.
+    SimpleProducer producer( brokerURI, numMessages, destURI, useTopics );
+    producer.run();
 
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
