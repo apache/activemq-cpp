@@ -48,6 +48,7 @@ private:
     Destination* destination;
     MessageProducer* producer;
     bool useTopic;
+    bool clientAck;
     unsigned int numMessages;
     std::string brokerURI;
     std::string destURI;
@@ -57,7 +58,8 @@ public:
     SimpleProducer( const std::string& brokerURI,
                     unsigned int numMessages,
                     const std::string& destURI,
-                    bool useTopic = false ){
+                    bool useTopic = false,
+                    bool clientAck = false ){
         connection = NULL;
         session = NULL;
         destination = NULL;
@@ -66,6 +68,7 @@ public:
         this->useTopic = useTopic;
         this->brokerURI = brokerURI;
         this->destURI = destURI;
+        this->clientAck = clientAck;
     }
 
     virtual ~SimpleProducer(){
@@ -86,7 +89,11 @@ public:
             delete connectionFactory;
 
             // Create a Session
-            session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            if( clientAck ) {
+                session = connection->createSession( Session::CLIENT_ACKNOWLEDGE );
+            } else {
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            }
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
@@ -181,15 +188,15 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
-        "&transport.useAsyncSend=true";
+        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true";
-//        "&wireFormat.tightEncodingEnabled=true";
+        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
     // Total number of messages for this producer to send.
     //============================================================
-    unsigned int numMessages = 32730;
+    unsigned int numMessages = 2000;
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to
@@ -203,7 +210,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // Note in the code above that this causes createTopic or
     // createQueue to be used in the producer.
     //============================================================
-    bool useTopics = true;
+    bool useTopics = false;
 
     // Create the producer and run it.
     SimpleProducer producer( brokerURI, numMessages, destURI, useTopics );

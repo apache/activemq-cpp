@@ -49,6 +49,7 @@ private:
     Destination* destination;
     MessageConsumer* consumer;
     bool useTopic;
+    bool clientAck;
     std::string brokerURI;
     std::string destURI;
 
@@ -56,7 +57,8 @@ public:
 
     SimpleAsyncConsumer( const std::string& brokerURI,
                          const std::string& destURI,
-                         bool useTopic = false ) {
+                         bool useTopic = false,
+                         bool clientAck = false ) {
         connection = NULL;
         session = NULL;
         destination = NULL;
@@ -64,6 +66,7 @@ public:
         this->useTopic = useTopic;
         this->brokerURI = brokerURI;
         this->destURI = destURI;
+        this->clientAck = clientAck;
     }
 
     virtual ~SimpleAsyncConsumer(){
@@ -86,7 +89,11 @@ public:
             connection->setExceptionListener(this);
 
             // Create a Session
-            session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            if( clientAck ) {
+                session = connection->createSession( Session::CLIENT_ACKNOWLEDGE );
+            } else {
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            }
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
@@ -120,6 +127,10 @@ public:
                 text = textMessage->getText();
             } else {
                 text = "NOT A TEXTMESSAGE!";
+            }
+
+            if( clientAck ) {
+                message->acknowledge();
             }
 
             printf( "Message #%d Received: %s\n", count, text.c_str() );
@@ -199,10 +210,10 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
-        "&transport.useAsyncSend=true";
+        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true";
-//        "&wireFormat.tightEncodingEnabled=true";
+        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to
@@ -216,10 +227,16 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // Note in the code above that this causes createTopic or
     // createQueue to be used in the consumer.
     //============================================================
-    bool useTopics = true;
+    bool useTopics = false;
+
+    //============================================================
+    // set to true if you want the consumer to use client ack mode
+    // instead of the default auto ack mode.
+    //============================================================
+    bool clientAck = false;
 
     // Create the consumer
-    SimpleAsyncConsumer consumer( brokerURI, destURI, useTopics );
+    SimpleAsyncConsumer consumer( brokerURI, destURI, useTopics, clientAck );
 
     // Start it up and it will listen forever.
     consumer.runConsumer();
