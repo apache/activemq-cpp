@@ -366,31 +366,8 @@ namespace marshal{
         BaseDataStreamMarshallerTest() {}
         virtual ~BaseDataStreamMarshallerTest() {}
 
-        virtual void setUp(){
-            dataStructure = new ComplexDataStructure();
-            dataStructure->boolValue = true;
-            dataStructure->setCachedChild( new SimpleDataStructure() );
-            dataStructure->cachedChild->boolValue = true;
-            dataStructure->cachedChild->charValue = 'a';
-            dataStructure->cachedChild->shortValue = 1000;
-            dataStructure->cachedChild->intValue = 100000;
-            dataStructure->cachedChild->longValue1 = 1000000;
-            dataStructure->cachedChild->longValue2 = 256;
-            dataStructure->cachedChild->longValue3 = 65536;
-            dataStructure->cachedChild->longValue4 = 65535;
-            dataStructure->cachedChild->longValue5 = 32769;
-            dataStructure->cachedChild->floatValue = 10.3f;
-            dataStructure->cachedChild->doubleValue = 20.1;
-            dataStructure->cachedChild->stringValue = "hello world";
-        }
-
-        virtual void tearDown(){
-
-            if( dataStructure != NULL ) {
-                delete dataStructure;
-                dataStructure = NULL;
-            }
-        }
+        virtual void setUp();
+        virtual void tearDown();
 
         void testLooseMarshal();
         void testTightMarshal();

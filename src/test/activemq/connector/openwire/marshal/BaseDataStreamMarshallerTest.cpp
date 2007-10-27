@@ -40,6 +40,35 @@ using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
+void BaseDataStreamMarshallerTest::setUp(){
+    
+    dataStructure = new ComplexDataStructure();
+    dataStructure->boolValue = true;
+    dataStructure->setCachedChild( new SimpleDataStructure() );
+    dataStructure->cachedChild->boolValue = true;
+    dataStructure->cachedChild->charValue = 'a';
+    dataStructure->cachedChild->shortValue = 1000;
+    dataStructure->cachedChild->intValue = 100000;
+    dataStructure->cachedChild->longValue1 = 1000000;
+    dataStructure->cachedChild->longValue2 = 256;
+    dataStructure->cachedChild->longValue3 = 65536;
+    dataStructure->cachedChild->longValue4 = 65535;
+    dataStructure->cachedChild->longValue5 = 32769;
+    dataStructure->cachedChild->floatValue = 10.3f;
+    dataStructure->cachedChild->doubleValue = 20.1;
+    dataStructure->cachedChild->stringValue = "hello world";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BaseDataStreamMarshallerTest::tearDown(){
+
+    if( dataStructure != NULL ) {
+        delete dataStructure;
+        dataStructure = NULL;
+    }
+}
+        
+////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshallerTest::testLooseMarshal()
 {
     SimpleDataStructureMarshaller* simpleMarshaller = new SimpleDataStructureMarshaller();
