@@ -40,6 +40,7 @@ namespace cms
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
          * called.
+         * 
          * @return Pointer to a connection object, caller owns the pointer
          * @throws CMSException
          */
@@ -53,8 +54,11 @@ namespace cms
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * @param username to authenticate with
-         * @param password to authenticate with
+         * 
+         * @param username 
+         *      to authenticate with
+         * @param password 
+         *      to authenticate with
          * @returns a Connection Pointer
          * @throws CMSException
          */
@@ -70,10 +74,14 @@ namespace cms
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * @param username to authenticate with
-         * @param password to authenticate with
-         * @param clientId to assign to connection if "" then a random cleint
-         *        Id is created for this connection.
+         * 
+         * @param username 
+         *      to authenticate with
+         * @param password 
+         *      to authenticate with
+         * @param clientId 
+         *      to assign to connection if "" then a random client Id is 
+         *      created for this connection.
          * @returns a Connection Pointer
          * @throws CMSException
          */

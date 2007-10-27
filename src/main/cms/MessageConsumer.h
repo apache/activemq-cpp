@@ -25,7 +25,25 @@
 
 namespace cms
 {
-
+    /**
+     * A client uses a <code>MessageConsumer</code> to received messages
+     * from a destination.<br>
+     * <br>
+     * A client may either synchronously receive a message consumer's messages 
+     * or have the consumer asynchronously deliver them as they arrive. <br>
+     * <br>
+     * For synchronous receipt, a client can request the next message from a 
+     * message consumer using one of its <code>receive</code> methods. There are 
+     * several variations of <code>receive</code> that allow a client to poll or 
+     * wait for the next message.<br>  
+     * <br>
+     * For asynchronous delivery, a client can register a 
+     * <code>MessageListener</code> object with a message consumer. As messages 
+     * arrive at the message consumer, it delivers them by calling the 
+     * <code>MessageListener</code>'s <code>onMessage</code> method.
+     * 
+     * @see MessageListener
+     */
     class CMS_API MessageConsumer : public Closeable
     {
     public:
@@ -34,6 +52,7 @@ namespace cms
       
         /**
          * Synchronously Receive a Message
+         * 
          * @return new message
          * @throws CMSException
          */
@@ -42,6 +61,7 @@ namespace cms
         /**
          * Synchronously Receive a Message, time out after defined interval.
          * Returns null if nothing read.
+         * 
          * @return new message
          * @throws CMSException
          */
@@ -50,6 +70,7 @@ namespace cms
         /**
          * Receive a Message, does not wait if there isn't a new message
          * to read, returns NULL if nothing read.
+         * 
          * @return new message
          * @throws CMSException
          */
@@ -57,18 +78,22 @@ namespace cms
 
         /**
          * Sets the MessageListener that this class will send notifs on
-         * @param MessageListener interface pointer
+         * 
+         * @param listener 
+         *      The listener of messages received by this consumer.
          */
         virtual void setMessageListener( MessageListener* listener ) = 0;
       
         /**
          * Gets the MessageListener that this class will send notifs on
-         * @param MessageListener interface pointer
+         * 
+         * @return The listener of messages received by this consumer
          */
         virtual MessageListener* getMessageListener() const = 0;
       
         /**
          * Gets this message consumer's message selector expression.
+         * 
          * @return This Consumer's selector expression or "".
          * @throws cms::CMSException
          */

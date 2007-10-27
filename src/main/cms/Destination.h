@@ -48,6 +48,7 @@ namespace cms{
       
         /**
          * Retrieve the Destination Type for this Destination
+         * 
          * @return The Destination Type
          */
         virtual DestinationType getDestinationType() const = 0;
@@ -58,6 +59,7 @@ namespace cms{
          * uniquely identify a particular destination.  For example, a topic
          * and a queue both named "FOO" must not have equivalent provider
          * strings.
+         * 
          * @return Provider specific Name
          */
         virtual std::string toProviderString() const = 0;
@@ -65,20 +67,24 @@ namespace cms{
         /**
          * Creates a new instance of this destination type that is a
          * copy of this one, and returns it.
+         * 
          * @returns cloned copy of this object
          */
         virtual cms::Destination* clone() const = 0;
       
         /**
          * Copies the contents of the given Destinastion object to this one.
-         * @param source The source Destination object.
+         * 
+         * @param source 
+         *      The source Destination object.
          */
         virtual void copy( const cms::Destination& source ) = 0;
 
         /**
          * Retrieve any properties that might be part of the destination
          * that was specified.  This is a deviation from the JMS spec
-         * but necessary due to C++ restrictions.  
+         * but necessary due to C++ restrictions.
+         * 
          * @return const reference to a properties object.
          */
         virtual const CMSProperties& getCMSProperties() const = 0;

@@ -24,6 +24,10 @@ namespace cms{
     
     class Message;
     
+    /**
+     * A <code>MessageListener</code> object is used to receive asynchronously 
+     * delivered messages.
+     */
     class CMS_API MessageListener{
     public:
     
@@ -41,7 +45,8 @@ namespace cms{
          * It is considered a programming error for this method to throw an
          * exception.
          * 
-         * @param Message object const pointer recipient does not own.
+         * @param message
+         *      Message object const pointer recipient does not own.
          */
         virtual void onMessage( const Message* message ) = 0;
 

@@ -41,6 +41,7 @@ namespace cms{
         /**
          * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
+         * 
          * @return new copy of this message
          */
         virtual Message* clone() const = 0;                
@@ -87,6 +88,7 @@ namespace cms{
         
         /**
          * Retrieves the propery names.
+         * 
          * @return The complete set of property names currently in this
          * message.
          */
@@ -94,14 +96,18 @@ namespace cms{
         
         /**
          * Indicates whether or not a given property exists.
-         * @param name The name of the property to look up.
+         * 
+         * @param name 
+         *      The name of the property to look up.
          * @return True if the property exists in this message.
          */
         virtual bool propertyExists( const std::string& name ) const = 0;
         
         /**
          * Gets a boolean property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -110,7 +116,9 @@ namespace cms{
             
         /**
          * Gets a byte property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -119,7 +127,9 @@ namespace cms{
             
         /**
          * Gets a double property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -128,7 +138,9 @@ namespace cms{
             
         /**
          * Gets a float property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -137,7 +149,9 @@ namespace cms{
             
         /**
          * Gets a int property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -146,7 +160,9 @@ namespace cms{
             
         /**
          * Gets a long property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -155,7 +171,9 @@ namespace cms{
             
         /**
          * Gets a short property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -164,7 +182,9 @@ namespace cms{
             
         /**
          * Gets a string property.
-         * @param name The name of the property to retrieve.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
          * @return The value for the named property.
          * @throws CMSException if the property does not exist.
          */
@@ -173,8 +193,11 @@ namespace cms{
         
         /**
          * Sets a boolean property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setBooleanProperty( const std::string& name,
@@ -182,8 +205,11 @@ namespace cms{
             
         /**
          * Sets a byte property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setByteProperty( const std::string& name,
@@ -191,8 +217,11 @@ namespace cms{
             
         /**
          * Sets a double property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setDoubleProperty( const std::string& name,
@@ -200,8 +229,10 @@ namespace cms{
             
         /**
          * Sets a float property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setFloatProperty( const std::string& name,
@@ -209,8 +240,11 @@ namespace cms{
             
         /**
          * Sets a int property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setIntProperty( const std::string& name,
@@ -218,8 +252,11 @@ namespace cms{
             
         /**
          * Sets a long property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setLongProperty( const std::string& name,
@@ -227,8 +264,11 @@ namespace cms{
             
         /**
          * Sets a short property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setShortProperty( const std::string& name,
@@ -236,8 +276,11 @@ namespace cms{
             
         /**
          * Sets a string property.
-         * @param name The name of the property to retrieve.
-         * @param value The value for the named property.
+         * 
+         * @param name 
+         *      The name of the property to retrieve.
+         * @param value 
+         *      The value for the named property.
          * @throws CMSException
          */
         virtual void setStringProperty( const std::string& name,
@@ -284,12 +327,14 @@ namespace cms{
          * values are not required to support byte[] values. The use of a byte[] 
          * value for CMSCorrelationID is non-portable.
          * 
-         * @param correlationId - the message ID of a message being referred to.
+         * @param correlationId
+         *      The message ID of a message being referred to.
          */
         virtual void setCMSCorrelationID( const std::string& correlationId ) = 0;
 
         /**
          * Gets the DeliveryMode for this message
+         * 
          * @return DeliveryMode enumerated value.
          */
         virtual int getCMSDeliveryMode() const = 0;
@@ -300,7 +345,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the value for a message that has been received.
          * 
-         * @param mode - DeliveryMode enumerated value.
+         * @param mode
+         *      DeliveryMode enumerated value.
          */
         virtual void setCMSDeliveryMode( int mode ) = 0;
       
@@ -327,7 +373,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the value for a message that has been received.
          * 
-         * @param destination - Destination Object
+         * @param destination
+         *      Destination Object
          */
         virtual void setCMSDestination( const Destination* destination ) = 0;
       
@@ -362,7 +409,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the value for a message that has been received.
          * 
-         * @param expireTime the message's expiration time
+         * @param expireTime 
+         *      the message's expiration time
          */
         virtual void setCMSExpiration( long long expireTime ) = 0;
       
@@ -403,7 +451,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the vaue for a message that has been received.
          * 
-         * @param id - the ID of the message
+         * @param id
+         *      the ID of the message
          */
         virtual void setCMSMessageID( const std::string& id ) = 0;
       
@@ -429,7 +478,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the value for a message that has been received.
          * 
-         * @param priority - priority value for this message
+         * @param priority
+         *      priority value for this message
          */
         virtual void setCMSPriority( int priority ) = 0;
 
@@ -450,7 +500,8 @@ namespace cms{
          * This field is set at the time the message is delivered. This method 
          * can be used to change the value for a message that has been received.
          * 
-         * @param redelivered - boolean redelivered value
+         * @param redelivered
+         *      boolean redelivered value
          */
         virtual void setCMSRedelivered( bool redelivered ) = 0;
 
@@ -484,8 +535,8 @@ namespace cms{
          * with a reply it has just received. The client can use the 
          * CMSCorrelationID header field for this purpose.
          * 
-         * @param destination - Destination to which to send a response to this 
-         * message
+         * @param destination
+         *      Destination to which to send a response to this message
          */
         virtual void setCMSReplyTo( const cms::Destination* destination ) = 0;
 
@@ -522,7 +573,8 @@ namespace cms{
          * CMS providers set this field when a message is sent. This method can 
          * be used to change the value for a message that has been received.
          * 
-         * @param timeStamp - integer time stamp value
+         * @param timeStamp
+         *      integer time stamp value
          */
         virtual void setCMSTimestamp( long long timeStamp ) = 0;
 
@@ -559,7 +611,8 @@ namespace cms{
          * literals are used, they may not be valid type names for some CMS 
          * providers.
          * 
-         * @param type the message type
+         * @param type 
+         *      the message type
          * @see getCMSType
          */
         virtual void setCMSType( const std::string& type ) = 0;
