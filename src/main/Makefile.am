@@ -75,8 +75,13 @@ cc_sources = \
     activemq/network/TcpSocket.cpp \
     activemq/network/BufferedSocket.cpp \
     activemq/network/SocketOutputStream.cpp \
-    activemq/network/SocketFactory.cpp \
+    activemq/network/TcpSocketFactory.cpp \
     activemq/network/SocketError.cpp \
+    activemq/network/SSLSocket.cpp \
+    activemq/network/SSLSocketInputStream.cpp \
+    activemq/network/SSLSocketOutputStream.cpp \
+    activemq/network/SSLSocketFactory.cpp \
+    activemq/network/SSLError.cpp \
     activemq/transport/TransportBuilder.cpp \
     activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TransportFilter.cpp \
@@ -90,6 +95,7 @@ cc_sources = \
     activemq/transport/filters/AsyncSendTransportFactory.cpp \
     activemq/transport/filters/TcpTransport.cpp \
     activemq/transport/filters/TcpTransportFactory.cpp \
+    activemq/transport/filters/SSLTransportFactory.cpp \
     activemq/transport/filters/LoggingTransport.cpp \
     activemq/transport/filters/LoggingTransportFactory.cpp \
     activemq/util/StringTokenizer.cpp \

@@ -65,7 +65,7 @@ void ActiveMQException::setMessage( const char* msg, ... ){
 void ActiveMQException::buildMessage(const char* format, va_list& vargs)
 {
     // Allocate buffer with a guess of it's size
-    int size = 128;
+    int size = 256;
     
     // Format string
     while( true ){

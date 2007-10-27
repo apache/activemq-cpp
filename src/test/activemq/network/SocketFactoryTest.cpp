@@ -20,7 +20,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::network::SocketFactoryTest );
 
 #include <activemq/util/Properties.h>
-#include <activemq/network/SocketFactory.h>
+#include <activemq/network/TcpSocketFactory.h>
 #include <activemq/network/TcpSocket.h>
 
 using namespace activemq;
@@ -44,7 +44,7 @@ void SocketFactoryTest::test()
 
         properties.setProperty("soLinger", "false");
 
-        Socket* client = SocketFactory::createSocket(
+        Socket* client = TcpSocketFactory ().createSocket(
             ostream.str(), properties );
 
         synchronized(&serverThread.mutex)
@@ -103,7 +103,7 @@ void SocketFactoryTest::testNoDelay()
         properties.setProperty( "soLinger", "false" );
         properties.setProperty( "tcpNoDelay", "true" );
 
-        Socket* client = SocketFactory::createSocket(
+        Socket* client = TcpSocketFactory ().createSocket(
             ostream.str(), properties );
 
         TcpSocket* tcpSock = dynamic_cast<TcpSocket*>( client );

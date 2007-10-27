@@ -21,6 +21,7 @@
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/filters/AsyncSendTransportFactory.h>
 #include <activemq/transport/filters/TcpTransportFactory.h>
+#include <activemq/transport/filters/SSLTransportFactory.h>
 #include <activemq/transport/filters/LoggingTransportFactory.h>
 #include <activemq/transport/filters/ResponseCorrelatorFactory.h>
 #include <activemq/connector/stomp/StompConnectorFactory.h>
@@ -40,6 +41,7 @@ InitDirector::InitDirector(void)
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
         transport::filters::TcpTransportFactory::getInstance();
+        transport::filters::SSLTransportFactory::getInstance();
         transport::filters::AsyncSendTransportFactory::getInstance();
         transport::filters::LoggingTransportFactory::getInstance();
         transport::filters::ResponseCorrelatorFactory::getInstance();

@@ -36,7 +36,7 @@ namespace network{
      */
     class TcpSocket : public Socket
     {
-    private:
+    protected:
 
         /**
          * The handle for this socket.
@@ -52,6 +52,11 @@ namespace network{
           * The output stream for writing to this socket.
           */
          SocketOutputStream* outputStream;
+
+	 /**
+	  * Create streams.
+	  */
+	 virtual void initialize () throw (SocketException);
 
     public:
 

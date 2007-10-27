@@ -31,7 +31,7 @@ namespace network{
      */
     class SocketOutputStream : public io::OutputStream
     {
-    private:
+    protected:
 
         // The socket.
         Socket::SocketHandle socket;

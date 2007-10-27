@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/network/SocketFactory.h>
+#include <activemq/network/TcpSocketFactory.h>
 #include <activemq/network/BufferedSocket.h>
 #include <activemq/network/TcpSocket.h>
 #include <activemq/util/Properties.h>
@@ -27,7 +27,7 @@ using namespace activemq::network;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Socket* SocketFactory::createSocket(
+Socket* TcpSocketFactory::createSocket(
     const std::string& uri,
     const Properties& properties)
         throw ( SocketException )
@@ -97,7 +97,7 @@ Socket* SocketFactory::createSocket(
         // so that users get the benefit of buffered reads and writes.
         // The buffered socket will own the TcpSocket instance, and will
         // clean it up when it is cleaned up.
-        TcpSocket* tcpSocket = new TcpSocket();
+        TcpSocket* tcpSocket = createTcpSocket( properties );
 
         try
         {
@@ -133,4 +133,11 @@ Socket* SocketFactory::createSocket(
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
     AMQ_CATCHALL_THROW( SocketException )
+}
+
+TcpSocket* TcpSocketFactory::createTcpSocket(
+    const util::Properties & )
+        throw ( SocketException )
+{
+  return new TcpSocket();
 }

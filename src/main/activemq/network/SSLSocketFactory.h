@@ -14,41 +14,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_NETWORK_SOCKETFACTORY_H_
-#define _ACTIVEMQ_NETWORK_SOCKETFACTORY_H_
+#ifndef _ACTIVEMQ_NETWORK_SSLSOCKETFACTORY_H_
+#define _ACTIVEMQ_NETWORK_SSLSOCKETFACTORY_H_
 
-#include <activemq/network/SocketException.h>
-#include <activemq/util/Properties.h>
+#include <activemq/network/TcpSocketFactory.h>
+
+#include <activemq/concurrent/Mutex.h>
 
 namespace activemq{
 namespace network{
 
-    class Socket;
-
     /**
-     * Socket Factory for use in Creating Sockets
-
-     * @see <code>Socket</code>
+     * Socket Factory implementation for use in Creating SSL Sockets
+     *
+     * @see <code>SSLSocket</code>
      */
-    class SocketFactory
+    class SSLSocketFactory : public TcpSocketFactory
     {
+#ifdef AMQ_HAVE_OPENSSL	
+
+	/**
+	 * If we should manage locks.
+	 */
+	bool manageLocks;
+
+	/**
+	 * Locks for OpenSSL and callback to manage them.
+	 */
+	static concurrent::Mutex *locks;
+	static void locking_cb( int mode, int n, const char* file, int line );
+
+#endif /* AMQ_HAVE_OPENSSL */ 	
+
     public:
+	SSLSocketFactory();
+	~SSLSocketFactory();
 
-	virtual ~SocketFactory() {};
-
-        /**
-         * Creates and returns a Socket dervied Object based on the values
-         * defined in the Properties Object that is passed in.
-         * @param the URI for the Socket Connection.
-         * @param properties a IProperties pointer.
-         * @throws SocketException.
-         */
-        virtual Socket* createSocket( const std::string& uri,
-                                     const util::Properties& properties )
-            throw ( SocketException ) = 0;
-
+	virtual TcpSocket* createTcpSocket(
+            const util::Properties &properties )
+	    throw ( SocketException );
     };
 
 }}
 
-#endif /*_ACTIVEMQ_NETWORK_SOCKETFACTORY_H_*/
+#endif /*_ACTIVEMQ_NETWORK_TCPSOCKETFACTORY_H_*/

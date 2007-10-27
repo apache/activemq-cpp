@@ -17,7 +17,7 @@
 
 #include "TcpTransport.h"
 
-#include <activemq/network/SocketFactory.h>
+#include <activemq/network/TcpSocketFactory.h>
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
@@ -31,7 +31,8 @@ using namespace activemq::network;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const activemq::util::Properties& properties,
+TcpTransport::TcpTransport( network::TcpSocketFactory& factory,
+			    const activemq::util::Properties& properties,
                             Transport* next,
                             const bool own )
 :
@@ -54,7 +55,7 @@ TcpTransport::TcpTransport( const activemq::util::Properties& properties,
         // Create the IO device we will be communicating over the
         // wire with.  This may need to change if we add more types
         // of sockets, such as SSL.
-        socket = SocketFactory::createSocket(
+        socket = factory.createSocket(
             properties.getProperty( "transport.uri" ), properties );
 
         // Cast it to an IO transport so we can wire up the socket

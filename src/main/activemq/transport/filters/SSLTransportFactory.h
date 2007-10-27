@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_SSLTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_FILTERS_SSLTRANSPORTFACTORY_H_
 
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/transport/IOTransportFactory.h>
-#include <activemq/network/TcpSocketFactory.h>
+#include <activemq/network/SSLSocketFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
@@ -31,11 +31,11 @@ namespace filters{
     /**
      * Factory Responsible for creating the TcpTransport.
      */
-    class TcpTransportFactory : public TransportFactory
+    class SSLTransportFactory : public TransportFactory
     {
     public:
 
-        virtual ~TcpTransportFactory() {}
+        virtual ~SSLTransportFactory() {}
 
         /**
          * Creates a Transport instance.
@@ -56,9 +56,9 @@ namespace filters{
         static TransportFactory& getInstance();
 
     private:
-	network::TcpSocketFactory sockets;
+	network::SSLSocketFactory sockets;
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_SSLTRANSPORTFACTORY_H_*/

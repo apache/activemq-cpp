@@ -15,34 +15,33 @@
  * limitations under the License.
  */
 
-#include "TcpTransportFactory.h"
+#include "SSLError.h"
+#include <activemq/util/Config.h>
 
-#include <activemq/transport/filters/TcpTransport.h>
+#ifdef AMQ_HAVE_OPENSSL
+#include <openssl/err.h>
 
 using namespace activemq;
-using namespace activemq::transport;
-using namespace activemq::transport::filters;
-using namespace activemq::exceptions;
+using namespace activemq::network;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& TcpTransportFactory::getInstance(void)
-{
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "tcp", new TcpTransportFactory() );
-
-    return registrar.getFactory();
+unsigned long SSLError::getErrorCode() {
+    return ERR_peek_last_error();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* TcpTransportFactory::createTransport(
-    const activemq::util::Properties& properties,
-    Transport* next,
-    bool own ) throw ( ActiveMQException ) {
-
-    try {
-	return new TcpTransport( sockets, properties, next, own );
+std::string SSLError::getErrorString() {
+    
+    std::string returnValue;
+    
+    for (unsigned long e = ERR_get_error(); e; e = ERR_get_error()) {
+	char msg[256];
+	ERR_error_string_n(e, msg, sizeof msg);
+	returnValue += "\n";
+	returnValue += msg;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    
+    return returnValue;
 }
+
+#endif /* AMQ_HAVE_OPENSSL */

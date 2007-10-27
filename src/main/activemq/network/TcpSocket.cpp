@@ -208,21 +208,7 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
                             ( const sockaddr * )&target_addr,
                             sizeof( target_addr ) ) );
 
-        // Destroy the input stream.
-        if( inputStream != NULL ){
-            delete inputStream;
-            inputStream = NULL;
-        }
-
-        // Destroy the output stream.
-        if( outputStream != NULL ){
-            delete outputStream;
-            outputStream = NULL;
-        }
-
-        // Create an input/output stream for this socket.
-        inputStream = new SocketInputStream( socketHandle );
-        outputStream = new SocketOutputStream( socketHandle );
+	initialize ();
     }
     catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
@@ -233,6 +219,26 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
         try{ close(); } catch( cms::CMSException& cx){ /* Absorb */ }
         throw SocketException( __FILE__, __LINE__, "connect() caught unknown exception");
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpSocket::initialize () throw( SocketException )
+{
+    // Destroy the input stream.
+    if( inputStream != NULL ){
+	delete inputStream;
+	inputStream = NULL;
+    }
+
+    // Destroy the output stream.
+    if( outputStream != NULL ){
+	delete outputStream;
+	outputStream = NULL;
+    }
+
+    // Create an input/output stream for this socket.
+    inputStream = new SocketInputStream( socketHandle );
+    outputStream = new SocketOutputStream( socketHandle );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

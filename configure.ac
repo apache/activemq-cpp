@@ -143,6 +143,9 @@ CHECK_VISIBILITY()
 ## supports addrinfo, defines HAVE_STRUCT_ADDRINFO.
 CHECK_ADDRINFO()
 
+## Configure SSL.
+AMQ_FIND_SSL
+
 ## Execute Doxygen macros
 DX_HTML_FEATURE(ON)
 DX_CHM_FEATURE(OFF)

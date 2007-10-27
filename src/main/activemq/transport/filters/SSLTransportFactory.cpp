@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include "TcpTransportFactory.h"
+#include "SSLTransportFactory.h"
 
 #include <activemq/transport/filters/TcpTransport.h>
 
@@ -25,17 +25,17 @@ using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& TcpTransportFactory::getInstance(void)
+TransportFactory& SSLTransportFactory::getInstance(void)
 {
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
-        "tcp", new TcpTransportFactory() );
+        "ssl", new SSLTransportFactory() );
 
     return registrar.getFactory();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* TcpTransportFactory::createTransport(
+Transport* SSLTransportFactory::createTransport(
     const activemq::util::Properties& properties,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {

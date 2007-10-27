@@ -20,6 +20,7 @@
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/network/Socket.h>
+#include <activemq/network/TcpSocketFactory.h>
 #include <activemq/util/Properties.h>
 #include <activemq/io/LoggingInputStream.h>
 #include <activemq/io/LoggingOutputStream.h>
@@ -59,7 +60,8 @@ namespace filters{
          * @param next the next transport in the chain
          * @param own indicates if this transport owns the next.
          */
-        TcpTransport( const activemq::util::Properties& properties,
+        TcpTransport( network::TcpSocketFactory& factory,
+		      const activemq::util::Properties& properties,
                       Transport* next,
                       const bool own = true );
 
