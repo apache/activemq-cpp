@@ -25,22 +25,11 @@ AC_CONFIG_SRCDIR(src/main/cms/BytesMessage.h)
 ## -----------------------------------------------
 ## Define the Version variables
 ## -----------------------------------------------
-CMS_LIBRARY_NAME=cms
-CMS_VERSION=1.2
-CMS_LIBRARY_VERSION=0:0:0
-CMS_RELEASE=0.0
-CMS_API_VERSION=${CMS_VERSION}
 
-AC_SUBST(CMS_LIBRARY_NAME)
-AC_SUBST(CMS_VERSION)
-AC_SUBST(CMS_LIBRARY_VERSION)
-AC_SUBST(CMS_RELEASE)
-AC_SUBST(CMS_API_VERSION)
+PACKAGE=cms
+PACKAGE_VERSION=1.2
 
-PACKAGE=$CMS_LIBRARY_NAME
-VERSION=$CMS_VERSION
-
-AM_INIT_AUTOMAKE($PACKAGE, $VERSION, no-define)
+AM_INIT_AUTOMAKE($PACKAGE, $PACKAGE_VERSION, no-define)
 AM_CONFIG_HEADER(config.h)
 
 ## -----------------------------------------------
@@ -72,7 +61,7 @@ DX_RTF_FEATURE(OFF)
 DX_XML_FEATURE(OFF)
 DX_PDF_FEATURE(OFF)
 DX_PS_FEATURE(OFF)
-DX_INIT_DOXYGEN(cms, doxygen.cfg, doc)
+DX_INIT_DOXYGEN([$PACKAGE], [doxygen.cfg], [doc])
 
 
 ## -----------------------------------------------------

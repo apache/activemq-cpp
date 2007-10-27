@@ -35,6 +35,7 @@ namespace cms{
         
         /**
          * Gets the name of this topic.
+         * 
          * @return The topic name.
          */
         virtual std::string getTopicName() 

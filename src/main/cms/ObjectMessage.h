@@ -23,6 +23,10 @@
 
 namespace cms{
 
+    /**
+     * Place holder for interaction with JMS systems that support Java 
+     * serialized <code>ObjectMessage</code>s.
+     */
     class CMS_API ObjectMessage : public Message
     {
     public:

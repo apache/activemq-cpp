@@ -28,6 +28,9 @@ namespace cms
 {
     class ExceptionListener;
    
+    /**
+     * The client's connection to its provider.
+     */
     class CMS_API Connection :
         public Startable,
         public Stoppable,
@@ -41,12 +44,14 @@ namespace cms
          * Closes this connection as well as any Sessions 
          * created from it (and those Sessions' consumers and
          * producers).
+         * 
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
 
 		/**
          * Creates an AUTO_ACKNOWLEDGE Session.
+         * 
          * @throws CMSException
          */
         virtual Session* createSession() throw ( CMSException ) = 0;
@@ -54,7 +59,9 @@ namespace cms
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
-         * @param the Acknowledgement Mode to use.
+         * 
+         * @param ackMode
+         *      the Acknowledgement Mode to use.
          * @throws CMSException
          */
         virtual Session* createSession( Session::AcknowledgeMode ackMode ) 
@@ -62,19 +69,23 @@ namespace cms
 
         /**
          * Get the Client Id for this session
+         * 
          * @return Client Id String
          */
         virtual std::string getClientID() const = 0;      
 
         /**
          * Gets the registered Exception Listener for this connection
+         * 
          * @return pointer to an exception listnener or NULL
          */
         virtual ExceptionListener* getExceptionListener() const = 0;
 
         /**
          * Sets the registed Exception Listener for this connection
-         * @param pointer to and <code>ExceptionListener</code>
+         * 
+         * @param listener
+         *      pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener( ExceptionListener* listener ) = 0;
 

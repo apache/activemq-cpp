@@ -44,5 +44,5 @@ h_sources = cms/DeliveryMode.h \
 ##
 ## Packaging Info
 ##
-library_includedir=$(includedir)/$(CMS_LIBRARY_NAME)-$(CMS_VERSION)
+library_includedir=$(includedir)/$(PACKAGE)-$(PACKAGE_VERSION)
 nobase_library_include_HEADERS = $(h_sources)
