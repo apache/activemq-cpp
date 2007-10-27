@@ -1,4 +1,34 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version includes several bugfixes, as well as some new examples.  Also
+a lot of work has been done on performance and memory leaks and stability.
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0
+
+Bug
+
+    * [AMQCPP-111] - Unable to ./configure under Suse Linux 64 bit
+    * [AMQCPP-137] - Exception in ResponseCorrelator::onCommand()
+    * [AMQCPP-141] - ActiveMQTextMessage::getText() causes an index out of bounds assertion failure if trying to read a 0 length text message
+    * [AMQCPP-142] - BufferedOutputStream flush called after BufferedOutputStream close resulting in unhandled exceptions
+    * [AMQCPP-144] - Decaf library build fails on OS X
+    * [AMQCPP-145] - Compiler error concerning TRANSACTION_ROLLBACK
+    * [AMQCPP-149] - Client crash when receiving message with empty string property from java
+    * [AMQCPP-150] - ActiveMQ-CPP consumer client hanging after receiving 32767 messages.
+
+Improvement
+
+    * [AMQCPP-99] - Incorporate APR for generation of GUIDs
+    * [AMQCPP-124] - Provide a ConnectionMetaData interface in CMS
+    * [AMQCPP-139] - Improvements for the Openwire Commands Generated Code
+    * [AMQCPP-143] - declara BytesMessage::readXXX() methods as 'const'
+    * [AMQCPP-146] - Refactor sequence id generation in the connectors
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.1                               ==
 =========================================================================
 
