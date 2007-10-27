@@ -409,13 +409,13 @@ long long BaseDataStreamMarshaller::tightUnmarshalLong(
             if( bs->readBoolean() ) {
                 return dataIn->readLong();
             } else {
-                return dataIn->readInt();
+                return (unsigned int)dataIn->readInt();
             }
 
         } else {
 
             if( bs->readBoolean()) {
-                return dataIn->readShort();
+                return (unsigned short)dataIn->readShort();
             } else {
                 return 0;
             }
