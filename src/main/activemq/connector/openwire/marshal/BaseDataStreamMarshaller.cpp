@@ -300,8 +300,7 @@ void BaseDataStreamMarshaller::looseMarshalString(
     try{
 
         dataOut->writeBoolean( value != "" );
-        if( value != "" )
-        {
+        if( value != "" ) {
             dataOut->writeUTF( value );
         }
     }
@@ -334,29 +333,24 @@ int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat AMQC
 
     try{
 
-        if( value == 0L )
-        {
+        if( value == 0L ) {
+
             bs->writeBoolean( false );
             bs->writeBoolean( false );
             return 0;
-        }
-        else
-        {
+
+        } else {
+
             unsigned long long ul = (unsigned long long)value;
-            if( (ul & 0xFFFFFFFFFFFF0000LL) == 0LL )
-            {
+            if( (ul & 0xFFFFFFFFFFFF0000ULL) == 0ULL ) {
                 bs->writeBoolean(false);
                 bs->writeBoolean(true);
                 return 2;
-            }
-            else if( (ul & 0xFFFFFFFF00000000LL) == 0LL )
-            {
+            } else if( (ul & 0xFFFFFFFF00000000ULL) == 0ULL ) {
                 bs->writeBoolean(true);
                 bs->writeBoolean(false);
                 return 4;
-            }
-            else
-            {
+            } else {
                 bs->writeBoolean(true);
                 bs->writeBoolean(true);
                 return 8;
@@ -409,13 +403,13 @@ long long BaseDataStreamMarshaller::tightUnmarshalLong(
             if( bs->readBoolean() ) {
                 return dataIn->readLong();
             } else {
-                return dataIn->readInt();
+                return (unsigned int)dataIn->readInt();
             }
 
         } else {
 
             if( bs->readBoolean()) {
-                return dataIn->readShort();
+                return dataIn->readUnsignedShort();
             } else {
                 return 0;
             }
@@ -447,7 +441,6 @@ long long BaseDataStreamMarshaller::looseUnmarshalLong(
         throw ( io::IOException ) {
 
     try{
-
         return dataIn->readLong();
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -463,20 +456,19 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
 
     try{
 
-        if( bs->readBoolean() )
-        {
+        if( bs->readBoolean() ) {
+
             BrokerError* answer = new BrokerError();
 
             answer->setExceptionClass( tightUnmarshalString( dataIn, bs ) );
             answer->setMessage( tightUnmarshalString( dataIn, bs ) );
 
-            if( wireFormat->isStackTraceEnabled() )
-            {
+            if( wireFormat->isStackTraceEnabled() ) {
                 short length = dataIn->readShort();
                 std::vector< BrokerError::StackTraceElement* > stackTrace;
 
-                for( int i = 0; i < length; ++i )
-                {
+                for( int i = 0; i < length; ++i ) {
+
                     BrokerError::StackTraceElement* element =
                         new BrokerError::StackTraceElement;
 
@@ -486,14 +478,15 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
                     element->LineNumber = dataIn->readInt();
                     stackTrace.push_back( element );
                 }
+
                 answer->setStackTraceElements( stackTrace );
                 answer->setCause( dynamic_cast<BrokerError*>(
                     tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
             }
+
             return answer;
-        }
-        else
-        {
+
+        } else {
             return NULL;
         }
     }
@@ -507,8 +500,8 @@ int BaseDataStreamMarshaller::tightMarshalBrokerError1(
     OpenWireFormat* wireFormat,
     commands::DataStructure* data,
     utils::BooleanStream* bs )
-        throw ( io::IOException )
-{
+        throw ( io::IOException ) {
+
     try{
 
         BrokerError* error = dynamic_cast<BrokerError*>( data );
@@ -714,6 +707,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
         throw ( io::IOException ) {
 
     try{
+
         if( dataIn->readBoolean() ) {
             int size = dataIn->readInt();
             std::vector<unsigned char> data;
@@ -765,8 +759,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( const commands::MessageId* id )
-{
+std::string BaseDataStreamMarshaller::toString( const commands::MessageId* id ) {
     if( id == NULL ) return "";
 
     return toString( id->getProducerId() ) + ":" +
@@ -774,27 +767,23 @@ std::string BaseDataStreamMarshaller::toString( const commands::MessageId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( const commands::ProducerId* id )
-{
+std::string BaseDataStreamMarshaller::toString( const commands::ProducerId* id ) {
     return id->getConnectionId() + ":" +
            Long::toString( id->getSessionId() ) + ":" +
            Long::toString( id->getValue() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string BaseDataStreamMarshaller::toString( const commands::TransactionId* txnId )
-{
+std::string BaseDataStreamMarshaller::toString( const commands::TransactionId* txnId ) {
+
     const LocalTransactionId* ltxnId =
         dynamic_cast<const LocalTransactionId*>( txnId );
     const XATransactionId* xaTxnId =
         dynamic_cast<const XATransactionId*>( txnId );
 
-    if( ltxnId != NULL )
-    {
+    if( ltxnId != NULL ) {
         return Long::toString( ltxnId->getValue() );
-    }
-    else if( xaTxnId != NULL )
-    {
+    } else if( xaTxnId != NULL ) {
         return string("XID:") + Integer::toString( xaTxnId->getFormatId() ) + ":" +
                toHexFromBytes( xaTxnId->getGlobalTransactionId() ) + ":" +
                toHexFromBytes( xaTxnId->getBranchQualifier() );
@@ -805,12 +794,11 @@ std::string BaseDataStreamMarshaller::toString( const commands::TransactionId* t
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::toHexFromBytes(
-    const std::vector<unsigned char>& data )
-{
+    const std::vector<unsigned char>& data ) {
+
     std::string buffer = "";
 
-    for( unsigned int i = 0; i < data.size(); i++ )
-    {
+    for( unsigned int i = 0; i < data.size(); i++ ) {
         buffer.append( hexTable[ data[i] ] );
     }
 
@@ -820,8 +808,8 @@ std::string BaseDataStreamMarshaller::toHexFromBytes(
 ////////////////////////////////////////////////////////////////////////////////
 std::string BaseDataStreamMarshaller::readAsciiString(
     io::DataInputStream* dataIn )
-        throw ( io::IOException )
-{
+        throw ( io::IOException ) {
+
     try{
 
         int size = dataIn->readShort() + 1; // add space c++ NULL

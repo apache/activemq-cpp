@@ -264,7 +264,7 @@ public:
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
-        printf("JMS Exception occured.  Shutting down client.\n");
+        printf("CMS Exception occured.  Shutting down client.\n");
     }
 
 private:

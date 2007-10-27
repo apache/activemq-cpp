@@ -15,7 +15,7 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-cc_sources = main.cpp
+main_example_sources = main.cpp
 
 ##
 ## Compiler / Linker Info
@@ -23,7 +23,19 @@ cc_sources = main.cpp
 
 INCLUDES = -I$(srcdir)/../main
 
-bin_PROGRAMS = example
-example_SOURCES = $(cc_sources)
-
+## Main Example
+bin_PROGRAMS = example 
+example_SOURCES = $(main_example_sources)
 example_LDADD= ../main/libactivemq-cpp.la
+
+## Simple Async Consumer
+simple_async_consumer_sources = ./consumers/SimpleAsyncConsumer.cpp
+bin_PROGRAMS += simple_async_consumer 
+simple_async_consumer_SOURCES = $(simple_async_consumer_sources)
+simple_async_consumer_LDADD= ../main/libactivemq-cpp.la
+
+## Simple Producer
+simple_producer_sources = ./producers/SimpleProducer.cpp
+bin_PROGRAMS += simple_producer 
+simple_producer_SOURCES = $(simple_producer_sources)
+simple_producer_LDADD= ../main/libactivemq-cpp.la
