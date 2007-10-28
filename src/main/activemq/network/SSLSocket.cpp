@@ -98,25 +98,25 @@ void SSLSocket::connect(const char* host, int port) throw ( SocketException )
             switch (SSL_get_error (ssl, result))
             {
                 case SSL_ERROR_NONE:
-                // Apart from verification we are done.
-                verifyPeerCertificate( host );
-                return;
+                    // Apart from verification we are done.
+                    verifyPeerCertificate( host );
+                    return;
 
                 case SSL_ERROR_SSL:
                 case SSL_ERROR_ZERO_RETURN:
-                TcpSocket::close();
-                throw SocketException( __FILE__, __LINE__,
-                        SSLError::getErrorString().c_str());
+                    TcpSocket::close();
+                    throw SocketException( __FILE__, __LINE__,
+                            SSLError::getErrorString().c_str());
 
                 case SSL_ERROR_WANT_READ:
                 case SSL_ERROR_WANT_WRITE:
-                // Repeat the operation.
-                break;
+                    // Repeat the operation.
+                    break;
 
                 case SSL_ERROR_SYSCALL:
-                TcpSocket::close();
-                throw SocketException( __FILE__, __LINE__,
-                        SocketError::getErrorString().c_str() );
+                    TcpSocket::close();
+                    throw SocketException( __FILE__, __LINE__,
+                            SocketError::getErrorString().c_str() );
             }
         }
     }
