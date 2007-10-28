@@ -31,41 +31,40 @@ using namespace activemq::network;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( network::TcpSocketFactory& factory,
-			    const activemq::util::Properties& properties,
-                            Transport* next,
-                            const bool own )
+TcpTransport::TcpTransport(network::TcpSocketFactory& factory,
+        const activemq::util::Properties& properties, Transport* next,
+        const bool own) 
 :
-    TransportFilter( next, own ),
-    socket( NULL ),
-    loggingInputStream( NULL ),
-    loggingOutputStream( NULL ),
-    bufferedInputStream( NULL ),
-    bufferedOutputStream( NULL )
-{
+    TransportFilter(next, own), 
+    socket(NULL), 
+    loggingInputStream(NULL),
+    loggingOutputStream(NULL), 
+    bufferedInputStream(NULL),
+    bufferedOutputStream(NULL) {
+    
     try
     {
         if( !properties.hasProperty( "transport.uri" ) ) {
             throw ActiveMQException(
-                __FILE__, __LINE__,
-                "TcpTransport::TcpTransport - "
-                "No URI set for this transport to connect to.");
+                    __FILE__, __LINE__,
+                    "TcpTransport::TcpTransport - "
+                    "No URI set for this transport to connect to.");
         }
 
         // Create the IO device we will be communicating over the
         // wire with.  This may need to change if we add more types
         // of sockets, such as SSL.
         socket = factory.createSocket(
-            properties.getProperty( "transport.uri" ), properties );
+                properties.getProperty( "transport.uri" ), properties );
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
         IOTransport* ioTransport = dynamic_cast<IOTransport*>( next );
-        if( ioTransport == NULL ){
+        if( ioTransport == NULL ) {
             throw ActiveMQException(
-                __FILE__, __LINE__,
-                "TcpTransport::TcpTransport - "
-                "transport must be of type IOTransport");
+                    __FILE__, __LINE__,
+                    "TcpTransport::TcpTransport - "
+                    "transport must be of type IOTransport");
         }
 
         InputStream* inputStream = socket->getInputStream();
@@ -93,13 +92,12 @@ TcpTransport::TcpTransport( network::TcpSocketFactory& factory,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::~TcpTransport()
-{
+TcpTransport::~TcpTransport() {
     try
     {
-        try{
+        try {
             close();
-        } catch( cms::CMSException& ex ){ /* Absorb */ }
+        } catch( cms::CMSException& ex ) { /* Absorb */}
 
         if( socket != NULL ) {
             delete socket;
@@ -131,7 +129,7 @@ TcpTransport::~TcpTransport()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpTransport::close() throw( cms::CMSException ) {
+void TcpTransport::close() throw(cms::CMSException ) {
 
     try
     {

@@ -25,23 +25,22 @@ using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& TcpTransportFactory::getInstance(void)
-{
+TransportFactory& TcpTransportFactory::getInstance(void) {
+    
     // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "tcp", new TcpTransportFactory() );
+    static TransportFactoryMapRegistrar registrar("tcp",
+            new TcpTransportFactory());
 
     return registrar.getFactory();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* TcpTransportFactory::createTransport(
-    const activemq::util::Properties& properties,
-    Transport* next,
-    bool own ) throw ( ActiveMQException ) {
+        const activemq::util::Properties& properties, Transport* next, bool own)
+        throw (ActiveMQException ) {
 
     try {
-	return new TcpTransport( sockets, properties, next, own );
+        return new TcpTransport( sockets, properties, next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

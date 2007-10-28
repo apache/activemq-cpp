@@ -53,35 +53,32 @@ using namespace activemq::io;
 
 #if defined(HAVE_WINSOCK2_H)
 
-    // Static socket initializer needed for winsock
+// Static socket initializer needed for winsock
 
-    TcpSocket::StaticSocketInitializer::StaticSocketInitializer() {
-        socketInitError = NULL;
-        const WORD version_needed = MAKEWORD(2,2); // lo-order byte: major version
-        WSAData temp;
-        if( WSAStartup( version_needed, &temp ) ){
-           clear();
-           socketInitError = new SocketException ( __FILE__, __LINE__,
-               "winsock.dll was not found");
-        }
-    }
-    TcpSocket::StaticSocketInitializer::~StaticSocketInitializer() {
+TcpSocket::StaticSocketInitializer::StaticSocketInitializer() {
+    socketInitError = NULL;
+    const WORD version_needed = MAKEWORD(2,2); // lo-order byte: major version
+    WSAData temp;
+    if( WSAStartup( version_needed, &temp ) ) {
         clear();
-        WSACleanup();
+        socketInitError = new SocketException ( __FILE__, __LINE__,
+                "winsock.dll was not found");
     }
+}
+TcpSocket::StaticSocketInitializer::~StaticSocketInitializer() {
+    clear();
+    WSACleanup();
+}
 
-    // Create static instance of the socket initializer.
-    TcpSocket::StaticSocketInitializer TcpSocket::staticSocketInitializer;
+// Create static instance of the socket initializer.
+TcpSocket::StaticSocketInitializer TcpSocket::staticSocketInitializer;
 
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket() throw (SocketException)
-:
-    socketHandle( INVALID_SOCKET_HANDLE ),
-    inputStream( NULL ),
-    outputStream( NULL )
-{
+TcpSocket::TcpSocket() throw (SocketException) :
+    socketHandle(INVALID_SOCKET_HANDLE), inputStream( NULL),
+            outputStream( NULL) {
 
     try {
 
@@ -96,12 +93,9 @@ TcpSocket::TcpSocket() throw (SocketException)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::TcpSocket( SocketHandle socketHandle )
-:
-    socketHandle( INVALID_SOCKET_HANDLE ),
-    inputStream( NULL ),
-    outputStream( NULL )
-{
+TcpSocket::TcpSocket(SocketHandle socketHandle) :
+    socketHandle(INVALID_SOCKET_HANDLE), inputStream( NULL),
+            outputStream( NULL) {
     try {
 
 #if defined(HAVE_WINSOCK2_H)
@@ -119,42 +113,40 @@ TcpSocket::TcpSocket( SocketHandle socketHandle )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpSocket::~TcpSocket()
-{
+TcpSocket::~TcpSocket() {
     // No shutdown, just close - dont want blocking destructor.
     close();
 
     // Destroy the input stream.
-    if( inputStream != NULL ){
+    if (inputStream != NULL) {
         delete inputStream;
         inputStream = NULL;
     }
 
     // Destroy the output stream.
-    if( outputStream != NULL ){
+    if (outputStream != NULL) {
         delete outputStream;
         outputStream = NULL;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InputStream* TcpSocket::getInputStream(){
+InputStream* TcpSocket::getInputStream() {
     return inputStream;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OutputStream* TcpSocket::getOutputStream(){
+OutputStream* TcpSocket::getOutputStream() {
     return outputStream;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::connect(const char* host, int port) throw ( SocketException )
-{
-    try{
+void TcpSocket::connect(const char* host, int port) throw (SocketException ) {
+    try {
 
         if( isConnected() ) {
             throw SocketException( __FILE__, __LINE__,
-                "Socket::connect - Socket already connected.  host: %s, port: %d", host, port );
+                    "Socket::connect - Socket already connected.  host: %s, port: %d", host, port );
         }
 
         // Create the socket.
@@ -164,11 +156,10 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
         if( port <= 0 || port > 65535 ) {
             close();
             throw SocketException ( __FILE__, __LINE__,
-                "Socket::connect- Port out of range: %d", port );
+                    "Socket::connect- Port out of range: %d", port );
         }
 
 #ifdef SO_NOSIGPIPE // Don't want to get a SIGPIPE on FreeBSD and Mac OS X
-
         int optval = 1;
         checkResult( ::setsockopt( socketHandle, SOL_SOCKET, SO_NOSIGPIPE, (char*)&optval, sizeof(optval)) );
 
@@ -205,35 +196,34 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
 
         // Attempt the connection to the server.
         checkResult( ::connect( socketHandle,
-                            ( const sockaddr * )&target_addr,
-                            sizeof( target_addr ) ) );
+                        ( const sockaddr * )&target_addr,
+                        sizeof( target_addr ) ) );
 
-	initialize ();
+        initialize ();
     }
     catch( SocketException& ex ) {
         ex.setMark( __FILE__, __LINE__);
-        try{ close(); } catch( cms::CMSException& cx){ /* Absorb */ }
+        try {close();} catch( cms::CMSException& cx) { /* Absorb */}
         throw ex;
     }
-    catch( ... ){
-        try{ close(); } catch( cms::CMSException& cx){ /* Absorb */ }
+    catch( ... ) {
+        try {close();} catch( cms::CMSException& cx) { /* Absorb */}
         throw SocketException( __FILE__, __LINE__, "connect() caught unknown exception");
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::initialize () throw( SocketException )
-{
+void TcpSocket::initialize() throw(SocketException ) {
     // Destroy the input stream.
-    if( inputStream != NULL ){
-	delete inputStream;
-	inputStream = NULL;
+    if (inputStream != NULL) {
+        delete inputStream;
+        inputStream = NULL;
     }
 
     // Destroy the output stream.
-    if( outputStream != NULL ){
-	delete outputStream;
-	outputStream = NULL;
+    if (outputStream != NULL) {
+        delete outputStream;
+        outputStream = NULL;
     }
 
     // Create an input/output stream for this socket.
@@ -242,36 +232,34 @@ void TcpSocket::initialize () throw( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::close() throw( cms::CMSException )
-{
+void TcpSocket::close() throw(cms::CMSException ) {
     // Close the input stream.
-    if( inputStream != NULL ){
+    if (inputStream != NULL) {
         inputStream->close();
     }
 
     // Close the output stream.
-    if( outputStream != NULL ){
+    if (outputStream != NULL) {
         outputStream->close();
     }
 
-    if( isConnected() )
-    {
-        ::shutdown( socketHandle, SHUT_RDWR );
+    if (isConnected() ) {
+::        shutdown( socketHandle, SHUT_RDWR );
 
-        #if !defined(HAVE_WINSOCK2_H)
-            ::close( socketHandle );
-        #else
-           ::closesocket( socketHandle );
-        #endif
+#if !defined(HAVE_WINSOCK2_H)
+        ::close( socketHandle );
+#else
+        ::closesocket( socketHandle );
+#endif
 
-       socketHandle = INVALID_SOCKET_HANDLE;
+        socketHandle = INVALID_SOCKET_HANDLE;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSoLinger() const throw( SocketException ){
+int TcpSocket::getSoLinger() const throw(SocketException ) {
 
-   try{
+    try {
         linger value;
         socklen_t length = sizeof( value );
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_LINGER, (char*)&value, &length ));
@@ -283,9 +271,9 @@ int TcpSocket::getSoLinger() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
+void TcpSocket::setSoLinger(int dolinger) throw(SocketException ) {
 
-    try{
+    try {
         linger value;
         value.l_onoff = dolinger != 0;
         value.l_linger = dolinger;
@@ -296,9 +284,9 @@ void TcpSocket::setSoLinger( int dolinger ) throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getKeepAlive() const throw( SocketException ){
+bool TcpSocket::getKeepAlive() const throw(SocketException ) {
 
-    try{
+    try {
         int value;
         socklen_t length = sizeof( int );
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, &length ));
@@ -309,9 +297,9 @@ bool TcpSocket::getKeepAlive() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
+void TcpSocket::setKeepAlive(const bool keepAlive) throw(SocketException ) {
 
-    try{
+    try {
         int value = keepAlive? 1 : 0;
         checkResult(::setsockopt(socketHandle, SOL_SOCKET, SO_KEEPALIVE, (char*)&value, sizeof(int)) );
     }
@@ -320,9 +308,9 @@ void TcpSocket::setKeepAlive( const bool keepAlive ) throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
+int TcpSocket::getReceiveBufferSize() const throw(SocketException ) {
 
-    try{
+    try {
         int value;
         socklen_t length = sizeof( value );
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&value, &length ));
@@ -333,9 +321,9 @@ int TcpSocket::getReceiveBufferSize() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
+void TcpSocket::setReceiveBufferSize(int size) throw(SocketException ) {
 
-    try{
+    try {
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_RCVBUF, (char*)&size, sizeof(size) ));
     }
     AMQ_CATCH_RETHROW( SocketException )
@@ -343,9 +331,9 @@ void TcpSocket::setReceiveBufferSize( int size ) throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getReuseAddress() const throw( SocketException ){
+bool TcpSocket::getReuseAddress() const throw(SocketException ) {
 
-    try{
+    try {
         int value;
         socklen_t length = sizeof( int );
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, &length ));
@@ -356,9 +344,9 @@ bool TcpSocket::getReuseAddress() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
+void TcpSocket::setReuseAddress(bool reuse) throw(SocketException ) {
 
-    try{
+    try {
         int value = reuse? 1 : 0;
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(int) ));
     }
@@ -367,9 +355,9 @@ void TcpSocket::setReuseAddress( bool reuse ) throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSendBufferSize() const throw( SocketException ){
+int TcpSocket::getSendBufferSize() const throw(SocketException ) {
 
-    try{
+    try {
         int value;
         socklen_t length = sizeof( value );
         checkResult(::getsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&value, &length ));
@@ -380,9 +368,9 @@ int TcpSocket::getSendBufferSize() const throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
+void TcpSocket::setSendBufferSize(int size) throw(SocketException ) {
 
-    try{
+    try {
         checkResult(::setsockopt( socketHandle, SOL_SOCKET, SO_SNDBUF, (char*)&size, sizeof(size) ));
     }
     AMQ_CATCH_RETHROW( SocketException )
@@ -390,9 +378,8 @@ void TcpSocket::setSendBufferSize( int size ) throw( SocketException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
-{
-    try{
+void TcpSocket::setSoTimeout(const int millisecs) throw (SocketException ) {
+    try {
 
 #if !defined(HAVE_WINSOCK2_H)
         timeval timot;
@@ -410,9 +397,8 @@ void TcpSocket::setSoTimeout ( const int millisecs ) throw ( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-int TcpSocket::getSoTimeout() const throw( SocketException )
-{
-    try{
+int TcpSocket::getSoTimeout() const throw(SocketException ) {
+    try {
 
 #if !defined(HAVE_WINSOCK2_H)
         timeval timot;
@@ -439,9 +425,9 @@ int TcpSocket::getSoTimeout() const throw( SocketException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool TcpSocket::getTcpNoDelay() const throw ( cms::CMSException ) {
+bool TcpSocket::getTcpNoDelay() const throw (cms::CMSException ) {
 
-    try{
+    try {
         int value;
         socklen_t length = sizeof( int );
         checkResult(::getsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&value, &length ));
@@ -452,9 +438,9 @@ bool TcpSocket::getTcpNoDelay() const throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::setTcpNoDelay( bool value ) throw ( cms::CMSException ) {
+void TcpSocket::setTcpNoDelay(bool value) throw (cms::CMSException ) {
 
-    try{
+    try {
         int ivalue = value ? 1 : 0;
         checkResult(::setsockopt( socketHandle, IPPROTO_TCP, TCP_NODELAY, (char*)&ivalue, sizeof(int) ));
     }
@@ -463,12 +449,11 @@ void TcpSocket::setTcpNoDelay( bool value ) throw ( cms::CMSException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TcpSocket::checkResult( int value ) const throw (SocketException) {
+void TcpSocket::checkResult(int value) const throw (SocketException) {
 
-    if( value < 0 ){
+    if (value < 0) {
         throw SocketException( __FILE__, __LINE__,
-            SocketError::getErrorString().c_str() );
+                SocketError::getErrorString().c_str() );
     }
 }
-
 

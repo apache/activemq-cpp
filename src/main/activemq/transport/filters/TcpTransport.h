@@ -27,9 +27,9 @@
 #include <activemq/io/BufferedInputStream.h>
 #include <activemq/io/BufferedOutputStream.h>
 
-namespace activemq{
-namespace transport{
-namespace filters{
+namespace activemq {
+namespace transport {
+namespace filters {
 
     /**
      * Implements a TCP/IP based transport filter, this transport
@@ -37,42 +37,40 @@ namespace filters{
      * level transport should take care of manaing stream reads
      * and writes.
      */
-    class TcpTransport : public TransportFilter
-    {
+    class TcpTransport : public TransportFilter {
     private:
-
+    
         /**
          * Socket that this Transport Communicates with
          */
         network::Socket* socket;
-
+    
         io::LoggingInputStream* loggingInputStream;
         io::LoggingOutputStream* loggingOutputStream;
-
+    
         io::BufferedInputStream* bufferedInputStream;
         io::BufferedOutputStream* bufferedOutputStream;
-
+    
     public:
-
+    
         /**
          * Constructor
          * @param properties the configuration properties for this transport
          * @param next the next transport in the chain
          * @param own indicates if this transport owns the next.
          */
-        TcpTransport( network::TcpSocketFactory& factory,
-		      const activemq::util::Properties& properties,
-                      Transport* next,
-                      const bool own = true );
-
+        TcpTransport(network::TcpSocketFactory& factory,
+                const activemq::util::Properties& properties, Transport* next,
+                const bool own = true);
+    
         virtual ~TcpTransport();
-
+    
         /**
          * Delegates to the superclass and then closes the socket.
          * @throws CMSException if errors occur.
          */
-        virtual void close() throw( cms::CMSException );
-
+        virtual void close() throw(cms::CMSException );
+    
     };
 
 }}}

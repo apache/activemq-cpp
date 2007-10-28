@@ -22,69 +22,68 @@
 #include <activemq/network/Socket.h>
 #include <activemq/concurrent/Mutex.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
     /**
      * Input stream for performing reads on a socket.  This
      * class will only work properly for blocking sockets.
      */
-    class SocketInputStream : public io::InputStream
-    {
+    class SocketInputStream : public io::InputStream {
     protected:
-
+    
         // The socket handle.
         Socket::SocketHandle socket;
         concurrent::Mutex mutex;
         bool closed;
-
+    
     public:
-
+    
         /**
          * Constructor.
          * @param socket the socket handle.
          */
-        SocketInputStream( Socket::SocketHandle socket );
-
+        SocketInputStream(Socket::SocketHandle socket);
+    
         /**
          * Destructor.
          */
         virtual ~SocketInputStream();
-
+    
         /**
          * Enables socket level output of the recieved data
          * @param debug true to turn on debugging
          */
         /*virtual void setDebug( bool debug ){
-            this->debug = debug;
-        }*/
-
+         this->debug = debug;
+         }*/
+    
         /**
          * Locks the object.
          * @throws ActiveMQException
          */
-        virtual void lock() throw( exceptions::ActiveMQException ){
+        virtual void lock() throw(exceptions::ActiveMQException ) {
             mutex.lock();
         }
-
+    
         /**
          * Unlocks the object.
          * @throws ActiveMQException
          */
-        virtual void unlock() throw( exceptions::ActiveMQException ){
+        virtual void unlock() throw(exceptions::ActiveMQException ) {
             mutex.unlock();
         }
-
+    
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
          * calling.
          * @throws ActiveMQException
          */
-        virtual void wait() throw( exceptions::ActiveMQException ){
+        virtual void wait() throw(exceptions::ActiveMQException ) {
             mutex.wait();
         }
-
+    
         /**
          * Waits on a signal from this object, which is generated
          * by a call to Notify.  Must have this object locked before
@@ -93,32 +92,32 @@ namespace network{
          * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
          * @throws ActiveMQException
          */
-        virtual void wait( unsigned long millisecs )
-            throw( exceptions::ActiveMQException ) {
-
-            mutex.wait( millisecs );
+        virtual void wait(unsigned long millisecs)
+                throw(exceptions::ActiveMQException ) {
+    
+            mutex.wait(millisecs);
         }
-
+    
         /**
          * Signals a waiter on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
          * @throws ActiveMQException
          */
-        virtual void notify() throw( exceptions::ActiveMQException ){
+        virtual void notify() throw(exceptions::ActiveMQException ) {
             mutex.notify();
         }
-
+    
         /**
          * Signals the waiters on this object that it can now wake
          * up and continue.  Must have this object locked before
          * calling.
          * @throws ActiveMQException
          */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
+        virtual void notifyAll() throw(exceptions::ActiveMQException ) {
             mutex.notifyAll();
         }
-
+    
         /**
          * Returns the number of bytes available on the socket to
          * be read right now.
@@ -126,15 +125,15 @@ namespace network{
          * be read on the socket.
          */
         virtual std::size_t available() const throw (activemq::io::IOException);
-
+    
         /**
          * Reads a single byte from the buffer.  If no data
          * is available, blocks until their is.
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( io::IOException );
-
+        virtual unsigned char read() throw (io::IOException );
+    
         /**
          * Reads an array of bytes from the buffer.  If no data
          * is available, blocks until there is.
@@ -143,25 +142,23 @@ namespace network{
          * @return The number of bytes read.
          * @throws IOException thrown if an error occurs.
          */
-        virtual std::size_t read( unsigned char* buffer,
-                                  std::size_t bufferSize )
-            throw (io::IOException);
-
+        virtual std::size_t read(unsigned char* buffer, std::size_t bufferSize)
+                throw (io::IOException);
+    
         /**
          * Close - does nothing.  It is the responsibility of the owner
          * of the socket object to close it.
          * @throws CMSException
          */
-        virtual void close() throw( cms::CMSException );
-
+        virtual void close() throw(cms::CMSException );
+    
         /**
          * Not supported.
          * @throws an UnsupportedOperationException.
          */
-        virtual std::size_t skip( std::size_t num )
-            throw ( io::IOException,
-                    exceptions::UnsupportedOperationException );
-
+        virtual std::size_t skip(std::size_t num) throw (io::IOException,
+                exceptions::UnsupportedOperationException );
+    
     };
 
 }}

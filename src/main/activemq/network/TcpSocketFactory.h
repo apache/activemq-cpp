@@ -19,11 +19,11 @@
 
 #include <activemq/network/SocketFactory.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
     class TcpSocket;
-
+    
     /**
      * Socket Factory implementation for use in Creating Sockets
      * <p>
@@ -41,14 +41,12 @@ namespace network{
      *
      * @see <code>Socket</code>
      */
-    class TcpSocketFactory : public SocketFactory
-    {
-	virtual TcpSocket* createTcpSocket(
-            const util::Properties &properties )
-	    throw ( SocketException );
-
+    class TcpSocketFactory : public SocketFactory {
+        virtual TcpSocket* createTcpSocket(const util::Properties &properties)
+                throw (SocketException );
+    
     public:
-
+    
         /**
          * Creates and returns a TcpSocket dervied Object based on the values
          * defined in the Properties Object that is passed in.
@@ -56,10 +54,9 @@ namespace network{
          * @param properties a IProperties pointer.
          * @throws SocketException.
          */
-        Socket* createSocket( const std::string& uri,
-			      const util::Properties& properties )
-            throw ( SocketException );
-
+        Socket* createSocket(const std::string& uri,
+                const util::Properties& properties) throw (SocketException );
+    
     };
 
 }}

@@ -33,10 +33,8 @@ using namespace activemq::support;
 int InitDirector::refCount;
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::InitDirector(void)
-{
-    if( refCount == 0 )
-    {
+InitDirector::InitDirector(void) {
+    if (refCount == 0) {
         logger::LogWriter::getInstance();
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
@@ -53,11 +51,9 @@ InitDirector::InitDirector(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::~InitDirector(void)
-{
+InitDirector::~InitDirector(void) {
     refCount--;
 
-    if( refCount == 0 )
-    {
+    if (refCount == 0) {
     }
 }

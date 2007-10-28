@@ -21,38 +21,36 @@
 
 #include <activemq/concurrent/Mutex.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
     /**
      * Socket Factory implementation for use in Creating SSL Sockets
      *
      * @see <code>SSLSocket</code>
      */
-    class SSLSocketFactory : public TcpSocketFactory
-    {
-#ifdef AMQ_HAVE_OPENSSL	
-
-	/**
-	 * If we should manage locks.
-	 */
-	bool manageLocks;
-
-	/**
-	 * Locks for OpenSSL and callback to manage them.
-	 */
-	static concurrent::Mutex *locks;
-	static void locking_cb( int mode, int n, const char* file, int line );
-
-#endif /* AMQ_HAVE_OPENSSL */ 	
-
+    class SSLSocketFactory : public TcpSocketFactory {
+    #ifdef AMQ_HAVE_OPENSSL	
+    
+        /**
+         * If we should manage locks.
+         */
+        bool manageLocks;
+    
+        /**
+         * Locks for OpenSSL and callback to manage them.
+         */
+        static concurrent::Mutex *locks;
+        static void locking_cb( int mode, int n, const char* file, int line );
+    
+    #endif /* AMQ_HAVE_OPENSSL */ 	
+    
     public:
-	SSLSocketFactory();
-	~SSLSocketFactory();
-
-	virtual TcpSocket* createTcpSocket(
-            const util::Properties &properties )
-	    throw ( SocketException );
+        SSLSocketFactory();
+        virtual ~SSLSocketFactory();
+    
+        virtual TcpSocket* createTcpSocket(const util::Properties &properties)
+                throw (SocketException );
     };
 
 }}

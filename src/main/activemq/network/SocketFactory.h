@@ -20,22 +20,21 @@
 #include <activemq/network/SocketException.h>
 #include <activemq/util/Properties.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
-    class Socket;
+class Socket;
 
     /**
      * Socket Factory for use in Creating Sockets
-
+    
      * @see <code>Socket</code>
      */
-    class SocketFactory
-    {
+    class SocketFactory {
     public:
-
-	virtual ~SocketFactory() {};
-
+    
+        virtual ~SocketFactory() {}
+    
         /**
          * Creates and returns a Socket dervied Object based on the values
          * defined in the Properties Object that is passed in.
@@ -43,10 +42,9 @@ namespace network{
          * @param properties a IProperties pointer.
          * @throws SocketException.
          */
-        virtual Socket* createSocket( const std::string& uri,
-                                     const util::Properties& properties )
-            throw ( SocketException ) = 0;
-
+        virtual Socket* createSocket(const std::string& uri,
+                const util::Properties& properties) throw (SocketException ) = 0;
+    
     };
 
 }}

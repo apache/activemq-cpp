@@ -24,8 +24,8 @@
 #ifdef AMQ_HAVE_OPENSSL
 #include <openssl/ssl.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
     /**
      * Input stream for performing reads on a socket.  This
@@ -35,7 +35,7 @@ namespace network{
     {
     private:
 
-	SSL* ssl;
+        SSL* ssl;
 
     public:
 
@@ -54,8 +54,8 @@ namespace network{
          * @throws IOException thrown if an error occurs.
          */
         virtual std::size_t read( unsigned char* buffer,
-                                  std::size_t bufferSize )
-            throw (io::IOException);
+                std::size_t bufferSize )
+        throw (io::IOException);
     };
 
 }}

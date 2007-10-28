@@ -27,15 +27,15 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 SSLSocketOutputStream::SSLSocketOutputStream( Socket::SocketHandle socket,
-					      SSL* ssl)
-  : SocketOutputStream( socket ),
-    ssl( ssl )
+        SSL* ssl)
+: SocketOutputStream( socket ),
+ssl( ssl )
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void SSLSocketOutputStream::write( const unsigned char* buffer, std::size_t len )
-    throw (IOException)
+throw (IOException)
 {
     std::size_t remaining = len;
 
@@ -43,36 +43,36 @@ void SSLSocketOutputStream::write( const unsigned char* buffer, std::size_t len 
     {
         int len = SSL_write( ssl, buffer, remaining );
 
-	switch (SSL_get_error( ssl, len ))
-	  {
-	  case SSL_ERROR_NONE:
-	    buffer += len;
-	    remaining -= len;
-	    break;
+        switch (SSL_get_error( ssl, len ))
+        {
+            case SSL_ERROR_NONE:
+            buffer += len;
+            remaining -= len;
+            break;
 
-	  case SSL_ERROR_WANT_READ:
-	  case SSL_ERROR_WANT_WRITE:
-	    // Repeat the operation.
-	    break;
+            case SSL_ERROR_WANT_READ:
+            case SSL_ERROR_WANT_WRITE:
+            // Repeat the operation.
+            break;
 
-	  case SSL_ERROR_ZERO_RETURN:
+            case SSL_ERROR_ZERO_RETURN:
             throw IOException( __FILE__, __LINE__,
-			       "activemq::io::SSLSocketInputStream::write"
-			       " - The connection is broken" );
+                    "activemq::io::SSLSocketInputStream::write"
+                    " - The connection is broken" );
 
-	  case SSL_ERROR_SSL:
+            case SSL_ERROR_SSL:
             throw IOException( __FILE__, __LINE__,
-			       "activemq::io::SSLSocketInputStream::write"
-			       " - %s",
-			       SSLError::getErrorString().c_str());
+                    "activemq::io::SSLSocketInputStream::write"
+                    " - %s",
+                    SSLError::getErrorString().c_str());
 
-	  case SSL_ERROR_SYSCALL:
-	    if( SocketError::getErrorCode() != SocketError::INTERRUPTED )
-		throw IOException( __FILE__, __LINE__,
-				   "activemq::io::SSLSocketInputStream::write"
-				   " - %s",
-				   SocketError::getErrorString().c_str() );
-	    break;
+            case SSL_ERROR_SYSCALL:
+            if( SocketError::getErrorCode() != SocketError::INTERRUPTED )
+            throw IOException( __FILE__, __LINE__,
+                    "activemq::io::SSLSocketInputStream::write"
+                    " - %s",
+                    SocketError::getErrorString().c_str() );
+            break;
         }
     }
 }

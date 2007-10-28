@@ -24,19 +24,19 @@
 #include <activemq/network/SSLSocketFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
-namespace activemq{
-namespace transport{
-namespace filters{
+namespace activemq {
+namespace transport {
+namespace filters {
 
     /**
      * Factory Responsible for creating the TcpTransport.
      */
-    class SSLTransportFactory : public TransportFactory
-    {
+    class SSLTransportFactory : public TransportFactory {
     public:
-
-        virtual ~SSLTransportFactory() {}
-
+    
+        virtual ~SSLTransportFactory() {
+        }
+    
         /**
          * Creates a Transport instance.
          * @param properties - Object that will hold transport config values
@@ -45,18 +45,18 @@ namespace filters{
          * @throws ActiveMQException if an error occurs.
          */
         virtual Transport* createTransport(
-            const activemq::util::Properties& properties,
-            Transport* next,
-            bool own ) throw ( exceptions::ActiveMQException );
-
+                const activemq::util::Properties& properties, Transport* next,
+                bool own) throw (exceptions::ActiveMQException );
+    
         /**
          * Returns a reference to this TransportFactory
          * @returns TransportFactory Reference
          */
         static TransportFactory& getInstance();
-
+    
     private:
-	network::SSLSocketFactory sockets;
+        
+        network::SSLSocketFactory sockets;
     };
 
 }}}

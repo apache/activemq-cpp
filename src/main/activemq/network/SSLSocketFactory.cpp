@@ -25,8 +25,8 @@
 #include <stdio.h>
 
 #ifdef AMQ_HAVE_OPENSSL
-#include <openssl/ssl.h>
-#include <openssl/rand.h>
+    #include <openssl/ssl.h>
+    #include <openssl/rand.h>
 #endif /* AMQ_HAVE_OPENSSL */
 
 using namespace std;
@@ -43,111 +43,108 @@ Mutex *SSLSocketFactory::locks = 0;
 void SSLSocketFactory::locking_cb( int mode, int type, const char *, int )
 {
     if( mode & CRYPTO_LOCK )
-	locks[type].lock ();
+    locks[type].lock ();
     else
-	locks[type].unlock ();
+    locks[type].unlock ();
 }
 
 #endif /* AMQ_HAVE_OPENSSL */
 
 ////////////////////////////////////////////////////////////////////////////////
-
-SSLSocketFactory::SSLSocketFactory()
-{
+SSLSocketFactory::SSLSocketFactory() {
 #ifdef AMQ_HAVE_OPENSSL
     manageLocks = false;
 
     // Initialize only if locking callback is not yet set.
-    if( !CRYPTO_get_locking_callback() ){
+    if( !CRYPTO_get_locking_callback() ) {
 
-	// General library initialization.
-	CRYPTO_malloc_init();
-	SSL_load_error_strings();
-	SSL_library_init();
-	OpenSSL_add_all_algorithms();
+        // General library initialization.
+        CRYPTO_malloc_init();
+        SSL_load_error_strings();
+        SSL_library_init();
+        OpenSSL_add_all_algorithms();
 
-	// Set up threading.
-	if( !locks ){
-	    manageLocks = true;
-	    locks = new Mutex[CRYPTO_num_locks()];
-	    CRYPTO_set_id_callback( &Thread::getId );
-	    CRYPTO_set_locking_callback( &locking_cb );
-	}
+        // Set up threading.
+        if( !locks ) {
+            manageLocks = true;
+            locks = new Mutex[CRYPTO_num_locks()];
+            CRYPTO_set_id_callback( &Thread::getId );
+            CRYPTO_set_locking_callback( &locking_cb );
+        }
     }
 
     // Seed the random number generator.
     // Not really safe, but what can you do if the system does not have a good
     // random source..
-    if( !RAND_status() ){
-	std::vector<unsigned char> data (64);
-	Random().nextBytes( data );
+    if( !RAND_status() ) {
+        std::vector<unsigned char> data (64);
+        Random().nextBytes( data );
 #ifdef WIN32
-	RAND_seed( static_cast<const void *>( data._Myfirst ), (int)data.size() );
+        RAND_seed( static_cast<const void *>( data._Myfirst ), (int)data.size() );
 #else
-	RAND_seed( static_cast<const void *>( data.data() ), data.size() );
+        RAND_seed( static_cast<const void *>( &data.front() ), data.size() );
 #endif
     }
 
 #endif /* AMQ_HAVE_OPENSSL */
 }
 
-SSLSocketFactory::~SSLSocketFactory()
-{
+///////////////////////////////////////////////////////////////////////////////
+SSLSocketFactory::~SSLSocketFactory() {
 #ifdef AMQ_HAVE_OPENSSL
 
-  if( manageLocks ){
-      CRYPTO_set_locking_callback( 0 );
-      delete [] locks;
-      locks = 0;
-  }
+    if( manageLocks ) {
+        CRYPTO_set_locking_callback( 0 );
+        delete [] locks;
+        locks = 0;
+    }
 
 #endif /* AMQ_HAVE_OPENSSL */
 }
 
-TcpSocket* SSLSocketFactory::createTcpSocket(
-    const util::Properties &properties )
-    throw ( SocketException )
-{
+///////////////////////////////////////////////////////////////////////////////
+TcpSocket* SSLSocketFactory::createTcpSocket(const util::Properties &properties)
+        throw (SocketException ) {
 #ifdef AMQ_HAVE_OPENSSL
     std::string ca_file
-	= properties.getProperty( "sslCAFile", "" );
+    = properties.getProperty( "sslCAFile", "" );
     std::string ca_path
-	= properties.getProperty( "sslCAPath", "" );
+    = properties.getProperty( "sslCAPath", "" );
 
     std::string cert_file
-	= properties.getProperty( "sslCertFile", "" );
+    = properties.getProperty( "sslCertFile", "" );
     std::string key_file
-	= properties.getProperty( "sslKeyFile", cert_file );
+    = properties.getProperty( "sslKeyFile", cert_file );
 
     std::string password
-	= properties.getProperty( "sslPassword", "" );
+    = properties.getProperty( "sslPassword", "" );
 
     bool verify_peer
-	= properties.getProperty( "sslVerifyPeer", "false" ) == "true";
+    = properties.getProperty( "sslVerifyPeer", "false" ) == "true";
     std::string verify_name
-	= properties.getProperty( "sslVerifyName", "" );
+    = properties.getProperty( "sslVerifyName", "" );
 
     std::string ciphers
-	= properties.getProperty( "sslCiphers", "" );
+    = properties.getProperty( "sslCiphers", "" );
 
     SSLSocket *socket = new SSLSocket();
 
     try {
-	try {
-	    socket->setPassword( password );
-	    socket->setCAFilePath( ca_file, ca_path );
-	    socket->setCertFile( cert_file, key_file );
-	    socket->setVerifyPeer( verify_peer, verify_name );
-	    socket->setCiphers( ciphers );
-	}
+        try {
+            socket->setPassword( password );
+            socket->setCAFilePath( ca_file, ca_path );
+            socket->setCertFile( cert_file, key_file );
+            socket->setVerifyPeer( verify_peer, verify_name );
+            socket->setCiphers( ciphers );
+        }
         catch ( SocketException& ex ) {
-	    ex.setMark( __FILE__, __LINE__ );
-	    try{
-		delete socket;
-	    } catch( SocketException& ex2 ){ /* Absorb */ }
+            ex.setMark( __FILE__, __LINE__ );
+            try {
+                delete socket;
+            } catch( SocketException& ex2 ) { /* Absorb */}
 
-	    throw ex;
-	}
+            throw ex;
+        }
 
         return socket;
     }

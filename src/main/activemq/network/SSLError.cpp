@@ -31,16 +31,16 @@ unsigned long SSLError::getErrorCode() {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string SSLError::getErrorString() {
-    
+
     std::string returnValue;
-    
+
     for (unsigned long e = ERR_get_error(); e; e = ERR_get_error()) {
-	char msg[256];
-	ERR_error_string_n(e, msg, sizeof msg);
-	returnValue += "\n";
-	returnValue += msg;
+        char msg[256];
+        ERR_error_string_n(e, msg, sizeof msg);
+        returnValue += "\n";
+        returnValue += msg;
     }
-    
+
     return returnValue;
 }
 

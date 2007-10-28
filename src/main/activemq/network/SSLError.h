@@ -23,26 +23,27 @@
 
 #ifdef AMQ_HAVE_SSL
 
-namespace activemq{
-namespace network{
-    
+namespace activemq {
+namespace network {
+
     /**
      * Static utility class to simplify handling of error codes
      * for SSL operations.
      */
     class SSLError {
     public:
-    
+
         /**
          * Gets the last error appropriate for the platform.
          */
         static unsigned long getErrorCode();
-        
+
         /**
          * Gets the string description for the last error.
          */
         static std::string getErrorString();
     };
+    
 }}
 
 #endif /* AMQ_HAVE_SSL */

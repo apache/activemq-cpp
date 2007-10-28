@@ -31,54 +31,54 @@ using namespace activemq::network;
 #if defined(HAVE_WINSOCK2_H)
     const int SocketError::INTERRUPTED = WSAEINTR;
 #else
-    const int SocketError::INTERRUPTED = EINTR;
+    const int SocketError::INTERRUPTED= EINTR;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 int SocketError::getErrorCode() {
-    
-    #if defined(HAVE_WINSOCK2_H)
-    
-        return ::WSAGetLastError();
-        
-    #else
-         
-        return errno;
-        
-    #endif
+
+#if defined(HAVE_WINSOCK2_H)
+
+    return ::WSAGetLastError();
+
+#else
+
+    return errno;
+
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string SocketError::getErrorString() {
-    
+
     std::string returnValue;
-    
+
     // Get the error code.
     int errorCode = getErrorCode();
-    
-    #if defined(HAVE_WINSOCK2_H)
-  
-        // Create the error string.
-        static const int errorStringSize = 512;
-        char errorString[errorStringSize];
-        memset( errorString, 0, errorStringSize );
-        ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
-           0,
-           errorCode,
-           0,
-           errorString,
-           errorStringSize - 1,
-           NULL);
-           
-        returnValue = errorString;
-        
-    #else
-         
-        // Create the error string.
-        returnValue = ::strerror(errorCode);
-        
-    #endif
-    
+
+#if defined(HAVE_WINSOCK2_H)
+
+    // Create the error string.
+    static const int errorStringSize = 512;
+    char errorString[errorStringSize];
+    memset( errorString, 0, errorStringSize );
+    ::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
+            0,
+            errorCode,
+            0,
+            errorString,
+            errorStringSize - 1,
+            NULL);
+
+    returnValue = errorString;
+
+#else
+
+    // Create the error string.
+    returnValue =:: strerror(errorCode);
+
+#endif
+
     return returnValue;
 }
 

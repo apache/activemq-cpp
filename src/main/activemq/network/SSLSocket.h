@@ -23,8 +23,8 @@
 #ifdef AMQ_HAVE_OPENSSL
 #include <openssl/ssl.h>
 
-namespace activemq{
-namespace network{
+namespace activemq {
+namespace network {
 
     /**
      * Platform-independent implementation of the SSL socket interface.
@@ -32,46 +32,46 @@ namespace network{
     class SSLSocket : public TcpSocket
     {
     private:
-	SSL_CTX *ctx;
-	SSL *ssl;
+        SSL_CTX *ctx;
+        SSL *ssl;
 
-	/**
-	 * Password for certificate and key files.
-	 */
-	std::string password;
+        /**
+         * Password for certificate and key files.
+         */
+        std::string password;
 
-	/**
-	 * If peer certificate needs to be verified.
-	 */
-	bool verify_peer;
+        /**
+         * If peer certificate needs to be verified.
+         */
+        bool verify_peer;
 
-	/**
-	 * Additional peer name that is accepted.
-	 */
-	std::string verify_name;
+        /**
+         * Additional peer name that is accepted.
+         */
+        std::string verify_name;
 
     protected:
-	/**
-	 * Internal initialize for TcpSocket.
-	 */
-	virtual void initialize () throw (SocketException);
+        /**
+         * Internal initialize for TcpSocket.
+         */
+        virtual void initialize () throw (SocketException);
 
-	/**
-	 * Verify peer certificate if needed.
-	 */
-	virtual void verifyPeerCertificate( const char* host)
-	    throw (SocketException);
+        /**
+         * Verify peer certificate if needed.
+         */
+        virtual void verifyPeerCertificate( const char* host)
+        throw (SocketException);
 
-	/**
-	 * Initialize SSL connection structure.
-	 */
-	virtual void initializeSSL( SocketHandle handle )
-	    throw (SocketException);
+        /**
+         * Initialize SSL connection structure.
+         */
+        virtual void initializeSSL( SocketHandle handle )
+        throw (SocketException);
 
-	/**
-	 * OpenSSL password callback.
-	 */
-	static int password_cb( char* buffer, int size, int rw, void* data);
+        /**
+         * OpenSSL password callback.
+         */
+        static int password_cb( char* buffer, int size, int rw, void* data);
 
     public:
 
@@ -109,7 +109,7 @@ namespace network{
          * Indicates whether or not this socket is connected to a destination.
          * @return true if connected
          */
-        bool isConnected() const{
+        bool isConnected() const {
             return TcpSocket::isConnected() && ssl != 0;
         }
 
@@ -119,37 +119,37 @@ namespace network{
          */
         void close() throw( cms::CMSException );
 
-	/**
-	 * Set CA file and path.
-	 */
-	virtual void setCAFilePath( std::string const& file,
-				    std::string const& path )
-	    throw( SocketException );
+        /**
+         * Set CA file and path.
+         */
+        virtual void setCAFilePath( std::string const& file,
+                std::string const& path )
+        throw( SocketException );
 
-	/**
-	 * Set client certificate file and private key file.
-	 */
-	virtual void setCertFile( std::string const& cert_file,
-				  std::string const& key_file )
-	    throw( SocketException );
+        /**
+         * Set client certificate file and private key file.
+         */
+        virtual void setCertFile( std::string const& cert_file,
+                std::string const& key_file )
+        throw( SocketException );
 
-	/**
-	 * Set password for key and possibly certificate.
-	 */
-	virtual void setPassword( std::string const& password )
-	    throw( SocketException );
+        /**
+         * Set password for key and possibly certificate.
+         */
+        virtual void setPassword( std::string const& password )
+        throw( SocketException );
 
-	/**
-	 * If the peer should be verified.
-	 */
-	virtual void setVerifyPeer( bool value, std::string const& name )
-	    throw( SocketException );
+        /**
+         * If the peer should be verified.
+         */
+        virtual void setVerifyPeer( bool value, std::string const& name )
+        throw( SocketException );
 
-	/**
-	 * Set cipher list for SSL.
-	 */
-	virtual void setCiphers( std::string const& ciphers )
-	    throw( SocketException );
+        /**
+         * Set cipher list for SSL.
+         */
+        virtual void setCiphers( std::string const& ciphers )
+        throw( SocketException );
     };
 
 }}

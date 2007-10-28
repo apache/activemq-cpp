@@ -25,13 +25,13 @@
 #endif
 
 #ifdef HAVE_SYS_IOCTL_H
-#define BSD_COMP /* Get FIONREAD on Solaris2. */
-#include <sys/ioctl.h>
+    #define BSD_COMP /* Get FIONREAD on Solaris2. */
+    #include <sys/ioctl.h>
 #endif
 
 // Pick up FIONREAD on Solaris 2.5.
 #ifdef HAVE_SYS_FILIO_H
-#include <sys/filio.h>
+    #include <sys/filio.h>
 #endif
 
 #include <activemq/network/SocketInputStream.h>
@@ -52,112 +52,111 @@ using namespace activemq::exceptions;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::SocketInputStream( network::Socket::SocketHandle socket ) {
+SocketInputStream::SocketInputStream(network::Socket::SocketHandle socket) {
 
     this->socket = socket;
     this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketInputStream::~SocketInputStream() {}
+SocketInputStream::~SocketInputStream() {
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketInputStream::close() throw( cms::CMSException ){
+void SocketInputStream::close() throw(cms::CMSException ) {
     this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::available() const throw (activemq::io::IOException){
+std::size_t SocketInputStream::available() const
+        throw (activemq::io::IOException) {
 
-// The windows version
+    // The windows version
 #if defined(HAVE_WINSOCK2_H)
 
     unsigned long numBytes = 0;
 
-    if( ::ioctlsocket(socket, FIONREAD, &numBytes ) == SOCKET_ERROR ){
+    if( ::ioctlsocket(socket, FIONREAD, &numBytes ) == SOCKET_ERROR ) {
         throw SocketException(
-            __FILE__, __LINE__,
-            "SocketInputStream::available - ioctlsocket failed" );
+                __FILE__, __LINE__,
+                "SocketInputStream::available - ioctlsocket failed" );
     }
 
     return (std::size_t)numBytes;
 
 #else // !defined(HAVE_WINSOCK2_H)
-
     // If FIONREAD is defined - use ioctl to find out how many bytes
     // are available.
-    #if defined(FIONREAD)
+#if defined(FIONREAD)
 
-        std::size_t numBytes = 0;
-        if( ::ioctl (socket, FIONREAD, &numBytes) != -1 ){
-            return numBytes;
-        }
+    std::size_t numBytes = 0;
+    if( ::ioctl (socket, FIONREAD, &numBytes) != -1 ) {
+        return numBytes;
+    }
 
-    #endif
+#endif
 
     // If we didn't get anything we can use select.  This is a little
     // less functional.  We will poll on the socket - if there is data
     // available, we'll return 1, otherwise we'll return zero.
-    #if defined(HAVE_SELECT)
+#if defined(HAVE_SELECT)
 
-        fd_set rd;
-        FD_ZERO(&rd);
-        FD_SET( socket, &rd );
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        int returnCode = ::select(socket+1, &rd, NULL, NULL, &tv);
-        if(returnCode == -1){
-            throw IOException(__FILE__, __LINE__, SocketError::getErrorString().c_str() );
-        }
-        return (returnCode == 0)? 0 : 1;
+    fd_set rd;
+    FD_ZERO(&rd);
+    FD_SET( socket, &rd );
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    int returnCode = ::select(socket+1, &rd, NULL, NULL, &tv);
+    if(returnCode == -1) {
+        throw IOException(__FILE__, __LINE__, SocketError::getErrorString().c_str() );
+    }
+    return (returnCode == 0)? 0 : 1;
 
-    #else
+#else
 
-        return 0;
+    return 0;
 
-    #endif /* HAVE_SELECT */
-
+#endif /* HAVE_SELECT */
 
 #endif // !defined(HAVE_WINSOCK2_H)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char SocketInputStream::read() throw (IOException){
+unsigned char SocketInputStream::read() throw (IOException) {
 
     unsigned char c;
-    std::size_t len = read( &c, 1 );
-    if( len != sizeof(c) && !closed ){
+    std::size_t len = read( &c, 1);
+    if (len != sizeof(c) && !closed) {
         throw IOException( __FILE__, __LINE__,
-            "activemq::io::SocketInputStream::read - failed reading a byte");
+                "activemq::io::SocketInputStream::read - failed reading a byte");
     }
 
     return c;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t SocketInputStream::read( unsigned char* buffer,
-                                     std::size_t bufferSize ) throw (IOException)
-{
+std::size_t SocketInputStream::read(unsigned char* buffer,
+        std::size_t bufferSize) throw (IOException) {
     int len = 0;
 
     // Loop to ignore any signal interruptions that occur during the read.
     do {
 
         // Read data from the socket.
-        len = ::recv(socket, (char*)buffer, (int)bufferSize, 0);
+        len =:: recv(socket, (char*)buffer, (int)bufferSize, 0);
 
         // Check for a closed socket.
-        if( len == 0 || closed ){
+        if( len == 0 || closed ) {
             throw IOException( __FILE__, __LINE__,
-                "activemq::io::SocketInputStream::read - The connection is broken" );
+                    "activemq::io::SocketInputStream::read - The connection is broken" );
         }
 
-    } while( !closed && len == -1 &&
-             SocketError::getErrorCode() == SocketError::INTERRUPTED );
+    }while( !closed && len == -1 &&
+            SocketError::getErrorCode() == SocketError::INTERRUPTED );
 
     // Check for error.
-    if( len == -1 ){
+    if( len == -1 ) {
 
         // Otherwise, this was a bad error - throw an exception.
         throw IOException( __FILE__, __LINE__,
@@ -169,10 +168,10 @@ std::size_t SocketInputStream::read( unsigned char* buffer,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::skip( std::size_t num AMQCPP_UNUSED )
-    throw ( io::IOException, exceptions::UnsupportedOperationException ) {
+throw ( io::IOException, exceptions::UnsupportedOperationException ) {
 
     throw exceptions::UnsupportedOperationException(
-        __FILE__, __LINE__,
-        "SocketInputStream::skip - skip() method is not supported");
+    __FILE__, __LINE__,
+    "SocketInputStream::skip - skip() method is not supported");
 }
 

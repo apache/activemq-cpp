@@ -45,8 +45,7 @@ using namespace activemq::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-SocketOutputStream::SocketOutputStream( Socket::SocketHandle socket )
-{
+SocketOutputStream::SocketOutputStream(Socket::SocketHandle socket) {
     this->socket = socket;
     this->closed = false;
 }
@@ -57,29 +56,26 @@ SocketOutputStream::~SocketOutputStream() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::close() throw( cms::CMSException ) {
+void SocketOutputStream::close() throw(cms::CMSException ) {
     this->closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( unsigned char c ) throw (IOException)
-{
-    write( &c, 1 );
+void SocketOutputStream::write(unsigned char c) throw (IOException) {
+    write( &c, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SocketOutputStream::write( const unsigned char* buffer, std::size_t len )
-    throw (IOException)
-{
+void SocketOutputStream::write(const unsigned char* buffer, std::size_t len)
+        throw (IOException) {
     std::size_t remaining = len;
-    int sendOpts = AMQ_SEND_OPTS;
+    int sendOpts= AMQ_SEND_OPTS;
 
-    while( remaining > 0 && !closed )
-    {
-        int length = ::send( socket, (const char*)buffer, (int)remaining, sendOpts );
-        if( length == -1 || closed ){
+    while (remaining > 0 && !closed) {
+        int length =:: send( socket, (const char*)buffer, (int)remaining, sendOpts );
+        if( length == -1 || closed ) {
             throw IOException( __FILE__, __LINE__,
-                "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
+                    "activemq::io::SocketOutputStream::write - %s", SocketError::getErrorString().c_str() );
         }
 
         buffer+=length;
