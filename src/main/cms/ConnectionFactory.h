@@ -96,6 +96,7 @@ namespace cms
          * Static method that is used to create a provider specfic connection
          * factory.  The provider implements this method in their library and
          * returns an instance of a ConnectionFactory dervied object.
+         * @param brokerURI - the address to use to connect to the broker.
          * @returns Provider specific ConnectionFactory
          * @throws CMSException if and error occurs.
          */
