@@ -35,6 +35,7 @@ namespace cms{
         /**
          * Closes this object and deallocates the appropriate resources.
          * The object is generally no longer usable after calling close.
+         * 
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;

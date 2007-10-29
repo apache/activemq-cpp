@@ -35,6 +35,7 @@ namespace cms{
 
         /**
          * Gets the name of this queue.
+         * 
          * @return The queue name.
          */
         virtual std::string getQueueName() const
@@ -42,6 +43,7 @@ namespace cms{
 
         /**
          * Destroy's the Temp Destination at the Broker
+         * 
          * @throws CMSException
          */
         virtual void destroy() throw ( CMSException ) = 0;

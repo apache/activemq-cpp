@@ -35,6 +35,7 @@ namespace cms{
 
         /**
          * Gets the name of this topic.
+         * 
          * @return The topic name.
          */
         virtual std::string getTopicName()
@@ -42,6 +43,7 @@ namespace cms{
 
         /**
          * Destroy's the Temp Destination at the Broker
+         * 
          * @throws CMSException
          */
         virtual void destroy() throw ( CMSException ) = 0;

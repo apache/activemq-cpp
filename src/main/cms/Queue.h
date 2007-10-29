@@ -35,6 +35,7 @@ namespace cms{
         
         /**
          * Gets the name of this queue.
+         * 
          * @return The queue name.
          */
         virtual std::string getQueueName() const 

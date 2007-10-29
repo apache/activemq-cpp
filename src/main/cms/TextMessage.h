@@ -35,20 +35,25 @@ namespace cms{
 
         /**
          * Gets the message character buffer.
+         * 
          * @return The message character buffer.
          */
         virtual std::string getText() const throw( CMSException ) = 0;
 
         /**
          * Sets the message contents, does not take ownership of the passed
-         * char*, but copies it instead.  
-         * @param msg The message buffer.
+         * char*, but copies it instead.
+         * 
+         * @param msg 
+         *      The message buffer.
          */
         virtual void setText( const char* msg ) throw( CMSException ) = 0;
 
         /**
          * Sets the message contents
-         * @param msg The message buffer.
+         * 
+         * @param msg 
+         *      The message buffer.
          */
         virtual void setText( const std::string& msg ) throw( CMSException ) = 0;
 
