@@ -34,10 +34,16 @@ using namespace activemq::exceptions;
 using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory()
-{
-    brokerURL = "tcp://localhost:61616";
+cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
+    throw ( cms::CMSException ) {
 
+    return new ActiveMQConnectionFactory( brokerURI );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQConnectionFactory::ActiveMQConnectionFactory() {
+
+    brokerURL = "tcp://localhost:61616";
     this->username = "";
     this->password = "";
 }
@@ -46,18 +52,17 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory()
 ActiveMQConnectionFactory::ActiveMQConnectionFactory(
     const std::string& url,
     const std::string& username,
-    const std::string& password )
-{
-    brokerURL = url;
+    const std::string& password ) {
 
+    brokerURL = url;
     this->username = username;
     this->password = password;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection()
-    throw ( cms::CMSException )
-{
+    throw ( cms::CMSException ) {
+
     return createConnection( brokerURL, username, password, Guid::createGUIDString() );
 }
 
@@ -65,8 +70,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection()
 cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password )
-        throw ( cms::CMSException )
-{
+        throw ( cms::CMSException ) {
+
     return createConnection( brokerURL, username, password, Guid::createGUIDString() );
 }
 
@@ -75,8 +80,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password,
     const std::string& clientId )
-        throw ( cms::CMSException )
-{
+        throw ( cms::CMSException ) {
+
     return createConnection( brokerURL, username, password, clientId );
 }
 
@@ -86,8 +91,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password,
     const std::string& clientId )
-       throw ( cms::CMSException )
-{
+       throw ( cms::CMSException ) {
+
     // Declared here so that they can be deleted in the catch block
     Properties* properties = NULL;
     Transport* transport = NULL;
@@ -97,13 +102,12 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     std::string clientIdLocal = clientId;
     TransportBuilder transportBuilder;
 
-    try
-    {
+    try{
+
         properties = new Properties;
 
         // if no Client Id specified, create one
-        if( clientIdLocal == "" )
-        {
+        if( clientIdLocal == "" ) {
             clientIdLocal = Guid::createGUIDString();
         }
 
@@ -136,8 +140,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         ConnectorFactory* connectorfactory =
             ConnectorFactoryMap::getInstance()->lookup( wireFormat );
 
-        if( connectorfactory == NULL )
-        {
+        if( connectorfactory == NULL ) {
             throw NullPointerException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
@@ -147,8 +150,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         // Create the Connector.
         connector = connectorfactory->createConnector( *properties, transport );
 
-        if( connector == NULL )
-        {
+        if( connector == NULL ) {
             throw NullPointerException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
@@ -166,9 +168,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         connection = new ActiveMQConnection( connectionData );
 
         return connection;
-    }
-    catch( exceptions::ActiveMQException& ex )
-    {
+
+    } catch( exceptions::ActiveMQException& ex ) {
         ex.setMark( __FILE__, __LINE__ );
 
         delete connection;
@@ -177,9 +178,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         delete properties;
 
         throw ex;
-    }
-    catch( ... )
-    {
+
+    } catch( ... ) {
         exceptions::ActiveMQException ex(
             __FILE__, __LINE__,
             "ActiveMQConnectionFactory::create - "

@@ -40,7 +40,7 @@ namespace cms
          * connection is created in stopped mode. No messages will be
          * delivered until the Connection.start method is explicitly
          * called.
-         * 
+         *
          * @return Pointer to a connection object, caller owns the pointer
          * @throws CMSException
          */
@@ -54,10 +54,10 @@ namespace cms
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * 
-         * @param username 
+         *
+         * @param username
          *      to authenticate with
-         * @param password 
+         * @param password
          *      to authenticate with
          * @returns a Connection Pointer
          * @throws CMSException
@@ -74,13 +74,13 @@ namespace cms
          * change the defaults, subsequent calls to the parameterless
          * createConnection will continue to use the default values that
          * were set in the Constructor.
-         * 
-         * @param username 
+         *
+         * @param username
          *      to authenticate with
-         * @param password 
+         * @param password
          *      to authenticate with
-         * @param clientId 
-         *      to assign to connection if "" then a random client Id is 
+         * @param clientId
+         *      to assign to connection if "" then a random client Id is
          *      created for this connection.
          * @returns a Connection Pointer
          * @throws CMSException
@@ -89,6 +89,18 @@ namespace cms
                                                    const std::string& password,
                                                    const std::string& clientId )
             throw ( cms::CMSException ) = 0;
+
+    public:
+
+        /**
+         * Static method that is used to create a provider specfic connection
+         * factory.  The provider implements this method in their library and
+         * returns an instance of a ConnectionFactory dervied object.
+         * @returns Provider specific ConnectionFactory
+         * @throws CMSException if and error occurs.
+         */
+        static ConnectionFactory* createCMSConnectionFactory( const std::string& brokerURI )
+            throw ( cms::CMSException );
 
     };
 

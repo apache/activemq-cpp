@@ -71,8 +71,8 @@ public:
     virtual void run() {
         try {
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory =
-                new ActiveMQConnectionFactory( brokerURI );
+            ConnectionFactory* connectionFactory =
+                ConnectionFactory::createCMSConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
@@ -195,8 +195,8 @@ public:
         try {
 
             // Create a ConnectionFactory
-            ActiveMQConnectionFactory* connectionFactory =
-                new ActiveMQConnectionFactory( brokerURI );
+            ConnectionFactory* connectionFactory =
+                ConnectionFactory::createCMSConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
