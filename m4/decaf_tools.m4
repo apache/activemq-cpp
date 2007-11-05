@@ -36,6 +36,20 @@ AC_DEFUN([DECAF_CONFIGURE_DECAF],
 
   dnl Get build information from Decaf
 
+  DECAF_CPPFLAGS="`$decaf_config --cppflags`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([decaf-config --cppflags failed])
+  fi
+
+  DECAF_INCLUDES="`$decaf_config --includes`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([decaf-config --includes failed])
+  fi
+
+  DECAF_LIBS="`$decaf_config --libs`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([decaf-config --libs failed])
+  fi
 
   AC_SUBST([DECAF_LIBS])
   AC_SUBST([DECAF_INCLUDES])
