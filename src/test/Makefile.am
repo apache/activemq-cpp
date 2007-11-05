@@ -103,7 +103,7 @@ include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 check_PROGRAMS = activemq-test
 
 ## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
+## TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options

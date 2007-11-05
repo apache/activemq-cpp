@@ -122,11 +122,14 @@ case "${host_os}" in
     PLAT_LIBS="-lm -lpthread -luuid"
 esac
 
+## find and configure the Apache Decaf Library
+DECAF_CONFIGURE_DECAF
+
 ## Flags for building the activemq-cpp library
 AC_SUBST([AMQ_CXXFLAGS])
 AC_SUBST([AMQ_LIBS])
-AMQ_CXXFLAGS="$PLAT_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
-AMQ_LIBS="$PLAT_LIBS"
+AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
