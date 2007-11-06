@@ -162,6 +162,8 @@ DX_INIT_DOXYGEN(activemq-cpp, doxygen.cfg, doc)
 ## Generates Makefile's, configuration files and scripts
 ## -----------------------------------------------------
 
+AC_OUTPUT_COMMANDS([chmod +x activemqcpp-config],[])
+
 AC_CONFIG_FILES(Makefile)
 AC_CONFIG_FILES(activemq-cpp.pc)
 AC_CONFIG_FILES(src/main/Makefile)
