@@ -27,15 +27,15 @@ dnl
 AC_DEFUN([DECAF_CONFIGURE_DECAF],
 [
   AC_MSG_NOTICE([Apache Decaf Library configuration])
-  DECAF_FIND_DECAF([], [], 1, [0 1])
+  DECAF_FIND_DECAF([$srcdir/decaf], [./decaf], 1, [0 1])
 
   if test $decaf_found = "no"; then
     AC_MSG_WARN([Decaf not found])
     DECAF_DOWNLOAD_DECAF
   fi
 
-  if test $apr_found = "reconfig"; then
-    SVN_EXTERNAL_PROJECT([decaf])
+  if test $decaf_found = "reconfig"; then
+    AMQ_EXTERNAL_PROJECT([decaf])
   fi
 
   dnl Get build information from Decaf

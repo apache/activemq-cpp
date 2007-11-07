@@ -44,7 +44,7 @@ AC_DEFUN([AMQ_EXTERNAL_PROJECT], [
     ac_popdir=`pwd`
     ac_abs_srcdir=`(cd $srcdir/$1 && pwd)`
     apr_config_subdirs="$1"
-    test -d $1 || $MKDIR $1
+    AS_MKDIR_P( $1 )
     cd $1
 
     # A "../" for each directory in /$config_subdirs.
