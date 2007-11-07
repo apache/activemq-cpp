@@ -15,10 +15,12 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
+AMQ_EXTERNAL_PROJECT_SUBDIRS=@AMQ_EXTERNAL_PROJECT_SUBDIRS@
+
 # Since we don't strictly follow the GNU standard of having 'NEWS README AUTHORS ChangeLog' files
 AUTOMAKE_OPTIONS = foreign
 
-SUBDIRS = src/main src/examples
+SUBDIRS = $(AMQ_EXTERNAL_PROJECT_SUBDIRS) src/main src/examples
 if BUILD_CPPUNIT_TESTS
   SUBDIRS += src/test src/test-integration src/test-benchmarks
 endif
