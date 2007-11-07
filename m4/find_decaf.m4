@@ -74,18 +74,7 @@ AC_DEFUN([DECAF_FIND_DECAF], [
          acceptable_majors="0 1"],
          [acceptable_majors="$4"])
 
-  decaf_temp_acceptable_decaf_config=""
-  for decaf_temp_major in $acceptable_majors
-  do
-    case $decaf_temp_major in
-      0)
-      decaf_temp_acceptable_decaf_config="$decaf_temp_acceptable_decaf_config decaf-config"
-      ;;
-      *)
-      decaf_temp_acceptable_decaf_config="$decaf_temp_acceptable_decaf_config decaf-$decaf_temp_major-config"
-      ;;
-    esac
-  done
+  decaf_temp_acceptable_decaf_config="decaf-config"
 
   AC_MSG_CHECKING(for DECAF)
   AC_ARG_WITH(decaf,
@@ -143,18 +132,8 @@ AC_DEFUN([DECAF_FIND_DECAF], [
     if test "$decaf_found" = "no" && test -d "$1"; then
       decaf_temp_abs_srcdir="`cd $1 && pwd`"
       decaf_found="reconfig"
-      decaf_bundled_major="`sed -n '/#define.*DECAF_MAJOR_VERSION/s/^[^0-9]*\([0-9]*\).*$/\1/p' \"$1/include/decaf_version.h\"`"
-      case $decaf_bundled_major in
-        "")
-          AC_MSG_ERROR([failed to find major version of bundled Decaf])
-        ;;
-        0)
-          decaf_temp_decaf_config_file="decaf-config"
-        ;;
-        *)
-          decaf_temp_decaf_config_file="decaf-$decaf_bundled_major-config"
-        ;;
-      esac
+      decaf_temp_decaf_config_file="decaf-config"
+
       if test -n "$2"; then
         decaf_config="$2/$decaf_temp_decaf_config_file"
       else
