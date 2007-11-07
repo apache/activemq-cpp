@@ -34,6 +34,10 @@ AC_DEFUN([DECAF_CONFIGURE_DECAF],
     DECAF_DOWNLOAD_DECAF
   fi
 
+  if test $apr_found = "reconfig"; then
+    SVN_EXTERNAL_PROJECT([decaf])
+  fi
+
   dnl Get build information from Decaf
 
   DECAF_CPPFLAGS="`$decaf_config --cppflags`"
