@@ -16,7 +16,7 @@
  */
 
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
