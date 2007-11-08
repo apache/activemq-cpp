@@ -491,13 +491,14 @@ out.println("//");
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
-out.println("using namespace activemq::io;");
 out.println("using namespace activemq::connector;");
 out.println("using namespace activemq::connector::openwire;");
 out.println("using namespace activemq::connector::openwire::commands;");
 out.println("using namespace activemq::connector::openwire::marshal;");
 out.println("using namespace activemq::connector::openwire::utils;");
 out.println("using namespace activemq::connector::openwire::marshal::v"+getOpenwireVersion()+";");
+out.println("using namespace decaf;");
+out.println("using namespace decaf::io;");
 out.println("");
 
     String typeName = jclass.getSimpleName().toUpperCase();
@@ -574,9 +575,9 @@ out.println("        int rc = "+baseClass+"::tightMarshal1( wireFormat, dataStru
 out.println("");
 out.println("        return rc + "+baseSize+";");
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");

@@ -153,7 +153,8 @@ out.println(" */");
     protected void generateFile(PrintWriter out) throws Exception {
         generateLicence(out);
 out.println("#include <activemq/connector/openwire/commands/"+className+".h>");
-out.println("#include <activemq/exceptions/NullPointerException.h>");
+out.println("#include <activemq/exceptions/ActiveMQException.h>");
+out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
@@ -161,6 +162,7 @@ out.println("using namespace activemq::exceptions;");
 out.println("using namespace activemq::connector;");
 out.println("using namespace activemq::connector::openwire;");
 out.println("using namespace activemq::connector::openwire::commands;");
+out.println("using namespace decaf::lang::exceptions;");
 out.println("");
 out.println("/*");
 out.println(" *");
@@ -244,7 +246,7 @@ out.println("    const "+className+"* srcPtr = dynamic_cast<const "+className+"*
 out.println("");
 out.println("    if( srcPtr == NULL || src == NULL ) {");
 out.println("    ");
-out.println("        throw exceptions::NullPointerException(");
+out.println("        throw decaf::lang::exceptions::NullPointerException(");
 out.println("            __FILE__, __LINE__,");
 out.println("            \""+className+"::copyDataStructure - src is NULL or invalid\" );");
 out.println("    }");
