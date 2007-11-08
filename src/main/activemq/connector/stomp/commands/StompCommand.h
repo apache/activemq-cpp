@@ -108,8 +108,8 @@ namespace commands{
          * Retrieves the Properties that are part of this command
          * @return const reference to a properties object
          */
-        virtual util::Properties& getProperties() = 0;
-        virtual const util::Properties& getProperties() const = 0;
+        virtual decaf::util::Properties& getProperties() = 0;
+        virtual const decaf::util::Properties& getProperties() const = 0;
 
         /**
          * Clone the StompCommand and return the new copy.

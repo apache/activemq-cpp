@@ -24,11 +24,11 @@
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::util;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* MockTransportFactory::createTransport(
-    const activemq::util::Properties& properties,
+    const decaf::util::Properties& properties,
     Transport* next,
     bool own ) throw ( exceptions::ActiveMQException )
 {

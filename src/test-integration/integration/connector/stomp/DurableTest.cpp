@@ -19,23 +19,23 @@
 
 #include <integration/IntegrationCommon.h>
 
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/util/Guid.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/StringTokenizer.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/network/SocketFactory.h>
+#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/network/Socket.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/net/Socket.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/StringTokenizer.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/Boolean.h>
 
 #include <cms/Connection.h>
 #include <cms/MessageConsumer.h>
@@ -64,9 +64,9 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::network;
+using namespace decaf::net;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 using namespace integration;
 using namespace integration::connector::stomp;
@@ -98,7 +98,7 @@ void DurableTest::test()
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =
             session->createDurableConsumer( topic, subName, "" );
         consumer->setMessageListener( &testSupport );

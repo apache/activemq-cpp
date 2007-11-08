@@ -32,8 +32,8 @@
 #include <cms/TextMessage.h>
 #include <cms/MapMessage.h>
 
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/SessionInfo.h>
@@ -105,7 +105,7 @@ namespace connector{
          * @throws InvalidStateException if the Transport is not set
          */
         virtual transport::Transport& getTransport() const
-            throw (exceptions::InvalidStateException ) = 0;
+            throw ( decaf::lang::exceptions::InvalidStateException ) = 0;
 
         /**
          * Creates a Session Info object for this connector
@@ -207,7 +207,7 @@ namespace connector{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Creates a Temporary Queue given a name and session info
@@ -218,7 +218,7 @@ namespace connector{
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends a Message
@@ -325,7 +325,7 @@ namespace connector{
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Unsubscribe from a givenDurable Subscription
@@ -334,7 +334,7 @@ namespace connector{
          * @throws UnsupportedOperationException
          */
         virtual void unsubscribe( const std::string&  )
-            throw ( ConnectorException, exceptions::UnsupportedOperationException ) = 0;
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Closes the given connector resource, caller must still delete

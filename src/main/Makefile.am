@@ -16,6 +16,12 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    activemq/io/LoggingInputStream.cpp \
+    activemq/io/LoggingOutputStream.cpp \
+    activemq/exceptions/ActiveMQException.cpp \
+    activemq/util/PrimitiveMap.cpp \
+    activemq/util/LongSequenceGenerator.cpp \
+    activemq/util/URISupport.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQSession.cpp \
@@ -24,27 +30,7 @@ cc_sources = \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
-    activemq/logger/LoggerHierarchy.cpp \
-    activemq/logger/LogWriter.cpp \
-    activemq/logger/Logger.cpp \
-    activemq/logger/LogManager.cpp \
-    activemq/logger/SimpleLogger.cpp \
     activemq/support/InitDirector.cpp \
-    activemq/io/BlockingByteArrayInputStream.cpp \
-    activemq/io/ByteArrayInputStream.cpp \
-    activemq/io/BufferedInputStream.cpp \
-    activemq/io/DataInputStream.cpp \
-    activemq/io/DataOutputStream.cpp \
-    activemq/io/BufferedOutputStream.cpp \
-    activemq/io/ByteArrayOutputStream.cpp \
-    activemq/io/LoggingInputStream.cpp \
-    activemq/io/LoggingOutputStream.cpp \
-    activemq/concurrent/PooledThread.cpp \
-    activemq/concurrent/ThreadPool.cpp \
-    activemq/concurrent/Mutex.cpp \
-    activemq/concurrent/Thread.cpp \
-    activemq/concurrent/CountDownLatch.cpp \
-    activemq/exceptions/ActiveMQException.cpp \
     activemq/connector/stomp/StompSessionManager.cpp \
     activemq/connector/stomp/commands/CommandConstants.cpp \
     activemq/connector/stomp/StompCommandReader.cpp \
@@ -70,13 +56,6 @@ cc_sources = \
     activemq/connector/openwire/marshal/PrimitiveMapMarshaller.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/connector/BaseConnectorResource.cpp \
-    activemq/network/SocketInputStream.cpp \
-    activemq/network/ServerSocket.cpp \
-    activemq/network/TcpSocket.cpp \
-    activemq/network/BufferedSocket.cpp \
-    activemq/network/SocketOutputStream.cpp \
-    activemq/network/SocketFactory.cpp \
-    activemq/network/SocketError.cpp \
     activemq/transport/TransportBuilder.cpp \
     activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TransportFilter.cpp \
@@ -91,15 +70,8 @@ cc_sources = \
     activemq/transport/filters/TcpTransport.cpp \
     activemq/transport/filters/TcpTransportFactory.cpp \
     activemq/transport/filters/LoggingTransport.cpp \
-    activemq/transport/filters/LoggingTransportFactory.cpp \
-    activemq/util/StringTokenizer.cpp \
-    activemq/util/Guid.cpp \
-    activemq/util/Date.cpp \
-    activemq/util/Math.cpp \
-    activemq/util/Random.cpp \
-    activemq/util/PrimitiveMap.cpp \
-    activemq/util/LongSequenceGenerator.cpp \
-    activemq/util/URISupport.cpp
+    activemq/transport/filters/LoggingTransportFactory.cpp
+
 
 h_sources = \
     activemq/core/ActiveMQProducer.h \
@@ -115,65 +87,11 @@ h_sources = \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
-    activemq/logger/LoggerCommon.h \
-    activemq/logger/LogRecord.h \
-    activemq/logger/SimpleLogger.h \
-    activemq/logger/LoggerDefines.h \
-    activemq/logger/LoggerHierarchy.h \
-    activemq/logger/LogWriter.h \
-    activemq/logger/SimpleFormatter.h \
-    activemq/logger/Filter.h \
-    activemq/logger/Formatter.h \
-    activemq/logger/LogManager.h \
-    activemq/logger/Logger.h \
-    activemq/logger/StreamHandler.h \
-    activemq/logger/ConsoleHandler.h \
-    activemq/logger/PropertiesChangeListener.h \
-    activemq/logger/MarkBlockLogger.h \
-    activemq/logger/Handler.h \
     activemq/support/LibraryInit.h \
     activemq/support/InitDirector.h \
-    activemq/io/StandardErrorOutputStream.h \
-    activemq/io/BlockingByteArrayInputStream.h \
-    activemq/io/ByteArrayInputStream.h \
-    activemq/io/InputStream.h \
-    activemq/io/DataOutputStream.h \
-    activemq/io/BufferedOutputStream.h \
-    activemq/io/Reader.h \
-    activemq/io/BufferedInputStream.h \
-    activemq/io/DataInputStream.h \
-    activemq/io/Writer.h \
-    activemq/io/ByteArrayOutputStream.h \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
-    activemq/io/OutputStream.h \
-    activemq/io/IOException.h \
-    activemq/io/FilterInputStream.h \
-    activemq/io/FilterOutputStream.h \
-    activemq/io/EOFException.h \
-    activemq/concurrent/Lock.h \
-    activemq/concurrent/ThreadPool.h \
-    activemq/concurrent/Thread.h \
-    activemq/concurrent/TaskListener.h \
-    activemq/concurrent/Synchronizable.h \
-    activemq/concurrent/Runnable.h \
-    activemq/concurrent/Mutex.h \
-    activemq/concurrent/PooledThread.h \
-    activemq/concurrent/Concurrent.h \
-    activemq/concurrent/PooledThreadListener.h \
-    activemq/concurrent/CountDownLatch.h \
-    activemq/exceptions/InvalidStateException.h \
-    activemq/exceptions/RuntimeException.h \
-    activemq/exceptions/InterruptedException.h \
     activemq/exceptions/ActiveMQException.h \
-    activemq/exceptions/IllegalMonitorStateException.h \
-    activemq/exceptions/ExceptionDefines.h \
-    activemq/exceptions/NoSuchElementException.h \
-    activemq/exceptions/UnsupportedOperationException.h \
-    activemq/exceptions/NullPointerException.h \
-    activemq/exceptions/IllegalArgumentException.h \
-    activemq/exceptions/IllegalStateException.h \
-    activemq/exceptions/IndexOutOfBoundsException.h \
     activemq/connector/ConsumerMessageListener.h \
     activemq/connector/ConnectorException.h \
     activemq/connector/TransactionInfo.h \
@@ -241,15 +159,6 @@ h_sources = \
     activemq/connector/ConnectorFactoryMapRegistrar.h \
     activemq/connector/ProducerInfo.h \
     activemq/connector/ConsumerInfo.h \
-    activemq/network/SocketException.h \
-    activemq/network/TcpSocket.h \
-    activemq/network/ServerSocket.h \
-    activemq/network/Socket.h \
-    activemq/network/SocketInputStream.h \
-    activemq/network/BufferedSocket.h \
-    activemq/network/SocketOutputStream.h \
-    activemq/network/SocketFactory.h \
-    activemq/network/SocketError.h \
     activemq/transport/TransportBuilder.h \
     activemq/transport/Transport.h \
     activemq/transport/TransportFilter.h \
@@ -276,26 +185,11 @@ h_sources = \
     activemq/transport/filters/TcpTransportFactory.h \
     activemq/transport/filters/LoggingTransport.h \
     activemq/transport/filters/LoggingTransportFactory.h \
-    activemq/util/Number.h \
     activemq/util/Config.h \
-    activemq/util/Character.h \
-    activemq/util/Integer.h \
-    activemq/util/Guid.h \
     activemq/util/ActiveMQProperties.h \
-    activemq/util/Properties.h \
-    activemq/util/Long.h \
-    activemq/util/Boolean.h \
-    activemq/util/StringTokenizer.h \
-    activemq/util/Queue.h \
-    activemq/util/Date.h \
-    activemq/util/Map.h \
-    activemq/util/Math.h \
     activemq/util/LongSequenceGenerator.h \
     activemq/util/PrimitiveMap.h \
-    activemq/util/Set.h \
     activemq/util/URISupport.h \
-    activemq/util/Random.h \
-    activemq/util/Iterator.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
@@ -321,9 +215,9 @@ h_sources = \
     cms/MessageConsumer.h \
     cms/Config.h
 
-include activemq/connector/openwire/commands/srcmakefile.mk
-include activemq/connector/openwire/marshal/v1/srcmakefile.mk
-include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+#include activemq/connector/openwire/commands/srcmakefile.mk
+#include activemq/connector/openwire/marshal/v1/srcmakefile.mk
+#include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ##
 ## Compiler / Linker Info

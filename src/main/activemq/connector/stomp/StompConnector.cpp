@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/concurrent/Concurrent.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
@@ -34,8 +34,8 @@
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>
 #include <activemq/connector/stomp/StompConnectionNegotiator.h>
-#include <activemq/util/Long.h>
-#include <activemq/util/Config.h>
+#include <decaf/lang/Long.h>
+#include <decaf/util/concurrent/Concurrent.h>
 
 using namespace std;
 using namespace activemq;
@@ -46,11 +46,15 @@ using namespace activemq::exceptions;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
 
-LOGCMS_INITIALIZE(logger, StompConnector, "activemq.connector.stomp.StompConnector" )
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
+
+LOGDECAF_INITIALIZE(logger, StompConnector, "activemq.connector.stomp.StompConnector" )
 
 ////////////////////////////////////////////////////////////////////////////////
 StompConnector::StompConnector( Transport* transport,
-                                const util::Properties& properties )
+                                const decaf::util::Properties& properties )
     throw ( IllegalArgumentException )
 {
     if( transport == NULL )
@@ -788,7 +792,7 @@ void StompConnector::onTransportException(
         }
 
         // We were not closing - log the stack trace.
-        LOGCMS_WARN(logger, ex.getStackTraceString() );
+        LOGDECAF_WARN(logger, ex.getStackTraceString() );
 
         // Inform the user of the error.
         fire( ex );

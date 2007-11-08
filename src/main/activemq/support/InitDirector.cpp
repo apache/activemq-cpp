@@ -16,7 +16,7 @@
  */
 #include "InitDirector.h"
 
-#include <activemq/logger/LogWriter.h>
+#include <decaf/util/logging/LogWriter.h>
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/filters/AsyncSendTransportFactory.h>
@@ -28,15 +28,14 @@
 
 using namespace activemq;
 using namespace activemq::support;
+using namespace decaf::util::logging;
 
 int InitDirector::refCount;
 
 ////////////////////////////////////////////////////////////////////////////////
 InitDirector::InitDirector(void)
 {
-    if( refCount == 0 )
-    {
-        logger::LogWriter::getInstance();
+    if( refCount == 0 ) {
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
         transport::filters::TcpTransportFactory::getInstance();
@@ -55,7 +54,6 @@ InitDirector::~InitDirector(void)
 {
     refCount--;
 
-    if( refCount == 0 )
-    {
+    if( refCount == 0 ) {
     }
 }

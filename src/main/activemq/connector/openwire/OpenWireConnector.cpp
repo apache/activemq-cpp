@@ -17,13 +17,13 @@
 
 #include <activemq/connector/openwire/OpenWireConnector.h>
 
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
-#include <activemq/util/Integer.h>
-#include <activemq/util/Boolean.h>
-#include <activemq/util/Long.h>
-#include <activemq/util/Guid.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Long.h>
+#include <decaf/util/UUID.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
 #include <activemq/connector/openwire/OpenWireSessionInfo.h>
 #include <activemq/connector/openwire/OpenWireProducerInfo.h>
@@ -63,10 +63,13 @@ using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
+using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireConnector::OpenWireConnector( Transport* transport,
-                                      const util::Properties& properties )
+                                      const decaf::util::Properties& properties )
     throw ( IllegalArgumentException )
 {
     if( transport == NULL )
@@ -193,12 +196,12 @@ void OpenWireConnector::connect() throw (ConnectorException)
         if( clientId.length() > 0 ){
             connectionInfo.setClientId( clientId );
         } else {
-            connectionInfo.setClientId( Guid::createGUIDString() );
+            connectionInfo.setClientId( UUID::randomUUID().toString() );
         }
 
         // Generate a connectionId
         commands::ConnectionId* connectionId = new commands::ConnectionId();
-        connectionId->setValue( Guid::createGUIDString() );
+        connectionId->setValue( UUID::randomUUID().toString() );
         connectionInfo.setConnectionId( connectionId );
 
         // Now we ping the broker and see if we get an ack / nack
@@ -1297,7 +1300,7 @@ void OpenWireConnector::onCommand( transport::Command* command )
         }
         else
         {
-            //LOGCMS_WARN( logger, "Received an unknown command" );
+            //LOGDECAF_WARN( logger, "Received an unknown command" );
             delete command;
         }
     }
@@ -1443,7 +1446,7 @@ std::string OpenWireConnector::createTemporaryDestinationName()
 {
     try {
         return connectionInfo.getConnectionId()->getValue() + ":" +
-               util::Long::toString( tempDestinationIds.getNextSequenceId() );
+               Long::toString( tempDestinationIds.getNextSequenceId() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCHALL_THROW( OpenWireConnectorException )

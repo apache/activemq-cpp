@@ -18,25 +18,24 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDWRITER_H_
 
 #include <activemq/transport/CommandWriter.h>
-#include <activemq/io/InputStream.h>
+#include <decaf/io/InputStream.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/connector/stomp/StompConnectorException.h>
 #include <activemq/transport/Command.h>
-#include <activemq/io/OutputStream.h>
+#include <decaf/io/OutputStream.h>
 #include <activemq/connector/stomp/marshal/Marshaler.h>
 
 namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompCommandWriter : public transport::CommandWriter
-    {
+    class StompCommandWriter : public transport::CommandWriter {
     private:
-    
+
         /**
          * Target output stream.
          */
-        io::OutputStream* outputStream;
+        decaf::io::OutputStream* outputStream;
 
         /**
          * Marshaler of Stomp Commands
@@ -44,7 +43,7 @@ namespace stomp{
         marshal::Marshaler marshaler;
 
     public:
-    
+
         /**
          * Default Constructor
          */
@@ -54,21 +53,21 @@ namespace stomp{
          * Constructor.
          * @param os the target output stream.
          */
-        StompCommandWriter( io::OutputStream* os );
+        StompCommandWriter( decaf::io::OutputStream* os );
 
         virtual ~StompCommandWriter() {}
 
         /**
          * Sets the target output stream.
          */
-        virtual void setOutputStream( io::OutputStream* os ){
+        virtual void setOutputStream( decaf::io::OutputStream* os ){
             outputStream = os;
         }
-      
+
         /**
          * Gets the target output stream.
          */
-        virtual io::OutputStream* getOutputStream(){
+        virtual decaf::io::OutputStream* getOutputStream(){
             return outputStream;
         }
 
@@ -78,7 +77,7 @@ namespace stomp{
          * @param os the target stream for the write.
          * @throws CommandIOException if a problem occurs during the write.
          */
-        virtual void writeCommand( transport::Command* command ) 
+        virtual void writeCommand( transport::Command* command )
             throw ( transport::CommandIOException );
 
         /**
@@ -87,26 +86,26 @@ namespace stomp{
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const unsigned char* buffer, std::size_t count ) 
-            throw( io::IOException );
-       
+        virtual void write( const unsigned char* buffer, std::size_t count )
+            throw( decaf::io::IOException );
+
         /**
          * Writes a byte to the output stream.
          * @param v The value to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void writeByte( unsigned char v ) throw( io::IOException );
+        virtual void writeByte( unsigned char v ) throw( decaf::io::IOException );
 
     private:
-   
+
         /**
          * Writes a char array to the output stream.
          * @param buffer a char array
          * @param count the number of bytes in the array to write.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void write( const char* buffer, std::size_t count ) 
-            throw( io::IOException );
+        virtual void write( const char* buffer, std::size_t count )
+            throw( decaf::io::IOException );
 
     };
 

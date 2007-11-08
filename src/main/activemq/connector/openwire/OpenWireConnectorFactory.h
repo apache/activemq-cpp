@@ -38,7 +38,7 @@ namespace openwire{
          * @param transport the Transport instance this connector uses.
          */
         virtual Connector* createConnector(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             activemq::transport::Transport* transport );
 
         /**

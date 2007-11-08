@@ -19,8 +19,10 @@
 
 #include <sstream>
 
+using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::exceptions;
+using namespace decaf::lang::exceptions;
+using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -239,7 +241,7 @@ void PrimitiveMap::setString( const string& key, const string& value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> PrimitiveMap::getByteArray( const std::string& key ) const
-    throw( activemq::exceptions::NoSuchElementException ) {
+    throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getByteArray();
@@ -274,7 +276,7 @@ vector<PrimitiveMap::ValueNode> PrimitiveMap::getValues() const{
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMap::ValueNode PrimitiveMap::getValue( const std::string& key ) const
-    throw ( activemq::exceptions::NoSuchElementException ) {
+    throw ( decaf::lang::exceptions::NoSuchElementException ) {
 
     return valueNodeMap.getValue( key );
 }

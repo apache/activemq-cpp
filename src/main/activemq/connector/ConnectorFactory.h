@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CONNECTORFACTORY_H_
-#define CONNECTORFACTORY_H_
+#ifndef _ACTIVEMQ_CONNECTOR_CONNECTORFACTORY_H_
+#define _ACTIVEMQ_CONNECTOR_CONNECTORFACTORY_H_
 
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/Connector.h>
 
@@ -27,23 +27,22 @@ namespace connector{
     /**
      * Interface class for all Connector Factory Classes
      */
-    class ConnectorFactory
-    {
+    class ConnectorFactory {
     public:
 
-        virtual ~ConnectorFactory(void) {};
+        virtual ~ConnectorFactory(void) {}
 
-        /** 
+        /**
          * Creates a connector
          * @param properties The Properties that the new connector is configured with
          * @param transport the Transport that the connector should use
          */
         virtual Connector* createConnector(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             activemq::transport::Transport* transport ) = 0;
 
    };
 
 }}
 
-#endif /*CONNECTORFACTORY_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_CONNECTORFACTORY_H_*/

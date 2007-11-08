@@ -28,7 +28,7 @@
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
 
-#include <activemq/concurrent/Runnable.h>
+#include <decaf/lang/Runnable.h>
 
 namespace integration{
 namespace connector{
@@ -55,7 +55,7 @@ namespace openwire{
         
     public:
     
-        class Producer : public activemq::concurrent::Runnable {
+        class Producer : public decaf::lang::Runnable {
         private:
         
             cms::Connection* connection;
@@ -84,7 +84,7 @@ namespace openwire{
             void cleanup();
         };
 
-        class Consumer : public cms::MessageListener, public activemq::concurrent::Runnable {
+        class Consumer : public cms::MessageListener, public decaf::lang::Runnable {
         
         private:
         

@@ -18,8 +18,8 @@
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
-#include <activemq/util/Boolean.h>
-#include <activemq/util/Integer.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
 
 using namespace std;
 using namespace activemq;
@@ -30,11 +30,12 @@ using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 WireFormat* OpenWireFormatFactory::createWireFormat(
-    const util::Properties& properties )
-        throw ( exceptions::IllegalStateException ) {
+    const decaf::util::Properties& properties )
+        throw ( decaf::lang::exceptions::IllegalStateException ) {
 
     WireFormatInfo* info = new WireFormatInfo();
 

@@ -16,11 +16,11 @@
 */
 #include "ActiveMQConnectionFactory.h"
 
-#include <activemq/util/Guid.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/transport/TransportBuilder.h>
-#include <activemq/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/support/LibraryInit.h>
@@ -28,10 +28,11 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
@@ -63,7 +64,7 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory(
 cms::Connection* ActiveMQConnectionFactory::createConnection()
     throw ( cms::CMSException ) {
 
-    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
+    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +73,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& password )
         throw ( cms::CMSException ) {
 
-    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
+    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +109,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         // if no Client Id specified, create one
         if( clientIdLocal == "" ) {
-            clientIdLocal = Guid::createGUIDString();
+            clientIdLocal = UUID::randomUUID().toString();
         }
 
         // Store login data in the properties

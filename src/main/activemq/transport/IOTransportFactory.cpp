@@ -24,7 +24,7 @@ using namespace activemq::transport;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* IOTransportFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next AMQCPP_UNUSED,
     bool own AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
 

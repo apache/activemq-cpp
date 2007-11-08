@@ -37,7 +37,7 @@ TransportFactory& AsyncSendTransportFactory::getInstance(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* AsyncSendTransportFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 

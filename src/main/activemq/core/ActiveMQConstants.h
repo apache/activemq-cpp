@@ -17,22 +17,20 @@
 #ifndef ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
 #define ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_
 
-#include <activemq/exceptions/IllegalArgumentException.h>
-
 #include <string>
 #include <map>
 
 namespace activemq{
 namespace core{
-    
+
     /**
      * Class holding constant values for various ActiveMQ specific things
      * Each constant is defined as an enumeration and has functions that
      * convert back an forth between string and enum values.
      */
-    class ActiveMQConstants{    
+    class ActiveMQConstants{
     public:
-    
+
         /**
          * These values represent the options that can be appended to an
          * Destination name, i.e. /topic/foo?consumer.exclusive=true
@@ -52,7 +50,7 @@ namespace core{
         /**
          * These values represent the parameters that can be added to the
          * connection URI that affect the ActiveMQ Core API
-         */        
+         */
         enum URIParam
         {
             PARAM_USERNAME,
@@ -60,54 +58,54 @@ namespace core{
             PARAM_CLIENTID,
             NUM_PARAMS
         };
-        
+
         static const std::string& toString( const DestinationOption option ){
             return StaticInitializer::destOptions[option];
         }
-        
-        static DestinationOption toDestinationOption( const std::string& option ){     
-            std::map< std::string, DestinationOption >::iterator iter = 
+
+        static DestinationOption toDestinationOption( const std::string& option ){
+            std::map< std::string, DestinationOption >::iterator iter =
                 StaticInitializer::destOptionMap.find( option );
 
             if( iter == StaticInitializer::destOptionMap.end() ){
                 return NUM_OPTIONS;
             }
-                    
+
             return iter->second;
-        }             
-        
+        }
+
         static const std::string& toString( const URIParam option ){
             return StaticInitializer::uriParams[option];
         }
-        
-        static URIParam toURIOption( const std::string& option ){     
-            std::map< std::string, URIParam >::iterator iter = 
+
+        static URIParam toURIOption( const std::string& option ){
+            std::map< std::string, URIParam >::iterator iter =
                 StaticInitializer::uriParamsMap.find( option );
 
             if( iter == StaticInitializer::uriParamsMap.end() ){
                 return NUM_PARAMS;
             }
-                    
+
             return iter->second;
-        }             
+        }
 
         class StaticInitializer{
         public:
             StaticInitializer();
             virtual ~StaticInitializer(){}
-            
+
             static std::string destOptions[NUM_OPTIONS];
             static std::string uriParams[NUM_PARAMS];
             static std::map<std::string, DestinationOption> destOptionMap;
             static std::map<std::string, URIParam> uriParamsMap;
         };
-        
+
     private:
-    
-        static StaticInitializer staticInits;        
+
+        static StaticInitializer staticInits;
 
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_CORE_ACTIVEMQCONSTANTS_H_*/

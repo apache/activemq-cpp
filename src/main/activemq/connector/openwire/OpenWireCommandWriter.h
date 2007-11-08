@@ -19,24 +19,23 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 
 #include <activemq/transport/CommandWriter.h>
-#include <activemq/io/OutputStream.h>
-#include <activemq/io/DataOutputStream.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
+#include <decaf/io/OutputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireCommandWriter : public transport::CommandWriter
-    {
+    class OpenWireCommandWriter : public transport::CommandWriter {
     private:
 
         /**
          * Target output stream.
          */
-        io::OutputStream* outputStream;
+        decaf::io::OutputStream* outputStream;
 
         /**
          * OpenWireFormat object we use to marshal.
@@ -46,7 +45,7 @@ namespace openwire{
         /**
          * DataOutputStream that wraps the supplied OutputStream
          */
-        io::DataOutputStream* dataOutputStream;
+        decaf::io::DataOutputStream* dataOutputStream;
 
     public:
 
@@ -59,7 +58,7 @@ namespace openwire{
          * Constructor.
          * @param os the target output stream.
          */
-        OpenWireCommandWriter( io::OutputStream* outputStream,
+        OpenWireCommandWriter( decaf::io::OutputStream* outputStream,
                                OpenWireFormat* openWireFormat );
 
         virtual ~OpenWireCommandWriter();
@@ -68,20 +67,20 @@ namespace openwire{
          * Sets the target output stream.
          * @param outputStream - stream to write to.
          */
-        virtual void setOutputStream( io::OutputStream* outputStream ){
+        virtual void setOutputStream( decaf::io::OutputStream* outputStream ){
             this->outputStream = outputStream;
-            
+
             if( dataOutputStream != NULL ) {
                 delete dataOutputStream;
             }
-            
-            dataOutputStream = new io::DataOutputStream( outputStream );
+
+            dataOutputStream = new decaf::io::DataOutputStream( outputStream );
         }
 
         /**
          * Gets the target output stream.
          */
-        virtual io::OutputStream* getOutputStream(){
+        virtual decaf::io::OutputStream* getOutputStream(){
             return outputStream;
         }
 
@@ -117,14 +116,14 @@ namespace openwire{
          * @throws IOException thrown if an error occurs.
          */
         virtual void write( const unsigned char* buffer, size_t count )
-            throw( io::IOException );
+            throw( decaf::io::IOException );
 
         /**
          * Writes a byte to the output stream.
          * @param v The value to be written.
          * @throws IOException thrown if an error occurs.
          */
-        virtual void writeByte( unsigned char v ) throw( io::IOException );
+        virtual void writeByte( unsigned char v ) throw( decaf::io::IOException );
 
     };
 

@@ -21,11 +21,12 @@
 #include <cms/BytesMessage.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
-#include <activemq/exceptions/IllegalStateException.h>
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/lang/Long.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 namespace activemq{
 namespace connector{
@@ -52,23 +53,23 @@ namespace commands{
          * InputStream that wraps around the frame's body when in read-only
          * mode.
          */
-        mutable io::ByteArrayInputStream inputStream;
+        mutable decaf::io::ByteArrayInputStream inputStream;
 
         /**
          * OutputStream that wraps around the frame's body when in write-only
          * mode.
          */
-        io::ByteArrayOutputStream outputStream;
+        decaf::io::ByteArrayOutputStream outputStream;
 
         /**
          * DataInputStream wrapper around the input stream.
          */
-        mutable io::DataInputStream dataInputStream;
+        mutable decaf::io::DataInputStream dataInputStream;
 
         /**
          * DataOutputStream wrapper around the output stream.
          */
-        io::DataOutputStream dataOutputStream;
+        decaf::io::DataOutputStream dataOutputStream;
 
     public:
 
@@ -138,7 +139,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_CONTENTLENGTH),
-                util::Long::toString( getFrame().getBodyLength() ) );
+                    decaf::lang::Long::toString( getFrame().getBodyLength() ) );
 
             return StompMessage<cms::BytesMessage>::marshal();
         }
@@ -519,7 +520,7 @@ namespace commands{
          */
         void checkWriteOnly() const throw (cms::CMSException){
             if( readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
             }
         }
@@ -530,7 +531,7 @@ namespace commands{
          */
         void checkReadOnly() const throw (cms::CMSException){
             if( !readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }
         }

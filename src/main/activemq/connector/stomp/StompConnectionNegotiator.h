@@ -20,10 +20,10 @@
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/CountDownLatch.h>
-#include <activemq/concurrent/Concurrent.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/Concurrent.h>
 
 namespace activemq{
 namespace connector{
@@ -45,7 +45,7 @@ namespace stomp{
         /**
          * Latch objects to count down till we receive the wireFormat info
          */
-        concurrent::CountDownLatch readyCountDownLatch;
+        decaf::util::concurrent::CountDownLatch readyCountDownLatch;
 
         /**
          * Indicates Transport has shut down
@@ -160,7 +160,7 @@ namespace stomp{
          * by this transport.
          */
         virtual void oneway( transport::Command* command )
-            throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -171,7 +171,7 @@ namespace stomp{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual transport::Response* request( transport::Command* command )
-            throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's

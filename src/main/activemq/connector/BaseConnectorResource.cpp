@@ -17,7 +17,7 @@
 
 #include "BaseConnectorResource.h"
 
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/connector/Connector.h>
 
 using namespace activemq;

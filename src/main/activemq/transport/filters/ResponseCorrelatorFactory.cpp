@@ -18,13 +18,14 @@
 #include "ResponseCorrelatorFactory.h"
 
 #include <activemq/transport/filters/ResponseCorrelator.h>
-#include <activemq/util/Long.h>
+#include <decaf/lang/Long.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
-using namespace activemq::util;
+using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactory& ResponseCorrelatorFactory::getInstance(void)
@@ -39,7 +40,7 @@ TransportFactory& ResponseCorrelatorFactory::getInstance(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* ResponseCorrelatorFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 
@@ -48,8 +49,8 @@ Transport* ResponseCorrelatorFactory::createTransport(
         ResponseCorrelator* transport = new ResponseCorrelator( next, own );
 
         transport->setMaxResponseWaitTime(
-            (unsigned long)Long::parseLong( 
-                properties.getProperty( 
+            (unsigned long)Long::parseLong(
+                properties.getProperty(
                     "transport.ResponseCorrelator.maxResponseWaitTime", "3000" ) ) );
 
         return transport;

@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
-#define ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
+#ifndef _ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
+#define _ACTIVEMQ_TRANSPORT_COMMANDREADER_H_
 
-#include <activemq/io/Reader.h>
+#include <decaf/io/Reader.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 
@@ -29,8 +29,7 @@ namespace transport{
      * Interface for an object responsible for reading a command
      * from an input stream.
      */
-    class CommandReader : public io::Reader
-    {
+    class CommandReader : public decaf::io::Reader {
     public:
 
         virtual ~CommandReader(){}
@@ -47,4 +46,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_COMMANDS_COMMANDREADER_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_COMMANDREADER_H_*/

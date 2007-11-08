@@ -20,10 +20,10 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::BooleanStreamTest );
 
 #include <activemq/connector/openwire/utils/BooleanStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/DataInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/DataInputStream.h>
 
 using namespace activemq;
 using namespace activemq::io;

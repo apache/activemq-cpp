@@ -23,14 +23,14 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompTopic.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/exceptions/NoSuchElementException.h>
-#include <activemq/exceptions/RuntimeException.h>
 
-#include <activemq/util/Date.h>
-#include <activemq/util/Long.h>
-#include <activemq/util/Integer.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/lang/exceptions/RuntimeException.h>
+#include <decaf/util/Date.h>
+#include <decaf/lang/Long.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
 
 #include <string>
 #include <sstream>
@@ -120,7 +120,7 @@ namespace commands{
          */
         virtual void clearProperties(){
 
-            util::Properties& props = getFrame().getProperties();
+            decaf::util::Properties& props = getFrame().getProperties();
             std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
             for( unsigned int ix=0; ix<propArray.size(); ++ix ){
 
@@ -141,7 +141,7 @@ namespace commands{
         virtual std::vector<std::string> getPropertyNames() const{
             std::vector<std::string> names;
 
-            const util::Properties& props = getFrame().getProperties();
+            const decaf::util::Properties& props = getFrame().getProperties();
             std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
             for( unsigned int ix=0; ix<propArray.size(); ++ix ){
 
@@ -299,7 +299,7 @@ namespace commands{
                 return cms::DeliveryMode::PERSISTENT;
             }
 
-            if( util::Boolean::parseBoolean( getPropertyValue(
+            if( decaf::lang::Boolean::parseBoolean( getPropertyValue(
                        CommandConstants::toString(
                            CommandConstants::HEADER_PERSISTENT ) ) ) == true ) {
                 return (int)cms::DeliveryMode::PERSISTENT;
@@ -354,7 +354,7 @@ namespace commands{
          * @return time value
          */
         virtual long long getCMSExpiration() const {
-            return util::Long::parseLong( getPropertyValue(
+            return decaf::lang::Long::parseLong( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_EXPIRES ), "0" ) );
         }
@@ -367,7 +367,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_EXPIRES) ,
-                util::Long::toString( expireTime ) );
+                decaf::lang::Long::toString( expireTime ) );
         }
 
         /**
@@ -396,7 +396,7 @@ namespace commands{
          * @return priority value
          */
         virtual int getCMSPriority() const {
-            return util::Integer::parseInt( getPropertyValue(
+            return decaf::lang::Integer::parseInt( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_JMSPRIORITY ), "0" ) );
         }
@@ -409,7 +409,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_JMSPRIORITY),
-                util::Integer::toString( priority ) );
+                decaf::lang::Integer::toString( priority ) );
         }
 
         /**
@@ -417,7 +417,7 @@ namespace commands{
          * @return redelivered value
          */
         virtual bool getCMSRedelivered() const {
-            return util::Boolean::parseBoolean( getPropertyValue(
+            return decaf::lang::Boolean::parseBoolean( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_REDELIVERED ),
                 "false" ) );
@@ -431,7 +431,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_REDELIVERED ),
-                util::Boolean::toString( redelivered ) );
+                decaf::lang::Boolean::toString( redelivered ) );
         }
 
         /**
@@ -463,7 +463,7 @@ namespace commands{
          * @return time stamp value
          */
         virtual long long getCMSTimestamp() const {
-            return util::Long::parseLong( getPropertyValue(
+            return decaf::lang::Long::parseLong( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TIMESTAMP ), "0" ) );
         }
@@ -476,7 +476,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_TIMESTAMP ),
-                util::Long::toString( timeStamp ) );
+                decaf::lang::Long::toString( timeStamp ) );
         }
 
         /**
@@ -529,7 +529,7 @@ namespace commands{
          * @return redelivery count
          */
         virtual int getRedeliveryCount() const {
-            return util::Integer::parseInt( getPropertyValue(
+            return decaf::lang::Integer::parseInt( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_REDELIVERYCOUNT ),
                 "0" ) );
@@ -544,7 +544,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_REDELIVERYCOUNT ),
-                util::Integer::toString( count ) );
+                decaf::lang::Integer::toString( count ) );
         }
 
         /**
@@ -554,7 +554,7 @@ namespace commands{
          */
         virtual bool isExpired() const {
             long long expireTime = this->getCMSExpiration();
-            long long currentTime = util::Date::getCurrentTimeMilliseconds();
+            long long currentTime = decaf::util::Date::getCurrentTimeMilliseconds();
             if( expireTime > 0 && currentTime > expireTime ) {
                 return true;
             }
@@ -570,7 +570,7 @@ namespace commands{
         virtual void testProperty( const std::string& name ) const
             throw( cms::CMSException ){
             if( CommandConstants::isStompHeader( name ) ){
-                throw exceptions::IllegalArgumentException( __FILE__, __LINE__,
+                throw decaf::lang::exceptions::IllegalArgumentException( __FILE__, __LINE__,
                     "searching for property with name of pre-defined header" );
             }
         }
@@ -586,7 +586,7 @@ namespace commands{
             testProperty( name );
 
             if( !getProperties().hasProperty( name ) ){
-                throw exceptions::NoSuchElementException(
+                throw decaf::lang::exceptions::NoSuchElementException(
                     __FILE__, __LINE__,
                     "property not available in message" );
             }
@@ -597,7 +597,7 @@ namespace commands{
             stream >> value;
 
             if( stream.fail() ){
-                throw exceptions::RuntimeException(
+                throw decaf::lang::exceptions::RuntimeException(
                     __FILE__, __LINE__,
                     "Error extracting property from string" );
             }

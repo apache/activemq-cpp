@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#include <activemq/concurrent/Thread.h>
-#include <activemq/concurrent/Runnable.h>
-#include <activemq/concurrent/CountDownLatch.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/util/Integer.h>
+#include <decaf/lang/Integer.h>
 #include <activemq/util/Config.h>
-#include <activemq/util/Date.h>
+#include <decaf/util/Date.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -35,7 +35,7 @@
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::util;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 using namespace cms;
 using namespace std;
 

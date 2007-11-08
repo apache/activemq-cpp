@@ -37,7 +37,7 @@ namespace transport{
          * @param properties The properties for the transport.
          */
         virtual Transport* createTransport(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             Transport* next = NULL,
             bool own = true ) throw ( exceptions::ActiveMQException );
 

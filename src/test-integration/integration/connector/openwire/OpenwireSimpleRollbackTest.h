@@ -21,7 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #include <cms/MessageListener.h>
 #include <cms/ExceptionListener.h>
@@ -60,7 +60,7 @@ namespace openwire{
 
         unsigned int numReceived;
         unsigned int msgCount;
-        activemq::concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
     };
 

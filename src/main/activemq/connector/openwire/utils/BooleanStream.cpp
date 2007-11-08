@@ -17,13 +17,17 @@
 
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 
+#include <activemq/exceptions/ActiveMQException.h>
+
 using namespace std;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ///////////////////////////////////////////////////////////////////////////////
 BooleanStream::BooleanStream()
@@ -105,7 +109,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
         }
 
         // Dump the payload
-        dataOut->write( &data[0], arrayLimit );
+        dataOut->write( &data[0], 0, arrayLimit );
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )

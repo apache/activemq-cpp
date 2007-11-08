@@ -20,14 +20,16 @@
 #include <cms/Session.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/util/Boolean.h>
-#include <activemq/util/Iterator.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/util/Iterator.h>
 
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
+using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace std;
@@ -200,7 +202,7 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
     try {
 
         if( connectionData == NULL) {
-            NullPointerException ex(
+            ActiveMQException ex(
                 __FILE__, __LINE__,
                 "ActiveMQConnection::onConsumerMessage - "
                 "Connection Data Null, could be closed." );

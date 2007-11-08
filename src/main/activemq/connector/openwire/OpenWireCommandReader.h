@@ -19,8 +19,8 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDREADER_H_
 
 #include <activemq/transport/CommandReader.h>
-#include <activemq/io/InputStream.h>
-#include <activemq/io/DataInputStream.h>
+#include <decaf/io/InputStream.h>
+#include <decaf/io/DataInputStream.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
@@ -36,7 +36,7 @@ namespace openwire{
         /**
          * The target input stream.
          */
-        io::InputStream* inputStream;
+        decaf::io::InputStream* inputStream;
 
         /**
          * Pointer to the OpenWireFormat object for this Reader
@@ -47,7 +47,7 @@ namespace openwire{
          * This is our DataInputStream that we will wrap around the target
          * input stream
          */
-        io::DataInputStream* dataInputStream;
+        decaf::io::DataInputStream* dataInputStream;
 
     public:
 
@@ -61,7 +61,7 @@ namespace openwire{
          * @param inputStream the target input stream.
          * @param owFormat the OpenWireFormat object that handles unmarshaling
          */
-        OpenWireCommandReader( io::InputStream* inputStream,
+        OpenWireCommandReader( decaf::io::InputStream* inputStream,
                                OpenWireFormat* openWireFormat );
 
         virtual ~OpenWireCommandReader();
@@ -78,21 +78,21 @@ namespace openwire{
          * Sets the target input stream.
          * @param Target Input Stream
          */
-        virtual void setInputStream( io::InputStream* inputStream ){
+        virtual void setInputStream( decaf::io::InputStream* inputStream ){
             this->inputStream = inputStream;
-            
+
             if( dataInputStream != NULL ) {
                 delete dataInputStream;
             }
-            
-            dataInputStream = new io::DataInputStream( inputStream );
+
+            dataInputStream = new decaf::io::DataInputStream( inputStream );
         }
 
         /**
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual io::InputStream* getInputStream(void){
+        virtual decaf::io::InputStream* getInputStream(void){
             return inputStream;
         }
 
@@ -120,14 +120,14 @@ namespace openwire{
          * @throws IOException thrown if an error occurs.
          */
         virtual size_t read( unsigned char* buffer, size_t count )
-            throw( io::IOException );
+            throw( decaf::io::IOException );
 
         /**
          * Attempts to read a byte from the input stream
          * @return The byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char readByte() throw( io::IOException );
+        virtual unsigned char readByte() throw( decaf::io::IOException );
 
     };
 

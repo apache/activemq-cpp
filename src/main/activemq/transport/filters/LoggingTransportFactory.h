@@ -43,7 +43,7 @@ namespace filters{
          * @throws ActiveMQException if an error occurs.
          */
         virtual Transport* createTransport(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
 

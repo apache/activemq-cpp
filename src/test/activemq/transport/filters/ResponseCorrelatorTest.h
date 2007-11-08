@@ -22,9 +22,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/transport/filters/ResponseCorrelator.h>
-#include <activemq/concurrent/Thread.h>
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
 #include <queue>
 
@@ -119,13 +119,13 @@ namespace filters{
         class MyTransport
         :
             public Transport,
-            public concurrent::Runnable{
+            public decaf::lang::Runnable{
         public:
             CommandReader* reader;
             CommandWriter* writer;
             CommandListener* listener;
             TransportExceptionListener* exListener;
-            concurrent::Thread* thread;
+            decaf::lang::Thread* thread;
             concurrent::Mutex mutex;
             concurrent::Mutex startedMutex;
             bool done;
@@ -188,7 +188,7 @@ namespace filters{
 
                 done = false;
 
-                thread = new concurrent::Thread( this );
+                thread = new decaf::lang::Thread( this );
                 thread->start();
             }
 
@@ -317,7 +317,7 @@ namespace filters{
             }
         };
 
-        class RequestThread : public concurrent::Thread{
+        class RequestThread : public decaf::lang::Thread{
         public:
 
             Transport* transport;
@@ -383,7 +383,7 @@ namespace filters{
                 CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
 
                 // Wait to get the message back asynchronously.
-                concurrent::Thread::sleep( 100 );
+                decaf::lang::Thread::sleep( 100 );
 
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
@@ -429,7 +429,7 @@ namespace filters{
                 }
 
                 // Give the thread a little time to get all the messages back.
-                concurrent::Thread::sleep( 500 );
+                decaf::lang::Thread::sleep( 500 );
 
                 // Make sure we got them all back.
                 CPPUNIT_ASSERT( listener.commands.size() == numCommands );
@@ -472,7 +472,7 @@ namespace filters{
                 }
 
                 // Wait to make sure we get the asynchronous message back.
-                concurrent::Thread::sleep( 200 );
+                decaf::lang::Thread::sleep( 200 );
 
                 // Since our transport relays our original command back at us as a
                 // non-response message, check to make sure we received it and that
@@ -526,7 +526,7 @@ namespace filters{
                     CPPUNIT_ASSERT( requesters[ix].cmd.getCommandId() == requesters[ix].resp->getCorrelationId() );
                 }
 
-                concurrent::Thread::sleep( 60 );
+                decaf::lang::Thread::sleep( 60 );
                 synchronized( &listener.mutex )
                 {
                     unsigned int count = 0;

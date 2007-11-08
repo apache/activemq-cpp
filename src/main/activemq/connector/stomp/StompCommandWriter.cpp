@@ -25,7 +25,7 @@ using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
 using namespace activemq::transport;
-using namespace activemq::io;
+using namespace decaf::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,15 +41,15 @@ StompCommandWriter::StompCommandWriter( OutputStream* os )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::writeCommand( Command* command ) 
+void StompCommandWriter::writeCommand( Command* command )
     throw ( transport::CommandIOException )
 {
     try
     {
         if( outputStream == NULL )
         {
-            throw CommandIOException( 
-                __FILE__, __LINE__, 
+            throw CommandIOException(
+                __FILE__, __LINE__,
                 "StompCommandWriter::writeCommand - "
                 "output stream is NULL" );
         }
@@ -62,7 +62,7 @@ void StompCommandWriter::writeCommand( Command* command )
         writeByte( '\n' );
 
         // Write all the headers.
-        vector< pair<string,string> > headers = frame.getProperties().toArray();   
+        vector< pair<string,string> > headers = frame.getProperties().toArray();
         for( std::size_t ix=0; ix < headers.size(); ++ix )
         {
             string& name = headers[ix].first;
@@ -71,7 +71,7 @@ void StompCommandWriter::writeCommand( Command* command )
             write( name.c_str(), name.length() );
             writeByte( ':' );
             write( value.c_str(), value.length() );
-            writeByte( '\n' );       
+            writeByte( '\n' );
         }
 
         // Finish the header section with a form feed.
@@ -79,14 +79,14 @@ void StompCommandWriter::writeCommand( Command* command )
 
         // Write the body.
         const std::vector<unsigned char>& body = frame.getBody();
-        if( body.size() > 0 ) 
+        if( body.size() > 0 )
         {
             write( &body[0], body.size() );
         }
 
         if( ( frame.getBodyLength() == 0 ) ||
-            ( frame.getProperties().getProperty( 
-                  CommandConstants::toString( 
+            ( frame.getProperties().getProperty(
+                  CommandConstants::toString(
                       CommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) )
         {
             writeByte( '\0' );
@@ -103,35 +103,35 @@ void StompCommandWriter::writeCommand( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::write( const unsigned char* buffer, std::size_t count ) 
+void StompCommandWriter::write( const unsigned char* buffer, std::size_t count )
     throw( IOException )
 {
     if( outputStream == NULL )
     {
-        throw IOException( 
-            __FILE__, __LINE__, 
+        throw IOException(
+            __FILE__, __LINE__,
             "StompCommandWriter::write(char*,int) - input stream is NULL" );
     }
 
-    outputStream->write( buffer, count );
+    outputStream->write( buffer, 0, count );
 }
- 
+
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandWriter::writeByte( unsigned char v ) throw( IOException )
 {
     if( outputStream == NULL )
     {
-        throw IOException( 
-            __FILE__, __LINE__, 
+        throw IOException(
+            __FILE__, __LINE__,
             "StompCommandWriter::write(char) - input stream is NULL" );
     }
-   
+
     outputStream->write( v );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::write( const char* buffer, std::size_t count ) 
-   throw( io::IOException )
+void StompCommandWriter::write( const char* buffer, std::size_t count )
+   throw( decaf::io::IOException )
 {
     write( reinterpret_cast<const unsigned char*>( buffer ), count );
 }

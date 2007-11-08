@@ -23,11 +23,12 @@
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
-#include <activemq/concurrent/Mutex.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/TransactionInfo.h>
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/util/Properties.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq{
 namespace core{
@@ -76,13 +77,13 @@ namespace core{
         RollbackMap rollbackMap;
 
         // Lock object to protect the rollback Map
-        concurrent::Mutex rollbackLock;
+        decaf::util::concurrent::Mutex rollbackLock;
 
         // Max number of redeliveries before we quit
         int maxRedeliveries;
 
         // Mutex that is signaled when all tasks complete.
-        concurrent::Mutex tasksDone;
+        decaf::util::concurrent::Mutex tasksDone;
 
     public:
 
@@ -94,7 +95,7 @@ namespace core{
          */
         ActiveMQTransaction( ActiveMQConnection* connection,
                              ActiveMQSession* session,
-                             const util::Properties& properties );
+                             const decaf::util::Properties& properties );
 
         virtual ~ActiveMQTransaction();
 
@@ -190,14 +191,14 @@ namespace core{
 
         /**
          * Redelivers each message that is in the Message List to the specified
-         * consumer, throwing messages away as they hit their max redilviery 
+         * consumer, throwing messages away as they hit their max redilviery
          * count.
          * @param consumer - the ActiveMQConsumer to redeliver to
          * @param messages - the list of messages that should be sent.
          * @throws ActiveMQException if an error occurs.
          */
         virtual void redeliverMessages( ActiveMQConsumer* consumer,
-                                        MessageList& messages ) 
+                                        MessageList& messages )
                                             throw ( exceptions::ActiveMQException );
     };
 

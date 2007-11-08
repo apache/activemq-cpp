@@ -75,7 +75,7 @@ Response* OpenWireResponseBuilder::buildResponse(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireResponseBuilder::buildIncomingCommands(
-    const transport::Command* command, util::Queue<transport::Command*>& queue ){
+    const transport::Command* command, decaf::util::Queue<transport::Command*>& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {

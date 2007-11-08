@@ -21,7 +21,7 @@
 #include <string>
 #include <string.h>
 #include <map>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace connector{
@@ -86,8 +86,8 @@ namespace stomp{
          * Gets access to the header properties for this frame.
          * @return the Properties object owned by this Frame
          */
-        util::Properties& getProperties(){ return properties; }
-        const util::Properties& getProperties() const {
+        decaf::util::Properties& getProperties(){ return properties; }
+        const decaf::util::Properties& getProperties() const {
             return properties;
         }
 
@@ -133,7 +133,7 @@ namespace stomp{
         std::string command;
 
         // Properties of the Stomp Message
-        util::Properties properties;
+        decaf::util::Properties properties;
 
         // Byte data of Body.
         std::vector<unsigned char> body;

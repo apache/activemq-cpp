@@ -16,21 +16,24 @@
  */
 
 #include "URISupport.h"
-#include "StringTokenizer.h"
 
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
+
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::exceptions;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Properties URISupport::parseQuery( std::string query )
     throw ( IllegalArgumentException )
 {
     try {
-        
-        Properties options;        
+
+        Properties options;
         URISupport::parseQuery( query, &options );
         return options;
     }
@@ -41,11 +44,11 @@ Properties URISupport::parseQuery( std::string query )
 
 ////////////////////////////////////////////////////////////////////////////////
 void URISupport::parseQuery( std::string query,
-                             util::Properties* properties )
-    throw ( exceptions::IllegalArgumentException ) {
+                             Properties* properties )
+    throw ( IllegalArgumentException ) {
 
     try {
-        
+
         if( properties == NULL ) {
             throw IllegalArgumentException(
                 __FILE__,
@@ -58,38 +61,38 @@ void URISupport::parseQuery( std::string query,
         if( pos != std::string::npos ) {
             query = query.substr(pos+1);
         }
-        
+
         // split the query into parameters
         StringTokenizer tokenizer( query, "&" );
         std::vector<std::string> options;
         tokenizer.toArray( options );
-    
+
         std::vector<std::string>::const_iterator iter = options.begin();
-        
+
         for( ; iter != options.end(); ++iter ) {
-    
+
             tokenizer.reset( *iter, "=" );
-            
+
             std::string key = "";
             std::string value = "";
-    
+
             if( tokenizer.countTokens() != 2 ) {
                 throw IllegalArgumentException(
                     __FILE__,
                     __LINE__,
                     "URISupport::parseQuery - Invalid URI Option." );
             }
-            
+
             // Get the Key
             if( tokenizer.hasMoreTokens() != false ) {
                 key = tokenizer.nextToken();
             }
-    
+
             // Get the Value
             if( tokenizer.hasMoreTokens() != false ) {
                 value = tokenizer.nextToken();
             }
-            
+
             // Store them.
             properties->setProperty( key, value );
         }

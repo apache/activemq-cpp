@@ -22,16 +22,16 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Properties.h>
 #include <activemq/connector/stomp/StompCommandReader.h>
 #include <activemq/connector/stomp/StompCommandWriter.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
 #include <activemq/connector/stomp/StompSessionManager.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/logger/LoggerDefines.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/logging/LoggerDefines.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
 namespace activemq{
@@ -49,7 +49,7 @@ namespace stomp{
         public StompCommandListener
     {
 
-        LOGCMS_DECLARE( logger )
+        LOGDECAF_DECLARE( logger )
 
     private:
 
@@ -72,7 +72,7 @@ namespace stomp{
         /**
          * Sync object.
          */
-        concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
         /**
          * Observer of messages directed at a particular
@@ -118,7 +118,7 @@ namespace stomp{
         /**
          * Properties for the connector.
          */
-        util::Properties properties;
+        decaf::util::Properties properties;
 
     private:
 
@@ -154,8 +154,8 @@ namespace stomp{
          * @param properties properties for configuring the connector.
          */
         StompConnector( transport::Transport* transport,
-                        const util::Properties& properties )
-            throw ( exceptions::IllegalArgumentException );
+                        const decaf::util::Properties& properties )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         virtual ~StompConnector();
 
@@ -211,10 +211,10 @@ namespace stomp{
          * @throws InvalidStateException if the Transport is not set
          */
         virtual transport::Transport& getTransport() const
-            throw ( exceptions::InvalidStateException ) {
+            throw ( decaf::lang::exceptions::InvalidStateException ) {
 
             if( transport == NULL ) {
-                throw exceptions::InvalidStateException(
+                throw decaf::lang::exceptions::InvalidStateException(
                     __FILE__, __LINE__,
                     "StompConnector::getTransport - "
                     "Invalid State, No Transport.");
@@ -322,7 +322,7 @@ namespace stomp{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Creates a Temporary Queue given a name and session info
@@ -332,7 +332,7 @@ namespace stomp{
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends a Message
@@ -438,7 +438,7 @@ namespace stomp{
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Unsubscribe from a givenDurable Subscription
@@ -446,7 +446,7 @@ namespace stomp{
          * @throws ConnectorException
          */
         virtual void unsubscribe( const std::string& name )
-            throw ( ConnectorException, exceptions::UnsupportedOperationException );
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Closes the given connector resource, caller must still delete

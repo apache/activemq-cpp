@@ -21,11 +21,11 @@
 #include <activemq/connector/stomp/StompFrame.h>
 #include <activemq/connector/stomp/commands/StompCommand.h>
 #include <activemq/transport/Command.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/util/Integer.h>
-#include <activemq/util/Long.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <activemq/util/Config.h>
-#include <activemq/util/Character.h>
+#include <decaf/lang/Character.h>
 #include <typeinfo>
 #include <sstream>
 
@@ -57,7 +57,7 @@ namespace commands{
 
         StompFrame& getFrame() {
             if( frame == NULL ){
-                throw exceptions::NullPointerException(
+                throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
                     "AbstractCommand::getFrame - Frame not initialized");
             }
@@ -67,7 +67,7 @@ namespace commands{
 
         const StompFrame& getFrame() const {
             if( frame == NULL ){
-                throw exceptions::NullPointerException(
+                throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
                     "AbstractCommand::getFrame - Frame not initialized");
             }
@@ -130,7 +130,7 @@ namespace commands{
 
             for( std::size_t ix=0; ix<bytes.size(); ++ix ){
                 char c = (char)bytes[ix];
-                if( util::Character::isLetterOrDigit(c) || util::Character::isWhitespace(c) ){
+                if( decaf::lang::Character::isLetterOrDigit(c) || decaf::lang::Character::isWhitespace(c) ){
                     ostream << c;
                 }
                 else
@@ -159,10 +159,10 @@ namespace commands{
          * Gets the properties map for this command.
          * @return Reference to a Properties object
          */
-        virtual util::Properties& getProperties(){
+        virtual decaf::util::Properties& getProperties(){
             return getFrame().getProperties();
         }
-        virtual const util::Properties& getProperties() const{
+        virtual const decaf::util::Properties& getProperties() const{
             return getFrame().getProperties();
         }
 
@@ -182,7 +182,7 @@ namespace commands{
          * @return Command Id
          */
         virtual int getCommandId() const {
-            return util::Integer::parseInt(
+            return decaf::lang::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString(
                         CommandConstants::HEADER_REQUESTID ),
@@ -212,7 +212,7 @@ namespace commands{
          * @return the Correlation Id
          */
         virtual int getCorrelationId() const {
-            return util::Integer::parseInt(
+            return decaf::lang::Integer::parseInt(
                 getPropertyValue(
                     CommandConstants::toString(
                         CommandConstants::HEADER_RESPONSEID ),
@@ -227,7 +227,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_RESPONSEID),
-                 util::Integer::toString( corrId ) );
+                 decaf::lang::Integer::toString( corrId ) );
         }
 
         /**

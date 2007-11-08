@@ -27,11 +27,11 @@
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/io/BlockingByteArrayInputStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/concurrent/Thread.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -235,7 +235,7 @@ namespace transport{
 
             transport.start();
 
-            concurrent::Thread::sleep( 50 );
+            decaf::lang::Thread::sleep( 50 );
 
             transport.close();
         }
@@ -258,7 +258,7 @@ namespace transport{
 
             transport.start();
 
-            concurrent::Thread::sleep( 10 );
+            decaf::lang::Thread::sleep( 10 );
 
             unsigned char buffer[10] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
             try{
@@ -269,7 +269,7 @@ namespace transport{
                 ex.setMark( __FILE__, __LINE__ );
             }
 
-            concurrent::Thread::sleep( 100 );
+            decaf::lang::Thread::sleep( 100 );
 
             CPPUNIT_ASSERT( listener.str == "1234567890" );
 

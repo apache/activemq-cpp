@@ -23,9 +23,9 @@
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::exceptions;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const char* CommandConstants::queuePrefix = "/queue/";
@@ -118,7 +118,7 @@ CommandConstants::StaticInitializer::StaticInitializer(){
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* CommandConstants::toDestination( const std::string& dest )
-    throw ( exceptions::IllegalArgumentException )
+    throw ( decaf::lang::exceptions::IllegalArgumentException )
 {
     std::size_t qpos = dest.find(queuePrefix);
     std::size_t tpos = dest.find(topicPrefix);

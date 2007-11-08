@@ -21,8 +21,8 @@
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/filters/FutureResponse.h>
 #include <activemq/transport/Command.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <map>
 #include <stdio.h>
 
@@ -58,12 +58,12 @@ namespace filters{
         /**
          * Sync object for accessing the next command id variable.
          */
-        concurrent::Mutex commandIdMutex;
+        decaf::util::concurrent::Mutex commandIdMutex;
 
         /**
          * Sync object for accessing the request map.
          */
-        concurrent::Mutex mapMutex;
+        decaf::util::concurrent::Mutex mapMutex;
 
         /**
          * Flag to indicate the closed state.
@@ -110,7 +110,7 @@ namespace filters{
          * by this transport.
          */
         virtual void oneway( Command* command )
-            throw( CommandIOException, exceptions::UnsupportedOperationException );
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -119,7 +119,7 @@ namespace filters{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual Response* request( Command* command )
-            throw( CommandIOException, exceptions::UnsupportedOperationException );
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's

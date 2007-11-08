@@ -18,8 +18,8 @@
 #ifndef _ACTIVEMQ_UTIL_URISUPPORT_H_
 #define _ACTIVEMQ_UTIL_URISUPPORT_H_
 
-#include <activemq/util/Properties.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
 namespace util{
@@ -27,9 +27,9 @@ namespace util{
     class URISupport
     {
     public:
-    
+
         virtual ~URISupport();
-        
+
         /**
          * Parse the Query portion of a URI String and return a Simple
          * Properties object containing the parameter names as keys, and
@@ -37,9 +37,9 @@ namespace util{
          * @param query. the query string to parse.
          * @returns Properties object with the parsed output.
          */
-        static Properties parseQuery( std::string query )
-            throw ( exceptions::IllegalArgumentException );
-         
+        static decaf::util::Properties parseQuery( std::string query )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
+
         /**
          * Parse the Query portion of a URI String and return a Simple
          * Properties object containing the parameter names as keys, and
@@ -48,8 +48,8 @@ namespace util{
          * @param properties - object pointer to get the parsed output.
          */
         static void parseQuery( std::string query,
-                                util::Properties* properties )
-            throw ( exceptions::IllegalArgumentException );
+                                decaf::util::Properties* properties )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
     };
 

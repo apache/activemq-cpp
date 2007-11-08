@@ -21,11 +21,11 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandListener.h>
-#include <activemq/concurrent/Runnable.h>
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Runnable.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Command.h>
-#include <activemq/logger/LoggerDefines.h>
+#include <decaf/util/logging/LoggerDefines.h>
 
 namespace activemq{
 namespace transport{
@@ -42,13 +42,12 @@ namespace transport{
      * destructor.  Once this object has been closed, it cannot be
      * restarted.
      */
-    class IOTransport
-    :
+    class IOTransport :
         public Transport,
-        public concurrent::Runnable
+        public decaf::lang::Runnable
     {
 
-        LOGCMS_DECLARE( logger )
+        LOGDECAF_DECLARE( logger )
 
     private:
 
@@ -75,17 +74,17 @@ namespace transport{
         /**
          * The input stream for incoming commands.
          */
-        io::InputStream* inputStream;
+        decaf::io::InputStream* inputStream;
 
         /**
          * The output stream for out-going commands.
          */
-        io::OutputStream* outputStream;
+        decaf::io::OutputStream* outputStream;
 
         /**
          * The polling thread.
          */
-        concurrent::Thread* thread;
+        decaf::lang::Thread* thread;
 
         /**
          * Flag marking this transport as closed.
@@ -147,7 +146,8 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
+        virtual void oneway( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
@@ -155,7 +155,8 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
+        virtual Response* request( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Assigns the command listener for non-response commands.
@@ -193,7 +194,7 @@ namespace transport{
          * Sets the input stream for in-coming commands.
          * @param is The input stream.
          */
-        virtual void setInputStream( io::InputStream* is ){
+        virtual void setInputStream( decaf::io::InputStream* is ){
             this->inputStream = is;
         }
 
@@ -201,7 +202,7 @@ namespace transport{
          * Sets the output stream for out-going commands.
          * @param os The output stream.
          */
-        virtual void setOutputStream( io::OutputStream* os ){
+        virtual void setOutputStream( decaf::io::OutputStream* os ){
             this->outputStream = os;
         }
 

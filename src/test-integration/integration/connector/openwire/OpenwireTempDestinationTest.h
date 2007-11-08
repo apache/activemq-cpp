@@ -18,7 +18,7 @@
 #ifndef _INTEGRATION_CONNECTOR_OPENWIRE_OPENWIRETEMPDESTINATIONTEST_H_
 #define _INTEGRATION_CONNECTOR_OPENWIRE_OPENWIRETEMPDESTINATIONTEST_H_
 
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -49,7 +49,7 @@ namespace openwire{
     protected:
 
         class Consumer : public cms::MessageListener,
-                         public activemq::concurrent::Runnable {
+                         public decaf::lang::Runnable {
 
         private:
 
@@ -58,8 +58,8 @@ namespace openwire{
             cms::Destination* destination;
             cms::MessageConsumer* consumer;
             unsigned int numReceived;
-            activemq::concurrent::Mutex mutex;
-            activemq::concurrent::Mutex onMsgMutex;
+            decaf::util::concurrent::Mutex mutex;
+            decaf::util::concurrent::Mutex onMsgMutex;
 
         public:
 
@@ -69,7 +69,7 @@ namespace openwire{
 
             virtual ~Consumer();
 
-            virtual activemq::concurrent::Mutex& getOnMsgMutex() {
+            virtual decaf::util::concurrent::Mutex& getOnMsgMutex() {
                 return this->onMsgMutex;
             }
 

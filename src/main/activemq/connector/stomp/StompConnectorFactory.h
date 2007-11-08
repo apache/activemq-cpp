@@ -27,17 +27,17 @@ namespace stomp{
     class StompConnectorFactory : public connector::ConnectorFactory
     {
     public:
-   
+
         virtual ~StompConnectorFactory(void) {}
-   
-        /** 
+
+        /**
          * Creates a StompConnector
-         * @param properties The Properties that the new connector is 
+         * @param properties The Properties that the new connector is
          * configured with
          * @param transport the Transport instance this connector uses.
          */
         virtual Connector* createConnector(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             activemq::transport::Transport* transport );
 
         /**

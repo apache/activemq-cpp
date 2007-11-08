@@ -32,7 +32,7 @@ namespace stomp{
 
         virtual transport::Response* buildResponse( const transport::Command* cmd );
         virtual void buildIncomingCommands(
-            const transport::Command* cmd, util::Queue<transport::Command*>& queue );
+            const transport::Command* cmd, decaf::util::Queue<transport::Command*>& queue );
 
     };
 

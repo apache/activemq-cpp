@@ -18,7 +18,7 @@
 #define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
 
 #include <cms/Destination.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 #include <string>
 #include <map>
@@ -178,7 +178,7 @@ namespace commands{
         }
 
         static cms::Destination* toDestination( const std::string& dest )
-            throw ( exceptions::IllegalArgumentException );
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         class StaticInitializer{
         public:

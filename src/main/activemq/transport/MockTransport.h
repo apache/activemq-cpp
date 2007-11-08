@@ -18,17 +18,17 @@
 #ifndef ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
 #define ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/concurrent/Concurrent.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandIOException.h>
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/Thread.h>
-#include <activemq/util/Config.h>
-#include <activemq/util/Queue.h>
-#include <activemq/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/Queue.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/Concurrent.h>
 
 #include <cms/Message.h>
 
@@ -78,7 +78,7 @@ namespace transport{
              * @param queue - Queue of Command sent back from the broker.
              */
             virtual void buildIncomingCommands(
-                const Command* cmd, util::Queue<Command*>& queue ) = 0;
+                const Command* cmd, decaf::util::Queue<Command*>& queue ) = 0;
 
         };
 
@@ -91,15 +91,15 @@ namespace transport{
          */
         class InternalCommandListener :
             public CommandListener,
-            public concurrent::Thread
+            public decaf::lang::Thread
         {
         private:
 
             MockTransport* transport;
             ResponseBuilder* responseBuilder;
             bool done;
-            concurrent::CountDownLatch startedLatch;
-            util::Queue<Command*> inboundQueue;
+            decaf::util::concurrent::CountDownLatch startedLatch;
+            decaf::util::Queue<Command*> inboundQueue;
 
         public:
 
@@ -178,7 +178,7 @@ namespace transport{
         CommandListener* outgoingCommandListener;
         TransportExceptionListener* exceptionListener;
         unsigned int nextCommandId;
-        concurrent::Mutex commandIdMutex;
+        decaf::util::concurrent::Mutex commandIdMutex;
         bool own;
         InternalCommandListener internalListener;
         static MockTransport* instance;
@@ -205,11 +205,11 @@ namespace transport{
         }
 
         virtual void oneway( Command* command )
-            throw(CommandIOException, exceptions::UnsupportedOperationException);
+            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
 
         virtual Response* request( Command* command )
-            throw(CommandIOException,
-                  exceptions::UnsupportedOperationException);
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException);
 
         virtual void setCommandListener( CommandListener* listener ){
             this->commandListener = listener;

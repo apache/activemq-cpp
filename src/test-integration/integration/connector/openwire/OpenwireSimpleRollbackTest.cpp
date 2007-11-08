@@ -23,23 +23,23 @@
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/util/Guid.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/StringTokenizer.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/network/SocketFactory.h>
+#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/network/Socket.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/net/Socket.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/StringTokenizer.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/Boolean.h>
 #include <activemq/util/Config.h>
 
 #include <cms/Connection.h>
@@ -70,9 +70,9 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::network;
+using namespace decaf::net;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 using namespace std;
 using namespace integration;
@@ -126,7 +126,7 @@ void OpenwireSimpleRollbackTest::test()
     try
     {
         // Create CMS Object for Comms
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
         consumer->setMessageListener( this );

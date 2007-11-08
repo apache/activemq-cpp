@@ -16,16 +16,18 @@
 */
 #include "ActiveMQSession.h"
 
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQTransaction.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQSessionExecutor.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/util/Queue.h>
 
 #include <activemq/connector/TransactionInfo.h>
 
@@ -33,9 +35,10 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
@@ -815,9 +818,9 @@ void ActiveMQSession::dispatch( DispatchData& message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::redispatch( util::Queue<DispatchData>& unconsumedMessages )
+void ActiveMQSession::redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages )
 {
-    util::Queue<DispatchData> reversedList;
+    decaf::util::Queue<DispatchData> reversedList;
 
     // Copy the list in reverse order then clear the original list.
     synchronized( &unconsumedMessages ) {

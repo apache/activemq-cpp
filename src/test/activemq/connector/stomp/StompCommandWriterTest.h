@@ -30,8 +30,8 @@
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
 #include <algorithm>
 #include <string.h>
 

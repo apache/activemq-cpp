@@ -18,24 +18,24 @@
 #include "SimpleTest.h"
 #include <integration/IntegrationCommon.h>
 
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/util/Guid.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/StringTokenizer.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/network/SocketFactory.h>
+#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/network/Socket.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/net/Socket.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/StringTokenizer.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/Boolean.h>
 
 #include <cms/Connection.h>
 #include <cms/MessageConsumer.h>
@@ -64,9 +64,9 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::network;
+using namespace decaf::net;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 using namespace integration;
 using namespace integration::connector::stomp;
@@ -203,7 +203,7 @@ void SimpleTest::testProducerWithNullDestination()
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =  session->createConsumer( topic );
         consumer->setMessageListener( &testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
@@ -252,7 +252,7 @@ void SimpleTest::testSyncReceive()
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
 
@@ -295,7 +295,7 @@ void SimpleTest::testSyncReceiveClientAck()
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
 
@@ -350,7 +350,7 @@ void SimpleTest::testMultipleConnections()
         cms::Session* session1 = connection1->createSession();
         cms::Session* session2 = connection2->createSession();
 
-        cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session1->createTopic(UUID::randomUUID().toString());
 
 
         cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
@@ -416,7 +416,7 @@ void SimpleTest::testMultipleSessions()
         cms::Session* session1 = connection->createSession();
         cms::Session* session2 = connection->createSession();
 
-        cms::Topic* topic = session1->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session1->createTopic(UUID::randomUUID().toString());
 
         cms::MessageConsumer* consumer1 = session1->createConsumer( topic );
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
@@ -478,7 +478,7 @@ void SimpleTest::testReceiveAlreadyInQueue() {
 
         cms::Session* session = connection->createSession();
 
-        cms::Topic* topic = session->createTopic(Guid::createGUIDString());
+        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
 
         cms::MessageConsumer* consumer = session->createConsumer( topic );
 

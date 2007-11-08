@@ -19,8 +19,8 @@
 #define _ACTIVEMQ_TRANSPORT_TRANSPORTBUILDER_H_
 
 #include <activemq/transport/Transport.h>
-#include <activemq/util/Properties.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
 namespace transport{
@@ -49,7 +49,7 @@ namespace transport{
          * @throws CMSException on failure.
          */
         virtual Transport* buildTransport( const std::string& url,
-                                           util::Properties& properties )
+                                           decaf::util::Properties& properties )
                                             throw ( cms::CMSException );
 
     protected:
@@ -62,8 +62,8 @@ namespace transport{
          * @throws IllegalArgumentException if the passed URI is invalid
          */
         virtual void parseURL( const std::string& URI,
-                               util::Properties& properties )
-            throw ( exceptions::IllegalArgumentException );
+                               decaf::util::Properties& properties )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Given a Transport Name and the properties it should use to configure
@@ -76,7 +76,7 @@ namespace transport{
          * @throws CMSException if an error occurs during creation.
          */
         virtual Transport* createTransport( const std::string& name,
-                                            const util::Properties& properties,
+                                            const decaf::util::Properties& properties,
                                             Transport* next = NULL )
                                                 throw ( cms::CMSException );
 

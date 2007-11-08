@@ -22,7 +22,7 @@ using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 
-LOGCMS_INITIALIZE( logger, LoggingTransport, "activemq.transport.filters.LoggingTransport")
+LOGDECAF_INITIALIZE( logger, LoggingTransport, "activemq.transport.filters.LoggingTransport")
 
 ////////////////////////////////////////////////////////////////////////////////
 LoggingTransport::LoggingTransport( Transport* next, bool own )
@@ -37,7 +37,7 @@ void LoggingTransport::onCommand( Command* command ) {
     ostream << command->toString() << endl;
     ostream << "*** END RECEIVED ASYNCHRONOUS COMMAND ***";
 
-    LOGCMS_INFO( logger, ostream.str() );
+    LOGDECAF_INFO( logger, ostream.str() );
 
     // Delegate to the base class.
     TransportFilter::onCommand( command );
@@ -45,7 +45,7 @@ void LoggingTransport::onCommand( Command* command ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void LoggingTransport::oneway( Command* command )
-    throw(CommandIOException, exceptions::UnsupportedOperationException) {
+    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
@@ -54,19 +54,19 @@ void LoggingTransport::oneway( Command* command )
         ostream << command->toString() << endl;
         ostream << "*** END SENDING ONEWAY COMMAND ***";
 
-        LOGCMS_INFO( logger, ostream.str() );
+        LOGDECAF_INFO( logger, ostream.str() );
 
         // Delegate to the base class.
         TransportFilter::oneway( command );
     }
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* LoggingTransport::request( Command* command )
-    throw(CommandIOException, exceptions::UnsupportedOperationException) {
+    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
@@ -79,14 +79,11 @@ Response* LoggingTransport::request( Command* command )
         ostream << "*** RECEIVED RESPONSE COMMAND ***" << endl;
         ostream << ( response == NULL? "NULL" : response->toString() );
 
-        LOGCMS_INFO( logger, ostream.str() );
+        LOGDECAF_INFO( logger, ostream.str() );
 
         return response;
     }
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
-
-
-

@@ -17,12 +17,12 @@
 
 #include "OpenWireFormat.h"
 
-#include <activemq/util/Boolean.h>
-#include <activemq/util/Integer.h>
-#include <activemq/util/Long.h>
-#include <activemq/util/Guid.h>
-#include <activemq/util/Math.h>
-#include <activemq/io/ByteArrayOutputStream.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
+#include <decaf/util/UUID.h>
+#include <decaf/lang/Math.h>
+#include <decaf/io/ByteArrayOutputStream.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
@@ -30,11 +30,11 @@
 #include <activemq/connector/openwire/marshal/DataStreamMarshaller.h>
 #include <activemq/connector/openwire/marshal/v2/MarshallerFactory.h>
 #include <activemq/connector/openwire/marshal/v1/MarshallerFactory.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::wireformat;
-using namespace activemq::io;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::transport;
@@ -43,12 +43,16 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::utils;
+using namespace decaf::io;
+using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const unsigned char OpenWireFormat::NULL_TYPE = 0;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
+OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 
     // Copy config data
     this->properties.copy( &properties );
@@ -58,8 +62,7 @@ OpenWireFormat::OpenWireFormat( const activemq::util::Properties& properties ) {
     dataMarshallers.resize( 256 );
 
     // Generate an ID
-    this->id = Guid::createGUIDString();
-
+    this->id = UUID::randomUUID().toString();
     // Set defaults for initial WireFormat negotiation
     this->version = 0;
     this->stackTraceEnabled = false;
@@ -139,8 +142,8 @@ void OpenWireFormat::setPreferedWireFormatInfo(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::marshal( transport::Command* command,
-                              io::DataOutputStream* dataOut )
-    throw ( io::IOException ) {
+                              decaf::io::DataOutputStream* dataOut )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -189,9 +192,8 @@ void OpenWireFormat::marshal( transport::Command* command,
 
                 if( !sizePrefixDisabled ) {
                     looseOut->close();
-                    dataOut->writeInt( (int)baos->getByteArraySize() );
-                    dataOut->write( baos->getByteArray(),
-                                    baos->getByteArraySize() );
+                    dataOut->writeInt( (int)baos->size() );
+                    dataOut->write( baos->toByteArray(), 0, baos->size() );
 
                     // Delete allocated resource
                     delete baos;
@@ -209,8 +211,8 @@ void OpenWireFormat::marshal( transport::Command* command,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-transport::Command* OpenWireFormat::unmarshal( io::DataInputStream* dis )
-    throw ( io::IOException ) {
+transport::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -296,7 +298,7 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
 ////////////////////////////////////////////////////////////////////////////////
 int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
                                                utils::BooleanStream* bs )
-    throw ( io::IOException ) {
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -358,7 +360,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 
             MarshalAware* ma = dynamic_cast< MarshalAware* >( o );
             vector<unsigned char> sequence = ma->getMarshaledForm( this );
-            ds->write( &sequence[0], sequence.size() );
+            ds->write( &sequence[0], 0, sequence.size() );
 
         } else {
 
@@ -382,7 +384,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
 ////////////////////////////////////////////////////////////////////////////////
 DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
                                                            BooleanStream* bs )
-    throw ( io::IOException ) {
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -425,7 +427,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* OpenWireFormat::looseUnmarshalNestedObject( io::DataInputStream* dis )
+DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputStream* dis )
     throw ( IOException ) {
 
     try{
@@ -459,8 +461,8 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( io::DataInputStream* 
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
-                                               io::DataOutputStream* dataOut )
-    throw ( io::IOException ) {
+                                               decaf::io::DataOutputStream* dataOut )
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -490,7 +492,7 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
-    throw ( exceptions::IllegalStateException ) {
+    throw ( IllegalStateException ) {
 
     if( preferedWireFormatInfo == NULL ) {
         throw IllegalStateException(

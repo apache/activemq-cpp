@@ -20,14 +20,14 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
-#include <activemq/concurrent/Runnable.h>
+#include <decaf/lang/Runnable.h>
 #include <benchmark/PerformanceTimer.h>
 #include <string>
 
 namespace benchmark{
 
     template < class NAME, class TARGET, int ITERATIONS = 100 >
-    class BenchmarkBase : public activemq::concurrent::Runnable,
+    class BenchmarkBase : public decaf::lang::Runnable,
                           public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( NAME );

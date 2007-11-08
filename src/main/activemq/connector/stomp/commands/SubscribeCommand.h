@@ -21,7 +21,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
-#include <activemq/util/Boolean.h>
+#include <decaf/lang/Boolean.h>
 
 namespace activemq{
 namespace connector{
@@ -151,7 +151,7 @@ namespace commands{
          * @return NoLocal value
          */
         virtual bool getNoLocal(void) const {
-            return util::Boolean::parseBoolean( getPropertyValue(
+            return decaf::lang::Boolean::parseBoolean( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_NOLOCAL ),
                 "false" ) );
@@ -166,7 +166,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_NOLOCAL ),
-                util::Boolean::toString( noLocal ) );
+                decaf::lang::Boolean::toString( noLocal ) );
         }
 
         /**
@@ -175,7 +175,7 @@ namespace commands{
          * @return true if in dispatch async mode
          */
         virtual bool getDispatchAsync() const {
-            return util::Boolean::parseBoolean( getPropertyValue(
+            return decaf::lang::Boolean::parseBoolean( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_DISPATCH_ASYNC ),
                 "false" ) );
@@ -190,7 +190,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_DISPATCH_ASYNC ),
-                util::Boolean::toString( dispatchAsync ) );
+                decaf::lang::Boolean::toString( dispatchAsync ) );
         }
 
         /**
@@ -199,7 +199,7 @@ namespace commands{
          * @return true for exclusive mode
          */
         virtual bool getExclusive() const {
-            return util::Boolean::parseBoolean( getPropertyValue(
+            return decaf::lang::Boolean::parseBoolean( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_EXCLUSIVE ),
                 "false" ) );
@@ -214,7 +214,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_EXCLUSIVE ),
-                util::Boolean::toString( exclusive ) );
+                decaf::lang::Boolean::toString( exclusive ) );
         }
 
         /**
@@ -226,7 +226,7 @@ namespace commands{
          * @return Max value
          */
         virtual int getMaxPendingMsgLimit() const {
-            return util::Integer::parseInt( getPropertyValue(
+            return decaf::lang::Integer::parseInt( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_MAXPENDINGMSGLIMIT ),
                 "0" ) );
@@ -244,7 +244,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_MAXPENDINGMSGLIMIT ),
-                util::Integer::toString( limit ) );
+                decaf::lang::Integer::toString( limit ) );
         }
 
         /**
@@ -256,7 +256,7 @@ namespace commands{
          * @return prefetch size value
          */
         virtual int getPrefetchSize() const {
-            return util::Integer::parseInt( getPropertyValue(
+            return decaf::lang::Integer::parseInt( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_PREFETCHSIZE ),
                 "1000" ) );
@@ -274,7 +274,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_PREFETCHSIZE ),
-                util::Integer::toString( size ) );
+                decaf::lang::Integer::toString( size ) );
         }
 
         /**
@@ -283,7 +283,7 @@ namespace commands{
          * @return priority level
          */
         virtual int getPriority() const {
-            return util::Integer::parseInt( getPropertyValue(
+            return decaf::lang::Integer::parseInt( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_CONSUMERPRIORITY ),
                 "0" ) );
@@ -298,7 +298,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_CONSUMERPRIORITY ),
-                util::Integer::toString( priority ) );
+                decaf::lang::Integer::toString( priority ) );
         }
 
         /**
@@ -307,7 +307,7 @@ namespace commands{
          * @return true for retroactive mode
          */
         virtual bool getRetroactive() const {
-            return util::Boolean::parseBoolean( getPropertyValue(
+            return decaf::lang::Boolean::parseBoolean( getPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_RETROACTIVE ),
                 "false" ) );
@@ -322,7 +322,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_RETROACTIVE ),
-                util::Boolean::toString( retroactive ) );
+                decaf::lang::Boolean::toString( retroactive ) );
         }
 
     protected:

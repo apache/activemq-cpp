@@ -17,19 +17,20 @@
 
 #include "OpenwireStringSupport.h"
 
-#include <activemq/util/Integer.h>
+#include <decaf/lang/Integer.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace activemq;
-using namespace activemq::io;
-using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
+using namespace decaf::io;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
-    throw ( io::IOException ) {
+std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataIn )
+    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -84,15 +85,15 @@ std::string OpenwireStringSupport::readString( io::DataInputStream& dataIn )
 
         return "";
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
+void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
                                          const std::string* str )
-                                            throw ( io::IOException ) {
+                                            throw ( decaf::io::IOException ) {
 
     try {
 
@@ -150,7 +151,7 @@ void OpenwireStringSupport::writeString( io::DataOutputStream& dataOut,
             dataOut.writeShort( (short)-1 );
         }
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }

@@ -27,7 +27,7 @@
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
 
-#include <activemq/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
 
 namespace activemq{
 namespace connector{

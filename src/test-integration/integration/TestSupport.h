@@ -18,7 +18,7 @@
 #ifndef _INTEGRATION_TESTSUPPORT_H_
 #define _INTEGRATION_TESTSUPPORT_H_
 
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
@@ -40,7 +40,7 @@ namespace integration{
         virtual void initialize();
         virtual void close();
 
-        virtual activemq::concurrent::Mutex& getMutex() {
+        virtual decaf::util::concurrent::Mutex& getMutex() {
             return mutex;
         }
 
@@ -92,7 +92,7 @@ namespace integration{
         cms::Session* session;
 
         unsigned int numReceived;
-        activemq::concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
         cms::Session::AcknowledgeMode ackMode;
 
     };

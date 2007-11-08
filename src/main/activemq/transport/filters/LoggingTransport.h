@@ -19,7 +19,7 @@
 #define ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_
 
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/logger/LoggerDefines.h>
+#include <decaf/util/logging/LoggerDefines.h>
 
 namespace activemq{
 namespace transport{
@@ -32,7 +32,7 @@ namespace filters{
     {
     private:
 
-        LOGCMS_DECLARE( logger )
+        LOGDECAF_DECLARE( logger )
 
     public:
 
@@ -60,14 +60,16 @@ namespace filters{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException);
+        virtual void oneway( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
 
         /**
          * Not supported by this class - throws an exception.
          * @param command the command that is sent as a request
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException);
+        virtual Response* request( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
 
     };
 

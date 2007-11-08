@@ -19,8 +19,8 @@
 
 #include <activemq/connector/Connector.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/util/Properties.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace core{
@@ -30,19 +30,18 @@ namespace core{
      * object.  Each ActiveMQConnection owns one of these objects.  This
      * object knows how to clean up the Connection Dependencies correctly
      */
-    class ActiveMQConnectionData
-    {
+    class ActiveMQConnectionData {
     private:
-    
+
         // Connector Object
         connector::Connector* connector;
-                
+
         // Transport we are using
         transport::Transport* transport;
-        
+
         // Properties used to configure this connection.
-        util::Properties* properties;
-        
+        decaf::util::Properties* properties;
+
     public:
 
         /**
@@ -55,13 +54,13 @@ namespace core{
          */
         ActiveMQConnectionData( connector::Connector* connector,
                                 transport::Transport* transport,
-                                util::Properties* properties )
+                                decaf::util::Properties* properties )
         {
-            if( connector  == NULL || 
-                transport  == NULL || 
+            if( connector  == NULL ||
+                transport  == NULL ||
                 properties == NULL )
             {
-                throw exceptions::IllegalArgumentException(
+                throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__,
                     "ActiveMQConnectionData::ActiveMQConnectionData - "
                     "Required Parameter was NULL.");
@@ -71,33 +70,33 @@ namespace core{
             this->transport = transport;
             this->properties = properties;
         }
-        
+
         virtual ~ActiveMQConnectionData(){
             close();
         }
-        
+
         virtual void close() throw (exceptions::ActiveMQException) {
-            
+
             bool hasException = false;
             exceptions::ActiveMQException e;
-            
+
             try
             {
                 if( connector != NULL ){
-                    
+
                     try{
                         connector->close();
-                    }catch( exceptions::ActiveMQException& ex ){                        
+                    }catch( exceptions::ActiveMQException& ex ){
                         if( !hasException ){
                             hasException = true;
                             ex.setMark(__FILE__, __LINE__ );
                             e = ex;
                         }
                     }
-                    
+
                     try{
                         delete connector;
-                    }catch( exceptions::ActiveMQException& ex ){                        
+                    }catch( exceptions::ActiveMQException& ex ){
                         if( !hasException ){
                             hasException = true;
                             ex.setMark(__FILE__, __LINE__ );
@@ -106,22 +105,22 @@ namespace core{
                     }
                     connector = NULL;
                 }
-                
+
                 if( transport != NULL ){
-                    
+
                     try{
                         transport->close();
-                    }catch( exceptions::ActiveMQException& ex ){                        
+                    }catch( exceptions::ActiveMQException& ex ){
                         if( !hasException ){
                             hasException = true;
                             ex.setMark(__FILE__, __LINE__ );
                             e = ex;
                         }
                     }
-                    
+
                     try{
-                        delete transport;                        
-                    }catch( exceptions::ActiveMQException& ex ){                        
+                        delete transport;
+                    }catch( exceptions::ActiveMQException& ex ){
                         if( !hasException ){
                             hasException = true;
                             ex.setMark(__FILE__, __LINE__ );
@@ -130,12 +129,12 @@ namespace core{
                     }
                     transport = NULL;
                 }
-                
+
                 if( properties != NULL ){
                     delete properties;
                     properties = NULL;
                 }
-                
+
                 // If we encountered an exception - throw the first
                 // one we encountered.
                 if( hasException ){
@@ -167,10 +166,10 @@ namespace core{
          * this Connection.
          * @return Properties object reference.
          */
-        virtual const util::Properties& getProperties() const {
+        virtual const decaf::util::Properties& getProperties() const {
             return *properties;
         }
-        
+
     };
 
 }}

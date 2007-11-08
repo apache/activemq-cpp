@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTest );
 
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
 using namespace std;

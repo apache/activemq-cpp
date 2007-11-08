@@ -16,10 +16,6 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-  activemq/concurrent/MutexTest.cpp \
-  activemq/concurrent/ThreadPoolTest.cpp \
-  activemq/concurrent/ThreadTest.cpp \
-  activemq/concurrent/CountDownLatchTest.cpp \
   activemq/connector/ConnectorFactoryMapRegistrarTest.cpp \
   activemq/connector/ConnectorFactoryMapTest.cpp \
   activemq/connector/stomp/commands/AbortCommandTest.cpp \
@@ -65,33 +61,13 @@ cc_sources = \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQSessionTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
-  activemq/io/BufferedInputStreamTest.cpp \
-  activemq/io/BufferedOutputStreamTest.cpp \
-  activemq/io/ByteArrayInputStreamTest.cpp \
-  activemq/io/ByteArrayOutputStreamTest.cpp \
-  activemq/io/DataInputStreamTest.cpp \
-  activemq/io/DataOutputStreamTest.cpp \
-  activemq/logger/LoggerTest.cpp \
-  activemq/network/SocketFactoryTest.cpp \
-  activemq/network/SocketTest.cpp \
   activemq/transport/IOTransportTest.cpp \
   activemq/transport/filters/ResponseCorrelatorTest.cpp \
   activemq/transport/TransportFactoryMapRegistrarTest.cpp \
   activemq/transport/TransportFactoryMapTest.cpp \
-  activemq/util/BooleanTest.cpp \
-  activemq/util/DateTest.cpp \
-  activemq/util/Endian.cpp \
-  activemq/util/GuidTest.cpp \
-  activemq/util/IntegerTest.cpp \
-  activemq/util/LongTest.cpp \
-  activemq/util/MapTest.cpp \
-  activemq/util/SetTest.cpp \
   activemq/util/PrimitiveMapTest.cpp \
-  activemq/util/QueueTest.cpp \
-  activemq/util/StringTokenizerTest.cpp \
   activemq/util/URISupportTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
-  activemq/util/RandomTest.cpp \
   main.cpp
 
 h_sources = 

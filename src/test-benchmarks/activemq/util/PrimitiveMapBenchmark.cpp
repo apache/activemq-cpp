@@ -18,7 +18,7 @@
 #include "PrimitiveMapBenchmark.h"
 
 #include <string>
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 
 using namespace std;
 using namespace activemq;

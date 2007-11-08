@@ -20,9 +20,10 @@
 
 #include <string>
 
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/ActiveMQProperties.h>
-#include <activemq/util/StringTokenizer.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 #include <cms/Destination.h>
 
@@ -68,7 +69,7 @@ namespace stomp{
                           cms::Destination::DestinationType destType ) {
             try
             {
-                util::StringTokenizer tokenizer(dest, "?&");
+                decaf::util::StringTokenizer tokenizer(dest, "?&");
                 std::vector<std::string> tokens;
 
                 // Set the type, we know that much anyway
@@ -77,7 +78,7 @@ namespace stomp{
                 // Require that there at least one token, the dest
                 if( tokenizer.countTokens() < 1 )
                 {
-                    throw exceptions::IllegalArgumentException(
+                    throw decaf::lang::exceptions::IllegalArgumentException(
                         __FILE__, __LINE__,
                         ( std::string(
                             "ActiveMQDestination::ActiveMQDestination - "
@@ -96,7 +97,7 @@ namespace stomp{
 
                     if( tokenizer.countTokens() != 2 )
                     {
-                        throw exceptions::IllegalArgumentException(
+                        throw decaf::lang::exceptions::IllegalArgumentException(
                             __FILE__, __LINE__,
                             ( std::string(
                                 "ActiveMQDestination::ActiveMQDestination - "
@@ -111,9 +112,9 @@ namespace stomp{
                     properties.setProperty( key, value );
                 }
             }
-            AMQ_CATCH_RETHROW( exceptions::IllegalArgumentException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, exceptions::IllegalArgumentException )
-            AMQ_CATCHALL_THROW( exceptions::IllegalArgumentException )
+            AMQ_CATCH_RETHROW( decaf::lang::exceptions::IllegalArgumentException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::lang::exceptions::IllegalArgumentException )
+            AMQ_CATCHALL_THROW( decaf::lang::exceptions::IllegalArgumentException )
         }
 
         virtual ~StompDestination() {}

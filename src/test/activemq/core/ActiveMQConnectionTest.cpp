@@ -19,16 +19,16 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/Thread.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/transport/MockTransport.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/openwire/OpenWireConnector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>

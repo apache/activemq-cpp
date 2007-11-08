@@ -19,26 +19,26 @@
 #define _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORT_H_
 
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/util/Queue.h>
-#include <activemq/concurrent/Runnable.h>
+#include <decaf/util/Queue.h>
+#include <decaf/lang/Runnable.h>
 
 namespace activemq{
 namespace transport{
 namespace filters{
 
     class AsyncSendTransport : public TransportFilter,
-                               public concurrent::Runnable {
+                               public decaf::lang::Runnable {
     private:
 
         /**
          * Thread to send messages in when oneway is called.
          */
-        concurrent::Thread* asyncThread;
+        decaf::lang::Thread* asyncThread;
 
         /**
          * Outgoing Message Queue
          */
-        util::Queue<Command*> msgQueue;
+        decaf::util::Queue<Command*> msgQueue;
 
         /**
          * boolean indicating that this transport is closed
@@ -66,7 +66,7 @@ namespace filters{
          * by this transport.
          */
         virtual void oneway( Command* command )
-            throw( CommandIOException, exceptions::UnsupportedOperationException );
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Starts this transport object and creates the thread for

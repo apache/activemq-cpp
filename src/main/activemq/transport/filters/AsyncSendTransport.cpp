@@ -21,9 +21,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
-using namespace activemq::util;
 using namespace activemq::exceptions;
-using namespace activemq::concurrent;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 AsyncSendTransport::AsyncSendTransport( Transport* next, bool own )
@@ -45,7 +47,7 @@ AsyncSendTransport::~AsyncSendTransport()
 
 ////////////////////////////////////////////////////////////////////////////////
 void AsyncSendTransport::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 

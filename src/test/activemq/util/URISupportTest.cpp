@@ -20,7 +20,7 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 
 #include <activemq/util/URISupport.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 
 using namespace std;
 using namespace activemq;

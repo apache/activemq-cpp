@@ -22,13 +22,13 @@
 #include <activemq/connector/stomp/commands/SubscribeCommand.h>
 #include <activemq/connector/stomp/commands/UnsubscribeCommand.h>
 
-#include <activemq/util/Guid.h>
+#include <decaf/util/UUID.h>
 
 using namespace activemq;
-using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::transport;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
@@ -46,7 +46,7 @@ Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompResponseBuilder::buildIncomingCommands(
-    const transport::Command* command, util::Queue<transport::Command*>& queue ){
+    const transport::Command* command, decaf::util::Queue<transport::Command*>& queue ){
 
     const commands::ConnectCommand* connectCommand =
         dynamic_cast<const commands::ConnectCommand*>( command );
@@ -56,7 +56,7 @@ void StompResponseBuilder::buildIncomingCommands(
         resp->setCorrelationId( connectCommand->getCommandId() );
 
         if( connectCommand->getClientId() == NULL ) {
-            resp->setSessionId( Guid::createGUIDString() );
+            resp->setSessionId( UUID::randomUUID().toString() );
         } else {
             resp->setSessionId( connectCommand->getClientId() );
         }

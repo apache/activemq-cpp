@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQDestinationTest );
 
-#include <activemq/util/Guid.h>
+#include <decaf/util/UUID.h>
 
 using namespace std;
 using namespace activemq;
@@ -70,7 +70,7 @@ void ActiveMQDestinationTest::test()
 
     delete dest3;
 
-    std::string clientId = Guid::createGUIDString();
+    std::string clientId = UUID::randomUUID().toString();
     std::string result = dest.createTemporaryName( clientId );
     CPPUNIT_ASSERT( result.find( clientId ) != string::npos );
     dest.setPhysicalName( result );

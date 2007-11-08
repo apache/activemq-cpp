@@ -24,8 +24,8 @@
 #include <cms/Connection.h>
 #include <cms/MessageListener.h>
 
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/transport/MockTransport.h>
 #include <activemq/util/Config.h>

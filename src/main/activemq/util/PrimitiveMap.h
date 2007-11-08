@@ -19,7 +19,9 @@
 #define ACTIVEMQ_UTIL_PRIMITIVEMAP_H_
 
 #include <string>
-#include <activemq/util/Map.h>
+#include <vector>
+#include <decaf/util/Map.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
 
 namespace activemq{
 namespace util{
@@ -27,8 +29,7 @@ namespace util{
     /**
      * Map of named primitives.
      */
-    class PrimitiveMap
-    {
+    class PrimitiveMap {
     public:
 
         /**
@@ -175,9 +176,9 @@ namespace util{
                 value.boolValue = lvalue;
             }
 
-            bool getBool() const throw(activemq::exceptions::NoSuchElementException){
+            bool getBool() const throw( decaf::lang::exceptions::NoSuchElementException ){
                 if( valueType != BOOLEAN_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not BOOLEAN_TYPE" );
                 }
 
@@ -190,9 +191,9 @@ namespace util{
                 value.byteValue = lvalue;
             }
 
-            unsigned char getByte() const throw(activemq::exceptions::NoSuchElementException){
+            unsigned char getByte() const throw( decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != BYTE_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not BYTE_TYPE" );
                 }
 
@@ -205,9 +206,9 @@ namespace util{
                 value.charValue = lvalue;
             }
 
-            char getChar() const throw(activemq::exceptions::NoSuchElementException){
+            char getChar() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != CHAR_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not CHAR_TYPE" );
                 }
 
@@ -220,9 +221,9 @@ namespace util{
                 value.shortValue = lvalue;
             }
 
-            short getShort() const throw(activemq::exceptions::NoSuchElementException){
+            short getShort() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != SHORT_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not SHORT_TYPE" );
                 }
 
@@ -235,9 +236,9 @@ namespace util{
                 value.intValue = lvalue;
             }
 
-            int getInt() const throw(activemq::exceptions::NoSuchElementException){
+            int getInt() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != INTEGER_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not INTEGER_TYPE" );
                 }
 
@@ -250,9 +251,9 @@ namespace util{
                 value.longValue = lvalue;
             }
 
-            long long getLong() const throw(activemq::exceptions::NoSuchElementException){
+            long long getLong() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != LONG_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not LONG_TYPE" );
                 }
 
@@ -265,9 +266,9 @@ namespace util{
                 value.doubleValue = lvalue;
             }
 
-            double getDouble() const throw(activemq::exceptions::NoSuchElementException){
+            double getDouble() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != DOUBLE_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not DOUBLE_TYPE" );
                 }
 
@@ -280,9 +281,9 @@ namespace util{
                 value.floatValue = lvalue;
             }
 
-            float getFloat() const throw(activemq::exceptions::NoSuchElementException){
+            float getFloat() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != FLOAT_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not FLOAT_TYPE" );
                 }
 
@@ -295,9 +296,9 @@ namespace util{
                 value.stringValue = new std::string( lvalue );
             }
 
-            std::string getString() const throw(activemq::exceptions::NoSuchElementException){
+            std::string getString() const throw(decaf::lang::exceptions::NoSuchElementException){
                 if( valueType != STRING_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException( __FILE__,
+                    throw decaf::lang::exceptions::NoSuchElementException( __FILE__,
                         __LINE__, "Value is not STRING_TYPE" );
                 }
 
@@ -314,10 +315,10 @@ namespace util{
                 value.byteArrayValue = new std::vector<unsigned char>( lvalue );
             }
 
-            std::vector<unsigned char> getByteArray() const throw( activemq::exceptions::NoSuchElementException ) {
+            std::vector<unsigned char> getByteArray() const throw( decaf::lang::exceptions::NoSuchElementException ) {
 
                 if( valueType != BYTE_ARRAY_TYPE ){
-                    throw activemq::exceptions::NoSuchElementException(
+                    throw decaf::lang::exceptions::NoSuchElementException(
                         __FILE__,
                         __LINE__,
                         "Value is not BYTE_ARRAY_TYPE" );
@@ -367,7 +368,7 @@ namespace util{
 
     private:
 
-        activemq::util::Map<std::string, ValueNode> valueNodeMap;
+        decaf::util::Map<std::string, ValueNode> valueNodeMap;
 
     public:
 
@@ -425,43 +426,43 @@ namespace util{
         virtual bool isEmpty() const;
 
         virtual bool getBool( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setBool( const std::string& key, bool value );
 
         virtual unsigned char getByte( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setByte( const std::string& key, unsigned char value );
 
         virtual char getChar( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setChar( const std::string& key, char value );
 
         virtual short getShort( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setShort( const std::string& key, short value );
 
         virtual int getInt( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setInt( const std::string& key, int value );
 
         virtual long long getLong( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setLong( const std::string& key, long long value );
 
         virtual double getDouble( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setDouble( const std::string& key, double value );
 
         virtual float getFloat( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setFloat( const std::string& key, float value );
 
         virtual std::string getString( const std::string& key ) const
-            throw(activemq::exceptions::NoSuchElementException);
+            throw(decaf::lang::exceptions::NoSuchElementException);
         virtual void setString( const std::string& key, const std::string& value );
 
         virtual std::vector<unsigned char> getByteArray( const std::string& key ) const
-            throw( activemq::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setByteArray( const std::string& key, const std::vector<unsigned char>& value );
 
         /**
@@ -488,7 +489,7 @@ namespace util{
          * @throws NoSuchElementException
          */
         ValueNode getValue( const std::string& key ) const
-            throw( activemq::exceptions::NoSuchElementException );
+            throw( decaf::lang::exceptions::NoSuchElementException );
 
     };
 

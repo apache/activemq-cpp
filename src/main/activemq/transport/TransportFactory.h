@@ -19,8 +19,9 @@
 #define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
 
 #include <activemq/transport/Transport.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/util/Config.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
@@ -45,7 +46,7 @@ namespace transport{
          * @throws ActiveMQexception if an error occurs
          */
         virtual Transport* createTransport(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             Transport* next = NULL,
             bool own = true ) throw ( exceptions::ActiveMQException ) = 0;
 

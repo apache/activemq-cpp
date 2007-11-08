@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_MARSHALAWARE_H_
 
 #include <vector>
-#include <activemq/io/IOException.h>
+#include <decaf/io/IOException.h>
 
 namespace activemq{
 namespace connector{
@@ -52,7 +52,7 @@ namespace marshal{
          * @param wireFormat - the wireformat object to control marshaling
          */
         virtual void beforeMarshal( OpenWireFormat* wireFormat )
-            throw ( io::IOException ) = 0;
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Called after marshaling is started to cleanup the object being
@@ -60,7 +60,7 @@ namespace marshal{
          * @param wireFormat - the wireformat object to control marshaling
          */
         virtual void afterMarshal( OpenWireFormat* wireFormat )
-            throw ( io::IOException ) = 0;
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Called before unmarshaling is started to prepare the object to be
@@ -68,7 +68,7 @@ namespace marshal{
          * @param wireFormat - the wireformat object to control unmarshaling
          */
         virtual void beforeUnmarshal( OpenWireFormat* wireFormat )
-            throw ( io::IOException ) = 0;
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Called after unmarshaling is started to cleanup the object being
@@ -76,7 +76,7 @@ namespace marshal{
          * @param wireFormat - the wireformat object to control unmarshaling
          */
         virtual void afterUnmarshal( OpenWireFormat* wireFormat )
-            throw ( io::IOException ) = 0;
+            throw ( decaf::io::IOException ) = 0;
 
         /**
          * Called to set the data to this object that will contain the objects

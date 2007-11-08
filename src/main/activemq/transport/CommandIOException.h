@@ -18,13 +18,12 @@
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 
-#include <activemq/io/IOException.h>
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/io/IOException.h>
 
 namespace activemq{
 namespace transport{
 
-    class CommandIOException : public io::IOException{
+    class CommandIOException : public decaf::io::IOException{
     public:
 
         /**
@@ -36,10 +35,10 @@ namespace transport{
          * Copy Constructor
          * @param ex the exception to copy
          */
-        CommandIOException( const exceptions::ActiveMQException& ex ) throw()
-        : io::IOException()
+        CommandIOException( const decaf::lang::Exception& ex ) throw()
+        : decaf::io::IOException()
         {
-            *(exceptions::ActiveMQException*)this = ex;
+            *this = ex;
         }
 
         /**
@@ -47,9 +46,8 @@ namespace transport{
          * @param ex the exception to copy, which is an instance of this type
          */
         CommandIOException( const CommandIOException& ex ) throw()
-        : io::IOException()
-        {
-            *(exceptions::ActiveMQException*)this = ex;
+        : decaf::io::IOException() {
+            *this = ex;
         }
 
         /**
@@ -60,7 +58,7 @@ namespace transport{
          */
         CommandIOException( const char* file, const int lineNumber,
                             const char* msg, ... ) throw()
-        : io::IOException()
+        : decaf::io::IOException()
         {
             va_list vargs;
             va_start( vargs, msg );
@@ -76,7 +74,7 @@ namespace transport{
          * All subclasses should override.
          * @return cloned version of this exception
          */
-        virtual exceptions::ActiveMQException* clone() const{
+        virtual CommandIOException* clone() const{
             return new CommandIOException( *this );
         }
 

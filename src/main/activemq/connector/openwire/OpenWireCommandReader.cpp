@@ -17,17 +17,17 @@
 
 #include "OpenWireCommandReader.h"
 
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <iostream>
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::transport;
-using namespace activemq::io;
 using namespace activemq::exceptions;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandReader::OpenWireCommandReader()
@@ -47,7 +47,7 @@ OpenWireCommandReader::OpenWireCommandReader( InputStream* inputStream,
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandReader::~OpenWireCommandReader() {
-    
+
     if( dataInputStream != NULL ) {
         delete dataInputStream;
     }
@@ -77,7 +77,7 @@ Command* OpenWireCommandReader::readCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
-   throw( io::IOException )
+   throw( decaf::io::IOException )
 {
     try
     {
@@ -88,7 +88,7 @@ size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
                 "OpenwireCommandReader::read(char*,int) - input stream is NULL" );
         }
 
-        return inputStream->read( &buffer[0], count );
+        return inputStream->read( &buffer[0], 0, count );
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
@@ -96,7 +96,7 @@ size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char OpenWireCommandReader::readByte() throw( io::IOException )
+unsigned char OpenWireCommandReader::readByte() throw( decaf::io::IOException )
 {
     try
     {
@@ -109,7 +109,7 @@ unsigned char OpenWireCommandReader::readByte() throw( io::IOException )
         }
 
         unsigned char c = 0;
-        inputStream->read( &c, 1 );
+        inputStream->read( &c, 0, 1 );
         return c;
     }
     AMQ_CATCH_RETHROW( IOException )

@@ -19,12 +19,12 @@
 #define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
 
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/network/Socket.h>
-#include <activemq/util/Properties.h>
+#include <decaf/net/Socket.h>
+#include <decaf/util/Properties.h>
 #include <activemq/io/LoggingInputStream.h>
 #include <activemq/io/LoggingOutputStream.h>
-#include <activemq/io/BufferedInputStream.h>
-#include <activemq/io/BufferedOutputStream.h>
+#include <decaf/io/BufferedInputStream.h>
+#include <decaf/io/BufferedOutputStream.h>
 
 namespace activemq{
 namespace transport{
@@ -43,13 +43,13 @@ namespace filters{
         /**
          * Socket that this Transport Communicates with
          */
-        network::Socket* socket;
+        decaf::net::Socket* socket;
 
         io::LoggingInputStream* loggingInputStream;
         io::LoggingOutputStream* loggingOutputStream;
 
-        io::BufferedInputStream* bufferedInputStream;
-        io::BufferedOutputStream* bufferedOutputStream;
+        decaf::io::BufferedInputStream* bufferedInputStream;
+        decaf::io::BufferedOutputStream* bufferedOutputStream;
 
     public:
 
@@ -59,7 +59,7 @@ namespace filters{
          * @param next the next transport in the chain
          * @param own indicates if this transport owns the next.
          */
-        TcpTransport( const activemq::util::Properties& properties,
+        TcpTransport( const decaf::util::Properties& properties,
                       Transport* next,
                       const bool own = true );
 

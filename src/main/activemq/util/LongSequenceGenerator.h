@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_UTIL_LONGSEQUENCEGENERATOR_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq{
 namespace util{
@@ -33,7 +33,7 @@ namespace util{
     private:
 
         long long lastSequenceId;
-        activemq::concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
     public:
 

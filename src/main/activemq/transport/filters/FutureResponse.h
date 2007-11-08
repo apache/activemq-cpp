@@ -18,8 +18,8 @@
 #ifndef ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
 #define ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
 
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/transport/Response.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
@@ -34,11 +34,11 @@ namespace filters{
      * and when a response comes in, notify can be called to
      * inform those waiting that the response is now available.
      */
-    class FutureResponse : public concurrent::Synchronizable{
+    class FutureResponse : public decaf::util::concurrent::Synchronizable{
     private:
 
         Response* response;
-        concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
     public:
 

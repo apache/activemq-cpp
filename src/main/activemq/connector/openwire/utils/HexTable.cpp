@@ -17,24 +17,26 @@
 
 #include "HexTable.h"
 
-#include <activemq/util/Integer.h>
+#include <decaf/lang/Integer.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 HexTable::HexTable(){
-    
-    const char values[] = 
-        { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 
+
+    const char values[] =
+        { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b',
           'c', 'd', 'e', 'f' };
     const int count = 16;
-    
+
     for( int i = 0; i < count; ++i ) {
         for( int j = 0; j < count; ++j ) {
             string entry( 1, values[i] );
@@ -45,28 +47,28 @@ HexTable::HexTable(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index ) 
-    throw ( exceptions::IndexOutOfBoundsException ) {
+const std::string& HexTable::operator[]( std::size_t index )
+    throw ( IndexOutOfBoundsException ) {
     if( size() < index ) {
         throw IndexOutOfBoundsException(
             __FILE__, __LINE__,
             ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
               Integer::toString( (int)index ) ).c_str() );
     }
-    
+
     return table[index];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& HexTable::operator[]( std::size_t index ) const 
-    throw ( exceptions::IndexOutOfBoundsException ) {
-        
+const std::string& HexTable::operator[]( std::size_t index ) const
+    throw ( IndexOutOfBoundsException ) {
+
     if( size() < index ) {
         throw IndexOutOfBoundsException(
             __FILE__, __LINE__,
             ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
               Integer::toString( (int)index ) ).c_str() );
     }
-    
+
     return table[index];
 }

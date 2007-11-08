@@ -17,23 +17,24 @@
 
 #include "TransportBuilder.h"
 
-#include <activemq/util/StringTokenizer.h>
+#include <decaf/util/StringTokenizer.h>
 #include <activemq/transport/TransportFactoryMap.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::transport;
-using namespace activemq::util;
 using namespace activemq::exceptions;
+using namespace activemq::transport;
+using namespace decaf;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportBuilder::TransportBuilder()
-{
+TransportBuilder::TransportBuilder() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportBuilder::~TransportBuilder()
-{
+TransportBuilder::~TransportBuilder() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +88,7 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
 ////////////////////////////////////////////////////////////////////////////////
 void TransportBuilder::parseURL( const std::string& URI,
                                  util::Properties& properties )
-    throw ( exceptions::IllegalArgumentException ) {
+    throw ( decaf::lang::exceptions::IllegalArgumentException ) {
 
     try
     {
@@ -99,7 +100,7 @@ void TransportBuilder::parseURL( const std::string& URI,
         // transport, url, port.
         if( tokenizer.countTokens() < 3 )
         {
-            throw exceptions::IllegalArgumentException(
+            throw decaf::lang::exceptions::IllegalArgumentException(
                 __FILE__, __LINE__,
                 (string( "TransportBuilder::parseURL - "
                          "Marlformed URI: ") + URI).c_str() );
@@ -123,7 +124,7 @@ void TransportBuilder::parseURL( const std::string& URI,
 
             if( tokenizer.countTokens() != 2 )
             {
-                throw exceptions::IllegalArgumentException(
+                throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__,
                     ( string( "TransportBuilder::parseURL - "
                               "Marlformed Parameter = " ) + tokens[i] ).c_str() );

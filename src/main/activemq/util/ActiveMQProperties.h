@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _ACTIVEMQ_UTIL_ACTIVEMQPROPERTIES_H_
 #define _ACTIVEMQ_UTIL_ACTIVEMQPROPERTIES_H_
 
@@ -22,7 +22,7 @@
 #include <string>
 #include <sstream>
 #include <cms/CMSProperties.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace util{
@@ -34,24 +34,24 @@ namespace util{
     class ActiveMQProperties : public cms::CMSProperties {
     private:
 
-        Properties properties;
+        decaf::util::Properties properties;
 
     public:
 
         virtual ~ActiveMQProperties(){}
 
-        virtual Properties& getProperties() {
+        virtual decaf::util::Properties& getProperties() {
             return properties;
         }
-        
-        virtual const Properties& getProperties() const {
+
+        virtual const decaf::util::Properties& getProperties() const {
             return properties;
         }
-        
-        virtual void setProperties( Properties& props ) {
+
+        virtual void setProperties( decaf::util::Properties& props ) {
             properties.copy( &props );
         }
-        
+
         /**
          * Returns true if the properties object is empty
          * @return true if empty
@@ -127,12 +127,12 @@ namespace util{
          * @param source The source properties object.
          */
         virtual void copy( const CMSProperties* source ){
-            
+
             properties.clear();
 
             std::vector< std::pair< std::string, std::string > > vec =
                 source->toArray();
-                
+
             for( unsigned int ix=0; ix<vec.size(); ++ix ){
                 properties.setProperty(vec[ix].first, vec[ix].second );
             }

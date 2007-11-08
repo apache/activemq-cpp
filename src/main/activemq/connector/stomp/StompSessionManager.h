@@ -21,7 +21,7 @@
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/concurrent/Mutex.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <activemq/connector/ConnectorException.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
@@ -58,7 +58,7 @@ namespace stomp{
         long long nextConsumerId;
 
         // Mutex to protect ids.
-        concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
         // Mapping of a Session to all the consumer's
         DestinationMap destinationMap;
@@ -140,7 +140,7 @@ namespace stomp{
             const std::string& selector = "",
             bool noLocal = false )
                 throw ( StompConnectorException );
-                
+
         /**
          * Given a valid Consumer info Object that was previously created
          * by a call to <code>createConsumer</code>, the Consumer will be

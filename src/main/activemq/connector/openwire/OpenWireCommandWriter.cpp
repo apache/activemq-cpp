@@ -23,12 +23,13 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::transport;
-using namespace activemq::io;
 using namespace activemq::exceptions;
+using namespace decaf::io;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireCommandWriter::OpenWireCommandWriter()
-{
+OpenWireCommandWriter::OpenWireCommandWriter() {
+
     this->outputStream = NULL;
     this->openWireFormat = NULL;
     this->dataOutputStream = NULL;
@@ -44,7 +45,7 @@ OpenWireCommandWriter::OpenWireCommandWriter( OutputStream* outputStream,
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandWriter::~OpenWireCommandWriter() {
-    
+
     if( dataOutputStream != NULL ) {
         delete dataOutputStream;
     }
@@ -87,7 +88,7 @@ void OpenWireCommandWriter::write( const unsigned char* buffer, size_t count )
             "OpenWireCommandWriter::write(char*,int) - input stream is NULL" );
     }
 
-    outputStream->write( buffer, count );
+    outputStream->write( buffer, 0, count );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -102,5 +103,3 @@ void OpenWireCommandWriter::writeByte( unsigned char v ) throw( IOException )
 
     outputStream->write( v );
 }
-
-

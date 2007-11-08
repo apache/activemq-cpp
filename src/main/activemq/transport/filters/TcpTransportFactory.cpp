@@ -36,7 +36,7 @@ TransportFactory& TcpTransportFactory::getInstance(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* TcpTransportFactory::createTransport(
-    const activemq::util::Properties& properties,
+    const decaf::util::Properties& properties,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 

@@ -16,11 +16,11 @@
  */
 
 #include "LongSequenceGenerator.h"
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Concurrent.h>
 
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 LongSequenceGenerator::LongSequenceGenerator() {

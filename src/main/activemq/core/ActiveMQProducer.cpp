@@ -17,17 +17,18 @@
 #include "ActiveMQProducer.h"
 
 #include <activemq/core/ActiveMQSession.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/util/Date.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Date.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::util;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,

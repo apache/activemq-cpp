@@ -17,20 +17,22 @@
 
 #include "PrimitiveMapMarshaller.h"
 
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 #include <activemq/connector/openwire/utils/OpenwireStringSupport.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal;
+using namespace decaf;
+using namespace decaf::io;
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
@@ -126,7 +128,7 @@ void PrimitiveMapMarshaller::unmarshal(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
                                                util::PrimitiveMap::ValueNode& value )
-                                                    throw ( io::IOException ) {
+                                                    throw ( decaf::io::IOException ) {
 
     try {
 
@@ -209,7 +211,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                                                  const std::string& key,
                                                  util::PrimitiveMap& map )
-                                                    throw ( io::IOException ) {
+                                                    throw ( decaf::io::IOException ) {
 
     try {
 

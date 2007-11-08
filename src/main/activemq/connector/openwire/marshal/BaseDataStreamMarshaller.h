@@ -55,7 +55,7 @@ namespace marshal{
         virtual int tightMarshal1( OpenWireFormat* format AMQCPP_UNUSED,
                                    commands::DataStructure* command AMQCPP_UNUSED,
                                    utils::BooleanStream* bs AMQCPP_UNUSED )
-                                       throw ( io::IOException ) { return 0; }
+                                       throw ( decaf::io::IOException ) { return 0; }
 
         /**
          * Tight Marhsal to the given stream
@@ -67,9 +67,9 @@ namespace marshal{
          */
         virtual void tightMarshal2( OpenWireFormat* format AMQCPP_UNUSED,
                                     commands::DataStructure* command AMQCPP_UNUSED,
-                                    io::DataOutputStream* ds AMQCPP_UNUSED,
+                                    decaf::io::DataOutputStream* ds AMQCPP_UNUSED,
                                     utils::BooleanStream* bs AMQCPP_UNUSED )
-                                        throw ( io::IOException ) {}
+                                        throw ( decaf::io::IOException ) {}
 
         /**
          * Tight Un-marhsal to the given stream
@@ -81,9 +81,9 @@ namespace marshal{
          */
         virtual void tightUnmarshal( OpenWireFormat* format AMQCPP_UNUSED,
                                      commands::DataStructure* command AMQCPP_UNUSED,
-                                     io::DataInputStream* dis AMQCPP_UNUSED,
+                                     decaf::io::DataInputStream* dis AMQCPP_UNUSED,
                                      utils::BooleanStream* bs AMQCPP_UNUSED )
-                                        throw ( io::IOException ) {}
+                                        throw ( decaf::io::IOException ) {}
 
         /**
          * Tight Marhsal to the given stream
@@ -94,8 +94,8 @@ namespace marshal{
          */
         virtual void looseMarshal( OpenWireFormat* format AMQCPP_UNUSED,
                                    commands::DataStructure* command AMQCPP_UNUSED,
-                                   io::DataOutputStream* ds AMQCPP_UNUSED )
-                                       throw ( io::IOException ) {}
+                                   decaf::io::DataOutputStream* ds AMQCPP_UNUSED )
+                                       throw ( decaf::io::IOException ) {}
 
         /**
          * Loose Un-marhsal to the given stream
@@ -106,8 +106,8 @@ namespace marshal{
          */
         virtual void looseUnmarshal( OpenWireFormat* format AMQCPP_UNUSED,
                                      commands::DataStructure* command AMQCPP_UNUSED,
-                                     io::DataInputStream* dis AMQCPP_UNUSED )
-                                        throw ( io::IOException ) {}
+                                     decaf::io::DataInputStream* dis AMQCPP_UNUSED )
+                                        throw ( decaf::io::IOException ) {}
 
     public:      // Statics
 
@@ -153,8 +153,8 @@ namespace marshal{
          */
         virtual commands::DataStructure* tightUnmarshalCachedObject(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
          * Tightly marshalls the passed DataStructure based object to the passed
@@ -168,7 +168,7 @@ namespace marshal{
         virtual int tightMarshalCachedObject1( OpenWireFormat* wireFormat,
                                                commands::DataStructure* data,
                                                utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Tightly marshalls the passed DataStructure based object to the passed
@@ -181,9 +181,9 @@ namespace marshal{
          */
         virtual void tightMarshalCachedObject2( OpenWireFormat* wireFormat,
                                                 commands::DataStructure* data,
-                                                io::DataOutputStream* dataOut,
+                                                decaf::io::DataOutputStream* dataOut,
                                                 utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Loosely marshalls the passed DataStructure based object to the passed
@@ -196,8 +196,8 @@ namespace marshal{
          */
         virtual void looseMarshalCachedObject( OpenWireFormat* wireFormat,
                                                commands::DataStructure* data,
-                                               io::DataOutputStream* dataOut )
-                                                    throw ( io::IOException );
+                                               decaf::io::DataOutputStream* dataOut )
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Loose Unmarshall the cached object
@@ -208,7 +208,7 @@ namespace marshal{
          */
         virtual commands::DataStructure* looseUnmarshalCachedObject(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
          * Tightly marshalls the passed DataStructure based object to the passed
@@ -222,7 +222,7 @@ namespace marshal{
         virtual int tightMarshalNestedObject1( OpenWireFormat* wireFormat,
                                                commands::DataStructure* object,
                                                utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Tightly marshalls the passed DataStructure based object to the passed
@@ -235,9 +235,9 @@ namespace marshal{
          */
         virtual void tightMarshalNestedObject2( OpenWireFormat* wireFormat,
                                                 commands::DataStructure* object,
-                                                io::DataOutputStream* dataOut,
+                                                decaf::io::DataOutputStream* dataOut,
                                                 utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Tight Unmarshall the nested object
@@ -249,8 +249,8 @@ namespace marshal{
          */
         virtual commands::DataStructure* tightUnmarshalNestedObject(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
          * Loose Unmarshall the nested object
@@ -261,7 +261,7 @@ namespace marshal{
          */
         virtual commands::DataStructure* looseUnmarshalNestedObject(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
          * Loose marshall the nested object
@@ -272,8 +272,8 @@ namespace marshal{
          */
         virtual void looseMarshalNestedObject( OpenWireFormat* wireFormat,
                                                commands::DataStructure* object,
-                                               io::DataOutputStream* dataOut )
-                                                    throw ( io::IOException );
+                                               decaf::io::DataOutputStream* dataOut )
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Performs Tight Unmarshalling of String Objects
@@ -282,9 +282,9 @@ namespace marshal{
          * @returns the unmarshalled string.
          * @throws IOException if an error occurs.
          */
-        virtual std::string tightUnmarshalString( io::DataInputStream* dataIn,
+        virtual std::string tightUnmarshalString( decaf::io::DataInputStream* dataIn,
                                                   utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Tight Marshals the String to a Booleans Stream Object, returns
@@ -296,7 +296,7 @@ namespace marshal{
          */
         virtual int tightMarshalString1( const std::string& value,
                                          utils::BooleanStream* bs )
-                                            throw ( io::IOException );
+                                            throw ( decaf::io::IOException );
 
         /**
          * Tight Marshals the passed string to the streams passed
@@ -306,9 +306,9 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual void tightMarshalString2( const std::string& value,
-                                          io::DataOutputStream* dataOut,
+                                          decaf::io::DataOutputStream* dataOut,
                                           utils::BooleanStream* bs )
-                                                throw ( io::IOException );
+                                                throw ( decaf::io::IOException );
 
         /**
          * Loose Marshal the String to the DataOuputStream passed
@@ -317,8 +317,8 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual void looseMarshalString( const std::string value,
-                                         io::DataOutputStream* dataOut )
-                                            throw ( io::IOException );
+                                         decaf::io::DataOutputStream* dataOut )
+                                            throw ( decaf::io::IOException );
 
         /**
          * Loose Un-Marshal the String to the DataOuputStream passed
@@ -326,8 +326,8 @@ namespace marshal{
          * @return the unmarshalled string
          * @throws IOException if an error occurs.
          */
-        virtual std::string looseUnmarshalString( io::DataInputStream* dataIn )
-            throw ( io::IOException );
+        virtual std::string looseUnmarshalString( decaf::io::DataInputStream* dataIn )
+            throw ( decaf::io::IOException );
 
         /**
          * Tightly marshal the long long to the BooleanStream passed.
@@ -340,7 +340,7 @@ namespace marshal{
         virtual int tightMarshalLong1( OpenWireFormat* wireFormat,
                                        long long value,
                                        utils::BooleanStream* bs )
-                                            throw ( io::IOException );
+                                            throw ( decaf::io::IOException );
 
         /**
          * Tightly marshal the long long to the Streams passed.
@@ -352,9 +352,9 @@ namespace marshal{
          */
         virtual void tightMarshalLong2( OpenWireFormat* wireFormat,
                                         long long value,
-                                        io::DataOutputStream* dataOut,
+                                        decaf::io::DataOutputStream* dataOut,
                                         utils::BooleanStream* bs )
-                                            throw ( io::IOException );
+                                            throw ( decaf::io::IOException );
 
         /**
          * Tight marshal the long long type.
@@ -365,9 +365,9 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual long long tightUnmarshalLong( OpenWireFormat* wireFormat,
-                                              io::DataInputStream* dataIn,
+                                              decaf::io::DataInputStream* dataIn,
                                               utils::BooleanStream* bs )
-                                                throw ( io::IOException );
+                                                throw ( decaf::io::IOException );
 
         /**
          * Tightly marshal the long long to the BooleanStream passed.
@@ -378,8 +378,8 @@ namespace marshal{
          */
         virtual void looseMarshalLong( OpenWireFormat* wireFormat,
                                        long long value,
-                                       io::DataOutputStream* dataOut )
-                                            throw ( io::IOException );
+                                       decaf::io::DataOutputStream* dataOut )
+                                            throw ( decaf::io::IOException );
 
         /**
          * Loose marshal the long long type.
@@ -389,8 +389,8 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual long long looseUnmarshalLong( OpenWireFormat* wireFormat,
-                                              io::DataInputStream* dataIn )
-                                                throw ( io::IOException );
+                                              decaf::io::DataInputStream* dataIn )
+                                                throw ( decaf::io::IOException );
 
         /**
          * Tight Unmarshal an array of char
@@ -400,8 +400,8 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalByteArray(
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
          * Loose Unmarshal an array of char
@@ -410,7 +410,7 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalByteArray(
-            io::DataInputStream* dataIn ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -422,9 +422,9 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> tightUnmarshalConstByteArray(
-            io::DataInputStream* dataIn,
+            decaf::io::DataInputStream* dataIn,
             utils::BooleanStream* bs,
-            int size ) throw ( io::IOException );
+            int size ) throw ( decaf::io::IOException );
 
         /**
          * Tight Unmarshal a fixed size array from that data input stream
@@ -436,8 +436,8 @@ namespace marshal{
          * @throws IOException if an error occurs.
          */
         virtual std::vector<unsigned char> looseUnmarshalConstByteArray(
-            io::DataInputStream* dataIn,
-            int size ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn,
+            int size ) throw ( decaf::io::IOException );
 
         /**
          * Tight Unarshall the Error object
@@ -449,8 +449,8 @@ namespace marshal{
          */
         virtual commands::DataStructure* tightUnmarshalBrokerError(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn,
-            utils::BooleanStream* bs ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn,
+            utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
          * Tight Marshall the Error object
@@ -463,7 +463,7 @@ namespace marshal{
         virtual int tightMarshalBrokerError1( OpenWireFormat* wireFormat,
                                               commands::DataStructure* data,
                                               utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Tight Marshall the Error object
@@ -475,9 +475,9 @@ namespace marshal{
          */
         virtual void tightMarshalBrokerError2( OpenWireFormat* wireFormat,
                                                commands::DataStructure* data,
-                                               io::DataOutputStream* dataOut,
+                                               decaf::io::DataOutputStream* dataOut,
                                                utils::BooleanStream* bs )
-                                                    throw ( io::IOException );
+                                                    throw ( decaf::io::IOException );
 
         /**
          * Loose Unarshall the Error object
@@ -488,7 +488,7 @@ namespace marshal{
          */
         virtual commands::DataStructure* looseUnmarshalBrokerError(
             OpenWireFormat* wireFormat,
-            io::DataInputStream* dataIn ) throw ( io::IOException );
+            decaf::io::DataInputStream* dataIn ) throw ( decaf::io::IOException );
 
         /**
          * Tight Marshall the Error object
@@ -499,8 +499,8 @@ namespace marshal{
          */
         virtual void looseMarshalBrokerError( OpenWireFormat* wireFormat,
                                               commands::DataStructure* data,
-                                              io::DataOutputStream* dataOut )
-                                                  throw ( io::IOException );
+                                              decaf::io::DataOutputStream* dataOut )
+                                                  throw ( decaf::io::IOException );
 
         /**
          * Tightly Marshal an array of DataStructure objects to the provided
@@ -516,7 +516,7 @@ namespace marshal{
         int tightMarshalObjectArray1( OpenWireFormat* wireFormat,
                                       std::vector<T*> objects,
                                       utils::BooleanStream* bs )
-                                        throw ( io::IOException )
+                                        throw ( decaf::io::IOException )
         {
             try{
                 if( !objects.empty() )
@@ -535,9 +535,9 @@ namespace marshal{
                     return 0;
                 }
             }
-            AMQ_CATCH_RETHROW( io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-            AMQ_CATCHALL_THROW( io::IOException )
+            AMQ_CATCH_RETHROW( decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
         /**
@@ -553,9 +553,9 @@ namespace marshal{
         template<typename T>
         void tightMarshalObjectArray2( OpenWireFormat* wireFormat,
                                        std::vector<T*> objects,
-                                       io::DataOutputStream* dataOut,
+                                       decaf::io::DataOutputStream* dataOut,
                                        utils::BooleanStream* bs )
-                                        throw ( io::IOException ) {
+                                        throw ( decaf::io::IOException ) {
 
             try {
 
@@ -568,9 +568,9 @@ namespace marshal{
                     }
                 }
             }
-            AMQ_CATCH_RETHROW( io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-            AMQ_CATCHALL_THROW( io::IOException )
+            AMQ_CATCH_RETHROW( decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
         /**
@@ -585,8 +585,8 @@ namespace marshal{
         template<typename T>
         void looseMarshalObjectArray( OpenWireFormat* wireFormat,
                                       std::vector<T*> objects,
-                                      io::DataOutputStream* dataOut )
-                                        throw ( io::IOException ) {
+                                      decaf::io::DataOutputStream* dataOut )
+                                        throw ( decaf::io::IOException ) {
 
             try {
 
@@ -600,9 +600,9 @@ namespace marshal{
                     }
                 }
             }
-            AMQ_CATCH_RETHROW( io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-            AMQ_CATCHALL_THROW( io::IOException )
+            AMQ_CATCH_RETHROW( decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
     protected:
@@ -613,8 +613,8 @@ namespace marshal{
          * @param dataIn - DataInputStream to read from
          * @return string value read from stream
          */
-        virtual std::string readAsciiString( io::DataInputStream* dataIn )
-            throw ( io::IOException );
+        virtual std::string readAsciiString( decaf::io::DataInputStream* dataIn )
+            throw ( decaf::io::IOException );
 
     };
 

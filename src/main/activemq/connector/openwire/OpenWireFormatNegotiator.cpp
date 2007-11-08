@@ -24,10 +24,11 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace decaf::util::concurrent;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
@@ -51,7 +52,7 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
 
@@ -72,7 +73,7 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 
         next->oneway( command );
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
@@ -80,7 +81,7 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* OpenWireFormatNegotiator::request( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
 
@@ -101,7 +102,7 @@ Response* OpenWireFormatNegotiator::request( Command* command )
 
         return next->request( command );
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )

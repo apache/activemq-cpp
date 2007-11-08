@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTempQueueTest );
 
-#include <activemq/util/Guid.h>
+#include <decaf/util/UUID.h>
 #include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
 
 using namespace std;

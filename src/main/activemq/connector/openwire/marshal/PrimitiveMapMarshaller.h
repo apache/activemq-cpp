@@ -18,10 +18,11 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 
+#include <cms/CMSException.h>
 #include <activemq/util/PrimitiveMap.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/IOException.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/IOException.h>
 
 namespace activemq{
 namespace connector{
@@ -76,9 +77,9 @@ namespace marshal{
          * @param value - the ValueNode to write.
          * @throws CMSException
          */
-        static void marshalPrimitive( io::DataOutputStream& dataOut,
+        static void marshalPrimitive( decaf::io::DataOutputStream& dataOut,
                                       util::PrimitiveMap::ValueNode& value )
-                                        throw ( io::IOException );
+                                        throw ( decaf::io::IOException );
 
         /**
          * Unmarshals a Primitive Type from the stream, and returns it as a
@@ -88,10 +89,10 @@ namespace marshal{
          * @param map - Map to insert data into.
          * @throws CMSException
          */
-        static void unmarshalPrimitive( io::DataInputStream& dataIn,
+        static void unmarshalPrimitive( decaf::io::DataInputStream& dataIn,
                                         const std::string& key,
                                         util::PrimitiveMap& map )
-                                            throw ( io::IOException );
+                                            throw ( decaf::io::IOException );
 
     };
 

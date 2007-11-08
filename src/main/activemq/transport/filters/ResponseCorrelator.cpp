@@ -75,7 +75,7 @@ void ResponseCorrelator::setMaxResponseWaitTime( const unsigned long millisecond
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelator::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( getNextCommandId() );
@@ -88,7 +88,7 @@ void ResponseCorrelator::oneway( Command* command )
 
         next->oneway( command );
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
@@ -96,7 +96,7 @@ void ResponseCorrelator::oneway( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* ResponseCorrelator::request( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( getNextCommandId() );
@@ -150,7 +150,7 @@ Response* ResponseCorrelator::request( Command* command )
 
         return response;
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )

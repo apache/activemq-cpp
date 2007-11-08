@@ -32,7 +32,7 @@
 #include <activemq/transport/MockTransport.h>
 #include <activemq/util/Config.h>
 
-#include <activemq/io/ByteArrayOutputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
 #include <algorithm>
 
 namespace activemq{

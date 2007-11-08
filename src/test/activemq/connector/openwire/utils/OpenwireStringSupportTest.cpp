@@ -21,10 +21,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireS
 
 #include <activemq/connector/openwire/utils/OpenwireStringSupport.h>
 
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 using namespace std;
 using namespace activemq;

@@ -28,7 +28,7 @@ using namespace activemq::connector::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
 Connector* OpenWireConnectorFactory::createConnector(
-    const activemq::util::Properties& properties,
+    const decaf::util::Properties& properties,
     activemq::transport::Transport* transport )
 {
     return dynamic_cast<Connector*>(

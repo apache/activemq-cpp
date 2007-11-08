@@ -18,9 +18,9 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_DATASTREAMMARSHALLER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_DATASTREAMMARSHALLER_H_
 
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/IOException.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/IOException.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
@@ -28,92 +28,92 @@
 namespace activemq{
 namespace connector{
 namespace openwire{
-    
+
     /**
      * Base class for all classes that marshal commands for Openwire
      */
     class DataStreamMarshaller
     {
     public:
-    
+
         virtual ~DataStreamMarshaller() {}
-    
+
         /**
          * Gets the DataStructureType that this class marshals/unmarshals
          * @returns byte Id of this classes DataStructureType
          */
         virtual unsigned char getDataStructureType() const = 0;
-        
+
         /**
          * Creates a new instance of the class that this class is a marshaling
          * director for.
          * @returns newly allocated Command
          */
         virtual commands::DataStructure* createObject() const = 0;
-    
+
         /**
          * Tight Marhsal to the given stream
-         * @param format - The OpenwireFormat properties 
+         * @param format - The OpenwireFormat properties
          * @param command -  the object to Marshal
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
-        virtual int tightMarshal1( OpenWireFormat* format, 
-                                   commands::DataStructure* command, 
-                                   utils::BooleanStream* bs ) 
-                                       throw ( io::IOException ) = 0;
+        virtual int tightMarshal1( OpenWireFormat* format,
+                                   commands::DataStructure* command,
+                                   utils::BooleanStream* bs )
+                                       throw ( decaf::io::IOException ) = 0;
 
         /**
          * Tight Marhsal to the given stream
-         * @param format - The OpenwireFormat properties 
+         * @param format - The OpenwireFormat properties
          * @param command -  the object to Marshal
          * @param ds - the DataOutputStream to Marshal to
          * @param bs - boolean stream to marshal to.
          * @throws IOException if an error occurs.
          */
-        virtual void tightMarshal2( OpenWireFormat* format, 
-                                    commands::DataStructure* command, 
-                                    io::DataOutputStream* ds, 
-                                    utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) = 0;
+        virtual void tightMarshal2( OpenWireFormat* format,
+                                    commands::DataStructure* command,
+                                    decaf::io::DataOutputStream* ds,
+                                    utils::BooleanStream* bs )
+                                        throw ( decaf::io::IOException ) = 0;
 
         /**
          * Tight Un-marhsal to the given stream
-         * @param format - The OpenwireFormat properties 
+         * @param format - The OpenwireFormat properties
          * @param command -  the object to Un-Marshal
          * @param dis - the DataInputStream to Un-Marshal from
          * @param bs - boolean stream to unmarshal from.
          * @throws IOException if an error occurs.
          */
-        virtual void tightUnmarshal( OpenWireFormat* format, 
-                                     commands::DataStructure* command, 
-                                     io::DataInputStream* dis, 
-                                     utils::BooleanStream* bs ) 
-                                        throw ( io::IOException ) = 0;
-    
+        virtual void tightUnmarshal( OpenWireFormat* format,
+                                     commands::DataStructure* command,
+                                     decaf::io::DataInputStream* dis,
+                                     utils::BooleanStream* bs )
+                                        throw ( decaf::io::IOException ) = 0;
+
         /**
          * Tight Marhsal to the given stream
-         * @param format - The OpenwireFormat properties 
+         * @param format - The OpenwireFormat properties
          * @param command -  the object to Marshal
          * @param ds - DataOutputStream to marshal to
          * @throws IOException if an error occurs.
          */
-        virtual void looseMarshal( OpenWireFormat* format, 
-                                   commands::DataStructure* command, 
-                                   io::DataOutputStream* ds ) 
-                                       throw ( io::IOException ) = 0;
+        virtual void looseMarshal( OpenWireFormat* format,
+                                   commands::DataStructure* command,
+                                   decaf::io::DataOutputStream* ds )
+                                       throw ( decaf::io::IOException ) = 0;
 
         /**
          * Loose Un-marhsal to the given stream
-         * @param format - The OpenwireFormat properties 
+         * @param format - The OpenwireFormat properties
          * @param command -  the object to Un-Marshal
          * @param dis - the DataInputStream to Un-Marshal from
          * @throws IOException if an error occurs.
          */
-        virtual void looseUnmarshal( OpenWireFormat* format, 
-                                     commands::DataStructure* command, 
-                                     io::DataInputStream* dis ) 
-                                        throw ( io::IOException ) = 0;
+        virtual void looseUnmarshal( OpenWireFormat* format,
+                                     commands::DataStructure* command,
+                                     decaf::io::DataInputStream* dis )
+                                        throw ( decaf::io::IOException ) = 0;
 
     };
 

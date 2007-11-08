@@ -21,25 +21,25 @@
 #include <vector>
 #include <string>
 
-#include <activemq/exceptions/IndexOutOfBoundsException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace utils{
-    
+
     /**
      * The HexTable class maps hexidecimal strings to the value of an index
      * into the table, i.e. the class will return "FF" for the index 255 in
-     * the table.  
+     * the table.
      */
     class HexTable
     {
     public:
-    
-    	HexTable();
-    	virtual ~HexTable() {}
-        
+
+        HexTable();
+        virtual ~HexTable() {}
+
         /**
          * Index operator for this Table, will throw an exeption if the
          * index requested is out of bounds for this table.
@@ -47,9 +47,11 @@ namespace utils{
          * @returns string contianing the hex value if the index
          * @throws IndexOutOfBoundsException
          */
-        virtual const std::string& operator[]( std::size_t index ) throw ( exceptions::IndexOutOfBoundsException );
-        virtual const std::string& operator[]( std::size_t index ) const throw ( exceptions::IndexOutOfBoundsException );
-        
+        virtual const std::string& operator[]( std::size_t index )
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
+        virtual const std::string& operator[]( std::size_t index ) const
+            throw ( decaf::lang::exceptions::IndexOutOfBoundsException );
+
         /**
          * Returns the max size of this Table.
          * @returns int size value
@@ -57,12 +59,12 @@ namespace utils{
         virtual std::size_t size() const{
             return table.size();
         }
-        
+
     private:
-    
+
         // Vector of Strings mapping hex to the value of the index.
         std::vector<std::string> table;
-        
+
     };
 
 }}}}

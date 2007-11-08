@@ -17,7 +17,7 @@
 
 #include "PerformanceTimer.h"
 
-#include <activemq/util/Date.h>
+#include <decaf/util/Date.h>
 
 using namespace std;
 using namespace benchmark;

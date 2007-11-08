@@ -22,9 +22,9 @@
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
-#include <activemq/util/Properties.h>
-#include <activemq/exceptions/IllegalStateException.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
 namespace connector{
@@ -39,7 +39,7 @@ namespace openwire{
          * Constructs a new OpenWireFormat object
          * @param properties - can contain optional config params.
          */
-        OpenWireFormat( const activemq::util::Properties& properties );
+        OpenWireFormat( const decaf::util::Properties& properties );
 
         virtual ~OpenWireFormat();
 
@@ -57,8 +57,8 @@ namespace openwire{
          * @throws IOException
          */
         virtual void marshal( transport::Command* command,
-                              io::DataOutputStream* dataOut )
-            throw ( io::IOException );
+                              decaf::io::DataOutputStream* dataOut )
+            throw ( decaf::io::IOException );
 
         /**
          * Packet based un-marshaling
@@ -66,7 +66,7 @@ namespace openwire{
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual transport::Command* unmarshal( io::DataInputStream* dis ) throw ( io::IOException );
+        virtual transport::Command* unmarshal( decaf::io::DataInputStream* dis ) throw ( decaf::io::IOException );
 
         /**
          * Utility method for Tight Marshalling the given object to the boolean
@@ -77,7 +77,7 @@ namespace openwire{
          */
         virtual int tightMarshalNestedObject1( commands::DataStructure* object,
                                                utils::BooleanStream* bs )
-            throw ( io::IOException );
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method that will Tight marshall some internally nested object
@@ -89,8 +89,8 @@ namespace openwire{
          * @throws IOException if an error occurs.
          */
         void tightMarshalNestedObject2( commands::DataStructure* o,
-                                        io::DataOutputStream* ds,
-                                        utils::BooleanStream* bs ) throw ( io::IOException );
+                                        decaf::io::DataOutputStream* ds,
+                                        utils::BooleanStream* bs ) throw ( decaf::io::IOException );
 
         /**
          * Utility method used to Unmarshal a Nested DataStructure type object
@@ -101,9 +101,9 @@ namespace openwire{
          * @returns Newly allocated DataStructure Object
          * @throws IOException if an error occurs.
          */
-        commands::DataStructure* tightUnmarshalNestedObject( io::DataInputStream* dis,
+        commands::DataStructure* tightUnmarshalNestedObject( decaf::io::DataInputStream* dis,
                                                              utils::BooleanStream* bs )
-            throw ( io::IOException );
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method to unmarshal an DataStructure object from an
@@ -115,8 +115,8 @@ namespace openwire{
          * @throws IOException if an error occurs.
          */
         commands::DataStructure* looseUnmarshalNestedObject(
-            io::DataInputStream* dis)
-                throw ( io::IOException );
+            decaf::io::DataInputStream* dis)
+                throw ( decaf::io::IOException );
 
         /**
          * Utility method to loosely Marshal an object that is derived from the
@@ -127,8 +127,8 @@ namespace openwire{
          * @throw IOException if an error occurs.
          */
         void looseMarshalNestedObject( commands::DataStructure* o,
-                                       io::DataOutputStream* dataOut )
-                                           throw ( io::IOException );
+                                       decaf::io::DataOutputStream* dataOut )
+                                           throw ( decaf::io::IOException );
 
         /**
          * Called to renegotiate the settings for the WireFormatInfo, these
@@ -137,14 +137,14 @@ namespace openwire{
          * @throws IllegalStateException is the params can't be negotiated.
          */
         void renegotiateWireFormat( commands::WireFormatInfo* info )
-            throw ( exceptions::IllegalStateException );
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Configures this object using the provieded WireformatInfo object
          * @param info - a WireFormatInfo object, takes ownership.
          */
         virtual void setPreferedWireFormatInfo( commands::WireFormatInfo* info )
-            throw ( exceptions::IllegalStateException );
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Gets the Preferend WireFormatInfo object that this class holds
@@ -198,7 +198,7 @@ namespace openwire{
          * Set the current Wireformat Version
          * @param version - int that identifies the version
          */
-        void setVersion( int version ) throw ( exceptions::IllegalArgumentException );
+        void setVersion( int version ) throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         /**
          * Checks if the cacheEnabled flag is on
@@ -259,8 +259,8 @@ namespace openwire{
          * @returns new DataStructure* that the caller owns
          * @throws IOException if an error occurs during the unmarshal
          */
-        commands::DataStructure* doUnmarshal( io::DataInputStream* dis )
-            throw ( io::IOException );
+        commands::DataStructure* doUnmarshal( decaf::io::DataInputStream* dis )
+            throw ( decaf::io::IOException );
 
         /**
          * Cleans up all registered Marshallers and empties the dataMarshallers
@@ -280,7 +280,7 @@ namespace openwire{
     private:
 
         // This object config data
-        activemq::util::Properties properties;
+        decaf::util::Properties properties;
 
         // Prefered WireFormatInfo
         commands::WireFormatInfo* preferedWireFormatInfo;

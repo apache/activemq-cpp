@@ -19,7 +19,7 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
@@ -31,15 +31,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 #include <activemq/connector/stomp/StompSessionInfo.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
-#include <activemq/network/Socket.h>
+#include <decaf/net/Socket.h>
 #include <activemq/network/ServerSocket.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/Date.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/Date.h>
 #include <activemq/connector/ConsumerMessageListener.h>
 
 using namespace std;

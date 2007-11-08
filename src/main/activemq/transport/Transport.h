@@ -18,10 +18,10 @@
 #ifndef ACTIVEMQ_TRANSPORT_TRANSPORT_H_
 #define ACTIVEMQ_TRANSPORT_TRANSPORT_H_
 
-#include <activemq/io/InputStream.h>
-#include <activemq/io/OutputStream.h>
+#include <decaf/io/InputStream.h>
+#include <decaf/io/OutputStream.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/transport/CommandIOException.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/Response.h>
 #include <cms/Startable.h>
@@ -67,7 +67,7 @@ namespace transport{
          */
         virtual void oneway( Command* command )
             throw( CommandIOException,
-                   exceptions::UnsupportedOperationException ) = 0;
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends the given command to the broker and then waits for the response.
@@ -80,7 +80,7 @@ namespace transport{
          */
         virtual Response* request( Command* command )
             throw( CommandIOException,
-                   exceptions::UnsupportedOperationException ) = 0;
+                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Assigns the command listener for non-response commands.

@@ -62,7 +62,7 @@ namespace commands{
             setPropertyValue(
                 CommandConstants::toString(
                     CommandConstants::HEADER_REQUESTID),
-                 util::Integer::toString( id ) );
+                 decaf::lang::Integer::toString( id ) );
         }
 
         /**

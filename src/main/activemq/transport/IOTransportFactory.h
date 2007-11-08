@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 #define ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 
@@ -45,7 +46,7 @@ namespace transport{
          * @throws ActiveMQException if an error occurs.
          */
         virtual Transport* createTransport(
-            const activemq::util::Properties& properties,
+            const decaf::util::Properties& properties,
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
 

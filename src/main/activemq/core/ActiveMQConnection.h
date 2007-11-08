@@ -24,9 +24,10 @@
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/connector/ConsumerMessageListener.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/Map.h>
-#include <activemq/util/Set.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/Map.h>
+#include <decaf/util/Set.h>
 
 #include <string>
 
@@ -77,12 +78,12 @@ namespace core{
         /**
          * Map of message dispatchers indexed by consumer id.
          */
-        util::Map< long long, Dispatcher* > dispatchers;
+        decaf::util::Map< long long, Dispatcher* > dispatchers;
 
         /**
          * Maintain the set of all active sessions.
          */
-        util::Set<ActiveMQSession*> activeSessions;
+        decaf::util::Set<ActiveMQSession*> activeSessions;
 
     public:
 
@@ -210,12 +211,9 @@ namespace core{
          * Notify the excpetion listener
          * @param ex the exception to fire
          */
-        void fire( exceptions::ActiveMQException& ex )
-        {
-            if( exceptionListener != NULL )
-            {
-                try
-                {
+        void fire( exceptions::ActiveMQException& ex ) {
+            if( exceptionListener != NULL ) {
+                try {
                     exceptionListener->onException( ex );
                 }
                 catch(...){}
@@ -226,4 +224,4 @@ namespace core{
 
 }}
 
-#endif /*ACTIVEMQCONNECTION_H_*/
+#endif /*_ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_*/

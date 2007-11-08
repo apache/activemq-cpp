@@ -23,8 +23,8 @@
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/concurrent/Thread.h>
-#include <activemq/util/Guid.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/UUID.h>
 
 #include <cms/Connection.h>
 #include <cms/Session.h>
@@ -37,7 +37,7 @@ using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::exceptions;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 using namespace integration;
 

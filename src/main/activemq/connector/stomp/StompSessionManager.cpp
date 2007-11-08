@@ -19,24 +19,29 @@
 
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/connector/stomp/StompSessionInfo.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
 #include <activemq/connector/stomp/commands/SubscribeCommand.h>
 #include <activemq/connector/stomp/commands/UnsubscribeCommand.h>
 #include <activemq/connector/stomp/StompSelector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
 #include <activemq/util/Config.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 StompSessionManager::StompSessionManager( const std::string& connectionId,

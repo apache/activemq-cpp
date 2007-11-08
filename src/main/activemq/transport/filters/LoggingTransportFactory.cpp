@@ -37,7 +37,7 @@ TransportFactory& LoggingTransportFactory::getInstance(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* LoggingTransportFactory::createTransport(
-    const activemq::util::Properties& properties AMQCPP_UNUSED,
+    const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 

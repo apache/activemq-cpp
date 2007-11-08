@@ -67,7 +67,8 @@ unsigned int MockTransport::getNextCommandId() throw ( exceptions::ActiveMQExcep
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::oneway( Command* command )
-        throw(CommandIOException, exceptions::UnsupportedOperationException)
+        throw( CommandIOException,
+               decaf::lang::exceptions::UnsupportedOperationException)
 {
     // Process and send any new Commands back.
     internalListener.onCommand( command );
@@ -81,8 +82,8 @@ void MockTransport::oneway( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* MockTransport::request( Command* command )
-    throw(CommandIOException,
-          exceptions::UnsupportedOperationException)
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException)
 {
     if( responseBuilder != NULL ){
 

@@ -20,8 +20,8 @@
 
 #include <activemq/wireformat/WireFormatFactory.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
-#include <activemq/exceptions/IllegalStateException.h>
-#include <activemq/util/Properties.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace connector{
@@ -35,7 +35,7 @@ namespace openwire{
          * Constructor - Sets Defaults for all properties, these are all
          * subject to change once the <code>createWireFormat</code> method
          * is called.
-         * 
+         *
          * URL options
          * --------------------
          * wireFormat.stackTraceEnabled
@@ -49,13 +49,14 @@ namespace openwire{
 
         virtual ~OpenWireFormatFactory() {};
 
-        /**    
+        /**
          * Creates a new WireFormat Object passing it a set of
          * properties from which it can obtain any optional settings
          * @param properties - the Properties for this WireFormat
          */
-        virtual wireformat::WireFormat* createWireFormat( const util::Properties& properties )
-            throw ( exceptions::IllegalStateException );
+        virtual wireformat::WireFormat* createWireFormat(
+            const decaf::util::Properties& properties )
+                throw ( decaf::lang::exceptions::IllegalStateException );
 
     };
 

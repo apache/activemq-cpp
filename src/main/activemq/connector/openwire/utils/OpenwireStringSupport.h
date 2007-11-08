@@ -19,8 +19,8 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_UTILS_OPENWIRESTRINGSUPPORT_H_
 
 #include <string>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 namespace activemq{
 namespace connector{
@@ -30,12 +30,12 @@ namespace utils{
     class OpenwireStringSupport
     {
     protected:
-    
+
         OpenwireStringSupport() {}
         virtual ~OpenwireStringSupport() {}
 
     public:
-    
+
         /**
          * Static method used for reading a string that uses the Openwire format
          * from a DataInputStream, this can throw an IOException for the same
@@ -45,8 +45,8 @@ namespace utils{
          * @returns A string that has been read
          * @throws IOException on Errror.
          */
-        static std::string readString( io::DataInputStream& dataIn )
-            throw ( io::IOException );
+        static std::string readString( decaf::io::DataInputStream& dataIn )
+            throw ( decaf::io::IOException );
 
         /**
          * Static method used for writing a string that uses the Openwire format
@@ -54,12 +54,12 @@ namespace utils{
          * reason as a DataOutputStream.writeUTF might.
          * @param dataOut - DataOutputStream to write to
          * @param str - A pointer to a string that should be written, NULL needs
-         *              to be an option here as its written as -1. 
+         *              to be an option here as its written as -1.
          * @throws IOException on Errror.
          */
-        static void writeString( io::DataOutputStream& dataOut, 
+        static void writeString( decaf::io::DataOutputStream& dataOut,
                                  const std::string* str )
-            throw ( io::IOException );
+            throw ( decaf::io::IOException );
 
     };
 

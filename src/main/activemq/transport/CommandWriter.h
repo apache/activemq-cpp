@@ -18,8 +18,8 @@
 #ifndef ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
 #define ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
 
-#include <activemq/io/OutputStream.h>
-#include <activemq/io/Writer.h>
+#include <decaf/io/OutputStream.h>
+#include <decaf/io/Writer.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 
@@ -30,7 +30,7 @@ namespace transport{
      * Interface for an object responsible for writing a command
      * to an output stream.
      */
-    class CommandWriter : public io::Writer
+    class CommandWriter : public decaf::io::Writer
     {
     public:
 

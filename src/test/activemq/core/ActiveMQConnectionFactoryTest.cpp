@@ -19,9 +19,9 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
 
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/Thread.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <cms/Connection.h>

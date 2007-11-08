@@ -19,15 +19,16 @@
 
 #include <activemq/connector/stomp/commands/ConnectCommand.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 StompConnectionNegotiator::StompConnectionNegotiator( Transport* next, bool own ) :
@@ -48,7 +49,7 @@ StompConnectionNegotiator::~StompConnectionNegotiator()
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnectionNegotiator::oneway( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -60,7 +61,7 @@ void StompConnectionNegotiator::oneway( Command* command )
 
         next->oneway( command );
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
@@ -68,7 +69,7 @@ void StompConnectionNegotiator::oneway( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* StompConnectionNegotiator::request( Command* command )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -110,7 +111,7 @@ Response* StompConnectionNegotiator::request( Command* command )
             return connectedCmd;
         }
     }
-    AMQ_CATCH_RETHROW( exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )

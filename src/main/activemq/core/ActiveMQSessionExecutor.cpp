@@ -24,9 +24,10 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::concurrent;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
@@ -174,9 +175,9 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
     try {
 
         ActiveMQConsumer* consumer = NULL;
-        util::Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
+        Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
 
-        synchronized(&consumers) {
+        synchronized( &consumers ) {
             consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
         }
 

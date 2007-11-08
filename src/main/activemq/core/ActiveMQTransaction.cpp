@@ -16,21 +16,23 @@
  */
 #include "ActiveMQTransaction.h"
 
-#include <activemq/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQMessage.h>
-#include <activemq/util/Integer.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/Integer.h>
 
 using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::connector;
-using namespace activemq::concurrent;
 using namespace activemq::exceptions;
+using namespace activemq::connector;
+using namespace decaf::lang::exceptions;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
@@ -273,7 +275,7 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
-                                             MessageList& messages ) 
+                                             MessageList& messages )
     throw ( exceptions::ActiveMQException ) {
 
     try

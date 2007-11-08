@@ -21,7 +21,6 @@
 
 #include <cms/ConnectionFactory.h>
 #include <cms/Connection.h>
-#include <activemq/util/Properties.h>
 
 namespace activemq{
 namespace core{

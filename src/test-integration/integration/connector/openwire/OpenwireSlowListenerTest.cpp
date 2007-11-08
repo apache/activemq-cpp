@@ -18,25 +18,25 @@
 #include "OpenwireSlowListenerTest.h"
 #include <integration/IntegrationCommon.h>
 
-#include <activemq/concurrent/Thread.h>
+#include <decaf/lang/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/util/Guid.h>
-#include <activemq/util/Properties.h>
-#include <activemq/util/StringTokenizer.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/network/SocketFactory.h>
+#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/network/Socket.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/net/Socket.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
-#include <activemq/util/StringTokenizer.h>
-#include <activemq/util/Boolean.h>
-#include <activemq/util/Date.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/Boolean.h>
+#include <decaf/util/Date.h>
 
 #include <cms/Connection.h>
 #include <cms/MessageConsumer.h>
@@ -65,9 +65,9 @@ using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::network;
+using namespace decaf::net;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace decaf::util::concurrent;
 
 using namespace integration;
 using namespace integration::connector::openwire;
@@ -103,7 +103,7 @@ void OpenwireSlowListenerTest::test()
                 IntegrationCommon::getInstance().getOpenwireURL() );
         cms::Connection* connection = connectionFactory->createConnection();
         cms::Session* session = connection->createSession( cms::Session::AUTO_ACKNOWLEDGE );
-        cms::Destination* destination = session->createTopic(Guid::createGUIDString());
+        cms::Destination* destination = session->createTopic(UUID::randomUUID().toString());
         cms::MessageProducer* producer = session->createProducer( destination );
 
         const unsigned int numConsumers = 5;

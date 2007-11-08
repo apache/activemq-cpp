@@ -22,12 +22,14 @@
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/connector/ConnectorResourceListener.h>
-#include <activemq/util/Queue.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
-#include <activemq/concurrent/Mutex.h>
+
+#include <decaf/util/Queue.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq{
 namespace core{
@@ -60,7 +62,7 @@ namespace core{
         /**
          * Queue of unconsumed messages.
          */
-        util::Queue<DispatchData> unconsumedMessages;
+        decaf::util::Queue<DispatchData> unconsumedMessages;
 
         /**
          * Boolean that indicates if the consumer has been closed
@@ -186,28 +188,28 @@ namespace core{
          */
         virtual void destroyMessage( ActiveMQMessage* message )
             throw (exceptions::ActiveMQException);
-            
+
         /**
          * Used by synchronous receive methods to wait for messages to come in.
-         * @param timeout - The maximum number of milliseconds to wait before 
+         * @param timeout - The maximum number of milliseconds to wait before
          * returning.
-         * If -1, it will block until a messages is received or this consumer 
+         * If -1, it will block until a messages is received or this consumer
          * is closed.
-         * If 0, will not block at all.  If > 0, will wait at a maximum the 
+         * If 0, will not block at all.  If > 0, will wait at a maximum the
          * specified number of milliseconds before returning.
-         * @return the message, if received within the allotted time.  
+         * @return the message, if received within the allotted time.
          * Otherwise NULL.
-         * @throws InvalidStateException if this consumer is closed upon 
+         * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
         ActiveMQMessage* dequeue(int timeout) throw ( cms::CMSException );
-        
+
         /**
          * Pre-consume processing
          * @param message - the message being consumed.
          */
         virtual void beforeMessageIsConsumed( ActiveMQMessage* message );
-        
+
         /**
          * Post-consume processing
          * @param message - the consumed message

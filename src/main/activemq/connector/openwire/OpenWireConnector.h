@@ -33,8 +33,8 @@
 #include <cms/TextMessage.h>
 #include <cms/MapMessage.h>
 
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/SessionInfo.h>
@@ -45,8 +45,8 @@
 #include <activemq/connector/ConnectorException.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Properties.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
@@ -122,7 +122,7 @@ namespace openwire{
         /**
          * Sync object.
          */
-        concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex mutex;
 
         /**
          * Observer of messages directed at a particular
@@ -178,13 +178,13 @@ namespace openwire{
         /**
          * Properties for the connector.
          */
-        util::Properties properties;
+        decaf::util::Properties properties;
 
         /**
          * Mapping of consumer IDs to their respective
          * consumer info object.
          */
-        util::Map< long long, OpenWireConsumerInfo* > consumerInfoMap;
+        decaf::util::Map< long long, OpenWireConsumerInfo* > consumerInfoMap;
 
     private:
 
@@ -234,8 +234,8 @@ namespace openwire{
          * @param properties - properties for configuring the connector.
          */
         OpenWireConnector( transport::Transport* transport,
-                           const util::Properties& properties )
-            throw ( exceptions::IllegalArgumentException );
+                           const decaf::util::Properties& properties )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
         virtual ~OpenWireConnector();
 
@@ -291,10 +291,10 @@ namespace openwire{
          * @throws InvalidStateException if the Transport is not set
          */
         virtual transport::Transport& getTransport() const
-            throw ( exceptions::InvalidStateException ) {
+            throw ( decaf::lang::exceptions::InvalidStateException ) {
 
             if( transport == NULL ) {
-                throw exceptions::InvalidStateException(
+                throw decaf::lang::exceptions::InvalidStateException(
                     __FILE__, __LINE__,
                     "OpenWireConnector::getTransport - "
                     "Invalid State, No Transport.");
@@ -403,7 +403,7 @@ namespace openwire{
          */
         virtual cms::TemporaryTopic* createTemporaryTopic(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Creates a Temporary Queue given a name and session info
@@ -414,7 +414,7 @@ namespace openwire{
          */
         virtual cms::TemporaryQueue* createTemporaryQueue(
             SessionInfo* session )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends a Message
@@ -520,7 +520,7 @@ namespace openwire{
         virtual cms::MapMessage* createMapMessage(
             SessionInfo* session,
             TransactionInfo* transaction )
-                throw ( ConnectorException, exceptions::UnsupportedOperationException );
+                throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Unsubscribe from a givenDurable Subscription
@@ -528,7 +528,7 @@ namespace openwire{
          * @throws ConnectorException
          */
         virtual void unsubscribe( const std::string& name )
-            throw ( ConnectorException, exceptions::UnsupportedOperationException );
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Closes the given connector resource, caller must still delete

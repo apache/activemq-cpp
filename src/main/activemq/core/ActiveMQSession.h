@@ -19,13 +19,14 @@
 
 #include <cms/Session.h>
 #include <cms/ExceptionListener.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConnectorResourceListener.h>
 #include <activemq/core/Dispatcher.h>
-#include <activemq/util/Map.h>
-#include <activemq/util/Set.h>
-#include <activemq/util/Queue.h>
-#include <activemq/util/Properties.h>
+#include <decaf/util/Map.h>
+#include <decaf/util/Set.h>
+#include <decaf/util/Queue.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace core{
@@ -70,12 +71,12 @@ namespace core{
          * This can consist of consumers and producers and sometimes
          * destination.
          */
-        util::Set<cms::Closeable*> closableSessionResources;
+        decaf::util::Set<cms::Closeable*> closableSessionResources;
 
         /**
          * Map of consumers.
          */
-        util::Map<long long, ActiveMQConsumer*> consumers;
+        decaf::util::Map<long long, ActiveMQConsumer*> consumers;
 
         /**
          * Sends incoming messages to the registered consumers.
@@ -85,12 +86,12 @@ namespace core{
     public:
 
         ActiveMQSession( connector::SessionInfo* sessionInfo,
-                         const util::Properties& properties,
+                         const decaf::util::Properties& properties,
                          ActiveMQConnection* connection );
 
         virtual ~ActiveMQSession();
 
-        util::Map<long long, ActiveMQConsumer*>& getConsumers() {
+        decaf::util::Map<long long, ActiveMQConsumer*>& getConsumers() {
             return consumers;
         }
 
@@ -98,7 +99,7 @@ namespace core{
          * Redispatches the given set of unconsumed messages to the consumers.
          * @param unconsumedMessages - unconsumed messages to be redelivered.
          */
-        void redispatch( util::Queue<DispatchData>& unconsumedMessages );
+        void redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages );
 
         /**
          * Stops asynchronous message delivery.

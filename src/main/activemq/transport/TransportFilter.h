@@ -124,7 +124,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException){
+        virtual void oneway( Command* command ) throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException){
             next->oneway( command );
         }
 
@@ -133,7 +133,7 @@ namespace transport{
          * @param command the command that is sent as a request
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw(CommandIOException, exceptions::UnsupportedOperationException){
+        virtual Response* request( Command* command ) throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException){
             return next->request( command );
         }
 

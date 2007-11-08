@@ -19,15 +19,16 @@
 #include "CommandReader.h"
 #include "CommandWriter.h"
 
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace decaf::lang;
+using namespace decaf::util::concurrent;
 
-LOGCMS_INITIALIZE(logger, IOTransport, "activemq.transport.IOTransport" )
+LOGDECAF_INITIALIZE(logger, IOTransport, "activemq.transport.IOTransport" )
 
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::IOTransport(){
@@ -50,7 +51,7 @@ IOTransport::~IOTransport(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::oneway( Command* command )
-    throw(CommandIOException, exceptions::UnsupportedOperationException)
+    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
 {
     if( closed ){
         throw CommandIOException( __FILE__, __LINE__,
@@ -181,7 +182,7 @@ void IOTransport::run(){
             __FILE__, __LINE__,
             "IOTransport::run - caught unknown exception" );
 
-        LOGCMS_WARN(logger, ex.getStackTraceString() );
+        LOGDECAF_WARN(logger, ex.getStackTraceString() );
 
         fire( ex );
     }
@@ -189,8 +190,10 @@ void IOTransport::run(){
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* IOTransport::request( Command* command AMQCPP_UNUSED )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ){
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
-    throw exceptions::UnsupportedOperationException( __FILE__, __LINE__, "IOTransport::request() - unsupported operation" );
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation" );
 }
 

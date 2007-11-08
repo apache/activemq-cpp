@@ -20,9 +20,9 @@
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
-#include <activemq/concurrent/Mutex.h>
-#include <activemq/concurrent/CountDownLatch.h>
-#include <activemq/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 
 namespace activemq{
@@ -45,8 +45,8 @@ namespace openwire{
         /**
          * Latch objects to count down till we receive the wireFormat info
          */
-        concurrent::CountDownLatch wireInfoSentDownLatch;
-        concurrent::CountDownLatch readyCountDownLatch;
+        decaf::util::concurrent::CountDownLatch wireInfoSentDownLatch;
+        decaf::util::concurrent::CountDownLatch readyCountDownLatch;
 
         /**
          * The OpenWireFormat object that we use in negotiation.
@@ -84,7 +84,7 @@ namespace openwire{
          * by this transport.
          */
         virtual void oneway( transport::Command* command )
-            throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -95,7 +95,7 @@ namespace openwire{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual transport::Response* request( transport::Command* command )
-            throw( transport::CommandIOException, exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's

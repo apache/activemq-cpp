@@ -17,7 +17,7 @@
 
 #include "TcpTransport.h"
 
-#include <activemq/network/SocketFactory.h>
+#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
@@ -27,11 +27,13 @@ using namespace activemq;
 using namespace activemq::io;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
-using namespace activemq::network;
 using namespace activemq::exceptions;
+using namespace decaf::net;
+using namespace decaf::io;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const activemq::util::Properties& properties,
+TcpTransport::TcpTransport( const decaf::util::Properties& properties,
                             Transport* next,
                             const bool own )
 :

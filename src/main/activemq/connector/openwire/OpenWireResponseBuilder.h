@@ -32,7 +32,7 @@ namespace openwire{
 
         virtual transport::Response* buildResponse( const transport::Command* command );
         virtual void buildIncomingCommands(
-            const transport::Command* command, util::Queue<transport::Command*>& queue );
+            const transport::Command* command, decaf::util::Queue<transport::Command*>& queue );
 
     };
 
