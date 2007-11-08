@@ -53,28 +53,28 @@ namespace commands{
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED)
-            throw ( io::IOException ) {}
+            throw ( decaf::io::IOException ) {}
 
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void afterMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED)
-            throw ( io::IOException ) {}
+            throw ( decaf::io::IOException ) {}
 
         /**
          * Perform any processing needed before an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void beforeUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED)
-            throw ( io::IOException ) {}
+            throw ( decaf::io::IOException ) {}
 
         /**
          * Perform any processing needed after an unmarshal
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED)
-            throw ( io::IOException ) {}
+            throw ( decaf::io::IOException ) {}
 
         /**
          * Called to set the data to this object that will contain the objects
