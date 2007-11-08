@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/util/URISupport.h>
 
 using namespace std;

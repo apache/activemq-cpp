@@ -24,10 +24,10 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
-#include <activemq/io/ByteArrayInputStream.h>
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/io/ByteArrayInputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 #include <cms/BytesMessage.h>
 #include <vector>
 #include <string>
@@ -394,7 +394,7 @@ namespace commands{
          */
         void checkWriteOnly() const throw (cms::CMSException){
             if( readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
             }
         }
@@ -405,7 +405,7 @@ namespace commands{
          */
         void checkReadOnly() const throw (cms::CMSException){
             if( !readOnly ){
-                throw exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }
         }
@@ -423,23 +423,23 @@ namespace commands{
          * InputStream that wraps around the command's content when in
          * read-only mode.
          */
-        mutable io::ByteArrayInputStream inputStream;
+        mutable decaf::io::ByteArrayInputStream inputStream;
 
         /**
          * OutputStream that wraps around the command's content when in
          * write-only mode.
          */
-        io::ByteArrayOutputStream outputStream;
+        decaf::io::ByteArrayOutputStream outputStream;
 
         /**
          * DataInputStream wrapper around the input stream.
          */
-        mutable io::DataInputStream dataInputStream;
+        mutable decaf::io::DataInputStream dataInputStream;
 
         /**
          * DataOutputStream wrapper around the output stream.
          */
-        io::DataOutputStream dataOutputStream;
+        decaf::io::DataOutputStream dataOutputStream;
 
     };
 

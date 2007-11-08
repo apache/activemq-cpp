@@ -25,7 +25,7 @@
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <activemq/util/PrimitiveMap.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <cms/MapMessage.h>
 #include <vector>
 #include <string>
@@ -83,7 +83,7 @@ namespace commands{
          * @param wireformat - the OpenWireFormat object in use.
          */
         virtual void beforeMarshal( OpenWireFormat* wireFormat )
-            throw ( io::IOException );
+            throw ( decaf::io::IOException );
 
         /**
          * Returns a string containing the information for this DataStructure
@@ -320,14 +320,14 @@ namespace commands{
          * to be created or unmarshalled, this will perform the correct steps.
          * @returns reference to a PrimtiveMap.
          */
-        util::PrimitiveMap& getMap() throw ( exceptions::NullPointerException );
-        const util::PrimitiveMap& getMap() const throw ( exceptions::NullPointerException );
+        util::PrimitiveMap& getMap() throw ( decaf::lang::exceptions::NullPointerException );
+        const util::PrimitiveMap& getMap() const throw ( decaf::lang::exceptions::NullPointerException );
 
         /**
          * Performs the unmarshal on the Map if needed, otherwise just returns
          */
         virtual void checkMapIsUnmarshalled() const
-            throw ( exceptions::NullPointerException );
+            throw ( decaf::lang::exceptions::NullPointerException );
 
     private:
 

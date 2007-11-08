@@ -23,7 +23,7 @@
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 #include <activemq/core/ActiveMQAckHandler.h>
-#include <activemq/util/Date.h>
+#include <decaf/util/Date.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <cms/DeliveryMode.h>
 
@@ -84,7 +84,7 @@ namespace commands{
          * @param wireFormat - the wireformatting controller
          */
         virtual void beforeMarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED )
-            throw ( io::IOException ) {
+            throw ( decaf::io::IOException ) {
 
             try{
 
@@ -95,9 +95,9 @@ namespace commands{
                         &properties, marshalledProperties );
                 }
             }
-            AMQ_CATCH_RETHROW( io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-            AMQ_CATCHALL_THROW( io::IOException )
+            AMQ_CATCH_RETHROW( decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
         /**
@@ -106,16 +106,16 @@ namespace commands{
          * @param wireFormat - the wireformat object to control unmarshaling
          */
         virtual void afterUnmarshal( OpenWireFormat* wireFormat AMQCPP_UNUSED )
-            throw ( io::IOException ) {
+            throw ( decaf::io::IOException ) {
 
             try{
 
                 marshal::PrimitiveMapMarshaller::unmarshal(
                     &properties, marshalledProperties );
             }
-            AMQ_CATCH_RETHROW( io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-            AMQ_CATCHALL_THROW( io::IOException )
+            AMQ_CATCH_RETHROW( decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
         /**
@@ -214,7 +214,7 @@ namespace commands{
          */
         virtual bool isExpired() const {
             long long expireTime = this->getCMSExpiration();
-            long long currentTime = util::Date::getCurrentTimeMilliseconds();
+            long long currentTime = decaf::util::Date::getCurrentTimeMilliseconds();
             if( expireTime > 0 && currentTime > expireTime ) {
                 return true;
             }

@@ -16,8 +16,8 @@
  */
 #include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
 
-#include <activemq/io/ByteArrayOutputStream.h>
-#include <activemq/io/DataOutputStream.h>
+#include <decaf/io/ByteArrayOutputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 using namespace std;
 using namespace activemq;

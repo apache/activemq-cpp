@@ -47,7 +47,7 @@ unsigned char ActiveMQMapMessage::getDataStructureType() const
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMapMessage::beforeMarshal( OpenWireFormat* wireFormat )
-    throw ( io::IOException ) {
+    throw ( decaf::io::IOException ) {
 
     try{
 
@@ -80,7 +80,7 @@ util::PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) 
 
 ////////////////////////////////////////////////////////////////////////////////
 const util::PrimitiveMap& ActiveMQMapMessage::getMap() const
-    throw ( exceptions::NullPointerException ) {
+    throw ( decaf::lang::exceptions::NullPointerException ) {
 
     try{
 
@@ -93,7 +93,7 @@ const util::PrimitiveMap& ActiveMQMapMessage::getMap() const
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQMapMessage::checkMapIsUnmarshalled() const
-    throw ( exceptions::NullPointerException ) {
+    throw ( decaf::lang::exceptions::NullPointerException ) {
 
     try {
 
