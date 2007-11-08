@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BROKERERROR_H_
 
 #include <activemq/connector/openwire/commands/BaseCommand.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 #include <string>
 #include <vector>
@@ -84,7 +84,7 @@ namespace commands{
             const BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
             
             if( srcErr == NULL || src == NULL ) {
-                throw activemq::exceptions::NullPointerException(
+                throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
                     "BrokerError::copyCommand - src is NULL or invalid" );
             } 
