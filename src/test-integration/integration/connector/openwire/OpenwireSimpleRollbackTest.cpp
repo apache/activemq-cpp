@@ -71,7 +71,9 @@ using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace decaf::net;
+using namespace decaf::lang;
 using namespace activemq::transport;
+using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 using namespace std;

@@ -21,7 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/util/Set.h>
+#include <decaf/util/Set.h>
 #include <cms/MessageListener.h>
 
 namespace integration{
@@ -40,7 +40,7 @@ namespace openwire{
 
         public:
             unsigned int count;
-            activemq::util::Set<long long> threadIds;
+            decaf::util::Set<long long> threadIds;
             
             SlowListener() { count = 0; }
         

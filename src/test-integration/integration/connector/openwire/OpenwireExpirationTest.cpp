@@ -58,18 +58,18 @@
 #include <cms/MapMessage.h>
 #include <cms/Session.h>
 
-using namespace activemq::connector::stomp;
-using namespace activemq::transport;
-using namespace activemq::util;
 using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
 using namespace activemq::connector;
+using namespace activemq::connector::stomp;
+using namespace activemq::util;
 using namespace activemq::exceptions;
-using namespace decaf::net;
 using namespace activemq::transport;
+using namespace decaf::net;
+using namespace decaf::lang;
+using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 using namespace std;
@@ -268,7 +268,7 @@ void OpenwireExpirationTest::Consumer::cleanup(){
 
 void OpenwireExpirationTest::testExpired()
 {
-    string topic = Guid().createGUID();
+    string topic = UUID::randomUUID().toString();
     Producer producer( topic, 1, 1 );
     Thread producerThread( &producer );
     producerThread.start();
@@ -288,7 +288,7 @@ void OpenwireExpirationTest::testExpired()
 
 void OpenwireExpirationTest::testNotExpired()
 {
-    string topic = Guid().createGUID();
+    string topic = UUID::randomUUID().toString();
     Producer producer( topic, 2, 2000 );
     producer.setDisableTimeStamps( true );
     Thread producerThread( &producer );

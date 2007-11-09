@@ -71,6 +71,8 @@ using namespace activemq::exceptions;
 using namespace decaf::net;
 using namespace activemq::transport;
 using namespace decaf::util::concurrent;
+using namespace decaf::lang;
+using namespace decaf::util;
 
 using namespace std;
 using namespace integration;
@@ -268,7 +270,7 @@ void ExpirationTest::Consumer::cleanup(){
 
 void ExpirationTest::testExpired()
 {
-    string topic = Guid().createGUID();
+    string topic = UUID::randomUUID().toString();
     Producer producer( topic, 1, 1 );
     Thread producerThread( &producer );
     producerThread.start();
@@ -288,7 +290,7 @@ void ExpirationTest::testExpired()
 
 void ExpirationTest::testNotExpired()
 {
-    string topic = Guid().createGUID();
+    string topic = UUID::randomUUID().toString();
     Producer producer( topic, 2, 2000 );
     producer.setDisableTimeStamps( true );
     Thread producerThread( &producer );

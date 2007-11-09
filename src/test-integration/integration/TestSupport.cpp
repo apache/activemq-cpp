@@ -35,9 +35,9 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::exceptions;
 using namespace decaf::util::concurrent;
+using namespace decaf::util;
+using namespace decaf::lang;
 
 using namespace integration;
 
@@ -67,7 +67,7 @@ void TestSupport::close() {
             delete connection;
         }
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_NOTHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 
     session = NULL;
@@ -81,7 +81,7 @@ void TestSupport::initialize(){
 
         // Now create the connection
         connection = createDetachedConnection(
-            "", "", Guid().createGUIDString() );
+            "", "", UUID::randomUUID().toString() );
 
         // Set ourself as a recipient of Exceptions
         connection->setExceptionListener( this );
@@ -90,8 +90,8 @@ void TestSupport::initialize(){
         // Create a Session
         session = connection->createSession( ackMode );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 cms::Connection* TestSupport::createDetachedConnection(
@@ -108,8 +108,8 @@ cms::Connection* TestSupport::createDetachedConnection(
 
         return connection;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 void TestSupport::doSleep(void)
@@ -147,8 +147,8 @@ unsigned int TestSupport::produceTextMessages(
 
         return realCount;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 unsigned int TestSupport::produceBytesMessages(
@@ -185,8 +185,8 @@ unsigned int TestSupport::produceBytesMessages(
 
         return realCount;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 void TestSupport::waitForMessages( unsigned int count )
@@ -208,8 +208,8 @@ void TestSupport::waitForMessages( unsigned int count )
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
 }
 
 void TestSupport::onException( const cms::CMSException& error )

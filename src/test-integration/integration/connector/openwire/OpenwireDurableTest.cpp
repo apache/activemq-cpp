@@ -61,12 +61,12 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace decaf::net;
 using namespace activemq::transport;
 using namespace decaf::util::concurrent;
+using namespace decaf::util;
+using namespace decaf::net;
 
 using namespace integration;
 using namespace integration::connector::openwire;
@@ -94,11 +94,11 @@ void OpenwireDurableTest::test()
                  << endl;
         }
 
-        std::string subName = Guid().createGUID();
+        std::string subName = UUID::randomUUID().toString();
 
         // Create CMS Object for Comms
         cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
+        cms::Topic* topic = session->createTopic( UUID::randomUUID().toString() );
         cms::MessageConsumer* consumer =
             session->createDurableConsumer( topic, subName, "" );
         consumer->setMessageListener( &testSupport );
