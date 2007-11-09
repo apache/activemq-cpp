@@ -21,7 +21,7 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/Date.h>
 #include <activemq/util/Config.h>
-#include <activemq/exceptions/ExceptionDefines.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <cms/ExceptionListener.h>
@@ -32,17 +32,17 @@ using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
-                                    ActiveMQSession* session )
-{
-    if( session == NULL || consumerInfo == NULL )
-    {
-        throw NullPointerException(
+                                    ActiveMQSession* session ) {
+
+    if( session == NULL || consumerInfo == NULL ) {
+        throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Session");
     }
@@ -58,12 +58,10 @@ ActiveMQConsumer::ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::~ActiveMQConsumer()
-{
-    try
-    {
-        close();
+ActiveMQConsumer::~ActiveMQConsumer() {
 
+    try {
+        close();
         delete consumerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
@@ -72,10 +70,10 @@ ActiveMQConsumer::~ActiveMQConsumer()
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::close()
-    throw ( cms::CMSException )
-{
-    try
-    {
+    throw ( cms::CMSException ) {
+
+    try{
+
         if( !closed ) {
 
             // Identifies any errors encountered during shutdown.
@@ -118,37 +116,37 @@ void ActiveMQConsumer::close()
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQConsumer::getMessageSelector() const
-    throw ( cms::CMSException )
-{
-    try
-    {
+    throw ( cms::CMSException ) {
+
+    try {
         // Fetch the Selector
         return consumerInfo->getMessageSelector();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMessage* ActiveMQConsumer::dequeue(int timeout)
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+ActiveMQMessage* ActiveMQConsumer::dequeue( int timeout )
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
 
-        synchronized( &unconsumedMessages )
-        {
+        synchronized( &unconsumedMessages ) {
+
             // Calculate the deadline
             long long deadline = 0;
             if (timeout > 0) {
@@ -160,8 +158,8 @@ ActiveMQMessage* ActiveMQConsumer::dequeue(int timeout)
 
                 // Wait until either the deadline is met, a message arrives, or
                 // we've closed.
-                while( !closed && unconsumedMessages.empty() && timeout != 0 )
-                {
+                while( !closed && unconsumedMessages.empty() && timeout != 0 ) {
+
                     if( timeout < 0 ) {
                         unconsumedMessages.wait();
                     } else if( timeout > 0 ) {
@@ -204,17 +202,17 @@ ActiveMQMessage* ActiveMQConsumer::dequeue(int timeout)
         return NULL;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
@@ -239,18 +237,18 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException )
         return clonedMsg;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* ActiveMQConsumer::receive( int millisecs )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
@@ -275,18 +273,18 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         return clonedMsg;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* ActiveMQConsumer::receiveNoWait()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
@@ -311,17 +309,17 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
         return clonedMsg;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
@@ -346,6 +344,7 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -365,10 +364,10 @@ void ActiveMQConsumer::beforeMessageIsConsumed( ActiveMQMessage* message ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::afterMessageIsConsumed( ActiveMQMessage* message,
-    bool messageExpired AMQCPP_UNUSED )
-{
-    try
-    {
+    bool messageExpired AMQCPP_UNUSED ) {
+
+    try{
+
         if( !session->isClientAcknowledge() ) {
             session->acknowledge( this, message );
         }
@@ -380,18 +379,18 @@ void ActiveMQConsumer::afterMessageIsConsumed( ActiveMQMessage* message,
         destroyMessage( message );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::acknowledgeMessage( const ActiveMQMessage* message )
-   throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+   throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
@@ -402,14 +401,15 @@ void ActiveMQConsumer::acknowledgeMessage( const ActiveMQMessage* message )
         session->acknowledge( this, const_cast<ActiveMQMessage*>(message) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::dispatch( DispatchData& data )
-{
-    try
-    {
+void ActiveMQConsumer::dispatch( DispatchData& data ) {
+
+    try {
+
         ActiveMQMessage* message = data.getMessage();
 
         // Don't dispatch expired messages, ack it and then destroy it
@@ -444,18 +444,18 @@ void ActiveMQConsumer::dispatch( DispatchData& data )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
 {
-    try
-    {
-        synchronized( &unconsumedMessages )
-        {
-            while( !unconsumedMessages.empty() )
-            {
+    try {
+
+        synchronized( &unconsumedMessages ) {
+
+            while( !unconsumedMessages.empty() ) {
                 // destroy these messages if this is not a transacted
                 // session, if it is then the tranasction will clean
                 // the messages up.
@@ -464,26 +464,25 @@ void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::destroyMessage( ActiveMQMessage* message )
-throw ( ActiveMQException )
-{
+    throw ( ActiveMQException ) {
 
-    try
-    {
+    try {
         /**
          * Only destroy the message if the session is NOT transacted.  If
          * it is, the session will take care of it.
          */
-        if( message != NULL && !session->isTransacted() )
-        {
+        if( message != NULL && !session->isTransacted() ) {
             delete message;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -493,16 +492,15 @@ void ActiveMQConsumer::onConnectorResourceClosed(
 
     try{
 
-        if( closed )
-        {
-            throw InvalidStateException(
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::onConnectorResourceClosed - "
                 "Producer Already Closed");
         }
 
         if( resource != consumerInfo ) {
-            throw IllegalArgumentException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::onConnectorResourceClosed - "
                 "Unknown object passed to this callback");
@@ -512,5 +510,6 @@ void ActiveMQConsumer::onConnectorResourceClosed(
         this->close();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -142,7 +142,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
             ConnectorFactoryMap::getInstance()->lookup( wireFormat );
 
         if( connectorfactory == NULL ) {
-            throw NullPointerException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
                 "Connector for Wire Format not registered in Map" );
@@ -152,7 +152,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         connector = connectorfactory->createConnector( *properties, transport );
 
         if( connector == NULL ) {
-            throw NullPointerException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
                 "Failed to Create the Connector" );
