@@ -230,67 +230,67 @@ namespace commands{
             try{
                 cmd.setBodyBytes( (unsigned char*)"test", 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeBoolean( true );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeByte( 2 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeBytes( std::vector<unsigned char>() );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeBytes( (unsigned char*)"test", 0, 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeChar( 'a' );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeFloat( 1.0f );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeDouble( 1.0 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeUnsignedShort( 3 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeShort( 4 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeInt( 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeLong( 6LL );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.writeString( "test" );
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             // Now, verify that all the reads work properly
 
@@ -315,58 +315,58 @@ namespace commands{
             try{
                 cmd.readBoolean();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readByte();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 std::vector<unsigned char> buf;
                 cmd.readBytes(buf);
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readChar();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readFloat();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readDouble();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readUnsignedShort();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readShort();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readInt();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readLong();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             try{
                 cmd.readString();
                 CPPUNIT_ASSERT( false );
-            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
+            } catch( activemq::exceptions::ActiveMQException& e ){}
 
             // Now, verify that all the writes work properly
 

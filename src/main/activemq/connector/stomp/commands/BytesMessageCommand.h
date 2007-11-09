@@ -21,8 +21,8 @@
 #include <cms/BytesMessage.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Long.h>
-#include <decaf/lang/exceptions/IllegalStateException.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -520,7 +520,7 @@ namespace commands{
          */
         void checkWriteOnly() const throw (cms::CMSException){
             if( readOnly ){
-                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
             }
         }
@@ -531,7 +531,7 @@ namespace commands{
          */
         void checkReadOnly() const throw (cms::CMSException){
             if( !readOnly ){
-                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }
         }
