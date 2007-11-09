@@ -21,10 +21,10 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQDestination::ADVISORY_PREFIX = "ActiveMQ.Advisory.";

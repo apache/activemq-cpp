@@ -18,6 +18,9 @@
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 
 using namespace std;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::exceptions;
@@ -67,19 +70,19 @@ void ActiveMQMapMessage::beforeMarshal( OpenWireFormat* wireFormat )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-util::PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) {
+PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) {
 
     try{
 
         this->checkMapIsUnmarshalled();
         return *map;
     }
-    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
-    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const util::PrimitiveMap& ActiveMQMapMessage::getMap() const
+const PrimitiveMap& ActiveMQMapMessage::getMap() const
     throw ( decaf::lang::exceptions::NullPointerException ) {
 
     try{
@@ -87,8 +90,8 @@ const util::PrimitiveMap& ActiveMQMapMessage::getMap() const
         this->checkMapIsUnmarshalled();
         return *map;
     }
-    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
-    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,8 +117,8 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
             }
         }
     }
-    AMQ_CATCH_RETHROW( exceptions::NullPointerException )
-    AMQ_CATCHALL_THROW( exceptions::NullPointerException )
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCHALL_THROW( NullPointerException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
