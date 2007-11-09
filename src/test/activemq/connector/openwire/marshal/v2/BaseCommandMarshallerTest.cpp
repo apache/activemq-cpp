@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "BaseCommandMarshallerTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::v2::BaseCommandMarshallerTest );
@@ -25,15 +25,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::v2::Bas
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::io;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::marshal::v2;
+using namespace decaf;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-void BaseCommandMarshallerTest::test()
-{
+void BaseCommandMarshallerTest::test() {
     //BaseCommandMarshaller myMarshaller;
 }
