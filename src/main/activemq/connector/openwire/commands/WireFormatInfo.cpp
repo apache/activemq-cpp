@@ -19,6 +19,9 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
@@ -67,7 +70,7 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
 
     if( srcPtr == NULL || src == NULL ) {
 
-        throw exceptions::NullPointerException(
+        throw NullPointerException(
             __FILE__, __LINE__,
             "WireFormatInfo::copyDataStructure - src is NULL or invalid" );
     }
