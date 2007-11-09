@@ -18,10 +18,10 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
-#include <activemq/core/ActiveMQConnectionFactory.h>
 #include <decaf/lang/Integer.h>
-#include <activemq/util/Config.h>
 #include <decaf/util/Date.h>
+#include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/util/Config.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -34,7 +34,9 @@
 
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace cms;
 using namespace std;
