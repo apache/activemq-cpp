@@ -171,9 +171,9 @@ out.println("");
     }
 
 out.println("");
-out.println("#include <activemq/io/DataInputStream.h>");
-out.println("#include <activemq/io/DataOutputStream.h>");
-out.println("#include <activemq/io/IOException.h>");
+out.println("#include <decaf/io/DataInputStream.h>");
+out.println("#include <decaf/io/DataOutputStream.h>");
+out.println("#include <decaf/io/IOException.h>");
 out.println("#include <activemq/connector/openwire/OpenWireFormat.h>");
 out.println("#include <activemq/connector/openwire/commands/DataStructure.h>");
 out.println("#include <activemq/connector/openwire/utils/BooleanStream.h>");
@@ -223,7 +223,7 @@ out.println("         * @param bs - BooleanStream");
 out.println("         */");
 out.println("        virtual void tightUnmarshal( OpenWireFormat* wireFormat,");
 out.println("                                     commands::DataStructure* dataStructure,");
-out.println("                                     io::DataInputStream* dataIn,");
+out.println("                                     decaf::io::DataInputStream* dataIn,");
 out.println("                                     utils::BooleanStream* bs ) throw( io::IOException );");
 out.println("");
 out.println("        /**");
@@ -246,7 +246,7 @@ out.println("         * @param bs - BooleanStream");
 out.println("         */");
 out.println("        virtual void tightMarshal2( OpenWireFormat* wireFormat,");
 out.println("                                    commands::DataStructure* dataStructure,");
-out.println("                                    io::DataOutputStream* dataOut,");
+out.println("                                    decaf::io::DataOutputStream* dataOut,");
 out.println("                                    utils::BooleanStream* bs ) throw( io::IOException );");
 out.println("");
 out.println("        /**");
@@ -257,7 +257,7 @@ out.println("         * @param dataIn - BinaryReader that provides that data sou
 out.println("         */");
 out.println("        virtual void looseUnmarshal( OpenWireFormat* wireFormat,");
 out.println("                                     commands::DataStructure* dataStructure,");
-out.println("                                     io::DataInputStream* dataIn ) throw( io::IOException );");
+out.println("                                     decaf::io::DataInputStream* dataIn ) throw( io::IOException );");
 out.println("");
 out.println("        /**");
 out.println("         * Write a object instance to data output stream");
@@ -267,7 +267,7 @@ out.println("         * @param dataOut - BinaryWriter that provides that data si
 out.println("         */");
 out.println("        virtual void looseMarshal( OpenWireFormat* wireFormat,");
 out.println("                                   commands::DataStructure* dataStructure,");
-out.println("                                   io::DataOutputStream* dataOut ) throw( io::IOException );");
+out.println("                                   decaf::io::DataOutputStream* dataOut ) throw( io::IOException );");
 out.println("");
 out.println("    };");
 out.println("");

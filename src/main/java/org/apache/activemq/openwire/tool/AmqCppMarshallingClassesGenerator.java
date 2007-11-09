@@ -517,7 +517,7 @@ out.println("");
     }
 
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {");
+out.println("void "+className+"::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -546,13 +546,13 @@ out.println("        info->afterUnmarshal( wireFormat );");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {");
+out.println("int "+className+"::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -575,13 +575,13 @@ out.println("        int rc = "+baseClass+"::tightMarshal1( wireFormat, dataStru
 out.println("");
 out.println("        return rc + "+baseSize+";");
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::decaf::io::IOException )" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {");
+out.println("void "+className+"::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -601,13 +601,13 @@ out.println("        info->afterMarshal( wireFormat );");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {");
+out.println("void "+className+"::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -630,13 +630,13 @@ out.println("        info->afterUnmarshal( wireFormat );");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
 out.println("}");
 out.println("");
 out.println("///////////////////////////////////////////////////////////////////////////////");
-out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {");
+out.println("void "+className+"::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {");
 out.println("");
 out.println("    try {");
 out.println("");
@@ -661,9 +661,9 @@ out.println("        info->afterMarshal( wireFormat );");
     }
 
 out.println("    }");
-out.println("    AMQ_CATCH_RETHROW( io::IOException )" );
-out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )" );
-out.println("    AMQ_CATCHALL_THROW( io::IOException )" );
+out.println("    AMQ_CATCH_RETHROW( decaf::io::IOException )" );
+out.println("    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )" );
+out.println("    AMQ_CATCHALL_THROW( decaf::io::IOException )" );
 out.println("}");
 out.println("");
 }
