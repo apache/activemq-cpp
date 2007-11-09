@@ -25,9 +25,9 @@
 
 #include <activemq/connector/openwire/marshal/v1/BaseCommandMarshaller.h>
 
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/IOException.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/IOException.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
@@ -61,8 +61,8 @@ namespace v1{
          */
         virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs ) throw( io::IOException );
+                                     decaf::io::DataInputStream* dataIn,
+                                     utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Write the booleans that this object uses to a BooleanStream
@@ -73,7 +73,7 @@ namespace v1{
          */
         virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   utils::BooleanStream* bs ) throw( io::IOException );
+                                   utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -84,8 +84,8 @@ namespace v1{
          */
         virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
-                                    io::DataOutputStream* dataOut,
-                                    utils::BooleanStream* bs ) throw( io::IOException );
+                                    decaf::io::DataOutputStream* dataOut,
+                                    utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Un-marshal an object instance from the data input stream
@@ -95,7 +95,7 @@ namespace v1{
          */
         virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     io::DataInputStream* dataIn ) throw( io::IOException );
+                                     decaf::io::DataInputStream* dataIn ) throw( decaf::io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -105,7 +105,7 @@ namespace v1{
          */
         virtual void looseMarshal( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   io::DataOutputStream* dataOut ) throw( io::IOException );
+                                   decaf::io::DataOutputStream* dataOut ) throw( decaf::io::IOException );
 
     };
 

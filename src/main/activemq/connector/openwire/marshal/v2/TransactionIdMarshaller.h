@@ -62,7 +62,7 @@ namespace v2{
         virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
                                      decaf::io::DataInputStream* dataIn,
-                                     utils::BooleanStream* bs ) throw( io::IOException );
+                                     utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Write the booleans that this object uses to a BooleanStream
@@ -73,7 +73,7 @@ namespace v2{
          */
         virtual int tightMarshal1( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   utils::BooleanStream* bs ) throw( io::IOException );
+                                   utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -85,7 +85,7 @@ namespace v2{
         virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
                                     decaf::io::DataOutputStream* dataOut,
-                                    utils::BooleanStream* bs ) throw( io::IOException );
+                                    utils::BooleanStream* bs ) throw( decaf::io::IOException );
 
         /**
          * Un-marshal an object instance from the data input stream
@@ -95,7 +95,7 @@ namespace v2{
          */
         virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     decaf::io::DataInputStream* dataIn ) throw( io::IOException );
+                                     decaf::io::DataInputStream* dataIn ) throw( decaf::io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -105,7 +105,7 @@ namespace v2{
          */
         virtual void looseMarshal( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   decaf::io::DataOutputStream* dataOut ) throw( io::IOException );
+                                   decaf::io::DataOutputStream* dataOut ) throw( decaf::io::IOException );
 
     };
 
