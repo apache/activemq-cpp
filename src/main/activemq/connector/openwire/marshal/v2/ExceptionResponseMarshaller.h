@@ -25,9 +25,9 @@
 
 #include <activemq/connector/openwire/marshal/v2/ResponseMarshaller.h>
 
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/IOException.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/IOException.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
@@ -73,7 +73,7 @@ namespace v2{
          */
         virtual void tightUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     io::DataInputStream* dataIn,
+                                     decaf::io::DataInputStream* dataIn,
                                      utils::BooleanStream* bs ) throw( io::IOException );
 
         /**
@@ -96,7 +96,7 @@ namespace v2{
          */
         virtual void tightMarshal2( OpenWireFormat* wireFormat,
                                     commands::DataStructure* dataStructure,
-                                    io::DataOutputStream* dataOut,
+                                    decaf::io::DataOutputStream* dataOut,
                                     utils::BooleanStream* bs ) throw( io::IOException );
 
         /**
@@ -107,7 +107,7 @@ namespace v2{
          */
         virtual void looseUnmarshal( OpenWireFormat* wireFormat,
                                      commands::DataStructure* dataStructure,
-                                     io::DataInputStream* dataIn ) throw( io::IOException );
+                                     decaf::io::DataInputStream* dataIn ) throw( io::IOException );
 
         /**
          * Write a object instance to data output stream
@@ -117,7 +117,7 @@ namespace v2{
          */
         virtual void looseMarshal( OpenWireFormat* wireFormat,
                                    commands::DataStructure* dataStructure,
-                                   io::DataOutputStream* dataOut ) throw( io::IOException );
+                                   decaf::io::DataOutputStream* dataOut ) throw( io::IOException );
 
     };
 

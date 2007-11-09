@@ -27,13 +27,14 @@
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
+using namespace decaf;
+using namespace decaf::io;
 
 ///////////////////////////////////////////////////////////////////////////////
 DataStructure* JournalTopicAckMarshaller::createObject() const {
@@ -46,7 +47,7 @@ unsigned char JournalTopicAckMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+void JournalTopicAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -64,13 +65,13 @@ void JournalTopicAckMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Data
         info->setTransactionId( dynamic_cast< TransactionId* >(
             tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int JournalTopicAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
+int JournalTopicAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -87,13 +88,13 @@ int JournalTopicAckMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataSt
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
+void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -108,13 +109,13 @@ void JournalTopicAckMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataS
         tightMarshalString2( info->getClientId(), dataOut, bs );
         tightMarshalNestedObject2( wireFormat, info->getTransactionId(), dataOut, bs );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -131,13 +132,13 @@ void JournalTopicAckMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Data
         info->setTransactionId( dynamic_cast< TransactionId* >( 
             looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void JournalTopicAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+void JournalTopicAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -152,8 +153,8 @@ void JournalTopicAckMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataSt
         looseMarshalString( info->getClientId(), dataOut );
         looseMarshalNestedObject( wireFormat, info->getTransactionId(), dataOut );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 

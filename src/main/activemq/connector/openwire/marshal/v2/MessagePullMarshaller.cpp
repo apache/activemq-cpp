@@ -27,13 +27,14 @@
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
+using namespace decaf;
+using namespace decaf::io;
 
 ///////////////////////////////////////////////////////////////////////////////
 DataStructure* MessagePullMarshaller::createObject() const {
@@ -46,7 +47,7 @@ unsigned char MessagePullMarshaller::getDataStructureType() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( io::IOException ) {
+void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -60,13 +61,13 @@ void MessagePullMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStru
             tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
         info->setTimeout( tightUnmarshalLong( wireFormat, dataIn, bs ) );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( io::IOException ) {
+int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure* dataStructure, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -80,13 +81,13 @@ int MessagePullMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStruct
 
         return rc + 0;
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( io::IOException ) {
+void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut, BooleanStream* bs ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -98,13 +99,13 @@ void MessagePullMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStruc
         tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
         tightMarshalLong2( wireFormat, info->getTimeout(), dataOut, bs );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( io::IOException ) {
+void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataInputStream* dataIn ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -117,13 +118,13 @@ void MessagePullMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStru
             looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
         info->setTimeout( looseUnmarshalLong( wireFormat, dataIn ) );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( io::IOException ) {
+void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure* dataStructure, DataOutputStream* dataOut ) throw( decaf::io::IOException ) {
 
     try {
 
@@ -135,8 +136,8 @@ void MessagePullMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStruct
         looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
         looseMarshalLong( wireFormat, info->getTimeout(), dataOut );
     }
-    AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
-    AMQ_CATCHALL_THROW( io::IOException )
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 

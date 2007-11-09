@@ -70,11 +70,11 @@ void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSExcep
     try{
         std::vector<unsigned char>& content = getContent();
         content.clear();
-        io::ByteArrayOutputStream bos( content );
-        io::DataOutputStream dos( &bos );
+        decaf::io::ByteArrayOutputStream bos( content );
+        decaf::io::DataOutputStream dos( &bos );
 
         dos.writeInt( (int)msg.length() );
-        dos.write( (const unsigned char*)msg.c_str(), msg.length() );
+        dos.write( (const unsigned char*)msg.c_str(), 0, msg.length() );
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )

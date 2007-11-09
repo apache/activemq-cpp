@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/commands/ConnectionControl.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
@@ -23,6 +24,7 @@ using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace decaf::lang::exceptions;
 
 /*
  *
@@ -69,7 +71,7 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
 
     if( srcPtr == NULL || src == NULL ) {
     
-        throw exceptions::NullPointerException(
+        throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConnectionControl::copyDataStructure - src is NULL or invalid" );
     }
