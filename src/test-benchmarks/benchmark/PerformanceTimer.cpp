@@ -21,7 +21,7 @@
 
 using namespace std;
 using namespace benchmark;
-using namespace activemq::util;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 PerformanceTimer::PerformanceTimer(){
