@@ -134,8 +134,8 @@ AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
 AC_SUBST([AMQ_TEST_LIBS])
-AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
-AMQ_TEST_LIBS="../main/libactivemq-cpp.la"
+AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+AMQ_TEST_LIBS="../main/libactivemq-cpp.la $DECAF_LIBS"
 
 
 # Check to see if the compiler supports the visibility flags.
