@@ -28,7 +28,7 @@
 #include <activemq/transport/Command.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <decaf/util/concurrent/Concurrent.h>
-#include <activemq/io/BlockingByteArrayInputStream.h>
+#include <decaf/io/BlockingByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -87,7 +87,7 @@ namespace transport{
             /**
              * The target input stream.
              */
-            io::InputStream* inputStream;
+            decaf::io::InputStream* inputStream;
 
         public:
             MyCommandReader(){ throwException = false; }
@@ -95,11 +95,11 @@ namespace transport{
 
             bool throwException;
 
-            virtual void setInputStream(io::InputStream* is){
+            virtual void setInputStream(decaf::io::InputStream* is){
                 inputStream = is;
             }
 
-            virtual io::InputStream* getInputStream(void){
+            virtual decaf::io::InputStream* getInputStream(void){
                 return inputStream;
             }
 
@@ -137,11 +137,11 @@ namespace transport{
 
             virtual std::size_t read(unsigned char* buffer AMQCPP_UNUSED,
                              std::size_t count AMQCPP_UNUSED)
-                throw( io::IOException ) {
+                throw( decaf::io::IOException ) {
                 return 0;
             }
 
-            virtual unsigned char readByte() throw(io::IOException) {
+            virtual unsigned char readByte() throw(decaf::io::IOException) {
                 return 0;
             }
         };
@@ -152,16 +152,16 @@ namespace transport{
             /**
              * Target output stream.
              */
-            io::OutputStream* outputStream;
+            decaf::io::OutputStream* outputStream;
 
         public:
             virtual ~MyCommandWriter(){}
 
-            virtual void setOutputStream(io::OutputStream* os){
+            virtual void setOutputStream(decaf::io::OutputStream* os){
                 outputStream = os;
             }
 
-            virtual io::OutputStream* getOutputStream(void){
+            virtual decaf::io::OutputStream* getOutputStream(void){
                 return outputStream;
             }
 
@@ -184,16 +184,16 @@ namespace transport{
 
             virtual void write( const unsigned char* buffer AMQCPP_UNUSED,
                                 std::size_t count AMQCPP_UNUSED)
-                throw(io::IOException) {}
+                throw(decaf::io::IOException) {}
 
-            virtual void writeByte(unsigned char v AMQCPP_UNUSED) throw(io::IOException) {}
+            virtual void writeByte(unsigned char v AMQCPP_UNUSED) throw(decaf::io::IOException) {}
         };
 
         class MyExceptionListener : public TransportExceptionListener{
         public:
 
             Transport* transport;
-            concurrent::Mutex mutex;
+            decaf::util::concurrent::Mutex mutex;
 
             MyExceptionListener(){
                 transport = NULL;
@@ -219,8 +219,8 @@ namespace transport{
         // transport without any exceptions.
         void testStartClose(){
 
-            io::BlockingByteArrayInputStream is;
-            io::ByteArrayOutputStream os;
+            decaf::io::BlockingByteArrayInputStream is;
+            decaf::io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
             MyCommandWriter writer;
@@ -242,8 +242,8 @@ namespace transport{
 
         void testRead(){
 
-            io::BlockingByteArrayInputStream is;
-            io::ByteArrayOutputStream os;
+            decaf::io::BlockingByteArrayInputStream is;
+            decaf::io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
             MyCommandWriter writer;
@@ -278,8 +278,8 @@ namespace transport{
 
         void testWrite(){
 
-            io::BlockingByteArrayInputStream is;
-            io::ByteArrayOutputStream os;
+            decaf::io::BlockingByteArrayInputStream is;
+            decaf::io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
             MyCommandWriter writer;
@@ -306,8 +306,8 @@ namespace transport{
             cmd.c = '5';
             transport.oneway( &cmd );
 
-            const unsigned char* bytes = os.getByteArray();
-            std::size_t size = os.getByteArraySize();
+            const unsigned char* bytes = os.toByteArray();
+            std::size_t size = os.size();
             CPPUNIT_ASSERT( size >= 5 );
             CPPUNIT_ASSERT( bytes[0] == '1' );
             CPPUNIT_ASSERT( bytes[1] == '2' );
@@ -320,8 +320,8 @@ namespace transport{
 
         void testException(){
 
-            io::BlockingByteArrayInputStream is;
-            io::ByteArrayOutputStream os;
+            decaf::io::BlockingByteArrayInputStream is;
+            decaf::io::ByteArrayOutputStream os;
             MyCommandListener listener;
             MyCommandReader reader;
             MyCommandWriter writer;

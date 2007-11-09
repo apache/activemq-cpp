@@ -126,8 +126,8 @@ namespace filters{
             CommandListener* listener;
             TransportExceptionListener* exListener;
             decaf::lang::Thread* thread;
-            concurrent::Mutex mutex;
-            concurrent::Mutex startedMutex;
+            decaf::util::concurrent::Mutex mutex;
+            decaf::util::concurrent::Mutex startedMutex;
             bool done;
             std::queue<Command*> requests;
 
@@ -148,7 +148,7 @@ namespace filters{
             }
 
             virtual void oneway( Command* command )
-                throw(CommandIOException, exceptions::UnsupportedOperationException)
+                throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
             {
                 synchronized( &mutex ){
                     requests.push( command );
@@ -157,9 +157,9 @@ namespace filters{
             }
 
             virtual Response* request( Command* command AMQCPP_UNUSED)
-                throw(CommandIOException, exceptions::UnsupportedOperationException)
+                throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
             {
-                throw exceptions::UnsupportedOperationException(
+                throw decaf::lang::exceptions::UnsupportedOperationException(
                     __FILE__,
                     __LINE__,
                     "stuff" );
@@ -290,7 +290,7 @@ namespace filters{
 
             int exCount;
             std::set<int> commands;
-            concurrent::Mutex mutex;
+            decaf::util::concurrent::Mutex mutex;
 
         public:
 

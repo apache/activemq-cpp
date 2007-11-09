@@ -64,7 +64,7 @@ namespace core{
         public:
 
             std::vector<cms::Message*> messages;
-            concurrent::Mutex mutex;
+            decaf::util::concurrent::Mutex mutex;
             bool ack;
 
         public:

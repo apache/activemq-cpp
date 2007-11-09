@@ -32,7 +32,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <decaf/net/Socket.h>
-#include <activemq/network/ServerSocket.h>
+#include <decaf/net/ServerSocket.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/core/ActiveMQSession.h>
@@ -441,7 +441,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 1" ,
                        *topic1,
-                       activemq::util::Date::getCurrentTimeMilliseconds(),
+                       decaf::util::Date::getCurrentTimeMilliseconds(),
                        50 );
 
     synchronized( &msgListener1.mutex )
@@ -456,7 +456,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 2" ,
                        *topic2,
-                       activemq::util::Date::getCurrentTimeMilliseconds() - 100,
+                       decaf::util::Date::getCurrentTimeMilliseconds() - 100,
                        1 );
 
     synchronized( &msgListener2.mutex )

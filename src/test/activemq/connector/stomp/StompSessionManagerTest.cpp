@@ -327,7 +327,7 @@ void StompSessionManagerTest::setUp() {
 
     this->connectionId = "testConnectionId";
 
-    activemq::util::Properties properties;
+    decaf::util::Properties properties;
 
     // Default to Stomp
     properties.setProperty( "wireFormat", "stomp" );

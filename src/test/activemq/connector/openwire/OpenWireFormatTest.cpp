@@ -25,7 +25,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTe
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::io;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;

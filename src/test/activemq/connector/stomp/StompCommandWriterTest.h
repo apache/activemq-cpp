@@ -52,14 +52,14 @@ namespace stomp{
             virtual const StompFrame& marshal(void)
                 throw (marshal::MarshalException)
             {
-                const StompFrame& frame = 
+                const StompFrame& frame =
                     commands::BytesMessageCommand::marshal();
 
                 // Before we send out the frame tag it with the content length
                 // as this is a bytes message and we can't ensure we have only
                 // a trailing NULL.
                 const_cast< StompFrame* >( &frame )->setCommand(
-                    commands::CommandConstants::toString( 
+                    commands::CommandConstants::toString(
                         commands::CommandConstants::MESSAGE ) );
 
                 return frame;
@@ -73,14 +73,14 @@ namespace stomp{
             virtual const StompFrame& marshal(void)
                 throw (marshal::MarshalException)
             {
-                const StompFrame& frame = 
+                const StompFrame& frame =
                     commands::TextMessageCommand::marshal();
 
                 // Before we send out the frame tag it with the content length
                 // as this is a bytes message and we can't ensure we have only
                 // a trailing NULL.
                 const_cast< StompFrame* >( &frame )->setCommand(
-                    commands::CommandConstants::toString( 
+                    commands::CommandConstants::toString(
                         commands::CommandConstants::MESSAGE ) );
 
                 return frame;
@@ -89,17 +89,17 @@ namespace stomp{
         };
 
     public:
-    
-    	StompCommandWriterTest() {}
-    	virtual ~StompCommandWriterTest() {}
-    
+
+        StompCommandWriterTest() {}
+        virtual ~StompCommandWriterTest() {}
+
         void test( void )
         {
-            io::ByteArrayOutputStream boStream;
+            decaf::io::ByteArrayOutputStream boStream;
 
             StompCommandWriter writer( &boStream );
 
-            const char* result = 
+            const char* result =
                 "CONNECTED\nsession:test\n\n\0\n"   // 26 = 26
                 "SEND\n"                            // 5
                 "destination:/topic/a\n"            // 21
@@ -116,7 +116,7 @@ namespace stomp{
             commands::ConnectedCommand connectedCommand;
             commands::TextMessageCommand textCommand;
             commands::BytesMessageCommand bytesCommand;
-            
+
             // Sync to expected output
             connectedCommand.setSessionId( "test" );
 
@@ -124,7 +124,7 @@ namespace stomp{
             StompTopic topic1("a");
             textCommand.setCMSDestination( &topic1 );
             textCommand.setCMSMessageID( "123" );
-            textCommand.getProperties().setProperty( 
+            textCommand.getProperties().setProperty(
                 "sampleProperty", "testvalue" );
             textCommand.setText( "testMessage" );
 
@@ -132,23 +132,23 @@ namespace stomp{
             StompTopic topic2("a");
             bytesCommand.setCMSDestination( &topic2 );
             bytesCommand.setCMSMessageID( "123" );
-            bytesCommand.getProperties().setProperty( 
+            bytesCommand.getProperties().setProperty(
                 "sampleProperty", "testvalue" );
-            bytesCommand.setBodyBytes( 
+            bytesCommand.setBodyBytes(
                 (const unsigned char*)"123456789", 9 );
 
             writer.writeCommand( &connectedCommand );
             writer.writeCommand( &textCommand );
             writer.writeCommand( &bytesCommand );
 
-            const unsigned char* alloc = boStream.getByteArray();
+            const unsigned char* alloc = boStream.toByteArray();
 
             //for( int i = 0; i < 201; ++i )
             //{
             //    std::cout << result[i] << " == " << alloc[i] << std::endl;
             //}
 
-            CPPUNIT_ASSERT( boStream.getByteArraySize() == 201 );
+            CPPUNIT_ASSERT( boStream.size() == 201 );
 
             for( int i = 0; i < 201; ++i )
             {
@@ -156,18 +156,18 @@ namespace stomp{
             }
 
             // Use STL Compare
-            CPPUNIT_ASSERT( 
-                memcmp( &result[0], boStream.getByteArray(), 200 ) == 0 );
+            CPPUNIT_ASSERT(
+                memcmp( &result[0], boStream.toByteArray(), 200 ) == 0 );
         }
 
         void testWriteAndReads() {
-            
-            io::ByteArrayOutputStream boStream;
-            io::ByteArrayInputStream biStream;
+
+            decaf::io::ByteArrayOutputStream boStream;
+            decaf::io::ByteArrayInputStream biStream;
 
             StompCommandWriter writer( &boStream );
             StompCommandReader reader( &biStream );
-            
+
             MyTextMessageCommand textCommand;
             MyBytesMessageCommand bytesCommand;
 
@@ -181,19 +181,19 @@ namespace stomp{
 
             const int testInt1 = 45678;
             const int testInt2 = 42;
-            
+
             const std::string testStr1 = "Test String 1";
             const std::string testStr2 = "Test String 2";
-            
+
             const bool testBool1 = true;
             const bool testBool2 = false;
 
             bytesCommand.writeInt( testInt1 );
             bytesCommand.writeInt( testInt2 );
-            
+
             bytesCommand.writeString( testStr1 );
             bytesCommand.writeUTF( testStr2 );
-            
+
             bytesCommand.writeBoolean( testBool1 );
             bytesCommand.writeBoolean( testBool2 );
 
@@ -201,11 +201,11 @@ namespace stomp{
             writer.writeCommand( &bytesCommand );
 
             // Copy output Command to the Input Stream
-            biStream.setByteArray( boStream.getByteArray(), 
-                                   boStream.getByteArraySize() );
+            biStream.setByteArray( boStream.toByteArray(),
+                                   boStream.size() );
 
-            commands::TextMessageCommand* textMessage = 
-                dynamic_cast< commands::TextMessageCommand* >( 
+            commands::TextMessageCommand* textMessage =
+                dynamic_cast< commands::TextMessageCommand* >(
                     reader.readCommand() );
 
             CPPUNIT_ASSERT( textMessage != NULL );
@@ -213,8 +213,8 @@ namespace stomp{
             std::string text = textMessage->getText();
             CPPUNIT_ASSERT( text == "This is a TextMessage" );
 
-            commands::BytesMessageCommand* bytesMessage = 
-                dynamic_cast< commands::BytesMessageCommand* >( 
+            commands::BytesMessageCommand* bytesMessage =
+                dynamic_cast< commands::BytesMessageCommand* >(
                     reader.readCommand() );
 
             CPPUNIT_ASSERT( bytesMessage != NULL );
@@ -229,9 +229,9 @@ namespace stomp{
             delete bytesMessage;
             delete textMessage;
         }
-        
+
     };
-    
+
 }}}
 
 #endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDWRITERTEST_H_*/

@@ -23,6 +23,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 #include <decaf/util/Properties.h>
 
 using namespace std;
+using namespace decaf;
+using namespace decaf::util;
 using namespace activemq;
 using namespace activemq::util;
 
@@ -30,15 +32,15 @@ using namespace activemq::util;
 void URISupportTest::test()
 {
     string test = "?option1=test1&option2=test2";
-    
+
     Properties map = URISupport::parseQuery( test );
 
     CPPUNIT_ASSERT( map.hasProperty( "option1" ) == true );
     CPPUNIT_ASSERT( map.hasProperty( "option2" ) == true );
-    
+
     CPPUNIT_ASSERT( map.getProperty( "option1", "" ) == "test1" );
     CPPUNIT_ASSERT( map.getProperty( "option2", "" ) == "test2" );
-    
+
     string test2 = "option&option";
 
     try{
@@ -47,12 +49,12 @@ void URISupportTest::test()
     } catch(...) {}
 
     string test3 = "option1=test1&option2=test2";
-    
+
     map = URISupport::parseQuery( test3 );
 
     CPPUNIT_ASSERT( map.hasProperty( "option1" ) == true );
     CPPUNIT_ASSERT( map.hasProperty( "option2" ) == true );
-    
+
     CPPUNIT_ASSERT( map.getProperty( "option1", "" ) == "test1" );
     CPPUNIT_ASSERT( map.getProperty( "option2", "" ) == "test2" );
 

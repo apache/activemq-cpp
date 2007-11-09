@@ -104,7 +104,7 @@ namespace connector{
 		public:
 		
 		   virtual Connector* createConnector(
-		      const activemq::util::Properties& properties AMQCPP_UNUSED,
+		      const decaf::util::Properties& properties AMQCPP_UNUSED,
             activemq::transport::Transport*   transport AMQCPP_UNUSED) { return NULL; };
 		};
 		

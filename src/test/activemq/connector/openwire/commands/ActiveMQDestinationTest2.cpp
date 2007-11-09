@@ -22,6 +22,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::Active
 #include <decaf/util/UUID.h>
 
 using namespace std;
+using namespace decaf;
+using namespace decaf::util;
 using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::connector;

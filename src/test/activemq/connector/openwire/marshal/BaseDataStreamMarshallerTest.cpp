@@ -32,7 +32,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::BaseDat
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::io;
+using namespace decaf::io;
+using namespace decaf::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
@@ -41,7 +42,7 @@ using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshallerTest::setUp(){
-    
+
     dataStructure = new ComplexDataStructure();
     dataStructure->boolValue = true;
     dataStructure->setCachedChild( new SimpleDataStructure() );
@@ -67,7 +68,7 @@ void BaseDataStreamMarshallerTest::tearDown(){
         dataStructure = NULL;
     }
 }
-        
+
 ////////////////////////////////////////////////////////////////////////////////
 void BaseDataStreamMarshallerTest::testLooseMarshal()
 {
@@ -85,7 +86,7 @@ void BaseDataStreamMarshallerTest::testLooseMarshal()
     complexMarshaller->looseMarshal( &openWireFormat, dataStructure, &looseOut );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.getByteArray(), baos.getByteArraySize() );
+    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
     DataInputStream looseIn( &bais );
 
     unsigned char dataType = looseIn.readByte();
@@ -136,7 +137,7 @@ void BaseDataStreamMarshallerTest::testTightMarshal()
     complexMarshaller->tightMarshal2( &openWireFormat, dataStructure, &dataOut, &bs );
 
     // Now read it back in and make sure it's all right.
-    ByteArrayInputStream bais( baos.getByteArray(), baos.getByteArraySize() );
+    ByteArrayInputStream bais( baos.toByteArray(), baos.size() );
     DataInputStream dataIn( &bais );
 
     unsigned char dataType = dataIn.readByte();

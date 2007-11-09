@@ -41,7 +41,7 @@ namespace transport{
         public:
 
             virtual Transport* createTransport(
-                const activemq::util::Properties& properties AMQCPP_UNUSED,
+                const decaf::util::Properties& properties AMQCPP_UNUSED,
                 Transport* next = NULL,
                 bool own = true ) throw ( exceptions::ActiveMQException ) {
 

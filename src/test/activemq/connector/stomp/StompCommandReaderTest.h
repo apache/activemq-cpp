@@ -40,40 +40,40 @@ namespace stomp{
         CPPUNIT_TEST_SUITE_END();
 
     public:
-    
-    	StompCommandReaderTest() {}
-    	virtual ~StompCommandReaderTest() {}
+
+        StompCommandReaderTest() {}
+        virtual ~StompCommandReaderTest() {}
 
         void test( void )
         {
-            io::ByteArrayInputStream biStream;
+            decaf::io::ByteArrayInputStream biStream;
 
             StompCommandReader reader( &biStream );
 
-            const char* connectedStr = 
+            const char* connectedStr =
                 "CONNECTED\nsession:test\n\n\0\n";
-            const char* textStr = 
+            const char* textStr =
                 "MESSAGE\n"
                 "destination:/topic/a\n"
                 "message-id:123\n"
                 "sampleProperty:testvalue\n\n"
                 "testMessage\0\n";
-            const char* bytesStr = 
+            const char* bytesStr =
                 "MESSAGE\n"                    // 8
                 "destination:/topic/a\n"       // 21
                 "message-id:123\n"             // 15
                 "content-length:9\n"           // 17
                 "sampleProperty:testvalue\n\n" // 26
                 "123456789\0\n";               // 11
-            
-            biStream.setByteArray( 
+
+            biStream.setByteArray(
                 (const unsigned char*)connectedStr, 27 );
 
             transport::Command* command = reader.readCommand();
 
             CPPUNIT_ASSERT( command != NULL );
-            
-            commands::ConnectedCommand* connected = 
+
+            commands::ConnectedCommand* connected =
                 dynamic_cast< commands::ConnectedCommand* >( command );
 
             CPPUNIT_ASSERT( connected != NULL );
@@ -82,16 +82,16 @@ namespace stomp{
             std::string sessionId = connected->getSessionId();
             CPPUNIT_ASSERT( sessionId == "test" );
 
-            biStream.setByteArray( 
+            biStream.setByteArray(
                 (const unsigned char*)textStr, 83 );
 
             delete command;
-            
+
             command = reader.readCommand();
 
             CPPUNIT_ASSERT( command != NULL );
-            
-            commands::TextMessageCommand* textMessage = 
+
+            commands::TextMessageCommand* textMessage =
                 dynamic_cast< commands::TextMessageCommand* >( command );
 
             CPPUNIT_ASSERT( textMessage != NULL );
@@ -100,7 +100,7 @@ namespace stomp{
             std::string text = textMessage->getText();
             CPPUNIT_ASSERT( text == "testMessage" );
 
-            biStream.setByteArray( 
+            biStream.setByteArray(
                 (const unsigned char*)bytesStr, 98 );
 
             delete command;
@@ -108,21 +108,21 @@ namespace stomp{
             command = reader.readCommand();
 
             CPPUNIT_ASSERT( command != NULL );
-            
-            commands::BytesMessageCommand* bytesMessage = 
+
+            commands::BytesMessageCommand* bytesMessage =
                 dynamic_cast< commands::BytesMessageCommand* >( command );
 
             CPPUNIT_ASSERT( bytesMessage != NULL );
 
             CPPUNIT_ASSERT( bytesMessage->getBodyBytes() != NULL );
-            std::string bytesText( 
-                (const char*)bytesMessage->getBodyBytes(), 
+            std::string bytesText(
+                (const char*)bytesMessage->getBodyBytes(),
                 (int)bytesMessage->getBodyLength() );
             CPPUNIT_ASSERT( bytesText == "123456789" );
 
             delete command;
         }
-        
+
     };
 
 }}}

@@ -25,8 +25,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::Primiti
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
-using namespace activemq::io;
-using namespace activemq::exceptions;
+using namespace decaf::io;
+using namespace decaf::lang::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
@@ -45,7 +45,7 @@ void PrimitiveMapMarshallerTest::test()
     float floatValue = 45.6545f;
     double doubleValue = 654564.654654;
     std::string stringValue = "The test string";
-    
+
     myMap.setString( "stringKey", stringValue );
     myMap.setBool( "boolKey", booleanValue );
     myMap.setByte( "byteKey", byteValue );
@@ -55,7 +55,7 @@ void PrimitiveMapMarshallerTest::test()
     myMap.setLong( "longKey", longValue );
     myMap.setFloat( "floatKey", floatValue );
     myMap.setDouble( "doubleKey", doubleValue );
-    
+
     std::vector<unsigned char> bytes;
     bytes.push_back( 65 );
     bytes.push_back( 66 );
@@ -63,15 +63,15 @@ void PrimitiveMapMarshallerTest::test()
     bytes.push_back( 68 );
     bytes.push_back( 69 );
     myMap.setByteArray( "bytesKey", bytes );
-    
+
     std::vector<unsigned char> marshaled;
-    
+
     // Turn it into some bytes
     PrimitiveMapMarshaller::marshal( &myMap, marshaled );
-    
+
     // Try and get it back from those bytes.
     PrimitiveMap* newMap = NULL;
-    
+
     try {
         newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
     } catch(...) {
@@ -79,7 +79,7 @@ void PrimitiveMapMarshallerTest::test()
     }
 
     CPPUNIT_ASSERT( newMap != NULL );
-    
+
     CPPUNIT_ASSERT( myMap.getString( "stringKey" ) == stringValue );
     CPPUNIT_ASSERT( myMap.getBool( "boolKey" ) == booleanValue );
     CPPUNIT_ASSERT( myMap.getByte( "byteKey" ) == byteValue );

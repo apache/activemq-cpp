@@ -25,8 +25,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::BooleanSt
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 
+using namespace decaf;
+using namespace decaf::io;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
@@ -47,16 +48,16 @@ void BooleanStreamTest::test() {
     b1Stream.writeBoolean( false );
     b1Stream.writeBoolean( true );
     b1Stream.writeBoolean( true );
-    
+
     b1Stream.marshal( &daoStream );
-    
+
     BooleanStream b2Stream;
-    io::ByteArrayInputStream baiStream( baoStream.getByteArray(),
-                                        baoStream.getByteArraySize() );
-    io::DataInputStream daiStream( &baiStream );
+    decaf::io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
+                                               baoStream.size() );
+    decaf::io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );
-    
+
     CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
     CPPUNIT_ASSERT( b2Stream.readBoolean() == true );
     CPPUNIT_ASSERT( b2Stream.readBoolean() == false );
@@ -83,10 +84,10 @@ void BooleanStreamTest::test2(){
     }
 
     b1Stream.marshal( &daoStream );
-    
+
     BooleanStream b2Stream;
-    io::ByteArrayInputStream baiStream( baoStream.getByteArray(),
-                                        baoStream.getByteArraySize() );
+    io::ByteArrayInputStream baiStream( baoStream.toByteArray(),
+                                        baoStream.size() );
     io::DataInputStream daiStream( &baiStream );
 
     b2Stream.unmarshal( &daiStream );

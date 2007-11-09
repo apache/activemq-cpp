@@ -22,13 +22,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Thread.h>
+#include <decaf/util/Properties.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/transport/MockTransport.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/openwire/OpenWireConnector.h>
-#include <decaf/util/Properties.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
@@ -41,6 +41,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 
 using namespace activemq;
 using namespace activemq::core;
+using namespace decaf;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnectionTest::test1WithStomp()
@@ -52,8 +54,8 @@ void ActiveMQConnectionTest::test1WithStomp()
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
-        util::Properties* properties =
-            new util::Properties();
+        decaf::util::Properties* properties =
+            new decaf::util::Properties();
         transport::Transport* transport = NULL;
 
         // Default to Stomp
@@ -190,8 +192,8 @@ void ActiveMQConnectionTest::test2WithStomp()
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
-        util::Properties* properties =
-            new util::Properties();
+        decaf::util::Properties* properties =
+            new decaf::util::Properties();
         transport::Transport* transport = NULL;
 
         // Default to Stomp
@@ -247,8 +249,8 @@ void ActiveMQConnectionTest::test2WithOpenwire()
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
-        util::Properties* properties =
-            new util::Properties();
+        decaf::util::Properties* properties =
+            new decaf::util::Properties();
         transport::Transport* transport = NULL;
 
         // Default to Stomp

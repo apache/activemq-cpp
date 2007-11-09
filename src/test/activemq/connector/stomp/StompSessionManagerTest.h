@@ -85,7 +85,7 @@ namespace stomp{
                 subscribe = dynamic_cast< commands::SubscribeCommand* >( command );
                 if( subscribe )
                 {
-                    const util::Properties& properties =
+                    const decaf::util::Properties& properties =
                         subscribe->getProperties();
 
                     for( size_t ix = 0; ix < expected.size(); ++ix )

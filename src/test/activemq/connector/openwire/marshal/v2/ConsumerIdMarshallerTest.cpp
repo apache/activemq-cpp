@@ -22,12 +22,12 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::v2::ConsumerIdMarshallerTest );
 
-#include <decaf/io/DataInputStream.h>
-#include <decaf/io/DataOutputStream.h>
-#include <decaf/io/IOException.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/IOException.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/util/Properties.h>
@@ -39,7 +39,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::v2::Con
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
@@ -48,6 +47,9 @@ using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal::v2;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::util;
 
 ///////////////////////////////////////////////////////////////////////////////
 void ConsumerIdMarshallerTest::test() {

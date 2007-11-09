@@ -209,8 +209,8 @@ namespace commands{
                 (std::string)CommandConstants::topicPrefix + "mytopic" );
 
             // write a bunch of values to the frame's body.
-            io::ByteArrayOutputStream os( frame->getBody() );
-            io::DataOutputStream dos(&os);
+            decaf::io::ByteArrayOutputStream os( frame->getBody() );
+            decaf::io::DataOutputStream dos(&os);
             dos.writeBoolean( true );
             dos.writeByte( 1 );
             dos.writeChar( 'a' );
@@ -230,67 +230,67 @@ namespace commands{
             try{
                 cmd.setBodyBytes( (unsigned char*)"test", 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeBoolean( true );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeByte( 2 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeBytes( std::vector<unsigned char>() );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeBytes( (unsigned char*)"test", 0, 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeChar( 'a' );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeFloat( 1.0f );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeDouble( 1.0 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeUnsignedShort( 3 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeShort( 4 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeInt( 5 );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeLong( 6LL );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.writeString( "test" );
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             // Now, verify that all the reads work properly
 
@@ -315,58 +315,58 @@ namespace commands{
             try{
                 cmd.readBoolean();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readByte();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 std::vector<unsigned char> buf;
                 cmd.readBytes(buf);
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readChar();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readFloat();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readDouble();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readUnsignedShort();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readShort();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readInt();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readLong();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             try{
                 cmd.readString();
                 CPPUNIT_ASSERT( false );
-            } catch( exceptions::IllegalStateException& e ){}
+            } catch( decaf::lang::exceptions::IllegalStateException& e ){}
 
             // Now, verify that all the writes work properly
 

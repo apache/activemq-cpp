@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "OpenwireStringSupportTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireStringSupportTest );
@@ -27,8 +27,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireS
 #include <decaf/io/DataOutputStream.h>
 
 using namespace std;
+using namespace decaf;
+using namespace decaf::io;
 using namespace activemq;
-using namespace activemq::io;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::utils;
@@ -38,18 +39,18 @@ void OpenwireStringSupportTest::test()
 {
     ByteArrayInputStream bytesIn;
     ByteArrayOutputStream bytesOut;
-    
+
     DataInputStream dataIn( &bytesIn );
     DataOutputStream dataOut( &bytesOut );
 
     string testStr = "This is a test string for Openwire";
 
     OpenwireStringSupport::writeString( dataOut, &testStr );
-    
+
     // Move the output back to the input.
-    bytesIn.setByteArray( bytesOut.getByteArray(), bytesOut.getByteArraySize() );
+    bytesIn.setByteArray( bytesOut.toByteArray(), bytesOut.size() );
 
     string resultStr = OpenwireStringSupport::readString( dataIn );
-    
+
     CPPUNIT_ASSERT( testStr == resultStr );
 }
