@@ -37,12 +37,10 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
                                           ActiveMQSession* session,
-                                          const Properties& properties )
-{
-    try
-    {
-        if( connection == NULL || session == NULL )
-        {
+                                          const Properties& properties ) {
+    try {
+
+        if( connection == NULL || session == NULL ) {
             throw NullPointerException(
                 __FILE__, __LINE__,
                 "ActiveMQTransaction::ActiveMQTransaction - "
@@ -66,10 +64,10 @@ ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTransaction::~ActiveMQTransaction(void)
-{
-    try
-    {
+ActiveMQTransaction::~ActiveMQTransaction() {
+
+    try{
+
         // Inform the connector we are rolling back before we close so that
         // the provider knows we didn't complete this transaction
         connection->getConnectionData()->getConnector()->
@@ -83,29 +81,27 @@ ActiveMQTransaction::~ActiveMQTransaction(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::clearTransaction(void)
-{
-    try
-    {
-        if( transactionInfo != NULL )
-        {
+void ActiveMQTransaction::clearTransaction() {
+
+    try{
+
+        if( transactionInfo != NULL ) {
             // Dispose of the ProducerInfo
             transactionInfo->close();
             delete transactionInfo;
         }
 
-        synchronized( &rollbackLock )
-        {
+        synchronized( &rollbackLock ) {
+
             // If there are any messages that are being transacted, then
             // they die once and for all here.
             RollbackMap::iterator itr = rollbackMap.begin();
 
-            for( ; itr != rollbackMap.end(); ++itr )
-            {
+            for( ; itr != rollbackMap.end(); ++itr ) {
+
                 MessageList::iterator msgItr = itr->second.begin();
 
-                for( ; msgItr != itr->second.end(); ++msgItr )
-                {
+                for( ; msgItr != itr->second.end(); ++msgItr ) {
                    delete *msgItr;
                 }
             }
@@ -119,36 +115,31 @@ void ActiveMQTransaction::clearTransaction(void)
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransaction::addToTransaction( ActiveMQMessage* message,
-                                            ActiveMQConsumer* consumer )
-{
-    synchronized( &rollbackLock )
-    {
+                                            ActiveMQConsumer* consumer ) {
+
+    synchronized( &rollbackLock ) {
         // Store in the Multi Map
         rollbackMap[consumer].push_back( message );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::removeFromTransaction(
-    ActiveMQConsumer* consumer )
-{
-    try
-    {
+void ActiveMQTransaction::removeFromTransaction( ActiveMQConsumer* consumer ) {
+
+    try{
+
         // Delete all the messages, then remove the consumer's entry from
         // the Rollback Map.
-        synchronized( &rollbackLock )
-        {
+        synchronized( &rollbackLock ) {
             RollbackMap::iterator rb_itr = rollbackMap.find( consumer );
 
-            if( rb_itr == rollbackMap.end() )
-            {
+            if( rb_itr == rollbackMap.end() ) {
                 return;
             }
 
             MessageList::iterator itr = rb_itr->second.begin();
 
-            for( ; itr != rollbackMap[consumer].end(); ++itr )
-            {
+            for( ; itr != rollbackMap[consumer].end(); ++itr ) {
                delete *itr;
             }
 
@@ -167,8 +158,8 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
 
         // Delete all the messages, then remove the consumer's entry from
         // the Rollback Map.
-        synchronized( &rollbackLock )
-        {
+        synchronized( &rollbackLock ) {
+
             RollbackMap::iterator iter = rollbackMap.begin();
 
             for( ; iter != rollbackMap.end(); ++iter ) {
@@ -187,12 +178,11 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException )
-{
-    try
-    {
-        if( this->transactionInfo == NULL )
-        {
+void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        if( this->transactionInfo == NULL ) {
             throw InvalidStateException(
                 __FILE__, __LINE__,
                 "ActiveMQTransaction::begin - "
@@ -221,12 +211,11 @@ void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
-{
-    try
-    {
-        if( this->transactionInfo == NULL )
-        {
+void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        if( this->transactionInfo == NULL ) {
             throw InvalidStateException(
                 __FILE__, __LINE__,
                 "ActiveMQTransaction::rollback - "
@@ -255,12 +244,11 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException )
         // rollbackLock, then no message will added to the transaction unitll we
         // are done processing all the messages that we to redeliver and the map
         // is cleared.
-        synchronized( &rollbackLock )
-        {
+        synchronized( &rollbackLock ) {
+
             RollbackMap::iterator itr = rollbackMap.begin();
 
-            for(; itr != rollbackMap.end(); ++itr)
-            {
+            for(; itr != rollbackMap.end(); ++itr) {
                 redeliverMessages( itr->first, itr->second );
             }
 
@@ -278,12 +266,12 @@ void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
                                              MessageList& messages )
     throw ( exceptions::ActiveMQException ) {
 
-    try
-    {
+    try {
+
         MessageList::iterator itr = messages.begin();
 
-        for( ; itr != messages.end(); ++itr )
-        {
+        for( ; itr != messages.end(); ++itr ) {
+
             ActiveMQMessage* message = *itr;
             message->setRedeliveryCount( message->getRedeliveryCount() + 1 );
 
@@ -308,5 +296,6 @@ void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
