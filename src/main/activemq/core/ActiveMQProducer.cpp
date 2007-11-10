@@ -33,11 +33,10 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
-                                    ActiveMQSession* session )
-{
-    if( session == NULL || producerInfo == NULL )
-    {
-        throw NullPointerException(
+                                    ActiveMQSession* session ) {
+
+    if( session == NULL || producerInfo == NULL ) {
+        throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQProducer::ActiveMQProducer - Init with NULL Session" );
     }
@@ -58,12 +57,9 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::~ActiveMQProducer(void)
-{
-    try
-    {
+ActiveMQProducer::~ActiveMQProducer() {
+    try {
         close();
-
         delete producerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
@@ -71,11 +67,10 @@ ActiveMQProducer::~ActiveMQProducer(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::close()
-    throw ( cms::CMSException )
-{
-    try
-    {
+void ActiveMQProducer::close() throw ( cms::CMSException ) {
+
+    try{
+
         if( !closed ) {
 
             // Close the ProducerInfo
@@ -89,18 +84,18 @@ void ActiveMQProducer::close()
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( cms::Message* message )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
@@ -108,19 +103,18 @@ void ActiveMQProducer::send( cms::Message* message )
         send( producerInfo->getDestination(), message );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
                              int priority, long long timeToLive )
-                                throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+                                throw ( cms::CMSException ) {
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
@@ -129,18 +123,18 @@ void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
               priority, timeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( const cms::Destination* destination,
-                             cms::Message* message ) throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+                             cms::Message* message ) throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
@@ -149,6 +143,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
               defaultPriority, defaultTimeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -156,20 +151,19 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 void ActiveMQProducer::send( const cms::Destination* destination,
                              cms::Message* message, int deliveryMode,
                              int priority, long long timeToLive )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - This Producer is closed" );
         }
 
         if( destination == NULL ) {
 
-            throw InvalidStateException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - Attempting to send on NULL destination");
         }
@@ -194,6 +188,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
         session->send( message, this );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -203,16 +198,15 @@ void ActiveMQProducer::onConnectorResourceClosed(
 
     try{
 
-        if( closed )
-        {
-            throw InvalidStateException(
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::onConnectorResourceClosed - "
                 "Producer Already Closed");
         }
 
         if( resource != producerInfo ) {
-            throw IllegalArgumentException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::onConnectorResourceClosed - "
                 "Unknown object passed to this callback");
@@ -222,5 +216,6 @@ void ActiveMQProducer::onConnectorResourceClosed(
         this->close();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

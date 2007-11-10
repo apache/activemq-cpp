@@ -38,16 +38,16 @@ using namespace activemq::core;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
                                   const Properties& properties,
-                                  ActiveMQConnection* connection )
-{
-    if( sessionInfo == NULL || connection == NULL )
-    {
-        throw NullPointerException(
+                                  ActiveMQConnection* connection ) {
+
+    if( sessionInfo == NULL || connection == NULL ) {
+        throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQSession::ActiveMQSession - Init with NULL data");
     }
@@ -58,8 +58,7 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     this->closed = false;
 
     // Create a Transaction object only if the session is transactional
-    if( isTransacted() )
-    {
+    if( isTransacted() ) {
         transaction =
             new ActiveMQTransaction(connection, this, properties );
     }
@@ -69,10 +68,8 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQSession::~ActiveMQSession()
-{
-    try
-    {
+ActiveMQSession::~ActiveMQSession() {
+    try{
         // Destroy this session's resources
         close();
     }
@@ -95,8 +92,8 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         return;
     }
 
-    try
-    {
+    try {
+
         // Stop the dispatch executor.
         stop();
 
@@ -134,17 +131,17 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         executor = NULL;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::commit() throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed || !isTransacted() )
-        {
-            throw InvalidStateException(
+void ActiveMQSession::commit() throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed || !isTransacted() ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::commit - This Session Can't Commit");
         }
@@ -153,17 +150,17 @@ void ActiveMQSession::commit() throw ( cms::CMSException )
         transaction->commit();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::rollback() throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed || !isTransacted() )
-        {
-            throw InvalidStateException(
+void ActiveMQSession::rollback() throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed || !isTransacted() ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::rollback - This Session Can't Rollback" );
         }
@@ -172,19 +169,19 @@ void ActiveMQSession::rollback() throw ( cms::CMSException )
         transaction->rollback();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageConsumer* ActiveMQSession::createConsumer(
     const cms::Destination* destination )
-        throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+        throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
@@ -192,6 +189,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         return createConsumer( destination, "", false );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -199,13 +197,11 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 cms::MessageConsumer* ActiveMQSession::createConsumer(
     const cms::Destination* destination,
     const std::string& selector )
-        throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+        throw ( cms::CMSException ) {
+
+    try{
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
@@ -213,6 +209,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         return createConsumer( destination, selector, false );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -221,13 +218,12 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
     const cms::Destination* destination,
     const std::string& selector,
     bool noLocal )
-        throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+        throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
@@ -272,6 +268,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         return consumer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -281,13 +278,12 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
     const std::string& name,
     const std::string& selector,
     bool noLocal )
-        throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+        throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createDurableConsumer - Session Already Closed" );
         }
@@ -329,19 +325,19 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         return consumer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MessageProducer* ActiveMQSession::createProducer(
     const cms::Destination* destination )
-        throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+        throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createProducer - Session Already Closed" );
         }
@@ -361,18 +357,17 @@ cms::MessageProducer* ActiveMQSession::createProducer(
         return producer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createQueue - Session Already Closed" );
         }
@@ -387,18 +382,18 @@ cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
         return queue;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createTopic - Session Already Closed");
         }
@@ -413,18 +408,18 @@ cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
         return topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createTemporaryQueue - "
                 "Session Already Closed" );
@@ -442,18 +437,17 @@ cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
         return queue;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createTemporaryTopic - "
                 "Session Already Closed" );
@@ -471,18 +465,17 @@ cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
         return topic;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Message* ActiveMQSession::createMessage()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createMessage - Session Already Closed" );
         }
@@ -497,18 +490,17 @@ cms::Message* ActiveMQSession::createMessage()
         return message;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::BytesMessage* ActiveMQSession::createBytesMessage()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createBytesMessage - Session Already Closed" );
         }
@@ -523,6 +515,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
         return message;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -530,10 +523,9 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
 cms::BytesMessage* ActiveMQSession::createBytesMessage(
     const unsigned char* bytes,
     std::size_t bytesSize )
-        throw ( cms::CMSException )
-{
-    try
-    {
+        throw ( cms::CMSException ) {
+
+    try{
         BytesMessage* msg = createBytesMessage();
 
         msg->setBodyBytes( bytes, bytesSize );
@@ -541,18 +533,18 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage(
         return msg;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* ActiveMQSession::createTextMessage()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createTextMessage - Session Already Closed" );
         }
@@ -567,15 +559,16 @@ cms::TextMessage* ActiveMQSession::createTextMessage()
         return message;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
-    throw ( cms::CMSException )
-{
-    try
-    {
+    throw ( cms::CMSException ) {
+
+    try {
+
         TextMessage* msg = createTextMessage();
 
         msg->setText( text.c_str() );
@@ -583,18 +576,18 @@ cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
         return msg;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::MapMessage* ActiveMQSession::createMapMessage()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createMapMessage - Session Already Closed" );
         }
@@ -609,6 +602,7 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
         return message;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -629,21 +623,19 @@ bool ActiveMQSession::isTransacted() const
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
                                    ActiveMQMessage* message )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::acknowledgeMessage - Session Already Closed" );
         }
 
         // Stores the Message and its consumer in the tranasction, if the
         // session is a transactional one.
-        if( isTransacted() )
-        {
+        if( isTransacted() ) {
             transaction->addToTransaction( message, consumer );
         }
 
@@ -655,18 +647,18 @@ void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
                 dynamic_cast< cms::Message* >( message ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::onProducerClose - Session Already Closed" );
         }
@@ -676,6 +668,7 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
             getConnector()->send( message, producer->getProducerInfo() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -685,9 +678,8 @@ void ActiveMQSession::onConnectorResourceClosed(
 
     try{
 
-        if( closed )
-        {
-            throw InvalidStateException(
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::onProducerClose - Session Already Closed");
         }
@@ -695,8 +687,8 @@ void ActiveMQSession::onConnectorResourceClosed(
         const ConsumerInfo* consumer =
             dynamic_cast<const ConsumerInfo*>( resource );
 
-        if( consumer != NULL )
-        {
+        if( consumer != NULL ) {
+
             // If the executor thread is currently running, stop it.
             bool wasStarted = isStarted();
             if( wasStarted ) {
@@ -758,14 +750,14 @@ void ActiveMQSession::onConnectorResourceClosed(
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQSession::getExceptionListener()
 {
-    if( connection != NULL )
-    {
+    if( connection != NULL ) {
         return connection->getExceptionListener();
     }
 
@@ -774,13 +766,12 @@ cms::ExceptionListener* ActiveMQSession::getExceptionListener()
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::unsubscribe( const std::string& name )
-    throw ( CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( CMSException ) {
+
+    try{
+
+        if( closed ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createConsumer - Session Already Closed" );
         }
@@ -789,6 +780,7 @@ void ActiveMQSession::unsubscribe( const std::string& name )
         connection->getConnectionData()->getConnector()->unsubscribe( name );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -818,8 +810,8 @@ void ActiveMQSession::dispatch( DispatchData& message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages )
-{
+void ActiveMQSession::redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages ) {
+
     decaf::util::Queue<DispatchData> reversedList;
 
     // Copy the list in reverse order then clear the original list.
@@ -836,24 +828,24 @@ void ActiveMQSession::redispatch( decaf::util::Queue<DispatchData>& unconsumedMe
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::start()
-{
+void ActiveMQSession::start() {
+
     if( executor != NULL ) {
         executor->start();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::stop()
-{
+void ActiveMQSession::stop() {
+
     if( executor != NULL ) {
         executor->stop();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool ActiveMQSession::isStarted() const
-{
+bool ActiveMQSession::isStarted() const {
+
     if( executor == NULL ) {
         return false;
     }
