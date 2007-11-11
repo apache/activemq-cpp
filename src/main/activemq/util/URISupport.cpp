@@ -25,12 +25,13 @@
 using namespace activemq;
 using namespace activemq::util;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Properties URISupport::parseQuery( std::string query )
-    throw ( IllegalArgumentException )
-{
+    throw ( IllegalArgumentException ) {
+
     try {
 
         Properties options;
@@ -38,7 +39,7 @@ Properties URISupport::parseQuery( std::string query )
         return options;
     }
     AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( NoSuchElementException, IllegalArgumentException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )
 }
 
@@ -98,6 +99,6 @@ void URISupport::parseQuery( std::string query,
         }
     }
     AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( NoSuchElementException, IllegalArgumentException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )
 }

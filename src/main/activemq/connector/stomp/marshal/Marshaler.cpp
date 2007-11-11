@@ -39,17 +39,18 @@ using namespace activemq::transport;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
 using namespace activemq::connector::stomp::marshal;
+using namespace decaf::lang;
 
-////////////////////////////////////////////////////////////////////////////////      
+////////////////////////////////////////////////////////////////////////////////
 transport::Command* Marshaler::marshal( StompFrame* frame )
-    throw ( MarshalException )
-{
-    try
-    {
-        CommandConstants::CommandId commandId = 
+    throw ( MarshalException ) {
+
+    try {
+
+        CommandConstants::CommandId commandId =
             CommandConstants::toCommandId(frame->getCommand().c_str());
         transport::Command* command = NULL;
-        
+
         if(commandId == CommandConstants::CONNECTED){
             command = new ConnectedCommand( frame );
         }
@@ -60,22 +61,19 @@ transport::Command* Marshaler::marshal( StompFrame* frame )
             command = new ReceiptCommand( frame );
         }
         else if(commandId == CommandConstants::MESSAGE){
+
             if( !frame->getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_CONTENTLENGTH ) ) )
-            {
+                        CommandConstants::HEADER_CONTENTLENGTH ) ) ) {
                 command = new TextMessageCommand( frame );
-            }
-            else
-            {
+            } else {
                 command = new BytesMessageCommand( frame );
             }
         }
-    
+
         // We either got a command or a response, but if we got neither
         // then complain, something went wrong.
-        if(command == NULL)
-        {
+        if(command == NULL) {
             throw MarshalException(
                 __FILE__, __LINE__,
                 "Marshaler::marshal - No Command Created from frame");
@@ -85,25 +83,23 @@ transport::Command* Marshaler::marshal( StompFrame* frame )
     }
     AMQ_CATCH_RETHROW( MarshalException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, MarshalException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, MarshalException )
     AMQ_CATCHALL_THROW( MarshalException )
 }
 
-////////////////////////////////////////////////////////////////////////////////      
+////////////////////////////////////////////////////////////////////////////////
 const StompFrame& Marshaler::marshal( transport::Command* command )
-    throw ( MarshalException )
-{
-    try
-    {
-        Marshalable* marshalable = 
+    throw ( MarshalException ) {
+
+    try{
+
+        Marshalable* marshalable =
             dynamic_cast<Marshalable*>(command);
 
         // Easy, just get the frame from the command
-        if(marshalable != NULL)
-        {        
+        if( marshalable != NULL ) {
             return marshalable->marshal();
-        }
-        else
-        {
+        } else {
             throw MarshalException(
                 __FILE__, __LINE__,
                 "Marshaler::marshal - Invalid Command Type!");
@@ -111,5 +107,6 @@ const StompFrame& Marshaler::marshal( transport::Command* command )
     }
     AMQ_CATCH_RETHROW( MarshalException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, MarshalException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, MarshalException )
     AMQ_CATCHALL_THROW( MarshalException )
 }

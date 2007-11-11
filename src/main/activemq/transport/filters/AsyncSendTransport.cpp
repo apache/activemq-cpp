@@ -29,15 +29,14 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 AsyncSendTransport::AsyncSendTransport( Transport* next, bool own )
- :  TransportFilter( next, own )
-{
+ : TransportFilter( next, own ) {
+
     this->closed = true;
     this->asyncThread = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AsyncSendTransport::~AsyncSendTransport()
-{
+AsyncSendTransport::~AsyncSendTransport() {
     try {
         close();
     }
@@ -47,7 +46,8 @@ AsyncSendTransport::~AsyncSendTransport()
 
 ////////////////////////////////////////////////////////////////////////////////
 void AsyncSendTransport::oneway( Command* command )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -61,6 +61,8 @@ void AsyncSendTransport::oneway( Command* command )
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -77,6 +79,7 @@ void AsyncSendTransport::start() throw( cms::CMSException ) {
         next->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -93,36 +96,35 @@ void AsyncSendTransport::close() throw( cms::CMSException ) {
         next->close();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AsyncSendTransport::run()
-{
+void AsyncSendTransport::run() {
+
     try{
 
-        while( !closed )
-        {
+        while( !closed ) {
+
             Command* command = NULL;
 
-            synchronized( &msgQueue )
-            {
+            synchronized( &msgQueue ) {
+
                 // Gaurd against spurious wakeup or race to sync lock
                 // also if the listner has been unregistered we don't
                 // have anyone to notify, so we wait till a new one is
                 // registered, and then we will deliver the backlog
-                while( msgQueue.empty() )
-                {
-                    if( closed )
-                    {
+                while( msgQueue.empty() ) {
+
+                    if( closed ) {
                         break;
                     }
                     msgQueue.wait();
                 }
 
                 // don't want to process messages if we are shutting down.
-                if( closed )
-                {
+                if( closed ) {
                     return;
                 }
 
@@ -136,9 +138,7 @@ void AsyncSendTransport::run()
             // Destroy Our copy of the message
             delete command;
         }
-    }
-    catch(...)
-    {
+    } catch(...) {
         this->fire( ActiveMQException(
             __FILE__, __LINE__,
             "AsyncSendTransport::run - "
@@ -149,30 +149,29 @@ void AsyncSendTransport::run()
 ////////////////////////////////////////////////////////////////////////////////
 void AsyncSendTransport::startThread() throw ( ActiveMQException ) {
 
-    try
-    {
+    try{
+
         // Start the thread, if it's not already started.
-        if( asyncThread == NULL )
-        {
+        if( asyncThread == NULL ) {
             asyncThread = new Thread( this );
             asyncThread->start();
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AsyncSendTransport::stopThread() throw ( ActiveMQException ) {
 
-    try
-    {
+    try{
+
         // if the thread is running signal it to quit and then
         // wait for run to return so thread can die
-        if( asyncThread != NULL )
-        {
-            synchronized( &msgQueue )
-            {
+        if( asyncThread != NULL ) {
+
+            synchronized( &msgQueue ) {
                 // Force a wakeup if run is in a wait.
                 msgQueue.notifyAll();
             }
@@ -187,18 +186,19 @@ void AsyncSendTransport::stopThread() throw ( ActiveMQException ) {
         purgeMessages();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AsyncSendTransport::purgeMessages() throw ( ActiveMQException )
-{
-    try
-    {
-        synchronized( &msgQueue )
-        {
-            while( !msgQueue.empty() )
-            {
+void AsyncSendTransport::purgeMessages() throw ( ActiveMQException ) {
+
+    try{
+
+        synchronized( &msgQueue ) {
+
+            while( !msgQueue.empty() ) {
+
                 // destroy these messages if this is not a transacted
                 // session, if it is then the tranasction will clean
                 // the messages up.
@@ -207,5 +207,6 @@ void AsyncSendTransport::purgeMessages() throw ( ActiveMQException )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

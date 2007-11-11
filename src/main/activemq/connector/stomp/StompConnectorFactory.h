@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
 
 #include <activemq/connector/ConnectorFactory.h>
 #include <activemq/connector/ConnectorFactoryMapRegistrar.h>
+#include <activemq/connector/stomp/StompConnector.h>
 
 namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompConnectorFactory : public connector::ConnectorFactory
-    {
+    class StompConnectorFactory : public connector::ConnectorFactory {
     public:
 
         virtual ~StompConnectorFactory(void) {}
@@ -36,7 +36,7 @@ namespace stomp{
          * configured with
          * @param transport the Transport instance this connector uses.
          */
-        virtual Connector* createConnector(
+        virtual StompConnector* createConnector(
             const decaf::util::Properties& properties,
             activemq::transport::Transport* transport );
 
@@ -44,10 +44,10 @@ namespace stomp{
          * Returns an instance of this Factory by reference
          * @return StompConnectorFactory reference
          */
-        static ConnectorFactory& getInstance(void);
+        static ConnectorFactory& getInstance();
 
     };
 
 }}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_*/

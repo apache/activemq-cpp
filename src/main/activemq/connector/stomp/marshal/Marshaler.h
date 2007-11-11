@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
 
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompFrame.h>
@@ -26,18 +26,17 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 namespace marshal{
-        
+
     /**
      * Interface for all marshallers between Commands and
      * stomp frames.
      */
-    class Marshaler
-    {
+    class Marshaler {
     public:
-   
+
         Marshaler(void) {}
         virtual ~Marshaler(void) {}
-        
+
         /**
          * Marshall a Stomp Frame to a Stomp Command, the frame is now
          * owned by this Command, caller should not use the frame again.
@@ -47,7 +46,7 @@ namespace marshal{
          */
         virtual transport::Command* marshal( StompFrame* frame )
             throw ( MarshalException );
-      
+
         /**
          * Marshal a Stomp Command to a Stom Frame, if the command that
          * is past is not castable to a Stomp Command an Exception will
@@ -56,7 +55,7 @@ namespace marshal{
          * @return newly Marshaled Stomp Frame
          * @throws MarshalException
          */
-        virtual const StompFrame& marshal( 
+        virtual const StompFrame& marshal(
             transport::Command* command )
                 throw ( MarshalException );
 
@@ -64,4 +63,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_*/

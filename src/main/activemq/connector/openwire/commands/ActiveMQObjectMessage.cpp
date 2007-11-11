@@ -24,17 +24,10 @@ using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQObjectMessage::ActiveMQObjectMessage() :
-    ActiveMQMessageBase<cms::ObjectMessage>()
-{
+    ActiveMQMessageBase<cms::ObjectMessage>() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQObjectMessage::~ActiveMQObjectMessage()
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQObjectMessage::getDataStructureType() const
-{
-    return ActiveMQObjectMessage::ID_ACTIVEMQOBJECTMESSAGE; 
+unsigned char ActiveMQObjectMessage::getDataStructureType() const {
+    return ActiveMQObjectMessage::ID_ACTIVEMQOBJECTMESSAGE;
 }

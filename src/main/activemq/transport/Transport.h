@@ -47,14 +47,11 @@ namespace transport{
      * provide object(s) that implement the CommandReader and CommandWriter
      * interfaces.
      */
-    class Transport
-    :
-        public cms::Startable,
-        public cms::Closeable
-    {
+    class Transport : public cms::Startable,
+                      public cms::Closeable {
     public:
 
-        virtual ~Transport(){}
+        virtual ~Transport() {}
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
@@ -111,4 +108,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORT_H_*/

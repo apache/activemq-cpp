@@ -31,8 +31,7 @@ namespace wireformat{
      * the properties that are set in the passed <code>Properties</code>
      * object.
      */
-    class WireFormatFactory
-    {
+    class WireFormatFactory {
     public:
 
         virtual ~WireFormatFactory() {}

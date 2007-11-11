@@ -24,8 +24,7 @@ namespace connector{
 
     class SessionInfo;
 
-    class TransactionInfo : public BaseConnectorResource
-    {
+    class TransactionInfo : public BaseConnectorResource {
     public:
 
         TransactionInfo() : BaseConnectorResource() {}

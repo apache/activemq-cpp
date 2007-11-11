@@ -23,8 +23,7 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempQueue::ActiveMQTempQueue() : ActiveMQTempDestination()
-{
+ActiveMQTempQueue::ActiveMQTempQueue() : ActiveMQTempDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,8 +32,7 @@ ActiveMQTempQueue::ActiveMQTempQueue( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempQueue::~ActiveMQTempQueue()
-{
+ActiveMQTempQueue::~ActiveMQTempQueue() {
     try {
         this->close();
     }
@@ -42,8 +40,6 @@ ActiveMQTempQueue::~ActiveMQTempQueue()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQTempQueue::getDataStructureType() const
-{
+unsigned char ActiveMQTempQueue::getDataStructureType() const {
     return ActiveMQTempQueue::ID_ACTIVEMQTEMPQUEUE;
 }
-

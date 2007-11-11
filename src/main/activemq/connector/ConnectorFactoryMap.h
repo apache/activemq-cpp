@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CONNECTORFACTORYMAP_H_
-#define CONNECTORFACTORYMAP_H_
+#ifndef _ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAP_H_
+#define _ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAP_H_
 
 #include <map>
 #include <vector>
@@ -32,23 +32,22 @@ namespace connector{
      * find the associated factory.  This class does not take ownership
      * of the stored factories, they must be deallocated somewhere.
      */
-    class ConnectorFactoryMap
-    {
+    class ConnectorFactoryMap {
     public:
-      
+
         /**
          * Gets a singleton instance of this class.
          */
-        static ConnectorFactoryMap* getInstance(void);
+        static ConnectorFactoryMap* getInstance();
 
         /**
          * Registers a new Connector Factory with this map
          * @param name to associate the factory with
          * @param factory to store.
         */
-        void registerConnectorFactory( const std::string& name, 
+        void registerConnectorFactory( const std::string& name,
                                        ConnectorFactory* factory );
-      
+
         /**
          * Unregisters a Connector Factory with this map
          * @param name of the factory to remove
@@ -61,7 +60,7 @@ namespace connector{
          * @return the factory assciated with the name, or NULL
          */
         ConnectorFactory* lookup( const std::string& name );
-      
+
         /**
          * Fetch a list of factory names that this Map contains
          * @param factoryList vector object to receive the list
@@ -70,24 +69,24 @@ namespace connector{
         std::size_t getFactoryNames( std::vector< std::string >& factoryList );
 
     private:
-   
+
         // Hidden Contrustor, prevents instantiation
         ConnectorFactoryMap() {};
-      
+
         // Hidden Destructor.
         virtual ~ConnectorFactoryMap() {};
- 
+
         // Hidden Copy Constructore
         ConnectorFactoryMap( const ConnectorFactoryMap& factoryMap );
-      
+
         // Hidden Assignment operator
         ConnectorFactoryMap operator=( const ConnectorFactoryMap& factoryMap );
 
         // Map of Factories
         std::map< std::string, ConnectorFactory* > factoryMap;
-      
+
     };
 
 }}
 
-#endif /*CONNECTORFACTORYMAP_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAP_H_*/

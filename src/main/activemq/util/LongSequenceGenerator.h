@@ -26,7 +26,7 @@ namespace util{
 
     /**
      * This class is used to generate a sequence of long long values that
-     * is incremented each time a new value is requested.  This class is
+     * are incremented each time a new value is requested.  This class is
      * thread safe so the ids can be requested in different threads safely.
      */
     class LongSequenceGenerator {

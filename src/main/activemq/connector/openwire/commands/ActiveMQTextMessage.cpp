@@ -21,24 +21,23 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTextMessage::ActiveMQTextMessage() :
-    ActiveMQMessageBase<cms::TextMessage>()
-{
+    ActiveMQMessageBase<cms::TextMessage>() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTextMessage::~ActiveMQTextMessage()
-{
+ActiveMQTextMessage::~ActiveMQTextMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQTextMessage::getDataStructureType() const
-{
+unsigned char ActiveMQTextMessage::getDataStructureType() const {
     return ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE;
 }
 
@@ -52,8 +51,9 @@ std::string ActiveMQTextMessage::getText() const throw( cms::CMSException ) {
 
         return std::string( (const char*)&getContent()[4], getContent().size()-4 );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,8 +61,9 @@ void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) 
     try{
         setText( std::string(msg) );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +77,7 @@ void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSExcep
         dos.writeInt( (int)msg.length() );
         dos.write( (const unsigned char*)msg.c_str(), 0, msg.length() );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

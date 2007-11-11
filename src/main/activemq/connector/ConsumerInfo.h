@@ -25,8 +25,7 @@
 namespace activemq{
 namespace connector{
 
-    class ConsumerInfo : public BaseConnectorResource
-    {
+    class ConsumerInfo : public BaseConnectorResource {
     public:
 
         ConsumerInfo() : BaseConnectorResource() {}

@@ -46,19 +46,20 @@ using namespace activemq::exceptions;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
 
-using namespace decaf::lang;
+using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
-LOGDECAF_INITIALIZE(logger, StompConnector, "activemq.connector.stomp.StompConnector" )
+////////////////////////////////////////////////////////////////////////////////
+LOGDECAF_INITIALIZE( logger, StompConnector, "activemq.connector.stomp.StompConnector" )
 
 ////////////////////////////////////////////////////////////////////////////////
 StompConnector::StompConnector( Transport* transport,
                                 const decaf::util::Properties& properties )
-    throw ( IllegalArgumentException )
-{
-    if( transport == NULL )
-    {
+    throw ( IllegalArgumentException ) {
+
+    if( transport == NULL ) {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "StompConnector::StompConnector - Transport cannot be NULL");
@@ -86,10 +87,10 @@ StompConnector::StompConnector( Transport* transport,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompConnector::~StompConnector()
-{
-    try
-    {
+StompConnector::~StompConnector() {
+
+    try{
+
         close();
 
         delete transport;
@@ -100,10 +101,9 @@ StompConnector::~StompConnector()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::enforceConnected() throw ( ConnectorException )
-{
-    if( state != CONNECTION_STATE_CONNECTED )
-    {
+void StompConnector::enforceConnected() throw ( ConnectorException ) {
+
+    if( state != CONNECTION_STATE_CONNECTED ) {
         throw StompConnectorException(
             __FILE__, __LINE__,
             "StompConnector::enforceConnected - Not Connected!" );
@@ -113,27 +113,24 @@ void StompConnector::enforceConnected() throw ( ConnectorException )
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::addCmdListener(
     commands::CommandConstants::CommandId commandId,
-    StompCommandListener* listener )
-{
+    StompCommandListener* listener ) {
     cmdListenerMap.insert( make_pair( commandId, listener ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::removeCmdListener(
-    commands::CommandConstants::CommandId commandId )
-{
+    commands::CommandConstants::CommandId commandId ) {
     cmdListenerMap.erase( commandId );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::start() throw( cms::CMSException )
-{
-    try
-    {
-        synchronized( &mutex )
-        {
-            if( state == CONNECTION_STATE_CONNECTED )
-            {
+void StompConnector::start() throw( cms::CMSException ) {
+
+    try{
+
+        synchronized( &mutex ) {
+
+            if( state == CONNECTION_STATE_CONNECTED ) {
                 throw ActiveMQException(
                     __FILE__, __LINE__,
                     "StompConnector::start - already started" );
@@ -147,14 +144,15 @@ void StompConnector::start() throw( cms::CMSException )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::close() throw( cms::CMSException ){
 
-    try
-    {
+    try{
+
         if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
@@ -169,14 +167,15 @@ void StompConnector::close() throw( cms::CMSException ){
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::connect()
-{
-    try
-    {
+void StompConnector::connect() {
+
+    try{
+
         // Mark this connector as started.
         state = CONNECTION_STATE_CONNECTING;
 
@@ -238,13 +237,14 @@ void StompConnector::connect()
         delete response;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::disconnect()
-{
-    try {
+void StompConnector::disconnect() {
+
+    try{
 
         // Mark state as no longer connected.
         state = CONNECTION_STATE_DISCONNECTED;
@@ -258,19 +258,21 @@ void StompConnector::disconnect()
         throw ex;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo* StompConnector::createSession(
     cms::Session::AcknowledgeMode ackMode )
-        throw( ConnectorException )
-{
+        throw( ConnectorException ) {
+
     try {
         enforceConnected();
         return sessionManager->createSession( ackMode );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -280,28 +282,30 @@ ConsumerInfo* StompConnector::createConsumer(
     SessionInfo* session,
     const std::string& selector,
     bool noLocal )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         return sessionManager->createConsumer(
             destination, session, selector, noLocal );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::startConsumer(ConsumerInfo* consumer )
-        throw ( ConnectorException )
-{
+        throw ( ConnectorException ) {
+
     try {
         enforceConnected();
         return sessionManager->startConsumer(consumer);
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -312,16 +316,17 @@ ConsumerInfo* StompConnector::createDurableConsumer(
     const std::string& name,
     const std::string& selector,
     bool noLocal )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         return sessionManager->createDurableConsumer(
             topic, session, name, selector, noLocal );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -329,10 +334,10 @@ ConsumerInfo* StompConnector::createDurableConsumer(
 ProducerInfo* StompConnector::createProducer(
     const cms::Destination* destination,
     SessionInfo* session )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         ProducerInfo* producer = new StompProducerInfo( this );
@@ -344,40 +349,43 @@ ProducerInfo* StompConnector::createProducer(
         return producer;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* StompConnector::createTopic( const std::string& name,
                                          SessionInfo* session AMQCPP_UNUSED)
-    throw ( ConnectorException )
-{
+    throw ( ConnectorException ) {
+
     try {
         enforceConnected();
         return new StompTopic( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* StompConnector::createQueue( const std::string& name,
                                          SessionInfo* session AMQCPP_UNUSED)
-    throw ( ConnectorException )
-{
+    throw ( ConnectorException ) {
+
     try {
         enforceConnected();
         return new StompQueue( name );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryTopic* StompConnector::createTemporaryTopic(
     SessionInfo* session AMQCPP_UNUSED)
-        throw ( ConnectorException, UnsupportedOperationException )
-{
+        throw ( ConnectorException, UnsupportedOperationException ) {
+
     try {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
@@ -385,6 +393,7 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -392,8 +401,8 @@ cms::TemporaryTopic* StompConnector::createTemporaryTopic(
 ////////////////////////////////////////////////////////////////////////////////
 cms::TemporaryQueue* StompConnector::createTemporaryQueue(
     SessionInfo* session AMQCPP_UNUSED)
-        throw ( ConnectorException, UnsupportedOperationException )
-{
+        throw ( ConnectorException, UnsupportedOperationException ) {
+
     try {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
@@ -401,6 +410,7 @@ cms::TemporaryQueue* StompConnector::createTemporaryQueue(
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -408,30 +418,28 @@ cms::TemporaryQueue* StompConnector::createTemporaryQueue(
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::send( cms::Message* message,
                            ProducerInfo* producerInfo )
-    throw ( ConnectorException )
-{
-    try
-    {
+    throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         const SessionInfo* session = producerInfo->getSessionInfo();
         Command* command = dynamic_cast< transport::Command* >( message );
 
-        if( command == NULL )
-        {
+        if( command == NULL ) {
             throw StompConnectorException(
                 __FILE__, __LINE__,
                 "StompConnector::send - "
                 "Message is not a valid stomp type.");
         }
 
-        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED )
-        {
+        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
             StompCommand* stompCommand =
                 dynamic_cast< StompCommand* >( message );
 
-            if( stompCommand == NULL )
-            {
+            if( stompCommand == NULL ) {
                 throw StompConnectorException(
                     __FILE__, __LINE__,
                     "StompConnector::send - "
@@ -452,16 +460,17 @@ void StompConnector::send( cms::Message* message,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::send( std::list<cms::Message*>& messages,
                            ProducerInfo* producerInfo )
-    throw ( ConnectorException )
-{
-    try
-    {
+    throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         list< cms::Message* >::const_iterator itr = messages.begin();
@@ -471,6 +480,7 @@ void StompConnector::send( std::list<cms::Message*>& messages,
         }
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -479,8 +489,8 @@ void StompConnector::acknowledge( const SessionInfo* session,
                                   const ConsumerInfo* consumer AMQCPP_UNUSED,
                                   const cms::Message* message,
                                   AckType ackType AMQCPP_UNUSED)
-    throw ( ConnectorException )
-{
+    throw ( ConnectorException ) {
+
     try {
 
         enforceConnected();
@@ -508,16 +518,17 @@ void StompConnector::acknowledge( const SessionInfo* session,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* StompConnector::startTransaction(
     SessionInfo* session )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         TransactionInfo* transaction = new StompTransactionInfo( this );
@@ -541,6 +552,7 @@ TransactionInfo* StompConnector::startTransaction(
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
@@ -548,10 +560,10 @@ TransactionInfo* StompConnector::startTransaction(
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::commit( TransactionInfo* transaction,
                              SessionInfo* session AMQCPP_UNUSED)
-    throw ( ConnectorException )
-{
-    try
-    {
+    throw ( ConnectorException ) {
+
+    try {
+
         enforceConnected();
 
         CommitCommand cmd;
@@ -567,16 +579,17 @@ void StompConnector::commit( TransactionInfo* transaction,
             ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::rollback( TransactionInfo* transaction,
                                SessionInfo* session AMQCPP_UNUSED)
-    throw ( ConnectorException )
-{
-    try
-    {
+    throw ( ConnectorException ) {
+
+    try {
+
         enforceConnected();
 
         AbortCommand cmd;
@@ -588,10 +601,10 @@ void StompConnector::rollback( TransactionInfo* transaction,
     }
     catch( CommandIOException& ex ){
         transport->close();
-        throw ConnectorException( __FILE__, __LINE__,
-            ex.what() );
+        throw ConnectorException( __FILE__, __LINE__, ex.what() );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -599,16 +612,15 @@ void StompConnector::rollback( TransactionInfo* transaction,
 cms::Message* StompConnector::createMessage(
     SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         MessageCommand* cmd = new MessageCommand();
 
-        if( transaction != NULL )
-        {
+        if( transaction != NULL ) {
             cmd->setTransactionId(
                 Long::toString( transaction->getTransactionId() ) );
         }
@@ -616,6 +628,7 @@ cms::Message* StompConnector::createMessage(
         return cmd;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -623,16 +636,15 @@ cms::Message* StompConnector::createMessage(
 cms::BytesMessage* StompConnector::createBytesMessage(
     SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         BytesMessageCommand* cmd = new BytesMessageCommand();
 
-        if( transaction != NULL )
-        {
+        if( transaction != NULL ) {
             cmd->setTransactionId(
                 Long::toString( transaction->getTransactionId() ) );
         }
@@ -640,6 +652,7 @@ cms::BytesMessage* StompConnector::createBytesMessage(
         return cmd;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -647,16 +660,15 @@ cms::BytesMessage* StompConnector::createBytesMessage(
 cms::TextMessage* StompConnector::createTextMessage(
     SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction )
-        throw ( ConnectorException )
-{
-    try
-    {
+        throw ( ConnectorException ) {
+
+    try{
+
         enforceConnected();
 
         TextMessageCommand* cmd = new TextMessageCommand;
 
-        if( transaction != NULL )
-        {
+        if( transaction != NULL ) {
             cmd->setTransactionId(
                 Long::toString( transaction->getTransactionId() ) );
         }
@@ -664,6 +676,7 @@ cms::TextMessage* StompConnector::createTextMessage(
         return cmd;
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
@@ -671,48 +684,48 @@ cms::TextMessage* StompConnector::createTextMessage(
 cms::MapMessage* StompConnector::createMapMessage(
     SessionInfo* session AMQCPP_UNUSED,
     TransactionInfo* transaction AMQCPP_UNUSED )
-        throw ( ConnectorException, UnsupportedOperationException )
-{
-    try
-    {
+        throw ( ConnectorException, UnsupportedOperationException ) {
+
+    try{
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "StompConnector::createMapMessage - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
     return NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
-    throw ( ConnectorException, UnsupportedOperationException )
-{
-    try
-    {
+    throw ( ConnectorException, UnsupportedOperationException ) {
+
+    try {
         throw UnsupportedOperationException(
             __FILE__, __LINE__,
             "StompConnector::unsubscribe - No Stomp Support");
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::closeResource( ConnectorResource* resource )
-    throw ( ConnectorException )
-{
-    try
-    {
+    throw ( ConnectorException ) {
+
+    try{
+
         ConsumerInfo* consumer =
             dynamic_cast<ConsumerInfo*>(resource);
         SessionInfo* session =
             dynamic_cast<SessionInfo*>(resource);
 
-        if( consumer != NULL)
-        {
+        if( consumer != NULL) {
+
             try{
                 sessionManager->removeConsumer( consumer );
             } catch( ConnectorException& ex ){
@@ -723,9 +736,9 @@ void StompConnector::closeResource( ConnectorResource* resource )
                 ex.setMark( __FILE__, __LINE__ );
                 throw ex;
             }
-        }
-        else if( session != NULL)
-        {
+
+        } else if( session != NULL ) {
+
             try{
                 sessionManager->removeSession( session );
             } catch( ConnectorException& ex ){
@@ -739,18 +752,18 @@ void StompConnector::closeResource( ConnectorResource* resource )
         }
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::onCommand( transport::Command* command )
-{
-    try
-    {
+void StompConnector::onCommand( transport::Command* command ) {
+
+    try{
+
         StompCommand* stompCommand = dynamic_cast< StompCommand* >(command);
 
-        if( stompCommand == NULL )
-        {
+        if( stompCommand == NULL ) {
             fire( ConnectorException(
                 __FILE__, __LINE__,
                 "StompConnector::onCommand - Recieved an unknown Command") );
@@ -759,8 +772,7 @@ void StompConnector::onCommand( transport::Command* command )
         CmdListenerMap::iterator itr =
             cmdListenerMap.find( stompCommand->getStompCommandId() );
 
-        if( itr == cmdListenerMap.end() )
-        {
+        if( itr == cmdListenerMap.end() ) {
             fire( ConnectorException(
                 __FILE__, __LINE__,
                 "StompConnector::onCommand - "
@@ -776,42 +788,44 @@ void StompConnector::onCommand( transport::Command* command )
         itr->second->onStompCommand( stompCommand );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::onTransportException(
     transport::Transport* source AMQCPP_UNUSED,
-    const exceptions::ActiveMQException& ex )
-{
-    try
-    {
+    const decaf::lang::Exception& ex ) {
+
+    try{
+
         // We're disconnected - the asynchronous error is expected.
         if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
 
         // We were not closing - log the stack trace.
-        LOGDECAF_WARN(logger, ex.getStackTraceString() );
+        LOGDECAF_WARN( logger, ex.getStackTraceString() );
 
         // Inform the user of the error.
-        fire( ex );
+        ActiveMQException convert( ex );
+        fire( convert );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
     AMQ_CATCHALL_THROW( ConnectorException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnector::onStompCommand( commands::StompCommand* command )
-    throw ( StompConnectorException )
-{
-    try
-    {
+    throw ( StompConnectorException ) {
+
+    try{
+
         ErrorCommand* error =
             dynamic_cast<ErrorCommand*>( command );
 
-        if( error != NULL )
-        {
+        if( error != NULL ) {
             fire( StompConnectorException(
                   __FILE__, __LINE__,
                   ( string( "StompConnector::onStompCommand - " ) +
@@ -825,5 +839,6 @@ void StompConnector::onStompCommand( commands::StompCommand* command )
         delete command;
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException );
 }

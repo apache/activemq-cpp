@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_
 
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
@@ -45,7 +45,7 @@ namespace commands{
                 validate( getFrame() );
         }
 
-        virtual ~ErrorCommand() {};
+        virtual ~ErrorCommand() {}
 
         /**
          * Clone the StompCommand and return the new copy.
@@ -105,8 +105,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::ERROR_CMD ) );
         }
@@ -117,15 +116,14 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ERROR_CMD ) ) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_MESSAGE ) ) ) )
-            {
-                return true;
+                        CommandConstants::HEADER_MESSAGE ) ) ) ) {
+                
+            	return true;
             }
 
             return false;
@@ -135,4 +133,4 @@ namespace commands{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ERRORCOMMAND_H_*/

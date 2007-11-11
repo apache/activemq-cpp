@@ -83,8 +83,7 @@ namespace filters{
          * @throws ActiveMQException
          */
         virtual void wait( unsigned long millisecs )
-            throw( exceptions::ActiveMQException )
-        {
+            throw( exceptions::ActiveMQException ) {
             mutex.wait( millisecs );
         }
 
@@ -126,6 +125,7 @@ namespace filters{
         virtual void setResponse( Response* response ){
             this->response = response;
         }
+
     };
 
 }}}

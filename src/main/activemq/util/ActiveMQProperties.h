@@ -80,7 +80,7 @@ namespace util{
          */
         virtual std::string getProperty( const std::string& name,
                                          const std::string& defaultValue ) const {
-            return properties.getProperty(name,defaultValue);
+            return properties.getProperty( name,defaultValue );
         }
 
         /**
@@ -91,7 +91,7 @@ namespace util{
          */
         virtual void setProperty( const std::string& name,
                                   const std::string& value ){
-            properties.setProperty(name,value);
+            properties.setProperty( name,value );
         }
 
         /**
@@ -99,8 +99,7 @@ namespace util{
          * @param name - property name to check for in this properties set.
          * @return true if property exists, false otherwise.
          */
-        virtual bool hasProperty( const std::string& name ) const
-        {
+        virtual bool hasProperty( const std::string& name ) const {
             return properties.hasProperty(name);
         }
 

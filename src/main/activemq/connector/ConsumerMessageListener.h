@@ -30,7 +30,7 @@ namespace connector{
     class ConsumerMessageListener{
     public:
 
-        virtual ~ConsumerMessageListener(){}
+        virtual ~ConsumerMessageListener() {}
 
         /**
          * Called to dispatch a message to a particular consumer.
@@ -38,9 +38,8 @@ namespace connector{
          * @param msg the message to be dispatched. the receiver owns this
          * destroy it.
          */
-        virtual void onConsumerMessage(
-            ConsumerInfo* consumer,
-            core::ActiveMQMessage* msg ) = 0;
+        virtual void onConsumerMessage( ConsumerInfo* consumer,
+                                        core::ActiveMQMessage* msg ) = 0;
 
     };
 

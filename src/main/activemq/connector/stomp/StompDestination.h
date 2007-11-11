@@ -37,8 +37,7 @@ namespace stomp{
      * one of Topic, Queue, TemporaryTopic, or TemporaryQueue.
      */
     template <typename T>
-    class StompDestination : public T
-    {
+    class StompDestination : public T {
     private:
 
         // Params that are optional on the destination
@@ -67,8 +66,8 @@ namespace stomp{
          */
         StompDestination( const std::string& dest,
                           cms::Destination::DestinationType destType ) {
-            try
-            {
+            try{
+
                 decaf::util::StringTokenizer tokenizer(dest, "?&");
                 std::vector<std::string> tokens;
 
@@ -76,8 +75,7 @@ namespace stomp{
                 this->destType = destType;
 
                 // Require that there at least one token, the dest
-                if( tokenizer.countTokens() < 1 )
-                {
+                if( tokenizer.countTokens() < 1 ) {
                     throw decaf::lang::exceptions::IllegalArgumentException(
                         __FILE__, __LINE__,
                         ( std::string(
@@ -91,12 +89,11 @@ namespace stomp{
                 // Now get all the optional parameters and store them as properties
                 int count = tokenizer.toArray( tokens );
 
-                for( int i = 0; i < count; ++i )
-                {
+                for( int i = 0; i < count; ++i ) {
+
                     tokenizer.reset( tokens[i], "=" );
 
-                    if( tokenizer.countTokens() != 2 )
-                    {
+                    if( tokenizer.countTokens() != 2 ) {
                         throw decaf::lang::exceptions::IllegalArgumentException(
                             __FILE__, __LINE__,
                             ( std::string(
@@ -187,8 +184,8 @@ namespace stomp{
          */
         virtual void copy( const cms::Destination& source ) {
 
-            try
-            {
+            try{
+
                 // This will throw an Bad Cast Exception if the destination
                 // isn't a compatible type
                 const StompDestination<T>& destination =

@@ -29,25 +29,22 @@ using namespace decaf::io;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandWriter::StompCommandWriter()
-{
+StompCommandWriter::StompCommandWriter() {
     outputStream = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandWriter::StompCommandWriter( OutputStream* os )
-{
+StompCommandWriter::StompCommandWriter( OutputStream* os ) {
     outputStream = os;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandWriter::writeCommand( Command* command )
-    throw ( transport::CommandIOException )
-{
-    try
-    {
-        if( outputStream == NULL )
-        {
+    throw ( transport::CommandIOException ) {
+
+    try{
+
+        if( outputStream == NULL ) {
             throw CommandIOException(
                 __FILE__, __LINE__,
                 "StompCommandWriter::writeCommand - "
@@ -63,8 +60,7 @@ void StompCommandWriter::writeCommand( Command* command )
 
         // Write all the headers.
         vector< pair<string,string> > headers = frame.getProperties().toArray();
-        for( std::size_t ix=0; ix < headers.size(); ++ix )
-        {
+        for( std::size_t ix=0; ix < headers.size(); ++ix ) {
             string& name = headers[ix].first;
             string& value = headers[ix].second;
 
@@ -79,16 +75,15 @@ void StompCommandWriter::writeCommand( Command* command )
 
         // Write the body.
         const std::vector<unsigned char>& body = frame.getBody();
-        if( body.size() > 0 )
-        {
+        if( body.size() > 0 ) {
             write( &body[0], body.size() );
         }
 
         if( ( frame.getBodyLength() == 0 ) ||
             ( frame.getProperties().getProperty(
                   CommandConstants::toString(
-                      CommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) )
-        {
+                      CommandConstants::HEADER_CONTENTLENGTH ), "" ) != "" ) ) {
+
             writeByte( '\0' );
         }
 
@@ -104,34 +99,53 @@ void StompCommandWriter::writeCommand( Command* command )
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandWriter::write( const unsigned char* buffer, std::size_t count )
-    throw( IOException )
-{
-    if( outputStream == NULL )
-    {
+    throw( IOException ) {
+
+    if( outputStream == NULL ) {
         throw IOException(
-            __FILE__, __LINE__,
-            "StompCommandWriter::write(char*,int) - input stream is NULL" );
+        __FILE__, __LINE__,
+        "StompCommandWriter::write(char*,int) - output stream is NULL" );
     }
 
-    outputStream->write( buffer, 0, count );
+    try {
+        outputStream->write( buffer, 0, count );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompCommandWriter::writeByte( unsigned char v ) throw( IOException )
-{
-    if( outputStream == NULL )
-    {
+void StompCommandWriter::writeByte( unsigned char v ) throw( IOException ) {
+
+    if( outputStream == NULL ) {
         throw IOException(
-            __FILE__, __LINE__,
-            "StompCommandWriter::write(char) - input stream is NULL" );
+        __FILE__, __LINE__,
+        "StompCommandWriter::writeByte( char ) - output stream is NULL" );
     }
 
-    outputStream->write( v );
+    try {
+        outputStream->write( v );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandWriter::write( const char* buffer, std::size_t count )
    throw( decaf::io::IOException )
 {
-    write( reinterpret_cast<const unsigned char*>( buffer ), count );
+    if( outputStream == NULL ) {
+        throw IOException(
+        __FILE__, __LINE__,
+        "StompCommandWriter::write() - output stream is NULL" );
+    }
+
+    try {
+        write( reinterpret_cast<const unsigned char*>( buffer ), count );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

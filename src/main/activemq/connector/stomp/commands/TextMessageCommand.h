@@ -28,8 +28,7 @@ namespace connector{
 namespace stomp{
 namespace commands{
 
-    class TextMessageCommand : public StompMessage< cms::TextMessage >
-    {
+    class TextMessageCommand : public StompMessage< cms::TextMessage > {
     public:
 
         TextMessageCommand() :
@@ -72,12 +71,17 @@ namespace commands{
          */
         virtual std::string getText() const throw( cms::CMSException ) {
 
-            const std::vector<unsigned char>& bytes = getBytes();
-            if( bytes.size() == 0 ){
-                return "";
-            }
+            try{
+                const std::vector<unsigned char>& bytes = getBytes();
+                if( bytes.size() == 0 ){
+                    return "";
+                }
 
-            return std::string( (char*)&bytes[0] );
+                return std::string( (char*)&bytes[0] );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -85,7 +89,12 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const char* msg ) throw( cms::CMSException ) {
-            setBytes( (unsigned char*)msg, strlen(msg) + 1 );
+            try{
+                setBytes( (unsigned char*)msg, strlen(msg) + 1 );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -93,7 +102,12 @@ namespace commands{
          * @param msg The message buffer.
          */
         virtual void setText( const std::string& msg ) throw( cms::CMSException ) {
-            setBytes( (unsigned char*)msg.c_str(), msg.length() + 1 );
+            try{
+                setBytes( (unsigned char*)msg.c_str(), msg.length() + 1 );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     };

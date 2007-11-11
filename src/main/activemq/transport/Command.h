@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_COMMAND_H_
-#define ACTIVEMQ_TRANSPORT_COMMAND_H_
+#ifndef _ACTIVEMQ_TRANSPORT_COMMAND_H_
+#define _ACTIVEMQ_TRANSPORT_COMMAND_H_
 
 #include <string>
 
@@ -26,7 +26,7 @@ namespace transport{
     class Command{
     public:
 
-        virtual ~Command(){}
+        virtual ~Command() {}
 
         /**
          * Sets the Command Id of this Message
@@ -69,4 +69,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_COMMAND_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_COMMAND_H_*/

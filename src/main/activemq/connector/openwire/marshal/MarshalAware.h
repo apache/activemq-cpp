@@ -30,8 +30,7 @@ namespace openwire{
 
 namespace marshal{
 
-    class MarshalAware
-    {
+    class MarshalAware {
     public:
 
         virtual ~MarshalAware() {}

@@ -65,7 +65,6 @@ Response* OpenWireResponseBuilder::buildResponse(
     // If this command requires a response we don't know what it is
     // so we throw an exception.
     if( command->isResponseRequired() ) {
-
         throw transport::CommandIOException( __FILE__, __LINE__,
             "OpenWireResponseBuilder - unrecognized command" );
     }

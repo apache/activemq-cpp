@@ -18,10 +18,10 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 
+#include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/DataOutputStream.h>
 

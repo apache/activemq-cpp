@@ -43,11 +43,8 @@ namespace commands{
      * more user-friendly interface to the frame content.
      */
     template<typename T>
-    class AbstractCommand
-    :
-        public StompCommand,
-        public T
-    {
+    class AbstractCommand : public StompCommand,
+                            public T {
     protected:
 
         // Frame that contains the actual message
@@ -173,7 +170,7 @@ namespace commands{
          * require it.
          * @param id Command Id
          */
-        virtual void setCommandId( int id AMQCPP_UNUSED){
+        virtual void setCommandId( int id AMQCPP_UNUSED ){
             /* do nothing */
         }
 
@@ -204,7 +201,7 @@ namespace commands{
         virtual bool isResponseRequired() const {
             return frame->getProperties().hasProperty(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_REQUESTID) );
+                    CommandConstants::HEADER_REQUESTID ) );
         }
 
         /**
@@ -226,7 +223,7 @@ namespace commands{
         virtual void setCorrelationId( int corrId ) {
             setPropertyValue(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_RESPONSEID),
+                    CommandConstants::HEADER_RESPONSEID ),
                  decaf::lang::Integer::toString( corrId ) );
         }
 
@@ -247,7 +244,7 @@ namespace commands{
         virtual void setTransactionId( const std::string& id ){
             setPropertyValue(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_TRANSACTIONID),
+                    CommandConstants::HEADER_TRANSACTIONID ),
                 id );
         }
 
@@ -268,15 +265,19 @@ namespace commands{
          * in a state that can be marshaled.
          */
         virtual const StompFrame& marshal()
-            throw (marshal::MarshalException)
-        {
-            if( frame == NULL || !validate( *frame ) ){
-                throw marshal::MarshalException(
-                    __FILE__, __LINE__,
-                    "AbstractCommand::marshal() - frame invalid" );
-            }
+            throw ( marshal::MarshalException ) {
 
-            return getFrame();
+            try{
+                if( frame == NULL || !validate( *frame ) ){
+                    throw marshal::MarshalException(
+                        __FILE__, __LINE__,
+                        "AbstractCommand::marshal() - frame invalid" );
+                }
+
+                return getFrame();
+            }
+            AMQ_CATCH_RETHROW( marshal::MarshalException )
+            AMQ_CATCHALL_THROW( marshal::MarshalException )
         }
 
         /**
@@ -319,14 +320,11 @@ namespace commands{
          * @param setContentLength true if the content length header should
          * be set
          */
-        virtual void setBytes( const unsigned char* bytes,
-                               std::size_t numBytes )
-        {
+        virtual void setBytes( const unsigned char* bytes, std::size_t numBytes ) {
             getFrame().setBody( bytes, numBytes );
         }
 
-        virtual void setBytes( const std::vector<unsigned char>& bytes )
-        {
+        virtual void setBytes( const std::vector<unsigned char>& bytes ) {
             getFrame().getBody() = bytes;
         }
     };

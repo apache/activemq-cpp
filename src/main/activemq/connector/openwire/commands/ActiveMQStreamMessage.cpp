@@ -23,18 +23,15 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQStreamMessage::ActiveMQStreamMessage()
-{
+ActiveMQStreamMessage::ActiveMQStreamMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQStreamMessage::~ActiveMQStreamMessage()
-{
+ActiveMQStreamMessage::~ActiveMQStreamMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQStreamMessage::getDataStructureType() const
-{
+unsigned char ActiveMQStreamMessage::getDataStructureType() const {
     return ActiveMQStreamMessage::ID_ACTIVEMQSTREAMMESSAGE; 
 }
 

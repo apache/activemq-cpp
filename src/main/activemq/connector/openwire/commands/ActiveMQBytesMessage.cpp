@@ -21,24 +21,20 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
+using namespace activemq::exceptions;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() :
     ActiveMQMessageBase< cms::BytesMessage >(),
     dataInputStream( &inputStream ),
-    dataOutputStream( &outputStream )
-{
+    dataOutputStream( &outputStream ) {
+
     clearBody();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBytesMessage::~ActiveMQBytesMessage()
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQBytesMessage::getDataStructureType() const
-{
+unsigned char ActiveMQBytesMessage::getDataStructureType() const {
     return ActiveMQBytesMessage::ID_ACTIVEMQBYTESMESSAGE;
 }
 
@@ -53,8 +49,9 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
         std::vector<unsigned char>& content = getContent();
         content.insert( content.end(), buffer, buffer + numBytes );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,8 +65,9 @@ const unsigned char* ActiveMQBytesMessage::getBodyBytes(void) const {
             return NULL;
         }
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +76,9 @@ std::size_t ActiveMQBytesMessage::getBodyLength(void) const {
     try{
         return getContent().size();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,8 +88,9 @@ void ActiveMQBytesMessage::reset() throw ( cms::CMSException ) {
         readOnly = true;
         inputStream.setBuffer( getContent() );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,8 +100,9 @@ bool ActiveMQBytesMessage::readBoolean() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readBoolean();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,8 +112,9 @@ void ActiveMQBytesMessage::writeBoolean( bool value ) throw ( cms::CMSException 
         checkWriteOnly();
         dataOutputStream.writeBoolean( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,8 +124,9 @@ unsigned char ActiveMQBytesMessage::readByte() const throw ( cms::CMSException )
         checkReadOnly();
         return dataInputStream.readByte();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,8 +136,9 @@ void ActiveMQBytesMessage::writeByte( unsigned char value ) throw ( cms::CMSExce
         checkWriteOnly();
         dataOutputStream.writeByte( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,8 +149,9 @@ std::size_t ActiveMQBytesMessage::readBytes( std::vector<unsigned char>& value )
         checkReadOnly();
         return dataInputStream.read( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,8 +161,9 @@ void ActiveMQBytesMessage::writeBytes( const std::vector<unsigned char>& value )
         checkWriteOnly();
         dataOutputStream.write( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,8 +174,9 @@ std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t
         checkReadOnly();
         return dataInputStream.read( buffer, 0, length );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,8 +188,9 @@ void ActiveMQBytesMessage::writeBytes( const unsigned char* value,
         checkWriteOnly();
         dataOutputStream.write( value, offset, length );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,8 +200,9 @@ char ActiveMQBytesMessage::readChar() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readChar();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,8 +212,9 @@ void ActiveMQBytesMessage::writeChar( char value ) throw ( cms::CMSException ) {
         checkWriteOnly();
         dataOutputStream.writeChar( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +224,9 @@ float ActiveMQBytesMessage::readFloat() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readFloat();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,8 +236,9 @@ void ActiveMQBytesMessage::writeFloat( float value ) throw ( cms::CMSException )
         checkWriteOnly();
         dataOutputStream.writeFloat( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,8 +248,9 @@ double ActiveMQBytesMessage::readDouble() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readDouble();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,8 +260,9 @@ void ActiveMQBytesMessage::writeDouble( double value ) throw ( cms::CMSException
         checkWriteOnly();
         dataOutputStream.writeDouble( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -258,8 +272,9 @@ short ActiveMQBytesMessage::readShort() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readShort();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -269,8 +284,9 @@ void ActiveMQBytesMessage::writeShort( short value ) throw ( cms::CMSException )
         checkWriteOnly();
         dataOutputStream.writeShort( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -280,8 +296,9 @@ unsigned short ActiveMQBytesMessage::readUnsignedShort() const throw ( cms::CMSE
         checkReadOnly();
         return dataInputStream.readUnsignedShort();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -291,8 +308,9 @@ void ActiveMQBytesMessage::writeUnsignedShort( unsigned short value ) throw ( cm
         checkWriteOnly();
         dataOutputStream.writeUnsignedShort( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -302,8 +320,9 @@ int ActiveMQBytesMessage::readInt() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readInt();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -313,8 +332,9 @@ void ActiveMQBytesMessage::writeInt( int value ) throw ( cms::CMSException ) {
         checkWriteOnly();
         dataOutputStream.writeInt( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,8 +344,9 @@ long long ActiveMQBytesMessage::readLong() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readLong();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -335,8 +356,9 @@ void ActiveMQBytesMessage::writeLong( long long value ) throw ( cms::CMSExceptio
         checkWriteOnly();
         dataOutputStream.writeLong( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -346,8 +368,9 @@ std::string ActiveMQBytesMessage::readString() const throw ( cms::CMSException )
         checkReadOnly();
         return dataInputStream.readString();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -357,8 +380,9 @@ void ActiveMQBytesMessage::writeString( const std::string& value ) throw ( cms::
         checkWriteOnly();
         dataOutputStream.writeChars( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,8 +392,9 @@ std::string ActiveMQBytesMessage::readUTF() const throw ( cms::CMSException ) {
         checkReadOnly();
         return dataInputStream.readUTF();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -379,6 +404,7 @@ void ActiveMQBytesMessage::writeUTF( const std::string& value ) throw ( cms::CMS
         checkWriteOnly();
         dataOutputStream.writeUTF( value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -41,13 +41,11 @@ namespace stomp{
     /**
      * The connector implementation for the STOMP protocol.
      */
-    class StompConnector
-    :
+    class StompConnector :
         public Connector,
         public transport::CommandListener,
         public transport::TransportExceptionListener,
-        public StompCommandListener
-    {
+        public StompCommandListener {
 
         LOGDECAF_DECLARE( logger )
 
@@ -462,12 +460,10 @@ namespace stomp{
          * @param listener listener the observer.
          */
         virtual void setConsumerMessageListener(
-            ConsumerMessageListener* listener )
-        {
+            ConsumerMessageListener* listener ) {
             this->messageListener = listener;
 
-            if(sessionManager != NULL)
-            {
+            if( sessionManager != NULL ) {
                 sessionManager->setConsumerMessageListener( listener );
             }
         }
@@ -477,8 +473,7 @@ namespace stomp{
          * @param listener ExceptionListener the observer.
          */
         virtual void setExceptionListener(
-            cms::ExceptionListener* listener )
-        {
+            cms::ExceptionListener* listener ) {
             this->exceptionListener = listener;
         }
 
@@ -500,7 +495,7 @@ namespace stomp{
          */
         virtual void onTransportException(
             transport::Transport* source,
-            const exceptions::ActiveMQException& ex );
+            const decaf::lang::Exception& ex );
 
     public: // StompCommandListener
 

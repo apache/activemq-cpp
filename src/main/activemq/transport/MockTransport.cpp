@@ -16,10 +16,13 @@
  */
 
 #include <activemq/transport/MockTransport.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 MockTransport* MockTransport::instance = NULL;
@@ -44,16 +47,20 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
 
 ////////////////////////////////////////////////////////////////////////////////
 MockTransport::~MockTransport(){
+    try{
 
-    if( own ){
-        delete responseBuilder;
+        if( own ){
+            delete responseBuilder;
+        }
     }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int MockTransport::getNextCommandId() throw ( exceptions::ActiveMQException ) {
 
     try{
+
         synchronized( &commandIdMutex ){
             return ++nextCommandId;
         }
@@ -62,22 +69,32 @@ unsigned int MockTransport::getNextCommandId() throw ( exceptions::ActiveMQExcep
         // smart enough to figure out we'll never get here.
         return 0;
     }
-    AMQ_CATCHALL_THROW( transport::CommandIOException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::oneway( Command* command )
         throw( CommandIOException,
-               decaf::lang::exceptions::UnsupportedOperationException)
-{
-    // Process and send any new Commands back.
-    internalListener.onCommand( command );
+               decaf::lang::exceptions::UnsupportedOperationException) {
 
-    // Notify external Client of command that we "sent"
-    if( outgoingCommandListener != NULL ){
-        outgoingCommandListener->onCommand( command );
-        return;
+    try{
+
+        // Process and send any new Commands back.
+        internalListener.onCommand( command );
+
+        // Notify external Client of command that we "sent"
+        if( outgoingCommandListener != NULL ){
+            outgoingCommandListener->onCommand( command );
+            return;
+        }
     }
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,18 +102,27 @@ Response* MockTransport::request( Command* command )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {
-    if( responseBuilder != NULL ){
+    try{
 
-        // Notify external Client of command that we "sent"
-        if( outgoingCommandListener != NULL ){
-            outgoingCommandListener->onCommand( command );
+        if( responseBuilder != NULL ){
+
+            // Notify external Client of command that we "sent"
+            if( outgoingCommandListener != NULL ){
+                outgoingCommandListener->onCommand( command );
+            }
+
+            command->setCommandId( getNextCommandId() );
+            command->setResponseRequired( true );
+            return responseBuilder->buildResponse( command );
         }
 
-        command->setCommandId( getNextCommandId() );
-        command->setResponseRequired( true );
-        return responseBuilder->buildResponse( command );
+        throw CommandIOException(
+            __FILE__, __LINE__,
+            "MockTransport::request - no response builder available" );
     }
-
-    throw CommandIOException( __FILE__, __LINE__,
-        "no response builder available" );
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
 }

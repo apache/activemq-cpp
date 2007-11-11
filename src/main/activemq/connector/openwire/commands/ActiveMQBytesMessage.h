@@ -38,8 +38,8 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQBytesMessage :
-        public ActiveMQMessageBase< cms::BytesMessage >
-    {
+        public ActiveMQMessageBase< cms::BytesMessage > {
+
     public:
 
         const static unsigned char ID_ACTIVEMQBYTESMESSAGE = 24;
@@ -47,7 +47,7 @@ namespace commands{
     public:
 
         ActiveMQBytesMessage();
-        virtual ~ActiveMQBytesMessage();
+        virtual ~ActiveMQBytesMessage() {}
 
         virtual unsigned char getDataStructureType() const;
 
@@ -104,7 +104,7 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::BytesMessage* clone(void) const {
+        virtual cms::BytesMessage* clone() const {
             return dynamic_cast<cms::BytesMessage*>(
                 this->cloneDataStructure() );
         }
@@ -144,13 +144,13 @@ namespace commands{
          * to expect.
          * @return const pointer to a byte buffer
          */
-        virtual const unsigned char* getBodyBytes(void) const;
+        virtual const unsigned char* getBodyBytes() const;
 
         /**
          * Returns the number of bytes contained in the body of this message.
          * @return number of bytes.
          */
-        virtual std::size_t getBodyLength(void) const;
+        virtual std::size_t getBodyLength() const;
 
         /**
          * Puts the message body in read-only mode and repositions the stream
@@ -394,7 +394,7 @@ namespace commands{
          */
         void checkWriteOnly() const throw (cms::CMSException){
             if( readOnly ){
-                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
             }
         }
@@ -405,7 +405,7 @@ namespace commands{
          */
         void checkReadOnly() const throw (cms::CMSException){
             if( !readOnly ){
-                throw decaf::lang::exceptions::IllegalStateException( __FILE__, __LINE__,
+                throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }
         }

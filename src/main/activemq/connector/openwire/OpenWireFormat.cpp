@@ -77,8 +77,7 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormat::~OpenWireFormat()
-{
+OpenWireFormat::~OpenWireFormat() {
     try {
         this->destroyMarshalers();
         delete preferedWireFormatInfo;
@@ -102,32 +101,35 @@ void OpenWireFormat::destroyMarshalers() {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException ) {
 
-    if( version == this->getVersion() ){
-        return;
-    }
+    try{
+        if( version == this->getVersion() ){
+            return;
+        }
 
-    // Clear old marshalers in preperation for the new set.
-    this->destroyMarshalers();
-    this->version = version;
+        // Clear old marshalers in preperation for the new set.
+        this->destroyMarshalers();
+        this->version = version;
 
-    switch( this->version ){
-    case 1:
-        v1::MarshallerFactory().configure( this );
-        break;
-    case 2:
-        v2::MarshallerFactory().configure( this );
-        break;
-    default:
-        throw IllegalArgumentException(
-            __FILE__, __LINE__,
-            "OpenWireFormat::setVersion - "
-            "Given Version: %d , is not supported", version );
+        switch( this->version ){
+        case 1:
+            v1::MarshallerFactory().configure( this );
+            break;
+        case 2:
+            v2::MarshallerFactory().configure( this );
+            break;
+        default:
+            throw IllegalArgumentException(
+                __FILE__, __LINE__,
+                "OpenWireFormat::setVersion - "
+                "Given Version: %d , is not supported", version );
+        }
     }
+    AMQ_CATCH_RETHROW( IllegalArgumentException )
+    AMQ_CATCHALL_THROW( IllegalArgumentException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller )
-{
+void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
     unsigned char type = marshaller->getDataStructureType();
     dataMarshallers[type & 0xFF] = marshaller;
 }
@@ -207,6 +209,7 @@ void OpenWireFormat::marshal( transport::Command* command,
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -249,6 +252,7 @@ transport::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -292,6 +296,7 @@ commands::DataStructure* OpenWireFormat::doUnmarshal( DataInputStream* dis )
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -337,6 +342,7 @@ int OpenWireFormat::tightMarshalNestedObject1( commands::DataStructure* object,
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -378,6 +384,7 @@ void OpenWireFormat::tightMarshalNestedObject2( DataStructure* o,
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -423,6 +430,7 @@ DataStructure* OpenWireFormat::tightUnmarshalNestedObject( DataInputStream* dis,
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -456,6 +464,7 @@ DataStructure* OpenWireFormat::looseUnmarshalNestedObject( decaf::io::DataInputS
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -487,6 +496,7 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 

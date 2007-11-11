@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
-#define ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
+#ifndef _ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
+#define _ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
 
 #include <cms/Closeable.h>
 #include <activemq/connector/ConnectorResourceListener.h>
@@ -38,7 +38,6 @@ namespace connector{
      * <code>ConnectorResouceListener</code> from its owner.
      */
     class ConnectorResource : public cms::Closeable {
-
     public:
 
         virtual ~ConnectorResource() {}
@@ -71,4 +70,4 @@ namespace connector{
 
 }}
 
-#endif /*ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_*/

@@ -29,18 +29,17 @@ namespace stomp{
      * Interface class for object that with to register with the Stomp
      * Connector in order to process a Command that was received.
      */
-    class StompCommandListener
-    {
+    class StompCommandListener {
     public:
-    
+
         virtual ~StompCommandListener(void) {}
-    
+
         /**
          * Process the Stomp Command
          * @param command to process
          * @throw ConnterException
          */
-        virtual void onStompCommand( commands::StompCommand* command ) 
+        virtual void onStompCommand( commands::StompCommand* command )
             throw ( StompConnectorException ) = 0;
 
     };

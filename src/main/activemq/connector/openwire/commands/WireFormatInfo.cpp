@@ -46,8 +46,7 @@ WireFormatInfo::WireFormatInfo()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatInfo::~WireFormatInfo()
-{
+WireFormatInfo::~WireFormatInfo() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +68,6 @@ void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
     const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-
         throw NullPointerException(
             __FILE__, __LINE__,
             "WireFormatInfo::copyDataStructure - src is NULL or invalid" );

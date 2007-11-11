@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
 
-#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 
 namespace activemq{
 namespace transport{
@@ -41,10 +41,10 @@ namespace transport{
          */
         virtual void onTransportException(
             Transport* source,
-            const exceptions::ActiveMQException& ex ) = 0;
+            const decaf::lang::Exception& ex ) = 0;
 
     };
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_*/

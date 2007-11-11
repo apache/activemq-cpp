@@ -27,7 +27,6 @@ namespace connector{
 namespace openwire{
 
     class OpenWireConsumerInfo : public ConsumerInfo {
-
     private:
 
         // OpenWire's Consumer Info Command
@@ -48,7 +47,7 @@ namespace openwire{
             this->started = false;
         }
 
-        virtual ~OpenWireConsumerInfo() { 
+        virtual ~OpenWireConsumerInfo() {
             this->close();
             delete consumerInfo;
         }
@@ -57,7 +56,7 @@ namespace openwire{
          * Gets this message consumer's message selector expression.
          * @return This Consumer's selector expression or "".
          */
-        virtual const std::string& getMessageSelector(void) const {
+        virtual const std::string& getMessageSelector() const {
             static std::string selector = "";
 
             if( consumerInfo != NULL ) {
@@ -81,7 +80,7 @@ namespace openwire{
          * Gets the ID that is assigned to this consumer
          * @return value of the Consumer Id.
          */
-        virtual long long getConsumerId(void) const {
+        virtual long long getConsumerId() const {
             if( consumerInfo != NULL ) {
                 return (unsigned int)
                     this->consumerInfo->getConsumerId()->getValue();
@@ -104,7 +103,7 @@ namespace openwire{
          * Gets the Destination that this Consumer is subscribed on
          * @return Destination this consumer is attached to
          */
-        virtual const cms::Destination* getDestination(void) const {
+        virtual const cms::Destination* getDestination() const {
             if( this->consumerInfo != NULL ) {
                 return this->consumerInfo->getDestination()->getCMSDestination();
             }
@@ -118,7 +117,6 @@ namespace openwire{
          */
         virtual void setDestination( const cms::Destination* destination ) {
             if( consumerInfo != NULL ) {
-
                 this->consumerInfo->setDestination(
                     dynamic_cast<commands::ActiveMQDestination*>(
                         destination->clone() ) );
@@ -129,7 +127,7 @@ namespace openwire{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const {
+        virtual const SessionInfo* getSessionInfo() const {
             return session;
         }
 

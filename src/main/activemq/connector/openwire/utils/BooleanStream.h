@@ -45,12 +45,11 @@ namespace utils{
      * value.  If the first byte = 0xC0, the following unsigned byte is the size field.
      * If the first byte = 0x80, the following short (two bytes) are the size field.
      */
-    class BooleanStream
-    {
+    class BooleanStream {
     public:
 
         BooleanStream();
-        virtual ~BooleanStream();
+        virtual ~BooleanStream() {}
 
         /**
          * Read a boolean data element from the internal data buffer

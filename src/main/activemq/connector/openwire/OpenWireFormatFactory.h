@@ -27,8 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireFormatFactory : public wireformat::WireFormatFactory
-    {
+    class OpenWireFormatFactory : public wireformat::WireFormatFactory {
     public:
 
         /**
@@ -45,9 +44,9 @@ namespace openwire{
          * wireFormat.sizePrefixDisabled
          * wireFormat.maxInactivityDuration
          */
-        OpenWireFormatFactory() {};
+        OpenWireFormatFactory() {}
 
-        virtual ~OpenWireFormatFactory() {};
+        virtual ~OpenWireFormatFactory() {}
 
         /**
          * Creates a new WireFormat Object passing it a set of

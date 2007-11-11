@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_
 
-#include <activemq/transport/Transport.h>
-#include <decaf/util/Properties.h>
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace transport{
+
+    class Transport;
 
     /**
      * Defines the interface for Factories that create Transports or
@@ -54,4 +55,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORTFACTORY_H_*/

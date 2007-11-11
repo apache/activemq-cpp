@@ -31,18 +31,19 @@ namespace commands{
      * Represents the Stomp Abort Command which rolls back a
      * transaction in progress.
      */
-    class AbortCommand : public AbstractCommand< transport::Command >
-    {
+    class AbortCommand : public AbstractCommand< transport::Command > {
     public:
 
         AbortCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
+
         AbortCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>(frame) {
                 validate( getFrame() );
         }
+
         virtual ~AbortCommand(void) {}
 
         /**
@@ -60,8 +61,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame the Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::ABORT ) );
         }
@@ -72,14 +72,14 @@ namespace commands{
          * @param frame the Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
+
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ABORT ) ) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_TRANSACTIONID ) ) ) )
-            {
+                        CommandConstants::HEADER_TRANSACTIONID ) ) ) ) {
+
                 return true;
             }
 

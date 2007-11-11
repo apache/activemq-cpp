@@ -15,23 +15,23 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
-#define ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
+#ifndef _ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
+#define _ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_
 
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/Writer.h>
 #include <activemq/transport/CommandIOException.h>
-#include <activemq/transport/Command.h>
 
 namespace activemq{
 namespace transport{
+
+    class Command;
 
     /**
      * Interface for an object responsible for writing a command
      * to an output stream.
      */
-    class CommandWriter : public decaf::io::Writer
-    {
+    class CommandWriter : public decaf::io::Writer {
     public:
 
         virtual ~CommandWriter() {}
@@ -48,4 +48,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_COMMANDWRITER_H_*/

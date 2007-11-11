@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_
 
 #include <activemq/transport/MockTransport.h>
 
@@ -27,8 +27,8 @@ namespace stomp{
     class StompResponseBuilder : public transport::MockTransport::ResponseBuilder{
     public:
 
-        StompResponseBuilder(){}
-        virtual ~StompResponseBuilder(){}
+        StompResponseBuilder() {}
+        virtual ~StompResponseBuilder() {}
 
         virtual transport::Response* buildResponse( const transport::Command* cmd );
         virtual void buildIncomingCommands(
@@ -38,4 +38,4 @@ namespace stomp{
 
 }}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_*/

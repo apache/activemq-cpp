@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
 
 #include <activemq/transport/TransportFactoryMap.h>
 
@@ -27,8 +27,7 @@ namespace transport{
      * Registers the passed in factory into the factory map, this class
      * can manage the lifetime of the registered factory (default behaviour).
      */
-    class TransportFactoryMapRegistrar
-    {
+    class TransportFactoryMapRegistrar {
     public:
 
         /**
@@ -40,32 +39,30 @@ namespace transport{
          */
         TransportFactoryMapRegistrar( const std::string& name,
                                       TransportFactory* factory,
-                                      bool manageLifetime = true)
-        {
+                                      bool manageLifetime = true ) {
+
             // Register it in the map.
             TransportFactoryMap::getInstance().
                 registerTransportFactory( name, factory );
 
             // Store for later deletion
-            this->factory        = factory;
+            this->factory = factory;
             this->manageLifetime = manageLifetime;
-            this->name           = name;
+            this->name = name;
         }
 
-        virtual ~TransportFactoryMapRegistrar()
-        {
-            try
-            {
+        virtual ~TransportFactoryMapRegistrar() {
+
+            try {
+
                 // UnRegister it in the map.
                 TransportFactoryMap::getInstance().
                     unregisterTransportFactory( name );
 
-                if( manageLifetime )
-                {
+                if( manageLifetime ) {
                     delete factory;
                 }
-            }
-            catch(...) {}
+            } catch(...) {}
         }
 
         /**
@@ -87,4 +84,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_*/

@@ -32,11 +32,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQStreamMessage : public ActiveMQMessage
-    {
-    protected:
-
-
+    class ActiveMQStreamMessage : public ActiveMQMessage {
     public:
 
         const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;

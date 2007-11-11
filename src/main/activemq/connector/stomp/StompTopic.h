@@ -26,8 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
     
-    class StompTopic : public StompDestination<cms::Topic>
-    {
+    class StompTopic : public StompDestination<cms::Topic> {
     public:
 
         /**

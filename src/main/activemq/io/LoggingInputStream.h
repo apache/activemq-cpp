@@ -73,6 +73,7 @@ namespace io{
          * Logs the data in the buffer.
          */
         void log( const unsigned char* buffer, std::size_t len );
+
     };
 
 }}

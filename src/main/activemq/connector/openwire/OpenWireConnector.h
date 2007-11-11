@@ -52,7 +52,6 @@
 
 #include <activemq/connector/openwire/OpenWireCommandReader.h>
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 
@@ -67,11 +66,11 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireConnector :
-        public Connector,
-        public transport::CommandListener,
-        public transport::TransportExceptionListener
-    {
+    class OpenWireFormat;
+
+    class OpenWireConnector : public Connector,
+                              public transport::CommandListener,
+                              public transport::TransportExceptionListener {
     private:
 
         // Enumeration of Transaction State flags
@@ -192,12 +191,12 @@ namespace openwire{
          * Sends the connect message to the broker and
          * waits for the response.
          */
-        void connect() throw (ConnectorException);
+        void connect() throw ( ConnectorException );
 
         /**
          * Sends a oneway disconnect message to the broker.
          */
-        void disconnect() throw (ConnectorException);
+        void disconnect() throw ( ConnectorException );
 
         /**
          * Fires a consumer message to the observer.
@@ -577,7 +576,7 @@ namespace openwire{
          */
         virtual void onTransportException(
             transport::Transport* source,
-            const exceptions::ActiveMQException& ex );
+            const decaf::lang::Exception& ex );
 
     private:
 

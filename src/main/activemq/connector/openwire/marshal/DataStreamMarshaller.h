@@ -32,8 +32,7 @@ namespace openwire{
     /**
      * Base class for all classes that marshal commands for Openwire
      */
-    class DataStreamMarshaller
-    {
+    class DataStreamMarshaller {
     public:
 
         virtual ~DataStreamMarshaller() {}

@@ -26,8 +26,7 @@ using namespace decaf::util;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveMap::PrimitiveMap()
-{
+PrimitiveMap::PrimitiveMap(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,13 +35,7 @@ PrimitiveMap::PrimitiveMap( const PrimitiveMap& src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PrimitiveMap::~PrimitiveMap()
-{
-}
-
-////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::equals( const PrimitiveMap& src ) const {
-
     return this->valueNodeMap.equals( src.valueNodeMap );
 }
 
@@ -66,31 +59,26 @@ std::string PrimitiveMap::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::copy( const PrimitiveMap& src ) {
-
     return this->valueNodeMap.copy( src.valueNodeMap );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveMap::clear() {
-
     valueNodeMap.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::contains( const string& key ) const{
-
     return valueNodeMap.containsKey( key );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t PrimitiveMap::size() const{
-
     return valueNodeMap.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveMap::isEmpty() const{
-
     return valueNodeMap.isEmpty();
 }
 
@@ -113,7 +101,7 @@ void PrimitiveMap::setBool( const string& key, bool value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char PrimitiveMap::getByte( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getByte();
@@ -129,7 +117,7 @@ void PrimitiveMap::setByte( const string& key, unsigned char value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 char PrimitiveMap::getChar( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getChar();
@@ -145,7 +133,7 @@ void PrimitiveMap::setChar( const string& key, char value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 short PrimitiveMap::getShort( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getShort();
@@ -161,7 +149,7 @@ void PrimitiveMap::setShort( const string& key, short value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 int PrimitiveMap::getInt( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getInt();
@@ -177,7 +165,7 @@ void PrimitiveMap::setInt( const string& key, int value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 long long PrimitiveMap::getLong( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getLong();
@@ -193,7 +181,7 @@ void PrimitiveMap::setLong( const string& key, long long value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 double PrimitiveMap::getDouble( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getDouble();
@@ -209,7 +197,7 @@ void PrimitiveMap::setDouble( const string& key, double value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 float PrimitiveMap::getFloat( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getFloat();
@@ -225,7 +213,7 @@ void PrimitiveMap::setFloat( const string& key, float value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 string PrimitiveMap::getString( const string& key ) const
-    throw(NoSuchElementException){
+    throw( NoSuchElementException ){
 
     ValueNode node = valueNodeMap.getValue( key );
     return node.getString();

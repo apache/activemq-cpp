@@ -19,14 +19,15 @@
 
 #include <activemq/transport/filters/LoggingTransport.h>
 
+using namespace decaf::lang;
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& LoggingTransportFactory::getInstance(void)
-{
+TransportFactory& LoggingTransportFactory::getInstance() {
+
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
         "transport.filters.LoggingTransport",
@@ -45,5 +46,6 @@ Transport* LoggingTransportFactory::createTransport(
         return new LoggingTransport( next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

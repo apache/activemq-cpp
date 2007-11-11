@@ -27,7 +27,6 @@ namespace connector{
 namespace openwire{
 
     class OpenWireProducerInfo : public ProducerInfo {
-
     private:
 
         // Are Message Ids Disabled

@@ -32,12 +32,7 @@ ActiveMQQueue::ActiveMQQueue( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQQueue::~ActiveMQQueue()
-{}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQQueue::getDataStructureType() const
-{
+unsigned char ActiveMQQueue::getDataStructureType() const {
     return ActiveMQQueue::ID_ACTIVEMQQUEUE;
 }
 

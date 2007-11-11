@@ -66,7 +66,8 @@ namespace openwire{
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual transport::Command* unmarshal( decaf::io::DataInputStream* dis ) throw ( decaf::io::IOException );
+        virtual transport::Command* unmarshal( decaf::io::DataInputStream* dis )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method for Tight Marshalling the given object to the boolean
@@ -90,7 +91,8 @@ namespace openwire{
          */
         void tightMarshalNestedObject2( commands::DataStructure* o,
                                         decaf::io::DataOutputStream* ds,
-                                        utils::BooleanStream* bs ) throw ( decaf::io::IOException );
+                                        utils::BooleanStream* bs )
+            throw ( decaf::io::IOException );
 
         /**
          * Utility method used to Unmarshal a Nested DataStructure type object

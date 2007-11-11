@@ -26,22 +26,21 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompQueue : public StompDestination< cms::Queue >
-    {
+    class StompQueue : public StompDestination< cms::Queue > {
     public:
 
         /**
          * Copy Consturctor
          * @param source CMS Dest to Copy, must be a compatible type
          */
-    	StompQueue( const cms::Destination* source ) : 
+        StompQueue( const cms::Destination* source ) :
             StompDestination< cms::Queue >( source ) {}
 
         /**
          * Custom Constructor
          * @param name string destination name plus any params
          */
-        StompQueue( const std::string& name ) : 
+        StompQueue( const std::string& name ) :
             StompDestination< cms::Queue >( name, cms::Destination::QUEUE )
         {}
 
@@ -74,7 +73,7 @@ namespace stomp{
         virtual std::string getPrefix() const {
             return commands::CommandConstants::queuePrefix;
         }
-        
+
     };
 
 }}}

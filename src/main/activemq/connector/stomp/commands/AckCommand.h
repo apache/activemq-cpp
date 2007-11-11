@@ -35,18 +35,19 @@ namespace commands{
      * Optionally a Transaction Id can be set that indicates that the
      * message acknowledgement should be part of a named transaction.
      */
-    class AckCommand : public AbstractCommand< transport::Command >
-    {
+    class AckCommand : public AbstractCommand< transport::Command > {
     public:
 
         AckCommand() :
             AbstractCommand<transport::Command>() {
                 initialize( getFrame() );
         }
+
         AckCommand( StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
+
         virtual ~AckCommand() {}
 
         /**
@@ -85,8 +86,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::ACK ) );
         }
@@ -97,8 +97,8 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
+
             // Make sure the message is an ACK message.
             bool isAck = frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ACK );
@@ -108,8 +108,7 @@ namespace commands{
                    CommandConstants::toString(
                        CommandConstants::HEADER_MESSAGEID ) );
 
-            if( isAck && hasMessageId )
-            {
+            if( isAck && hasMessageId ) {
                 return true;
             }
 

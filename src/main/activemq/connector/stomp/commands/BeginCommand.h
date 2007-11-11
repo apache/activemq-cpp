@@ -36,8 +36,7 @@ namespace commands{
      * A transaction Identifier is required and this id will be used
      * for all sends, commits, aborts, or acks.
      */
-    class BeginCommand : public AbstractCommand< transport::Command >
-    {
+    class BeginCommand : public AbstractCommand< transport::Command > {
     public:
 
         BeginCommand() :
@@ -67,8 +66,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::BEGIN ) );
         }
@@ -79,8 +77,8 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
+
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::BEGIN )) &&
                (frame.getProperties().hasProperty(

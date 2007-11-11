@@ -18,10 +18,12 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPSESSIONMANAGER_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPSESSIONMANAGER_H_
 
+#include <decaf/util/concurrent/Mutex.h>
+
+#include <activemq/util/LongSequenceGenerator.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/transport/Transport.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <activemq/connector/ConnectorException.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
@@ -41,8 +43,7 @@ namespace stomp{
      * so that a transactional session can manage the lifetime of the
      * message.
      */
-    class StompSessionManager : public StompCommandListener
-    {
+    class StompSessionManager : public StompCommandListener {
     private:
 
         // Map Types
@@ -52,10 +53,10 @@ namespace stomp{
     private:
 
         // Next id to be used for a Session Id
-        long long nextSessionId;
+        util::LongSequenceGenerator nextSessionId;
 
         // Next id to be used for a Consumer Id
-        long long nextConsumerId;
+        util::LongSequenceGenerator nextConsumerId;
 
         // Mutex to protect ids.
         decaf::util::concurrent::Mutex mutex;
@@ -169,8 +170,7 @@ namespace stomp{
          * @param listener the observer.
          */
         virtual void setConsumerMessageListener(
-            ConsumerMessageListener* listener )
-        {
+            ConsumerMessageListener* listener ) {
             this->messageListener = listener;
         }
 
@@ -195,20 +195,6 @@ namespace stomp{
         virtual void setSubscribeOptions( const cms::Destination* destination,
                                           commands::SubscribeCommand& command )
             throw ( StompConnectorException );
-
-    protected:
-
-        /**
-         * Gets the Next Session Id
-         * @return unique session id
-         */
-        virtual long long getNextSessionId();
-
-        /**
-         * Gets the Next Session Id
-         * @return unique session id
-         */
-        virtual long long getNextConsumerId();
 
     };
 

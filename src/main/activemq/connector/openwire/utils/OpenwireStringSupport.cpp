@@ -86,7 +86,7 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
         return "";
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
     AMQ_CATCHALL_THROW( decaf::io::IOException )
 }
 
@@ -97,8 +97,8 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
 
     try {
 
-        if( str != NULL )
-        {
+        if( str != NULL ) {
+
             if( str->size() > 65536 ) {
                 throw IOException(
                     __FILE__,
@@ -152,6 +152,6 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
     AMQ_CATCHALL_THROW( decaf::io::IOException )
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_
 
 #include <cms/Message.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
@@ -31,8 +31,7 @@ namespace commands{
      * Message command which represents a ActiveMQMessage with no body
      * can be sent or recieved.
      */
-    class MessageCommand : public StompMessage< cms::Message >
-    {
+    class MessageCommand : public StompMessage< cms::Message > {
     public:
 
         MessageCommand() :
@@ -73,4 +72,4 @@ namespace commands{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_MESSAGECOMMAND_H_*/

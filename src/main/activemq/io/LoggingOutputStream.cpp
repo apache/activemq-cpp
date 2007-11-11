@@ -40,7 +40,6 @@ void LoggingOutputStream::write( const unsigned char c ) throw ( IOException ) {
     try {
 
         log( &c, 1 );
-
         FilterOutputStream::write( c );
     }
     AMQ_CATCH_RETHROW( IOException )

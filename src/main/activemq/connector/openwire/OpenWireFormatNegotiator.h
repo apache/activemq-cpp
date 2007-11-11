@@ -20,10 +20,10 @@
 
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
+#include <activemq/connector/openwire/OpenWireFormat.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
 
 namespace activemq{
 namespace connector{
@@ -84,7 +84,8 @@ namespace openwire{
          * by this transport.
          */
         virtual void oneway( transport::Command* command )
-            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -95,7 +96,8 @@ namespace openwire{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual transport::Response* request( transport::Command* command )
-            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's
@@ -112,9 +114,8 @@ namespace openwire{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException(
-            transport::Transport* source,
-            const exceptions::ActiveMQException& ex );
+        virtual void onTransportException( transport::Transport* source,
+                                           const decaf::lang::Exception& ex );
 
         /**
          * Starts this transport object and creates the thread for

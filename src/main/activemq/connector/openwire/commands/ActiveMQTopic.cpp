@@ -23,8 +23,7 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTopic::ActiveMQTopic() : ActiveMQDestination()
-{
+ActiveMQTopic::ActiveMQTopic() : ActiveMQDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,13 +32,10 @@ ActiveMQTopic::ActiveMQTopic( const std::string& name ) :
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQTopic::~ActiveMQTopic()
-{
+ActiveMQTopic::~ActiveMQTopic() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQTopic::getDataStructureType() const
-{
+unsigned char ActiveMQTopic::getDataStructureType() const {
     return ActiveMQTopic::ID_ACTIVEMQTOPIC;
 }
-

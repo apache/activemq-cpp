@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFILTER_H_
 #define ACTIVEMQ_TRANSPORT_TRANSPORTFILTER_H_
 
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/Command.h>
@@ -31,12 +32,11 @@ namespace transport{
      * filters implement the Transport interface and
      * optionally delegate calls to another Transport object.
      */
-    class TransportFilter
-    :
+    class TransportFilter :
         public Transport,
         public CommandListener,
-        public TransportExceptionListener
-    {
+        public TransportExceptionListener {
+
     protected:
 
         /**
@@ -66,10 +66,9 @@ namespace transport{
          * Notify the excpetion listener
          * @param ex - the exception to send to listeners
          */
-        void fire( const exceptions::ActiveMQException& ex ){
+        void fire( const decaf::lang::Exception& ex ){
 
             if( exceptionListener != NULL ){
-
                 try{
                     exceptionListener->onTransportException( this, ex );
                 }catch( ... ){}
@@ -81,7 +80,6 @@ namespace transport{
          * @param command - the command to send to the listener
          */
         void fire( Command* command ){
-
             try{
                 if( commandlistener != NULL ){
                     commandlistener->onCommand( command );
@@ -113,7 +111,8 @@ namespace transport{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( Transport* source, const exceptions::ActiveMQException& ex );
+        virtual void onTransportException( Transport* source,
+                                           const decaf::lang::Exception& ex );
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
@@ -124,16 +123,21 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException){
+        virtual void oneway( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+
             next->oneway( command );
         }
 
         /**
          * Not supported by this class - throws an exception.
          * @param command the command that is sent as a request
+         * @throws CommandIOException
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException){
+        virtual Response* request( Command* command )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+
             return next->request( command );
         }
 
@@ -178,7 +182,7 @@ namespace transport{
          * @throws CMSException if an error occurs or if this transport
          * has already been closed.
          */
-        virtual void start() throw( cms::CMSException ){
+        virtual void start() throw( cms::CMSException ) {
 
             if( commandlistener == NULL ){
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
@@ -201,7 +205,6 @@ namespace transport{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException ){
-
             next->close();
         }
 

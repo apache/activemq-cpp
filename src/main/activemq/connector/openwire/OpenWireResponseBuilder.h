@@ -27,12 +27,14 @@ namespace openwire{
     class OpenWireResponseBuilder : public transport::MockTransport::ResponseBuilder{
     public:
 
-        OpenWireResponseBuilder(){}
-        virtual ~OpenWireResponseBuilder(){}
+        OpenWireResponseBuilder() {}
+        virtual ~OpenWireResponseBuilder() {}
 
         virtual transport::Response* buildResponse( const transport::Command* command );
+
         virtual void buildIncomingCommands(
-            const transport::Command* command, decaf::util::Queue<transport::Command*>& queue );
+            const transport::Command* command,
+            decaf::util::Queue<transport::Command*>& queue );
 
     };
 

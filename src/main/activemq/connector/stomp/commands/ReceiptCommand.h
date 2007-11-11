@@ -31,8 +31,7 @@ namespace commands{
      * Message sent from the Broker when a receipt is requested
      * for messages that are sent.
      */
-    class ReceiptCommand : public AbstractCommand< transport::Response >
-    {
+    class ReceiptCommand : public AbstractCommand< transport::Response > {
     public:
 
         ReceiptCommand() :
@@ -45,7 +44,7 @@ namespace commands{
                 validate( getFrame() );
         }
 
-        virtual ~ReceiptCommand(void) {}
+        virtual ~ReceiptCommand() {}
 
         /**
          * Clone the StompCommand and return the new copy.
@@ -72,8 +71,7 @@ namespace commands{
         virtual void setReceiptId( const std::string& id ){
             setPropertyValue(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_RECEIPTID ),
-                id );
+                    CommandConstants::HEADER_RECEIPTID ), id );
         }
 
     protected:
@@ -83,8 +81,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::RECEIPT ) );
         }
@@ -95,14 +92,13 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::RECEIPT )) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_RECEIPTID ) ) ) )
-            {
+                        CommandConstants::HEADER_RECEIPTID ) ) ) ) {
+
                 return true;
             }
 

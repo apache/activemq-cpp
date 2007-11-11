@@ -27,8 +27,7 @@ namespace connector{
 namespace stomp{
 namespace commands{
 
-    class StompCommand : public marshal::Marshalable
-    {
+    class StompCommand : public marshal::Marshalable {
     protected:
 
         /**

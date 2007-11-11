@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
-#define ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
+#ifndef _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
+#define _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandListener.h>
-#include <decaf/lang/Runnable.h>
-#include <decaf/lang/Thread.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Command.h>
+
+#include <decaf/lang/Runnable.h>
+#include <decaf/lang/Thread.h>
 #include <decaf/util/logging/LoggerDefines.h>
 
 namespace activemq{
@@ -42,10 +43,8 @@ namespace transport{
      * destructor.  Once this object has been closed, it cannot be
      * restarted.
      */
-    class IOTransport :
-        public Transport,
-        public decaf::lang::Runnable
-    {
+    class IOTransport : public Transport,
+                        public decaf::lang::Runnable {
 
         LOGDECAF_DECLARE( logger )
 
@@ -97,7 +96,7 @@ namespace transport{
          * Notify the excpetion listener
          * @param ex the exception to send
          */
-        void fire( exceptions::ActiveMQException& ex ){
+        void fire( decaf::lang::Exception& ex ){
 
             if( exceptionListener != NULL ){
 
@@ -234,4 +233,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_*/

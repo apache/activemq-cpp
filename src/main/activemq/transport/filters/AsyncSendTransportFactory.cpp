@@ -25,8 +25,8 @@ using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& AsyncSendTransportFactory::getInstance(void)
-{
+TransportFactory& AsyncSendTransportFactory::getInstance() {
+
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
         "transport.filters.AsyncSendTransport",
@@ -45,5 +45,6 @@ Transport* AsyncSendTransportFactory::createTransport(
         return new AsyncSendTransport( next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

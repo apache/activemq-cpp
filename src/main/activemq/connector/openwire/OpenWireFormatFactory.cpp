@@ -31,41 +31,46 @@ using namespace activemq::exceptions;
 using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 WireFormat* OpenWireFormatFactory::createWireFormat(
     const decaf::util::Properties& properties )
         throw ( decaf::lang::exceptions::IllegalStateException ) {
 
-    WireFormatInfo* info = new WireFormatInfo();
+    try{
 
-    // Configure the version to use
-    info->setVersion( Integer::parseInt(
-            properties.getProperty( "wireFormat.version", "2" ) ) );
+        WireFormatInfo* info = new WireFormatInfo();
 
-    // parse params out of the properties
-    info->setStackTraceEnabled( Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.stackTraceEnabled",
-                                "false" ) ) );
-    info->setCacheEnabled( Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.cacheEnabled",
-                                "false" ) ) );
-    info->setTcpNoDelayEnabled( Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.tcpNoDelayEnabled",
-                                "false" ) ) );
-    info->setTightEncodingEnabled( Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.tightEncodingEnabled",
-                                "false" ) ) );
-    info->setSizePrefixDisabled( Boolean::parseBoolean(
-        properties.getProperty( "wireFormat.sizePrefixDisabled",
-                                "false" ) ) );
+        // Configure the version to use
+        info->setVersion( Integer::parseInt(
+                properties.getProperty( "wireFormat.version", "2" ) ) );
 
-    // Create the Openwire Format Object
-    OpenWireFormat* f = new OpenWireFormat( properties );
+        // parse params out of the properties
+        info->setStackTraceEnabled( Boolean::parseBoolean(
+            properties.getProperty( "wireFormat.stackTraceEnabled",
+                                    "false" ) ) );
+        info->setCacheEnabled( Boolean::parseBoolean(
+            properties.getProperty( "wireFormat.cacheEnabled",
+                                    "false" ) ) );
+        info->setTcpNoDelayEnabled( Boolean::parseBoolean(
+            properties.getProperty( "wireFormat.tcpNoDelayEnabled",
+                                    "false" ) ) );
+        info->setTightEncodingEnabled( Boolean::parseBoolean(
+            properties.getProperty( "wireFormat.tightEncodingEnabled",
+                                    "false" ) ) );
+        info->setSizePrefixDisabled( Boolean::parseBoolean(
+            properties.getProperty( "wireFormat.sizePrefixDisabled",
+                                    "false" ) ) );
 
-    // give the format object the ownership
-    f->setPreferedWireFormatInfo( info );
+        // Create the Openwire Format Object
+        OpenWireFormat* f = new OpenWireFormat( properties );
 
-    return f;
+        // give the format object the ownership
+        f->setPreferedWireFormatInfo( info );
+
+        return f;
+    }
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCHALL_THROW( IllegalStateException )
 }
-

@@ -21,14 +21,17 @@
 
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
 
-LOGDECAF_INITIALIZE(logger, IOTransport, "activemq.transport.IOTransport" )
+////////////////////////////////////////////////////////////////////////////////
+LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport" )
 
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::IOTransport(){
@@ -45,81 +48,98 @@ IOTransport::IOTransport(){
 
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::~IOTransport(){
-
-    close();
+    try{
+        close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::oneway( Command* command )
-    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
-{
-    if( closed ){
-        throw CommandIOException( __FILE__, __LINE__,
-            "IOTransport::oneway() - transport is closed!" );
-    }
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
-    // Make sure the thread has been started.
-    if( thread == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - transport is not started" );
-    }
+    try{
 
-    // Make sure the command object is valid.
-    if( command == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - attempting to write NULL command" );
-    }
+        if( closed ){
+            throw CommandIOException( __FILE__, __LINE__,
+                "IOTransport::oneway() - transport is closed!" );
+        }
 
-    // Make sure we have an output strema to write to.
-    if( outputStream == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - invalid output stream" );
-    }
+        // Make sure the thread has been started.
+        if( thread == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - transport is not started" );
+        }
 
-    synchronized( outputStream ){
-        // Write the command to the output stream.
-        writer->writeCommand( command );
+        // Make sure the command object is valid.
+        if( command == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - attempting to write NULL command" );
+        }
+
+        // Make sure we have an output strema to write to.
+        if( outputStream == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - invalid output stream" );
+        }
+
+        synchronized( outputStream ){
+            // Write the command to the output stream.
+            writer->writeCommand( command );
+        }
     }
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::start() throw( cms::CMSException ){
 
-    // Can't restart a closed transport.
-    if( closed ){
-        throw CommandIOException( __FILE__, __LINE__, "IOTransport::start() - transport is already closed - cannot restart" );
+    try{
+
+        // Can't restart a closed transport.
+        if( closed ){
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "IOTransport::start() - transport is already closed - cannot restart" );
+        }
+
+        // If it's already started, do nothing.
+        if( thread != NULL ){
+            return;
+        }
+
+        // Make sure all variables that we need have been set.
+        if( inputStream == NULL || outputStream == NULL ||
+            reader == NULL || writer == NULL ){
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "IOTransport::start() - "
+                "IO sreams and reader/writer must be set before calling start" );
+        }
+
+        // Init the Command Reader and Writer with the Streams
+        reader->setInputStream( inputStream );
+        writer->setOutputStream( outputStream );
+
+        // Start the polling thread.
+        thread = new Thread( this );
+        thread->start();
     }
-
-    // If it's already started, do nothing.
-    if( thread != NULL ){
-        return;
-    }
-
-    // Make sure all variables that we need have been set.
-    if( inputStream == NULL || outputStream == NULL ||
-        reader == NULL || writer == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::start() - "
-            "IO sreams and reader/writer must be set before calling start" );
-    }
-
-    // Init the Command Reader and Writer with the Streams
-    reader->setInputStream( inputStream );
-    writer->setOutputStream( outputStream );
-
-    // Start the polling thread.
-    thread = new Thread( this );
-    thread->start();
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::close() throw( cms::CMSException ){
 
     try{
+
         if( closed ){
             return;
         }
@@ -152,8 +172,9 @@ void IOTransport::close() throw( cms::CMSException ){
             outputStream = NULL;
         }
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,9 +193,13 @@ void IOTransport::run(){
 
     }
     catch( exceptions::ActiveMQException& ex ){
-
         ex.setMark( __FILE__, __LINE__ );
         fire( ex );
+    }
+    catch( decaf::lang::Exception& ex ){
+        exceptions::ActiveMQException exl( ex );
+        exl.setMark( __FILE__, __LINE__ );
+        fire( exl );
     }
     catch( ... ){
 
@@ -196,4 +221,3 @@ Response* IOTransport::request( Command* command AMQCPP_UNUSED )
         __FILE__, __LINE__,
         "IOTransport::request() - unsupported operation" );
 }
-

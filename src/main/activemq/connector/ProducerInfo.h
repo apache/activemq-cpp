@@ -25,8 +25,7 @@
 namespace activemq{
 namespace connector{
 
-    class ProducerInfo : public BaseConnectorResource
-    {
+    class ProducerInfo : public BaseConnectorResource {
     public:
 
         ProducerInfo() : BaseConnectorResource() {}

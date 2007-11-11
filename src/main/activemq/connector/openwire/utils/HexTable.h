@@ -33,8 +33,7 @@ namespace utils{
      * into the table, i.e. the class will return "FF" for the index 255 in
      * the table.
      */
-    class HexTable
-    {
+    class HexTable {
     public:
 
         HexTable();

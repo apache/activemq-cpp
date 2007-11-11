@@ -38,16 +38,19 @@ TransportFilter::TransportFilter( Transport* next, const bool own ) {
 ////////////////////////////////////////////////////////////////////////////////
 TransportFilter::~TransportFilter() {
 
-    if( own ){
-        delete next;
-        next = NULL;
+    try{
+        if( own ){
+            delete next;
+            next = NULL;
+        }
     }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportFilter::onTransportException(
     Transport* source AMQCPP_UNUSED,
-    const exceptions::ActiveMQException& ex ) {
+    const decaf::lang::Exception& ex ) {
 
     fire( ex );
 }

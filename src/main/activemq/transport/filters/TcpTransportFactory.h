@@ -30,8 +30,7 @@ namespace filters{
     /**
      * Factory Responsible for creating the TcpTransport.
      */
-    class TcpTransportFactory : public TransportFactory
-    {
+    class TcpTransportFactory : public TransportFactory {
     public:
 
         virtual ~TcpTransportFactory() {}

@@ -19,9 +19,13 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
+////////////////////////////////////////////////////////////////////////////////
 LOGDECAF_INITIALIZE( logger, LoggingTransport, "activemq.transport.filters.LoggingTransport")
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +64,8 @@ void LoggingTransport::oneway( Command* command )
         TransportFilter::oneway( command );
     }
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -84,6 +89,7 @@ Response* LoggingTransport::request( Command* command )
         return response;
     }
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }

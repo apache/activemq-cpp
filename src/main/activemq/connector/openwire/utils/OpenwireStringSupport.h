@@ -27,8 +27,7 @@ namespace connector{
 namespace openwire{
 namespace utils{
 
-    class OpenwireStringSupport
-    {
+    class OpenwireStringSupport {
     protected:
 
         OpenwireStringSupport() {}

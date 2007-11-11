@@ -123,15 +123,14 @@ std::string ActiveMQDestination::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQDestination::getDataStructureType() const
-{
+unsigned char ActiveMQDestination::getDataStructureType() const {
     return ActiveMQDestination::ID_ACTIVEMQDESTINATION;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string ActiveMQDestination::getClientId(
-    const ActiveMQDestination* destination )
-{
+    const ActiveMQDestination* destination ) {
+	
     std::string answer = "";
     if( destination != NULL && destination->isTemporary() ) {
         std::string name = destination->getPhysicalName();

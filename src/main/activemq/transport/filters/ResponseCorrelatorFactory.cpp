@@ -28,7 +28,7 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& ResponseCorrelatorFactory::getInstance(void)
+TransportFactory& ResponseCorrelatorFactory::getInstance()
 {
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
@@ -56,5 +56,6 @@ Transport* ResponseCorrelatorFactory::createTransport(
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -28,8 +28,8 @@ using namespace activemq::connector::stomp;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompSessionManagerTest::testSessions()
-{
+void StompSessionManagerTest::testSessions() {
+
     SessionInfo* info1 = manager->createSession( cms::Session::AUTO_ACKNOWLEDGE );
     CPPUNIT_ASSERT( info1->getAckMode() == cms::Session::AUTO_ACKNOWLEDGE );
     CPPUNIT_ASSERT( info1->getConnectionId() == connectionId );
@@ -324,6 +324,10 @@ void StompSessionManagerTest::testSubscribeOptions(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManagerTest::setUp() {
+
+    this->manager = NULL;
+    this->connector = NULL;
+    this->transport = NULL;
 
     this->connectionId = "testConnectionId";
 

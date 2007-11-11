@@ -32,15 +32,15 @@ namespace transport{
     class CommandReader : public decaf::io::Reader {
     public:
 
-        virtual ~CommandReader(){}
+        virtual ~CommandReader() {}
 
         /**
-         * Reads a command from the given input stream.
+         * Reads a command from the given input stream.  Will block until
+         * a command is read or an error is thrown.
          * @return The next command available on the stream.
          * @throws CommandIOException if a problem occurs during the read.
          */
-        virtual Command* readCommand()
-            throw ( CommandIOException ) = 0;
+        virtual Command* readCommand() throw ( CommandIOException ) = 0;
 
     };
 

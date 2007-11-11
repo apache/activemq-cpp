@@ -15,17 +15,19 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
-#define ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
+#ifndef _ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
+#define _ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandIOException.h>
+
+#include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/lang/Thread.h>
 #include <decaf/util/Queue.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
@@ -57,10 +59,10 @@ namespace transport{
          * Interface for all Protocols to implement that defines the behavior
          * of the Broker in response to messages of that protocol.
          */
-        class ResponseBuilder{
+        class ResponseBuilder {
         public:
 
-            virtual ~ResponseBuilder(){}
+            virtual ~ResponseBuilder() {}
 
             /**
              * Given a Command, check if it requires a response and return the
@@ -91,8 +93,8 @@ namespace transport{
          */
         class InternalCommandListener :
             public CommandListener,
-            public decaf::lang::Thread
-        {
+            public decaf::lang::Thread {
+
         private:
 
             MockTransport* transport;

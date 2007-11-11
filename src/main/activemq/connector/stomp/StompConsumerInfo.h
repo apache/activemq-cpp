@@ -24,8 +24,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompConsumerInfo : public ConsumerInfo
-    {
+    class StompConsumerInfo : public ConsumerInfo {
     private:
 
         // Message Selector for this Consumer
@@ -39,9 +38,10 @@ namespace stomp{
 
         // Session Info - We do not own this
         const SessionInfo* session;
-        
+
+        // Consumer shouldn't get messages it publishes
         bool noLocal;
-        
+
         // Subscription name for this consumer, "" for non-durables
         std::string name;
 
@@ -66,7 +66,7 @@ namespace stomp{
             noLocal = false;
         }
 
-        virtual ~StompConsumerInfo() { 
+        virtual ~StompConsumerInfo() {
             this->close();
             delete destination;
         }
@@ -134,19 +134,19 @@ namespace stomp{
         virtual void setSessionInfo( const SessionInfo* session ) {
             this->session = session;
         }
-        
+
         virtual bool getNoLocal() const {
             return noLocal;
         }
-        
+
         virtual void setNoLocal( bool noLocal ) {
             this->noLocal = noLocal;
         }
-        
+
         virtual const std::string& getName() const {
             return name;
         }
-        
+
         virtual void setName( const std::string& name ) {
             this->name = name;
         }

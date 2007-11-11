@@ -36,8 +36,8 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQMapMessage :
-        public ActiveMQMessageBase<cms::MapMessage>
-    {
+        public ActiveMQMessageBase<cms::MapMessage> {
+        	
     public:
 
         const static unsigned char ID_ACTIVEMQMAPMESSAGE = 25;
@@ -117,7 +117,7 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::MapMessage* clone(void) const {
+        virtual cms::MapMessage* clone() const {
             return dynamic_cast<cms::MapMessage*>(
                 this->cloneDataStructure() );
         }
@@ -131,7 +131,7 @@ namespace commands{
          *         name of an item in the MapMessage
          * @throws CMSException
          */
-        virtual std::vector<std::string> getMapNames(void) const;
+        virtual std::vector<std::string> getMapNames() const;
 
         /**
          * Indicates whether an item exists in this MapMessage object.

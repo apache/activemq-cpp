@@ -25,8 +25,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompProducerInfo : public ProducerInfo
-    {
+    class StompProducerInfo : public ProducerInfo {
     private:
 
         // Are Message Ids Disabled
@@ -60,9 +59,9 @@ namespace stomp{
             this->destination = NULL;
         }
 
-        virtual ~StompProducerInfo(void) { 
+        virtual ~StompProducerInfo(void) {
             this->close();
-            delete destination; 
+            delete destination;
         }
 
         /**
@@ -70,7 +69,7 @@ namespace stomp{
          * sends its messages to.
          * @return Destionation, owned by this object
          */
-        virtual const cms::Destination* getDestination(void) const {
+        virtual const cms::Destination* getDestination() const {
             return destination;
         }
 
@@ -93,7 +92,7 @@ namespace stomp{
          * Gets the ID that is assigned to this Producer
          * @return value of the Producer Id.
          */
-        virtual long long getProducerId(void) const {
+        virtual long long getProducerId() const {
             return producerId;
         }
 
@@ -109,7 +108,7 @@ namespace stomp{
          * Gets the Session Info that this consumer is attached too
          * @return SessionnInfo pointer
          */
-        virtual const SessionInfo* getSessionInfo(void) const {
+        virtual const SessionInfo* getSessionInfo() const {
             return session;
         }
 

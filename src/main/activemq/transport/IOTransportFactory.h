@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
-#define ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportFactory.h>
@@ -29,7 +29,7 @@ namespace transport{
      * Manufactures IOTransports, which are objects that
      * read from input streams and write to output streams.
      */
-    class IOTransportFactory : public TransportFactory{
+    class IOTransportFactory : public TransportFactory {
     private:
 
         static TransportFactoryMapRegistrar registrar;
@@ -60,4 +60,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_*/

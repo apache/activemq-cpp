@@ -21,36 +21,32 @@ using namespace activemq;
 using namespace activemq::connector;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectorFactoryMap* ConnectorFactoryMap::getInstance(void)
-{
+ConnectorFactoryMap* ConnectorFactoryMap::getInstance() {
+
     // Static instance of this Map, create here so that one will
-    // always exist, the one and only Connector Map.      
+    // always exist, the one and only Connector Map.
     static ConnectorFactoryMap instance;
-    
+
     return &instance;
-} 
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectorFactoryMap::registerConnectorFactory( const std::string& name, 
-                                                    ConnectorFactory* factory )
-{
+void ConnectorFactoryMap::registerConnectorFactory( const std::string& name,
+                                                    ConnectorFactory* factory ) {
     factoryMap[name] = factory;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectorFactoryMap::unregisterConnectorFactory( const std::string& name )
-{
+void ConnectorFactoryMap::unregisterConnectorFactory( const std::string& name ) {
     factoryMap.erase( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectorFactory* ConnectorFactoryMap::lookup( const std::string& name ) 
-{
-    std::map<std::string, ConnectorFactory*>::const_iterator itr = 
+ConnectorFactory* ConnectorFactoryMap::lookup( const std::string& name ) {
+    std::map<std::string, ConnectorFactory*>::const_iterator itr =
         factoryMap.find( name );
 
-    if( itr != factoryMap.end() )
-    {
+    if( itr != factoryMap.end() ) {
         return itr->second;
     }
 
@@ -60,15 +56,14 @@ ConnectorFactory* ConnectorFactoryMap::lookup( const std::string& name )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t ConnectorFactoryMap::getFactoryNames(
-   std::vector<std::string>& factoryList )
-{
+   std::vector<std::string>& factoryList ) {
+
     std::map<std::string, ConnectorFactory*>::const_iterator itr =
         factoryMap.begin();
-      
-    for( ; itr != factoryMap.end(); ++itr )
-    {
+
+    for( ; itr != factoryMap.end(); ++itr ) {
         factoryList.insert( factoryList.end(), itr->first );
     }
-      
+
     return factoryMap.size();
 }

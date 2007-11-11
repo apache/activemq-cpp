@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
-#define ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
 
 #include <activemq/transport/TransportFactory.h>
 
@@ -30,7 +30,7 @@ namespace transport{
     class MockTransportFactory : public TransportFactory{
     public:
 
-        virtual ~MockTransportFactory(){}
+        virtual ~MockTransportFactory() {}
 
         /**
          * Creates a Transport instance.
@@ -51,4 +51,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_*/

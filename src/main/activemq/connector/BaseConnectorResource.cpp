@@ -24,27 +24,25 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+
 ///////////////////////////////////////////////////////////////////////////////
-BaseConnectorResource::BaseConnectorResource()
-{
+BaseConnectorResource::BaseConnectorResource() {
     this->connector = NULL;
     this->closed = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-BaseConnectorResource::BaseConnectorResource( Connector* connector )
-{
+BaseConnectorResource::BaseConnectorResource( Connector* connector ) {
     this->connector = connector;
     this->closed = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-BaseConnectorResource::~BaseConnectorResource()
-{}
+void BaseConnectorResource::close() throw ( cms::CMSException ) {
 
-///////////////////////////////////////////////////////////////////////////////
-void BaseConnectorResource::close() throw ( cms::CMSException )
-{
     try {
 
         if( closed == true ) {
@@ -72,6 +70,7 @@ void BaseConnectorResource::close() throw ( cms::CMSException )
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 

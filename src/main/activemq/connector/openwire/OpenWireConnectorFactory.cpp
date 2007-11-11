@@ -27,17 +27,16 @@ using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 
 ////////////////////////////////////////////////////////////////////////////////
-Connector* OpenWireConnectorFactory::createConnector(
+OpenWireConnector* OpenWireConnectorFactory::createConnector(
     const decaf::util::Properties& properties,
-    activemq::transport::Transport* transport )
-{
-    return dynamic_cast<Connector*>(
-        new OpenWireConnector( transport, properties ) );
+    activemq::transport::Transport* transport ) {
+
+    return new OpenWireConnector( transport, properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectorFactory& OpenWireConnectorFactory::getInstance()
-{
+ConnectorFactory& OpenWireConnectorFactory::getInstance() {
+
     // Create a static instance of the registrar and return a reference to
     // its internal instance of this class.
     static ConnectorFactoryMapRegistrar registrar(

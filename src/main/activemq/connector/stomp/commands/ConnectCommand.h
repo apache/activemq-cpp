@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_
 
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
@@ -30,8 +30,7 @@ namespace commands{
     /**
      * Message sent to the broker to connect.
      */
-    class ConnectCommand : public AbstractCommand< transport::Command >
-    {
+    class ConnectCommand : public AbstractCommand< transport::Command > {
     public:
 
         ConnectCommand() :
@@ -44,7 +43,7 @@ namespace commands{
                 validate( getFrame() );
         }
 
-        virtual ~ConnectCommand() {};
+        virtual ~ConnectCommand() {}
 
         /**
          * Clone the StompCommand and return the new copy.
@@ -114,7 +113,7 @@ namespace commands{
         virtual const char* getClientId() const{
             return getPropertyValue(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_CLIENT_ID) );
+                    CommandConstants::HEADER_CLIENT_ID ) );
         }
 
         /**
@@ -124,7 +123,7 @@ namespace commands{
         virtual void setClientId( const std::string& clientId ){
             setPropertyValue(
                 CommandConstants::toString(
-                    CommandConstants::HEADER_CLIENT_ID) ,
+                    CommandConstants::HEADER_CLIENT_ID ),
                 clientId );
         }
 
@@ -135,8 +134,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::CONNECT ) );
         }
@@ -147,11 +145,9 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
-            if(frame.getCommand() ==
-               CommandConstants::toString( CommandConstants::CONNECT ) )
-            {
+        virtual bool validate( const StompFrame& frame ) const {
+            if( frame.getCommand() ==
+                CommandConstants::toString( CommandConstants::CONNECT ) ) {
                 return true;
             }
 
@@ -162,4 +158,4 @@ namespace commands{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_CONNECTCOMMAND_H_*/

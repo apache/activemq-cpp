@@ -22,16 +22,18 @@
 
 using namespace std;
 using namespace activemq;
-using namespace decaf::util::concurrent;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace decaf::io;
+using namespace decaf::util::concurrent;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireCommandReader::OpenWireCommandReader()
-{
+OpenWireCommandReader::OpenWireCommandReader() {
+
     this->inputStream = NULL;
     this->openWireFormat = NULL;
     this->dataInputStream = NULL;
@@ -39,15 +41,13 @@ OpenWireCommandReader::OpenWireCommandReader()
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandReader::OpenWireCommandReader( InputStream* inputStream,
-                                              OpenWireFormat* openWireFormat )
-{
+                                              OpenWireFormat* openWireFormat ) {
     this->setInputStream( inputStream );
     this->openWireFormat = openWireFormat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandReader::~OpenWireCommandReader() {
-
     if( dataInputStream != NULL ) {
         delete dataInputStream;
     }
@@ -55,14 +55,14 @@ OpenWireCommandReader::~OpenWireCommandReader() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Command* OpenWireCommandReader::readCommand()
-    throw ( CommandIOException )
-{
-    try
-    {
+    throw ( CommandIOException ) {
+
+    try{
+
         if( inputStream == NULL ||
             dataInputStream == NULL ||
-            openWireFormat == NULL)
-        {
+            openWireFormat == NULL) {
+
             throw IOException(
                 __FILE__, __LINE__,
                 "OpenwireCommandReader::read(char*,int) - class not properly initialized" );
@@ -72,17 +72,17 @@ Command* OpenWireCommandReader::readCommand()
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
-   throw( decaf::io::IOException )
-{
-    try
-    {
-        if( inputStream == NULL )
-        {
+   throw( decaf::io::IOException ) {
+
+    try{
+
+        if( inputStream == NULL ) {
             throw IOException(
                 __FILE__, __LINE__,
                 "OpenwireCommandReader::read(char*,int) - input stream is NULL" );
@@ -92,16 +92,16 @@ size_t OpenWireCommandReader::read( unsigned char* buffer, size_t count )
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char OpenWireCommandReader::readByte() throw( decaf::io::IOException )
-{
-    try
-    {
-        if( inputStream == NULL )
-        {
+unsigned char OpenWireCommandReader::readByte() throw( decaf::io::IOException ) {
+
+    try{
+
+        if( inputStream == NULL ) {
             throw IOException(
                 __FILE__, __LINE__,
                 "OpenwireCommandReader::read(char*,int) - "
@@ -114,5 +114,6 @@ unsigned char OpenWireCommandReader::readByte() throw( decaf::io::IOException )
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }

@@ -29,12 +29,11 @@ namespace transport{
      * This class controls the creation of transports based on configuration
      * options set in a properties object.
      */
-    class TransportBuilder
-    {
+    class TransportBuilder {
     public:
 
-        TransportBuilder();
-        virtual ~TransportBuilder();
+        TransportBuilder() {}
+        virtual ~TransportBuilder() {}
 
     public:
 
@@ -50,7 +49,7 @@ namespace transport{
          */
         virtual Transport* buildTransport( const std::string& url,
                                            decaf::util::Properties& properties )
-                                            throw ( cms::CMSException );
+                                               throw ( cms::CMSException );
 
     protected:
 

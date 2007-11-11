@@ -25,15 +25,11 @@ using namespace activemq::connector::openwire::commands;
 using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMessage::ActiveMQMessage() : 
+ActiveMQMessage::ActiveMQMessage() :
     ActiveMQMessageBase<cms::Message>()
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMessage::~ActiveMQMessage()
-{}
-
-////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQMessage::getDataStructureType() const {
-    return ActiveMQMessage::ID_ACTIVEMQMESSAGE; 
+    return ActiveMQMessage::ID_ACTIVEMQMESSAGE;
 }

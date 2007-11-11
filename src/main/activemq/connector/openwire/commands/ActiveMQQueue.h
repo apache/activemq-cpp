@@ -24,6 +24,8 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 #include <cms/Queue.h>
 #include <vector>
 #include <string>
@@ -34,8 +36,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQQueue : public ActiveMQDestination,
-                          public cms::Queue
-    {
+                          public cms::Queue {
     public:
 
         const static unsigned char ID_ACTIVEMQQUEUE = 100;
@@ -44,7 +45,7 @@ namespace commands{
 
         ActiveMQQueue();
         ActiveMQQueue( const std::string& name );
-        virtual ~ActiveMQQueue();
+        virtual ~ActiveMQQueue() {}
 
         virtual unsigned char getDataStructureType() const;
 
@@ -117,7 +118,7 @@ namespace commands{
          * necessarily equal to the User Supplied name of the Destination
          * @return Provider specific Name
          */
-        virtual std::string toProviderString(void) const {
+        virtual std::string toProviderString() const {
             return this->getPhysicalName();
         }
 
@@ -126,7 +127,7 @@ namespace commands{
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const {
+        virtual cms::Destination* clone() const {
             return dynamic_cast<cms::Destination*>(
                 this->cloneDataStructure() );
         }
@@ -158,7 +159,13 @@ namespace commands{
          */
         virtual std::string getQueueName() const
             throw( cms::CMSException ) {
+
+            try{
                 return this->getPhysicalName();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     };

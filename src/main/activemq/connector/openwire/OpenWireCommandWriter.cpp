@@ -25,6 +25,7 @@ using namespace activemq::connector::openwire;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace decaf::io;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,8 +38,8 @@ OpenWireCommandWriter::OpenWireCommandWriter() {
 
 ////////////////////////////////////////////////////////////////////////////////
 OpenWireCommandWriter::OpenWireCommandWriter( OutputStream* outputStream,
-                                              OpenWireFormat* openWireFormat )
-{
+                                              OpenWireFormat* openWireFormat ) {
+
     this->setOutputStream( outputStream );
     this->openWireFormat = openWireFormat;
 }
@@ -53,14 +54,14 @@ OpenWireCommandWriter::~OpenWireCommandWriter() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireCommandWriter::writeCommand( Command* command )
-    throw ( transport::CommandIOException )
-{
-    try
-    {
+    throw ( transport::CommandIOException ) {
+
+    try{
+
         if( outputStream == NULL ||
             dataOutputStream == NULL ||
-            openWireFormat == NULL )
-        {
+            openWireFormat == NULL ) {
+
             throw CommandIOException(
                 __FILE__, __LINE__,
                 "OpenWireCommandWriter::writeCommand - "
@@ -74,32 +75,43 @@ void OpenWireCommandWriter::writeCommand( Command* command )
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireCommandWriter::write( const unsigned char* buffer, size_t count )
-    throw( IOException )
-{
-    if( outputStream == NULL )
-    {
+    throw( IOException ) {
+
+    if( outputStream == NULL ) {
         throw IOException(
             __FILE__, __LINE__,
             "OpenWireCommandWriter::write(char*,int) - input stream is NULL" );
     }
 
-    outputStream->write( buffer, 0, count );
+    try{
+        outputStream->write( buffer, 0, count );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireCommandWriter::writeByte( unsigned char v ) throw( IOException )
-{
-    if( outputStream == NULL )
-    {
+void OpenWireCommandWriter::writeByte( unsigned char v ) throw( IOException ) {
+
+    if( outputStream == NULL ) {
         throw IOException(
             __FILE__, __LINE__,
             "OpenWireCommandWriter::write(char) - input stream is NULL" );
     }
 
-    outputStream->write( v );
+    try{
+        outputStream->write( v );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

@@ -28,8 +28,7 @@ namespace filters{
     /**
      * A transport filter that logs commands as they are sent/received.
      */
-    class LoggingTransport : public TransportFilter
-    {
+    class LoggingTransport : public TransportFilter {
     private:
 
         LOGDECAF_DECLARE( logger )
@@ -61,7 +60,8 @@ namespace filters{
          * by this transport.
          */
         virtual void oneway( Command* command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException);
 
         /**
          * Not supported by this class - throws an exception.
@@ -69,7 +69,8 @@ namespace filters{
          * @throws UnsupportedOperationException.
          */
         virtual Response* request( Command* command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException);
 
     };
 

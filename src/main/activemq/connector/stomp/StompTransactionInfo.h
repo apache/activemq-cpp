@@ -14,8 +14,8 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#ifndef ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
-#define ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
+#define _ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
 
 #include <activemq/connector/TransactionInfo.h>
 #include <activemq/connector/SessionInfo.h>
@@ -24,8 +24,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompTransactionInfo : public TransactionInfo
-    {
+    class StompTransactionInfo : public TransactionInfo {
     private:
 
         // Transaction Id
@@ -89,4 +88,4 @@ namespace stomp{
 
 }}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_*/

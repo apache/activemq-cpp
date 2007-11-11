@@ -31,8 +31,7 @@ namespace commands{
     /**
      * Commits a Transaction.
      */
-    class CommitCommand  : public AbstractCommand< transport::Command >
-    {
+    class CommitCommand  : public AbstractCommand< transport::Command > {
     public:
 
         CommitCommand() :
@@ -62,8 +61,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::COMMIT ) );
         }
@@ -74,14 +72,13 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::COMMIT )) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_TRANSACTIONID ) ) ) )
-            {
+                        CommandConstants::HEADER_TRANSACTIONID ) ) ) ) {
+
                 return true;
             }
 

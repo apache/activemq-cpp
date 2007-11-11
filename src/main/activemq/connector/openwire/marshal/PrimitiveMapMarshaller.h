@@ -34,8 +34,7 @@ namespace marshal{
      * map to the Openwire Format's expectation of what the map looks like
      * on the wire.
      */
-    class PrimitiveMapMarshaller
-    {
+    class PrimitiveMapMarshaller {
     public:
 
         PrimitiveMapMarshaller() {}
@@ -48,7 +47,8 @@ namespace marshal{
          * @throws CMSException
          */
         static void marshal( const util::PrimitiveMap* map,
-                             std::vector<unsigned char>& dest ) throw ( cms::CMSException );
+                             std::vector<unsigned char>& dest )
+                                throw ( cms::CMSException );
 
         /**
          * Static Map Unmarshaler, takes an array of bytes and returns a
@@ -66,7 +66,8 @@ namespace marshal{
          * @param reference to a byte array to read data from.
          */
         static void unmarshal( util::PrimitiveMap* map,
-                               const std::vector<unsigned char>& src ) throw ( cms::CMSException );
+                               const std::vector<unsigned char>& src )
+                                    throw ( cms::CMSException );
 
     protected:
 

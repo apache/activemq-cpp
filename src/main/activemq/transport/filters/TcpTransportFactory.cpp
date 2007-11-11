@@ -23,9 +23,10 @@ using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& TcpTransportFactory::getInstance(void)
+TransportFactory& TcpTransportFactory::getInstance()
 {
     // Create the one and only instance of the registrar
     static TransportFactoryMapRegistrar registrar(
@@ -44,5 +45,6 @@ Transport* TcpTransportFactory::createTransport(
         return new TcpTransport( properties, next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

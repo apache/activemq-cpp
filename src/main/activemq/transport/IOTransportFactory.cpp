@@ -18,9 +18,13 @@
 #include "IOTransportFactory.h"
 #include <activemq/util/Config.h>
 #include <activemq/transport/IOTransport.h>
+#include <decaf/lang/Exception.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* IOTransportFactory::createTransport(
@@ -28,8 +32,13 @@ Transport* IOTransportFactory::createTransport(
     Transport* next AMQCPP_UNUSED,
     bool own AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
 
-    // IO is the Base Tranport, it can have no next.
-    return new IOTransport();
+    try{
+        // IO is the Base Tranport, it can have no next.
+        return new IOTransport();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

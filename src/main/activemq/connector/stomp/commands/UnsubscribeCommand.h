@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_
 
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
@@ -31,8 +31,7 @@ namespace commands{
      * Command sent to the broker to unsubscribe to a
      * topic or queue.
      */
-    class UnsubscribeCommand : public AbstractCommand< transport::Command >
-    {
+    class UnsubscribeCommand : public AbstractCommand< transport::Command > {
     public:
 
         UnsubscribeCommand() :
@@ -45,7 +44,7 @@ namespace commands{
                 validate( getFrame() );
         }
 
-        virtual ~UnsubscribeCommand(void) {};
+        virtual ~UnsubscribeCommand(void) {}
 
         /**
          * Clone the StompCommand and return the new copy.
@@ -83,8 +82,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::UNSUBSCRIBE ) );
         }
@@ -95,14 +93,12 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::UNSUBSCRIBE )) &&
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_DESTINATION ) ) ) )
-            {
+                        CommandConstants::HEADER_DESTINATION ) ) ) ) {
                 return true;
             }
 
@@ -113,4 +109,4 @@ namespace commands{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_UNSUBSCRIBECOMMAND_H_*/

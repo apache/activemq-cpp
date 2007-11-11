@@ -19,18 +19,18 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDREADER_H_
 
 #include <activemq/transport/CommandReader.h>
-#include <decaf/io/InputStream.h>
-#include <decaf/io/DataInputStream.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
+
+#include <decaf/io/InputStream.h>
+#include <decaf/io/DataInputStream.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireCommandReader : public transport::CommandReader
-    {
+    class OpenWireCommandReader : public transport::CommandReader {
     private:
 
         /**

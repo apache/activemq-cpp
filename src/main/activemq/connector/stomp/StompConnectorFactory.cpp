@@ -25,19 +25,21 @@ using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Connector* StompConnectorFactory::createConnector(
+StompConnector* StompConnectorFactory::createConnector(
     const decaf::util::Properties& properties,
-    activemq::transport::Transport* transport )
-{
-    return dynamic_cast<Connector*>(
-        new StompConnector( transport, properties ) );
+    activemq::transport::Transport* transport ) {
+
+    return new StompConnector( transport, properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectorFactory& StompConnectorFactory::getInstance(void)
-{
+ConnectorFactory& StompConnectorFactory::getInstance() {
+
     // Create a static instance of the registrar and return a reference to
     // its internal instance of this class.
     static ConnectorFactoryMapRegistrar registrar(

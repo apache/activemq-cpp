@@ -38,10 +38,9 @@ LoggingInputStream::~LoggingInputStream() {}
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char LoggingInputStream::read() throw ( IOException ) {
     try {
+
         unsigned char c = FilterInputStream::read();
-
         log( &c, 1 );
-
         return c;
     }
     AMQ_CATCH_RETHROW( IOException )

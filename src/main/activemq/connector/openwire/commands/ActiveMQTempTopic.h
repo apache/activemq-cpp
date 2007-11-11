@@ -34,8 +34,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQTempTopic : public ActiveMQTempDestination,
-                              public cms::TemporaryTopic
-    {
+                              public cms::TemporaryTopic {
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPTOPIC = 103;
@@ -72,7 +71,7 @@ namespace commands{
          * Converts the Destination Name into a String
          * @return string name
          */
-        virtual std::string toString(void) const {
+        virtual std::string toString() const {
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQTempTopic" << std::endl;
@@ -106,7 +105,7 @@ namespace commands{
          * Retrieve the Destination Type for this Destination
          * @return The Destination Type
          */
-        virtual cms::Destination::DestinationType getDestinationType(void) const {
+        virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::TEMPORARY_TOPIC;
         }
 
@@ -116,7 +115,7 @@ namespace commands{
          * necessarily equal to the User Supplied name of the Destination
          * @return Provider specific Name
          */
-        virtual std::string toProviderString(void) const {
+        virtual std::string toProviderString() const {
             return this->getPhysicalName();
         }
 
@@ -125,7 +124,7 @@ namespace commands{
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const {
+        virtual cms::Destination* clone() const {
             return dynamic_cast<cms::Destination*>(
                 this->cloneDataStructure() );
         }
@@ -155,9 +154,15 @@ namespace commands{
          * Gets the name of this topic.
          * @return The topic name.
          */
-        virtual std::string getTopicName(void)
+        virtual std::string getTopicName()
             const throw( cms::CMSException ) {
+        	
+            try{
                 return this->getPhysicalName();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -165,7 +170,12 @@ namespace commands{
          * @throws CMSException
          */
         virtual void destroy() throw ( cms::CMSException ) {
-            close();
+            try{
+                close();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     };

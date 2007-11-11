@@ -18,13 +18,15 @@
 #include "StompSelector.h"
 #include <activemq/util/Config.h>
 
-using namespace activemq::connector::stomp;
 using namespace std;
+using namespace activemq;
+using namespace activemq::connector;
+using namespace activemq::connector::stomp;
 
 ////////////////////////////////////////////////////////////////////////////////
 bool StompSelector::isSelected( const string& selector AMQCPP_UNUSED,
-    cms::Message* msg AMQCPP_UNUSED)
-{
+                                cms::Message* msg AMQCPP_UNUSED ) {
+
     return true;
 }
 

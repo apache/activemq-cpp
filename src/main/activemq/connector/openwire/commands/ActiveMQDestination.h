@@ -36,8 +36,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQDestination : public BaseDataStructure
-    {
+    class ActiveMQDestination : public BaseDataStructure {
     protected:
 
         enum DESTINATION_TYPE_IDS {

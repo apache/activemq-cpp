@@ -36,8 +36,7 @@ namespace filters{
      * level transport should take care of manaing stream reads
      * and writes.
      */
-    class TcpTransport : public TransportFilter
-    {
+    class TcpTransport : public TransportFilter {
     private:
 
         /**

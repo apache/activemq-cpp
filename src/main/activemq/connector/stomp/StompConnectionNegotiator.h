@@ -144,7 +144,7 @@ namespace stomp{
          * @param own - do we own the Transport pointer.
          */
         StompConnectionNegotiator( transport::Transport* next,
-                                  bool own = true );
+                                   bool own = true );
 
         virtual ~StompConnectionNegotiator();
 
@@ -160,7 +160,8 @@ namespace stomp{
          * by this transport.
          */
         virtual void oneway( transport::Command* command )
-            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -171,7 +172,8 @@ namespace stomp{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual transport::Response* request( transport::Command* command )
-            throw( transport::CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( transport::CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's
@@ -190,7 +192,7 @@ namespace stomp{
          */
         virtual void onTransportException(
             transport::Transport* source,
-            const exceptions::ActiveMQException& ex );
+            const decaf::lang::Exception& ex );
 
         /**
          * Starts this transport object and creates the thread for

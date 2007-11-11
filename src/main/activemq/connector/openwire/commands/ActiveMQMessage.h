@@ -26,8 +26,8 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQMessage :
-        public ActiveMQMessageBase<cms::Message>
-    {
+        public ActiveMQMessageBase<cms::Message> {
+
     public:
 
         static const unsigned char ID_ACTIVEMQMESSAGE = 23;
@@ -35,7 +35,7 @@ namespace commands{
     public:
 
         ActiveMQMessage();
-        virtual ~ActiveMQMessage();
+        virtual ~ActiveMQMessage() {}
 
         virtual unsigned char getDataStructureType() const;
 
@@ -91,7 +91,7 @@ namespace commands{
          * caller is required to delete.
          * @return new copy of this message
          */
-        virtual cms::Message* clone(void) const {
+        virtual cms::Message* clone() const {
             return dynamic_cast<cms::Message*>(
                 this->cloneDataStructure() );
         }

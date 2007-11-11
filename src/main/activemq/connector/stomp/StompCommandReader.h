@@ -18,12 +18,12 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDREADER_H_
 
 #include <activemq/transport/CommandReader.h>
-#include <decaf/io/InputStream.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompFrame.h>
 #include <activemq/connector/stomp/StompConnectorException.h>
 #include <activemq/connector/stomp/marshal/Marshaler.h>
+#include <decaf/io/InputStream.h>
 
 namespace activemq{
 namespace connector{

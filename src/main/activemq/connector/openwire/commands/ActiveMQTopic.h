@@ -24,6 +24,8 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Exception.h>
 #include <cms/Topic.h>
 #include <vector>
 #include <string>
@@ -34,8 +36,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQTopic : public ActiveMQDestination,
-                          public cms::Topic
-    {
+                          public cms::Topic {
     public:
 
         const static unsigned char ID_ACTIVEMQTOPIC = 101;
@@ -107,7 +108,7 @@ namespace commands{
          * Retrieve the Destination Type for this Destination
          * @return The Destination Type
          */
-        virtual cms::Destination::DestinationType getDestinationType(void) const {
+        virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::TOPIC;
         }
 
@@ -126,7 +127,7 @@ namespace commands{
          * copy of this one, and returns it.
          * @returns cloned copy of this object
          */
-        virtual cms::Destination* clone(void) const {
+        virtual cms::Destination* clone() const {
             return dynamic_cast<cms::Destination*>(
                 this->cloneDataStructure() );
         }
@@ -158,7 +159,13 @@ namespace commands{
          */
         virtual std::string getTopicName(void)
             const throw( cms::CMSException ) {
+
+            try{
                 return this->getPhysicalName();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     };

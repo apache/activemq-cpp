@@ -34,8 +34,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQTextMessage :
-        public ActiveMQMessageBase<cms::TextMessage>
-    {
+        public ActiveMQMessageBase<cms::TextMessage> {
     public:
 
         const static unsigned char ID_ACTIVEMQTEXTMESSAGE = 28;

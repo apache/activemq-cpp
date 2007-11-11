@@ -38,8 +38,7 @@ namespace commands{
      * class StompMessage to implement all cms::Message type functionality
      * and implements the BytesMessage interface here.
      */
-    class BytesMessageCommand : public StompMessage< cms::BytesMessage >
-    {
+    class BytesMessageCommand : public StompMessage< cms::BytesMessage > {
     private:
 
         /**
@@ -79,8 +78,8 @@ namespace commands{
         BytesMessageCommand() :
             StompMessage< cms::BytesMessage >(),
             dataInputStream(&inputStream),
-            dataOutputStream(&outputStream)
-        {
+            dataOutputStream(&outputStream) {
+
             initialize( getFrame() );
             clearBody();
         }
@@ -92,8 +91,8 @@ namespace commands{
         BytesMessageCommand( StompFrame* frame ) :
             StompMessage< cms::BytesMessage >( frame ),
             dataInputStream(&inputStream),
-            dataOutputStream(&outputStream)
-        {
+            dataOutputStream(&outputStream) {
+
             validate( getFrame() );
             reset();
         }
@@ -130,18 +129,21 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal()
-            throw (marshal::MarshalException)
-        {
-            // Before we send out the frame tag it with the content length
-            // as this is a bytes message and we can't ensure we have only
-            // a trailing NULL.
-            setPropertyValue(
-                CommandConstants::toString(
-                    CommandConstants::HEADER_CONTENTLENGTH),
-                    decaf::lang::Long::toString( getFrame().getBodyLength() ) );
+        virtual const StompFrame& marshal() throw ( marshal::MarshalException ) {
 
-            return StompMessage<cms::BytesMessage>::marshal();
+            try{
+                // Before we send out the frame tag it with the content length
+                // as this is a bytes message and we can't ensure we have only
+                // a trailing NULL.
+                setPropertyValue(
+                    CommandConstants::toString(
+                        CommandConstants::HEADER_CONTENTLENGTH),
+                        decaf::lang::Long::toString( getFrame().getBodyLength() ) );
+
+                return StompMessage<cms::BytesMessage>::marshal();
+            }
+            AMQ_CATCH_RETHROW( marshal::MarshalException )
+            AMQ_CATCHALL_THROW( marshal::MarshalException )
         }
 
         /**
@@ -212,8 +214,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual bool readBoolean() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readBoolean();
+            try{
+                checkReadOnly();
+                return dataInputStream.readBoolean();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -224,8 +231,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeBoolean( bool value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeBoolean( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeBoolean( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -234,8 +246,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual unsigned char readByte() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readByte();
+            try{
+                checkReadOnly();
+                return dataInputStream.readByte();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -244,8 +261,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeByte( unsigned char value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeByte( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeByte( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -269,8 +291,13 @@ namespace commands{
          */
         virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
             throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.read( value );
+            try{
+                checkReadOnly();
+                return dataInputStream.read( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -281,8 +308,13 @@ namespace commands{
          */
         virtual void writeBytes( const std::vector<unsigned char>& value )
             throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.write( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.write( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -313,8 +345,13 @@ namespace commands{
         virtual std::size_t readBytes( unsigned char*& buffer, std::size_t length ) const
             throw ( cms::CMSException )
         {
-            checkReadOnly();
-            return dataInputStream.read( buffer, 0, length );
+            try{
+                checkReadOnly();
+                return dataInputStream.read( buffer, 0, length );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -328,8 +365,13 @@ namespace commands{
         virtual void writeBytes( const unsigned char* value,
                                  std::size_t offset,
                                  std::size_t length ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.write( value, offset, length );
+            try{
+                checkWriteOnly();
+                dataOutputStream.write( value, offset, length );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -338,8 +380,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual char readChar() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readChar();
+            try{
+                checkReadOnly();
+                return dataInputStream.readChar();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -348,8 +395,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeChar( char value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeChar( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeChar( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -358,8 +410,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual float readFloat() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readFloat();
+            try{
+                checkReadOnly();
+                return dataInputStream.readFloat();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -368,8 +425,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeFloat( float value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeFloat( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeFloat( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -378,8 +440,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual double readDouble() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readDouble();
+            try{
+                checkReadOnly();
+                return dataInputStream.readDouble();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -388,8 +455,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeDouble( double value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeDouble( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeDouble( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -398,8 +470,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual short readShort() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readShort();
+            try{
+                checkReadOnly();
+                return dataInputStream.readShort();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -408,8 +485,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeShort( short value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeShort( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeShort( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -418,8 +500,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual unsigned short readUnsignedShort() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readUnsignedShort();
+            try{
+                checkReadOnly();
+                return dataInputStream.readUnsignedShort();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -428,8 +515,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeUnsignedShort( unsigned short value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeUnsignedShort( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeUnsignedShort( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -438,8 +530,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual int readInt() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readInt();
+            try{
+                checkReadOnly();
+                return dataInputStream.readInt();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -448,8 +545,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeInt( int value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeInt( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeInt( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -458,8 +560,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual long long readLong() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readLong();
+            try{
+                checkReadOnly();
+                return dataInputStream.readLong();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -468,8 +575,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeLong( long long value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeLong( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeLong( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -478,8 +590,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual std::string readString() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readString();
+            try{
+                checkReadOnly();
+                return dataInputStream.readString();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -488,8 +605,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeString( const std::string& value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeChars( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeChars( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -498,8 +620,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual std::string readUTF() const throw ( cms::CMSException ){
-            checkReadOnly();
-            return dataInputStream.readUTF();
+            try{
+                checkReadOnly();
+                return dataInputStream.readUTF();
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -508,8 +635,13 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException ){
-            checkWriteOnly();
-            dataOutputStream.writeUTF( value );
+            try{
+                checkWriteOnly();
+                dataOutputStream.writeUTF( value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
     protected:
@@ -518,7 +650,7 @@ namespace commands{
          * Throws an exception if not in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnly() const throw (cms::CMSException){
+        void checkWriteOnly() const throw ( cms::CMSException ){
             if( readOnly ){
                 throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
@@ -529,7 +661,7 @@ namespace commands{
          * Throws an exception if not in read-only mode.
          * @throws CMSException
          */
-        void checkReadOnly() const throw (cms::CMSException){
+        void checkReadOnly() const throw ( cms::CMSException ){
             if( !readOnly ){
                 throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );

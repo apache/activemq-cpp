@@ -30,7 +30,7 @@ namespace connector{
     class ConnectorFactory {
     public:
 
-        virtual ~ConnectorFactory(void) {}
+        virtual ~ConnectorFactory() {}
 
         /**
          * Creates a connector

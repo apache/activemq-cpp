@@ -50,6 +50,7 @@ namespace commands{
             this->ackHandler = NULL;
             this->redeliveryCount = 0;
         }
+
         virtual ~ActiveMQMessageBase() {}
 
         /**
@@ -96,7 +97,7 @@ namespace commands{
                 }
             }
             AMQ_CATCH_RETHROW( decaf::io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
             AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
@@ -114,7 +115,7 @@ namespace commands{
                     &properties, marshalledProperties );
             }
             AMQ_CATCH_RETHROW( decaf::io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
             AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
@@ -232,6 +233,7 @@ namespace commands{
                 this->getAckHandler()->acknowledgeMessage( this );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
             AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
@@ -278,7 +280,12 @@ namespace commands{
         virtual bool getBooleanProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getBool( name );
+            try{
+                return properties.getBool( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -290,7 +297,12 @@ namespace commands{
         virtual unsigned char getByteProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getByte( name );
+            try{
+                return properties.getByte( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -302,7 +314,12 @@ namespace commands{
         virtual double getDoubleProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getDouble( name );
+            try{
+                return properties.getDouble( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -314,7 +331,12 @@ namespace commands{
         virtual float getFloatProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getFloat( name );
+            try{
+                return properties.getFloat( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -326,7 +348,12 @@ namespace commands{
         virtual int getIntProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getInt( name );
+            try{
+                return properties.getInt( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -338,7 +365,12 @@ namespace commands{
         virtual long long getLongProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getLong( name );
+            try{
+                return properties.getLong( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -350,7 +382,12 @@ namespace commands{
         virtual short getShortProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getShort( name );
+            try{
+                return properties.getShort( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -362,7 +399,12 @@ namespace commands{
         virtual std::string getStringProperty( const std::string& name ) const
             throw( cms::CMSException ) {
 
-            return properties.getString( name );
+            try{
+                return properties.getString( name );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -375,7 +417,12 @@ namespace commands{
                                          bool value )
                                             throw( cms::CMSException ) {
 
-            properties.setBool( name, value );
+            try{
+                properties.setBool( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -388,7 +435,12 @@ namespace commands{
                                       unsigned char value )
                                         throw( cms::CMSException ) {
 
-            properties.setByte( name, value );
+            try{
+                properties.setByte( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -401,7 +453,12 @@ namespace commands{
                                         double value )
                                             throw( cms::CMSException ) {
 
-            properties.setDouble( name, value );
+            try{
+                properties.setDouble( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -414,7 +471,12 @@ namespace commands{
                                        float value )
                                         throw( cms::CMSException ) {
 
-            properties.setFloat( name, value );
+            try{
+                properties.setFloat( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -427,7 +489,12 @@ namespace commands{
                                      int value )
                                         throw( cms::CMSException ) {
 
-            properties.setInt( name, value );
+            try{
+                properties.setInt( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -440,7 +507,12 @@ namespace commands{
                                       long long value )
                                         throw( cms::CMSException ) {
 
-            properties.setLong( name, value );
+            try{
+                properties.setLong( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -453,7 +525,12 @@ namespace commands{
                                        short value )
                                         throw( cms::CMSException ) {
 
-            properties.setShort( name, value );
+            try{
+                properties.setShort( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -466,7 +543,12 @@ namespace commands{
                                         const std::string& value )
                                             throw( cms::CMSException ) {
 
-            properties.setString( name, value );
+            try{
+                properties.setString( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -530,7 +612,7 @@ namespace commands{
          * Gets the Expiration Time for this Message
          * @return time value
          */
-        virtual long long getCMSExpiration(void) const {
+        virtual long long getCMSExpiration() const {
             return this->getExpiration();
         }
 
@@ -546,7 +628,7 @@ namespace commands{
          * Gets the CMS Message Id for this Message
          * @return time value
          */
-        virtual std::string getCMSMessageID(void) const {
+        virtual std::string getCMSMessageID() const {
             return marshal::BaseDataStreamMarshaller::toString( this->getMessageId() );
         }
 
@@ -560,7 +642,7 @@ namespace commands{
          * Gets the Priority Value for this Message
          * @return priority value
          */
-        virtual int getCMSPriority(void) const {
+        virtual int getCMSPriority() const {
             return this->getPriority();
         }
 
@@ -576,7 +658,7 @@ namespace commands{
          * Gets the Redelivered Flag for this Message
          * @return redelivered value
          */
-        virtual bool getCMSRedelivered(void) const {
+        virtual bool getCMSRedelivered() const {
             return this->getRedeliveryCounter() != 0;
         }
 
@@ -615,7 +697,7 @@ namespace commands{
          * Gets the Time Stamp for this Message
          * @return time stamp value
          */
-        virtual long long getCMSTimestamp(void) const {
+        virtual long long getCMSTimestamp() const {
             return this->getTimestamp();
         }
 
@@ -631,7 +713,7 @@ namespace commands{
          * Gets the CMS Message Type for this Message
          * @return type value
          */
-        virtual std::string getCMSType(void) const {
+        virtual std::string getCMSType() const {
             return this->getType();
         }
 

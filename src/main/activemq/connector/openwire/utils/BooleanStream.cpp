@@ -30,8 +30,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::BooleanStream()
-{
+BooleanStream::BooleanStream() {
+
     this->arrayLimit = 0;
     this->arrayPos = 0;
     this->bytePos = 0;
@@ -41,13 +41,10 @@ BooleanStream::BooleanStream()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-BooleanStream::~BooleanStream()
-{}
-
-///////////////////////////////////////////////////////////////////////////////
 bool BooleanStream::readBoolean() throw ( IOException ) {
 
     try {
+    	
         unsigned char b = data[arrayPos];
         bool rc = ( ( b >> bytePos ) & 0x01 ) != 0;
         bytePos++;
@@ -58,7 +55,7 @@ bool BooleanStream::readBoolean() throw ( IOException ) {
         return rc;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -89,7 +86,7 @@ void BooleanStream::writeBoolean( bool value ) throw ( IOException ) {
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -113,7 +110,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -121,6 +118,7 @@ void BooleanStream::marshal( DataOutputStream* dataOut ) throw ( IOException ) {
 void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
 
     try{
+
         if( arrayLimit < 64 ) {
             dataOut.push_back( ( unsigned char ) arrayLimit );
         } else if( arrayLimit < 256 ) { // max value of unsigned byte
@@ -137,7 +135,7 @@ void BooleanStream::marshal( std::vector< unsigned char >& dataOut ) {
         std::copy( &data[0], &data[arrayLimit-1], iter );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -163,18 +161,20 @@ void BooleanStream::unmarshal( DataInputStream* dataIn ) throw ( IOException ) {
         clear();
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void BooleanStream::clear() {
+    // Reset the positions
     arrayPos = 0;
     bytePos = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 int BooleanStream::marshalledSize() {
+
     if( arrayLimit < 64 ) {
         return 1 + arrayLimit;
     } else if( arrayLimit < 256 ) {

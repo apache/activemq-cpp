@@ -34,8 +34,7 @@ namespace marshal{
      * Base class for all Marshallers that marshal DataStructures to and
      * from the wire using the OpenWire protocal.
      */
-    class BaseDataStreamMarshaller : public DataStreamMarshaller
-    {
+    class BaseDataStreamMarshaller : public DataStreamMarshaller {
     private:
 
         // Table for converting bytes to Hex Strings.
@@ -536,7 +535,7 @@ namespace marshal{
                 }
             }
             AMQ_CATCH_RETHROW( decaf::io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
             AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
@@ -569,7 +568,7 @@ namespace marshal{
                 }
             }
             AMQ_CATCH_RETHROW( decaf::io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
             AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 
@@ -601,7 +600,7 @@ namespace marshal{
                 }
             }
             AMQ_CATCH_RETHROW( decaf::io::IOException )
-            AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
             AMQ_CATCHALL_THROW( decaf::io::IOException )
         }
 

@@ -28,28 +28,35 @@ using namespace activemq::transport;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 StompConnectionNegotiator::StompConnectionNegotiator( Transport* next, bool own ) :
     TransportFilter( next, own ),
-    readyCountDownLatch(1)
-{
+    readyCountDownLatch(1) {
+
     this->connected = false;
     this->closed = true;
     this->connectedCmd = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompConnectionNegotiator::~StompConnectionNegotiator()
-{
-    // Close the transport and destroy it.
-    close();
+StompConnectionNegotiator::~StompConnectionNegotiator() {
+
+    try{
+        // Close the transport and destroy it.
+        close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnectionNegotiator::oneway( Command* command )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -61,9 +68,10 @@ void StompConnectionNegotiator::oneway( Command* command )
 
         next->oneway( command );
     }
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -111,9 +119,10 @@ Response* StompConnectionNegotiator::request( Command* command )
             return connectedCmd;
         }
     }
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -143,7 +152,7 @@ void StompConnectionNegotiator::onCommand( Command* command ) {
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnectionNegotiator::onTransportException(
     Transport* source AMQCPP_UNUSED,
-    const exceptions::ActiveMQException& ex ) {
+    const decaf::lang::Exception& ex ) {
 
     readyCountDownLatch.countDown();
     fire( ex );
@@ -180,21 +189,33 @@ void StompConnectionNegotiator::start() throw( cms::CMSException ){
             "next transport is NULL" );
     }
 
-    // Start the delegate transport object.
-    next->start();
+    try{
 
-    // Mark it as open.
-    closed = false;
-    connected = false;
+        // Start the delegate transport object.
+        next->start();
+
+        // Mark it as open.
+        closed = false;
+        connected = false;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnectionNegotiator::close() throw( cms::CMSException ){
 
-    if( !closed && next != NULL ){
-        next->close();
-    }
+    try{
 
-    closed = true;
-    connected = false;
+        if( !closed && next != NULL ){
+            next->close();
+        }
+
+        closed = true;
+        connected = false;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

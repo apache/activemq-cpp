@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_
 
 #include <cms/Message.h>
 #include <string>
@@ -41,4 +41,4 @@ namespace stomp{
     
 }}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPSELECTOR_H_*/

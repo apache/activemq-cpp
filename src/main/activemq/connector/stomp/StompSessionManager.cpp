@@ -46,80 +46,53 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 StompSessionManager::StompSessionManager( const std::string& connectionId,
                                           Connector* connector,
-                                          Transport* transport )
-{
-    if( transport == NULL )
-    {
+                                          Transport* transport ) {
+
+    if( transport == NULL ) {
         throw NullPointerException(
             __FILE__, __LINE__,
-            "StompSessionManager::StompSessionManager" );
+            "StompSessionManager::StompSessionManager - Null param passed" );
     }
 
     this->transport = transport;
     this->connector = connector;
     this->connectionId = connectionId;
-    this->nextSessionId = 0;
-    this->nextConsumerId = 0;
     this->messageListener = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompSessionManager::~StompSessionManager(void)
-{
+StompSessionManager::~StompSessionManager() {
     // NOTE - I am not cleaning out the ConsumerInfo objects in the
     // map because it is really the job of the consumer to remove itself
     // when it is destructed.  If it doesn't then we would have problems,
-    // but it's deleted after this object then we would
-    // still have problems.
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long StompSessionManager::getNextSessionId(void)
-{
-    synchronized( &mutex )
-    {
-        return nextSessionId++;
-    }
-
-    return 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-long long StompSessionManager::getNextConsumerId(void)
-{
-    synchronized( &mutex )
-    {
-        return nextConsumerId++;
-    }
-
-    return 0;
+    // but it's deleted after this object then we would still have problems.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 connector::SessionInfo* StompSessionManager::createSession(
     cms::Session::AcknowledgeMode ackMode )
-        throw ( exceptions::ActiveMQException )
-{
-    try
-    {
+        throw ( exceptions::ActiveMQException ) {
+
+    try{
+
         SessionInfo* session = new StompSessionInfo( connector );
 
         // Init data
         session->setAckMode( ackMode );
         session->setConnectionId( connectionId );
-        session->setSessionId( getNextSessionId() );
+        session->setSessionId( this->nextSessionId.getNextSequenceId() );
 
         return session;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::removeSession(
     connector::SessionInfo* session AMQCPP_UNUSED)
-        throw ( exceptions::ActiveMQException )
-{
+        throw ( exceptions::ActiveMQException ) {
     // NO-op
 }
 
@@ -129,10 +102,9 @@ connector::ConsumerInfo* StompSessionManager::createConsumer(
     SessionInfo* session,
     const std::string& selector,
     bool noLocal )
-        throw( StompConnectorException )
-{
-    try
-    {
+        throw( StompConnectorException ) {
+
+    try{
         // Delegate to the createDurableConsumer method, just pass the
         // appropriate params so that a regular consumer is created on
         // the broker side.
@@ -140,6 +112,7 @@ connector::ConsumerInfo* StompSessionManager::createConsumer(
             destination, session, "", selector, noLocal );
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
@@ -157,7 +130,7 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
         // Initialize a new Consumer info Message
         StompConsumerInfo* consumer = new StompConsumerInfo( connector );
 
-        consumer->setConsumerId( getNextConsumerId() );
+        consumer->setConsumerId( this->nextConsumerId.getNextSequenceId() );
         consumer->setDestination( destination );
         consumer->setMessageSelector( selector );
         consumer->setSessionInfo( session );
@@ -167,6 +140,7 @@ connector::ConsumerInfo* StompSessionManager::createDurableConsumer(
         return consumer;
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
@@ -178,7 +152,9 @@ void StompSessionManager::startConsumer(
 
         StompConsumerInfo* stompConsumer = dynamic_cast<StompConsumerInfo*>(consumer);
         if( stompConsumer == NULL ) {
-            throw StompConnectorException(__FILE__, __LINE__,
+            throw StompConnectorException(
+                __FILE__, __LINE__,
+                "StompSessionManager::startConsumer - "
                 "ConsumerInfo is not of type created by this connector" );
         }
 
@@ -239,6 +215,7 @@ void StompSessionManager::startConsumer(
         }
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
@@ -284,15 +261,16 @@ void StompSessionManager::removeConsumer(
         }
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::onStompCommand( commands::StompCommand* command )
-    throw ( StompConnectorException )
-{
-    try
-    {
+    throw ( StompConnectorException ) {
+
+    try{
+
         cms::Message* message = dynamic_cast<cms::Message*>( command );
 
         if( message == NULL ) {
@@ -328,8 +306,8 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
 
                 if( StompSelector::isSelected(
                         consumerInfo->getMessageSelector(),
-                        message ) )
-                {
+                        message ) ) {
+
                     ActiveMQMessage* msg =
                         dynamic_cast<ActiveMQMessage*>( message );
                     messageListener->onConsumerMessage( consumerInfo, msg );
@@ -364,21 +342,21 @@ void StompSessionManager::onStompCommand( commands::StompCommand* command )
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
                                                SubscribeCommand& command )
-    throw ( StompConnectorException )
-{
-    try
-    {
+    throw ( StompConnectorException ) {
+
+    try{
+
         // Get the properties of this destination
         const cms::CMSProperties& destProperties = dest->getCMSProperties();
 
-        if( destProperties.isEmpty() )
-        {
+        if( destProperties.isEmpty() ) {
             // Nothing to do, so save some work and quit now.
             return;
         }
@@ -387,8 +365,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_NOLOCAL );
 
-        if( destProperties.hasProperty( noLocalStr ) )
-        {
+        if( destProperties.hasProperty( noLocalStr ) ) {
             command.setNoLocal(
                 Boolean::parseBoolean(
                     destProperties.getProperty( noLocalStr ) ) );
@@ -398,8 +375,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_SELECTOR );
 
-        if( destProperties.hasProperty( selectorStr ) )
-        {
+        if( destProperties.hasProperty( selectorStr ) ) {
             command.setMessageSelector(
                 destProperties.getProperty( selectorStr ) );
         }
@@ -408,8 +384,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_PRIORITY );
 
-        if( destProperties.hasProperty( priorityStr ) )
-        {
+        if( destProperties.hasProperty( priorityStr ) ) {
             command.setPriority(
                 Integer::parseInt(
                     destProperties.getProperty( priorityStr ) ) );
@@ -419,8 +394,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_DISPATCHASYNC );
 
-        if( destProperties.hasProperty( dispatchAsyncStr ) )
-        {
+        if( destProperties.hasProperty( dispatchAsyncStr ) ) {
             command.setDispatchAsync(
                 Boolean::parseBoolean(
                     destProperties.getProperty( dispatchAsyncStr ) ) );
@@ -430,8 +404,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_EXCLUSIVE );
 
-        if( destProperties.hasProperty( exclusiveStr ) )
-        {
+        if( destProperties.hasProperty( exclusiveStr ) ) {
             command.setExclusive(
                 Boolean::parseBoolean(
                     destProperties.getProperty( exclusiveStr ) ) );
@@ -441,8 +414,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CUNSUMER_MAXPENDINGMSGLIMIT );
 
-        if( destProperties.hasProperty( maxPendingMsgLimitStr ) )
-        {
+        if( destProperties.hasProperty( maxPendingMsgLimitStr ) ) {
             command.setMaxPendingMsgLimit(
                 Integer::parseInt(
                     destProperties.getProperty( maxPendingMsgLimitStr ) ) );
@@ -452,8 +424,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_PREFECTCHSIZE );
 
-        if( destProperties.hasProperty( prefetchSizeStr ) )
-        {
+        if( destProperties.hasProperty( prefetchSizeStr ) ) {
             command.setPrefetchSize(
                 Integer::parseInt(
                     destProperties.getProperty( prefetchSizeStr ) ) );
@@ -463,8 +434,7 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
             ActiveMQConstants::toString(
                 ActiveMQConstants::CONSUMER_RETROACTIVE );
 
-        if( destProperties.hasProperty( retroactiveStr ) )
-        {
+        if( destProperties.hasProperty( retroactiveStr ) ) {
             command.setRetroactive(
                 Boolean::parseBoolean(
                     destProperties.getProperty( retroactiveStr ) ) );
@@ -472,5 +442,6 @@ void StompSessionManager::setSubscribeOptions( const cms::Destination* dest,
     }
     AMQ_CATCH_RETHROW( StompConnectorException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, StompConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, StompConnectorException )
     AMQ_CATCHALL_THROW( StompConnectorException )
 }

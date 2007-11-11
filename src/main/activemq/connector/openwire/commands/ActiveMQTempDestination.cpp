@@ -28,23 +28,20 @@ using namespace activemq::connector::openwire::commands;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination() :
     ActiveMQDestination(),
-    connector( NULL )
-{
+    connector( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
     ActiveMQDestination( name ),
-    connector( NULL )
-{}
-
-////////////////////////////////////////////////////////////////////////////////
-ActiveMQTempDestination::~ActiveMQTempDestination()
-{
+    connector( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQTempDestination::getDataStructureType() const
-{
+ActiveMQTempDestination::~ActiveMQTempDestination() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned char ActiveMQTempDestination::getDataStructureType() const {
     return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION;
 }

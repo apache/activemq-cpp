@@ -26,8 +26,7 @@ namespace connector{
 namespace stomp{
 namespace marshal{
 
-    class Marshalable
-    {
+    class Marshalable {
     public:
 
         virtual ~Marshalable(void) {}

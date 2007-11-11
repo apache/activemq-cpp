@@ -33,12 +33,13 @@ using namespace activemq::connector::openwire::utils;
 using namespace activemq::connector::openwire::marshal;
 using namespace decaf;
 using namespace decaf::io;
+using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
                                       std::vector<unsigned char>& dest )
-                                        throw ( cms::CMSException )
-{
+                                        throw ( cms::CMSException ) {
+
     try {
 
         ByteArrayOutputStream bytesOut( dest );
@@ -61,14 +62,15 @@ void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
     const std::vector<unsigned char>& src )
-        throw ( cms::CMSException )
-{
+        throw ( cms::CMSException ) {
+
     try{
 
         ByteArrayInputStream bytesIn( src );
@@ -89,8 +91,8 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 
         return NULL;
     }
-    AMQ_CATCH_EXCEPTION_CONVERT( io::IOException, ActiveMQException )
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -120,8 +122,8 @@ void PrimitiveMapMarshaller::unmarshal(
             }
         }
     }
-    AMQ_CATCH_EXCEPTION_CONVERT( io::IOException, ActiveMQException )
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -132,57 +134,57 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
     try {
 
-        if( value.getValueType() == PrimitiveMap::BOOLEAN_TYPE )
-        {
+        if( value.getValueType() == PrimitiveMap::BOOLEAN_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::BOOLEAN_TYPE );
             dataOut.writeBoolean( value.getBool() );
-        }
-        else if( value.getValueType() == PrimitiveMap::BYTE_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::BYTE_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::BYTE_TYPE );
             dataOut.writeByte( value.getByte() );
-        }
-        else if( value.getValueType() == PrimitiveMap::CHAR_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::CHAR_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::CHAR_TYPE );
             dataOut.writeChar( value.getChar() );
-        }
-        else if( value.getValueType() == PrimitiveMap::SHORT_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::SHORT_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::SHORT_TYPE );
             dataOut.writeShort( value.getShort() );
-        }
-        else if( value.getValueType() == PrimitiveMap::INTEGER_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::INTEGER_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::INTEGER_TYPE );
             dataOut.writeInt( value.getInt() );
-        }
-        else if( value.getValueType() == PrimitiveMap::LONG_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::LONG_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::LONG_TYPE );
             dataOut.writeLong( value.getLong() );
-        }
-        else if( value.getValueType() == PrimitiveMap::FLOAT_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::FLOAT_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::FLOAT_TYPE );
             dataOut.writeFloat( value.getFloat() );
-        }
-        else if( value.getValueType() == PrimitiveMap::DOUBLE_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::DOUBLE_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::DOUBLE_TYPE );
             dataOut.writeDouble( value.getDouble() );
-        }
-        else if( value.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE ) {
+
             dataOut.writeByte( PrimitiveMap::BYTE_ARRAY_TYPE );
 
             std::vector<unsigned char> data = value.getByteArray();
 
             dataOut.writeInt( (int)data.size() );
             dataOut.write( data );
-        }
-        else if( value.getValueType() == PrimitiveMap::STRING_TYPE )
-        {
+
+        } else if( value.getValueType() == PrimitiveMap::STRING_TYPE ) {
+
             std::string data = value.getString();
 
             // is the string big??
@@ -193,9 +195,8 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             }
 
             OpenwireStringSupport::writeString( dataOut, &data );
-        }
-        else
-        {
+
+        } else {
             throw IOException(
                 __FILE__,
                 __LINE__,
@@ -203,7 +204,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
         }
     }
     AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
     AMQ_CATCHALL_THROW( io::IOException )
 }
 
@@ -270,6 +271,6 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
         }
     }
     AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
     AMQ_CATCHALL_THROW( io::IOException )
 }

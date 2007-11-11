@@ -66,7 +66,8 @@ namespace filters{
          * by this transport.
          */
         virtual void oneway( Command* command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Starts this transport object and creates the thread for

@@ -44,8 +44,8 @@ TcpTransport::TcpTransport( const decaf::util::Properties& properties,
     bufferedInputStream( NULL ),
     bufferedOutputStream( NULL )
 {
-    try
-    {
+    try{
+
         if( !properties.hasProperty( "transport.uri" ) ) {
             throw ActiveMQException(
                 __FILE__, __LINE__,
@@ -90,14 +90,15 @@ TcpTransport::TcpTransport( const decaf::util::Properties& properties,
         ioTransport->setOutputStream( bufferedOutputStream );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( Exception )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::~TcpTransport()
-{
-    try
-    {
+TcpTransport::~TcpTransport() {
+
+    try{
+
         try{
             close();
         } catch( cms::CMSException& ex ){ /* Absorb */ }
@@ -128,6 +129,7 @@ TcpTransport::~TcpTransport()
         }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_NOTHROW( Exception )
     AMQ_CATCHALL_NOTHROW()
 }
 
@@ -146,5 +148,6 @@ void TcpTransport::close() throw( cms::CMSException ) {
     }
     AMQ_CATCH_RETHROW( SocketException )
     AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
     AMQ_CATCHALL_THROW( SocketException )
 }

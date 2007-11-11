@@ -36,8 +36,7 @@ namespace filters{
      * are simply sent directly to the CommandListener.  It owns
      * the transport that it
      */
-    class ResponseCorrelator : public TransportFilter
-    {
+    class ResponseCorrelator : public TransportFilter {
     private:
 
         /**
@@ -110,7 +109,8 @@ namespace filters{
          * by this transport.
          */
         virtual void oneway( Command* command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
@@ -119,7 +119,8 @@ namespace filters{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual Response* request( Command* command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's

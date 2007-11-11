@@ -29,7 +29,6 @@ namespace connector{
      * Listener of events from a connector resource.
      */
     class ConnectorResourceListener {
-
     public:
 
         virtual ~ConnectorResourceListener() {}

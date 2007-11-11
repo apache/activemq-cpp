@@ -25,24 +25,27 @@
 namespace activemq{
 namespace connector{
 namespace openwire{
-    
+
     class BrokerException : public OpenWireConnectorException {
     public:
-    
-        BrokerException() throw(){}
+
+        BrokerException() throw() {}
+
         BrokerException( const exceptions::ActiveMQException& ex ) throw()
             : OpenWireConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
+
         BrokerException( const BrokerException& ex ) throw()
             : OpenWireConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
+
         BrokerException( const char* file,
                                     const int lineNumber,
                                     const char* msg, ... ) throw()
-            : OpenWireConnectorException()
-        {
+          : OpenWireConnectorException() {
+
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -50,29 +53,29 @@ namespace openwire{
             // Set the first mark for this exception.
             setMark( file, lineNumber );
         }
-        
-        BrokerException( const char* file, 
-                         const int lineNumber, 
+
+        BrokerException( const char* file,
+                         const int lineNumber,
                          const commands::BrokerError* error ) throw()
-            : OpenWireConnectorException()
-        {
+          : OpenWireConnectorException() {
+
             std::ostringstream ostream;
             ostream << "*** BEGIN SERVER-SIDE STACK TRACE ***" << std::endl;
             ostream << "Message: " << error->getMessage() << std::endl;
             ostream << "Cause: " << error->getCause() << std::endl;
             ostream << "Exception Class " << error->getExceptionClass() << std::endl;
-            
+
             const std::vector<commands::BrokerError::StackTraceElement*>& trace = error->getStackTraceElements();
             for( std::size_t ix=0; ix<trace.size(); ++ix ){
                 commands::BrokerError::StackTraceElement* element = trace[ix];
                 ostream << "\t[FILE: " << element->FileName << ", LINE: " << element->LineNumber
                     << "] occurred in: " << element->ClassName << "." << element->MethodName << std::endl;
             }
-            
+
             ostream << "*** END SERVER-SIDE STACK TRACE ***";
-            
-            setMessage( ostream.str().c_str() );            
-            setMark( file, lineNumber );            
+
+            setMessage( ostream.str().c_str() );
+            setMark( file, lineNumber );
         }
 
         /**
@@ -80,13 +83,13 @@ namespace openwire{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual exceptions::ActiveMQException* clone() const{
+        virtual BrokerException* clone() const{
             return new BrokerException( *this );
         }
 
         virtual ~BrokerException() throw() {}
     };
-    
+
 }}}
 
 #endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_BROKEREXCEPTION_H_*/

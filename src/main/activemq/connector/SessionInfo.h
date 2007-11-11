@@ -24,8 +24,7 @@
 namespace activemq{
 namespace connector{
 
-    class SessionInfo : public BaseConnectorResource
-    {
+    class SessionInfo : public BaseConnectorResource {
     public:
 
         SessionInfo() : BaseConnectorResource() {}

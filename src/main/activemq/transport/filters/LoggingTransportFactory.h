@@ -30,7 +30,6 @@ namespace filters{
      * Factory Responsible for creating the LoggingTransport.
      */
     class LoggingTransportFactory : public TransportFactory {
-
     public:
 
         virtual ~LoggingTransportFactory() {}

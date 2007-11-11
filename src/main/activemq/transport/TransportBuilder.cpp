@@ -18,6 +18,7 @@
 #include "TransportBuilder.h"
 
 #include <decaf/util/StringTokenizer.h>
+#include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -27,15 +28,8 @@ using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
-
-////////////////////////////////////////////////////////////////////////////////
-TransportBuilder::TransportBuilder() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TransportBuilder::~TransportBuilder() {
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* TransportBuilder::buildTransport( const std::string& url,
@@ -82,6 +76,7 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -90,16 +85,15 @@ void TransportBuilder::parseURL( const std::string& URI,
                                  util::Properties& properties )
     throw ( decaf::lang::exceptions::IllegalArgumentException ) {
 
-    try
-    {
+    try{
+
         StringTokenizer tokenizer( URI, ":/" );
 
         std::vector<std::string> tokens;
 
         // Require that there be three tokens at the least, these are
         // transport, url, port.
-        if( tokenizer.countTokens() < 3 )
-        {
+        if( tokenizer.countTokens() < 3 ) {
             throw decaf::lang::exceptions::IllegalArgumentException(
                 __FILE__, __LINE__,
                 (string( "TransportBuilder::parseURL - "
@@ -118,12 +112,10 @@ void TransportBuilder::parseURL( const std::string& URI,
         // Now get all the optional parameters and store them as properties
         int count = tokenizer.toArray( tokens );
 
-        for( int i = 0; i < count; ++i )
-        {
+        for( int i = 0; i < count; ++i ) {
             tokenizer.reset( tokens[i], "=" );
 
-            if( tokenizer.countTokens() != 2 )
-            {
+            if( tokenizer.countTokens() != 2 ) {
                 throw decaf::lang::exceptions::IllegalArgumentException(
                     __FILE__, __LINE__,
                     ( string( "TransportBuilder::parseURL - "
@@ -132,7 +124,7 @@ void TransportBuilder::parseURL( const std::string& URI,
 
             // Get them in order, passing both as nextToken calls in the
             // set Property can cause reversed order.
-            string key   = tokenizer.nextToken();
+            string key = tokenizer.nextToken();
             string value = tokenizer.nextToken();
 
             // Store this param as a property
@@ -174,5 +166,6 @@ Transport* TransportBuilder::createTransport( const std::string& name,
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -309,7 +309,7 @@ namespace filters{
 
             virtual void onTransportException(
                 Transport* source AMQCPP_UNUSED,
-                const exceptions::ActiveMQException& ex AMQCPP_UNUSED)
+                const decaf::lang::Exception& ex AMQCPP_UNUSED)
             {
                 synchronized( &mutex ){
                     exCount++;

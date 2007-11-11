@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CONNECTORFACTORYMAPREGISTRAR_H_
-#define CONNECTORFACTORYMAPREGISTRAR_H_
+#ifndef _ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAPREGISTRAR_H_
+#define _ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAPREGISTRAR_H_
 
 #include <string>
 
@@ -28,47 +28,45 @@ namespace connector{
      * Registers the passed in factory into the factory map, this class
      * can manage the lifetime of the registered factory (default behaviour).
      */
-    class ConnectorFactoryMapRegistrar
-    {
+    class ConnectorFactoryMapRegistrar {
     public:
-   
-        /** 
+
+        /**
          * Constructor for this class
          * @param name of the factory to register
          * @param factory the factory
-         * @param manageLifetime boolean indicating if this object manages the 
+         * @param manageLifetime boolean indicating if this object manages the
          * lifetime of the factory that is being registered.
          */
-        ConnectorFactoryMapRegistrar( const std::string& name, 
+        ConnectorFactoryMapRegistrar( const std::string& name,
                                       ConnectorFactory* factory,
-                                      bool manageLifetime = true )
-        {       
+                                      bool manageLifetime = true ) {
+
             // Register it in the map.
             ConnectorFactoryMap::getInstance()->
                 registerConnectorFactory(name, factory);
 
-            // Store for later deletion            
-            this->factory        = factory;
+            // Store for later deletion
+            this->factory = factory;
             this->manageLifetime = manageLifetime;
-            this->name           = name;
+            this->name = name;
         }
-      
-        virtual ~ConnectorFactoryMapRegistrar(void)
-        {
-            try
-            {
+
+        virtual ~ConnectorFactoryMapRegistrar() {
+
+            try{
+
                 // UnRegister it in the map.
                 ConnectorFactoryMap::getInstance()->
                     unregisterConnectorFactory( name );
-            
-                if( manageLifetime )
-                {
+
+                if( manageLifetime ) {
                     delete factory;
                 }
             }
             catch(...) {}
         }
-      
+
         /**
          * get a reference to the factory that this class is holding
          * @return reference to a factory class
@@ -76,15 +74,15 @@ namespace connector{
         virtual ConnectorFactory& getFactory(void) {
             return *factory;
         }
-      
-    private:
-      
-        std::string       name;
-        ConnectorFactory* factory;
-        bool              manageLifetime;
 
-    }; 
-      
+    private:
+
+        std::string name;
+        ConnectorFactory* factory;
+        bool manageLifetime;
+
+    };
+
 }}
 
-#endif /*CONNECTORFACTORYMAPREGISTRAR_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_CONNECTORFACTORYMAPREGISTRAR_H_*/

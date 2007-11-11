@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
-#define ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
+#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
+#define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
 
 #include <activemq/connector/ConnectorException.h>
 
@@ -27,24 +27,26 @@ namespace openwire{
     /*
      * Signals that an Connector exception of some sort has occurred.
      */
-    class OpenWireConnectorException : public connector::ConnectorException
-    {
+    class OpenWireConnectorException : public connector::ConnectorException {
     public:
 
         OpenWireConnectorException() throw(){}
+
         OpenWireConnectorException( const exceptions::ActiveMQException& ex ) throw()
             : connector::ConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
+
         OpenWireConnectorException( const OpenWireConnectorException& ex ) throw()
             : connector::ConnectorException(){
             *( exceptions::ActiveMQException* )this = ex;
         }
+
         OpenWireConnectorException( const char* file,
                                     const int lineNumber,
                                     const char* msg, ... ) throw()
-            : connector::ConnectorException()
-        {
+            : connector::ConnectorException() {
+
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -58,7 +60,7 @@ namespace openwire{
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual exceptions::ActiveMQException* clone() const{
+        virtual OpenWireConnectorException* clone() const{
             return new OpenWireConnectorException( *this );
         }
 
@@ -68,4 +70,4 @@ namespace openwire{
 
 }}}
 
-#endif /*ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_*/

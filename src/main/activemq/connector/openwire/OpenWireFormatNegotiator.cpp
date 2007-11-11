@@ -148,7 +148,7 @@ void OpenWireFormatNegotiator::onCommand( Command* command ) {
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onTransportException(
     Transport* source AMQCPP_UNUSED,
-    const exceptions::ActiveMQException& ex ) {
+    const decaf::lang::Exception& ex ) {
 
     readyCountDownLatch.countDown();
     fire( ex );

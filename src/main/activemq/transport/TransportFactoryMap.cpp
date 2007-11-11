@@ -17,25 +17,25 @@
 
 #include "TransportFactoryMap.h"
 #include <activemq/util/Config.h>
+#include <activemq/transport/TransportFactory.h>
 
 using namespace activemq::transport;
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactoryMap& TransportFactoryMap::getInstance()
-{
+TransportFactoryMap& TransportFactoryMap::getInstance() {
+
     // Static instance of this Map, create here so that one will
     // always exist, the one and only Connector Map.
     static TransportFactoryMap instance;
-
     return instance;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportFactoryMap::registerTransportFactory(
     const std::string& name,
-    TransportFactory* factory )
-{
+    TransportFactory* factory ) {
+
     factoryMap[name] = factory;
 }
 
@@ -62,8 +62,7 @@ TransportFactory* TransportFactoryMap::lookup( const std::string& name ) {
     map<string, TransportFactory*>::const_iterator itr =
     factoryMap.find(name);
 
-    if( itr != factoryMap.end() )
-    {
+    if( itr != factoryMap.end() ) {
         return itr->second;
     }
 
@@ -73,13 +72,12 @@ TransportFactory* TransportFactoryMap::lookup( const std::string& name ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 size_t TransportFactoryMap::getFactoryNames(
-    std::vector< std::string >& factoryList )
-{
+    std::vector< std::string >& factoryList ) {
+
     map<string, TransportFactory*>::const_iterator itr =
     factoryMap.begin();
 
-    for(; itr != factoryMap.end(); ++itr)
-    {
+    for(; itr != factoryMap.end(); ++itr) {
         factoryList.insert( factoryList.end(), itr->first );
     }
 

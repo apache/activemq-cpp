@@ -23,6 +23,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
@@ -79,8 +80,8 @@ namespace commands{
             AbstractCommand< transport::Command >( frame ),
             ackHandler( NULL ),
             dest( NULL ),
-            replyTo( NULL )
-        {
+            replyTo( NULL ) {
+
             const std::string& destHeader = CommandConstants::toString(
                 CommandConstants::HEADER_DESTINATION );
             const std::string& replyToHeader = CommandConstants::toString(
@@ -171,87 +172,171 @@ namespace commands{
 
         virtual bool getBooleanProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            std::string value = getStrictPropertyValue<std::string>( name );
-            return value == "true";
+
+            try{
+                std::string value = getStrictPropertyValue<std::string>( name );
+                return value == "true";
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual unsigned char getByteProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<unsigned char>(name);
+
+            try{
+                return getStrictPropertyValue<unsigned char>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual double getDoubleProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<double>(name);
+            try{
+                return getStrictPropertyValue<double>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual float getFloatProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<float>(name);
+            try{
+                return getStrictPropertyValue<float>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual int getIntProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<int>(name);
+            try{
+                return getStrictPropertyValue<int>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual long long getLongProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<long long>(name);
+            try{
+                return getStrictPropertyValue<long long>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual short getShortProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<short>(name);
+            try{
+                return getStrictPropertyValue<short>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual std::string getStringProperty( const std::string& name ) const
             throw( cms::CMSException ){
-            return getStrictPropertyValue<std::string>(name);
+            try{
+                return getStrictPropertyValue<std::string>(name);
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setBooleanProperty( const std::string& name,
             bool value ) throw( cms::CMSException ){
-            testProperty( name );
 
-            std::string strvalue = value? "true" : "false";
-            setPropertyValue( name, strvalue );
+            try{
+                testProperty( name );
+
+                std::string strvalue = value? "true" : "false";
+                setPropertyValue( name, strvalue );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setByteProperty( const std::string& name,
             unsigned char value ) throw( cms::CMSException ){
-            setStrictPropertyValue<unsigned char>( name, value );
+
+            try{
+                setStrictPropertyValue<unsigned char>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setDoubleProperty( const std::string& name,
             double value ) throw( cms::CMSException ){
-            setStrictPropertyValue<double>( name, value );
+            try{
+                setStrictPropertyValue<double>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setFloatProperty( const std::string& name,
             float value ) throw( cms::CMSException ){
-            setStrictPropertyValue<float>( name, value );
+            try{
+                setStrictPropertyValue<float>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setIntProperty( const std::string& name,
             int value ) throw( cms::CMSException ){
-            setStrictPropertyValue<int>( name, value );
+            try{
+                setStrictPropertyValue<int>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setLongProperty( const std::string& name,
             long long value ) throw( cms::CMSException ){
-            setStrictPropertyValue<long long>( name, value );
+            try{
+                setStrictPropertyValue<long long>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setShortProperty( const std::string& name,
             short value ) throw( cms::CMSException ){
-            setStrictPropertyValue<short>( name, value );
+            try{
+                setStrictPropertyValue<short>( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         virtual void setStringProperty( const std::string& name,
             const std::string& value ) throw( cms::CMSException ){
-            testProperty( name );
-            setPropertyValue( name, value );
+            try{
+                testProperty( name );
+                setPropertyValue( name, value );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -285,7 +370,14 @@ namespace commands{
          * @throws CMSException
          */
         virtual void acknowledge() const throw( cms::CMSException ) {
-            if(ackHandler != NULL) ackHandler->acknowledgeMessage( this );
+            try{
+                if( ackHandler != NULL ) {
+                    ackHandler->acknowledgeMessage( this );
+                }
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -293,6 +385,7 @@ namespace commands{
          * @return DeliveryMode enumerated value.
          */
         virtual int getCMSDeliveryMode() const {
+
             if(!getFrame().getProperties().hasProperty(
                    CommandConstants::toString(
                        CommandConstants::HEADER_PERSISTENT ) ) ) {
@@ -338,8 +431,8 @@ namespace commands{
          * @param destination Destination Object
          */
         virtual void setCMSDestination( const cms::Destination* destination ) {
-            if( destination != NULL )
-            {
+
+            if( destination != NULL ) {
                 delete dest;
                 dest = destination->clone();
                 setPropertyValue(
@@ -570,7 +663,8 @@ namespace commands{
         virtual void testProperty( const std::string& name ) const
             throw( cms::CMSException ){
             if( CommandConstants::isStompHeader( name ) ){
-                throw decaf::lang::exceptions::IllegalArgumentException( __FILE__, __LINE__,
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__,
                     "searching for property with name of pre-defined header" );
             }
         }
@@ -583,26 +677,31 @@ namespace commands{
         TYPE getStrictPropertyValue( const std::string& name ) const
             throw( cms::CMSException ){
 
-            testProperty( name );
+            try{
+                testProperty( name );
 
-            if( !getProperties().hasProperty( name ) ){
-                throw decaf::lang::exceptions::NoSuchElementException(
-                    __FILE__, __LINE__,
-                    "property not available in message" );
+                if( !getProperties().hasProperty( name ) ){
+                    throw exceptions::ActiveMQException(
+                        __FILE__, __LINE__,
+                        "property not available in message" );
+                }
+
+                const char* strProp = getPropertyValue( name );
+                std::istringstream stream( strProp );
+                TYPE value;
+                stream >> value;
+
+                if( stream.fail() ){
+                    throw exceptions::ActiveMQException(
+                        __FILE__, __LINE__,
+                        "Error extracting property from string" );
+                }
+
+                return value;
             }
-
-            const char* strProp = getPropertyValue( name );
-            std::istringstream stream( strProp );
-            TYPE value;
-            stream >> value;
-
-            if( stream.fail() ){
-                throw decaf::lang::exceptions::RuntimeException(
-                    __FILE__, __LINE__,
-                    "Error extracting property from string" );
-            }
-
-            return value;
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -613,12 +712,17 @@ namespace commands{
         template <typename TYPE>
         void setStrictPropertyValue( const std::string& name, TYPE value )
             throw( cms::CMSException ){
-            testProperty( name );
+            try{
+                testProperty( name );
 
-            std::ostringstream stream;
-            stream << value;
+                std::ostringstream stream;
+                stream << value;
 
-            setPropertyValue( name, stream.str() );
+                setPropertyValue( name, stream.str() );
+            }
+            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
+            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
         }
 
         /**
@@ -626,8 +730,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame )
-        {
+        virtual void initialize( StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::SEND ) );
         }
@@ -638,28 +741,27 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const
-        {
+        virtual bool validate( const StompFrame& frame ) const {
+
             if(frame.getCommand() ==
-               CommandConstants::toString( CommandConstants::SEND ) )
-            {
+               CommandConstants::toString( CommandConstants::SEND ) ) {
+
                 if(frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_DESTINATION ) ) )
-                {
+                        CommandConstants::HEADER_DESTINATION ) ) ) {
+
                     return true;
                 }
-            }
-            else if( frame.getCommand() ==
-                     CommandConstants::toString( CommandConstants::MESSAGE ) )
-            {
+
+            } else if( frame.getCommand() ==
+                       CommandConstants::toString( CommandConstants::MESSAGE ) ) {
+
                 if(frame.getProperties().hasProperty(
                     CommandConstants::toString(
                         CommandConstants::HEADER_DESTINATION ) ) &&
                    frame.getProperties().hasProperty(
                     CommandConstants::toString(
-                        CommandConstants::HEADER_MESSAGEID ) ) )
-                {
+                        CommandConstants::HEADER_MESSAGEID ) ) ) {
                     return true;
                 }
             }

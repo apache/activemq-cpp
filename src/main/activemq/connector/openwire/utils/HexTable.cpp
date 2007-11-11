@@ -49,26 +49,39 @@ HexTable::HexTable(){
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& HexTable::operator[]( std::size_t index )
     throw ( IndexOutOfBoundsException ) {
-    if( size() < index ) {
-        throw IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
-              Integer::toString( (int)index ) ).c_str() );
-    }
 
-    return table[index];
+    try{
+
+        if( size() < index ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
+                  Integer::toString( (int)index ) ).c_str() );
+        }
+
+        return table[index];
+    }
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IndexOutOfBoundsException )
+    AMQ_CATCHALL_THROW( IndexOutOfBoundsException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& HexTable::operator[]( std::size_t index ) const
     throw ( IndexOutOfBoundsException ) {
 
-    if( size() < index ) {
-        throw IndexOutOfBoundsException(
-            __FILE__, __LINE__,
-            ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
-              Integer::toString( (int)index ) ).c_str() );
-    }
+    try{
 
-    return table[index];
+        if( size() < index ) {
+            throw IndexOutOfBoundsException(
+                __FILE__, __LINE__,
+                ( string( "HexTable::operator[] - Index passed is out of Bounds" ) +
+                  Integer::toString( (int)index ) ).c_str() );
+        }
+
+        return table[index];
+    }
+    AMQ_CATCH_RETHROW( IndexOutOfBoundsException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IndexOutOfBoundsException )
+    AMQ_CATCHALL_THROW( IndexOutOfBoundsException )
 }

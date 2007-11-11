@@ -54,7 +54,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalCachedObject(
         return wireFormat->tightUnmarshalNestedObject( dataIn, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -69,7 +69,7 @@ int BaseDataStreamMarshaller::tightMarshalCachedObject1(
         return wireFormat->tightMarshalNestedObject1( data, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -85,7 +85,7 @@ void BaseDataStreamMarshaller::tightMarshalCachedObject2(
         wireFormat->tightMarshalNestedObject2( data, dataOut, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -100,7 +100,7 @@ void BaseDataStreamMarshaller::looseMarshalCachedObject(
         wireFormat->looseMarshalNestedObject( data, dataOut );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -113,7 +113,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalCachedObject(
         return wireFormat->looseUnmarshalNestedObject( dataIn );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -128,7 +128,7 @@ int BaseDataStreamMarshaller::tightMarshalNestedObject1(
         return wireFormat->tightMarshalNestedObject1( object, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -144,7 +144,7 @@ void BaseDataStreamMarshaller::tightMarshalNestedObject2(
         wireFormat->tightMarshalNestedObject2( object, dataOut, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -159,7 +159,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalNestedObject(
         return wireFormat->tightUnmarshalNestedObject( dataIn, bs );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -173,7 +173,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalNestedObject(
         return wireFormat->looseUnmarshalNestedObject( dataIn );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -188,7 +188,7 @@ void BaseDataStreamMarshaller::looseMarshalNestedObject(
         wireFormat->looseMarshalNestedObject( object, dataOut );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -211,7 +211,7 @@ std::string BaseDataStreamMarshaller::tightUnmarshalString(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -290,7 +290,7 @@ void BaseDataStreamMarshaller::tightMarshalString2(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -307,7 +307,7 @@ void BaseDataStreamMarshaller::looseMarshalString(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -323,7 +323,7 @@ std::string BaseDataStreamMarshaller::looseUnmarshalString(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -360,7 +360,7 @@ int BaseDataStreamMarshaller::tightMarshalLong1( OpenWireFormat* wireFormat AMQC
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -388,7 +388,7 @@ void BaseDataStreamMarshaller::tightMarshalLong2( OpenWireFormat* wireFormat AMQ
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -418,7 +418,7 @@ long long BaseDataStreamMarshaller::tightUnmarshalLong(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -432,7 +432,7 @@ void BaseDataStreamMarshaller::looseMarshalLong( OpenWireFormat* wireFormat AMQC
         dataOut->writeLong( value );
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -446,7 +446,7 @@ long long BaseDataStreamMarshaller::looseUnmarshalLong(
         return dataIn->readLong();
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -493,7 +493,7 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -540,7 +540,7 @@ int BaseDataStreamMarshaller::tightMarshalBrokerError1(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -583,7 +583,7 @@ void BaseDataStreamMarshaller::tightMarshalBrokerError2(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -631,7 +631,7 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -676,7 +676,7 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
         }
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -699,7 +699,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalByteArray(
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -721,7 +721,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalByteArray(
         return std::vector<unsigned char>();
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -739,7 +739,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::tightUnmarshalConstByteArra
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -756,7 +756,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
         return data;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }
 
@@ -828,6 +828,6 @@ std::string BaseDataStreamMarshaller::readAsciiString(
         return text;
     }
     AMQ_CATCH_RETHROW( IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
 }

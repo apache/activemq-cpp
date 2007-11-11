@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
 
 #include <cms/Destination.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -202,4 +202,4 @@ namespace commands{
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_*/

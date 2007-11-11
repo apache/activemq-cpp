@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CONNECTOREXCEPTION_H_
-#define CONNECTOREXCEPTION_H_
+#ifndef _ACTIVEMQ_CONNECTOR_CONNECTOREXCEPTION_H_
+#define _ACTIVEMQ_CONNECTOR_CONNECTOREXCEPTION_H_
 
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -25,10 +25,9 @@ namespace connector{
     /*
      * Signals that an Connector exception of some sort has occurred.
      */
-    class ConnectorException : public exceptions::ActiveMQException
-    {
+    class ConnectorException : public exceptions::ActiveMQException {
     public:
-   
+
         /**
          * Default Constructor
          */
@@ -39,8 +38,7 @@ namespace connector{
          * @param ex the exception to copy
          */
         ConnectorException( const exceptions::ActiveMQException& ex ) throw()
-        : exceptions::ActiveMQException()
-        {
+        : exceptions::ActiveMQException() {
             *(ActiveMQException*)this = ex;
         }
 
@@ -49,8 +47,7 @@ namespace connector{
          * @param ex the exception to copy, which is an instance of this type
          */
         ConnectorException( const ConnectorException& ex ) throw()
-        : exceptions::ActiveMQException()
-        {
+        : exceptions::ActiveMQException() {
             *(exceptions::ActiveMQException*)this = ex;
         }
 
@@ -60,32 +57,32 @@ namespace connector{
          * @param lineNumber line where the exception occured
          * @param msg the message that was generated
          */
-        ConnectorException( const char* file, 
-                            const int lineNumber, 
+        ConnectorException( const char* file,
+                            const int lineNumber,
                             const char* msg, ... ) throw()
-        : exceptions::ActiveMQException()
-        {
+        : exceptions::ActiveMQException() {
+
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
-            
+
             // Set the first mark for this exception.
             setMark( file, lineNumber );
         }
-      
+
         /**
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual exceptions::ActiveMQException* clone() const{
+        virtual ConnectorException* clone() const{
             return new ConnectorException( *this );
         }
-        
-   	    virtual ~ConnectorException() throw() {}
-   
+
+        virtual ~ConnectorException() throw() {}
+
     };
 
 }}
 
-#endif /*CONNECTOREXCEPTION_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_CONNECTOREXCEPTION_H_*/

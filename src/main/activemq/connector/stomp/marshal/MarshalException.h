@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
-#define ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
 
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -24,12 +24,11 @@ namespace connector{
 namespace stomp{
 namespace marshal{
 
-	/*
-	 * Signals that an problem occurred during marshalling.
-	 */
-	class MarshalException : public exceptions::ActiveMQException
-	{
-	public:
+    /*
+     * Signals that an problem occurred during marshalling.
+     */
+    class MarshalException : public exceptions::ActiveMQException {
+    public:
 
         /**
          * Default Constructor
@@ -41,9 +40,8 @@ namespace marshal{
          * @param ex the exception to copy
          */
         MarshalException( const exceptions::ActiveMQException& ex ) throw()
-        : exceptions::ActiveMQException()
-        {
-          *(ActiveMQException*)this = ex;
+        : exceptions::ActiveMQException() {
+            *(ActiveMQException*)this = ex;
         }
 
         /**
@@ -51,8 +49,7 @@ namespace marshal{
          * @param ex the exception to copy, which is an instance of this type
          */
         MarshalException( const MarshalException& ex ) throw()
-        : exceptions::ActiveMQException()
-        {
+        : exceptions::ActiveMQException() {
             *(exceptions::ActiveMQException*)this = ex;
         }
 
@@ -62,30 +59,32 @@ namespace marshal{
          * @param lineNumber line where the exception occured
          * @param msg the message that was generated
          */
-        MarshalException(const char* file, const int lineNumber, 
-            const char* msg, ...) throw()
-        : exceptions::ActiveMQException()
-        {
+        MarshalException( const char* file,
+                          const int lineNumber,
+                          const char* msg, ...) throw()
+         :  exceptions::ActiveMQException() {
+
             va_list vargs ;
             va_start(vargs, msg) ;
             buildMessage(msg, vargs) ;
-            
+
             // Set the first mark for this exception.
             setMark( file, lineNumber );
         }
-      
+
         /**
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
          */
-        virtual exceptions::ActiveMQException* clone() const{
+        virtual MarshalException* clone() const{
             return new MarshalException( *this );
         }
-        virtual ~MarshalException() throw(){}
-	    
-	};
+
+        virtual ~MarshalException() throw() {}
+
+    };
 
 }}}}
 
-#endif /*ACTIVEMQ_CONNECTOR_STOMP_MARSHAL_MARSHALLEXCEPTION_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_MARSHAL_MARSHALLEXCEPTION_H_*/

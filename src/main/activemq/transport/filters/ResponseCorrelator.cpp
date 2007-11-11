@@ -20,6 +20,9 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
+using namespace activemq::exceptions;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int ResponseCorrelator::getNextCommandId()
@@ -36,6 +39,7 @@ unsigned int ResponseCorrelator::getNextCommandId()
         return 0;
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }
 
@@ -88,9 +92,10 @@ void ResponseCorrelator::oneway( Command* command )
 
         next->oneway( command );
     }
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -150,9 +155,10 @@ Response* ResponseCorrelator::request( Command* command )
 
         return response;
     }
-    AMQ_CATCH_RETHROW( decaf::lang::exceptions::UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
 
@@ -202,42 +208,53 @@ void ResponseCorrelator::onCommand( Command* command ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelator::start() throw( cms::CMSException ) {
 
-    /**
-     * We're already started.
-     */
-    if( !closed ){
-        return;
+    try{
+
+        /**
+         * We're already started.
+         */
+        if( !closed ){
+            return;
+        }
+
+        if( commandlistener == NULL ){
+            throw exceptions::ActiveMQException( __FILE__, __LINE__,
+                "commandListener is invalid" );
+        }
+
+        if( exceptionListener == NULL ){
+            throw exceptions::ActiveMQException( __FILE__, __LINE__,
+                "exceptionListener is invalid" );
+        }
+
+        if( next == NULL ){
+            throw exceptions::ActiveMQException( __FILE__, __LINE__,
+                "next transport is NULL" );
+        }
+
+        // Start the delegate transport object.
+        next->start();
+
+        // Mark it as open.
+        closed = false;
     }
-
-    if( commandlistener == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
-            "commandListener is invalid" );
-    }
-
-    if( exceptionListener == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
-            "exceptionListener is invalid" );
-    }
-
-    if( next == NULL ){
-        throw exceptions::ActiveMQException( __FILE__, __LINE__,
-            "next transport is NULL" );
-    }
-
-    // Start the delegate transport object.
-    next->start();
-
-    // Mark it as open.
-    closed = false;
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelator::close() throw( cms::CMSException ){
 
-    if( !closed && next != NULL ){
-        next->close();
+    try{
+
+        if( !closed && next != NULL ){
+            next->close();
+        }
+
+        closed = true;
     }
-
-    closed = true;
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
-

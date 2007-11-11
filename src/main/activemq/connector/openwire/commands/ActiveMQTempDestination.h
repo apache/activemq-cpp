@@ -36,8 +36,7 @@ namespace openwire{
 namespace commands{
 
     class ActiveMQTempDestination : public ActiveMQDestination,
-                                    public BaseConnectorResource
-    {
+                                    public BaseConnectorResource {
     protected:
 
         /**

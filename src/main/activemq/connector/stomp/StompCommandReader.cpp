@@ -32,24 +32,22 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandReader::StompCommandReader(void)
-{
+StompCommandReader::StompCommandReader() {
     inputStream = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-StompCommandReader::StompCommandReader( InputStream* is )
-{
+StompCommandReader::StompCommandReader( InputStream* is ) {
     inputStream = is;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Command* StompCommandReader::readCommand()
-    throw ( CommandIOException )
-{
+Command* StompCommandReader::readCommand() throw ( CommandIOException ) {
+
     StompFrame* frame = NULL;
-    try
-    {
+
+    try{
+
         // Create a new Frame for reading to.
         frame = new StompFrame();
 
@@ -64,22 +62,25 @@ Command* StompCommandReader::readCommand()
 
         // Return the Command, caller must delete it.
         return marshaler.marshal( frame );
-    }
-    catch( CommandIOException& ex ){
+
+    } catch( CommandIOException& ex ){
+
         if( frame != NULL ){
             delete frame;
         }
         ex.setMark( __FILE__, __LINE__);
         throw ex;
-    }
-    catch( ActiveMQException& ex ){
+
+    } catch( ActiveMQException& ex ){
+
         if( frame != NULL ){
             delete frame;
         }
         ex.setMark( __FILE__, __LINE__ );
         throw CommandIOException(ex);
-    }
-    catch( ... ){
+
+    } catch( ... ) {
+
         if( frame != NULL ){
             delete frame;
         }
@@ -89,19 +90,20 @@ Command* StompCommandReader::readCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandReader::readStompCommandHeader( StompFrame& frame )
-   throw ( CommandIOException )
-{
+   throw ( CommandIOException ) {
+
     try{
-        while( true )
-        {
+
+        while( true ) {
+
             // The command header is formatted
             // just like any other stomp header.
             readStompHeaderLine();
 
             // Ignore all white space before the command.
             long long offset = -1;
-            for( size_t ix = 0; ix < buffer.size()-1; ++ix )
-            {
+            for( size_t ix = 0; ix < buffer.size()-1; ++ix ) {
+
                 // Find the first non whitespace character
                 if( !Character::isWhitespace(buffer[ix]) ){
                     offset = (long long)ix;
@@ -109,8 +111,7 @@ void StompCommandReader::readStompCommandHeader( StompFrame& frame )
                 }
             }
 
-            if( offset >= 0 )
-            {
+            if( offset >= 0 ) {
                 // Set the command in the frame - copy the memory.
                 frame.setCommand( reinterpret_cast<char*>(&buffer[(size_t)offset]) );
                 break;
@@ -125,39 +126,40 @@ void StompCommandReader::readStompCommandHeader( StompFrame& frame )
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandReader::readStompHeaders( StompFrame& frame )
-   throw ( CommandIOException )
-{
+    throw ( CommandIOException ) {
+
     try{
+
         // Read the command;
         bool endOfHeaders = false;
 
-        while( !endOfHeaders )
-        {
+        while( !endOfHeaders ) {
+
             // Read in the next header line.
             std::size_t numChars = readStompHeaderLine();
 
-            if( numChars == 0 )
-            {
+            if( numChars == 0 ) {
+
                 // should never get here
-                throw StompConnectorException(
+                throw CommandIOException(
                     __FILE__, __LINE__,
                     "StompCommandReader::readStompHeaders: no characters read" );
             }
 
             // Check for an empty line to demark the end of the header section.
             // if its not the end then we have a header to process, so parse it.
-            if( numChars == 1 && buffer[0] == '\0' )
-            {
+            if( numChars == 1 && buffer[0] == '\0' ) {
+
                 endOfHeaders = true;
-            }
-            else
-            {
+
+            } else {
+
                 // Search through this line to separate the key/value pair.
-                for( size_t ix = 0; ix < buffer.size(); ++ix )
-                {
+                for( size_t ix = 0; ix < buffer.size(); ++ix ) {
+
                     // If found the key/value separator...
-                    if( buffer[ix] == ':' )
-                    {
+                    if( buffer[ix] == ':' ) {
+
                         // Null-terminate the key.
                         buffer[ix] = '\0';
 
@@ -181,16 +183,17 @@ void StompCommandReader::readStompHeaders( StompFrame& frame )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t StompCommandReader::readStompHeaderLine()
-    throw ( CommandIOException )
-{
+    throw ( CommandIOException ) {
+
     try{
+
         // Clear any data from the buffer.
         buffer.clear();
 
         std::size_t count = 0;
 
-        while( true )
-        {
+        while( true ) {
+
             // Read the next char from the stream.
             buffer.push_back( inputStream->read() );
 
@@ -209,7 +212,7 @@ std::size_t StompCommandReader::readStompHeaderLine()
         }
 
         // If we get here something bad must have happened.
-        throw StompConnectorException(
+        throw CommandIOException(
             __FILE__, __LINE__,
             "StompCommandReader::readStompHeaderLine: "
             "Unrecoverable, error condition");
@@ -220,9 +223,10 @@ std::size_t StompCommandReader::readStompHeaderLine()
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompCommandReader::readStompBody( StompFrame& frame )
-   throw ( CommandIOException )
-{
+   throw ( CommandIOException ) {
+
     try{
+
         // Clear any data from the buffer.
         buffer.clear();
 
@@ -230,8 +234,8 @@ void StompCommandReader::readStompBody( StompFrame& frame )
 
         if(frame.getProperties().hasProperty(
             commands::CommandConstants::toString(
-                commands::CommandConstants::HEADER_CONTENTLENGTH)))
-        {
+                commands::CommandConstants::HEADER_CONTENTLENGTH))) {
+
             char* stopped_string = NULL;
 
             string length =
@@ -245,8 +249,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
                 10 );
          }
 
-         if( content_length != 0 )
-         {
+         if( content_length != 0 ) {
             // For this case its assumed that content length indicates how
             // much to read.  We reserve space in the buffer for it to
             // minimize the number of reallocs that might occur.  We are
@@ -269,21 +272,20 @@ void StompCommandReader::readStompBody( StompFrame& frame )
             read( &buffer[0], content_length );
 
             // Content Length read, now pop the end terminator off (\0\n).
-            if(inputStream->read() != '\0' )
-            {
-                throw StompConnectorException(
+            if(inputStream->read() != '\0' ) {
+
+                throw CommandIOException(
                     __FILE__, __LINE__,
                     "StompCommandReader::readStompBody: "
                     "Read Content Length, and no trailing null");
             }
-        }
-        else
-        {
+
+        } else {
+
             // Content length was either zero, or not set, so we read until the
             // first null is encounted.
+            while( true ) {
 
-            while( true )
-            {
                 char byte = inputStream->read();
 
                 buffer.push_back(byte);
@@ -299,8 +301,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
             }
         }
 
-        if( content_length != 0 )
-        {
+        if( content_length != 0 ) {
             // Set the body contents in the frame - copy the memory
             frame.getBody() = buffer;
         }
@@ -311,11 +312,11 @@ void StompCommandReader::readStompBody( StompFrame& frame )
 
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t StompCommandReader::read( unsigned char* buffer, std::size_t count )
-   throw( decaf::io::IOException )
-{
+   throw( decaf::io::IOException ) {
+
     try{
-        if( inputStream == NULL )
-        {
+
+        if( inputStream == NULL ) {
             throw IOException(
                 __FILE__, __LINE__,
                 "StompCommandReader::read(char*,int) - input stream is NULL" );
@@ -329,11 +330,11 @@ std::size_t StompCommandReader::read( unsigned char* buffer, std::size_t count )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char StompCommandReader::readByte() throw( decaf::io::IOException )
-{
-        try{
-        if( inputStream == NULL )
-        {
+unsigned char StompCommandReader::readByte() throw( decaf::io::IOException ) {
+
+    try{
+
+        if( inputStream == NULL ) {
             throw IOException(
                 __FILE__, __LINE__,
                 "StompCommandReader::read(char*,int) - input stream is NULL" );

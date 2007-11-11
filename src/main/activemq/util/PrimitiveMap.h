@@ -373,7 +373,7 @@ namespace util{
     public:
 
         PrimitiveMap();
-        virtual ~PrimitiveMap();
+        virtual ~PrimitiveMap() {}
 
         /**
          * Copy Constructor
@@ -426,39 +426,39 @@ namespace util{
         virtual bool isEmpty() const;
 
         virtual bool getBool( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setBool( const std::string& key, bool value );
 
         virtual unsigned char getByte( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setByte( const std::string& key, unsigned char value );
 
         virtual char getChar( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setChar( const std::string& key, char value );
 
         virtual short getShort( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setShort( const std::string& key, short value );
 
         virtual int getInt( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setInt( const std::string& key, int value );
 
         virtual long long getLong( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setLong( const std::string& key, long long value );
 
         virtual double getDouble( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setDouble( const std::string& key, double value );
 
         virtual float getFloat( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setFloat( const std::string& key, float value );
 
         virtual std::string getString( const std::string& key ) const
-            throw(decaf::lang::exceptions::NoSuchElementException);
+            throw( decaf::lang::exceptions::NoSuchElementException );
         virtual void setString( const std::string& key, const std::string& value );
 
         virtual std::vector<unsigned char> getByteArray( const std::string& key ) const

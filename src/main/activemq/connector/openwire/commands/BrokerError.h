@@ -28,13 +28,12 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
-           
+
     /**
      * This class represents an Exception sent from the Broker.  The Broker
      * sends java Throwables, so we must mimic its structure here.
      */
-    class BrokerError : public BaseCommand<transport::Command>
-    {
+    class BrokerError : public BaseCommand<transport::Command> {
     public:
 
         struct StackTraceElement
@@ -72,26 +71,26 @@ namespace commands{
             BrokerError* error = new BrokerError();
             error->copyDataStructure( this );
             return error;
-        }            
-        
+        }
+
         /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            
+
             const BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
-            
+
             if( srcErr == NULL || src == NULL ) {
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
                     "BrokerError::copyCommand - src is NULL or invalid" );
-            } 
-            
+            }
+
             this->setMessage( srcErr->getMessage() );
             this->setExceptionClass( srcErr->getExceptionClass() );
-            
+
             for( unsigned int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
                 if( srcErr->getStackTraceElements()[i] != NULL ) {
                     StackTraceElement* element = new StackTraceElement;
@@ -101,9 +100,9 @@ namespace commands{
                     this->stackTraceElements.push_back( element );
                 }
             }
-            
+
             if( srcErr->getCause() ) {
-                this->cause = dynamic_cast<BrokerError*>( 
+                this->cause = dynamic_cast<BrokerError*>(
                     srcErr->getCause()->cloneDataStructure() );
             }
         }
@@ -115,7 +114,7 @@ namespace commands{
         virtual const std::string& getMessage() const {
             return message;
         }
-        
+
         /**
          * Sets the string that contains the error Message
          * @param message - String Error Message
@@ -147,7 +146,7 @@ namespace commands{
         virtual BrokerError* getCause() const {
             return cause;
         }
-        
+
         /**
          * Sets the Broker Error that caused this exception
          * @param cause - Broker Error
@@ -163,7 +162,7 @@ namespace commands{
         virtual const std::vector<StackTraceElement*>& getStackTraceElements() const {
             return stackTraceElements;
         }
-        
+
         /**
          * Sets the Stack Trace Elements for this Exception
          * @param stackTraceElements - Stack Trace Elements
@@ -171,7 +170,7 @@ namespace commands{
         virtual void setStackTraceElements( const std::vector<StackTraceElement*>& stackTraceElements ) {
             this->stackTraceElements = stackTraceElements;
         }
-        
+
     private:
 
         std::string message;

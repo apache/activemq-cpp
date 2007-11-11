@@ -15,11 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_
 
 #include <activemq/transport/TransportFactory.h>
+
 #include <map>
+#include <vector>
 #include <string>
 
 namespace activemq{
@@ -31,7 +33,6 @@ namespace transport{
      * Transport.
      */
     class TransportFactoryMap{
-
     private:
 
         // Map of Factories
@@ -90,4 +91,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_*/

@@ -25,8 +25,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompSessionInfo : public SessionInfo
-    {
+    class StompSessionInfo : public SessionInfo {
     private:
 
         // Acknowledge Mode of this Session

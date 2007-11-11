@@ -40,7 +40,7 @@ namespace connector{
         Connector* connector;
 
         /** Set of ConnectorResourceListeners to call back */
-        std::set< ConnectorResourceListener* > listeners;
+        std::set<ConnectorResourceListener*> listeners;
 
         /** Have we been closed already */
         bool closed;
@@ -59,7 +59,7 @@ namespace connector{
          */
         BaseConnectorResource( Connector* connector );
 
-        virtual ~BaseConnectorResource();
+        virtual ~BaseConnectorResource() {}
 
         /**
          * Handles the close of the Resource which calls back to the

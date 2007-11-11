@@ -24,8 +24,7 @@
 namespace activemq{
 namespace util{
 
-    class URISupport
-    {
+    class URISupport {
     public:
 
         virtual ~URISupport();

@@ -31,20 +31,17 @@ using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMapMessage::ActiveMQMapMessage() :
-    ActiveMQMessageBase<cms::MapMessage>()
-{
+    ActiveMQMessageBase<cms::MapMessage>() {
     this->map = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQMapMessage::~ActiveMQMapMessage()
-{
+ActiveMQMapMessage::~ActiveMQMapMessage() {
     delete map;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char ActiveMQMapMessage::getDataStructureType() const
-{
+unsigned char ActiveMQMapMessage::getDataStructureType() const {
     return ActiveMQMapMessage::ID_ACTIVEMQMAPMESSAGE;
 }
 
@@ -65,7 +62,7 @@ void ActiveMQMapMessage::beforeMarshal( OpenWireFormat* wireFormat )
         }
     }
     AMQ_CATCH_RETHROW( io::IOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
     AMQ_CATCHALL_THROW( io::IOException )
 }
 
@@ -78,6 +75,7 @@ PrimitiveMap& ActiveMQMapMessage::getMap() throw ( NullPointerException ) {
         return *map;
     }
     AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     AMQ_CATCHALL_THROW( NullPointerException )
 }
 
@@ -91,6 +89,7 @@ const PrimitiveMap& ActiveMQMapMessage::getMap() const
         return *map;
     }
     AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     AMQ_CATCHALL_THROW( NullPointerException )
 }
 
@@ -118,6 +117,7 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
         }
     }
     AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, NullPointerException )
     AMQ_CATCHALL_THROW( NullPointerException )
 }
 
@@ -127,8 +127,9 @@ std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
     try{
         return getMap().getKeys();
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,8 +138,9 @@ bool ActiveMQMapMessage::itemExists( const std::string& name ) const {
     try{
         return getMap().contains( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -148,8 +150,9 @@ bool ActiveMQMapMessage::getBoolean( const std::string& name ) const
     try{
         return getMap().getBool( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,8 +162,9 @@ void ActiveMQMapMessage::setBoolean( const std::string& name, bool value )
     try{
         getMap().setBool( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,8 +174,9 @@ unsigned char ActiveMQMapMessage::getByte( const std::string& name ) const
     try{
         return getMap().getByte( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,8 +187,9 @@ void ActiveMQMapMessage::setByte( const std::string& name,
     try{
         getMap().setByte( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,8 +199,9 @@ std::vector<unsigned char> ActiveMQMapMessage::getBytes( const std::string& name
     try{
         return getMap().getByteArray( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,8 +212,9 @@ void ActiveMQMapMessage::setBytes( const std::string& name,
     try{
         getMap().setByteArray( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,8 +224,9 @@ char ActiveMQMapMessage::getChar( const std::string& name ) const
     try{
         return getMap().getChar( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -227,8 +236,9 @@ void ActiveMQMapMessage::setChar( const std::string& name, char value )
     try{
         getMap().setChar( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,8 +248,9 @@ double ActiveMQMapMessage::getDouble( const std::string& name ) const
     try{
         return getMap().getDouble( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,8 +261,9 @@ void ActiveMQMapMessage::setDouble( const std::string& name,
     try{
         getMap().setDouble( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,8 +273,9 @@ float ActiveMQMapMessage::getFloat( const std::string& name ) const
     try{
         return getMap().getFloat( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -272,8 +285,9 @@ void ActiveMQMapMessage::setFloat( const std::string& name, float value )
     try{
         getMap().setFloat( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -283,8 +297,9 @@ int ActiveMQMapMessage::getInt( const std::string& name ) const
     try{
         return getMap().getInt( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -294,8 +309,9 @@ void ActiveMQMapMessage::setInt( const std::string& name, int value )
     try{
         getMap().setInt( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -305,8 +321,9 @@ long long ActiveMQMapMessage::getLong( const std::string& name ) const
     try{
         return getMap().getLong( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -316,8 +333,9 @@ void ActiveMQMapMessage::setLong( const std::string& name, long long value )
     try{
         getMap().setLong( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -327,8 +345,9 @@ short ActiveMQMapMessage::getShort( const std::string& name ) const
     try{
         return getMap().getShort( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -338,8 +357,9 @@ void ActiveMQMapMessage::setShort( const std::string& name, short value )
     try{
         getMap().setShort( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -349,8 +369,9 @@ std::string ActiveMQMapMessage::getString( const std::string& name ) const
     try{
         return getMap().getString( name );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -361,6 +382,7 @@ void ActiveMQMapMessage::setString( const std::string& name,
     try{
         getMap().setString( name, value );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

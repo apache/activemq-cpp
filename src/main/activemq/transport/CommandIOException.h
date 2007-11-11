@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
-#define ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
+#ifndef _ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
+#define _ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 
 #include <decaf/io/IOException.h>
 
@@ -29,15 +29,14 @@ namespace transport{
         /**
          * Default Constructor
          */
-        CommandIOException() throw() {};
+        CommandIOException() throw() {}
 
         /**
          * Copy Constructor
          * @param ex the exception to copy
          */
         CommandIOException( const decaf::lang::Exception& ex ) throw()
-        : decaf::io::IOException()
-        {
+        : decaf::io::IOException() {
             *this = ex;
         }
 
@@ -56,10 +55,11 @@ namespace transport{
          * @param lineNumber line where the exception occured
          * @param msg the message that was generated
          */
-        CommandIOException( const char* file, const int lineNumber,
+        CommandIOException( const char* file,
+                            const int lineNumber,
                             const char* msg, ... ) throw()
-        : decaf::io::IOException()
-        {
+        : decaf::io::IOException() {
+
             va_list vargs;
             va_start( vargs, msg );
             buildMessage( msg, vargs );
@@ -83,4 +83,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_*/

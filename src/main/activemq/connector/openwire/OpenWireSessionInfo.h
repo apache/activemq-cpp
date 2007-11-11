@@ -28,7 +28,6 @@ namespace connector{
 namespace openwire{
 
     class OpenWireSessionInfo : public SessionInfo {
-
     private:
 
         // The OpenWire Session Info DataStructure for this Session
@@ -52,6 +51,7 @@ namespace openwire{
             transaction = NULL;
             sessionInfo = NULL;
         }
+        
         virtual ~OpenWireSessionInfo() {
             this->close();
             delete sessionInfo;
@@ -105,7 +105,7 @@ namespace openwire{
          * Sets the Ack Mode of this Session Info object
          * @param ackMode Ack Mode
          */
-        virtual void setAckMode(cms::Session::AcknowledgeMode ackMode) {
+        virtual void setAckMode( cms::Session::AcknowledgeMode ackMode ) {
             this->ackMode = ackMode;
         }
 

@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_RESPONSE_H_
-#define ACTIVEMQ_TRANSPORT_RESPONSE_H_
+#ifndef _ACTIVEMQ_TRANSPORT_RESPONSE_H_
+#define _ACTIVEMQ_TRANSPORT_RESPONSE_H_
 
 #include <activemq/transport/Command.h>
 
@@ -50,4 +50,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_RESPONSE_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_RESPONSE_H_*/

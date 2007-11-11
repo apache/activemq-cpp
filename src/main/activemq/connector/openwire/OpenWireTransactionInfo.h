@@ -27,7 +27,6 @@ namespace connector{
 namespace openwire{
 
     class OpenWireTransactionInfo : public TransactionInfo {
-
     private:
 
         // OpenWire Tramsaction Info Command

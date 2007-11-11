@@ -30,7 +30,6 @@ namespace filters{
      * Factory Responsible for creating the ResponseCorrelator.
      */
     class ResponseCorrelatorFactory : public TransportFactory {
-
     public:
 
         virtual ~ResponseCorrelatorFactory() {}

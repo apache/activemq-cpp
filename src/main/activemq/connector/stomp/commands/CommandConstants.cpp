@@ -120,19 +120,14 @@ CommandConstants::StaticInitializer::StaticInitializer(){
 cms::Destination* CommandConstants::toDestination( const std::string& dest )
     throw ( decaf::lang::exceptions::IllegalArgumentException )
 {
-    std::size_t qpos = dest.find(queuePrefix);
-    std::size_t tpos = dest.find(topicPrefix);
+    std::size_t qpos = dest.find( queuePrefix );
+    std::size_t tpos = dest.find( topicPrefix );
 
-    if(tpos == 0)
-    {
+    if( tpos == 0 ) {
         return new StompTopic(dest.substr(strlen(topicPrefix)));
-    }
-    else if(qpos == 0)
-    {
+    } else if( qpos == 0 ) {
         return new StompQueue(dest.substr(strlen(queuePrefix)));
-    }
-    else
-    {
+    } else {
         throw IllegalArgumentException(
             __FILE__, __LINE__,
             "CommandConstants::toDestination - Not a valid Stomp Dest [%s]", dest.c_str());

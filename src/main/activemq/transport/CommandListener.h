@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
-#define ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
-
-#include <activemq/transport/Command.h>
+#ifndef _ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
+#define _ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
 
 namespace activemq{
 namespace transport{
+
+    class Command;
 
     /**
      * Interface for an observer of broker commands.
@@ -41,4 +41,4 @@ namespace transport{
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_*/

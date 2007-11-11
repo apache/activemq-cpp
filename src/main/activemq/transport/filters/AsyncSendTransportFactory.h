@@ -30,7 +30,6 @@ namespace filters{
      * Factory Responsible for creating the AsyncSendTransport.
      */
     class AsyncSendTransportFactory : public TransportFactory {
-
     public:
 
         virtual ~AsyncSendTransportFactory() {}

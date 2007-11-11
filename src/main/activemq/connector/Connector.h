@@ -47,11 +47,8 @@ namespace activemq{
 namespace connector{
 
     // Forward declarations.
-    class Connector
-    :
-        public cms::Startable,
-        public cms::Closeable
-    {
+    class Connector : public cms::Startable,
+                      public cms::Closeable {
     protected:
 
         // Flags the state we are in for connection to broker.
@@ -75,7 +72,7 @@ namespace connector{
 
     public:
 
-        virtual ~Connector() {};
+        virtual ~Connector() {}
 
         /**
          * Gets the Client Id for this connection, if this

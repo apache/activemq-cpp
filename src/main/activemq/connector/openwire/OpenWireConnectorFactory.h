@@ -20,13 +20,13 @@
 
 #include <activemq/connector/ConnectorFactory.h>
 #include <activemq/connector/ConnectorFactoryMapRegistrar.h>
+#include <activemq/connector/openwire/OpenWireConnector.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireConnectorFactory : public connector::ConnectorFactory
-    {
+    class OpenWireConnectorFactory : public connector::ConnectorFactory {
     public:
 
         virtual ~OpenWireConnectorFactory() {}
@@ -37,7 +37,7 @@ namespace openwire{
          * configured with
          * @param transport the Transport instance this connector uses.
          */
-        virtual Connector* createConnector(
+        virtual OpenWireConnector* createConnector(
             const decaf::util::Properties& properties,
             activemq::transport::Transport* transport );
 

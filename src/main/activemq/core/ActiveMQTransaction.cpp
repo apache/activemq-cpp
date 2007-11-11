@@ -60,6 +60,7 @@ ActiveMQTransaction::ActiveMQTransaction( ActiveMQConnection* connection,
             getConnector()->startTransaction( session->getSessionInfo() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -77,6 +78,7 @@ ActiveMQTransaction::~ActiveMQTransaction() {
         clearTransaction();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
@@ -110,6 +112,7 @@ void ActiveMQTransaction::clearTransaction() {
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -148,6 +151,7 @@ void ActiveMQTransaction::removeFromTransaction( ActiveMQConsumer* consumer ) {
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -174,6 +178,7 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -207,6 +212,7 @@ void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException ) {
         session->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -258,6 +264,7 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException ) {
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
