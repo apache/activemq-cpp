@@ -41,10 +41,10 @@ namespace transport{
     class IOTransportTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( IOTransportTest );
-        //CPPUNIT_TEST( testStartClose );
-        //CPPUNIT_TEST( testRead );
-        //CPPUNIT_TEST( testWrite );
-        //CPPUNIT_TEST( testException );
+        CPPUNIT_TEST( testStartClose );
+        CPPUNIT_TEST( testRead );
+        CPPUNIT_TEST( testWrite );
+        CPPUNIT_TEST( testException );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -104,7 +104,7 @@ namespace transport{
                 return inputStream;
             }
 
-            virtual Command* readCommand( void ) throw (CommandIOException){
+            virtual Command* readCommand( void ) throw ( CommandIOException ){
 
                 try{
                     if( throwException ){
@@ -121,7 +121,12 @@ namespace transport{
                             delete command;
 
                             ex.setMark( __FILE__, __LINE__ );
-                            throw CommandIOException( ex );
+                            throw CommandIOException();
+                        } catch( ... ) {
+                            // Free the memory.
+                            delete command;
+
+                            throw CommandIOException( __FILE__, __LINE__, "Catch all" );
                         }
 
                         return command;
@@ -130,7 +135,12 @@ namespace transport{
                     assert(false);
                     return NULL;
                 }catch( decaf::lang::Exception& ex ){
-                    CommandIOException cx( ex );
+                    CommandIOException cx;
+                    cx.setMark( __FILE__, __LINE__ );
+                    throw cx;
+                }
+                catch( ... ){
+                    CommandIOException cx;
                     cx.setMark( __FILE__, __LINE__ );
                     throw cx;
                 }
@@ -179,6 +189,10 @@ namespace transport{
                 }catch( decaf::lang::Exception& ex ){
                     CommandIOException cx( ex );
                     cx.setMark( __FILE__, __LINE__ );
+                    throw cx;
+                }
+                catch( ... ){
+                    CommandIOException cx( __FILE__, __LINE__, "writeCommand");
                     throw cx;
                 }
             }
