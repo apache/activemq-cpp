@@ -187,13 +187,11 @@ namespace transport{
                         outputStream->write( m->c );
                     }
                 }catch( decaf::lang::Exception& ex ){
-                    CommandIOException cx( ex );
-                    cx.setMark( __FILE__, __LINE__ );
-                    throw cx;
+                    ex.setMark( __FILE__, __LINE__ );
+                    throw CommandIOException( ex );
                 }
                 catch( ... ){
-                    CommandIOException cx( __FILE__, __LINE__, "writeCommand");
-                    throw cx;
+                    throw CommandIOException( __FILE__, __LINE__, "writeCommand");
                 }
             }
 
