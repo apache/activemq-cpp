@@ -114,7 +114,7 @@ public:
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
 
-            for( int ix=0; ix<numMessages; ++ix ){
+            for( unsigned int ix=0; ix<numMessages; ++ix ){
                 TextMessage* message = session->createTextMessage( text );
 
                 message->setIntProperty( "Integer", ix );
