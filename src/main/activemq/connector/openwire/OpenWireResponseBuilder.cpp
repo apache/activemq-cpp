@@ -17,6 +17,7 @@
 
 #include "OpenWireResponseBuilder.h"
 
+#include <typeinfo>
 #include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
 #include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>

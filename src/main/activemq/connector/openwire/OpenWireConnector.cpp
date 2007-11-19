@@ -17,6 +17,7 @@
 
 #include <activemq/connector/openwire/OpenWireConnector.h>
 
+#include <typeinfo>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <activemq/transport/Transport.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
