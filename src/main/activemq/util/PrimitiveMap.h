@@ -22,6 +22,8 @@
 #include <vector>
 #include <decaf/util/Map.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <stdio.h>
+#include <string.h>
 
 namespace activemq{
 namespace util{
