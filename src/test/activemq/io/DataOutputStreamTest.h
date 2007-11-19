@@ -24,6 +24,8 @@
 #include <activemq/util/Endian.h>
 #include <activemq/io/DataOutputStream.h>
 #include <activemq/io/ByteArrayOutputStream.h>
+#include <string.h>
+#include <stdio.h>
 
 namespace activemq{
 namespace io{

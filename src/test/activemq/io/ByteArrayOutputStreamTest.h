@@ -22,6 +22,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/io/ByteArrayOutputStream.h>
+#include <string.h>
+#include <stdio.h>
 
 namespace activemq{
 namespace io{

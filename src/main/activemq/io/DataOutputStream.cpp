@@ -17,6 +17,8 @@
 
 #include "DataOutputStream.h"
 #include <activemq/util/Config.h>
+#include <string.h>
+#include <stdio.h>
 
 using namespace activemq;
 using namespace activemq::io;

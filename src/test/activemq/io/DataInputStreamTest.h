@@ -26,6 +26,8 @@
 #include <activemq/io/BufferedInputStream.h>
 #include <activemq/io/ByteArrayInputStream.h>
 #include <activemq/io/DataInputStream.h>
+#include <string.h>
+#include <stdio.h>
 
 #ifdef min
 #undef min

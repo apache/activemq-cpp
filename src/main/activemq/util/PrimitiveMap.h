@@ -20,6 +20,8 @@
 
 #include <string>
 #include <activemq/util/Map.h>
+#include <string.h>
+#include <stdio.h>
 
 namespace activemq{
 namespace util{

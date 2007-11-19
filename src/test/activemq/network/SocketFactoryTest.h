@@ -28,6 +28,8 @@
 #include <activemq/concurrent/Thread.h>
 
 #include <sstream>
+#include <string.h>
+#include <stdio.h>
 
 namespace activemq{
 namespace network{

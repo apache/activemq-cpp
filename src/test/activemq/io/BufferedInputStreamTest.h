@@ -23,7 +23,8 @@
 
 #include <activemq/io/BufferedInputStream.h>
 #include <activemq/util/Config.h>
-
+#include <string.h>
+#include <stdio.h>
 
 namespace activemq{
 namespace io{
