@@ -112,7 +112,7 @@ case "${host_os}" in
     if test "$GCC" = "yes"; then
        PLAT_CXXFLAGS="-ansi -pedantic"
     else
-       PLAT_CXXFLAGS="-library=stlport4 -mt +w"
+       PLAT_CXXFLAGS="-mt +w"
     fi
     PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
     ;;
