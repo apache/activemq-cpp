@@ -88,7 +88,7 @@ AC_CHECK_HEADERS([pthread.h])
 
 AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 
-AM_PATH_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
+AMQ_FIND_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
 PLAT_CXXFLAGS=
@@ -136,7 +136,6 @@ AC_SUBST([AMQ_TEST_CXXFLAGS])
 AC_SUBST([AMQ_TEST_LIBS])
 AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la $DECAF_LIBS"
-
 
 # Check to see if the compiler supports the visibility flags.
 # If so, define HAVE_VISIBILITY_OPTIONS
