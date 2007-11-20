@@ -23,6 +23,7 @@
 #include <activemq/concurrent/Runnable.h>
 #include <benchmark/PerformanceTimer.h>
 #include <string>
+#include <iostream>
 
 namespace benchmark{
 
