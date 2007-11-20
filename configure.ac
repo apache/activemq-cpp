@@ -26,8 +26,8 @@ AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 ## Define the Version variables
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
-ACTIVEMQ_VERSION=2.1.1
-ACTIVEMQ_LIBRARY_VERSION=2:1:1
+ACTIVEMQ_VERSION=2.1.2
+ACTIVEMQ_LIBRARY_VERSION=2:1:2
 ACTIVEMQ_RELEASE=0.0
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 
@@ -116,7 +116,7 @@ case "${host_os}" in
     else
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
-       PLAT_CXXFLAGS="-mt +w -O5"
+       PLAT_CXXFLAGS="-mt -w -O5"
        PLAT_LIBS+="-library=stlport4"
     fi
     ;;
@@ -151,7 +151,6 @@ else
    AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS"
 fi
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la"
-
 
 # Check to see if the compiler supports the visibility flags.
 # If so, define HAVE_VISIBILITY_OPTIONS
