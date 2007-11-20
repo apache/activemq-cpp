@@ -58,9 +58,9 @@ the following software installed:
 
 Tool        Recommended Version
 -------------------------------
-autoconf    >= 2.59
-automake    >= 1.9.6
-libtool     >= 1.5.22
+autoconf    >= 2.60
+automake    >= 1.10
+libtool     >= 1.5.24
 
 On Debian/Ubuntu, multiple versions of autoconf and automake are available
 in separate packages. If you have multiple versions of autoconf or automake
@@ -75,21 +75,6 @@ now ready to create the configure script.  To do this, run:
 
   ./autogen.sh
 
-    -----------------------------------------------------------------------
-    |NOTE: You may see the following warnings when running this command:  |
-    |                                                                     |
-    |  src/test-integration/Makefile.am:44: `CXXFLAGS' is a user variable,|
-    |you should not override it;                                          |
-    |  src/test-integration/Makefile.am:44: use `AM_CXXFLAGS' instead.    |
-    |  src/test/Makefile.am:104: `CXXFLAGS' is a user variable, you       |
-    |should not override it;                                              |
-    |  src/test/Makefile.am:104: use `AM_CXXFLAGS' instead.               |
-    |                                                                     |
-    |These can be ignored.  We override CXXFLAGS in the makefiles for     |
-    |the unit and integration tests in order to suppress compiler         |
-    |warnings.                                                            |
-    -----------------------------------------------------------------------
-
 This should be run the first time and anytime you change configure.ac or
 any of the Makefile.am files.
 
@@ -97,6 +82,9 @@ any of the Makefile.am files.
     |Solaris 10 Note:  CppUnit might not build until you correct the file |
     |  libstdc++.la to contain the correct data, see this discussion:     |
     |  http://forum.sun.com/jive/thread.jspa?threadID=73150               |
+    |  Also you must pass --enable-shared=no for Solaris GCC builds       |
+    |  For Solaris builds using the Sun Compiler you must set the env     |
+    |  values CC and CXX to point to the cc and CC commands respectively. |
     -----------------------------------------------------------------------
 
 The configure script will customize the way the software is built and
