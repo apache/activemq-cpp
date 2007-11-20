@@ -109,14 +109,16 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
+    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
+
     if test "$GCC" = "yes"; then
        PLAT_CXXFLAGS="-ansi -pedantic"
     else
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
        PLAT_CXXFLAGS="-mt +w -O5"
+       PLAT_LIBS+="-library=stlport4"
     fi
-    PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
     ;;
 
   *) ## Unix configuration
