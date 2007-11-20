@@ -112,7 +112,9 @@ case "${host_os}" in
     if test "$GCC" = "yes"; then
        PLAT_CXXFLAGS="-ansi -pedantic"
     else
-       PLAT_CXXFLAGS="-mt +w"
+       # Assuming Sun Compiler and adding in optimization
+       # because autoconf can't seem to figure it out.
+       PLAT_CXXFLAGS="-mt +w -O5"
     fi
     PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
     ;;

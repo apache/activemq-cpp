@@ -21,21 +21,26 @@ main_example_sources = main.cpp
 ## Compiler / Linker Info
 ##
 
-INCLUDES = -I$(srcdir)/../main
+##
+## Compiler / Linker Info
+##
 
 ## Main Example
 bin_PROGRAMS = example 
 example_SOURCES = $(main_example_sources)
-example_LDADD= ../main/libactivemq-cpp.la
+example_LDADD= $(AMQ_TEST_LIBS)
+example_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
 ## Simple Async Consumer
 simple_async_consumer_sources = ./consumers/SimpleAsyncConsumer.cpp
 bin_PROGRAMS += simple_async_consumer 
 simple_async_consumer_SOURCES = $(simple_async_consumer_sources)
-simple_async_consumer_LDADD= ../main/libactivemq-cpp.la
+simple_async_consumer_LDADD= $(AMQ_TEST_LIBS)
+simple_async_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
 ## Simple Producer
 simple_producer_sources = ./producers/SimpleProducer.cpp
 bin_PROGRAMS += simple_producer 
 simple_producer_SOURCES = $(simple_producer_sources)
-simple_producer_LDADD= ../main/libactivemq-cpp.la
+simple_producer_LDADD= $(AMQ_TEST_LIBS)
+simple_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
