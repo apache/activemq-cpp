@@ -109,8 +109,16 @@ case "${host_os}" in
     AC_CHECK_LIB(pthread, pthread_create,[have_pthread="yes"],
                 AC_MSG_ERROR([libpthread not found!]))
 
-    PLAT_CXXFLAGS="-ansi -pedantic"
     PLAT_LIBS="-lm -lpthread -luuid -lsocket -lrt"
+
+    if test "$GCC" = "yes"; then
+       PLAT_CXXFLAGS="-ansi -pedantic"
+    else
+       # Assuming Sun Compiler and adding in optimization
+       # because autoconf can't seem to figure it out.
+       PLAT_CXXFLAGS="-mt -w -O5"
+       PLAT_LIBS+="-library=stlport4"
+    fi
     ;;
 
   *) ## Unix configuration
@@ -128,13 +136,25 @@ DECAF_CONFIGURE_DECAF
 ## Flags for building the activemq-cpp library
 AC_SUBST([AMQ_CXXFLAGS])
 AC_SUBST([AMQ_LIBS])
-AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+
+if test "$GCC" = "yes"; then
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+else
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -PIC"
+fi
+
 AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
 
 ## Flags for building the test applications.
 AC_SUBST([AMQ_TEST_CXXFLAGS])
 AC_SUBST([AMQ_TEST_LIBS])
-AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+
+if test "$GCC" = "yes"; then
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+else
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS"
+fi
+
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la $DECAF_LIBS"
 
 # Check to see if the compiler supports the visibility flags.
