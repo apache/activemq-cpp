@@ -112,7 +112,7 @@ public:
             // Create a messages
             string text = (string)"Hello world! from thread " + threadIdStr;
 
-            for( int ix=0; ix<numMessages; ++ix ){
+            for( std::size_t ix=0; ix<numMessages; ++ix ){
                 TextMessage* message = session->createTextMessage( text );
 
                 message->setIntProperty( "Integer", ix );
