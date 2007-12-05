@@ -32,7 +32,9 @@
 // Pick up FIONREAD on Solaris 2.5.
 #ifdef HAVE_SYS_FILIO_H
 #include <unistd.h>
-#include <stropts.h>
+    #ifdef HAVE_STROPTS_H
+    #include <stropts.h>
+    #endif
 #include <sys/filio.h>
 #endif
 

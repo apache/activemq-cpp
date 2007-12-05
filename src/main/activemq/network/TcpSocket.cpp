@@ -189,7 +189,12 @@ void TcpSocket::connect(const char* host, int port) throw ( SocketException )
 
         checkResult( ::getaddrinfo( host, NULL, &hints, &res_ptr ) );
 
-        assert(res_ptr->ai_addr->sa_family == AF_INET);
+        if( res_ptr == NULL || res_ptr->ai_addr->sa_family != AF_INET ){
+            throw SocketException(
+                __FILE__, __LINE__,
+                "TcpSocket::connect - getaddrinfo failed, is hostname correct?" );
+        }
+
         // Porting: On both 32bit and 64 bit systems that we compile to soo far, sin_addr
         // is a 32 bit value, not an unsigned long.
         assert( sizeof( ( ( sockaddr_in* )res_ptr->ai_addr )->sin_addr.s_addr ) == 4 );

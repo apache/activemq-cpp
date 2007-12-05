@@ -79,6 +79,7 @@ AC_CHECK_SIZEOF(double, 8)
 AC_CHECK_HEADERS([uuid.h uuid/uuid.h], [AC_DEFINE([HAVE_UUID_T], [1], [Define if uuid_t exists.])])
 AC_CHECK_HEADERS([objbase.h])
 AC_CHECK_HEADERS([repcdce.h])
+AC_CHECK_HEADERS([stropts.h])
 AC_CHECK_HEADERS([sys/filio.h])
 AC_CHECK_HEADERS([sys/ioctl.h])
 AC_CHECK_HEADERS([sys/select.h])
@@ -116,8 +117,8 @@ case "${host_os}" in
     else
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
-       PLAT_CXXFLAGS="-mt -w -O5"
-       PLAT_LIBS+="-library=stlport4"
+       PLAT_CXXFLAGS="-library=stlport4 -mt -w -O5"
+       PLAT_LIBS="$PLAT_LIBS -library=stlport4"
     fi
     ;;
 
