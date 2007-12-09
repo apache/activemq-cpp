@@ -1,4 +1,15 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.3                               ==
+=========================================================================
+
+This release adds support for building the library and tests, etc on the
+Solaris platform using the Sun Compiler in Sun Studio 11 and 12.
+
+Improvement
+
+    * [AMQCPP-154] - Improve build compatibility (Solaris)
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.1.2                               ==
 =========================================================================
 
