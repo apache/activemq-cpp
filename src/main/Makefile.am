@@ -24,6 +24,8 @@ cc_sources = \
     activemq/util/URISupport.cpp \
     activemq/cmsutil/DynamicDestinationResolver.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
+    activemq/cmsutil/CmsAccessor.cpp \
+    activemq/cmsutil/CmsDestinationAccessor.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQSession.cpp \

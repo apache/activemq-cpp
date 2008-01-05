@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CMSUTIL_CMSDESTINATIONACCESSOR_H_
 
 #include <activemq/cmsutil/CmsAccessor.h>
+#include <activemq/cmsutil/DynamicDestinationResolver.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -51,14 +52,16 @@ namespace cmsutil {
     
     public:
         
-        CmsDestinationAccessor() {
-            pubSubDomain = false;             
-            destinationResolver = &defaultDestinationResolver;
-        }
+        CmsDestinationAccessor();
         
-        virtual ~CmsDestinationAccessor() {            
-        }
+        virtual ~CmsDestinationAccessor();
         
+        /**
+         * Initializes this object and prepares it for use.  This should be called
+         * before any other methds are called.
+         */
+        virtual void init() throw (cms::CMSException);
+                
         virtual bool isPubSubDomain() const {
             return this->pubSubDomain;
         }
@@ -75,9 +78,7 @@ namespace cmsutil {
             return destinationResolver;
         }
         
-        virtual void setDestinationResolver( DestinationResolver* destRes ) {
-            this->destinationResolver = destRes;
-        }
+        virtual void setDestinationResolver( DestinationResolver* destRes );
         
     protected:
         
@@ -92,12 +93,7 @@ namespace cmsutil {
          */
         virtual cms::Destination* resolveDestinationName( 
                 cms::Session* session, 
-                const std::string& destName ) throws (cms::CMSException) {
-            
-            getDestinationResolver().resolveDestinationName(session, 
-                    destName, 
-                    isPubSubDomain());
-        }
+                const std::string& destName ) throw (cms::CMSException);
     };
 
 }}

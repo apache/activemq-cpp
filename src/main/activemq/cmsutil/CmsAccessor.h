@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CMSUTIL_CMSACCESSOR_H_
 
 #include <cms/ConnectionFactory.h>
+#include <activemq/cmsutil/ResourceLifecycleManager.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -38,26 +39,44 @@ namespace cmsutil {
     
     private:
     
+        ResourceLifecycleManager resourceLifecycleManager;
+        
         cms::ConnectionFactory* connectionFactory;
     
-        bool sessionTransacted;
-    
-        int sessionAcknowledgeMode;
+        cms::Session::AcknowledgeMode sessionAcknowledgeMode;
     
     public:
         
-        CmsAccessor() {
-            sessionTransacted = false;
-            sessionAcknowledgeMode = cms::Session::AUTO_ACKNOWLEDGE;
+        CmsAccessor();
+        
+        virtual ~CmsAccessor();
+        
+        /**
+         * Initializes this object and prepares it for use.  This should be called
+         * before any other methds are called.
+         */
+        virtual void init() throw (cms::CMSException) {            
         }
         
-        virtual ~CmsAccessor() {            
+        /**
+         * Shuts down this object and destroys any allocated resources.
+         */
+        virtual void destroy() throw (cms::CMSException) {
+            resourceLifecycleManager.destroy();
+        }
+        
+        virtual ResourceLifecycleManager* getResourceLifecycleManager() {
+            return &resourceLifecycleManager;
+        }
+        
+        virtual const ResourceLifecycleManager* getResourceLifecycleManager() const {
+            return &resourceLifecycleManager;
         }
     
         /**
          * Set the ConnectionFactory to use for obtaining CMS Connections.
          */
-        virtual void setConnectionFactory(ConnectionFactory* connectionFactory) {
+        virtual void setConnectionFactory(cms::ConnectionFactory* connectionFactory) {
             this->connectionFactory = connectionFactory;
         }
     
@@ -65,7 +84,7 @@ namespace cmsutil {
          * Return the ConnectionFactory that this accessor uses for
          * obtaining CMS Connections.
          */
-        virtual const ConnectionFactory* getConnectionFactory() const {
+        virtual const cms::ConnectionFactory* getConnectionFactory() const {
             return this->connectionFactory;
         }
     
@@ -73,28 +92,8 @@ namespace cmsutil {
          * Return the ConnectionFactory that this accessor uses for
          * obtaining CMS Connections.
          */
-        virtual ConnectionFactory* getConnectionFactory() {
+        virtual cms::ConnectionFactory* getConnectionFactory() {
             return this->connectionFactory;
-        }
-    
-        /**
-         * Set the transaction mode that is used when creating a CMS Session.
-         * Default is "false".
-         * 
-         * @param sessionTransacted the transaction mode
-         */
-        virtual void setSessionTransacted(bool sessionTransacted) {
-            this->sessionTransacted = sessionTransacted;
-        }
-    
-        /**
-         * Return whether the CMS sessions used by this
-         * accessor are supposed to be transacted.
-         * @return <code>true</code> if the CMS Sessions used are transacted
-         * @see #setSessionTransacted(bool)
-         */
-        virtual bool isSessionTransacted() const {
-            return this->sessionTransacted;
         }
     
         /**
@@ -103,7 +102,8 @@ namespace cmsutil {
          * <p>Default is <code>AUTO_ACKNOWLEDGE</code>.
          * @param sessionAcknowledgeMode the acknowledgement mode
          */
-        virtual void setSessionAcknowledgeMode(int sessionAcknowledgeMode) {
+        virtual void setSessionAcknowledgeMode(
+                cms::Session::AcknowledgeMode sessionAcknowledgeMode) {
             this->sessionAcknowledgeMode = sessionAcknowledgeMode;
         }
     
@@ -111,7 +111,7 @@ namespace cmsutil {
          * Return the acknowledgement mode for CMS sessions.
          * @return the acknowledgement mode applied by this accessor
          */
-        virtual int getSessionAcknowledgeMode() const {
+        virtual cms::Session::AcknowledgeMode getSessionAcknowledgeMode() const {
             return this->sessionAcknowledgeMode;
         }
     
@@ -122,9 +122,7 @@ namespace cmsutil {
          * @return the new CMS Connection
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Connection* createConnection() throw (cms::CMSException) {
-            return getConnectionFactory()->createConnection();
-        }
+        virtual cms::Connection* createConnection() throw (cms::CMSException);
     
         /**
          * Create a CMS Session for the given Connection.
@@ -132,19 +130,8 @@ namespace cmsutil {
          * @return the new CMS Session
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Session* createSession(cms::Connection* con) throw (cms::CMSException) {
-            return con->createSession(isSessionTransacted(), getSessionAcknowledgeMode());
-        }
-    
-        /**
-         * Determine whether the given Session is in client acknowledge mode.
-         * @param session the CMS Session to check
-         * @return whether the given Session is in client acknowledge mode
-         * @throws cms::CMSException if thrown by CMS API methods
-         */
-        virtual bool isClientAcknowledge(cms::Session* session) throws JMSException {
-            return (session.getAcknowledgeMode() == Session.CLIENT_ACKNOWLEDGE);
-        }
+        virtual cms::Session* createSession(cms::Connection* con) 
+            throw (cms::CMSException);
     
     };
 
