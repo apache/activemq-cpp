@@ -22,6 +22,8 @@ cc_sources = \
     activemq/util/PrimitiveMap.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/URISupport.cpp \
+    activemq/cmsutil/DynamicDestinationResolver.cpp \
+    activemq/cmsutil/ResourceLifecycleManager.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQSession.cpp \
@@ -87,6 +89,11 @@ h_sources = \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
+    activemq/cmsutil/CmsAccessor.h \
+    activemq/cmsutil/CmsDestinationAccessor.h \
+    activemq/cmsutil/DestinationResolver.h \
+    activemq/cmsutil/DynamicDestinationResolver.h \
+    activemq/cmsutil/ResourceLifecycleManager.h \
     activemq/support/LibraryInit.h \
     activemq/support/InitDirector.h \
     activemq/io/LoggingInputStream.h \

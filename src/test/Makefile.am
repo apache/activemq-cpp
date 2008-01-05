@@ -60,6 +60,7 @@ cc_sources = \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQSessionTest.cpp \
+  activemq/cmsutil/DynamicDestinationResolverTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
   activemq/transport/IOTransportTest.cpp \
   activemq/transport/filters/ResponseCorrelatorTest.cpp \
@@ -79,7 +80,7 @@ include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 check_PROGRAMS = activemq-test
 
 ## Also run the tests as part of make check
-## TESTS = $(check_PROGRAMS)
+TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options

@@ -1,0 +1,98 @@
+#ifndef ACTIVEMQ_CMSUTIL_DUMMYSESSION_H_
+#define ACTIVEMQ_CMSUTIL_DUMMYSESSION_H_
+
+#include <cms/Session.h>
+#include <activemq/connector/stomp/StompTopic.h>
+#include <activemq/connector/stomp/StompQueue.h>
+
+namespace activemq {
+namespace cmsutil {
+
+    class DummySession : public cms::Session {
+        
+    public:
+
+            virtual ~DummySession() {}
+
+            virtual void close() throw( cms::CMSException ){}
+            
+            virtual void commit() throw ( cms::CMSException ) {}
+            
+            virtual void rollback() throw ( cms::CMSException ) {}
+
+            virtual cms::MessageConsumer* createConsumer(
+                const cms::Destination* destination )
+                    throw ( cms::CMSException ) { return NULL; }
+
+            virtual cms::MessageConsumer* createConsumer( 
+                const cms::Destination* destination,
+                const std::string& selector )
+                    throw ( cms::CMSException ) {
+                return NULL;
+            }
+            
+            virtual cms::MessageConsumer* createConsumer( 
+                const cms::Destination* destination,
+                const std::string& selector,
+                bool noLocal )
+                    throw ( cms::CMSException ) { return NULL; }
+
+            virtual cms::MessageConsumer* createDurableConsumer(
+                const cms::Topic* destination,
+                const std::string& name,
+                const std::string& selector,
+                bool noLocal = false )
+                    throw ( cms::CMSException ) { return NULL; }
+
+            virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
+                throw ( cms::CMSException ) { return NULL; }
+
+            virtual cms::Queue* createQueue( const std::string& queueName )
+                throw ( cms::CMSException ) {
+                return new activemq::connector::stomp::StompQueue(queueName);
+            }
+            
+            virtual cms::Topic* createTopic( const std::string& topicName )
+                throw ( cms::CMSException ) {
+                return new activemq::connector::stomp::StompTopic(topicName);
+            }
+
+            virtual cms::TemporaryQueue* createTemporaryQueue()
+                throw ( cms::CMSException ) { return NULL; }
+
+            virtual cms::TemporaryTopic* createTemporaryTopic()
+                throw ( cms::CMSException ){ return NULL; }
+
+            virtual cms::Message* createMessage() 
+                throw ( cms::CMSException ){ return NULL; }
+
+            virtual cms::BytesMessage* createBytesMessage() 
+                throw ( cms::CMSException){ return NULL; }
+
+            virtual cms::BytesMessage* createBytesMessage(
+                const unsigned char* bytes,
+                std::size_t bytesSize ) 
+                    throw ( cms::CMSException){
+                return NULL;
+            }
+
+            virtual cms::TextMessage* createTextMessage() 
+                throw ( cms::CMSException ){ return NULL; }
+
+            virtual cms::TextMessage* createTextMessage( const std::string& text ) 
+                throw ( cms::CMSException ){ return NULL; }
+
+            virtual cms::MapMessage* createMapMessage() 
+                throw ( cms::CMSException ){ return NULL; }
+
+            virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const { return cms::Session::AUTO_ACKNOWLEDGE; }
+
+            virtual bool isTransacted() const{ return false; }
+ 
+            virtual void unsubscribe( const std::string& name ) 
+                throw ( cms::CMSException ){}
+    };
+    
+}}
+
+#endif /*ACTIVEMQ_CMSUTIL_DUMMYSESSION_H_*/
