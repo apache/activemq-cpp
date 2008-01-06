@@ -35,7 +35,8 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::init() throw (cms::CMSException) {
+void CmsDestinationAccessor::init() 
+throw (cms::CMSException, IllegalStateException) {
     
     // Invoke the base class.
     CmsAccessor::init();

@@ -50,6 +50,16 @@ void CmsTemplate::initDefaults() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
+    
+    // Invoke the base class.
+    CmsDestinationAccessor::init();
+    
+    // Make sure we have a valid default destination.
+    checkDefaultDestination();   
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::checkDefaultDestination() throw (IllegalStateException) {
     if (this->defaultDestination == NULL) {
         throw IllegalStateException(

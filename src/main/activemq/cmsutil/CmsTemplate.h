@@ -81,6 +81,13 @@ namespace cmsutil {
     	    
     	virtual ~CmsTemplate();
     	
+    	/**
+         * Initializes this object and prepares it for use.  This should be called
+         * before any other methds are called.
+         */
+        virtual void init() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+    	        
     	virtual void setDefaultDestination(cms::Destination* defaultDestination) {
     	    this->defaultDestination = defaultDestination;
     	}

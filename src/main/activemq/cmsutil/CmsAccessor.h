@@ -56,14 +56,16 @@ namespace cmsutil {
          * Initializes this object and prepares it for use.  This should be called
          * before any other methds are called.
          */
-        virtual void init() throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+        virtual void init() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
             checkConnectionFactory();
         }
         
         /**
          * Shuts down this object and destroys any allocated resources.
          */
-        virtual void destroy() throw (cms::CMSException) {
+        virtual void destroy() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
             resourceLifecycleManager.destroy();
         }
         
