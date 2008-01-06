@@ -15,54 +15,46 @@
  * limitations under the License.
  */
 
-#include "CmsAccessor.h"
+#include "CmsTemplate.h"
 
 using namespace activemq::cmsutil;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsAccessor::CmsAccessor() {
-    sessionAcknowledgeMode = cms::Session::AUTO_ACKNOWLEDGE;
+CmsTemplate::CmsTemplate() {
+    initDefaults();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsAccessor::~CmsAccessor() {
+CmsTemplate::CmsTemplate(cms::ConnectionFactory* connectionFactory) {
+    initDefaults();
+    setConnectionFactory(connectionFactory);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsAccessor::createConnection() 
-throw (cms::CMSException,IllegalStateException) {
-    
-    checkConnectionFactory();
-    
-    // Create the connection.
-    cms::Connection* c = getConnectionFactory()->createConnection();
-    
-    // Manage the lifecycle of this resource.
-    getResourceLifecycleManager()->addConnection(c);
-    
-    return c;
+CmsTemplate::~CmsTemplate() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* CmsAccessor::createSession(cms::Connection* con) 
-throw (cms::CMSException,IllegalStateException) {
-    
-    // Create the session.
-    cms::Session* s = con->createSession(getSessionAcknowledgeMode());
-    
-    // Manage the lifecycle of this resource.
-    getResourceLifecycleManager()->addSession(s);
-    
-    return s;
+void CmsTemplate::initDefaults() {
+    defaultDestination = NULL;
+    defaultDestinationName = "";
+    messageIdEnabled = true;
+    messageTimestampEnabled = true;
+    pubSubNoLocal = false;
+    receiveTimeout = RECEIVE_TIMEOUT_INDEFINITE_WAIT;
+    explicitQosEnabled = false;
+    deliveryMode = cms::DeliveryMode::PERSISTENT;
+    priority = DEFAULT_PRIORITY;
+    timeToLive = DEFAULT_TIME_TO_LIVE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsAccessor::checkConnectionFactory() throw (IllegalStateException) {
-    if (getConnectionFactory() == NULL) {
-            throw IllegalStateException(
-                    __FILE__, __LINE__,
-                    "Property 'connectionFactory' is required");
+void CmsTemplate::checkDefaultDestination() throw (IllegalStateException) {
+    if (this->defaultDestination == NULL) {
+        throw IllegalStateException(
+                __FILE__, __LINE__,
+                "No defaultDestination or defaultDestinationName specified. Check configuration of CmsTemplate.");
     }
 }
 

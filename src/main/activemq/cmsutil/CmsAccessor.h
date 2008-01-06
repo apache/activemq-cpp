@@ -19,6 +19,7 @@
 
 #include <cms/ConnectionFactory.h>
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -55,7 +56,8 @@ namespace cmsutil {
          * Initializes this object and prepares it for use.  This should be called
          * before any other methds are called.
          */
-        virtual void init() throw (cms::CMSException) {            
+        virtual void init() throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+            checkConnectionFactory();
         }
         
         /**
@@ -122,7 +124,8 @@ namespace cmsutil {
          * @return the new CMS Connection
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Connection* createConnection() throw (cms::CMSException);
+        virtual cms::Connection* createConnection() 
+            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
     
         /**
          * Create a CMS Session for the given Connection.
@@ -131,7 +134,12 @@ namespace cmsutil {
          * @throws cms::CMSException if thrown by CMS API methods
          */
         virtual cms::Session* createSession(cms::Connection* con) 
-            throw (cms::CMSException);
+            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Verifies that the connection factory is valid.
+         */
+        virtual void checkConnectionFactory() throw (decaf::lang::exceptions::IllegalStateException);
     
     };
 

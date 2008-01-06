@@ -78,7 +78,9 @@ namespace cmsutil {
             return destinationResolver;
         }
         
-        virtual void setDestinationResolver( DestinationResolver* destRes );
+        virtual void setDestinationResolver( DestinationResolver* destRes ) {
+            this->destinationResolver = destRes;     
+        }
         
     protected:
         
@@ -90,10 +92,18 @@ namespace cmsutil {
          *      the name of the destination.
          * @return the destination
          * @throws cms::CMSException if resolution failed.
+         * @throws decaf::lang::exceptions::IllegalStateException if the destiation
+         *      resolver property is NULL.
          */
         virtual cms::Destination* resolveDestinationName( 
                 cms::Session* session, 
-                const std::string& destName ) throw (cms::CMSException);
+                const std::string& destName ) 
+                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Verifies that the connection factory is valid.
+         */
+        virtual void checkDestinationResolver() throw (decaf::lang::exceptions::IllegalStateException);
     };
 
 }}

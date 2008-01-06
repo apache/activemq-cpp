@@ -18,6 +18,7 @@
 #include "CmsDestinationAccessor.h"
 
 using namespace activemq::cmsutil;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsDestinationAccessor::CmsDestinationAccessor() {
@@ -35,23 +36,37 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessor::init() throw (cms::CMSException) {
-    setDestinationResolver(destinationResolver);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::setDestinationResolver( DestinationResolver* destRes ) {
-    this->destinationResolver = destRes; 
-    destRes->setResourceLifecycleManager(getResourceLifecycleManager());
+    
+    // Invoke the base class.
+    CmsAccessor::init();
+    
+    // Make sure we have a destination resolver.
+    checkDestinationResolver();
+    
+    // Give the resolver our lifecycle manager.
+    destinationResolver->setResourceLifecycleManager(getResourceLifecycleManager());    
 }
   
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* CmsDestinationAccessor::resolveDestinationName( 
     cms::Session* session, 
-    const std::string& destName ) throw (cms::CMSException) {
+    const std::string& destName ) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    checkDestinationResolver();
     
     getDestinationResolver()->resolveDestinationName(session, 
             destName, 
             isPubSubDomain());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsDestinationAccessor::checkDestinationResolver() throw (IllegalStateException) {
+    if (getDestinationResolver() == NULL) {
+            throw IllegalStateException(
+                    __FILE__, __LINE__,
+                    "Property 'destinationResolver' is required");
+    }
 }
 
 
