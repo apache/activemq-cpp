@@ -26,6 +26,8 @@ cc_sources = \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
     activemq/cmsutil/CmsDestinationAccessor.cpp \
+    activemq/cmsutil/SessionPool.cpp \
+    activemq/cmsutil/PooledSession.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQSession.cpp \
@@ -96,6 +98,8 @@ h_sources = \
     activemq/cmsutil/DestinationResolver.h \
     activemq/cmsutil/DynamicDestinationResolver.h \
     activemq/cmsutil/ResourceLifecycleManager.h \
+    activemq/cmsutil/SessionPool.h \
+    activemq/cmsutil/PooledSession.h \
     activemq/support/LibraryInit.h \
     activemq/support/InitDirector.h \
     activemq/io/LoggingInputStream.h \
