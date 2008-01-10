@@ -63,6 +63,7 @@ cc_sources = \
   activemq/cmsutil/DynamicDestinationResolverTest.cpp \
   activemq/cmsutil/CmsAccessorTest.cpp \
   activemq/cmsutil/CmsDestinationAccessorTest.cpp \
+  activemq/cmsutil/SessionPoolTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
   activemq/transport/IOTransportTest.cpp \
   activemq/transport/filters/ResponseCorrelatorTest.cpp \

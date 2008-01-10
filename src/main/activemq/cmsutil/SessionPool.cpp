@@ -40,6 +40,7 @@ SessionPool::~SessionPool() {
         delete *iter;
     }
     sessions.clear();
+    available.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
