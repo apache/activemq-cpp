@@ -30,112 +30,118 @@ namespace cmsutil {
     class CmsTemplate : public CmsDestinationAccessor
     {
     public:
-        
+    
         /**
          * Timeout value indicating that a receive operation should
          * check if a message is immediately available without blocking.
          */
         static const long long RECEIVE_TIMEOUT_NO_WAIT = -1;
-
+    
         /**
          * Timeout value indicating a blocking receive without timeout.
          */
         static const long long RECEIVE_TIMEOUT_INDEFINITE_WAIT = 0;
-        
+    
         /**
          * Default message priority.
          */
         static const int DEFAULT_PRIORITY = 4;
-        
+    
         /**
          * My default, messages should live forever.
          */
-        static const long long DEFAULT_TIME_TO_LIVE = 0;
+        static const long long DEFAULT_TIME_TO_LIVE = 0;                
+    
+    private:
+                
+        static const int NUM_SESSION_POOLS = (int)cms::Session::SESSION_TRANSACTED + 1;
+    
+        cms::Connection* connection;
         
-    private:                
+        SessionPool*[NUM_SESSION_POOLS] sessionPools;
         
         cms::Destination* defaultDestination;
-        
+    
         std::string defaultDestinationName;
-        
+    
         bool messageIdEnabled;
-        
+    
         bool messageTimestampEnabled;
-        
-        bool pubSubNoLocal;
-        
+    
+        bool noLocal;
+    
         long long receiveTimeout;
-        
+    
         bool explicitQosEnabled;
-        
+    
         int deliveryMode;
-        
+    
         int priority;
-        
+    
         long long timeToLive;
-        
+    
     public:
-        
-    	CmsTemplate();
-    	CmsTemplate(cms::ConnectionFactory* connectionFactory);
-    	    
-    	virtual ~CmsTemplate();
-    	
-    	/**
+    
+        CmsTemplate();
+        CmsTemplate(cms::ConnectionFactory* connectionFactory);
+    
+        virtual ~CmsTemplate();
+    
+        /**
          * Initializes this object and prepares it for use.  This should be called
          * before any other methds are called.
          */
-        virtual void init() 
+        virtual void init()
         throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-    	        
-    	virtual void setDefaultDestination(cms::Destination* defaultDestination) {
-    	    this->defaultDestination = defaultDestination;
-    	}
-    	
-    	virtual const cms::Destination* getDefaultDestination() const {
-    	    return this->defaultDestination;
-    	}    	    	
-    	
-    	virtual void setDefaultDestinationName(const std::string& defaultDestinationName) {
-    	    this->defaultDestinationName = defaultDestinationName;
-    	}
-    	
-    	virtual const std::string getDefaultDestinationName() const {
+    
+        virtual void setDefaultDestination(cms::Destination* defaultDestination) {
+            this->defaultDestination = defaultDestination;
+        }
+    
+        virtual const cms::Destination* getDefaultDestination() const {
+            return this->defaultDestination;
+        }
+    
+        virtual void setDefaultDestinationName(const std::string& defaultDestinationName) {
+            this->defaultDestinationName = defaultDestinationName;
+        }
+    
+        virtual const std::string getDefaultDestinationName() const {
             return this->defaultDestinationName;
-        }            	
-    	
-    	virtual void setMessageIdEnabled(bool messageIdEnabled) {
-    	    this->messageIdEnabled = messageIdEnabled;
-    	}
-    	
-    	virtual bool isMessageIdEnabled() const {
+        }
+    
+        virtual void setMessageIdEnabled(bool messageIdEnabled) {
+            this->messageIdEnabled = messageIdEnabled;
+        }
+    
+        virtual bool isMessageIdEnabled() const {
             return this->messageIdEnabled;
-        }                
-        
+        }
+    
         virtual void setMessageTimestampEnabled(bool messageTimestampEnabled) {
             this->messageTimestampEnabled = messageTimestampEnabled;
         }
-        
+    
         virtual bool isMessageTimestampEnabled() const {
             return this->messageTimestampEnabled;
-        }                
-
-        virtual void setPubSubNoLocal(bool pubSubNoLocal) {
-            this->pubSubNoLocal = pubSubNoLocal;
         }
-
-        virtual bool isPubSubNoLocal() const {
-            return this->pubSubNoLocal;
+    
+        virtual void setNoLocal(bool noLocal) {
+            this->noLocal = noLocal;
         }
-        
+    
+        virtual bool isNoLocal() const {
+            return this->noLocal;
+        }
+    
         virtual void setReceiveTimeout(long long receiveTimeout) {
             this->receiveTimeout = receiveTimeout;
         }
-
+    
         virtual long long getReceiveTimeout() const {
             return this->receiveTimeout;
         }
-        
+    
         /**
          * Set if the QOS values (deliveryMode, priority, timeToLive)
          * should be used for sending a message.
@@ -147,7 +153,7 @@ namespace cmsutil {
         virtual void setExplicitQosEnabled(bool explicitQosEnabled) {
             this->explicitQosEnabled = explicitQosEnabled;
         }
-
+    
         /**
          * If "true", then the values of deliveryMode, priority, and timeToLive
          * will be used when sending a message. Otherwise, the default values,
@@ -163,7 +169,7 @@ namespace cmsutil {
         virtual bool isExplicitQosEnabled() const {
             return this->explicitQosEnabled;
         }
-        
+    
         /**
          * Set whether message delivery should be persistent or non-persistent,
          * specified as boolean value ("true" or "false"). This will set the delivery
@@ -175,7 +181,7 @@ namespace cmsutil {
         virtual void setDeliveryPersistent(bool deliveryPersistent) {
             this->deliveryMode = (deliveryPersistent ? cms::DeliveryMode.PERSISTENT : cms::DeliveryMode.NON_PERSISTENT);
         }
-
+    
         /**
          * Set the delivery mode to use when sending a message.
          * Default is the Message default: "PERSISTENT".
@@ -187,14 +193,14 @@ namespace cmsutil {
         virtual void setDeliveryMode(int deliveryMode) {
             this.deliveryMode = deliveryMode;
         }
-        
+    
         /**
          * Return the delivery mode to use when sending a message.
          */
         virtual int getDeliveryMode() const {
             return this->deliveryMode;
         }
-        
+    
         /**
          * Set the priority of a message when sending.
          * <p>Since a default value may be defined administratively,
@@ -202,17 +208,17 @@ namespace cmsutil {
          * 
          * @see #isExplicitQosEnabled
          */
-        public void setPriority(int priority) {
+        virtual public void setPriority(int priority) {
             this->priority = priority;
         }
-            
+    
         /**
          * Return the priority of a message when sending.
          */
         virtual int getPriority() const {
             return this->priority;
         }
-
+    
         /**
          * Set the time-to-live of the message when sending.
          * <p>Since a default value may be defined administratively,
@@ -224,19 +230,107 @@ namespace cmsutil {
         virtual void setTimeToLive(long long timeToLive) {
             this->timeToLive = timeToLive;
         }
-
+    
         /**
          * Return the time-to-live of the message when sending.
          */
         virtual long long getTimeToLive() const {
             return this->timeToLive;
         }
-    	
+    
     private:
-        
+    
+        /**
+         * Initializes all members to their defaults.
+         */
         void initDefaults();
         
-        void checkDefaultDestination() throw (decaf::lang::exceptions::IllegalStateException);
+        /**
+         * Creates the session pools objects.
+         */
+        void createSessionPools();
+        
+        /**
+         * Destroys the session pool objects.
+         */
+        void destroySessionPools();
+    
+        /**
+         * Checks that the default destination is valid, if not throws
+         * an exception.
+         * @throws decaf::lang::exceptions::IllegalStateException thrown
+         * if the default destination is invalid.
+         */
+        void checkDefaultDestination()
+        throw (decaf::lang::exceptions::IllegalStateException);
+    
+        /**
+         * Gets the connection, creating it if it doesn't already exist.
+         * @return the connection
+         * @throws cms::CMSException if any of the CMS methods throw.
+         */
+        cms::Connection* getConnection() throw (cms::CMSException);
+        
+        /**
+         * Creates a session initialized with the proper values.
+         * 
+         * @return the session
+         * @throws cms::CMSException if any of the CMS methods throw.
+         */
+        cms::Session* createSession() throw (cms::CMSException);
+    
+        /**
+         * Closes, but does not destroy the pooled session resource.
+         * @aaram session
+         *          a pooled session resource
+         * @throws cms::CMSException thrown if the CMS methods throw.
+         */
+        void destroySession( cms::Session* session ) throw (cms::CMSException);
+    
+        /**
+         * Allocates a producer initialized with the proper values.
+         * 
+         * @param session
+         *          The session from which to create a producer
+         * @param dest
+         *          The destination for which to create the producer.
+         * @return the producer
+         * @throws cms::CMSException thrown by the CMS API
+         */
+        cms::MessageProducer* createProducer(cms::Session* session,
+                cms::Destination* dest) throw (cms::CMSException);
+        
+        /**
+         * Closes and destroys a producer resource
+         * @aaram producer
+         *          a producer to destroy
+         * @throws cms::CMSException thrown if the CMS methods throw.
+         */
+        void destroyProducer( cms::MessageProducer* producer ) throw (cms::CMSException);
+    
+        /**
+         * Allocates a consumer initialized with the proper values.
+         * 
+         * @param session
+         *          The session from which to create a consumer
+         * @param dest
+         *          The destination for which to create the consumer
+         * @param messageSelector
+         *          The message selector for the consumer.
+         * @return the new consumer
+         * @throws cms::CMSException if the CMS methods throw.
+         */
+        cms::MessageConsumer* createConsumer(cms::Session* session,
+                cms::Destination* dest, const std::string& messageSelector)
+        throw (cms::CMSException);
+        
+        /**
+         * Closes and destroys a consumer resource
+         * @aaram consumer
+         *          a consumer to destroy
+         * @throws cms::CMSException thrown if the CMS methods throw.
+         */
+        void destroyConsumer( cms::MessageConsumer* consumer ) throw (cms::CMSException);
     };
 
 }}

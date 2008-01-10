@@ -33,6 +33,8 @@ CmsTemplate::CmsTemplate(cms::ConnectionFactory* connectionFactory) {
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsTemplate::~CmsTemplate() {
+    
+    destroySessionPools();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +43,7 @@ void CmsTemplate::initDefaults() {
     defaultDestinationName = "";
     messageIdEnabled = true;
     messageTimestampEnabled = true;
-    pubSubNoLocal = false;
+    noLocal = false;
     receiveTimeout = RECEIVE_TIMEOUT_INDEFINITE_WAIT;
     explicitQosEnabled = false;
     deliveryMode = cms::DeliveryMode::PERSISTENT;
@@ -50,13 +52,43 @@ void CmsTemplate::initDefaults() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
+void CmsTemplate::createSessionPools() {
     
+    // Make sure they're destroyed first.
+    destroySessionPools();
+    
+    /**
+     * Create the session pools.
+     */
+    for( int ix=0; ix<NUM_SESSION_POOLS; ++ix) {
+        sessionPools[ix] = new SessionPool(connection,
+                (cms::Session::AcknowledgeMode)ix, 
+                getResourceLifecycleManager());
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroySessionPools() {
+    
+    /**
+     * Destroy the session pools.
+     */
+    for( int ix=0; ix<NUM_SESSION_POOLS; ++ix) {
+        if( sessionPools[ix] != NULL ) {
+            delete sessionPools[ix];
+            sessionPools[ix] = NULL;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
+
     // Invoke the base class.
     CmsDestinationAccessor::init();
-    
+
     // Make sure we have a valid default destination.
-    checkDefaultDestination();   
+    checkDefaultDestination();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -68,3 +100,120 @@ void CmsTemplate::checkDefaultDestination() throw (IllegalStateException) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+cms::Connection* CmsTemplate::getConnection() 
+throw (cms::CMSException) {
+
+    try {
+        
+        // If we don't have a connection, create one.
+        if( connection == NULL ) {
+        
+            // Invoke the base class to create the connection and add it
+            // to the resource lifecycle manager.
+            connection = createConnection();
+            
+            // Create the session pools, passing in this connection.
+            createSessionPools();
+        }
+        
+        return connection;
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Session* CmsTemplate::createSession() 
+throw (cms::CMSException) {
+
+    try {
+        
+        // Take a session from the pool.
+        return sessionPools[getSessionAcknowledgeMode()].takeSession();        
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroySession( cms::Session* session ) 
+throw (cms::CMSException) {
+
+    try {
+
+        if( session == NULL ) {
+            return;
+        }
+        
+        // Close the session, but do not delete since it's a pooled session
+        session->close();
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Producer* CmsTemplate::createProducer(cms::Session* session,
+        cms::Destination* dest) throw (cms::CMSException) {
+
+    try {
+
+        cms::MessageProducer* producer = session->createProducer(dest);
+        if (!isMessageIdEnabled()) {
+            producer->setDisableMessageID(true);
+        }
+        if (!isMessageTimestampEnabled()) {
+            producer->setDisableMessageTimestamp(true);
+        }
+
+        return producer;
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroyProducer( cms::MessageProducer* producer) 
+throw (cms::CMSException) {
+
+    try {
+
+        if( producer == NULL ) {
+            return;
+        }
+        
+        // Close the producer, then destroy it.
+        producer->close();        
+        delete producer;
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::MessageConsumer* CmsTemplate::createConsumer(cms::Session* session,
+        cms::Destination* dest, const std::string& messageSelector)
+        throw (cms::CMSException) {
+
+    try {
+        cms::MessageConsumer* consumer = session->createConsumer(dest,
+                messageSelector, 
+                isNoLocal());
+        
+        return consumer;
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroyConsumer( cms::MessageConsumer* consumer) 
+throw (cms::CMSException) {
+
+    try {
+
+        if( consumer == NULL ) {
+            return;
+        }
+        
+        // Close the consumer, then destroy it.
+        consumer->close();        
+        delete consumer;
+    }
+    AMQ_CATCH_RETHROW( cms::CMSException )
+}
