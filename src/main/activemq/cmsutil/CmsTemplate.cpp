@@ -113,6 +113,9 @@ throw (cms::CMSException) {
             // to the resource lifecycle manager.
             connection = createConnection();
             
+            // Start the connection.
+            connection->start();
+            
             // Create the session pools, passing in this connection.
             createSessionPools();
         }
@@ -123,7 +126,7 @@ throw (cms::CMSException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* CmsTemplate::createSession() 
+PooledSession* CmsTemplate::takeSession() 
 throw (cms::CMSException) {
 
     try {
@@ -135,7 +138,7 @@ throw (cms::CMSException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroySession( cms::Session* session ) 
+void CmsTemplate::returnSession( PooledSession*& session ) 
 throw (cms::CMSException) {
 
     try {
@@ -146,6 +149,7 @@ throw (cms::CMSException) {
         
         // Close the session, but do not delete since it's a pooled session
         session->close();
+        session = NULL;
     }
     AMQ_CATCH_RETHROW( cms::CMSException )
 }
@@ -156,6 +160,10 @@ cms::Producer* CmsTemplate::createProducer(cms::Session* session,
 
     try {
 
+        if( dest == NULL ) {
+            dest = getDefaultDestination();
+        }
+        
         cms::MessageProducer* producer = session->createProducer(dest);
         if (!isMessageIdEnabled()) {
             producer->setDisableMessageID(true);
@@ -170,20 +178,22 @@ cms::Producer* CmsTemplate::createProducer(cms::Session* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyProducer( cms::MessageProducer* producer) 
+void CmsTemplate::destroyProducer( cms::MessageProducer*& producer) 
 throw (cms::CMSException) {
 
-    try {
-
-        if( producer == NULL ) {
-            return;
-        }
+    if( producer == NULL ) {
+        return;
+    }
+    
+    try {        
         
         // Close the producer, then destroy it.
-        producer->close();        
-        delete producer;
+        producer->close();                
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_NO_RETHROW( cms::CMSException )
+    
+    delete producer;
+    producer = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -202,18 +212,144 @@ cms::MessageConsumer* CmsTemplate::createConsumer(cms::Session* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::destroyConsumer( cms::MessageConsumer* consumer) 
+void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer) 
 throw (cms::CMSException) {
 
-    try {
-
-        if( consumer == NULL ) {
-            return;
-        }
+    if( consumer == NULL ) {
+        return;
+    }
+    
+    try {        
         
         // Close the consumer, then destroy it.
-        consumer->close();        
-        delete consumer;
+        consumer->close();                
+    }
+    AMQ_CATCH_NO_RETHROW( cms::CMSException )
+    
+    delete consumer;
+    consumer = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroyMessage( cms::Message*& message) {
+
+    if( message == NULL ) {
+        return;
+    }
+    
+    // Destroy the message.      
+    delete message;
+    message = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::execute(SessionCallback* action) throw (cms::CMSException) {    
+    
+    PooledSession* pooledSession = NULL;
+    
+    try {
+        
+        if( action == NULL ) {
+            return;
+        }
+    
+        // Take a session from the pool.
+        pooledSession = takeSession();
+        
+        // Execute the action with the given session.
+        action->doInCms(pooledSession);
+        
+        // Return the session to the pool.
+        returnSession(pooledSession);
+        
+    } catch( cms::CMSException& e ) {
+        
+        e.setMark(__FILE__, __LINE__);
+        
+        // Return the session to the pool.
+        returnSession(pooledSession);
+        
+        throw e;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
+    
+    try {
+        
+        // Create the callback.
+        ProducerSessionCallback cb(action);
+        
+        // Execute the action in a session.
+        execute(&cb);
     }
     AMQ_CATCH_RETHROW( cms::CMSException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::ProducerSessionCallback::doInCms( cms::Session* session ) 
+throw (cms::CMSException) {
+        
+    MessageProducer* producer = NULL;
+    
+    try {
+    
+        if( session == NULL ) {
+            return;
+        }
+        
+        // Create the producer.
+        producer = createProducer(session, null);
+        
+        // Execute the action.
+        action->doInCms(session, producer);
+        
+        // Destroy the producer.
+        destroyProducer(producer);
+        
+    } catch( cms::CMSException& e) {
+        
+        // Destroy the producer.
+        destroyProducer(producer);
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest, 
+        MessageCreator* messageCreator) throw (cms::CMSException) {
+    
+    cms::MessageProducer* producer = NULL;
+    cms::Message* message = NULL;
+        
+    try {
+    
+        if( session == NULL || dest == NULL) {
+            return;
+        }
+        
+        // Create the producer.
+        producer = createProducer(session, dest);
+        
+        // Create the message.
+        message = messageCreator->createMessage(session);
+        
+        // Send the message.
+        if( isExplicitQosEnabled() ) {
+            producer->send(message, getDeliveryMode(), getPriority(), getTimeToLive());
+        } else {
+            producer->send(message);
+        }
+        
+        // Destroy the resources.
+        destroyProducer(producer);
+        destroyMessage(message);
+        
+    } catch( cms::CMSException& e) {
+        
+        // Destroy the resources.
+        destroyProducer(producer);
+        destroyMessage(message);
+    }
+}
+

@@ -18,7 +18,8 @@
 #ifndef ACTIVEMQ_CMSUTIL_CMSTEMPLATE_H_
 #define ACTIVEMQ_CMSUTIL_CMSTEMPLATE_H_
 
-#include <activemq/cms/CmsDestinationAccessor.h>
+#include <activemq/cmsutil/CmsDestinationAccessor.h>
+#include <activemq/cmsutil/SessionCallback.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <cms/ConnectionFactory.h>
 #include <cms/DeliveryMode.h>
@@ -27,6 +28,9 @@
 namespace activemq {
 namespace cmsutil {
 
+    // Forward declarations.
+    class SessionCallback;
+    
     class CmsTemplate : public CmsDestinationAccessor
     {
     public:
@@ -53,6 +57,25 @@ namespace cmsutil {
         static const long long DEFAULT_TIME_TO_LIVE = 0;                
     
     private:
+        
+        /**
+         * Session callback that executes a producer callback.
+         */
+        class ProducerSessionCallback : public SessionCallback {
+        private:
+            
+            ProducerCallback* action;
+            
+        public:
+            
+            ProducerSessionCallback(PoducerCallback* action){
+                this->action = action;
+            }
+            
+            virtual ~ProducerSessionCallback() {}
+            
+            virtual void doInCms(cms::Session* session) throw (cms::CMSException);
+        };
                 
         static const int NUM_SESSION_POOLS = (int)cms::Session::SESSION_TRANSACTED + 1;
     
@@ -237,6 +260,24 @@ namespace cmsutil {
         virtual long long getTimeToLive() const {
             return this->timeToLive;
         }
+        
+        /**
+         * Executes the given action within a CMS Session.
+         * @param action
+         *          the action to perform within a CMS Session
+         * @throws cms::CMSException thrown if an error occurs.
+         */
+        virtual void execute(SessionCallback* action) throw (cms::CMSException);
+        
+        /**
+         * Executes the given action and provides it with a CMS Session and 
+         * producer
+         * 
+         * @param action
+         *          the action to perform
+         * @throws cms::CMSException thrown if an error occurs.
+         */
+        virtual void execute(ProducerCallback* action) throw (cms::CMSException);
     
     private:
     
@@ -277,7 +318,7 @@ namespace cmsutil {
          * @return the session
          * @throws cms::CMSException if any of the CMS methods throw.
          */
-        cms::Session* createSession() throw (cms::CMSException);
+        PooledSession* takeSession() throw (cms::CMSException);
     
         /**
          * Closes, but does not destroy the pooled session resource.
@@ -285,7 +326,7 @@ namespace cmsutil {
          *          a pooled session resource
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void destroySession( cms::Session* session ) throw (cms::CMSException);
+        void returnSession( PooledSession*& session ) throw (cms::CMSException);
     
         /**
          * Allocates a producer initialized with the proper values.
@@ -293,7 +334,8 @@ namespace cmsutil {
          * @param session
          *          The session from which to create a producer
          * @param dest
-         *          The destination for which to create the producer.
+         *          The destination for which to create the producer.  If
+         *          this is NULL, the default will be used.
          * @return the producer
          * @throws cms::CMSException thrown by the CMS API
          */
@@ -306,7 +348,7 @@ namespace cmsutil {
          *          a producer to destroy
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void destroyProducer( cms::MessageProducer* producer ) throw (cms::CMSException);
+        void destroyProducer( cms::MessageProducer*& producer ) throw (cms::CMSException);
     
         /**
          * Allocates a consumer initialized with the proper values.
@@ -330,7 +372,27 @@ namespace cmsutil {
          *          a consumer to destroy
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void destroyConsumer( cms::MessageConsumer* consumer ) throw (cms::CMSException);
+        void destroyConsumer( cms::MessageConsumer*& consumer ) throw (cms::CMSException);
+        
+        /**
+         * Destroys the given message
+         * @param message   
+         *          the message to destroy
+         */
+        void destroyMessage( cms::Message*& message );
+        
+        /**
+         * Sends a message to a destination.
+         * @param session
+         *          the session to be used.
+         * @param dest
+         *          the destination to send the message on.
+         * @param messageCreator
+         *          creates the message to be sent
+         * @throws cms::CMSException thrown if the CMS API throws.
+         */
+        void doSend(cms::Session* session, cms::Destination* dest, 
+                MessageCreator* messageCreator) throw (cms::CMSException);
     };
 
 }}
