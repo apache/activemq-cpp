@@ -18,6 +18,9 @@
 #ifndef ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H
 #define ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H
 
+#include <cms/Session.h>
+#include <cms/Message.h>
+
 namespace activemq {
 namespace cmsutil {
 
@@ -26,8 +29,9 @@ namespace cmsutil {
      * <code>CmsTemplate</code>.
      */
     class MessageCreator {
+    public:
         
-        virtual ~MessageCreator();
+        virtual ~MessageCreator(){}
     
         /**
          * Creates a message from the given session.
@@ -39,7 +43,7 @@ namespace cmsutil {
         virtual cms::Message* createMessage(cms::Session* session ) 
             throw (cms::CMSException);
     
-    }
+    };
 
 }}
 

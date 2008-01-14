@@ -20,6 +20,7 @@
 
 #include <activemq/cmsutil/CmsDestinationAccessor.h>
 #include <activemq/cmsutil/SessionCallback.h>
+#include <activemq/cmsutil/SessionPool.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <cms/ConnectionFactory.h>
 #include <cms/DeliveryMode.h>
@@ -29,7 +30,8 @@ namespace activemq {
 namespace cmsutil {
 
     // Forward declarations.
-    class SessionCallback;
+    class ProducerCallback;
+    class MessageCreator;
     
     class CmsTemplate : public CmsDestinationAccessor
     {
@@ -56,32 +58,94 @@ namespace cmsutil {
          */
         static const long long DEFAULT_TIME_TO_LIVE = 0;                
     
-    private:
+    public:
         
         /**
          * Session callback that executes a producer callback.
          */
+        class ProducerSessionCallback;
+        friend class ProducerSessionCallback;
         class ProducerSessionCallback : public SessionCallback {
         private:
             
             ProducerCallback* action;
+            CmsTemplate* parent;
             
         public:
             
-            ProducerSessionCallback(PoducerCallback* action){
+            ProducerSessionCallback(ProducerCallback* action,
+                    CmsTemplate* parent){
                 this->action = action;
+                this->parent = parent;
             }
             
             virtual ~ProducerSessionCallback() {}
             
             virtual void doInCms(cms::Session* session) throw (cms::CMSException);
         };
+        
+        /**
+         * Session callback that sends to the given destination.
+         */
+        class Sender;
+        friend class Sender;
+        class Sender : public SessionCallback {
+        private:
+            
+            cms::Destination* dest;
+            MessageCreator* messageCreator;
+            CmsTemplate* parent;
+            
+        public:
+            
+            Sender(cms::Destination* dest, MessageCreator* messageCreator,
+                    CmsTemplate* parent) {
+                this->dest = dest;
+                this->messageCreator = messageCreator;
+                this->parent = parent;
+            }
+            
+            virtual ~Sender() {}
+            
+            virtual void doInCms(cms::Session* session) throw (cms::CMSException) {
+                parent->doSend(session, dest, messageCreator);
+            }
+        };
+        
+        /**
+         * Session callback that sends a message to a named destination.
+         */
+        class ResolveSender;
+        friend class ResolveSender;
+        class ResolveSender : public SessionCallback {
+        private:
+                    
+            std::string destinationName;
+            MessageCreator* messageCreator;
+            CmsTemplate* parent;
+            
+        public:
+            
+            ResolveSender(const std::string& destinationName, 
+                    MessageCreator* messageCreator,
+                    CmsTemplate* parent ) {
+                this->destinationName = destinationName;
+                this->messageCreator = messageCreator;
+                this->parent = parent;
+            }
+            
+            virtual ~ResolveSender() {}
+            
+            virtual void doInCms(cms::Session* session) throw (cms::CMSException);
+        };
+        
+    private:
                 
         static const int NUM_SESSION_POOLS = (int)cms::Session::SESSION_TRANSACTED + 1;
     
         cms::Connection* connection;
         
-        SessionPool*[NUM_SESSION_POOLS] sessionPools;
+        SessionPool* sessionPools[NUM_SESSION_POOLS];
         
         cms::Destination* defaultDestination;
     
@@ -122,6 +186,10 @@ namespace cmsutil {
         }
     
         virtual const cms::Destination* getDefaultDestination() const {
+            return this->defaultDestination;
+        }
+        
+        virtual cms::Destination* getDefaultDestination() {
             return this->defaultDestination;
         }
     
@@ -202,7 +270,7 @@ namespace cmsutil {
          * @see #setDeliveryMode(int)
          */
         virtual void setDeliveryPersistent(bool deliveryPersistent) {
-            this->deliveryMode = (deliveryPersistent ? cms::DeliveryMode.PERSISTENT : cms::DeliveryMode.NON_PERSISTENT);
+            this->deliveryMode = (deliveryPersistent ? cms::DeliveryMode::PERSISTENT : cms::DeliveryMode::NON_PERSISTENT);
         }
     
         /**
@@ -214,7 +282,7 @@ namespace cmsutil {
          * @see #isExplicitQosEnabled
          */
         virtual void setDeliveryMode(int deliveryMode) {
-            this.deliveryMode = deliveryMode;
+            this->deliveryMode = deliveryMode;
         }
     
         /**
@@ -231,7 +299,7 @@ namespace cmsutil {
          * 
          * @see #isExplicitQosEnabled
          */
-        virtual public void setPriority(int priority) {
+        virtual void setPriority(int priority) {
             this->priority = priority;
         }
     
@@ -279,6 +347,48 @@ namespace cmsutil {
          */
         virtual void execute(ProducerCallback* action) throw (cms::CMSException);
     
+        /**
+         * Convenience method for sending a message to the default destination.
+         * 
+         * @param messageCreator
+         *          Responsible for creating the message to be sent
+         * @throws cms::CMSException thrown if an error occurs.
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual void send(MessageCreator* messageCreator) 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+
+        /**
+         * Convenience method for sending a message to the specified destination.
+         * 
+         * @param dest
+         *          The destination to send to
+         * @param messageCreator
+         *          Responsible for creating the message to be sent
+         * @throws cms::CMSException thrown if an error occurs.
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual void send(cms::Destination* dest, 
+                MessageCreator* messageCreator)
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Convenience method for sending a message to the specified destination.
+         * 
+         * @param destinationName
+         *          The name of the destination to send to.
+         * @param messageCreator
+         *          Responsible for creating the message to be sent
+         * @throws cms::CMSException thrown if an error occurs.
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual void send(const std::string& destinationName, 
+                MessageCreator* messageCreator)
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
     private:
     
         /**
@@ -393,6 +503,18 @@ namespace cmsutil {
          */
         void doSend(cms::Session* session, cms::Destination* dest, 
                 MessageCreator* messageCreator) throw (cms::CMSException);
+        
+        /**
+         * Resolves the default destination and returns it.
+         * @param session
+         *          the parent session.
+         * @return the default destination
+         * @throws cms::CMSException if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if
+         *          no default destination was provided.
+         */
+        cms::Destination* resolveDefaultDestination(cms::Session* session)
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
     };
 
 }}

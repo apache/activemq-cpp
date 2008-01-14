@@ -18,6 +18,8 @@
 #ifndef ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H
 #define ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H
 
+#include <cms/Session.h>
+
 namespace activemq {
 namespace cmsutil {
 
@@ -27,7 +29,9 @@ namespace cmsutil {
      */
     class SessionCallback {
         
-        virtual ~SessionCallback();
+    public:
+        
+        virtual ~SessionCallback(){}
     
         /**
          * Execute any number of operations against the supplied CMS
@@ -39,7 +43,7 @@ namespace cmsutil {
          */
         virtual void doInCms(cms::Session* session) throw (cms::CMSException) = 0;
     
-    }
+    };
 
 }}
 

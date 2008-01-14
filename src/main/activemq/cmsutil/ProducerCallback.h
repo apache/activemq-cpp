@@ -18,15 +18,19 @@
 #ifndef ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H
 #define ACTIVEMQ_CMSUTIL_PRODUCERCALLBACK_H
 
+#include <cms/Session.h>
+#include <cms/MessageProducer.h>
+
 namespace activemq {
 namespace cmsutil {
 
     /**
      * Callback for sending a message to a CMS destination.
      */
-    class ProducernCallback {
+    class ProducerCallback {
+    public:
         
-        virtual ~ProducernCallback();
+        virtual ~ProducerCallback(){}
     
         /**
          * Execute an action given a session and producer.
@@ -40,7 +44,7 @@ namespace cmsutil {
         virtual void doInCms(cms::Session* session, 
                 cms::MessageProducer* producer) throw (cms::CMSException) = 0;
     
-    }
+    };
 
 }}
 

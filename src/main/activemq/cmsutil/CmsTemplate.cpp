@@ -16,8 +16,13 @@
  */
 
 #include "CmsTemplate.h"
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
+#include "ProducerCallback.h"
+#include "MessageCreator.h"
 
 using namespace activemq::cmsutil;
+using namespace activemq::exceptions;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,20 +89,52 @@ void CmsTemplate::destroySessionPools() {
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
 
-    // Invoke the base class.
-    CmsDestinationAccessor::init();
-
-    // Make sure we have a valid default destination.
-    checkDefaultDestination();
+    try {
+        
+        // Invoke the base class.
+        CmsDestinationAccessor::init();
+    
+        // Make sure we have a valid default destination.
+        checkDefaultDestination();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::checkDefaultDestination() throw (IllegalStateException) {
-    if (this->defaultDestination == NULL) {
+    if (this->defaultDestination == NULL && this->defaultDestinationName.size()==0) {
         throw IllegalStateException(
                 __FILE__, __LINE__,
                 "No defaultDestination or defaultDestinationName specified. Check configuration of CmsTemplate.");
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Destination* CmsTemplate::resolveDefaultDestination(cms::Session* session)
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {
+        
+        // Make sure we have a default - otherwise throw.
+        checkDefaultDestination();
+        
+        // First, check the destination object.
+        cms::Destination* dest = getDefaultDestination();
+        
+        // If no default object was provided, the name was provided.  Resolve
+        // the name and then set the destination object so we don't have to
+        // do this next time.
+        if( dest == NULL ) {
+            dest = resolveDestinationName(session, getDefaultDestinationName());
+            setDefaultDestination(dest);
+        }
+        
+        return dest;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +159,8 @@ throw (cms::CMSException) {
         
         return connection;
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,9 +170,10 @@ throw (cms::CMSException) {
     try {
         
         // Take a session from the pool.
-        return sessionPools[getSessionAcknowledgeMode()].takeSession();        
+        return sessionPools[getSessionAcknowledgeMode()]->takeSession();        
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,17 +190,19 @@ throw (cms::CMSException) {
         session->close();
         session = NULL;
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Producer* CmsTemplate::createProducer(cms::Session* session,
+cms::MessageProducer* CmsTemplate::createProducer(cms::Session* session,
         cms::Destination* dest) throw (cms::CMSException) {
 
     try {
 
-        if( dest == NULL ) {
-            dest = getDefaultDestination();
+        // If no destination was provided, resolve the default.
+        if( dest == NULL ) {            
+            dest = resolveDefaultDestination(session);
         }
         
         cms::MessageProducer* producer = session->createProducer(dest);
@@ -169,12 +210,14 @@ cms::Producer* CmsTemplate::createProducer(cms::Session* session,
             producer->setDisableMessageID(true);
         }
         if (!isMessageTimestampEnabled()) {
-            producer->setDisableMessageTimestamp(true);
+            producer->setDisableMessageTimeStamp(true);
         }
 
         return producer;
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( IllegalStateException, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -190,7 +233,7 @@ throw (cms::CMSException) {
         // Close the producer, then destroy it.
         producer->close();                
     }
-    AMQ_CATCH_NO_RETHROW( cms::CMSException )
+    AMQ_CATCH_NOTHROW( cms::CMSException )
     
     delete producer;
     producer = NULL;
@@ -208,7 +251,7 @@ cms::MessageConsumer* CmsTemplate::createConsumer(cms::Session* session,
         
         return consumer;
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -224,7 +267,7 @@ throw (cms::CMSException) {
         // Close the consumer, then destroy it.
         consumer->close();                
     }
-    AMQ_CATCH_NO_RETHROW( cms::CMSException )
+    AMQ_CATCH_NOTHROW( cms::CMSException )
     
     delete consumer;
     consumer = NULL;
@@ -262,7 +305,7 @@ void CmsTemplate::execute(SessionCallback* action) throw (cms::CMSException) {
         // Return the session to the pool.
         returnSession(pooledSession);
         
-    } catch( cms::CMSException& e ) {
+    } catch( ActiveMQException& e ) {
         
         e.setMark(__FILE__, __LINE__);
         
@@ -279,19 +322,20 @@ void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
     try {
         
         // Create the callback.
-        ProducerSessionCallback cb(action);
+        ProducerSessionCallback cb(action, this);
         
         // Execute the action in a session.
         execute(&cb);
     }
-    AMQ_CATCH_RETHROW( cms::CMSException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::ProducerSessionCallback::doInCms( cms::Session* session ) 
 throw (cms::CMSException) {
         
-    MessageProducer* producer = NULL;
+    cms::MessageProducer* producer = NULL;
     
     try {
     
@@ -300,21 +344,70 @@ throw (cms::CMSException) {
         }
         
         // Create the producer.
-        producer = createProducer(session, null);
+        producer = parent->createProducer(session, NULL);
         
         // Execute the action.
         action->doInCms(session, producer);
         
         // Destroy the producer.
-        destroyProducer(producer);
+        parent->destroyProducer(producer);
         
-    } catch( cms::CMSException& e) {
+    } catch( ActiveMQException& e) {
+        
+        e.setMark(__FILE__, __LINE__);
         
         // Destroy the producer.
-        destroyProducer(producer);
+        parent->destroyProducer(producer);
+        
+        throw e;
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::send(MessageCreator* messageCreator) 
+throw (cms::CMSException, IllegalStateException)  {
+    
+    try {
+        
+        checkDefaultDestination();
+        if (getDefaultDestination() != NULL) {
+            send(getDefaultDestination(), messageCreator);
+        }
+        else {
+            send(getDefaultDestinationName(), messageCreator);
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::send(cms::Destination* dest, 
+                MessageCreator* messageCreator) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {
+        Sender sender(dest, messageCreator, this);
+        execute(&sender);
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+       
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::send(const std::string& destinationName, 
+                MessageCreator* messageCreator) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {
+        ResolveSender sender(destinationName, messageCreator, this);
+        execute(&sender);
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+        
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest, 
         MessageCreator* messageCreator) throw (cms::CMSException) {
@@ -345,11 +438,28 @@ void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest,
         destroyProducer(producer);
         destroyMessage(message);
         
-    } catch( cms::CMSException& e) {
+    } catch( ActiveMQException& e) {
+        
+        e.setMark(__FILE__, __LINE__ );
         
         // Destroy the resources.
         destroyProducer(producer);
         destroyMessage(message);
+        
+        throw e;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::ResolveSender::doInCms(cms::Session* session) 
+throw (cms::CMSException) {
+    
+    try {
+        cms::Destination* dest = parent->resolveDestinationName(session, destinationName);
+        parent->doSend(session, dest, messageCreator);
+    } 
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( IllegalStateException, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 

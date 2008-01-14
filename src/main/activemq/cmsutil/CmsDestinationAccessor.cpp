@@ -56,7 +56,7 @@ throw (cms::CMSException, IllegalStateException) {
     
     checkDestinationResolver();
     
-    getDestinationResolver()->resolveDestinationName(session, 
+    return getDestinationResolver()->resolveDestinationName(session, 
             destName, 
             isPubSubDomain());
 }
