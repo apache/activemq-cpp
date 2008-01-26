@@ -23,20 +23,22 @@
 
 namespace activemq{
 namespace util{
-    
-    class URISupportTest : public CppUnit::TestFixture { 
+
+    class URISupportTest : public CppUnit::TestFixture {
 
        CPPUNIT_TEST_SUITE( URISupportTest );
        CPPUNIT_TEST( test );
+       CPPUNIT_TEST( testURIParseEnv );
        CPPUNIT_TEST_SUITE_END();
 
     public:
-    
+
         URISupportTest() {}
         virtual ~URISupportTest() {}
-        
+
         void test();
-        
+        void testURIParseEnv();
+
     };
 
 }}

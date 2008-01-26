@@ -54,17 +54,6 @@ namespace transport{
     protected:
 
         /**
-         * Parses the properties out of the provided Broker URI and sets
-         * them in the passed Properties Object.
-         * @param URI a Broker URI to parse
-         * @param properties a Properties object to set the parsed values in
-         * @throws IllegalArgumentException if the passed URI is invalid
-         */
-        virtual void parseURL( const std::string& URI,
-                               decaf::util::Properties& properties )
-            throw ( decaf::lang::exceptions::IllegalArgumentException );
-
-        /**
          * Given a Transport Name and the properties it should use to configure
          * itself, create it.  If the name cannot be linked to a transport
          * factory then an exception is thrown.

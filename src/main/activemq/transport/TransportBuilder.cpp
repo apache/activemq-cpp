@@ -21,11 +21,13 @@
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/URISupport.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
+using namespace activemq::util;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
@@ -33,7 +35,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* TransportBuilder::buildTransport( const std::string& url,
-                                             util::Properties& properties )
+                                             decaf::util::Properties& properties )
     throw ( cms::CMSException ) {
 
     try{
@@ -41,7 +43,7 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
         Transport* transport = NULL;
 
         // Parse out the properties from the URI
-        parseURL( url, properties );
+        URISupport::parseURL( url, properties );
 
         // Create the Base IO Transport
         transport = this->createTransport(
@@ -81,64 +83,8 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportBuilder::parseURL( const std::string& URI,
-                                 util::Properties& properties )
-    throw ( decaf::lang::exceptions::IllegalArgumentException ) {
-
-    try{
-
-        StringTokenizer tokenizer( URI, ":/" );
-
-        std::vector<std::string> tokens;
-
-        // Require that there be three tokens at the least, these are
-        // transport, url, port.
-        if( tokenizer.countTokens() < 3 ) {
-            throw decaf::lang::exceptions::IllegalArgumentException(
-                __FILE__, __LINE__,
-                (string( "TransportBuilder::parseURL - "
-                         "Marlformed URI: ") + URI).c_str() );
-        }
-
-        // First element should be the Transport Type, following that is the
-        // URL and any params.
-        properties.setProperty( "transport.protocol", tokenizer.nextToken() );
-
-        // Parse URL and Port as one item, optional params follow the ?
-        // and then each param set is delimited with & we extract first
-        // three chars as they are the left over ://
-        properties.setProperty( "transport.uri", tokenizer.nextToken("&?").substr(3) );
-
-        // Now get all the optional parameters and store them as properties
-        int count = tokenizer.toArray( tokens );
-
-        for( int i = 0; i < count; ++i ) {
-            tokenizer.reset( tokens[i], "=" );
-
-            if( tokenizer.countTokens() != 2 ) {
-                throw decaf::lang::exceptions::IllegalArgumentException(
-                    __FILE__, __LINE__,
-                    ( string( "TransportBuilder::parseURL - "
-                              "Marlformed Parameter = " ) + tokens[i] ).c_str() );
-            }
-
-            // Get them in order, passing both as nextToken calls in the
-            // set Property can cause reversed order.
-            string key = tokenizer.nextToken();
-            string value = tokenizer.nextToken();
-
-            // Store this param as a property
-            properties.setProperty( key, value );
-        }
-    }
-    AMQ_CATCH_RETHROW( IllegalArgumentException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IllegalArgumentException )
-    AMQ_CATCHALL_THROW( IllegalArgumentException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 Transport* TransportBuilder::createTransport( const std::string& name,
-                                              const util::Properties& properties,
+                                              const decaf::util::Properties& properties,
                                               Transport* next )
     throw ( cms::CMSException ) {
 
@@ -147,6 +93,7 @@ Transport* TransportBuilder::createTransport( const std::string& name,
         // Create the Transport that the Connector will use.
         TransportFactory* factory =
             TransportFactoryMap::getInstance().lookup( name );
+
         if( factory == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
