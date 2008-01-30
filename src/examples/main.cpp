@@ -187,7 +187,7 @@ public:
         cleanup();
     }
 
-    void waitUnitlReady() {
+    void waitUntilReady() {
         latch.await();
     }
 
@@ -355,7 +355,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     consumerThread.start();
 
     // Wait for the consumer to indicate that its ready to go.
-    consumer.waitUnitlReady();
+    consumer.waitUntilReady();
 
     // Start the producer thread.
     Thread producerThread( &producer );
