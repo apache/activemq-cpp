@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\src\main&quot;;..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,10 +66,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib libdecafd.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\vs2005-build\Debug&quot;;&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -372,42 +372,6 @@
 		<Filter
 			Name="activemq"
 			>
-			<Filter
-				Name="concurrent"
-				>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\CountDownLatchTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\CountDownLatchTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\MutexTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\MutexTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\ThreadPoolTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\ThreadPoolTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\ThreadTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\concurrent\ThreadTest.h"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="connector"
 				>
@@ -3445,90 +3409,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="io"
-				>
-				<File
-					RelativePath="..\src\test\activemq\io\BufferedInputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\BufferedInputStreamTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\BufferedOutputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\BufferedOutputStreamTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\ByteArrayInputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\ByteArrayInputStreamTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\ByteArrayOutputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\ByteArrayOutputStreamTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\DataInputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\DataInputStreamTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\DataOutputStreamTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\io\DataOutputStreamTest.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="logger"
-				>
-				<File
-					RelativePath="..\src\test\activemq\logger\LoggerTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\logger\LoggerTest.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="network"
-				>
-				<File
-					RelativePath="..\src\test\activemq\network\SocketFactoryTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\network\SocketFactoryTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\network\SocketTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\network\SocketTest.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="transport"
 				>
 				<File
@@ -3572,59 +3452,11 @@
 				Name="util"
 				>
 				<File
-					RelativePath="..\src\test\activemq\util\BooleanTest.cpp"
+					RelativePath="..\src\test\activemq\util\LongSequenceGeneratorTest.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\src\test\activemq\util\BooleanTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\DateTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\DateTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\Endian.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\Endian.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\GuidTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\GuidTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\IntegerTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\IntegerTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\LongTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\LongTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\MapTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\MapTest.h"
+					RelativePath="..\src\test\activemq\util\LongSequenceGeneratorTest.h"
 					>
 				</File>
 				<File
@@ -3633,30 +3465,6 @@
 				</File>
 				<File
 					RelativePath="..\src\test\activemq\util\PrimitiveMapTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\QueueTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\QueueTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\RandomTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\RandomTest.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\StringTokenizerTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\StringTokenizerTest.h"
 					>
 				</File>
 				<File

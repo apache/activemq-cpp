@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\src\main&quot;;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -427,39 +427,11 @@
 				Name="util"
 				>
 				<File
-					RelativePath="..\src\main\activemq\util\Boolean.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Character.h"
+					RelativePath="..\src\main\activemq\util\ActiveMQProperties.h"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\util\Config.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Date.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Date.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Guid.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Guid.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Integer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Long.h"
 					>
 				</File>
 				<File
@@ -471,22 +443,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\util\Map.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Math.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Math.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Number.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\util\PrimitiveMap.cpp"
 					>
 				</File>
@@ -495,107 +451,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\util\Properties.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Queue.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Random.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Random.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\Set.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\StringTokenizer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\StringTokenizer.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\util\URISupport.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\util\URISupport.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="concurrent"
-				>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Concurrent.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\CountDownLatch.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\CountDownLatch.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Lock.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Mutex.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Mutex.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\PooledThread.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\PooledThread.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\PooledThreadListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Runnable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Synchronizable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\TaskListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Thread.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\Thread.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\ThreadPool.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\concurrent\ThreadPool.h"
 					>
 				</File>
 			</Filter>
@@ -4791,82 +4651,6 @@
 				Name="io"
 				>
 				<File
-					RelativePath="..\src\main\activemq\io\BlockingByteArrayInputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\BlockingByteArrayInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\BufferedInputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\BufferedInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\BufferedOutputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\BufferedOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\ByteArrayInputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\ByteArrayInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\ByteArrayOutputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\ByteArrayOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\DataInputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\DataInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\DataOutputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\DataOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\EOFException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\FilterInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\FilterOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\InputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\IOException.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\io\LoggingInputStream.cpp"
 					>
 				</File>
@@ -4880,178 +4664,6 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\io\LoggingOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\OutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\Reader.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\StandardErrorOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\io\Writer.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="logger"
-				>
-				<File
-					RelativePath="..\src\main\activemq\logger\ConsoleHandler.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\Filter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\Formatter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\Handler.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\Logger.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\Logger.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LoggerCommon.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LoggerDefines.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LoggerHierarchy.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LoggerHierarchy.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LogManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LogManager.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LogRecord.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LogWriter.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\LogWriter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\MarkBlockLogger.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\PropertiesChangeListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\SimpleFormatter.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\SimpleLogger.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\SimpleLogger.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\logger\StreamHandler.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="network"
-				>
-				<File
-					RelativePath="..\src\main\activemq\network\BufferedSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\BufferedSocket.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\ServerSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\ServerSocket.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\Socket.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketError.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketError.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketInputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketInputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketOutputStream.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\SocketOutputStream.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\TcpSocket.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\network\TcpSocket.h"
 					>
 				</File>
 			</Filter>
