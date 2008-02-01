@@ -65,7 +65,7 @@ int LoggingInputStream::read( unsigned char* buffer,
 
         log( buffer, numRead );
 
-        return numRead;
+        return (int)numRead;
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCHALL_THROW( IOException )

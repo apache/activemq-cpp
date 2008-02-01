@@ -37,7 +37,7 @@ namespace transport{
          */
         CommandIOException( const decaf::lang::Exception& ex ) throw()
         : decaf::io::IOException() {
-            *this = ex;
+            *(decaf::io::IOException*)this = ex;
         }
 
         /**
@@ -46,7 +46,7 @@ namespace transport{
          */
         CommandIOException( const CommandIOException& ex ) throw()
         : decaf::io::IOException() {
-            *this = ex;
+            *(decaf::io::IOException*)this = ex;
         }
 
         /**
