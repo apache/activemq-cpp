@@ -57,7 +57,8 @@ MockTransport::~MockTransport(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int MockTransport::getNextCommandId() throw ( exceptions::ActiveMQException ) {
+unsigned int MockTransport::getNextCommandId() 
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 

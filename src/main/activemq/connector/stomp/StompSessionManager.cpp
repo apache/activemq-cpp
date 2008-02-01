@@ -71,7 +71,7 @@ StompSessionManager::~StompSessionManager() {
 ////////////////////////////////////////////////////////////////////////////////
 connector::SessionInfo* StompSessionManager::createSession(
     cms::Session::AcknowledgeMode ackMode )
-        throw ( exceptions::ActiveMQException ) {
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -92,7 +92,7 @@ connector::SessionInfo* StompSessionManager::createSession(
 ////////////////////////////////////////////////////////////////////////////////
 void StompSessionManager::removeSession(
     connector::SessionInfo* session AMQCPP_UNUSED)
-        throw ( exceptions::ActiveMQException ) {
+        throw ( activemq::exceptions::ActiveMQException ) {
     // NO-op
 }
 

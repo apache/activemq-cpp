@@ -30,7 +30,8 @@ using namespace decaf::lang;
 Transport* IOTransportFactory::createTransport(
     const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next AMQCPP_UNUSED,
-    bool own AMQCPP_UNUSED ) throw ( exceptions::ActiveMQException ) {
+    bool own AMQCPP_UNUSED ) 
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         // IO is the Base Tranport, it can have no next.

@@ -94,7 +94,7 @@ namespace stomp{
          */
         virtual connector::SessionInfo* createSession(
             cms::Session::AcknowledgeMode ackMode )
-                throw ( exceptions::ActiveMQException );
+            throw ( activemq::exceptions::ActiveMQException );
 
         /**
          * removes the specified Session from the Manager, all data that
@@ -103,7 +103,7 @@ namespace stomp{
          * @param session the session info for the session to remove.
          */
         virtual void removeSession( connector::SessionInfo* session )
-            throw ( exceptions::ActiveMQException );
+            throw ( activemq::exceptions::ActiveMQException );
 
         /**
          * Creates a new consumer to the specified session, will subscribe

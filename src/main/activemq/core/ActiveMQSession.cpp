@@ -78,7 +78,7 @@ ActiveMQSession::~ActiveMQSession() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::fire( exceptions::ActiveMQException& ex ) {
+void ActiveMQSession::fire( activemq::exceptions::ActiveMQException& ex ) {
     if( connection != NULL ) {
         connection->fire( ex );
     }

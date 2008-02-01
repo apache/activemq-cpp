@@ -26,7 +26,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int ResponseCorrelator::getNextCommandId()
-    throw ( exceptions::ActiveMQException ){
+    throw ( activemq::exceptions::ActiveMQException ){
 
     try{
 

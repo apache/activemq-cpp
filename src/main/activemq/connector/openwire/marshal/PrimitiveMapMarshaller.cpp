@@ -36,7 +36,7 @@ using namespace decaf::io;
 using namespace decaf::lang;
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::marshal( const util::PrimitiveMap* map,
+void PrimitiveMapMarshaller::marshal( const activemq::util::PrimitiveMap* map,
                                       std::vector<unsigned char>& dest )
                                         throw ( cms::CMSException ) {
 
@@ -98,7 +98,7 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshal(
-    util::PrimitiveMap* map,
+    activemq::util::PrimitiveMap* map,
     const std::vector<unsigned char>& src ) throw ( cms::CMSException ) {
 
     try {
@@ -129,7 +129,7 @@ void PrimitiveMapMarshaller::unmarshal(
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
-                                               util::PrimitiveMap::ValueNode& value )
+                                               activemq::util::PrimitiveMap::ValueNode& value )
                                                     throw ( decaf::io::IOException ) {
 
     try {
@@ -211,7 +211,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                                                  const std::string& key,
-                                                 util::PrimitiveMap& map )
+                                                 activemq::util::PrimitiveMap& map )
                                                     throw ( decaf::io::IOException ) {
 
     try {

@@ -183,7 +183,8 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException ) {
+void ActiveMQTransaction::commit() 
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -217,7 +218,8 @@ void ActiveMQTransaction::commit() throw ( exceptions::ActiveMQException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException ) {
+void ActiveMQTransaction::rollback() 
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -271,7 +273,7 @@ void ActiveMQTransaction::rollback() throw ( exceptions::ActiveMQException ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
                                              MessageList& messages )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 

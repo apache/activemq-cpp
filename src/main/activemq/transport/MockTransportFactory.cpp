@@ -33,7 +33,7 @@ using namespace decaf::lang;
 Transport* MockTransportFactory::createTransport(
     const decaf::util::Properties& properties,
     Transport* next,
-    bool own ) throw ( exceptions::ActiveMQException ) {
+    bool own ) throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
