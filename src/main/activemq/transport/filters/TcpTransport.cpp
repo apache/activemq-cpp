@@ -146,8 +146,7 @@ void TcpTransport::close() throw( cms::CMSException ) {
         // Invoke the paren't close first.
         TransportFilter::close();
     }
-    AMQ_CATCH_RETHROW( SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, SocketException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, SocketException )
-    AMQ_CATCHALL_THROW( SocketException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

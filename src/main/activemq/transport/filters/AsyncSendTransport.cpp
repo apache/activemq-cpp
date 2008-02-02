@@ -61,6 +61,7 @@ void AsyncSendTransport::oneway( Command* command )
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
