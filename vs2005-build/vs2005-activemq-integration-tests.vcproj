@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\src\test-integration&quot;;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\src\main&quot;;&quot;..\src\test-integration&quot;;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -67,9 +67,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib libdecafd.lib libapr-1.lib libaprutil-1.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\vs2005-build\Debug&quot;;&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
