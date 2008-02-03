@@ -785,6 +785,25 @@ void ActiveMQSession::unsubscribe( const std::string& name )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
+    throw ( exceptions::ActiveMQException ) {
+
+    try {
+
+        if( closed ) {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "ActiveMQSession::createConsumer - Session Already Closed" );
+        }
+
+        this->connection->sendPullRequest( consumer, timeout );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::checkConnectorResource(
     connector::ConnectorResource* resource ) {
 

@@ -449,8 +449,8 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
-{
+void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException ) {
+
     try {
 
         synchronized( &unconsumedMessages ) {
@@ -462,6 +462,24 @@ void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException )
                 destroyMessage( unconsumedMessages.pop().getMessage() );
             }
         }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::sendPullRequest( long long timeout )
+    throw ( exceptions::ActiveMQException ) {
+
+    try {
+
+        // There are still local message, consume them first.
+        if( !unconsumedMessages.empty() ) {
+            return;
+        }
+
+        this->session->sendPullRequest( this->consumerInfo, timeout );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

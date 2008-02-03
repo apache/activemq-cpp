@@ -115,6 +115,17 @@ namespace core{
          */
         virtual void removeDispatcher( const connector::ConsumerInfo* consumer );
 
+        /**
+         * If supported sends a message pull request to the service provider asking
+         * for the delivery of a new message.  This is used in the case where the
+         * service provider has been configured with a zero prefectch or is only
+         * capable of delivering messages on a pull basis.
+         * @param consumer - the ConsumerInfo for the requesting Consumer.
+         * @param timeout - the time that the client is willing to wait.
+         */
+        virtual void sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
+            throw ( exceptions::ActiveMQException );
+
     public:   // Connection Interface Methods
 
         /**

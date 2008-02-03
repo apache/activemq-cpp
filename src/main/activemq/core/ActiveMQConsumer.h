@@ -162,6 +162,18 @@ namespace core{
             return consumerInfo;
         }
 
+        /**
+         * If supported sends a message pull request to the service provider asking
+         * for the delivery of a new message.  This is used in the case where the
+         * service provider has been configured with a zero prefectch or is only
+         * capable of delivering messages on a pull basis.  No request is made if
+         * there are already messages in the uncomsumed queue since there's no need
+         * for a server round-trip in that instance.
+         * @param timeout - the time that the client is willing to wait.
+         */
+        virtual void sendPullRequest( long long timeout )
+            throw ( exceptions::ActiveMQException );
+
     protected:   // ConnectorResourceListener
 
         /**

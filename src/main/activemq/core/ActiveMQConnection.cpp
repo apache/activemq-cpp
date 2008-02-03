@@ -275,3 +275,20 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
+    throw ( exceptions::ActiveMQException ) {
+
+    try {
+
+        if( !this->connectionData->getConnector()->isMessagePullSupported() ) {
+            return;
+        }
+
+        this->connectionData->getConnector()->pullMessage( consumer, timeout );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
