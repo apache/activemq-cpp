@@ -17,6 +17,7 @@
 
 #include "StompConnectorTest.h"
 #include <activemq/transport/TransportFactoryMap.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompConnectorTest );
 
@@ -93,6 +94,11 @@ void StompConnectorTest::testConsumers()
     CPPUNIT_ASSERT( cinfo4->getSessionInfo() == info4 );
     CPPUNIT_ASSERT( cinfo4->getDestination()->toProviderString() == dest4.toProviderString() );
     CPPUNIT_ASSERT( cinfo4->getMessageSelector() == sel4 );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Shold Throw an UnsupportedOperationException",
+        connector->pullMessage( cinfo1, 0 ),
+        decaf::lang::exceptions::UnsupportedOperationException );
 
     delete cinfo1;
     delete cinfo2;
