@@ -89,6 +89,10 @@ namespace cmsutil {
     	 */
     	virtual void returnSession(PooledSession* session);
     	
+    	ResourceLifecycleManager* getResourceLifecycleManager() {
+    	    return resourceLifecycleManager;
+    	}
+    	
     };
 
 }}

@@ -205,13 +205,19 @@ cms::MessageProducer* CmsTemplate::createProducer(cms::Session* session,
             dest = resolveDefaultDestination(session);
         }
         
-        cms::MessageProducer* producer = session->createProducer(dest);
-        if (!isMessageIdEnabled()) {
-            producer->setDisableMessageID(true);
+        cms::MessageProducer* producer = NULL;
+        
+        // Try to use a cached producer - requires that we're using a
+        // PooledSession
+        PooledSession* pooledSession = dynamic_cast<PooledSession*>(session);
+        if( pooledSession != NULL ) {
+            producer = pooledSession->createCachedProducer(dest);
+        } else {
+            producer = session->createProducer(dest);
         }
-        if (!isMessageTimestampEnabled()) {
-            producer->setDisableMessageTimeStamp(true);
-        }
+        
+        producer->setDisableMessageID(!isMessageIdEnabled());
+        producer->setDisableMessageTimeStamp(!isMessageTimestampEnabled());
 
         return producer;
     }

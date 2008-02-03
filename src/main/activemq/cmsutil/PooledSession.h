@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
 
 #include <cms/Session.h>
+#include <decaf/util/Map.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -36,6 +37,8 @@ namespace cmsutil {
         SessionPool* pool;
         
         cms::Session* session;
+        
+        decaf::util::Map<std::string, cms::MessageProducer*> producerCache;
         
     public:
         
@@ -113,6 +116,19 @@ namespace cmsutil {
             return session->createProducer(destination);
         }
         
+        /**
+         * First checks the internal producer cache and creates one if none exist 
+         * for the given destination.  If created, the producer is added to the 
+         * pool's lifecycle manager.
+         * 
+         * @param destination
+         *          the destination to send on
+         * @return the producer resource
+         * @throws cms::CMSException if something goes wrong.
+         */
+        virtual cms::MessageProducer* createCachedProducer( const cms::Destination* destination )
+            throw ( cms::CMSException );
+        
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {
             return session->createQueue(queueName);
@@ -177,6 +193,10 @@ namespace cmsutil {
             throw ( cms::CMSException ) {
             session->unsubscribe(name);
         }
+        
+    private:
+        
+        std::string getUniqueDestName( const cms::Destination* dest );
     };
 
 }}
