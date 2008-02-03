@@ -1207,13 +1207,13 @@ void OpenWireConnector::unsubscribe( const std::string& name )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireConnector::pullMessage( connector::ConsumerInfo* info, long long timeout )
+void OpenWireConnector::pullMessage( const connector::ConsumerInfo* info, long long timeout )
     throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try {
 
-        OpenWireConsumerInfo* consumer =
-             dynamic_cast<OpenWireConsumerInfo*>( info );
+        const OpenWireConsumerInfo* consumer =
+             dynamic_cast<const OpenWireConsumerInfo*>( info );
 
          if( consumer->getConsumerInfo()->getPrefetchSize() == 0 ) {
 

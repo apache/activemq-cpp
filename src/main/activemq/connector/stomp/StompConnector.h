@@ -497,7 +497,7 @@ namespace stomp{
          * @throw ConnectorException if a communications error occurs
          * @throw UnsupportedOperationException if the connector can't pull
          */
-        virtual void pullMessage( connector::ConsumerInfo* info, long long timeout )
+        virtual void pullMessage( const connector::ConsumerInfo* info, long long timeout )
             throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
     public: // transport::CommandListener

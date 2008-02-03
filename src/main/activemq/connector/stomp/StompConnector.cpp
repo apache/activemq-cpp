@@ -714,7 +714,7 @@ void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompConnector::pullMessage( connector::ConsumerInfo* info AMQCPP_UNUSED, long long timeout AMQCPP_UNUSED )
+void StompConnector::pullMessage( const connector::ConsumerInfo* info AMQCPP_UNUSED, long long timeout AMQCPP_UNUSED )
     throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try {
