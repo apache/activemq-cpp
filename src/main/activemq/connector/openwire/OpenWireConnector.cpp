@@ -47,6 +47,7 @@
 #include <activemq/connector/openwire/commands/DestinationInfo.h>
 #include <activemq/connector/openwire/commands/ExceptionResponse.h>
 #include <activemq/connector/openwire/commands/Message.h>
+#include <activemq/connector/openwire/commands/MessagePull.h>
 #include <activemq/connector/openwire/commands/MessageAck.h>
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
 #include <activemq/connector/openwire/commands/RemoveInfo.h>
@@ -1203,6 +1204,33 @@ void OpenWireConnector::unsubscribe( const std::string& name )
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::pullMessage( connector::ConsumerInfo* info, long long timeout )
+    throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try {
+
+        OpenWireConsumerInfo* consumer =
+             dynamic_cast<OpenWireConsumerInfo*>( info );
+
+         if( consumer->getConsumerInfo()->getPrefetchSize() == 0 ) {
+
+             commands::MessagePull messagePull;
+             messagePull.setConsumerId(
+                 consumer->getConsumerInfo()->getConsumerId()->cloneDataStructure() );
+             messagePull.setDestination(
+                 consumer->getConsumerInfo()->getDestination()->cloneDataStructure() );
+             messagePull.setTimeout( timeout );
+
+             // TODO - This should be Async
+             this->oneway( &messagePull );
+         }
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, OpenWireConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -477,6 +477,29 @@ namespace stomp{
             this->exceptionListener = listener;
         }
 
+        /**
+         * Checks if this connector supports pull of a new mesage from the service
+         * provider, if so then the user can call pullMessage() on the Connector
+         * to try and get a new message added to the receive queue.
+         * @returns true if the caller can use pullMessage without an exception
+         */
+        virtual bool isMessagePullSupported() const {
+            return false;
+        }
+
+        /**
+         * Pulls a message from the the service provider that this Connector is
+         * associated with. This could be because the service has a prefetch
+         * policy that is set to zero and therefor requires each message to
+         * be pulled from the server to the client via a poll.
+         * @param info - the consumer info for the consumer to pull for
+         * @param timeout - the time that the caller is going to wait for new messages
+         * @throw ConnectorException if a communications error occurs
+         * @throw UnsupportedOperationException if the connector can't pull
+         */
+        virtual void pullMessage( connector::ConsumerInfo* info, long long timeout )
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
+
     public: // transport::CommandListener
 
         /**

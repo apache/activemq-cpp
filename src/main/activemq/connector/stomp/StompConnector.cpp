@@ -714,6 +714,21 @@ void StompConnector::unsubscribe( const std::string& name AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StompConnector::pullMessage( connector::ConsumerInfo* info AMQCPP_UNUSED, long long timeout AMQCPP_UNUSED )
+    throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try {
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "StompConnector::pullMessage - No Stomp Support for Message Pull");
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
+    AMQ_CATCHALL_THROW( ConnectorException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StompConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException ) {
 
