@@ -38,6 +38,7 @@ namespace openwire{
         CPPUNIT_TEST( testMultipleSessions );
         CPPUNIT_TEST( testReceiveAlreadyInQueue );
         CPPUNIT_TEST( testQuickCreateAndDestroy );
+        CPPUNIT_TEST( testWithZeroConsumerPrefetch );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -53,6 +54,7 @@ namespace openwire{
         virtual void testMultipleSessions();
         virtual void testReceiveAlreadyInQueue();
         virtual void testQuickCreateAndDestroy();
+        virtual void testWithZeroConsumerPrefetch();
 
     };
 

@@ -73,18 +73,16 @@ using namespace decaf::util::concurrent;
 using namespace integration;
 using namespace integration::connector::openwire;
 
-OpenwireSimpleTest::OpenwireSimpleTest()
-{
+OpenwireSimpleTest::OpenwireSimpleTest() {
 }
 
-OpenwireSimpleTest::~OpenwireSimpleTest()
-{
+OpenwireSimpleTest::~OpenwireSimpleTest() {
 }
 
-void OpenwireSimpleTest::testAutoAck()
-{
-    try
-    {
+void OpenwireSimpleTest::testAutoAck() {
+
+    try {
+
         TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL());
         testSupport.initialize();
 
@@ -487,4 +485,48 @@ void OpenwireSimpleTest::testQuickCreateAndDestroy() {
         e.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
+}
+
+void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
+
+    try {
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
+        testSupport.initialize();
+
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+
+        // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
+        cms::Queue* queue = session->createQueue(
+            UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
+        cms::MessageConsumer* consumer = session->createConsumer( queue );
+        cms::MessageProducer* producer = session->createProducer( queue );
+
+        cms::TextMessage* textMsg = session->createTextMessage();
+
+        // Send some text messages
+        producer->send( textMsg );
+
+        delete textMsg;
+
+        cms::Message* message = consumer->receive( 1000 );
+        CPPUNIT_ASSERT( message != NULL );
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+
+        delete producer;
+        delete consumer;
+        delete queue;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
 }

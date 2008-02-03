@@ -217,6 +217,9 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
 
+        // Send a request for a new message if needed
+        this->sendPullRequest( 0 );
+
         // Wait for the next message.
         ActiveMQMessage* msg = dequeue( -1 );
         if( msg == NULL ) {
@@ -253,6 +256,9 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
 
+        // Send a request for a new message if needed
+        this->sendPullRequest( millisecs );
+
         // Wait for the next message.
         ActiveMQMessage* msg = dequeue( millisecs );
         if( msg == NULL ) {
@@ -288,6 +294,9 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
                 __FILE__, __LINE__,
                 "ActiveMQConsumer::receive - This Consumer is closed" );
         }
+
+        // Send a request for a new message if needed
+        this->sendPullRequest( -1 );
 
         // Get the next available message, if there is one.
         ActiveMQMessage* msg = dequeue( 0 );
