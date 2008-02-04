@@ -212,7 +212,7 @@ namespace cmsutil {
     
         /**
          * Sets the name of the default destination to be used from send/receive operations.
-         * Calling this method will set the <code>defaultDestination</code> to NULL.
+         * Calling this method will set the <code>defaultDestination</code> property to NULL.
          * The destination type (topic/queue) is determined by the
          * <code>pubSubDomain</code> property.
          * 
@@ -220,8 +220,10 @@ namespace cmsutil {
          *          the name of the destination for send/receive to by default.
          */
         virtual void setDefaultDestinationName(const std::string& defaultDestinationName) {
-            this->defaultDestination = NULL;
-            this->defaultDestinationName = defaultDestinationName;
+            if( defaultDestinationName != this->defaultDestinationName ) {
+                this->defaultDestination = NULL;
+                this->defaultDestinationName = defaultDestinationName;
+            }
         }
     
         /**
@@ -233,6 +235,20 @@ namespace cmsutil {
          */
         virtual const std::string getDefaultDestinationName() const {
             return this->defaultDestinationName;
+        }
+        
+        /**
+         * Indicates whether the default destination is a topic (true) or a queue (false).
+         * Calling this method will set the <code>defaultDestination</code> property to NULL.
+         * 
+         * @param pubSubDomain
+         *          indicates whether to use pub-sub messaging (topics).
+         */
+        virtual void setPubSubDomain( bool pubSubDomain ) {
+            if( pubSubDomain != isPubSubDomain() ) {
+                this->defaultDestination = NULL;
+                CmsDestinationAccessor::setPubSubDomain(pubSubDomain);                
+            }
         }
     
         virtual void setMessageIdEnabled(bool messageIdEnabled) {
