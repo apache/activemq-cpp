@@ -278,7 +278,7 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( ActiveMQException ) {
 
     try {
 

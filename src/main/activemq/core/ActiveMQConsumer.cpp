@@ -479,7 +479,7 @@ void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::sendPullRequest( long long timeout )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( ActiveMQException ) {
 
     try {
 

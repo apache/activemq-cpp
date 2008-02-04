@@ -786,7 +786,7 @@ void ActiveMQSession::unsubscribe( const std::string& name )
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 
