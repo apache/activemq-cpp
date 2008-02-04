@@ -61,7 +61,7 @@ PooledSession* SessionPool::takeSession() throw (cms::CMSException){
             resourceLifecycleManager->addSession(session);
 
             // Now wrap the session with a pooled session.
-            PooledSession* pooledSession = new PooledSession(this, session);
+            pooledSession = new PooledSession(this, session);
 
             // Add to the sessions list.
             sessions.push_back(pooledSession);

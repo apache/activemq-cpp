@@ -20,10 +20,12 @@
 #include <activemq/exceptions/ExceptionDefines.h>
 #include "ProducerCallback.h"
 #include "MessageCreator.h"
+#include <iostream>
 
 using namespace activemq::cmsutil;
 using namespace activemq::exceptions;
 using namespace decaf::lang::exceptions;
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsTemplate::CmsTemplate() {
@@ -54,6 +56,14 @@ void CmsTemplate::initDefaults() {
     deliveryMode = cms::DeliveryMode::PERSISTENT;
     priority = DEFAULT_PRIORITY;
     timeToLive = DEFAULT_TIME_TO_LIVE;
+    
+    // Initialize the connection object.
+    connection = NULL;
+    
+    // Initialize the session pools.
+    for( int ix=0; ix<NUM_SESSION_POOLS; ++ix) {
+        sessionPools[ix] = NULL;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +155,7 @@ throw (cms::CMSException) {
         
         // If we don't have a connection, create one.
         if( connection == NULL ) {
-        
+            
             // Invoke the base class to create the connection and add it
             // to the resource lifecycle manager.
             connection = createConnection();
@@ -168,6 +178,10 @@ PooledSession* CmsTemplate::takeSession()
 throw (cms::CMSException) {
 
     try {
+        
+        // Get the connection resource to verify that the connection and session
+        // pools have been allocated.
+        getConnection();
         
         // Take a session from the pool.
         return sessionPools[getSessionAcknowledgeMode()]->takeSession();        
@@ -301,7 +315,7 @@ void CmsTemplate::execute(SessionCallback* action) throw (cms::CMSException) {
         if( action == NULL ) {
             return;
         }
-    
+        
         // Take a session from the pool.
         pooledSession = takeSession();
         
