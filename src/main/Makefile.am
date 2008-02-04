@@ -28,6 +28,7 @@ cc_sources = \
     activemq/cmsutil/CmsDestinationAccessor.cpp \
     activemq/cmsutil/SessionPool.cpp \
     activemq/cmsutil/PooledSession.cpp \
+    activemq/cmsutil/CmsTemplate.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
     activemq/core/ActiveMQSession.cpp \
