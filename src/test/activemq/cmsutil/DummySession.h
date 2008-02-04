@@ -21,6 +21,7 @@
 #include <cms/Session.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
+#include <activemq/cmsutil/DummyProducer.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -70,7 +71,7 @@ namespace cmsutil {
                 throw ( cms::CMSException ) { return NULL; }
 
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
-            throw ( cms::CMSException ) { return NULL; }
+            throw ( cms::CMSException ) { return new DummyProducer(); }
 
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {

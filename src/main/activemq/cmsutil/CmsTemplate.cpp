@@ -255,7 +255,12 @@ throw (cms::CMSException) {
     }
     AMQ_CATCH_NOTHROW( cms::CMSException )
     
-    delete producer;
+    // Destroy if it's not a cached producer.
+    CachedProducer* cachedProducer = dynamic_cast<CachedProducer*>(producer);
+    if( cachedProducer == NULL ) {
+        delete producer;
+    }
+    
     producer = NULL;
 }
 

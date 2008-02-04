@@ -34,6 +34,7 @@ namespace cmsutil{
     {
         CPPUNIT_TEST_SUITE( CmsTemplateTest );
         CPPUNIT_TEST( testExecuteSession );
+        CPPUNIT_TEST( testExecuteProducer );
         CPPUNIT_TEST_SUITE_END();               
              
 
@@ -85,6 +86,7 @@ namespace cmsutil{
         virtual void tearDown();
         
         void testExecuteSession();
+        void testExecuteProducer();
     };
 
 }}

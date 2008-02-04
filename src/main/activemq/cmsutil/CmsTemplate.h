@@ -181,22 +181,56 @@ namespace cmsutil {
         virtual void init()
         throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
     
+        /**
+         * Sets the destination object to be used by default for send/receive operations.
+         * If no default destination is provided, the <code>defaultDestinationName</code>
+         * property is used to resolve this default destination for send/receive 
+         * operations.
+         * 
+         * @param defaultDestination
+         *          the default destination
+         */
         virtual void setDefaultDestination(cms::Destination* defaultDestination) {
             this->defaultDestination = defaultDestination;
         }
     
+        /**
+         * Retrieves the default destination to be used for send/receive operations.
+         * @return the default destination. Const version of this method.
+         */
         virtual const cms::Destination* getDefaultDestination() const {
             return this->defaultDestination;
         }
         
+        /**
+         * Retrieves the default destination to be used for send/receive operations.
+         * @return the default destination. Non-const version of this method.
+         */
         virtual cms::Destination* getDefaultDestination() {
             return this->defaultDestination;
         }
     
+        /**
+         * Sets the name of the default destination to be used from send/receive operations.
+         * Calling this method will set the <code>defaultDestination</code> to NULL.
+         * The destination type (topic/queue) is determined by the
+         * <code>pubSubDomain</code> property.
+         * 
+         * @param defaultDestinationName
+         *          the name of the destination for send/receive to by default.
+         */
         virtual void setDefaultDestinationName(const std::string& defaultDestinationName) {
+            this->defaultDestination = NULL;
             this->defaultDestinationName = defaultDestinationName;
         }
     
+        /**
+         * Gets the name of the default destination to be used for send/receive operations.
+         * The destination type (topic/queue) is determined by the
+         * <code>pubSubDomain</code> property.
+         * 
+         * @return the default name of the destination for send/receive operations.
+         */
         virtual const std::string getDefaultDestinationName() const {
             return this->defaultDestinationName;
         }

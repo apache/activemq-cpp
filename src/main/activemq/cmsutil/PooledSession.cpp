@@ -49,23 +49,33 @@ cms::MessageProducer* PooledSession::createCachedProducer(
     
     try {
         
+        if( destination == NULL ) {
+            throw ActiveMQException(__FILE__, __LINE__, "destination is NULL");
+        }
+        
         std::string destName = getUniqueDestName(destination);
         
         // Check the cache - add it if necessary.
-        cms::MessageProducer* p = producerCache.getValue(destName);
-        if( p == NULL ) {
+        CachedProducer* cachedProducer = NULL;
+        try {            
+            cachedProducer = producerCache.getValue(destName);            
+        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
             
-            // No producer exists for this destination - create it.
-            p = session->createProducer(destination);           
+            // No producer exists for this destination - start by creating
+            // a new producer resource.
+            cms::MessageProducer* p = session->createProducer(destination);                                    
+            
+            // Add the producer resource to the resource lifecycle manager.
+            pool->getResourceLifecycleManager()->addMessageProducer(p);
+            
+            // Create the cached producer wrapper.
+            cachedProducer = new CachedProducer(p);
             
             // Add it to the cache.
-            producerCache.setValue(destName, p);
-            
-            // Add the producer to the resource lifecycle manager.
-            pool->getResourceLifecycleManager()->addMessageProducer(p);
+            producerCache.setValue(destName, cachedProducer);
         }
         
-        return p;
+        return cachedProducer;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

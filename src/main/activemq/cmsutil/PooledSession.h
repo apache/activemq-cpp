@@ -20,6 +20,7 @@
 
 #include <cms/Session.h>
 #include <decaf/util/Map.h>
+#include <activemq/cmsutil/CachedProducer.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -38,7 +39,7 @@ namespace cmsutil {
         
         cms::Session* session;
         
-        decaf::util::Map<std::string, cms::MessageProducer*> producerCache;
+        decaf::util::Map<std::string, CachedProducer*> producerCache;
         
     public:
         
