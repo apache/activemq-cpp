@@ -3476,6 +3476,66 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="cmsutil"
+				>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsAccessorTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsAccessorTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsDestinationAccessorTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsDestinationAccessorTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsTemplateTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\CmsTemplateTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DummyConnection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DummyConnectionFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DummyProducer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DummySession.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DynamicDestinationResolverTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\DynamicDestinationResolverTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\SessionPoolTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\cmsutil\SessionPoolTest.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\src\test\main.cpp"
