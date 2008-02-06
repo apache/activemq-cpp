@@ -32,6 +32,12 @@ PooledSession::PooledSession(SessionPool* pool, cms::Session* session) {
 
 ////////////////////////////////////////////////////////////////////////////////
 PooledSession::~PooledSession(){
+    
+    std::vector<CachedProducer*> cachedProducers = producerCache.getValues();
+    for( std::size_t ix = 0; ix < cachedProducers.size(); ++ix ) {
+        delete cachedProducers[ix];
+    }
+    cachedProducers.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
