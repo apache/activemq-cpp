@@ -530,3 +530,88 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
+
+void OpenwireSimpleTest::testMapMessageSend() {
+
+    try {
+        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
+        testSupport.initialize();
+
+        if( IntegrationCommon::debug ) {
+            cout << "Starting activemqcms test (sending "
+                 << IntegrationCommon::defaultMsgCount
+                 << " messages per type and sleeping "
+                 << IntegrationCommon::defaultDelay
+                 << " milli-seconds) ...\n"
+                 << endl;
+        }
+
+        // Create CMS Object for Comms
+        cms::Session* session = testSupport.getSession();
+        cms::Queue* queue = session->createQueue( UUID::randomUUID().toString() );
+        cms::MessageConsumer* consumer = session->createConsumer( queue );
+        cms::MessageProducer* producer = session->createProducer( queue );
+
+        unsigned char byteValue = 'A';
+        char charValue = 'B';
+        bool booleanValue = true;
+        short shortValue = 2048;
+        int intValue = 655369;
+        long long longValue = 0xFFFFFFFF00000000ULL;
+        float floatValue = 45.6545f;
+        double doubleValue = 654564.654654;
+        std::string stringValue = "The test string";
+
+        cms::MapMessage* mapMessage = session->createMapMessage();
+
+        mapMessage->setString( "stringKey", stringValue );
+        mapMessage->setBoolean( "boolKey", booleanValue );
+        mapMessage->setByte( "byteKey", byteValue );
+        mapMessage->setChar( "charKey", charValue );
+        mapMessage->setShort( "shortKey", shortValue );
+        mapMessage->setInt( "intKey", intValue );
+        mapMessage->setLong( "longKey", longValue );
+        mapMessage->setFloat( "floatKey", floatValue );
+        mapMessage->setDouble( "doubleKey", doubleValue );
+
+        std::vector<unsigned char> bytes;
+        bytes.push_back( 65 );
+        bytes.push_back( 66 );
+        bytes.push_back( 67 );
+        bytes.push_back( 68 );
+        bytes.push_back( 69 );
+        mapMessage->setBytes( "bytesKey", bytes );
+
+        // Send some text messages
+        producer->send( mapMessage );
+
+        delete mapMessage;
+
+        cms::Message* message = consumer->receive( 1500 );
+        CPPUNIT_ASSERT( message != NULL );
+
+        cms::MapMessage* recvMapMessage = dynamic_cast<MapMessage*>( message );
+        CPPUNIT_ASSERT( recvMapMessage != NULL );
+        CPPUNIT_ASSERT( recvMapMessage->getString( "stringKey" ) == stringValue );
+        CPPUNIT_ASSERT( recvMapMessage->getBoolean( "boolKey" ) == booleanValue );
+        CPPUNIT_ASSERT( recvMapMessage->getByte( "byteKey" ) == byteValue );
+        CPPUNIT_ASSERT( recvMapMessage->getChar( "charKey" ) == charValue );
+        CPPUNIT_ASSERT( recvMapMessage->getShort( "shortKey" ) == shortValue );
+        CPPUNIT_ASSERT( recvMapMessage->getInt( "intKey" ) == intValue );
+        CPPUNIT_ASSERT( recvMapMessage->getLong( "longKey" ) == longValue );
+        CPPUNIT_ASSERT( recvMapMessage->getFloat( "floatKey" ) == floatValue );
+        CPPUNIT_ASSERT( recvMapMessage->getDouble( "doubleKey" ) == doubleValue );
+        CPPUNIT_ASSERT( recvMapMessage->getBytes( "bytesKey" ) == bytes );
+
+        delete message;
+
+        if( IntegrationCommon::debug ) {
+            printf("Shutting Down\n" );
+        }
+
+        delete producer;
+        delete consumer;
+        delete queue;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+}

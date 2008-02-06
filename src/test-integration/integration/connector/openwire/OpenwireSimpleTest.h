@@ -30,15 +30,16 @@ namespace openwire{
     class OpenwireSimpleTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( OpenwireSimpleTest );
-        CPPUNIT_TEST( testAutoAck );
-        CPPUNIT_TEST( testClientAck );
-        CPPUNIT_TEST( testProducerWithNullDestination );
-        CPPUNIT_TEST( testSyncReceive );
-        CPPUNIT_TEST( testMultipleConnections );
-        CPPUNIT_TEST( testMultipleSessions );
-        CPPUNIT_TEST( testReceiveAlreadyInQueue );
-        CPPUNIT_TEST( testQuickCreateAndDestroy );
-        CPPUNIT_TEST( testWithZeroConsumerPrefetch );
+//        CPPUNIT_TEST( testAutoAck );
+//        CPPUNIT_TEST( testClientAck );
+//        CPPUNIT_TEST( testProducerWithNullDestination );
+//        CPPUNIT_TEST( testSyncReceive );
+//        CPPUNIT_TEST( testMultipleConnections );
+//        CPPUNIT_TEST( testMultipleSessions );
+//        CPPUNIT_TEST( testReceiveAlreadyInQueue );
+//        CPPUNIT_TEST( testQuickCreateAndDestroy );
+//        CPPUNIT_TEST( testWithZeroConsumerPrefetch );
+        CPPUNIT_TEST( testMapMessageSend );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -55,6 +56,7 @@ namespace openwire{
         virtual void testReceiveAlreadyInQueue();
         virtual void testQuickCreateAndDestroy();
         virtual void testWithZeroConsumerPrefetch();
+        virtual void testMapMessageSend();
 
     };
 
