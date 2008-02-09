@@ -159,7 +159,19 @@ void CmsTemplateTest::testSend() {
         CPPUNIT_ASSERT(listener.message != NULL);
         CPPUNIT_ASSERT_EQUAL(5, listener.priority);
         CPPUNIT_ASSERT_EQUAL(10LL, listener.ttl);
-        CPPUNIT_ASSERT_EQUAL(0, listener.deliveryMode);              
+        CPPUNIT_ASSERT_EQUAL(0, listener.deliveryMode);
+        
+        // Now try the version of send with an explicit destination.
+        activemq::connector::stomp::StompTopic myTopic("anothertopic");
+        cmsTemplate->send(&myTopic, &msgCreator);  
+        t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t == &myTopic);
+        
+        // Now try the version of send with just a named destination.
+        cmsTemplate->send("yetanothertopic", &msgCreator);  
+        t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"yetanothertopic", t->getTopicName());
                 
     } catch( cms::CMSException& e) {
         e.printStackTrace();
