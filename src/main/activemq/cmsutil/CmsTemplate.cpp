@@ -529,11 +529,8 @@ void CmsTemplate::doSend(cms::Session* session, cms::MessageProducer* producer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Message* CmsTemplate::doReceive(cms::MessageConsumer* consumer,
-        long long receiveTime ) 
-throw (cms::CMSException) {
-    
-    cms::Message* message = NULL;
+cms::Message* CmsTemplate::doReceive(cms::MessageConsumer* consumer ) 
+throw (cms::CMSException) {    
             
     try {
     
@@ -541,27 +538,23 @@ throw (cms::CMSException) {
             throw new ActiveMQException(__FILE__, __LINE__, "consumer is NULL");
         }
         
+        long long receiveTime = getReceiveTimeout();
+        
         switch( receiveTime ) {
         case RECEIVE_TIMEOUT_NO_WAIT: {
-            message = consumer->receiveNoWait();
-            break;
+            return consumer->receiveNoWait();
         }
         case RECEIVE_TIMEOUT_INDEFINITE_WAIT: {
-            message = consumer->receive();
-            break;
+            return consumer->receive();
         }
         default: {
-            message = consumer->receive(receiveTime);
-            break;
+            return consumer->receive(receiveTime);
         }
         }
         
     } catch( ActiveMQException& e) {
         
         e.setMark(__FILE__, __LINE__ );
-        
-        // Destroy the message resource.
-        destroyMessage(message);
         
         throw e;
     }
@@ -579,7 +572,7 @@ void CmsTemplate::ReceiveExecutor::doInCms(cms::Session* session)
         consumer = parent->createConsumer(session, getDestination(session), selector, noLocal);
         
         // Receive the message.
-        message = parent->doReceive(consumer, receiveTime); 
+        message = parent->doReceive(consumer); 
             
         // Destroy the consumer resource.
         parent->destroyConsumer(consumer);
@@ -609,3 +602,99 @@ cms::Destination* CmsTemplate::ResolveReceiveExecutor::getDestination(
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receive() 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ReceiveExecutor receiveExecutor(this, NULL,
+                "", isNoLocal());
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receive(cms::Destination* destination ) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ReceiveExecutor receiveExecutor(this, destination,
+                "", isNoLocal());
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receive(const std::string& destinationName) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ResolveReceiveExecutor receiveExecutor(this,
+                "", isNoLocal(),
+                destinationName);
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receiveSelected(const std::string& selector) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ReceiveExecutor receiveExecutor(this, NULL,
+                selector, isNoLocal());
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receiveSelected(cms::Destination* destination,
+        const std::string& selector) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ReceiveExecutor receiveExecutor(this, destination,
+                selector, isNoLocal());
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::receiveSelected(const std::string& destinationName,
+        const std::string& selector) 
+throw (cms::CMSException, IllegalStateException) {
+    
+    try {        
+        ResolveReceiveExecutor receiveExecutor(this,
+                selector, isNoLocal(),
+                destinationName);
+        execute(&receiveExecutor);
+        
+        return receiveExecutor.getMessage();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+

@@ -182,19 +182,16 @@ namespace cmsutil {
             bool noLocal;
             cms::Message* message;
             CmsTemplate* parent;
-            long long receiveTime;
             
         public:
             ReceiveExecutor( CmsTemplate* parent,
                     cms::Destination* destination,
                     const std::string& selector,
-                    bool noLocal,
-                    long long receiveTime) {
+                    bool noLocal) {
                 this->parent = parent;
                 this->destination = destination;
                 this->selector = selector;
-                this->noLocal = noLocal;                
-                this->receiveTime = receiveTime;
+                this->noLocal = noLocal;
                 this->message = NULL;
             }
             
@@ -206,6 +203,10 @@ namespace cmsutil {
             virtual cms::Destination* getDestination(cms::Session* session AMQCPP_UNUSED) 
                 throw (cms::CMSException) {
                 return destination;
+            }
+            
+            cms::Message* getMessage() {
+                return message;
             }
         };
         
@@ -223,11 +224,10 @@ namespace cmsutil {
             
             ResolveReceiveExecutor(CmsTemplate* parent,
                     const std::string& selector,
-                    bool noLocal, 
-                    long long receiveTime,
+                    bool noLocal,
                     const std::string& destinationName)
             :
-                ReceiveExecutor( parent, NULL, selector, noLocal, receiveTime) {
+                ReceiveExecutor( parent, NULL, selector, noLocal) {
                 
                 this->destinationName = destinationName;
             }
@@ -565,6 +565,90 @@ namespace cmsutil {
                 MessageCreator* messageCreator)
         throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
         
+        /**
+         * Performs a synchronous read from the default destination.
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receive()
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Performs a synchronous read from the specified destination.
+         * @param destination
+         *          the destination to receive on
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receive(cms::Destination* destination )
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Performs a synchronous read from the specified destination.
+         * @param destinationName
+         *          the name of the destination to receive on
+         *          (will be resolved to destination internally).
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receive(const std::string& destinationName )
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Performs a synchronous read consuming only messages identified by the
+         * given selector.
+         * 
+         * @param selector
+         *          the selector expression.
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receiveSelected(const std::string& selector )
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Performs a synchronous read from the specified destination, consuming 
+         * only messages identified by the given selector.
+         * 
+         * @param destination
+         *          the destination to receive on.
+         * @param selector
+         *          the selector expression.
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receiveSelected( cms::Destination* destination,
+                const std::string& selector )
+                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
+         * Performs a synchronous read from the specified destination, consuming 
+         * only messages identified by the given selector.
+         * 
+         * @param destinationName
+         *          the name of the destination to receive on
+         *          (will be resolved to destination internally).
+         * @param selector
+         *          the selector expression.
+         * @return the message
+         * @throws cms::CMSException thrown if an error occurs
+         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
+         *          default destination has not been specified.
+         */
+        virtual cms::Message* receiveSelected( const std::string& destinationName,
+                const std::string& selector )
+                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
     private:
     
         /**
@@ -685,13 +769,11 @@ namespace cmsutil {
          * Receives a message from a destination.
          * @param consumer 
          *          the consumer to receive from
-         * @param receiveTime 
-         *          the time to wait for the receive.
          * @return the message that was read
          * @throws cms::CMSException thrown if the CMS API throws.
          */
-        cms::Message* doReceive(cms::MessageConsumer* consumer,
-                long long receiveTime ) throw (cms::CMSException);
+        cms::Message* doReceive(cms::MessageConsumer* consumer ) 
+        throw (cms::CMSException);
         
         /**
          * Resolves the default destination and returns it.
