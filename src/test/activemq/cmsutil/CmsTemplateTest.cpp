@@ -104,6 +104,30 @@ void CmsTemplateTest::testExecuteProducer() {
         cmsTemplate->execute(&callback4);    
         CPPUNIT_ASSERT(callback4.session == callback.session);
         CPPUNIT_ASSERT(callback4.producer != callback3.producer);
+        
+        // Now try without a valid default destination and make sure
+        // we get an exception.
+        try {
+            cmsTemplate->setDefaultDestinationName("");
+            MyProducerCallback callback5;
+            cmsTemplate->execute(&callback5);
+            CPPUNIT_FAIL("failed to throw expected exception");
+        } catch( cms::CMSException& ex) {
+            // expected.
+        }
+        
+        // Now try an explicit destination 
+        MyProducerCallback callback6;
+        activemq::connector::stomp::StompTopic myTopic("anothertopic");
+        cmsTemplate->execute(&myTopic, &callback6);
+        CPPUNIT_ASSERT(callback6.session == callback.session);
+        CPPUNIT_ASSERT(callback6.producer != callback4.producer);
+        
+        // Now try an explicitly named destination 
+        MyProducerCallback callback7;
+        cmsTemplate->execute("fred", &callback7);
+        CPPUNIT_ASSERT(callback7.session == callback.session);
+        CPPUNIT_ASSERT(callback7.producer != callback6.producer);
                 
     } catch( cms::CMSException& e) {
         e.printStackTrace();
