@@ -78,26 +78,12 @@ void CmsTemplateTest::testExecuteProducer() {
     try {
         
         cmsTemplate->setPubSubDomain(false);
-        
-        // Set the pass-thru values that will be applied to the producer.
-        cmsTemplate->setDeliveryMode(1);
-        cmsTemplate->setTimeToLive(100);
-        cmsTemplate->setPriority(5);
-        cmsTemplate->setMessageTimestampEnabled(true);
-        cmsTemplate->setMessageIdEnabled(true);
        
         // Test basics.
         MyProducerCallback callback;    
         cmsTemplate->execute(&callback);    
         CPPUNIT_ASSERT(callback.session != NULL);
         CPPUNIT_ASSERT(callback.producer != NULL);
-        
-        // Check the pass-thru values from CmsTemplate
-        CPPUNIT_ASSERT_EQUAL(1, callback.producer->getDeliveryMode());
-        CPPUNIT_ASSERT_EQUAL(100LL, callback.producer->getTimeToLive());
-        CPPUNIT_ASSERT_EQUAL(5, callback.producer->getPriority());
-        CPPUNIT_ASSERT_EQUAL(false, callback.producer->getDisableMessageID());
-        CPPUNIT_ASSERT_EQUAL(false, callback.producer->getDisableMessageTimeStamp());
     
         // Try again and make sure we have the same producer
         MyProducerCallback callback2;    
@@ -118,25 +104,6 @@ void CmsTemplateTest::testExecuteProducer() {
         cmsTemplate->execute(&callback4);    
         CPPUNIT_ASSERT(callback4.session == callback.session);
         CPPUNIT_ASSERT(callback4.producer != callback3.producer);
-        
-        // Change the pass-thru values
-        cmsTemplate->setDeliveryMode(0);
-        cmsTemplate->setTimeToLive(1000);
-        cmsTemplate->setPriority(7);
-        cmsTemplate->setMessageTimestampEnabled(false);
-        cmsTemplate->setMessageIdEnabled(false);
-        
-        // Now with the producer from the test 4, verify that the pass-thru
-        // values are changed.
-        MyProducerCallback callback5;    
-        cmsTemplate->execute(&callback5);    
-        CPPUNIT_ASSERT(callback5.session == callback.session);
-        CPPUNIT_ASSERT(callback5.producer == callback4.producer);
-        CPPUNIT_ASSERT_EQUAL(0, callback5.producer->getDeliveryMode());
-        CPPUNIT_ASSERT_EQUAL(1000LL, callback5.producer->getTimeToLive());
-        CPPUNIT_ASSERT_EQUAL(7, callback5.producer->getPriority());
-        CPPUNIT_ASSERT_EQUAL(true, callback5.producer->getDisableMessageID());
-        CPPUNIT_ASSERT_EQUAL(true, callback5.producer->getDisableMessageTimeStamp());
                 
     } catch( cms::CMSException& e) {
         e.printStackTrace();
@@ -155,13 +122,44 @@ void CmsTemplateTest::testSend() {
         
         DummyMessageCreator msgCreator;
         
-        cmsTemplate->send(&msgCreator);
-        
+        // First, test basics.
+        cmsTemplate->send(&msgCreator);        
         const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
         CPPUNIT_ASSERT(q != NULL);
         CPPUNIT_ASSERT_EQUAL((std::string)"test", q->getQueueName());
+        CPPUNIT_ASSERT(listener.message != NULL);
         CPPUNIT_ASSERT_EQUAL(4, listener.priority);
+        CPPUNIT_ASSERT_EQUAL(0LL, listener.ttl);
+        CPPUNIT_ASSERT_EQUAL(1, listener.deliveryMode);
+        
+        // Now change the defaults and verify that they did not change
+        // the values (explicit qos not enabled). Also, change to using topics.
+        cmsTemplate->setPubSubDomain(true);
+        cmsTemplate->setPriority(5);
+        cmsTemplate->setDeliveryMode(cms::DeliveryMode::NON_PERSISTENT);
+        cmsTemplate->setTimeToLive(10LL);
+        cmsTemplate->setDefaultDestinationName("bob");
+        cmsTemplate->setDeliveryMode(0);
+        cmsTemplate->send(&msgCreator);  
+        const cms::Topic* t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", t->getTopicName());
+        CPPUNIT_ASSERT(listener.message != NULL);
         CPPUNIT_ASSERT_EQUAL(4, listener.priority);
+        CPPUNIT_ASSERT_EQUAL(0LL, listener.ttl);
+        CPPUNIT_ASSERT_EQUAL(1, listener.deliveryMode);
+        
+        // Now enable explicit quality of service and verify that the new default
+        // values are used.
+        cmsTemplate->setExplicitQosEnabled(true);
+        cmsTemplate->send(&msgCreator);  
+        t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", t->getTopicName());
+        CPPUNIT_ASSERT(listener.message != NULL);
+        CPPUNIT_ASSERT_EQUAL(5, listener.priority);
+        CPPUNIT_ASSERT_EQUAL(10LL, listener.ttl);
+        CPPUNIT_ASSERT_EQUAL(0, listener.deliveryMode);              
                 
     } catch( cms::CMSException& e) {
         e.printStackTrace();

@@ -233,9 +233,6 @@ cms::MessageProducer* CmsTemplate::createProducer(cms::Session* session,
         // Set the default values on the producer.
         producer->setDisableMessageID(!isMessageIdEnabled());
         producer->setDisableMessageTimeStamp(!isMessageTimestampEnabled());
-        producer->setTimeToLive(getTimeToLive());
-        producer->setDeliveryMode(getDeliveryMode());
-        producer->setPriority(getPriority());
 
         return producer;
     }
