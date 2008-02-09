@@ -437,14 +437,8 @@ void CmsTemplate::send(MessageCreator* messageCreator)
 throw (cms::CMSException, IllegalStateException)  {
     
     try {
-        
-        checkDefaultDestination();
-        if (getDefaultDestination() != NULL) {
-            send(getDefaultDestination(), messageCreator);
-        }
-        else {
-            send(getDefaultDestinationName(), messageCreator);
-        }
+        SenderExecutor senderExecutor(messageCreator, this);
+        execute(&senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_RETHROW( IllegalStateException )
@@ -456,9 +450,9 @@ void CmsTemplate::send(cms::Destination* dest,
                 MessageCreator* messageCreator) 
 throw (cms::CMSException, IllegalStateException) {
     
-    try {
-        Sender sender(dest, messageCreator, this);
-        execute(&sender);
+    try {        
+        SenderExecutor senderExecutor(messageCreator, this);
+        execute(dest, &senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -470,28 +464,24 @@ void CmsTemplate::send(const std::string& destinationName,
 throw (cms::CMSException, IllegalStateException) {
     
     try {
-        ResolveSender sender(destinationName, messageCreator, this);
-        execute(&sender);
+        SenderExecutor senderExecutor(messageCreator, this);
+        execute(destinationName, &senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
         
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest, 
+void CmsTemplate::doSend(cms::Session* session, cms::MessageProducer* producer, 
         MessageCreator* messageCreator) throw (cms::CMSException) {
     
-    cms::MessageProducer* producer = NULL;
     cms::Message* message = NULL;
         
     try {
     
-        if( session == NULL || dest == NULL) {
+        if( producer == NULL ) {
             return;
-        }
-        
-        // Create the producer.
-        producer = createProducer(session, dest);
+        }        
         
         // Create the message.
         message = messageCreator->createMessage(session);
@@ -504,7 +494,6 @@ void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest,
         }
         
         // Destroy the resources.
-        destroyProducer(producer);
         destroyMessage(message);
         
     } catch( ActiveMQException& e) {
@@ -512,23 +501,10 @@ void CmsTemplate::doSend(cms::Session* session, cms::Destination* dest,
         e.setMark(__FILE__, __LINE__ );
         
         // Destroy the resources.
-        destroyProducer(producer);
         destroyMessage(message);
         
         throw e;
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ResolveSender::doInCms(cms::Session* session) 
-throw (cms::CMSException) {
-    
-    try {
-        cms::Destination* dest = parent->resolveDestinationName(session, destinationName);
-        parent->doSend(session, dest, messageCreator);
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( IllegalStateException, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
 

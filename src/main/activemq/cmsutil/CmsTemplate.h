@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/cmsutil/CmsDestinationAccessor.h>
 #include <activemq/cmsutil/SessionCallback.h>
+#include <activemq/cmsutil/ProducerCallback.h>
 #include <activemq/cmsutil/SessionPool.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <cms/ConnectionFactory.h>
@@ -31,7 +32,6 @@ namespace activemq {
 namespace cmsutil {
 
     // Forward declarations.
-    class ProducerCallback;
     class MessageCreator;
     
     /**
@@ -145,56 +145,28 @@ namespace cmsutil {
         /**
          * Session callback that sends to the given destination.
          */
-        class Sender;
-        friend class Sender;
-        class Sender : public SessionCallback {
+        class SenderExecutor;
+        friend class SenderExecutor;
+        class SenderExecutor : public ProducerCallback {
         private:
             
-            cms::Destination* dest;
             MessageCreator* messageCreator;
             CmsTemplate* parent;
             
         public:
             
-            Sender(cms::Destination* dest, MessageCreator* messageCreator,
+            SenderExecutor( MessageCreator* messageCreator,
                     CmsTemplate* parent) {
-                this->dest = dest;
                 this->messageCreator = messageCreator;
                 this->parent = parent;
             }
             
-            virtual ~Sender() {}
+            virtual ~SenderExecutor() {}
             
-            virtual void doInCms(cms::Session* session) throw (cms::CMSException) {
-                parent->doSend(session, dest, messageCreator);
+            virtual void doInCms(cms::Session* session,
+                    cms::MessageProducer* producer) throw (cms::CMSException) {
+                parent->doSend(session, producer, messageCreator);
             }
-        };
-        
-        /**
-         * Session callback that sends a message to a named destination.
-         */
-        class ResolveSender;
-        friend class ResolveSender;
-        class ResolveSender : public SessionCallback {
-        private:
-                    
-            std::string destinationName;
-            MessageCreator* messageCreator;
-            CmsTemplate* parent;
-            
-        public:
-                
-            ResolveSender(const std::string& destinationName, 
-                    MessageCreator* messageCreator,
-                    CmsTemplate* parent ) {
-                this->destinationName = destinationName;
-                this->messageCreator = messageCreator;
-                this->parent = parent;
-            }
-            
-            virtual ~ResolveSender() {}
-            
-            virtual void doInCms(cms::Session* session) throw (cms::CMSException);
         };
         
     private:
@@ -629,14 +601,15 @@ namespace cmsutil {
         /**
          * Sends a message to a destination.
          * @param session
-         *          the session to be used.
-         * @param dest
-         *          the destination to send the message on.
+         *          the session
+         * @param producer
+         *          the producer to send to.
          * @param messageCreator
          *          creates the message to be sent
          * @throws cms::CMSException thrown if the CMS API throws.
          */
-        void doSend(cms::Session* session, cms::Destination* dest, 
+        void doSend(cms::Session* session,
+                cms::MessageProducer* producer, 
                 MessageCreator* messageCreator) throw (cms::CMSException);
         
         /**
