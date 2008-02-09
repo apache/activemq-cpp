@@ -19,6 +19,7 @@
 #include <activemq/cmsutil/DynamicDestinationResolver.h>
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
 #include "DummyConnectionFactory.h"
+#include "DummyMessageCreator.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::CmsTemplateTest );
 
@@ -142,3 +143,27 @@ void CmsTemplateTest::testExecuteProducer() {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testSend() {
+    
+    try {
+        
+        MessageContext* messageContext = cf->getMessageContext();
+        
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        DummyMessageCreator msgCreator;
+        
+        cmsTemplate->send(&msgCreator);
+        
+        const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
+        CPPUNIT_ASSERT(q != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"test", q->getQueueName());
+        CPPUNIT_ASSERT_EQUAL(4, listener.priority);
+        CPPUNIT_ASSERT_EQUAL(4, listener.priority);
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}

@@ -32,7 +32,7 @@ void DynamicDestinationResolverTest::testTopics() {
     DynamicDestinationResolver resolver;
     resolver.setResourceLifecycleManager(&mgr);
     
-    DummySession session;
+    DummySession session(NULL);
     
     // Test topic
     cms::Destination* testTopic = dynamic_cast<cms::Topic*>(resolver.resolveDestinationName(&session, 
@@ -64,7 +64,7 @@ void DynamicDestinationResolverTest::testQueues() {
     DynamicDestinationResolver resolver;
     resolver.setResourceLifecycleManager(&mgr);
     
-    DummySession session;
+    DummySession session(NULL);
     
     // Queue topic
     cms::Destination* testQueue = dynamic_cast<cms::Queue*>(resolver.resolveDestinationName(&session, 

@@ -33,6 +33,30 @@ namespace cmsutil {
     class ProducerCallback;
     class MessageCreator;
     
+    /**
+     * <code>CmsTemplate</code> simplifies performing synchronous CMS 
+     * operations.  This class is intended to be for CMS what Spring's 
+     * <code>JmsTemplate</code> is for JMS.  Provided with a CMS 
+     * <code>ConnectionFactory</code>, creates and manages all other 
+     * CMS resources internally.
+     * <p>
+     * Before using <code>CmsTemplate</code> the user must first set
+     * the destination (either by name or by setting the destiation 
+     * object directly) and then call <code>init</code> to initialize
+     * the object for use.
+     * <p>
+     * <code>CmsTemplate</code> allows the user to get access to a CMS
+     * <code>Session</code> through a user-defined <code>SessionCallback</code>.
+     * Similarly, if the user wants direct access to a CMS
+     * <code>MessageProducer</code>, it can provide a 
+     * <code>ProducerCallback</code>.  As a convenience, the user can bypass
+     * having to provide callbacks altogether for sending messages, by calling
+     * one of the <code>send</code> methods.
+     * 
+     * @see SessionCallback
+     * @see ProducerCallback
+     * @see MessageCreator
+     */
     class CmsTemplate : public CmsDestinationAccessor
     {
     public:

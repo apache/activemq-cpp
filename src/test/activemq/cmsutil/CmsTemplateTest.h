@@ -24,6 +24,8 @@
 #include <activemq/cmsutil/CmsTemplate.h>
 #include <activemq/cmsutil/SessionCallback.h>
 #include <activemq/cmsutil/ProducerCallback.h>
+#include <activemq/cmsutil/DummyMessageCreator.h>
+#include <activemq/cmsutil/MessageContext.h>
 
 namespace activemq{
 namespace cmsutil{
@@ -35,11 +37,41 @@ namespace cmsutil{
         CPPUNIT_TEST_SUITE( CmsTemplateTest );
         CPPUNIT_TEST( testExecuteSession );
         CPPUNIT_TEST( testExecuteProducer );
+        CPPUNIT_TEST( testSend );
         CPPUNIT_TEST_SUITE_END();               
              
 
         CmsTemplate* cmsTemplate;
         DummyConnectionFactory* cf;
+        
+        class MySendListener : public MessageContext::SendListener {
+        public:
+            
+            const cms::Destination* dest;
+            cms::Message* message;
+            int deliveryMode;
+            int priority;
+            long long ttl;
+                    
+            MySendListener() {
+                dest = NULL;
+                message = NULL;
+                deliveryMode = 0;
+                priority = 0;
+                ttl = 0LL;
+            }
+            virtual ~MySendListener(){}
+            
+            virtual void onSend(const cms::Destination* destination,
+                cms::Message* message, int deliveryMode, int priority, 
+                long long timeToLive) {
+                this->dest = destination;
+                this->message = message;
+                this->deliveryMode = deliveryMode;
+                this->priority = priority;
+                this->ttl = timeToLive;
+            }
+        };
         
         class MySessionCallback : public SessionCallback {
         public:
@@ -87,6 +119,7 @@ namespace cmsutil{
         
         void testExecuteSession();
         void testExecuteProducer();
+        void testSend();
     };
 
 }}

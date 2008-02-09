@@ -15,36 +15,25 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H
-#define ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H
+#ifndef ACTIVEMQ_CMSUTIL_DUMMYMESSAGECREATOR_H_
+#define ACTIVEMQ_CMSUTIL_DUMMYMESSAGECREATOR_H_
 
-#include <cms/Session.h>
-#include <cms/Message.h>
+#include <activemq/cmsutil/MessageCreator.h>
+#include <activemq/cmsutil/DummyMessage.h>
 
 namespace activemq {
 namespace cmsutil {
 
-    /**
-     * Creates the user-defined message to be sent by the 
-     * <code>CmsTemplate</code>.
-     */
-    class MessageCreator {
+    class DummyMessageCreator : public MessageCreator {
     public:
         
-        virtual ~MessageCreator(){}
-    
-        /**
-         * Creates a message from the given session.
-         * 
-         * @param session 
-         *          the CMS <code>Session</code>
-         * @throws cms::CMSException if thrown by CMS API methods
-         */
+        virtual ~DummyMessageCreator() {}
+        
         virtual cms::Message* createMessage(cms::Session* session ) 
-            throw (cms::CMSException) = 0;
-    
+                    throw (cms::CMSException) {
+            return new DummyMessage();
+        }
     };
-
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H*/    
+#endif /*ACTIVEMQ_CMSUTIL_DUMMYMESSAGECREATOR_H_*/

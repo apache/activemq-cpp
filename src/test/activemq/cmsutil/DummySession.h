@@ -26,16 +26,20 @@
 namespace activemq {
 namespace cmsutil {
 
+    class MessageContext;
+
     class DummySession : public cms::Session {
     
     private:
         
         cms::Session::AcknowledgeMode mode;
+        MessageContext* messageContext;
         
     public:
 
-        DummySession() {
+        DummySession(MessageContext* messageContext) {
             this->mode = cms::Session::AUTO_ACKNOWLEDGE;
+            this->messageContext = messageContext;
         }
         
         virtual ~DummySession() {}
@@ -71,7 +75,7 @@ namespace cmsutil {
                 throw ( cms::CMSException ) { return NULL; }
 
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
-            throw ( cms::CMSException ) { return new DummyProducer(); }
+            throw ( cms::CMSException ) { return new DummyProducer(messageContext, destination); }
 
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {

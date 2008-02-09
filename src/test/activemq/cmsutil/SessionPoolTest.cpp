@@ -25,7 +25,7 @@ using namespace activemq::cmsutil;
 ////////////////////////////////////////////////////////////////////////////////
 void SessionPoolTest::testTakeSession() {
     
-    DummyConnection connection;
+    DummyConnection connection(NULL);
     ResourceLifecycleManager mgr;
     
     SessionPool pool(&connection, cms::Session::AUTO_ACKNOWLEDGE, &mgr);
@@ -45,7 +45,7 @@ void SessionPoolTest::testTakeSession() {
 ////////////////////////////////////////////////////////////////////////////////
 void SessionPoolTest::testReturnSession() {
     
-    DummyConnection connection;
+    DummyConnection connection(NULL);
     ResourceLifecycleManager mgr;
     
     SessionPool pool(&connection, cms::Session::AUTO_ACKNOWLEDGE, &mgr);
@@ -68,7 +68,7 @@ void SessionPoolTest::testReturnSession() {
 ////////////////////////////////////////////////////////////////////////////////
 void SessionPoolTest::testCloseSession() {
     
-    DummyConnection connection;
+    DummyConnection connection(NULL);
     ResourceLifecycleManager mgr;
     
     SessionPool pool(&connection, cms::Session::AUTO_ACKNOWLEDGE, &mgr);

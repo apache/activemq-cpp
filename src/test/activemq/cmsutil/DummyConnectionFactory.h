@@ -20,26 +20,30 @@
 
 #include <cms/ConnectionFactory.h>
 #include <activemq/cmsutil/DummyConnection.h>
+#include <activemq/cmsutil/MessageContext.h>
 
 namespace activemq {
 namespace cmsutil {
 
     class DummyConnectionFactory : public cms::ConnectionFactory {
+    private:
+        
+        MessageContext messageContext;
         
     public:
-
+        
         virtual ~DummyConnectionFactory() {}
 
         virtual cms::Connection* createConnection() throw ( cms::CMSException ) {
             
-            return new DummyConnection();
+            return new DummyConnection(&messageContext);
         }
 
         virtual cms::Connection* createConnection( const std::string& username,
                                                    const std::string& password )
             throw ( cms::CMSException ) {
             
-            return new DummyConnection();
+            return new DummyConnection(&messageContext);
         }
 
         virtual cms::Connection* createConnection( const std::string& username,
@@ -47,11 +51,16 @@ namespace cmsutil {
                                                    const std::string& clientId )
             throw ( cms::CMSException ) {
             
-            DummyConnection* c = new DummyConnection();
+            DummyConnection* c = new DummyConnection(&messageContext);
             c->setClientID(clientId);
             
             return c;
         }
+        
+        MessageContext* getMessageContext() {
+            return &messageContext;
+        }
+        
     };
     
 }}

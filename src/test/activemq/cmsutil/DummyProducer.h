@@ -19,26 +19,31 @@
 #define ACTIVEMQ_CMSUTIL_DUMMYPRODUCER_H_
 
 #include <cms/MessageProducer.h>
+#include <activemq/cmsutil/MessageContext.h>
 
 namespace activemq {
 namespace cmsutil {
 
     class DummyProducer : public cms::MessageProducer {  
     private:
+        const cms::Destination* dest;
         int deliveryMode;
         bool disableMessageId;
         bool disableMessageTimestamp;
         int priority;
         long long ttl;
+        MessageContext* messageContext;
         
     public:
 
-        DummyProducer() {
+        DummyProducer(MessageContext* messageContext, const cms::Destination* dest) {
             deliveryMode = 1;
             disableMessageId = false;
             disableMessageTimestamp = false;
             priority = 4;
             ttl = 0L;
+            this->dest = dest;
+            this->messageContext = messageContext;
         }
         virtual ~DummyProducer() {}
               
@@ -53,7 +58,8 @@ namespace cmsutil {
          *      The message to be sent.
          * @throws cms::CMSException
          */
-        virtual void send( cms::Message* message ) throw ( cms::CMSException ){            
+        virtual void send( cms::Message* message ) throw ( cms::CMSException ){
+            send(message, deliveryMode, priority, ttl);
         }
 
         /**
@@ -71,8 +77,10 @@ namespace cmsutil {
          * @throws cms::CMSException
          */
         virtual void send( cms::Message* message, int deliveryMode, int priority, 
-            long long timeToLive) throw ( cms::CMSException ){            
-            }
+            long long timeToLive) throw ( cms::CMSException ){
+            
+            send(dest, message, deliveryMode, priority, timeToLive);
+        }
             
         /**
          * Sends the message to the designated destination, but does
@@ -86,7 +94,9 @@ namespace cmsutil {
          * @throws cms::CMSException
          */
         virtual void send( const cms::Destination* destination,
-                           cms::Message* message ) throw ( cms::CMSException ){}
+                           cms::Message* message ) throw ( cms::CMSException ){
+            send(dest, message, deliveryMode, priority, ttl);
+        }
                            
         /**
          * Sends the message to the designated destination, but does
@@ -106,7 +116,10 @@ namespace cmsutil {
          */     
         virtual void send( const cms::Destination* destination,
             cms::Message* message, int deliveryMode, int priority, 
-            long long timeToLive) throw ( cms::CMSException ){}
+            long long timeToLive) throw ( cms::CMSException ){
+            
+            messageContext->send(destination, message, deliveryMode, priority, timeToLive);
+        }
             
         /** 
          * Sets the delivery mode for this Producer

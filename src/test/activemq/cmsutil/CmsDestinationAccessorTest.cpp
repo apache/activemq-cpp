@@ -43,7 +43,7 @@ void CmsDestinationAccessorTest::tearDown() {
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessorTest::test() {
 
-    DummySession s;
+    DummySession s(NULL);
     
     // Create a queue destination
     cms::Destination* d = accessor->resolveDestinationName(&s, "hello");

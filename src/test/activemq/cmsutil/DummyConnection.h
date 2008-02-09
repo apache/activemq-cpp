@@ -24,14 +24,20 @@
 namespace activemq {
 namespace cmsutil {
 
+    class MessageContext;
+
     class DummyConnection : public cms::Connection {
     private:
         
         cms::ExceptionListener* listener;
         std::string clientId;
+        MessageContext* messageContext;
         
     public:
 
+        DummyConnection(MessageContext* messageContext ) {
+            this->messageContext = messageContext;
+        }
         virtual ~DummyConnection() {}
 
         virtual void close() throw( cms::CMSException ) {            
@@ -44,13 +50,13 @@ namespace cmsutil {
         }
 
         virtual cms::Session* createSession() throw ( cms::CMSException ) {
-            return new DummySession();
+            return new DummySession(messageContext);
         }
                 
         virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode ) 
             throw ( cms::CMSException ) {
             
-            DummySession* s = new DummySession();
+            DummySession* s = new DummySession(messageContext);
             s->setAcknowledgeMode(ackMode);
             return s;
         }
