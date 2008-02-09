@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_CMSUTIL_CMSTEMPLATE_H_
 #define ACTIVEMQ_CMSUTIL_CMSTEMPLATE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/cmsutil/CmsDestinationAccessor.h>
 #include <activemq/cmsutil/SessionCallback.h>
 #include <activemq/cmsutil/SessionPool.h>
@@ -87,25 +88,58 @@ namespace cmsutil {
         /**
          * Session callback that executes a producer callback.
          */
-        class ProducerSessionCallback;
-        friend class ProducerSessionCallback;
-        class ProducerSessionCallback : public SessionCallback {
-        private:
+        class ProducerExecutor;
+        friend class ProducerExecutor;
+        class ProducerExecutor : public SessionCallback {
+        protected:
             
             ProducerCallback* action;
             CmsTemplate* parent;
+            cms::Destination* destination;
             
         public:
             
-            ProducerSessionCallback(ProducerCallback* action,
-                    CmsTemplate* parent){
+            ProducerExecutor(ProducerCallback* action,
+                    CmsTemplate* parent, cms::Destination* destination){
                 this->action = action;
                 this->parent = parent;
+                this->destination = destination;
             }
             
-            virtual ~ProducerSessionCallback() {}
+            virtual ~ProducerExecutor() {}
             
             virtual void doInCms(cms::Session* session) throw (cms::CMSException);
+            
+            virtual cms::Destination* getDestination(cms::Session* session AMQCPP_UNUSED) 
+                throw (cms::CMSException) {
+                return destination;
+            }
+        };
+        
+        /**
+         * Session callback that executes a producer callback for a named destination.
+         */
+        class ResolveProducerExecutor;
+        friend class ResolveProducerExecutor;
+        class ResolveProducerExecutor : public ProducerExecutor {
+        private:
+            
+            std::string destinationName;
+            
+        public:
+            
+            ResolveProducerExecutor(ProducerCallback* action,
+                    CmsTemplate* parent, const std::string& destinationName)
+            :
+                ProducerExecutor(action, parent, NULL) {
+                
+                this->destinationName = destinationName;
+            }
+            
+            virtual ~ResolveProducerExecutor() {}
+            
+            virtual cms::Destination* getDestination(cms::Session* session) 
+                throw (cms::CMSException) ;
         };
         
         /**
@@ -149,7 +183,7 @@ namespace cmsutil {
             CmsTemplate* parent;
             
         public:
-            
+                
             ResolveSender(const std::string& destinationName, 
                     MessageCreator* messageCreator,
                     CmsTemplate* parent ) {
@@ -420,6 +454,33 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs.
          */
         virtual void execute(ProducerCallback* action) throw (cms::CMSException);
+        
+        /**
+         * Executes the given action and provides it with a CMS Session and 
+         * producer
+         * 
+         * @param dest
+         *          the destination to send messages to
+         * @param action
+         *          the action to perform
+         * @throws cms::CMSException thrown if an error occurs.
+         */
+        virtual void execute(cms::Destination* dest,
+                ProducerCallback* action) throw (cms::CMSException);
+        
+        /**
+         * Executes the given action and provides it with a CMS Session and 
+         * producer
+         * 
+         * @param dest
+         *          the name of the destination to send messages to
+         *          (to internally be resolved to an actual destination)
+         * @param action
+         *          the action to perform
+         * @throws cms::CMSException thrown if an error occurs.
+         */
+        virtual void execute(const std::string& destinationName,
+                ProducerCallback* action) throw (cms::CMSException);
     
         /**
          * Convenience method for sending a message to the default destination.

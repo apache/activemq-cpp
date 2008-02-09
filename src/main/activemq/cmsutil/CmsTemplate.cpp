@@ -347,8 +347,8 @@ void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
     
     try {
         
-        // Create the callback.
-        ProducerSessionCallback cb(action, this);
+        // Create the callback with using default destination.
+        ProducerExecutor cb(action, this, NULL);
         
         // Execute the action in a session.
         execute(&cb);
@@ -358,7 +358,38 @@ void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsTemplate::ProducerSessionCallback::doInCms( cms::Session* session ) 
+void CmsTemplate::execute(cms::Destination* dest,
+        ProducerCallback* action) throw (cms::CMSException) {
+    
+    try {
+        
+        // Create the callback.
+        ProducerExecutor cb(action, this, dest);
+        
+        // Execute the action in a session.
+        execute(&cb);
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::execute(const std::string& destinationName,
+        ProducerCallback* action) throw (cms::CMSException) {
+    
+    try {
+        // Create the callback.
+        ResolveProducerExecutor cb(action, this, destinationName);
+        
+        // Execute the action in a session.
+        execute(&cb);
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::ProducerExecutor::doInCms( cms::Session* session ) 
 throw (cms::CMSException) {
         
     cms::MessageProducer* producer = NULL;
@@ -370,7 +401,7 @@ throw (cms::CMSException) {
         }
         
         // Create the producer.
-        producer = parent->createProducer(session, NULL);
+        producer = parent->createProducer(session, getDestination(session));
         
         // Execute the action.
         action->doInCms(session, producer);
@@ -387,6 +418,18 @@ throw (cms::CMSException) {
         
         throw e;
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Destination* CmsTemplate::ResolveProducerExecutor::getDestination(
+        cms::Session* session ) 
+    throw (cms::CMSException) {
+    
+    try {    
+        return parent->resolveDestinationName(session, destinationName);        
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -483,7 +526,7 @@ throw (cms::CMSException) {
     try {
         cms::Destination* dest = parent->resolveDestinationName(session, destinationName);
         parent->doSend(session, dest, messageCreator);
-    } 
+    }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( IllegalStateException, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
