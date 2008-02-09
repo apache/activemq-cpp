@@ -145,9 +145,9 @@ namespace cmsutil {
         /**
          * Session callback that sends to the given destination.
          */
-        class SenderExecutor;
-        friend class SenderExecutor;
-        class SenderExecutor : public ProducerCallback {
+        class SendExecutor;
+        friend class SendExecutor;
+        class SendExecutor : public ProducerCallback {
         private:
             
             MessageCreator* messageCreator;
@@ -155,18 +155,87 @@ namespace cmsutil {
             
         public:
             
-            SenderExecutor( MessageCreator* messageCreator,
+            SendExecutor( MessageCreator* messageCreator,
                     CmsTemplate* parent) {
                 this->messageCreator = messageCreator;
                 this->parent = parent;
             }
             
-            virtual ~SenderExecutor() {}
+            virtual ~SendExecutor() {}
             
             virtual void doInCms(cms::Session* session,
                     cms::MessageProducer* producer) throw (cms::CMSException) {
                 parent->doSend(session, producer, messageCreator);
             }
+        };
+        
+        /**
+         * Session callback that receives from the given destination.
+         */
+        class ReceiveExecutor;
+        friend class ReceiveExecutor;
+        class ReceiveExecutor : public SessionCallback {
+        protected:
+            
+            cms::Destination* destination;
+            std::string selector;
+            bool noLocal;
+            cms::Message* message;
+            CmsTemplate* parent;
+            long long receiveTime;
+            
+        public:
+            ReceiveExecutor( CmsTemplate* parent,
+                    cms::Destination* destination,
+                    const std::string& selector,
+                    bool noLocal,
+                    long long receiveTime) {
+                this->parent = parent;
+                this->destination = destination;
+                this->selector = selector;
+                this->noLocal = noLocal;                
+                this->receiveTime = receiveTime;
+                this->message = NULL;
+            }
+            
+            virtual ~ReceiveExecutor() {}
+            
+            virtual void doInCms(cms::Session* session) 
+                throw (cms::CMSException);
+            
+            virtual cms::Destination* getDestination(cms::Session* session AMQCPP_UNUSED) 
+                throw (cms::CMSException) {
+                return destination;
+            }
+        };
+        
+        /**
+         * Session callback that executes a receive callback for a named destination.
+         */
+        class ResolveReceiveExecutor;
+        friend class ResolveReceiveExecutor;
+        class ResolveReceiveExecutor : public ReceiveExecutor {
+        private:
+            
+            std::string destinationName;
+            
+        public:
+            
+            ResolveReceiveExecutor(CmsTemplate* parent,
+                    const std::string& selector,
+                    bool noLocal, 
+                    long long receiveTime,
+                    const std::string& destinationName)
+            :
+                ReceiveExecutor( parent, NULL, selector, noLocal, receiveTime) {
+                
+                this->destinationName = destinationName;
+            }
+            
+            virtual ~ResolveReceiveExecutor() {}
+            
+            virtual cms::Destination* getDestination(cms::Session* session) 
+                throw (cms::CMSException);
         };
         
     private:
@@ -566,22 +635,22 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
         void destroyProducer( cms::MessageProducer*& producer ) throw (cms::CMSException);
-    
+                
         /**
          * Allocates a consumer initialized with the proper values.
          * 
          * @param session
          *          The session from which to create a consumer
          * @param dest
-         *          The destination for which to create the consumer
-         * @param messageSelector
-         *          The message selector for the consumer.
-         * @return the new consumer
-         * @throws cms::CMSException if the CMS methods throw.
+         *          The destination for which to create the consumer.  If
+         *          this is NULL, the default will be used.
+         * @return the consumer
+         * @throws cms::CMSException thrown by the CMS API
          */
         cms::MessageConsumer* createConsumer(cms::Session* session,
-                cms::Destination* dest, const std::string& messageSelector)
-        throw (cms::CMSException);
+                cms::Destination* dest,
+                const std::string& selector,
+                bool noLocal ) throw (cms::CMSException);
         
         /**
          * Closes and destroys a consumer resource
@@ -611,6 +680,18 @@ namespace cmsutil {
         void doSend(cms::Session* session,
                 cms::MessageProducer* producer, 
                 MessageCreator* messageCreator) throw (cms::CMSException);
+        
+        /**
+         * Receives a message from a destination.
+         * @param consumer 
+         *          the consumer to receive from
+         * @param receiveTime 
+         *          the time to wait for the receive.
+         * @return the message that was read
+         * @throws cms::CMSException thrown if the CMS API throws.
+         */
+        cms::Message* doReceive(cms::MessageConsumer* consumer,
+                long long receiveTime ) throw (cms::CMSException);
         
         /**
          * Resolves the default destination and returns it.

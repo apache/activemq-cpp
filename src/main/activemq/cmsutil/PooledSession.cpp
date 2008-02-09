@@ -33,11 +33,19 @@ PooledSession::PooledSession(SessionPool* pool, cms::Session* session) {
 ////////////////////////////////////////////////////////////////////////////////
 PooledSession::~PooledSession(){
     
+    // Destroy cached producers.
     std::vector<CachedProducer*> cachedProducers = producerCache.getValues();
     for( std::size_t ix = 0; ix < cachedProducers.size(); ++ix ) {
         delete cachedProducers[ix];
     }
     cachedProducers.clear();
+    
+    // Destroy cached consumers.
+    std::vector<CachedConsumer*> cachedConsumers = consumerCache.getValues();
+    for( std::size_t ix = 0; ix < cachedConsumers.size(); ++ix ) {
+        delete cachedConsumers[ix];
+    }
+    cachedConsumers.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,12 +67,12 @@ cms::MessageProducer* PooledSession::createCachedProducer(
             throw ActiveMQException(__FILE__, __LINE__, "destination is NULL");
         }
         
-        std::string destName = getUniqueDestName(destination);
+        std::string key = getUniqueDestName(destination);
         
         // Check the cache - add it if necessary.
         CachedProducer* cachedProducer = NULL;
         try {            
-            cachedProducer = producerCache.getValue(destName);            
+            cachedProducer = producerCache.getValue(key);            
         } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
             
             // No producer exists for this destination - start by creating
@@ -78,7 +86,7 @@ cms::MessageProducer* PooledSession::createCachedProducer(
             cachedProducer = new CachedProducer(p);
             
             // Add it to the cache.
-            producerCache.setValue(destName, cachedProducer);
+            producerCache.setValue(key, cachedProducer);
         }
         
         return cachedProducer;
@@ -88,18 +96,65 @@ cms::MessageProducer* PooledSession::createCachedProducer(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::MessageConsumer* PooledSession::createCachedConsumer(
+    const cms::Destination* destination,
+    const std::string& selector,
+    bool noLocal) throw ( cms::CMSException ) {
+    
+    try {
+            
+        if( destination == NULL ) {
+            throw ActiveMQException(__FILE__, __LINE__, "destination is NULL");
+        }
+        
+        // Append the selector and noLocal flag onto the key.
+        std::string key = getUniqueDestName(destination);
+        key += "s=";
+        key += selector;
+        key += ",nl=";
+        key += (noLocal? "t" : "f");
+                
+        // Check the cache - add it if necessary.
+        CachedConsumer* cachedConsumer = NULL;
+        try {            
+            cachedConsumer = consumerCache.getValue(key);            
+        } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
+            
+            // No producer exists for this destination - start by creating
+            // a new consumer resource.
+            cms::MessageConsumer* c = session->createConsumer(destination, selector, noLocal);                                    
+            
+            // Add the consumer resource to the resource lifecycle manager.
+            pool->getResourceLifecycleManager()->addMessageConsumer(c);
+            
+            // Create the cached consumer wrapper.
+            cachedConsumer = new CachedConsumer(c);
+            
+            // Add it to the cache.
+            consumerCache.setValue(key, cachedConsumer);
+        }
+        
+        return cachedConsumer;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string PooledSession::getUniqueDestName( const cms::Destination* dest ) {
     
-    std::string destName;
+    std::string destName = "[";
     const cms::Queue* queue = dynamic_cast<const cms::Queue*>(dest);
     if( queue != NULL ) {
-        destName = "q:" + queue->getQueueName();
+        destName += "q:" + queue->getQueueName();
     } else {
         const cms::Topic* topic = dynamic_cast<const cms::Topic*>(dest);
         if( topic != NULL ) {
-            destName = "t:" + topic->getTopicName();
+            destName += "t:" + topic->getTopicName();
         }
     }
+    
+    destName += "]";
     
     return destName;
 }

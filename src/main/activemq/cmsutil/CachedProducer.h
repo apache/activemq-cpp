@@ -24,7 +24,7 @@ namespace activemq {
 namespace cmsutil {
 
     /**
-     * A cached message roducer contained within a pooled session.
+     * A cached message producer contained within a pooled session.
      */
     class CachedProducer : public cms::MessageProducer {
     private:

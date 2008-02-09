@@ -21,6 +21,7 @@
 #include <cms/Session.h>
 #include <decaf/util/Map.h>
 #include <activemq/cmsutil/CachedProducer.h>
+#include <activemq/cmsutil/CachedConsumer.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -40,6 +41,8 @@ namespace cmsutil {
         cms::Session* session;
         
         decaf::util::Map<std::string, CachedProducer*> producerCache;
+        
+        decaf::util::Map<std::string, CachedConsumer*> consumerCache;
         
     public:
         
@@ -111,6 +114,25 @@ namespace cmsutil {
                 throw ( cms::CMSException ) {
             return session->createDurableConsumer(destination, name, selector, noLocal);
         }
+        
+        /**
+         * First checks the internal consumer cache and creates on if none exist
+         * for the given destination, selector, noLocal.  If created, the consumer is
+         * added to the pool's lifecycle manager.
+         * 
+         * @param destiation
+         *          the destination to receive on
+         * @param selector
+         *          the selector to use
+         * @param noLocal
+         *          whether or not to receive messages from the same connection
+         * @return the consumer resource
+         * @throws cms::CMSException if something goes wrong.
+         */
+        virtual cms::MessageConsumer* createCachedConsumer(
+                const cms::Destination* destination,
+                const std::string& selector,
+                bool noLocal) throw ( cms::CMSException );
         
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
             throw ( cms::CMSException ) {

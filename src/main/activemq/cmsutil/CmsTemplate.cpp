@@ -242,6 +242,37 @@ cms::MessageProducer* CmsTemplate::createProducer(cms::Session* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+cms::MessageConsumer* CmsTemplate::createConsumer(cms::Session* session,
+        cms::Destination* dest,
+        const std::string& selector,
+        bool noLocal ) throw (cms::CMSException) {
+
+    try {
+
+        // If no destination was provided, resolve the default.
+        if( dest == NULL ) {            
+            dest = resolveDefaultDestination(session);
+        }
+        
+        cms::MessageConsumer* consumer = NULL;
+        
+        // Try to use a cached consumer - requires that we're using a
+        // PooledSession
+        PooledSession* pooledSession = dynamic_cast<PooledSession*>(session);
+        if( pooledSession != NULL ) {
+            consumer = pooledSession->createCachedConsumer(dest, selector, noLocal);
+        } else {
+            consumer = session->createConsumer(dest, selector, noLocal);
+        }
+
+        return consumer;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( IllegalStateException, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::destroyProducer( cms::MessageProducer*& producer) 
 throw (cms::CMSException) {
 
@@ -266,21 +297,6 @@ throw (cms::CMSException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::MessageConsumer* CmsTemplate::createConsumer(cms::Session* session,
-        cms::Destination* dest, const std::string& messageSelector)
-        throw (cms::CMSException) {
-
-    try {
-        cms::MessageConsumer* consumer = session->createConsumer(dest,
-                messageSelector, 
-                isNoLocal());
-        
-        return consumer;
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::destroyConsumer( cms::MessageConsumer*& consumer) 
 throw (cms::CMSException) {
 
@@ -290,12 +306,17 @@ throw (cms::CMSException) {
     
     try {        
         
-        // Close the consumer, then destroy it.
+        // Close the producer, then destroy it.
         consumer->close();                
     }
     AMQ_CATCH_NOTHROW( cms::CMSException )
     
-    delete consumer;
+    // Destroy if it's not a cached consumer.
+    CachedConsumer* cachedConsumer = dynamic_cast<CachedConsumer*>(consumer);
+    if( cachedConsumer == NULL ) {
+        delete consumer;
+    }
+    
     consumer = NULL;
 }
 
@@ -437,7 +458,7 @@ void CmsTemplate::send(MessageCreator* messageCreator)
 throw (cms::CMSException, IllegalStateException)  {
     
     try {
-        SenderExecutor senderExecutor(messageCreator, this);
+        SendExecutor senderExecutor(messageCreator, this);
         execute(&senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -451,7 +472,7 @@ void CmsTemplate::send(cms::Destination* dest,
 throw (cms::CMSException, IllegalStateException) {
     
     try {        
-        SenderExecutor senderExecutor(messageCreator, this);
+        SendExecutor senderExecutor(messageCreator, this);
         execute(dest, &senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -464,7 +485,7 @@ void CmsTemplate::send(const std::string& destinationName,
 throw (cms::CMSException, IllegalStateException) {
     
     try {
-        SenderExecutor senderExecutor(messageCreator, this);
+        SendExecutor senderExecutor(messageCreator, this);
         execute(destinationName, &senderExecutor);
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -507,4 +528,84 @@ void CmsTemplate::doSend(cms::Session* session, cms::MessageProducer* producer,
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+cms::Message* CmsTemplate::doReceive(cms::MessageConsumer* consumer,
+        long long receiveTime ) 
+throw (cms::CMSException) {
+    
+    cms::Message* message = NULL;
+            
+    try {
+    
+        if( consumer == NULL ) {
+            throw new ActiveMQException(__FILE__, __LINE__, "consumer is NULL");
+        }
+        
+        switch( receiveTime ) {
+        case RECEIVE_TIMEOUT_NO_WAIT: {
+            message = consumer->receiveNoWait();
+            break;
+        }
+        case RECEIVE_TIMEOUT_INDEFINITE_WAIT: {
+            message = consumer->receive();
+            break;
+        }
+        default: {
+            message = consumer->receive(receiveTime);
+            break;
+        }
+        }
+        
+    } catch( ActiveMQException& e) {
+        
+        e.setMark(__FILE__, __LINE__ );
+        
+        // Destroy the message resource.
+        destroyMessage(message);
+        
+        throw e;
+    }
+}
 
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::ReceiveExecutor::doInCms(cms::Session* session) 
+    throw (cms::CMSException) {
+    
+    cms::MessageConsumer* consumer = NULL;
+                
+    try {
+    
+        // Create the consumer resource.
+        consumer = parent->createConsumer(session, getDestination(session), selector, noLocal);
+        
+        // Receive the message.
+        message = parent->doReceive(consumer, receiveTime); 
+            
+        // Destroy the consumer resource.
+        parent->destroyConsumer(consumer);
+        
+    } catch( ActiveMQException& e) {
+        
+        e.setMark(__FILE__, __LINE__ );
+        
+        // Destroy the message resource.
+        parent->destroyMessage(message);
+        
+        // Destroy the consumer resource.
+        parent->destroyConsumer(consumer);
+        
+        throw e;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+cms::Destination* CmsTemplate::ResolveReceiveExecutor::getDestination(
+        cms::Session* session ) 
+    throw (cms::CMSException) {
+    
+    try {    
+        return parent->resolveDestinationName(session, destinationName);        
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
