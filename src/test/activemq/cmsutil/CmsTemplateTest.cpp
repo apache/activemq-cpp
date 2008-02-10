@@ -442,6 +442,7 @@ void CmsTemplateTest::testReceiveSelected_Destination() {
         cms::Message* message = cmsTemplate->receiveSelected(&myTopic, selector); 
         CPPUNIT_ASSERT( message != NULL );
         CPPUNIT_ASSERT(&myTopic == listener.dest);
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
         delete message;
         
         // Now try a failure.
@@ -481,6 +482,7 @@ void CmsTemplateTest::testReceiveSelected_DestinationName() {
         const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
         CPPUNIT_ASSERT(q != NULL);
         CPPUNIT_ASSERT_EQUAL((std::string)"bob", q->getQueueName());
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
         delete message;
         
         // Now try a failure.
