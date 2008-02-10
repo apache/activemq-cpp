@@ -120,13 +120,12 @@ void CmsTemplateTest::testExecuteProducer() {
         MyProducerCallback callback6;
         activemq::connector::stomp::StompTopic myTopic("anothertopic");
         cmsTemplate->execute(&myTopic, &callback6);
-        CPPUNIT_ASSERT(callback6.session == callback.session);
-        CPPUNIT_ASSERT(callback6.producer != callback4.producer);
+        CPPUNIT_ASSERT(callback6.session != NULL);
         
         // Now try an explicitly named destination 
         MyProducerCallback callback7;
         cmsTemplate->execute("fred", &callback7);
-        CPPUNIT_ASSERT(callback7.session == callback.session);
+        CPPUNIT_ASSERT(callback7.session == callback6.session);
         CPPUNIT_ASSERT(callback7.producer != callback6.producer);
                 
     } catch( cms::CMSException& e) {

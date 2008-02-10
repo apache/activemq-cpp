@@ -535,11 +535,9 @@ namespace cmsutil {
          * @param messageCreator
          *          Responsible for creating the message to be sent
          * @throws cms::CMSException thrown if an error occurs.
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual void send(MessageCreator* messageCreator) 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
 
         /**
          * Convenience method for sending a message to the specified destination.
@@ -549,12 +547,10 @@ namespace cmsutil {
          * @param messageCreator
          *          Responsible for creating the message to be sent
          * @throws cms::CMSException thrown if an error occurs.
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual void send(cms::Destination* dest, 
                 MessageCreator* messageCreator)
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Convenience method for sending a message to the specified destination.
@@ -564,22 +560,18 @@ namespace cmsutil {
          * @param messageCreator
          *          Responsible for creating the message to be sent
          * @throws cms::CMSException thrown if an error occurs.
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual void send(const std::string& destinationName, 
                 MessageCreator* messageCreator)
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Performs a synchronous read from the default destination.
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receive()
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Performs a synchronous read from the specified destination.
@@ -587,11 +579,9 @@ namespace cmsutil {
          *          the destination to receive on
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receive(cms::Destination* destination )
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Performs a synchronous read from the specified destination.
@@ -600,11 +590,9 @@ namespace cmsutil {
          *          (will be resolved to destination internally).
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receive(const std::string& destinationName )
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Performs a synchronous read consuming only messages identified by the
@@ -614,11 +602,9 @@ namespace cmsutil {
          *          the selector expression.
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receiveSelected(const std::string& selector )
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
         
         /**
          * Performs a synchronous read from the specified destination, consuming 
@@ -630,12 +616,10 @@ namespace cmsutil {
          *          the selector expression.
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receiveSelected( cms::Destination* destination,
                 const std::string& selector )
-                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+                throw (cms::CMSException);
         
         /**
          * Performs a synchronous read from the specified destination, consuming 
@@ -648,12 +632,10 @@ namespace cmsutil {
          *          the selector expression.
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if the
-         *          default destination has not been specified.
          */
         virtual cms::Message* receiveSelected( const std::string& destinationName,
                 const std::string& selector )
-                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+                throw (cms::CMSException);
         
     private:
     
@@ -787,11 +769,9 @@ namespace cmsutil {
          *          the parent session.
          * @return the default destination
          * @throws cms::CMSException if an error occurs
-         * @throws decaf::lang::exceptions::IllegalStateException thrown if
-         *          no default destination was provided.
          */
         cms::Destination* resolveDefaultDestination(cms::Session* session)
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        throw (cms::CMSException);
     };
 
 }}
