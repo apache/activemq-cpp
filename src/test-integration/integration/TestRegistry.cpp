@@ -25,6 +25,7 @@
 #include "connector/openwire/OpenwireTransactionTest.h"
 
 #include "connector/stomp/AsyncSenderTest.h"
+#include "connector/stomp/CmsTemplateTest.h"
 #include "connector/stomp/DurableTest.h"
 #include "connector/stomp/ExpirationTest.h"
 #include "connector/stomp/SimpleRollbackTest.h"
@@ -42,6 +43,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempD
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::CmsTemplateTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::DurableTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::ExpirationTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTest );

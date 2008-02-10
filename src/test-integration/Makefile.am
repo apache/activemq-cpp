@@ -28,6 +28,7 @@ cc_sources = \
   integration/connector/openwire/OpenwireTransactionTest.cpp \
   integration/connector/openwire/OpenwireTempDestinationTest.cpp \
   integration/connector/stomp/AsyncSenderTest.cpp \
+  integration/connector/stomp/CmsTemplateTest.cpp \
   integration/connector/stomp/DurableTest.cpp \
   integration/connector/stomp/ExpirationTest.cpp \
   integration/connector/stomp/SimpleRollbackTest.cpp \
