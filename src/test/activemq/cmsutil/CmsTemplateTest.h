@@ -26,6 +26,7 @@
 #include <activemq/cmsutil/ProducerCallback.h>
 #include <activemq/cmsutil/DummyMessageCreator.h>
 #include <activemq/cmsutil/MessageContext.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace cmsutil{
@@ -38,6 +39,12 @@ namespace cmsutil{
         CPPUNIT_TEST( testExecuteSession );
         CPPUNIT_TEST( testExecuteProducer );
         CPPUNIT_TEST( testSend );
+        CPPUNIT_TEST( testReceive );
+        CPPUNIT_TEST( testReceive_Destination );
+        CPPUNIT_TEST( testReceive_DestinationName );
+        CPPUNIT_TEST( testReceiveSelected );
+        CPPUNIT_TEST( testReceiveSelected_Destination );
+        CPPUNIT_TEST( testReceiveSelected_DestinationName );        
         CPPUNIT_TEST_SUITE_END();               
              
 
@@ -52,6 +59,9 @@ namespace cmsutil{
             int deliveryMode;
             int priority;
             long long ttl;
+            std::string selector;
+            bool noLocal;
+            long long timeout;
                     
             MySendListener() {
                 dest = NULL;
@@ -64,12 +74,44 @@ namespace cmsutil{
             
             virtual void onSend(const cms::Destination* destination,
                 cms::Message* message, int deliveryMode, int priority, 
-                long long timeToLive) {
+                long long timeToLive) throw (cms::CMSException){
                 this->dest = destination;
                 this->message = message;
                 this->deliveryMode = deliveryMode;
                 this->priority = priority;
                 this->ttl = timeToLive;
+            }
+            
+            virtual cms::Message* doReceive(const cms::Destination* dest, 
+                    const std::string& selector, 
+                    bool noLocal, 
+                    long long timeout) throw (cms::CMSException){
+                this->dest = dest;
+                this->selector = selector;
+                this->noLocal = noLocal;
+                this->timeout = timeout;
+                return new DummyMessage();
+            }
+        };
+        
+        class FailSendListener : public MessageContext::SendListener {
+        public:
+                    
+            FailSendListener() {
+            }
+            virtual ~FailSendListener(){}
+            
+            virtual void onSend(const cms::Destination* destination,
+                    cms::Message* message, int deliveryMode, int priority, 
+                    long long timeToLive) throw (cms::CMSException){
+                throw exceptions::ActiveMQException(__FILE__, __LINE__, "");
+            }
+            
+            virtual cms::Message* doReceive(const cms::Destination* dest, 
+                    const std::string& selector, 
+                    bool noLocal, 
+                    long long timeout) throw (cms::CMSException){
+                throw exceptions::ActiveMQException(__FILE__, __LINE__, "");
             }
         };
         
@@ -120,6 +162,12 @@ namespace cmsutil{
         void testExecuteSession();
         void testExecuteProducer();
         void testSend();
+        void testReceive();
+        void testReceive_Destination();
+        void testReceive_DestinationName();
+        void testReceiveSelected();
+        void testReceiveSelected_Destination();
+        void testReceiveSelected_DestinationName();
     };
 
 }}

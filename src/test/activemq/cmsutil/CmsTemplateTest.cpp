@@ -201,3 +201,304 @@ void CmsTemplateTest::testSend() {
         e.printStackTrace();
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceive() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        cms::Message* message = cmsTemplate->receive(); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
+        CPPUNIT_ASSERT(q != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"test", q->getQueueName());
+        CPPUNIT_ASSERT(listener.selector == "" );
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->isNoLocal(), listener.noLocal);
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->getReceiveTimeout(), listener.timeout);
+        delete message;        
+        
+        // Now change the destination type and verify that it changes.
+        cmsTemplate->setPubSubDomain(true);
+        message = cmsTemplate->receive(); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Topic* t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"test", t->getTopicName());
+        delete message;
+        
+        // Now change the destination name and verify that it changes.
+        cmsTemplate->setDefaultDestinationName("bob");
+        message = cmsTemplate->receive(); 
+        CPPUNIT_ASSERT( message != NULL );
+        t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", t->getTopicName());
+        delete message;
+        
+        // Now change the timeout and verify that it changes.
+        cmsTemplate->setReceiveTimeout(1000);
+        message = cmsTemplate->receive(); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->getReceiveTimeout(), listener.timeout);
+        delete message;
+        
+        // Now change the noLocal flag and verify that it changes.
+        cmsTemplate->setNoLocal(true);
+        message = cmsTemplate->receive(); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->isNoLocal(), listener.noLocal);
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receive(); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceive_Destination() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        activemq::connector::stomp::StompTopic myTopic("anothertopic");
+        cms::Message* message = cmsTemplate->receive(&myTopic); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT(&myTopic == listener.dest);
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receive(&myTopic); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceive_DestinationName() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        std::string destName = "bob";
+        cms::Message* message = cmsTemplate->receive(destName); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
+        CPPUNIT_ASSERT(q != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", q->getQueueName());
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receive(destName); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceiveSelected() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        std::string selector = "yadda";
+        cms::Message* message = cmsTemplate->receiveSelected(selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
+        CPPUNIT_ASSERT(q != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"test", q->getQueueName());
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->isNoLocal(), listener.noLocal);
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->getReceiveTimeout(), listener.timeout);
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
+        delete message;        
+        
+        // Now change the destination type and verify that it changes.
+        selector = "blah";
+        cmsTemplate->setPubSubDomain(true);
+        message = cmsTemplate->receiveSelected(selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Topic* t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"test", t->getTopicName());
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
+        delete message;
+        
+        // Now change the destination name and verify that it changes.
+        cmsTemplate->setDefaultDestinationName("bob");
+        message = cmsTemplate->receiveSelected(selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        t = dynamic_cast<const cms::Topic*>(listener.dest);
+        CPPUNIT_ASSERT(t != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", t->getTopicName());
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
+        delete message;
+        
+        // Now change the timeout and verify that it changes.
+        cmsTemplate->setReceiveTimeout(1000);
+        message = cmsTemplate->receiveSelected(selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->getReceiveTimeout(), listener.timeout);
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
+        delete message;
+        
+        // Now change the noLocal flag and verify that it changes.
+        cmsTemplate->setNoLocal(true);
+        message = cmsTemplate->receiveSelected(selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT_EQUAL(cmsTemplate->isNoLocal(), listener.noLocal);
+        CPPUNIT_ASSERT_EQUAL(selector, listener.selector);
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receiveSelected(selector); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceiveSelected_Destination() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        std::string selector = "yadda";
+        activemq::connector::stomp::StompTopic myTopic("anothertopic");
+        cms::Message* message = cmsTemplate->receiveSelected(&myTopic, selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        CPPUNIT_ASSERT(&myTopic == listener.dest);
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receiveSelected(&myTopic, selector); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceiveSelected_DestinationName() {
+    
+    try {
+
+        MessageContext* messageContext = cf->getMessageContext();
+                
+        MySendListener listener;
+        messageContext->setSendListener(&listener);
+        
+        // First, test basics.
+        std::string selector = "yadda";
+        std::string destName = "bob";
+        cms::Message* message = cmsTemplate->receiveSelected(destName, selector); 
+        CPPUNIT_ASSERT( message != NULL );
+        const cms::Queue* q = dynamic_cast<const cms::Queue*>(listener.dest);
+        CPPUNIT_ASSERT(q != NULL);
+        CPPUNIT_ASSERT_EQUAL((std::string)"bob", q->getQueueName());
+        delete message;
+        
+        // Now try a failure.
+        try {
+            
+            FailSendListener failListener;
+            messageContext->setSendListener(&failListener);
+            
+            // First, test basics.
+            cmsTemplate->receiveSelected(destName, selector); 
+            CPPUNIT_FAIL("failed to throw expected exception");
+            
+        } catch( cms::CMSException& e) {
+            // Expected
+        }
+                
+    } catch( cms::CMSException& e) {
+        e.printStackTrace();
+    }
+}
+

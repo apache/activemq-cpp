@@ -35,7 +35,12 @@ namespace cmsutil {
             
             virtual void onSend(const cms::Destination* destination,
                 cms::Message* message, int deliveryMode, int priority, 
-                long long timeToLive) = 0;
+                long long timeToLive) throw (cms::CMSException)= 0;
+            
+            virtual cms::Message* doReceive(const cms::Destination* dest, 
+                    const std::string& selector, 
+                    bool noLocal, 
+                    long long timeout) throw (cms::CMSException) = 0;
         };
         
     private:
@@ -55,11 +60,23 @@ namespace cmsutil {
         
         void send(const cms::Destination* destination,
             cms::Message* message, int deliveryMode, int priority, 
-            long long timeToLive) {
+            long long timeToLive) throw (cms::CMSException){
             
             if( listener != NULL ) {
                 listener->onSend(destination, message, deliveryMode, priority, timeToLive);
             }
+        }
+        
+        cms::Message* receive(const cms::Destination* dest, 
+                const std::string& selector, 
+                bool noLocal, 
+                long long timeout) throw (cms::CMSException){
+            
+            if( listener != NULL ) {
+                return listener->doReceive(dest, selector, noLocal, timeout);
+            }
+            
+            return NULL;
         }
     };
 }}

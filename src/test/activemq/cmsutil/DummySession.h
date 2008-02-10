@@ -22,6 +22,7 @@
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
 #include <activemq/cmsutil/DummyProducer.h>
+#include <activemq/cmsutil/DummyConsumer.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -52,20 +53,25 @@ namespace cmsutil {
 
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination )
-                throw ( cms::CMSException ) { return NULL; }
+                throw ( cms::CMSException ) {
+            
+            return new DummyConsumer(messageContext, destination, "", false);
+        }
 
         virtual cms::MessageConsumer* createConsumer( 
             const cms::Destination* destination,
             const std::string& selector )
                 throw ( cms::CMSException ) {
-            return NULL;
+            return new DummyConsumer(messageContext, destination, selector, false);
         }
         
         virtual cms::MessageConsumer* createConsumer( 
             const cms::Destination* destination,
             const std::string& selector,
             bool noLocal )
-                throw ( cms::CMSException ) { return NULL; }
+                throw ( cms::CMSException ) {
+            return new DummyConsumer(messageContext, destination, selector, noLocal);
+        }
 
         virtual cms::MessageConsumer* createDurableConsumer(
             const cms::Topic* destination,
