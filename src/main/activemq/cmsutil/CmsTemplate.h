@@ -281,6 +281,12 @@ namespace cmsutil {
         throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
     
         /**
+         * Clears all internal resources.
+         */
+        virtual void destroy() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        /**
          * Sets the destination object to be used by default for send/receive operations.
          * If no default destination is provided, the <code>defaultDestinationName</code>
          * property is used to resolve this default destination for send/receive 

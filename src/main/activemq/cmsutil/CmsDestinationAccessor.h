@@ -62,6 +62,9 @@ namespace cmsutil {
          */
         virtual void init() 
         throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        
+        virtual void destroy() 
+                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
                 
         virtual bool isPubSubDomain() const {
             return this->pubSubDomain;
@@ -102,7 +105,7 @@ namespace cmsutil {
                 throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
         
         /**
-         * Verifies that the connection factory is valid.
+         * Verifies that the destination resolver is valid.
          */
         virtual void checkDestinationResolver() throw (decaf::lang::exceptions::IllegalStateException);
     };

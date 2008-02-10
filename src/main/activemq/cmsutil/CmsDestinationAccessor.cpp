@@ -47,6 +47,17 @@ throw (cms::CMSException, IllegalStateException) {
     // Give the resolver our lifecycle manager.
     destinationResolver->setResourceLifecycleManager(getResourceLifecycleManager());    
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsDestinationAccessor::destroy() 
+throw (cms::CMSException, IllegalStateException) {
+        
+    // Invoke the base class.
+    CmsAccessor::destroy();
+    
+    // Reinitialize the destination resolver with the lifecycle manager.
+    destinationResolver->setResourceLifecycleManager(getResourceLifecycleManager()); 
+}
   
 ////////////////////////////////////////////////////////////////////////////////
 cms::Destination* CmsDestinationAccessor::resolveDestinationName( 

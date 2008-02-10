@@ -113,6 +113,28 @@ void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void CmsTemplate::destroy() throw (cms::CMSException, IllegalStateException) {
+      
+    try {
+        
+        // Destroy the session pools.
+        destroySessionPools();
+        
+        // Clear the connection reference
+        connection = NULL;
+        
+        // Clear the reference to the default destination.
+        defaultDestination = NULL;
+        
+        // Call the base class.
+        CmsDestinationAccessor::destroy();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::checkDefaultDestination() throw (IllegalStateException) {
     if (this->defaultDestination == NULL && this->defaultDestinationName.size()==0) {
         throw IllegalStateException(
@@ -696,5 +718,4 @@ throw (cms::CMSException, IllegalStateException) {
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-
 
