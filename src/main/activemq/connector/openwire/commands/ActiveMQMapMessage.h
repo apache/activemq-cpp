@@ -37,7 +37,7 @@ namespace commands{
 
     class ActiveMQMapMessage :
         public ActiveMQMessageBase<cms::MapMessage> {
-        	
+
     public:
 
         const static unsigned char ID_ACTIVEMQMAPMESSAGE = 25;
@@ -76,6 +76,13 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src ) {
             ActiveMQMessageBase<cms::MapMessage>::copyDataStructure( src );
+
+            const ActiveMQMapMessage* srcMap =
+                dynamic_cast< const ActiveMQMapMessage* >( src );
+
+            if( srcMap != NULL && srcMap->map != NULL ) {
+                this->map = new util::PrimitiveMap( *srcMap->map );
+            }
         }
 
         /**
