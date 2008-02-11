@@ -117,31 +117,47 @@ void CmsTemplateTest::testBasics()
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testReceiveException()
 {
-    try {
-        
-        activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
-        activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
-        cmsTemplate.setDefaultDestinationName("hello");
-        cmsTemplate.init();
-        
+    // First, try receiving from a bad url
+    activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
+    activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+    cmsTemplate.setDefaultDestinationName("hello");
+    cmsTemplate.init();            
+    try {                
         cmsTemplate.receive();
         CPPUNIT_FAIL("failed to throw expected exception");
     }
     catch( ActiveMQException& ex) {
         // Expected.
     }
+    
+    // Now change to a good url and verify that we can reuse the same
+    // CmsTemplate successfully.
+    activemq::core::ActiveMQConnectionFactory cf2(IntegrationCommon::getInstance().getStompURL());
+    cmsTemplate.setConnectionFactory(&cf2);
+    
+    // Send 1 message.
+    Sender sender( IntegrationCommon::getInstance().getStompURL(), 
+            false, 
+            "hello", 
+            1);
+    Thread st(&sender);
+    st.start();
+    
+    // Receive the message.
+    cms::Message* message = cmsTemplate.receive();
+    CPPUNIT_ASSERT(message != NULL);
+    delete message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testSendException()
 {
-    try {
-        
-        activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
-        activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
-        cmsTemplate.setDefaultDestinationName("hello");
-        cmsTemplate.init();
-        
+    // First, try sending to a bad url.
+    activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
+    activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+    cmsTemplate.setDefaultDestinationName("hello");
+    cmsTemplate.init();
+    try {                      
         TextMessageCreator msgCreator("hello world");
         cmsTemplate.send(&msgCreator);
         CPPUNIT_FAIL("failed to throw expected exception");
@@ -149,4 +165,11 @@ void CmsTemplateTest::testSendException()
     catch( ActiveMQException& ex) {
         // Expected.
     }
+    
+    // Now change to a good url and verify that we can reuse the same
+    // CmsTemplate successfully.
+    activemq::core::ActiveMQConnectionFactory cf2(IntegrationCommon::getInstance().getStompURL());
+    cmsTemplate.setConnectionFactory(&cf2);
+    TextMessageCreator msgCreator("hello world");
+    cmsTemplate.send(&msgCreator);
 }
