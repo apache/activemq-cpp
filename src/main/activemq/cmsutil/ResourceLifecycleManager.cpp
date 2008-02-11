@@ -49,32 +49,44 @@ void ResourceLifecycleManager::destroy() throw (cms::CMSException) {
 
     // Close all the connections.
     for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        connections[ix]->close();
+        try {
+            connections[ix]->close();
+        } catch(...){}
     }
 
     // Destroy the producers.
     for (std::size_t ix=0; ix<producers.size(); ++ix) {
-        delete producers[ix];
+        try {
+            delete producers[ix];
+        } catch( ... ) {}
     }
 
     // Destroy the consumers.
     for (std::size_t ix=0; ix<consumers.size(); ++ix) {
-        delete consumers[ix];
+        try {
+            delete consumers[ix];
+        } catch( ... ) {}
     }
 
     // Destroy the destinations.
     for (std::size_t ix=0; ix<destinations.size(); ++ix) {
-        delete destinations[ix];
+        try {
+            delete destinations[ix];
+        } catch( ... ) {}
     }
 
     // Destroy the sessions.
     for (std::size_t ix=0; ix<sessions.size(); ++ix) {
-        delete sessions[ix];
+        try {
+            delete sessions[ix];
+        } catch( ... ) {}
     }
 
     // Destroy the connections,
     for (std::size_t ix=0; ix<connections.size(); ++ix) {
-        delete connections[ix];
+        try {
+            delete connections[ix];
+        } catch( ... ) {}
     }
 
     // Empty all the vectors.
