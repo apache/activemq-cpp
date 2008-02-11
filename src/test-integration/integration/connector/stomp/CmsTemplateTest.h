@@ -34,6 +34,8 @@ namespace stomp{
     {
         CPPUNIT_TEST_SUITE( CmsTemplateTest );
         CPPUNIT_TEST( testBasics );
+        CPPUNIT_TEST( testReceiveException );
+        CPPUNIT_TEST( testSendException );
         CPPUNIT_TEST_SUITE_END();
         
         class TextMessageCreator : public activemq::cmsutil::MessageCreator {
@@ -140,6 +142,8 @@ namespace stomp{
         virtual void tearDown();
                 
         virtual void testBasics();
+        virtual void testReceiveException();
+        virtual void testSendException();
 
     };
 

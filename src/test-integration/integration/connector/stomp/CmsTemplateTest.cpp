@@ -113,3 +113,40 @@ void CmsTemplateTest::testBasics()
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testReceiveException()
+{
+    try {
+        
+        activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
+        activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+        cmsTemplate.setDefaultDestinationName("hello");
+        cmsTemplate.init();
+        
+        cmsTemplate.receive();
+        CPPUNIT_FAIL("failed to throw expected exception");
+    }
+    catch( ActiveMQException& ex) {
+        // Expected.
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CmsTemplateTest::testSendException()
+{
+    try {
+        
+        activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
+        activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
+        cmsTemplate.setDefaultDestinationName("hello");
+        cmsTemplate.init();
+        
+        TextMessageCreator msgCreator("hello world");
+        cmsTemplate.send(&msgCreator);
+        CPPUNIT_FAIL("failed to throw expected exception");
+    }
+    catch( ActiveMQException& ex) {
+        // Expected.
+    }
+}
