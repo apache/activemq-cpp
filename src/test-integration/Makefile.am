@@ -20,6 +20,7 @@ cc_sources = \
   integration/TestSupport.cpp \
   integration/TestRegistry.cpp \
   integration/connector/openwire/OpenwireAsyncSenderTest.cpp \
+  integration/connector/openwire/OpenwireCmsTemplateTest.cpp \
   integration/connector/openwire/OpenwireDurableTest.cpp \
   integration/connector/openwire/OpenwireExpirationTest.cpp \
   integration/connector/openwire/OpenwireSimpleRollbackTest.cpp \
