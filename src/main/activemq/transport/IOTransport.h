@@ -88,7 +88,7 @@ namespace transport{
         /**
          * Flag marking this transport as closed.
          */
-        bool closed;
+        volatile bool closed;
 
     private:
 
