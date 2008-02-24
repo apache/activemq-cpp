@@ -90,7 +90,7 @@ TcpTransport::TcpTransport( const decaf::util::Properties& properties,
         ioTransport->setOutputStream( bufferedOutputStream );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_RETHROW( Exception )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
