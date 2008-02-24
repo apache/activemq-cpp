@@ -116,7 +116,7 @@ namespace openwire{
         /**
          * Flag to indicate the start state of the connector.
          */
-        ConnectionState state;
+        volatile ConnectionState state;
 
         /**
          * Sync object.
