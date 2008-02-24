@@ -39,7 +39,12 @@ namespace cmsutil{
         
         public:
             
-            virtual ~MyAccessor(){}
+            virtual ~MyAccessor(){
+                try {
+                    destroy();
+                } catch( ... ) {                    
+                }
+            }
             
             virtual cms::Connection* createConnection() throw (cms::CMSException) {
                 return CmsDestinationAccessor::createConnection();
@@ -53,6 +58,14 @@ namespace cmsutil{
                 cms::Session* session, 
                 const std::string& destName ) throw (cms::CMSException) {
                 return CmsDestinationAccessor::resolveDestinationName(session,destName);
+            }
+            virtual void init() 
+            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+                CmsDestinationAccessor::init();
+            }
+            virtual void destroy() 
+            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+                CmsDestinationAccessor::destroy();
             }
         };
         

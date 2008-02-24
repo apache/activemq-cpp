@@ -265,26 +265,15 @@ namespace cmsutil {
         int priority;
     
         long long timeToLive;
+        
+        bool initialized;
     
     public:
     
         CmsTemplate();
         CmsTemplate(cms::ConnectionFactory* connectionFactory);
     
-        virtual ~CmsTemplate();
-    
-        /**
-         * Initializes this object and prepares it for use.  This should be called
-         * before any other methds are called.
-         */
-        virtual void init()
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-    
-        /**
-         * Clears all internal resources.
-         */
-        virtual void destroy() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        virtual ~CmsTemplate();            
         
         /**
          * Sets the destination object to be used by default for send/receive operations.
@@ -637,6 +626,21 @@ namespace cmsutil {
                 const std::string& selector )
                 throw (cms::CMSException);
         
+    protected:
+        
+        /**
+         * Initializes this object and prepares it for use.  This should be called
+         * before any other methds are called.
+         */
+        void init()
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+    
+        /**
+         * Clears all internal resources.
+         */
+        void destroy() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+                
     private:
     
         /**

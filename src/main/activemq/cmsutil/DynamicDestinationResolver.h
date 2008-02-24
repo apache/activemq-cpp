@@ -71,28 +71,18 @@ namespace cmsutil {
         
     public:
     
-        virtual ~DynamicDestinationResolver();
-        
-        /**
-         * Clears the internal data structures.
-         */
-        void clear();
+        virtual ~DynamicDestinationResolver();        
     
-        /**
-         * Sets the <code>ResourceLifecycleManager</code> to be used for
-         * any allocated resources.
-         * 
-         * @param mgr
-         *      the resource lifecycle manager.
-         */
-        virtual void setResourceLifecycleManager( ResourceLifecycleManager* mgr) {
+        virtual void init( ResourceLifecycleManager* mgr) {
             
             // since we're changing the lifecycle manager, clear out references
             // to old resources.
-            clear();
+            destroy();
             
             this->resourceLifecycleManager = mgr;
         }
+        
+        virtual void destroy();
                 
         /**
          * Resolves the given name to a destination.  If 

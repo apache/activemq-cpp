@@ -71,11 +71,9 @@ namespace stomp{
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
-                cmsTemplate.init();
                 this->count = count;
             }
             virtual ~Sender(){
-                cmsTemplate.destroy();
             }
             virtual void run() {                
                 try {
@@ -107,11 +105,9 @@ namespace stomp{
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
-                cmsTemplate.init();
                 this->count = count;
             }
             virtual ~Receiver(){
-                cmsTemplate.destroy();
             }
             int getNumReceived() const {
                 return numReceived;

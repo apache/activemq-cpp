@@ -54,17 +54,7 @@ namespace cmsutil {
         
         CmsDestinationAccessor();
         
-        virtual ~CmsDestinationAccessor();
-        
-        /**
-         * Initializes this object and prepares it for use.  This should be called
-         * before any other methds are called.
-         */
-        virtual void init() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-        
-        virtual void destroy() 
-                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+        virtual ~CmsDestinationAccessor();        
                 
         virtual bool isPubSubDomain() const {
             return this->pubSubDomain;
@@ -88,6 +78,18 @@ namespace cmsutil {
         
     protected:
         
+        /**
+         * Initializes the destination resolver.
+         */
+        virtual void init() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+                
+        /**
+         * Calls destroy() on the destination resolver.
+         */
+        virtual void destroy() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+                
         /**
          * Resolves the destination via the <code>DestinationResolver</code>.
          * @param session

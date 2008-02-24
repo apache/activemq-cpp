@@ -121,7 +121,6 @@ void CmsTemplateTest::testReceiveException()
     activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
     activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
     cmsTemplate.setDefaultDestinationName("hello");
-    cmsTemplate.init();            
     try {                
         cmsTemplate.receive();
         CPPUNIT_FAIL("failed to throw expected exception");
@@ -156,7 +155,6 @@ void CmsTemplateTest::testSendException()
     activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
     activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
     cmsTemplate.setDefaultDestinationName("hello");
-    cmsTemplate.init();
     try {                      
         TextMessageCreator msgCreator("hello world");
         cmsTemplate.send(&msgCreator);

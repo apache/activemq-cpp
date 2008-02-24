@@ -30,7 +30,7 @@ void DynamicDestinationResolverTest::testTopics() {
 
     ResourceLifecycleManager mgr;    
     DynamicDestinationResolver resolver;
-    resolver.setResourceLifecycleManager(&mgr);
+    resolver.init(&mgr);
     
     DummySession session(NULL);
     
@@ -62,7 +62,7 @@ void DynamicDestinationResolverTest::testQueues() {
 
     ResourceLifecycleManager mgr;    
     DynamicDestinationResolver resolver;
-    resolver.setResourceLifecycleManager(&mgr);
+    resolver.init(&mgr);
     
     DummySession session(NULL);
     

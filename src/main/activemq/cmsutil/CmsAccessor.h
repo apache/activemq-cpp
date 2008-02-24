@@ -50,24 +50,7 @@ namespace cmsutil {
         
         CmsAccessor();
         
-        virtual ~CmsAccessor();
-        
-        /**
-         * Initializes this object and prepares it for use.  This should be called
-         * before any other methds are called.
-         */
-        virtual void init() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
-            checkConnectionFactory();
-        }
-        
-        /**
-         * Shuts down this object and destroys any allocated resources.
-         */
-        virtual void destroy() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
-            resourceLifecycleManager.destroy();
-        }
+        virtual ~CmsAccessor();                
         
         virtual ResourceLifecycleManager* getResourceLifecycleManager() {
             return &resourceLifecycleManager;
@@ -121,6 +104,22 @@ namespace cmsutil {
     
     protected:
     
+        /**
+         * Initializes this object and prepares it for use.  This should be called
+         * before any other methds are called.  This version does nothing.
+         */
+        virtual void init() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+        }
+        
+        /**
+         * Shuts down this object and destroys any allocated resources.
+         */
+        virtual void destroy() 
+        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+            resourceLifecycleManager.destroy();
+        }
+                
         /**
          * Create a CMS Connection via this template's ConnectionFactory.
          * @return the new CMS Connection

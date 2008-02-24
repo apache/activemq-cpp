@@ -74,11 +74,14 @@ CmsTemplate::CmsTemplate(cms::ConnectionFactory* connectionFactory) {
 ////////////////////////////////////////////////////////////////////////////////
 CmsTemplate::~CmsTemplate() {
     
-    destroySessionPools();
+    try {
+        destroy();
+    } catch( ... ) { /* Absorb */ }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplate::initDefaults() {
+    initialized = false;
     defaultDestination = NULL;
     defaultDestinationName = "";
     messageIdEnabled = true;
@@ -134,11 +137,11 @@ void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
 
     try {
         
-        // Invoke the base class.
-        CmsDestinationAccessor::init();
-    
-        // Make sure we have a valid default destination.
-        checkDefaultDestination();
+        if( !initialized ) {
+        
+            // Invoke the base class.
+            CmsDestinationAccessor::init();
+        }
     }
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
@@ -150,6 +153,9 @@ void CmsTemplate::destroy() throw (cms::CMSException, IllegalStateException) {
       
     try {
         
+        // Mark as not initialized.
+        initialized = false;
+        
         // Clear the connection reference
         connection = NULL;
         
@@ -160,7 +166,7 @@ void CmsTemplate::destroy() throw (cms::CMSException, IllegalStateException) {
         destroySessionPools();
                 
         // Call the base class.
-        CmsDestinationAccessor::destroy();
+        CmsDestinationAccessor::destroy();                
     }
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCH( IllegalStateException, this )
@@ -399,6 +405,9 @@ void CmsTemplate::execute(SessionCallback* action) throw (cms::CMSException) {
             return;
         }
         
+        // Verify that we are initialized
+        init();
+        
         // Take a session from the pool.
         pooledSession = takeSession();
         
@@ -417,6 +426,9 @@ void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
     
     try {
         
+        // Verify that we are initialized
+        init();
+        
         // Create the callback with using default destination.
         ProducerExecutor cb(action, this, NULL);
         
@@ -433,6 +445,9 @@ void CmsTemplate::execute(cms::Destination* dest,
     
     try {
         
+        // Verify that we are initialized
+        init();
+        
         // Create the callback.
         ProducerExecutor cb(action, this, dest);
         
@@ -448,6 +463,10 @@ void CmsTemplate::execute(const std::string& destinationName,
         ProducerCallback* action) throw (cms::CMSException) {
     
     try {
+        
+        // Verify that we are initialized
+        init();
+                
         // Create the callback.
         ResolveProducerExecutor cb(action, this, destinationName);
         

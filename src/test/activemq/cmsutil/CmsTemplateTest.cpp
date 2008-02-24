@@ -31,12 +31,10 @@ void CmsTemplateTest::setUp() {
     cf = new DummyConnectionFactory();
     cmsTemplate = new CmsTemplate(cf);
     cmsTemplate->setDefaultDestinationName("test");
-    cmsTemplate->init();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::tearDown() {
-    cmsTemplate->destroy();
     delete cmsTemplate;
     delete cf;
 }
@@ -105,6 +103,9 @@ void CmsTemplateTest::testExecuteProducer() {
         CPPUNIT_ASSERT(callback4.session == callback.session);
         CPPUNIT_ASSERT(callback4.producer != callback3.producer);
         
+        std::cout << "before exception" << std::endl;
+        std::cout.flush();
+        
         // Now try without a valid default destination and make sure
         // we get an exception.
         try {
@@ -115,6 +116,9 @@ void CmsTemplateTest::testExecuteProducer() {
         } catch( cms::CMSException& ex) {
             // expected.
         }
+        
+        std::cout << "after exception" << std::endl;
+        std::cout.flush();
         
         // Now try an explicit destination 
         MyProducerCallback callback6;

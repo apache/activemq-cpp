@@ -75,11 +75,11 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
 ////////////////////////////////////////////////////////////////////////////////
 DynamicDestinationResolver::~DynamicDestinationResolver() {
     
-    clear();
+    destroy();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DynamicDestinationResolver::clear() {
+void DynamicDestinationResolver::destroy() {
     
     // Destroy the session resolvers.
     vector<SessionResolver*> r = sessionResolverMap.getValues();

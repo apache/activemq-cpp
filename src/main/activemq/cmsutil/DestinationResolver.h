@@ -35,13 +35,19 @@ namespace cmsutil {
         virtual ~DestinationResolver() {}
     
         /**
-         * Sets the <code>ResourceLifecycleManager</code> to be used for
-         * any allocated resources.
+         * Initializes this destination resolver for use.  Ensures that any 
+         * previously allocated resources are first destroyed 
+         * (e.g. calls destroy()).
          * 
          * @param mgr
          *      the resource lifecycle manager.
          */
-        virtual void setResourceLifecycleManager( ResourceLifecycleManager* mgr) = 0;
+        virtual void init( ResourceLifecycleManager* mgr) = 0;
+        
+        /**
+         * Destroys any allocated resources.
+         */
+        virtual void destroy() = 0;
         
         /**
          * Resolves the given name to a destination.  If 

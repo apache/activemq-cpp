@@ -35,7 +35,6 @@ void CmsDestinationAccessorTest::setUp() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessorTest::tearDown() {
-    accessor->destroy();
     delete accessor;
     delete cf;
 }

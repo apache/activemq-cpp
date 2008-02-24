@@ -38,25 +38,24 @@ CmsDestinationAccessor::~CmsDestinationAccessor() {
 void CmsDestinationAccessor::init() 
 throw (cms::CMSException, IllegalStateException) {
     
-    // Invoke the base class.
     CmsAccessor::init();
     
     // Make sure we have a destination resolver.
     checkDestinationResolver();
     
     // Give the resolver our lifecycle manager.
-    destinationResolver->setResourceLifecycleManager(getResourceLifecycleManager());    
+    destinationResolver->init(getResourceLifecycleManager());    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsDestinationAccessor::destroy() 
-throw (cms::CMSException, IllegalStateException) {
-        
-    // Invoke the base class.
-    CmsAccessor::destroy();
+throw (cms::CMSException, IllegalStateException) {        
     
-    // Reinitialize the destination resolver with the lifecycle manager.
-    destinationResolver->setResourceLifecycleManager(getResourceLifecycleManager()); 
+    if( destinationResolver != NULL ) {
+        destinationResolver->destroy();
+    }   
+    
+    CmsAccessor::destroy();
 }
   
 ////////////////////////////////////////////////////////////////////////////////
