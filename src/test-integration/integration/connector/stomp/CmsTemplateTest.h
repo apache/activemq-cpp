@@ -73,8 +73,10 @@ namespace stomp{
                 cmsTemplate.setDefaultDestinationName(destName);
                 this->count = count;
             }
+            
             virtual ~Sender(){
             }
+            
             virtual void run() {                
                 try {
                     // Send a batch of messages.
@@ -83,7 +85,6 @@ namespace stomp{
                         cmsTemplate.send(&tmc);
                     }
                     
-                    decaf::lang::Thread::sleep(100);
                 } catch( cms::CMSException& ex) {
                     ex.printStackTrace();
                 }
