@@ -73,7 +73,7 @@ CmsTemplate::CmsTemplate(cms::ConnectionFactory* connectionFactory) {
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsTemplate::~CmsTemplate() {
-    
+                    
     try {
         destroy();
     } catch( ... ) { /* Absorb */ }
@@ -141,6 +141,8 @@ void CmsTemplate::init() throw (cms::CMSException, IllegalStateException) {
         
             // Invoke the base class.
             CmsDestinationAccessor::init();
+            
+            initialized = true;
         }
     }
     CMSTEMPLATE_CATCH( ActiveMQException, this )
@@ -231,6 +233,7 @@ throw (cms::CMSException) {
         
         return connection;
     }
+    CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL(this)
 }
@@ -417,6 +420,7 @@ void CmsTemplate::execute(SessionCallback* action) throw (cms::CMSException) {
         // Return the session to the pool.
         returnSession(pooledSession);
     }
+    CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL(this)
 }
@@ -435,6 +439,7 @@ void CmsTemplate::execute(ProducerCallback* action) throw (cms::CMSException) {
         // Execute the action in a session.
         execute(&cb);
     }
+    CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL(this)
 }
@@ -454,6 +459,7 @@ void CmsTemplate::execute(cms::Destination* dest,
         // Execute the action in a session.
         execute(&cb);
     }
+    CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL(this)
 }
@@ -473,6 +479,7 @@ void CmsTemplate::execute(const std::string& destinationName,
         // Execute the action in a session.
         execute(&cb);
     }
+    CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
     CMSTEMPLATE_CATCHALL(this)
 }
@@ -624,6 +631,7 @@ void CmsTemplate::ReceiveExecutor::doInCms(cms::Session* session)
     throw (cms::CMSException) {
     
     cms::MessageConsumer* consumer = NULL;
+    message = NULL;
                 
     try {
     

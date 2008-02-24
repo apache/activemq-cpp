@@ -16,8 +16,11 @@
  */
 
 #include "CmsAccessor.h"
+#include <activemq/exceptions/ExceptionDefines.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 using namespace activemq::cmsutil;
+using namespace activemq::exceptions;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,28 +36,43 @@ CmsAccessor::~CmsAccessor() {
 cms::Connection* CmsAccessor::createConnection() 
 throw (cms::CMSException,IllegalStateException) {
     
-    checkConnectionFactory();
-    
-    // Create the connection.
-    cms::Connection* c = getConnectionFactory()->createConnection();
-    
-    // Manage the lifecycle of this resource.
-    getResourceLifecycleManager()->addConnection(c);
-    
-    return c;
+    try {
+        
+        checkConnectionFactory();
+        
+        // Create the connection.
+        cms::Connection* c = getConnectionFactory()->createConnection();
+        
+        // Manage the lifecycle of this resource.
+        getResourceLifecycleManager()->addConnection(c);
+        
+        return c;
+    }
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Session* CmsAccessor::createSession(cms::Connection* con) 
 throw (cms::CMSException,IllegalStateException) {
     
-    // Create the session.
-    cms::Session* s = con->createSession(getSessionAcknowledgeMode());
-    
-    // Manage the lifecycle of this resource.
-    getResourceLifecycleManager()->addSession(s);
-    
-    return s;
+    try {
+        if( con == NULL ) {
+            throw ActiveMQException(__FILE__, __LINE__, "connection object is invalid");
+        }
+        
+        // Create the session.
+        cms::Session* s = con->createSession(getSessionAcknowledgeMode());
+        
+        // Manage the lifecycle of this resource.
+        getResourceLifecycleManager()->addSession(s);
+        
+        return s;
+    }
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
