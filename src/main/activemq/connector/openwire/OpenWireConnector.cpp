@@ -86,7 +86,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     synchronized( &mutex ) {
         this->state = CONNECTION_STATE_DISCONNECTED;
     }
-    
+
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->brokerInfo = NULL;
@@ -146,7 +146,7 @@ void OpenWireConnector::start() throw( cms::CMSException ) {
                     __FILE__, __LINE__,
                     "OpenWireConnector::start - already started" );
             }
-            
+
             // Start the transport - this establishes the socket.
             transport->start();
 
@@ -172,7 +172,7 @@ void OpenWireConnector::close() throw( cms::CMSException ){
 
             // Send the disconnect message to the broker.
             disconnect();
-            
+
             // Close the transport now that we've sent the last messages..
             transport->close();
         }
@@ -208,7 +208,7 @@ void OpenWireConnector::connect() throw ( ConnectorException ) {
         commands::ConnectionId* connectionId = new commands::ConnectionId();
         connectionId->setValue( UUID::randomUUID().toString() );
         connectionInfo.setConnectionId( connectionId );
-                    
+
         // Now we ping the broker and see if we get an ack / nack
         Response* response = syncRequest( &connectionInfo );
 
@@ -698,26 +698,18 @@ ProducerInfo* OpenWireConnector::createProducer(
 
     } catch( ConnectorException& ex ) {
         delete producer;
-        delete producerInfo;
-
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( Exception& ex ) {
         delete producer;
-        delete producerInfo;
-
         ex.setMark( __FILE__, __LINE__ );
         throw OpenWireConnectorException( ex );
     } catch( std::exception& ex ) {
         delete producer;
-        delete producerInfo;
-
         throw OpenWireConnectorException( __FILE__, __LINE__,
             ex.what() );
     } catch( ... ) {
         delete producer;
-        delete producerInfo;
-
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
     }
@@ -1403,12 +1395,12 @@ void OpenWireConnector::onTransportException(
         if( state == CONNECTION_STATE_DISCONNECTED ){
             return;
         }
-                    
+
         synchronized( &mutex ) {
             // Mark the fact that we are in an error state
             state = CONNECTION_STATE_ERROR;
         }
-                    
+
         // Inform the user of the error.
         fire( ex );
     }
@@ -1434,7 +1426,7 @@ Response* OpenWireConnector::syncRequest( Command* command )
     throw ( ConnectorException ) {
 
     try {
-                    
+
         Response* response = transport->request( command );
 
         commands::ExceptionResponse* exceptionResponse =
