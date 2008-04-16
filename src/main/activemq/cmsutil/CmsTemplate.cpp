@@ -617,7 +617,7 @@ throw (cms::CMSException) {
             return consumer->receive();
         }
         default: {
-            return consumer->receive(receiveTime);
+            return consumer->receive((int)receiveTime);
         }
         }
         
