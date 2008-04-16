@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -216,7 +216,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -303,7 +303,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
