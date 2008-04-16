@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Eclipse\ActiveMQ\decaf-trunk\src\main&quot;;..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;;..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				AdditionalDependencies="ws2_32.lib rpcrt4.lib libdecafd.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Eclipse\ActiveMQ\decaf-trunk\vs2005-build\Debug&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Decaf\vs2005-build\Debug&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
