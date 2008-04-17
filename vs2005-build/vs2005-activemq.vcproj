@@ -204,8 +204,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="ws2_32.lib rpcrt4.lib apr-1.lib aprutil-1.lib decaf.lib"
 				OutputFile="$(OutDir)\activemq-cpp.dll"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Decaf\vs2005-build\ReleaseDLL&quot;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
