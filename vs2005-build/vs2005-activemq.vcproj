@@ -287,8 +287,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="ws2_32.lib apr-1.lib aprutil-1.lib decafd.lib"
 				OutputFile="$(OutDir)\activemq-cppd.dll"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Decaf\vs2005-build\DebugDLL&quot;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -4606,46 +4607,6 @@
 					RelativePath="..\src\main\activemq\exceptions\ExceptionDefines.h"
 					>
 				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\IllegalArgumentException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\IllegalMonitorStateException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\IllegalStateException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\IndexOutOfBoundsException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\InterruptedException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\InvalidStateException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\NoSuchElementException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\NullPointerException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\RuntimeException.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\exceptions\UnsupportedOperationException.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="io"
@@ -4870,6 +4831,10 @@
 			<Filter
 				Name="cmsutil"
 				>
+				<File
+					RelativePath="..\src\main\activemq\cmsutil\CachedConsumer.h"
+					>
+				</File>
 				<File
 					RelativePath="..\src\main\activemq\cmsutil\CachedProducer.h"
 					>
