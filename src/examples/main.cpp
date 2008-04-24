@@ -50,18 +50,22 @@ private:
     MessageProducer* producer;
     int numMessages;
     bool useTopic;
+    bool sessionTransacted;
     std::string brokerURI;
 
 public:
 
     HelloWorldProducer( const std::string& brokerURI,
-                        int numMessages, bool useTopic = false ){
-        connection = NULL;
-        session = NULL;
-        destination = NULL;
-        producer = NULL;
+                        int numMessages,
+                        bool useTopic = false,
+                        bool sessionTransacted = false ){
+        this->connection = NULL;
+        this->session = NULL;
+        this->destination = NULL;
+        this->producer = NULL;
         this->numMessages = numMessages;
         this->useTopic = useTopic;
+        this->sessionTransacted = sessionTransacted;
         this->brokerURI = brokerURI;
     }
 
@@ -83,7 +87,11 @@ public:
             delete connectionFactory;
 
             // Create a Session
-            session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            if( this->sessionTransacted ) {
+                session = connection->createSession( Session::SESSION_TRANSACTED );
+            } else {
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            }
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
@@ -166,6 +174,7 @@ private:
     MessageConsumer* consumer;
     long waitMillis;
     bool useTopic;
+    bool sessionTransacted;
     std::string brokerURI;
 
 public:
@@ -173,14 +182,16 @@ public:
     HelloWorldConsumer( const std::string& brokerURI,
                         long numMessages,
                         bool useTopic = false,
+                        bool sessionTransacted = false,
                         long waitMillis = 30000 )
                          : latch(1), doneLatch(numMessages){
-        connection = NULL;
-        session = NULL;
-        destination = NULL;
-        consumer = NULL;
+        this->connection = NULL;
+        this->session = NULL;
+        this->destination = NULL;
+        this->consumer = NULL;
         this->waitMillis = waitMillis;
         this->useTopic = useTopic;
+        this->sessionTransacted = sessionTransacted;
         this->brokerURI = brokerURI;
     }
     virtual ~HelloWorldConsumer(){
@@ -207,7 +218,11 @@ public:
             connection->setExceptionListener(this);
 
             // Create a Session
-            session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            if( this->sessionTransacted == true ) {
+                session = connection->createSession( Session::SESSION_TRANSACTED );
+            } else {
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE );
+            }
 
             // Create the destination (Topic or Queue)
             if( useTopic ) {
@@ -254,9 +269,13 @@ public:
             }
 
             printf( "Message #%d Received: %s\n", count, text.c_str() );
+
         } catch (CMSException& e) {
             e.printStackTrace();
         }
+
+        // Commit all messages.
+        session->commit();
 
         // No matter what, tag the count down latch until done.
         doneLatch.countDown();
@@ -343,12 +362,13 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     // createQueue to be used in both consumer an producer.
     //============================================================
     bool useTopics = true;
+    bool sessionTransacted = false;
     int numMessages = 2000;
 
     long long startTime = Date::getCurrentTimeMilliseconds();
 
     HelloWorldProducer producer( brokerURI, numMessages, useTopics );
-    HelloWorldConsumer consumer( brokerURI, numMessages, useTopics );
+    HelloWorldConsumer consumer( brokerURI, numMessages, useTopics, sessionTransacted );
 
     // Start the consumer thread.
     Thread consumerThread( &consumer );
