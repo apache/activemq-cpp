@@ -73,9 +73,102 @@ cc_sources = \
   activemq/util/PrimitiveMapTest.cpp \
   activemq/util/URISupportTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
+  decaf/internal/util/ByteArrayAdapterTest.cpp \
+  decaf/internal/nio/ByteArrayPerspectiveTest.cpp \
+  decaf/internal/nio/ByteArrayBufferTest.cpp \
+  decaf/internal/nio/BufferFactoryTest.cpp \
+  decaf/internal/nio/CharArrayBufferTest.cpp \
+  decaf/internal/nio/DoubleArrayBufferTest.cpp \
+  decaf/internal/nio/FloatArrayBufferTest.cpp \
+  decaf/internal/nio/LongArrayBufferTest.cpp \
+  decaf/internal/nio/IntArrayBufferTest.cpp \
+  decaf/internal/nio/ShortArrayBufferTest.cpp \
+  decaf/lang/ByteTest.cpp \
+  decaf/lang/CharacterTest.cpp \
+  decaf/lang/BooleanTest.cpp \
+  decaf/lang/ShortTest.cpp \
+  decaf/lang/IntegerTest.cpp \
+  decaf/lang/LongTest.cpp \
+  decaf/lang/FloatTest.cpp \
+  decaf/lang/DoubleTest.cpp \
+  decaf/lang/ThreadTest.cpp \
+  decaf/lang/ExceptionTest.cpp \
+  decaf/lang/MathTest.cpp \
+  decaf/lang/SystemTest.cpp \
+  decaf/io/FilterInputStreamTest.cpp \
+  decaf/io/FilterOutputStreamTest.cpp \
+  decaf/io/BufferedInputStreamTest.cpp \
+  decaf/io/BufferedOutputStreamTest.cpp \
+  decaf/io/ByteArrayInputStreamTest.cpp \
+  decaf/io/ByteArrayOutputStreamTest.cpp \
+  decaf/io/DataInputStreamTest.cpp \
+  decaf/io/DataOutputStreamTest.cpp \
+  decaf/net/SocketFactoryTest.cpp \
+  decaf/net/SocketTest.cpp \
+  decaf/net/URITest.cpp \
+  decaf/net/URISyntaxExceptionTest.cpp \
+  decaf/util/StringTokenizerTest.cpp \
+  decaf/util/Endian.cpp \
+  decaf/util/DateTest.cpp \
+  decaf/util/UUIDTest.cpp \
+  decaf/util/RandomTest.cpp \
+  decaf/util/MapTest.cpp \
+  decaf/util/QueueTest.cpp \
+  decaf/util/SetTest.cpp \
+  decaf/util/concurrent/CountDownLatchTest.cpp \
+  decaf/util/concurrent/MutexTest.cpp \
+  decaf/util/concurrent/ThreadPoolTest.cpp \
+  decaf/nio/BufferTest.cpp \
+  testRegistry.cpp \
   main.cpp
 
-h_sources = 
+h_sources = \
+  decaf/internal/util/ByteArrayAdapterTest.h \
+  decaf/internal/nio/ByteArrayPerspectiveTest.h \
+  decaf/internal/nio/ByteArrayBufferTest.h \
+  decaf/internal/nio/BufferFactoryTest.h \
+  decaf/internal/nio/CharArrayBufferTest.h \
+  decaf/internal/nio/DoubleArrayBufferTest.h \
+  decaf/internal/nio/FloatArrayBufferTest.h \
+  decaf/internal/nio/LongArrayBufferTest.h \
+  decaf/internal/nio/IntArrayBufferTest.h \
+  decaf/internal/nio/ShortArrayBufferTest.h \
+  decaf/lang/ByteTest.h \
+  decaf/lang/CharacterTest.h \
+  decaf/lang/BooleanTest.h \
+  decaf/lang/ShortTest.h \
+  decaf/lang/IntegerTest.h \
+  decaf/lang/LongTest.h \
+  decaf/lang/FloatTest.h \
+  decaf/lang/DoubleTest.h \
+  decaf/lang/ThreadTest.h \
+  decaf/lang/ExceptionTest.h \
+  decaf/lang/MathTest.h \
+  decaf/lang/SystemTest.h \
+  decaf/io/FilterInputStreamTest.h \
+  decaf/io/FilterOutputStreamTest.h \
+  decaf/io/BufferedInputStreamTest.h \
+  decaf/io/BufferedOutputStreamTest.h \
+  decaf/io/ByteArrayInputStreamTest.h \
+  decaf/io/ByteArrayOutputStreamTest.h \
+  decaf/io/DataInputStreamTest.h \
+  decaf/io/DataOutputStreamTest.h \
+  decaf/net/SocketFactoryTest.h \
+  decaf/net/SocketTest.h \
+  decaf/net/URITest.h \
+  decaf/net/URISyntaxExceptionTest.h \
+  decaf/util/StringTokenizerTest.h \
+  decaf/util/Endian.h \
+  decaf/util/DateTest.h \
+  decaf/util/UUIDTest.h \
+  decaf/util/RandomTest.h \
+  decaf/util/MapTest.h \
+  decaf/util/QueueTest.h \
+  decaf/util/SetTest.h \
+  decaf/util/concurrent/CountDownLatchTest.h \
+  decaf/util/concurrent/MutexTest.h \
+  decaf/util/concurrent/ThreadPoolTest.h \
+  decaf/nio/BufferTest.h  
 
 include activemq/connector/openwire/marshal/v1/srcmakefile.mk
 include activemq/connector/openwire/marshal/v2/srcmakefile.mk
@@ -84,7 +177,7 @@ include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 check_PROGRAMS = activemq-test
 
 ## Also run the tests as part of make check
-TESTS = $(check_PROGRAMS)
+## TESTS = $(check_PROGRAMS)
 
 ## 
 ## Compiler/Linker Options
@@ -92,4 +185,3 @@ TESTS = $(check_PROGRAMS)
 activemq_test_SOURCES = $(cc_sources)
 activemq_test_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
 activemq_test_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@ 
- 

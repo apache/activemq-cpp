@@ -17,12 +17,26 @@
 
 cc_sources = \
   activemq/util/PrimitiveMapBenchmark.cpp \
+  decaf/lang/BooleanBenchmark.cpp \
+  decaf/util/PropertiesBenchmark.cpp \
+  decaf/util/QueueBenchmark.cpp \
+  decaf/util/SetBenchmark.cpp \
+  decaf/util/MapBenchmark.cpp \
+  decaf/io/DataInputStreamBenchmark.cpp \
+  decaf/io/DataOutputStreamBenchmark.cpp \
   benchmark/PerformanceTimer.cpp \
   testRegistry.cpp \
   main.cpp
 
 hh_sources = \
   activemq/util/PrimitiveMapBenchmark.h \
+  decaf/lang/BooleanBenchmark.h \
+  decaf/util/PropertiesBenchmark.h \
+  decaf/util/QueueBenchmark.h \
+  decaf/util/SetBenchmark.h \
+  decaf/util/MapBenchmark.h \
+  decaf/io/DataInputStreamBenchmark.h \
+  decaf/io/DataOutputStreamBenchmark.h \
   benchmark/BenchmarkBase.h \
   benchmark/PerformanceTimer.h
 
@@ -33,6 +47,6 @@ check_PROGRAMS = activemq-test-benchmarks
 ## Compiler/Linker Options
 ##
 activemq_test_benchmarks_SOURCES = $(cc_sources)
-activemq_test_benchmarks_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemq_test_benchmarks_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@
+activemq_test_benchmarks_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) $(DECAF_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
+activemq_test_benchmarks_LDADD= $(AMQ_TEST_LIBS) $(DECAF_TEST_LIBS) @CPPUNIT_LIBS@
 

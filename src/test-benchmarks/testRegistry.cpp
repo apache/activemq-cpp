@@ -16,5 +16,21 @@
  */
 
 #include <activemq/util/PrimitiveMapBenchmark.h>
-
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapBenchmark );
+
+#include <decaf/lang/BooleanBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::BooleanBenchmark );
+
+#include <decaf/util/PropertiesBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::PropertiesBenchmark );
+#include <decaf/util/QueueBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueBenchmark );
+#include <decaf/util/SetBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetBenchmark );
+#include <decaf/util/MapBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapBenchmark );
+
+#include <decaf/io/DataInputStreamBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataInputStreamBenchmark );
+#include <decaf/io/DataOutputStreamBenchmark.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::io::DataOutputStreamBenchmark );

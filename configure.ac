@@ -91,6 +91,21 @@ AC_CHECK_FUNCS([ioctl select gettimeofday time ftime])
 AMQ_FIND_CPPUNIT(1.10.2, cppunit=yes, cppunit=no; AC_MSG_RESULT([no. Unit and Integration tests disabled]))
 AM_CONDITIONAL(BUILD_CPPUNIT_TESTS, test x$cppunit = xyes)
 
+# Absolute source/build directory
+decaf_srcdir=`(cd $srcdir && pwd)`
+decaf_builddir=`pwd`
+AC_SUBST(decaf_srcdir)
+AC_SUBST(decaf_builddir)
+
+if test "$decaf_builddir" != "$decaf_srcdir"; then
+  USE_VPATH=1
+  DECAF_CONFIG_LOCATION=build
+else
+  DECAF_CONFIG_LOCATION=source
+fi
+
+AC_SUBST(DECAF_CONFIG_LOCATION)
+
 PLAT_CXXFLAGS=
 PLAT_LIBS=
 
@@ -131,31 +146,43 @@ case "${host_os}" in
 esac
 
 ## find and configure the Apache Decaf Library
-DECAF_CONFIGURE_DECAF
+## DECAF_CONFIGURE_DECAF - Future use for decaf as a standalone lib
+## Flags for building the decaf cpp library
+## find and configure the APR, and APR Utils
+DECAF_CONFIGURE_APR
+DECAF_CXXFLAGS="$APR_CPPFLAGS $APR_INCLUDES $APU_INCLUDES"
+DECAF_LIBS="$APR_LIBS $APR_LDFLAGS $APU_LIBS $APU_LDFLAGS"
+
+AC_SUBST([DECAF_CXXFLAGS])
+AC_SUBST([DECAF_LIBS])
+
+## Flags for building the test applications.
+DECAF_TEST_CXXFLAGS="$DECAF_CXXFLAGS $APR_CPPFLAGS $APR_INCLUDES $APU_INCLUDES"
+AC_SUBST([DECAF_TEST_CXXFLAGS])
 
 ## Flags for building the activemq-cpp library
 AC_SUBST([AMQ_CXXFLAGS])
 AC_SUBST([AMQ_LIBS])
 
 if test "$GCC" = "yes"; then
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -W -Wall -fPIC -fstrict-aliasing -Wstrict-aliasing=2 -Wno-long-long"
 else
-   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -PIC"
+   AMQ_CXXFLAGS="$PLAT_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -PIC"
 fi
 
 AMQ_LIBS="$PLAT_LIBS $DECAF_LIBS"
 
-## Flags for building the test applications.
-AC_SUBST([AMQ_TEST_CXXFLAGS])
-AC_SUBST([AMQ_TEST_LIBS])
-
 if test "$GCC" = "yes"; then
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized"
 else
-   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CPPFLAGS"
+   AMQ_TEST_CXXFLAGS="$AMQ_CXXFLAGS $DECAF_INCLUDES $DECAF_CXXFLAGS"
 fi
 
 AMQ_TEST_LIBS="../main/libactivemq-cpp.la $DECAF_LIBS"
+
+## Flags for building the test applications.
+AC_SUBST([AMQ_TEST_CXXFLAGS])
+AC_SUBST([AMQ_TEST_LIBS])
 
 # Check to see if the compiler supports the visibility flags.
 # If so, define HAVE_VISIBILITY_OPTIONS
