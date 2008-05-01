@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;;..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,10 +66,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunitd.lib libdecafd.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Decaf\vs2005-build\Debug&quot;;&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -129,7 +129,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;"
+				Optimization="2"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -151,10 +152,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunit.lib libdecaf.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Decaf\vs2005-build\Release&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -216,7 +217,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -238,10 +239,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib cppunit.lib apr-1.lib aprutil-1.lib decaf.lib"
+				AdditionalDependencies="ws2_32.lib cppunit.lib apr-1.lib aprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Decaf\vs2005-build\ReleaseDLL&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -303,7 +304,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;"
+				AdditionalIncludeDirectories="..\src\test;..\src\main;&quot;C:\Program Files\CPPUnit\include&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Apps\cppunit-1.11.6\include&quot;;&quot;E:\dev\cppunit-1.11.6\include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -328,10 +329,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib aprutil-1.lib decafd.lib"
+				AdditionalDependencies="ws2_32.lib cppunitd.lib apr-1.lib aprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Decaf\vs2005-build\DebugDLL&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\CPPUnit\lib&quot;;&quot;C:\Apps\cppunit-1.11.6\lib&quot;;&quot;E:\dev\cppunit-1.11.6\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -3537,8 +3538,428 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="decaf"
+			>
+			<Filter
+				Name="internal"
+				>
+				<Filter
+					Name="nio"
+					>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\BufferFactoryTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\BufferFactoryTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ByteArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ByteArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ByteArrayPerspectiveTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ByteArrayPerspectiveTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\CharArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\CharArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\DoubleArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\DoubleArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\FloatArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\FloatArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\IntArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\IntArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\LongArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\LongArrayBufferTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ShortArrayBufferTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\nio\ShortArrayBufferTest.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\src\test\decaf\internal\util\ByteArrayAdapterTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\util\ByteArrayAdapterTest.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="io"
+				>
+				<File
+					RelativePath="..\src\test\decaf\io\BufferedInputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\BufferedInputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\BufferedOutputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\BufferedOutputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ByteArrayInputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ByteArrayInputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ByteArrayOutputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\ByteArrayOutputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\DataInputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\DataInputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\DataOutputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\DataOutputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\FilterInputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\FilterInputStreamTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\FilterOutputStreamTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\io\FilterOutputStreamTest.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="lang"
+				>
+				<File
+					RelativePath="..\src\test\decaf\lang\BooleanTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\BooleanTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ByteTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ByteTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\CharacterTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\CharacterTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\DoubleTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\DoubleTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ExceptionTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ExceptionTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\FloatTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\FloatTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\IntegerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\IntegerTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\LongTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\LongTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\MathTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\MathTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ShortTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ShortTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\SystemTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\SystemTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ThreadTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\lang\ThreadTest.h"
+					>
+				</File>
+				<Filter
+					Name="exceptions"
+					>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="net"
+				>
+				<File
+					RelativePath="..\src\test\decaf\net\SocketFactoryTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\SocketFactoryTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\SocketTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\SocketTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\URISyntaxExceptionTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\URISyntaxExceptionTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\URITest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\net\URITest.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="nio"
+				>
+				<File
+					RelativePath="..\src\test\decaf\nio\BufferTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\nio\BufferTest.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="util"
+				>
+				<File
+					RelativePath="..\src\test\decaf\util\DateTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\DateTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\Endian.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\Endian.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\MapTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\MapTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\QueueTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\QueueTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\RandomTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\RandomTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\SetTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\SetTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\StringTokenizerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\StringTokenizerTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\UUIDTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\decaf\util\UUIDTest.h"
+					>
+				</File>
+				<Filter
+					Name="concurrent"
+					>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\CountDownLatchTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\CountDownLatchTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\MutexTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\MutexTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolTest.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="logging"
+					>
+				</Filter>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath="..\src\test\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\src\test\testRegistry.cpp"
 			>
 		</File>
 	</Files>
