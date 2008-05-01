@@ -37,13 +37,16 @@ ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
 : cms::CMSException(),
   decaf::lang::Exception() {
 
-    *this = ex;
+  this->message = ex.getMessage();
+  this->stackTrace = ex.getStackTrace();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const Exception& ex ) throw()
 : cms::CMSException() {
-    *this = ex;
+
+  this->message = ex.getMessage();
+  this->stackTrace = ex.getStackTrace();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

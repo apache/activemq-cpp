@@ -34,7 +34,7 @@ namespace lang{
      * Base class for all exceptions.
      */
     class DECAF_API Exception : public Throwable {
-    private:
+    protected:
 
         /**
          * The cause of this exception.

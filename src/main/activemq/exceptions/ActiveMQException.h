@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
 #define _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
 
+#include <activemq/util/Config.h>
 #include <cms/CMSException.h>
 #include <decaf/lang/Exception.h>
 #include <activemq/exceptions/ExceptionDefines.h>
@@ -29,8 +30,8 @@ namespace exceptions{
     /*
      * Base class for all exceptions.
      */
-    class ActiveMQException : public cms::CMSException,
-                              public decaf::lang::Exception {
+    class AMQCPP_API ActiveMQException : public cms::CMSException,
+                                         public decaf::lang::Exception {
     public:
 
         /**
