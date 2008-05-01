@@ -72,202 +72,246 @@ using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
+////////////////////////////////////////////////////////////////////////////////
+namespace integration {
+namespace connector {
+namespace openwire{
+
+    class Producer : public decaf::lang::Runnable {
+    private:
+
+        cms::Connection* connection;
+        cms::Session* session;
+        cms::Destination* destination;
+        cms::MessageProducer* producer;
+        int numMessages;
+        long long timeToLive;
+        bool disableTimeStamps;
+        std::string topic;
+
+    public:
+
+        Producer( std::string topic, int numMessages,
+                  long long timeToLive ){
+
+            this->connection = NULL;
+            this->session = NULL;
+            this->destination = NULL;
+            this->producer = NULL;
+            this->numMessages = numMessages;
+            this->timeToLive = timeToLive;
+            this->disableTimeStamps = false;
+            this->topic = topic;
+        }
+
+        virtual ~Producer(){
+            cleanup();
+        }
+
+        virtual bool getDisableTimeStamps() const {
+            return this->disableTimeStamps;
+        }
+
+        virtual void setDisableTimeStamps( bool value ){
+            this->disableTimeStamps = value;
+        }
+
+        virtual void run() {
+            try {
+                // Create a ConnectionFactory
+                ActiveMQConnectionFactory* connectionFactory =
+                    new ActiveMQConnectionFactory(
+                        IntegrationCommon::getInstance().getOpenwireURL() );
+
+                // Create a Connection
+                connection = connectionFactory->createConnection();
+                delete connectionFactory;
+                connection->start();
+
+                string sss=connection->getClientID();
+                cout << sss << endl;
+
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
+                destination = session->createQueue( topic );
+
+                producer = session->createProducer( destination );
+                producer->setDeliveryMode( DeliveryMode::PERSISTENT );
+                producer->setDisableMessageTimeStamp( disableTimeStamps );
+
+                //unsigned long ttt=getcurt();
+                producer->setTimeToLive( 1 );
+
+                // Create the Thread Id String
+                string threadIdStr = Integer::toString( Thread::getId() );
+
+                // Create a messages
+                string text = (string)"Hello world! from thread " + threadIdStr;
+
+                for( int ix=0; ix<numMessages; ++ix ){
+                    TextMessage* message = session->createTextMessage( text );
+                    producer->send( message );
+                    delete message;
+                }
+
+            } catch ( CMSException& e ) {
+                e.printStackTrace();
+            }
+        }
+
+    private:
+
+        void cleanup(){
+
+            // Destroy resources.
+            try{
+                if( destination != NULL ) delete destination;
+            }catch ( CMSException& e ) {}
+            destination = NULL;
+
+            try{
+                if( producer != NULL ) delete producer;
+            }catch ( CMSException& e ) {}
+            producer = NULL;
+
+            // Close open resources.
+            try{
+                if( session != NULL ) session->close();
+                if( connection != NULL ) connection->close();
+            }catch ( CMSException& e ) {}
+
+            try{
+                if( session != NULL ) delete session;
+            }catch ( CMSException& e ) {}
+            session = NULL;
+
+            try{
+                if( connection != NULL ) delete connection;
+            }catch ( CMSException& e ) {}
+            connection = NULL;
+        }
+
+    };
+
+    class Consumer : public cms::MessageListener, public decaf::lang::Runnable {
+    private:
+
+        cms::Connection* connection;
+        cms::Session* session;
+        cms::Destination* destination;
+        cms::MessageConsumer* consumer;
+        long waitMillis;
+        int numReceived;
+        std::string topic;
+
+    public:
+
+        Consumer( std::string topic, long waitMillis ){
+            connection = NULL;
+            session = NULL;
+            destination = NULL;
+            consumer = NULL;
+            this->waitMillis = waitMillis;
+            numReceived = 0;
+            this->topic = topic;
+        }
+
+        virtual ~Consumer(){
+            cleanup();
+        }
+
+        virtual int getNumReceived() const{
+            return numReceived;
+        }
+
+        virtual void run(){
+
+            try {
+
+                string user,passwd,sID;
+                user="default";
+                passwd="";
+                sID="lsgID";
+
+                // Create a Connection
+                connection = ActiveMQConnectionFactory::createConnection(
+                    IntegrationCommon::getInstance().getOpenwireURL(), user, passwd, sID );
+
+                connection->start();
+
+                // Create a Session
+                session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
+
+                // Create the destination (Topic or Queue)
+                string t = topic + "?consumer.retroactive=true";
+
+                destination = session->createQueue( t );
+
+                consumer = session->createConsumer( destination );
+
+                consumer->setMessageListener( this );
+
+                // Sleep while asynchronous messages come in.
+                Thread::sleep( waitMillis );
+
+            } catch (CMSException& e) {
+                e.printStackTrace();
+            }
+        }
+
+        virtual void onMessage( const cms::Message* message ){
+
+            try{
+                const TextMessage* textMessage =
+                    dynamic_cast< const TextMessage* >( message );
+                textMessage->getText();
+                numReceived++;
+            } catch (CMSException& e) {
+                e.printStackTrace();
+            }
+        }
+
+    private:
+
+        void cleanup(){
+
+            // Destroy resources.
+            try{
+                if( destination != NULL ) delete destination;
+            }catch (CMSException& e) {}
+            destination = NULL;
+
+            try{
+                if( consumer != NULL ) delete consumer;
+            }catch (CMSException& e) {}
+            consumer = NULL;
+
+            // Close open resources.
+            try{
+                if( session != NULL ) session->close();
+                if( connection != NULL ) connection->close();
+            }catch (CMSException& e) {}
+
+            try{
+                if( session != NULL ) delete session;
+            }catch (CMSException& e) {}
+            session = NULL;
+
+            try{
+                if( connection != NULL ) delete connection;
+            }catch (CMSException& e) {}
+            connection = NULL;
+        }
+    };
+
+}}}
+
 using namespace std;
 using namespace integration;
 using namespace integration::connector::openwire;
 
-OpenwireExpirationTest::Producer::Producer( string topic, int numMessages, long long timeToLive ){
-    connection = NULL;
-    session = NULL;
-    destination = NULL;
-    producer = NULL;
-    this->numMessages = numMessages;
-    this->timeToLive = timeToLive;
-    this->disableTimeStamps = false;
-    this->topic = topic;
-}
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireExpirationTest::testExpired() {
 
-OpenwireExpirationTest::Producer::~Producer(){
-    cleanup();
-}
-
-bool OpenwireExpirationTest::Producer::getDisableTimeStamps() const {
-    return disableTimeStamps;
-}
-
-void OpenwireExpirationTest::Producer::setDisableTimeStamps( bool value ) {
-    this->disableTimeStamps = value;
-}
-
-void OpenwireExpirationTest::Producer::run() {
-    try {
-        // Create a ConnectionFactory
-        ActiveMQConnectionFactory* connectionFactory =
-            new ActiveMQConnectionFactory(
-                IntegrationCommon::getInstance().getStompURL() );
-
-        // Create a Connection
-        connection = connectionFactory->createConnection();
-        delete connectionFactory;
-        connection->start();
-
-        string sss=connection->getClientID();
-        cout << sss << endl;
-
-        session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
-        destination = session->createTopic( topic );
-
-        producer = session->createProducer( destination );
-        producer->setDeliveryMode( DeliveryMode::PERSISTENT );
-        producer->setDisableMessageTimeStamp( disableTimeStamps );
-
-        //unsigned long ttt=getcurt();
-        producer->setTimeToLive( 1);
-
-        // Create the Thread Id String
-        string threadIdStr = Integer::toString( Thread::getId() );
-
-        // Create a messages
-        string text = (string)"Hello world! from thread " + threadIdStr;
-
-            for( int ix=0; ix<numMessages; ++ix ){
-                TextMessage* message = session->createTextMessage( text );
-                producer->send( message );
-                delete message;
-           }
-
-       }catch ( CMSException& e ) {
-           e.printStackTrace();
-       }
-   }
-
-void OpenwireExpirationTest::Producer::cleanup(){
-
-        // Destroy resources.
-    try{
-        if( destination != NULL ) delete destination;
-    }catch ( CMSException& e ) {}
-    destination = NULL;
-
-    try{
-        if( producer != NULL ) delete producer;
-    }catch ( CMSException& e ) {}
-    producer = NULL;
-
-    // Close open resources.
-    try{
-        if( session != NULL ) session->close();
-        if( connection != NULL ) connection->close();
-    }catch ( CMSException& e ) {}
-
-    try{
-        if( session != NULL ) delete session;
-    }catch ( CMSException& e ) {}
-    session = NULL;
-
-    try{
-        if( connection != NULL ) delete connection;
-    }catch ( CMSException& e ) {}
-    connection = NULL;
-}
-
-OpenwireExpirationTest::Consumer::Consumer( string topic, long waitMillis ){
-    connection = NULL;
-    session = NULL;
-    destination = NULL;
-    consumer = NULL;
-    this->waitMillis = waitMillis;
-    numReceived = 0;
-    this->topic = topic;
-}
-
-OpenwireExpirationTest::Consumer::~Consumer(){
-    cleanup();
-}
-
-int OpenwireExpirationTest::Consumer::getNumReceived() const{
-    return numReceived;
-}
-
-void OpenwireExpirationTest::Consumer::run() {
-
-    try {
-
-        string user,passwd,sID;
-        user="default";
-        passwd="";
-        sID="lsgID";
-
-        // Create a Connection
-        connection = ActiveMQConnectionFactory::createConnection(
-            IntegrationCommon::getInstance().getStompURL(), user, passwd, sID );
-        connection->start();
-
-        // Create a Session
-        session = connection->createSession( Session::AUTO_ACKNOWLEDGE);
-
-        // Create the destination (Topic or Queue)
-        string t = topic + "?consumer.retroactive=true";
-
-        destination = session->createTopic( t );
-
-        consumer = session->createConsumer( destination );
-
-        consumer->setMessageListener( this );
-
-        // Sleep while asynchronous messages come in.
-        Thread::sleep( waitMillis );
-
-    } catch (CMSException& e) {
-        e.printStackTrace();
-    }
-}
-
-void OpenwireExpirationTest::Consumer::onMessage( const Message* message ){
-
-    try
-    {
-        const TextMessage* textMessage =
-            dynamic_cast< const TextMessage* >( message );
-        string text = textMessage->getText();
-        numReceived++;
-    } catch (CMSException& e) {
-        e.printStackTrace();
-    }
-}
-
-void OpenwireExpirationTest::Consumer::cleanup(){
-
-    // Destroy resources.
-    try{
-        if( destination != NULL ) delete destination;
-    }catch (CMSException& e) {}
-    destination = NULL;
-
-    try{
-        if( consumer != NULL ) delete consumer;
-    }catch (CMSException& e) {}
-    consumer = NULL;
-
-    // Close open resources.
-    try{
-        if( session != NULL ) session->close();
-        if( connection != NULL ) connection->close();
-    }catch (CMSException& e) {}
-
-    try{
-        if( session != NULL ) delete session;
-    }catch (CMSException& e) {}
-    session = NULL;
-
-    try{
-        if( connection != NULL ) delete connection;
-    }catch (CMSException& e) {}
-    connection = NULL;
-}
-
-void OpenwireExpirationTest::testExpired()
-{
     string topic = UUID::randomUUID().toString();
     Producer producer( topic, 1, 1 );
     Thread producerThread( &producer );
@@ -286,8 +330,9 @@ void OpenwireExpirationTest::testExpired()
     CPPUNIT_ASSERT_EQUAL( 0, consumer.getNumReceived() );
 }
 
-void OpenwireExpirationTest::testNotExpired()
-{
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireExpirationTest::testNotExpired() {
+
     string topic = UUID::randomUUID().toString();
     Producer producer( topic, 2, 2000 );
     producer.setDisableTimeStamps( true );
@@ -300,8 +345,5 @@ void OpenwireExpirationTest::testNotExpired()
     consumerThread.start();
     consumerThread.join();
 
-    Thread::sleep( 50 );
-
     CPPUNIT_ASSERT_EQUAL( 2, consumer.getNumReceived() );
 }
-
