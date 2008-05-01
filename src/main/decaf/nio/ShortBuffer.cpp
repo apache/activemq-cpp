@@ -267,7 +267,7 @@ int ShortBuffer::compareTo( const ShortBuffer& value ) const {
         compareRemaining--;
     }
 
-    return remaining() - value.remaining();
+    return (int)( remaining() - value.remaining() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -267,7 +267,7 @@ int DoubleBuffer::compareTo( const DoubleBuffer& value ) const {
         compareRemaining--;
     }
 
-    return remaining() - value.remaining();
+    return (int)( remaining() - value.remaining() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
