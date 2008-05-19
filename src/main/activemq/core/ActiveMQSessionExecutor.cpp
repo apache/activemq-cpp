@@ -148,7 +148,6 @@ void ActiveMQSessionExecutor::stop() {
             return;
         }
 
-
         synchronized( &mutex ) { started = false; }
     }
 }
