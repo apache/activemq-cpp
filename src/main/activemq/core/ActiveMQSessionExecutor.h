@@ -45,6 +45,7 @@ namespace core{
         std::list<DispatchData> messageQueue;
         decaf::lang::Thread* thread;
         decaf::util::concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex dispatchMutex;
         bool started;
         bool closed;
 
