@@ -46,8 +46,8 @@ namespace core{
         decaf::lang::Thread* thread;
         decaf::util::concurrent::Mutex mutex;
         decaf::util::concurrent::Mutex dispatchMutex;
-        bool started;
-        bool closed;
+        volatile bool started;
+        volatile bool closed;
 
     public:
 
