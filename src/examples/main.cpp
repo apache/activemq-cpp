@@ -275,7 +275,9 @@ public:
         }
 
         // Commit all messages.
-        session->commit();
+        if( this->sessionTransacted ) {
+            session->commit();
+        }
 
         // No matter what, tag the count down latch until done.
         doneLatch.countDown();
