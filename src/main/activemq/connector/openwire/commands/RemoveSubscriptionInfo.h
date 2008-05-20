@@ -53,7 +53,7 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_REMOVESUBSCRIPTIONINFO = 0;
+        const static unsigned char ID_REMOVESUBSCRIPTIONINFO = 9;
 
     public:
 
