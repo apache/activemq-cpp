@@ -57,6 +57,7 @@ void Exception::setMessage( const char* msg, ... ){
     va_list vargs;
     va_start( vargs, msg );
     buildMessage( msg, vargs );
+    va_end( vargs );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
