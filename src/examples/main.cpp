@@ -74,6 +74,9 @@ public:
     }
 
     virtual void run() {
+
+        ConnectionFactory* connectionFactory = NULL;
+
         try {
             // Create a ConnectionFactory
             ConnectionFactory* connectionFactory =
@@ -85,6 +88,7 @@ public:
 
             // free the factory, we are done with it.
             delete connectionFactory;
+            connectionFactory = NULL;
 
             // Create a Session
             if( this->sessionTransacted ) {
@@ -123,6 +127,9 @@ public:
             }
 
         }catch ( CMSException& e ) {
+            delete connectionFactory;
+            connectionFactory = NULL;
+
             e.printStackTrace();
         }
     }
@@ -204,15 +211,20 @@ public:
 
     virtual void run() {
 
+        ConnectionFactory* connectionFactory = NULL;
+
         try {
 
             // Create a ConnectionFactory
-            ConnectionFactory* connectionFactory =
+            connectionFactory =
                 ConnectionFactory::createCMSConnectionFactory( brokerURI );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
+
             delete connectionFactory;
+            connectionFactory = NULL;
+
             connection->start();
 
             connection->setExceptionListener(this);
@@ -246,6 +258,13 @@ public:
             doneLatch.await( waitMillis );
 
         } catch (CMSException& e) {
+
+            // Indicate we are ready for messages.
+            latch.countDown();
+
+            delete connectionFactory;
+            connectionFactory = NULL;
+
             e.printStackTrace();
         }
     }
