@@ -29,12 +29,11 @@ namespace decaf{
 namespace util{
 
     /**
-     * Map template that wraps around a std::map to provide
+     * Set template that wraps around a std::set to provide
      * a more user-friendly interface and to provide common
-     * functions that do not exist in std::map.
+     * functions that do not exist in std::set.
      */
-    template <typename E> class Set : public util::concurrent::Synchronizable
-    {
+    template <typename E> class Set : public util::concurrent::Synchronizable {
     private:
 
         std::set<E> values;
@@ -248,6 +247,7 @@ namespace util{
         virtual void notifyAll() throw(  lang::Exception  ) {
             mutex.notifyAll();
         }
+
     };
 
 }}
