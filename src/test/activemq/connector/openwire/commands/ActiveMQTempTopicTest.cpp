@@ -17,8 +17,6 @@
 
 #include "ActiveMQTempTopicTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTempTopicTest );
-
 #include <decaf/util/UUID.h>
 #include <activemq/connector/openwire/commands/ActiveMQTempTopic.h>
 
@@ -34,6 +32,6 @@ using namespace activemq::connector::openwire::commands;
 void ActiveMQTempTopicTest::test()
 {
     ActiveMQTempTopic myQueue;
-    
+
     CPPUNIT_ASSERT( myQueue.getDestinationType() == cms::Destination::TEMPORARY_TOPIC );
 }

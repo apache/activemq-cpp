@@ -17,8 +17,6 @@
 
 #include "ActiveMQConnectionFactoryTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
-
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Thread.h>

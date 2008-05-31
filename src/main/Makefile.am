@@ -20,6 +20,8 @@ cc_sources = \
     activemq/io/LoggingOutputStream.cpp \
     activemq/exceptions/ActiveMQException.cpp \
     activemq/util/PrimitiveMap.cpp \
+    activemq/util/PrimitiveList.cpp \
+    activemq/util/PrimitiveValueNode.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/URISupport.cpp \
     activemq/cmsutil/DynamicDestinationResolver.cpp \
@@ -265,7 +267,10 @@ h_sources = \
     activemq/util/Config.h \
     activemq/util/ActiveMQProperties.h \
     activemq/util/LongSequenceGenerator.h \
+    activemq/util/PrimitiveValueNode.h \
     activemq/util/PrimitiveMap.h \
+    activemq/util/PrimitiveList.h \
+    activemq/util/PrimitiveValueTypes.h \
     activemq/util/URISupport.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
@@ -378,6 +383,7 @@ h_sources = \
     decaf/util/Iterator.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
+    decaf/util/List.h \
     decaf/util/Map.h \
     decaf/util/Properties.h \
     decaf/util/Queue.h \

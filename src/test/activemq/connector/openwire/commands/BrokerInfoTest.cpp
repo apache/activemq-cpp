@@ -17,8 +17,6 @@
 
 #include "BrokerInfoTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::BrokerInfoTest );
-
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
 
 using namespace std;

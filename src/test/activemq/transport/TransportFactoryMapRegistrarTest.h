@@ -50,16 +50,8 @@ namespace transport{
 
         virtual ~TransportFactoryMapRegistrarTest(){}
 
-        void test(){
+        void test();
 
-            {
-                TransportFactoryMapRegistrar registrar("Test", new TestTransportFactory());
-
-                CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup("Test") != NULL);
-            }
-
-            CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup( "Test" ) == NULL );
-        }
     };
 
 }}

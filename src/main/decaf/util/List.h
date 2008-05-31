@@ -105,6 +105,16 @@ namespace util{
         virtual ~List(){}
 
         /**
+         * Comparison, equality is dependant on the method of determining
+         * if the element are equal.
+         * @param source - List to compare to this one.
+         * @returns true if the List passed is equal in value to this one.
+         */
+        virtual bool equals( const List& source ) const {
+            return this->values == source.values;
+        }
+
+        /**
          * Returns an iterator for this collection.  The order of Iteration
          * is in no particular order other than the natural ording of the
          * elements in the List class.

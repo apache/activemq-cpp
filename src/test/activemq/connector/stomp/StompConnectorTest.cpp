@@ -19,8 +19,6 @@
 #include <activemq/transport/TransportFactoryMap.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompConnectorTest );
-
 using namespace std;
 using namespace activemq;
 using namespace activemq::connector;

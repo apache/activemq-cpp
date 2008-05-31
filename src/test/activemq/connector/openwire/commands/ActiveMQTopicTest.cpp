@@ -17,8 +17,6 @@
 
 #include "ActiveMQTopicTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTopicTest );
-
 #include <decaf/util/UUID.h>
 #include <activemq/connector/openwire/commands/ActiveMQTopic.h>
 

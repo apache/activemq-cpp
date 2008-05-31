@@ -17,8 +17,6 @@
 
 #include "ActiveMQBytesMessageTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQBytesMessageTest );
-
 #include <decaf/util/UUID.h>
 #include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
 

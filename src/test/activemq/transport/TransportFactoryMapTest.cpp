@@ -17,5 +17,34 @@
 
 #include "TransportFactoryMapTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportFactoryMapTest );
+using namespace activemq;
+using namespace activemq::transport;
 
+////////////////////////////////////////////////////////////////////////////////
+void TransportFactoryMapTest::test(){
+
+    TransportFactoryMap& factMap =
+        TransportFactoryMap::getInstance();
+    TestTransportFactory testFactory;
+
+    factMap.registerTransportFactory( "test", &testFactory );
+
+    CPPUNIT_ASSERT( factMap.lookup( "test" ) == &testFactory );
+
+    std::vector<std::string> names;
+    CPPUNIT_ASSERT( factMap.getFactoryNames( names ) >= 1 );
+
+    bool found = false;
+    for( unsigned int i = 0; i < names.size(); ++i )
+    {
+        if( names[i] == "test" )
+        {
+            found = true;
+            break;
+        }
+    }
+    CPPUNIT_ASSERT( found );
+
+    factMap.unregisterTransportFactory( "test" );
+    CPPUNIT_ASSERT( factMap.lookup( "test" ) == NULL );
+}

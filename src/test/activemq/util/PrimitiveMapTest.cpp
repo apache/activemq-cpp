@@ -17,51 +17,52 @@
 
 #include "PrimitiveMapTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapTest );
+#include <activemq/util/PrimitiveValueNode.h>
 
+using namespace activemq;
 using namespace activemq::util;
 
 void PrimitiveMapTest::testValueNode(){
 
-    PrimitiveMap::ValueNode node;
+    PrimitiveValueNode node;
 
     node.setBool( true );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == true );
     node.setBool( false );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == false );
 
     node.setByte( 5 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::BYTE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == BYTE_TYPE );
     CPPUNIT_ASSERT( node.getByte() == 5 );
 
     node.setChar( 'a' );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::CHAR_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == CHAR_TYPE );
     CPPUNIT_ASSERT( node.getChar() == 'a' );
 
     node.setShort( 10 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::SHORT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == SHORT_TYPE );
     CPPUNIT_ASSERT( node.getShort() == 10 );
 
     node.setInt( 10000 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::INTEGER_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == INTEGER_TYPE );
     CPPUNIT_ASSERT( node.getInt() == 10000 );
 
     node.setLong( 100000L );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::LONG_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == LONG_TYPE );
     CPPUNIT_ASSERT( node.getLong() == 100000L );
 
     node.setDouble( 2.3 );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::DOUBLE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == DOUBLE_TYPE );
     CPPUNIT_ASSERT( node.getDouble() == 2.3 );
 
     node.setFloat( 3.2f );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::FLOAT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == FLOAT_TYPE );
     CPPUNIT_ASSERT( node.getFloat() == 3.2f );
 
     node.setString( "hello" );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::STRING_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == STRING_TYPE );
     CPPUNIT_ASSERT( node.getString() == "hello" );
 
     std::vector<unsigned char> byteArray;
@@ -71,7 +72,7 @@ void PrimitiveMapTest::testValueNode(){
     byteArray.push_back( 'd' );
 
     node.setByteArray( byteArray );
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == BYTE_ARRAY_TYPE );
     CPPUNIT_ASSERT( node.getByteArray() == byteArray );
 
     try{
@@ -81,7 +82,7 @@ void PrimitiveMapTest::testValueNode(){
     }
 
     node.clear();
-    CPPUNIT_ASSERT( node.getValueType() == PrimitiveMap::NULL_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == NULL_TYPE );
 }
 
 void PrimitiveMapTest::testSetGet(){

@@ -17,8 +17,6 @@
 
 #include "OpenwireStringSupportTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireStringSupportTest );
-
 #include <activemq/connector/openwire/utils/OpenwireStringSupport.h>
 
 #include <decaf/io/ByteArrayInputStream.h>

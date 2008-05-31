@@ -17,8 +17,6 @@
 
 #include "OpenWireFormatTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTest );
-
 #include <decaf/util/Properties.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 

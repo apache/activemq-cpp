@@ -15,46 +15,42 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPTEST_H_
-#define ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPTEST_H_
+#ifndef ACTIVEMQ_UTIL_PRIMITIVELISTTEST_H_
+#define ACTIVEMQ_UTIL_PRIMITIVELISTTEST_H_
+
+#include <activemq/util/PrimitiveList.h>
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/transport/TransportFactoryMap.h>
-#include <activemq/transport/TransportFactory.h>
-#include <activemq/util/Config.h>
-
 namespace activemq{
-namespace transport{
+namespace util{
 
-    class TransportFactoryMapTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( TransportFactoryMapTest );
-        CPPUNIT_TEST( test );
+    class PrimitiveListTest : public CppUnit::TestFixture
+    {
+        CPPUNIT_TEST_SUITE( PrimitiveListTest );
+//        CPPUNIT_TEST( testSetGet );
+//        CPPUNIT_TEST( testRemove );
+//        CPPUNIT_TEST( testCount );
+//        CPPUNIT_TEST( testClear );
+//        CPPUNIT_TEST( testCopy );
+//        CPPUNIT_TEST( testContains );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        class TestTransportFactory : public TransportFactory
-        {
-        public:
+        PrimitiveListTest(){}
+        virtual ~PrimitiveListTest(){}
 
-            virtual Transport* createTransport(
-                const decaf::util::Properties& properties AMQCPP_UNUSED,
-                Transport* next = NULL,
-                bool own = true ) throw ( exceptions::ActiveMQException ) {
-
-                return NULL;
-            };
-        };
-
-        virtual ~TransportFactoryMapTest(){}
-
-        void test();
-
+        void testValueNode();
+        void testSetGet();
+        void testRemove();
+        void testCount();
+        void testCopy();
+        void testClear();
+        void testContains();
     };
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPTEST_H_*/
+#endif /*ACTIVEMQ_UTIL_PRIMITIVELISTTEST_H_*/

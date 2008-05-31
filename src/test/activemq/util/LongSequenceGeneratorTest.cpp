@@ -17,8 +17,6 @@
 
 #include "LongSequenceGeneratorTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::LongSequenceGeneratorTest );
-
 using namespace activemq;
 using namespace activemq::util;
 

@@ -17,8 +17,6 @@
 
 #include "ActiveMQQueueTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQQueueTest );
-
 #include <decaf/util/UUID.h>
 
 #include <activemq/connector/openwire/commands/ActiveMQQueue.h>
@@ -35,6 +33,6 @@ using namespace activemq::connector::openwire::commands;
 void ActiveMQQueueTest::test()
 {
     ActiveMQQueue myQueue;
-    
+
     CPPUNIT_ASSERT( myQueue.getDestinationType() == cms::Destination::QUEUE );
 }

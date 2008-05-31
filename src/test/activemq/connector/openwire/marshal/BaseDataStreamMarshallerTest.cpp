@@ -17,8 +17,6 @@
 
 #include "BaseDataStreamMarshallerTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::BaseDataStreamMarshallerTest );
-
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>

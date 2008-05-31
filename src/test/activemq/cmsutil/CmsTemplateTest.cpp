@@ -21,8 +21,6 @@
 #include "DummyConnectionFactory.h"
 #include "DummyMessageCreator.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::CmsTemplateTest );
-
 using namespace activemq;
 using namespace activemq::cmsutil;
 

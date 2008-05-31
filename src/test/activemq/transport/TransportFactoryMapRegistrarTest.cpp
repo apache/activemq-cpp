@@ -17,4 +17,17 @@
 
 #include "TransportFactoryMapRegistrarTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportFactoryMapRegistrarTest );
+using namespace activemq;
+using namespace activemq::transport;
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFactoryMapRegistrarTest::test(){
+
+    {
+        TransportFactoryMapRegistrar registrar("Test", new TestTransportFactory());
+
+        CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup("Test") != NULL);
+    }
+
+    CPPUNIT_ASSERT( TransportFactoryMap::getInstance().lookup( "Test" ) == NULL );
+}

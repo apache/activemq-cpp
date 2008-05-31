@@ -20,70 +20,68 @@
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
 #include "DummySession.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::DynamicDestinationResolverTest );
-
 using namespace activemq;
 using namespace activemq::cmsutil;
 
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicDestinationResolverTest::testTopics() {
 
-    ResourceLifecycleManager mgr;    
+    ResourceLifecycleManager mgr;
     DynamicDestinationResolver resolver;
     resolver.init(&mgr);
-    
+
     DummySession session(NULL);
-    
+
     // Test topic
-    cms::Destination* testTopic = dynamic_cast<cms::Topic*>(resolver.resolveDestinationName(&session, 
+    cms::Destination* testTopic = dynamic_cast<cms::Topic*>(resolver.resolveDestinationName(&session,
             (std::string)"test", true ));
-    
+
     CPPUNIT_ASSERT(testTopic != NULL);
-    
+
     // Hello topic
-    cms::Destination* helloTopic = resolver.resolveDestinationName(&session, 
+    cms::Destination* helloTopic = resolver.resolveDestinationName(&session,
             (std::string)"hello", true );
-    
+
     CPPUNIT_ASSERT(helloTopic != NULL);
     CPPUNIT_ASSERT(helloTopic != testTopic);
-    
-    cms::Destination* testTopic2 = dynamic_cast<cms::Topic*>(resolver.resolveDestinationName(&session, 
+
+    cms::Destination* testTopic2 = dynamic_cast<cms::Topic*>(resolver.resolveDestinationName(&session,
                 (std::string)"test", true ));
-    
+
     CPPUNIT_ASSERT(testTopic2 != NULL);
     CPPUNIT_ASSERT(testTopic == testTopic2);
-    
+
     mgr.destroy();
-    
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicDestinationResolverTest::testQueues() {
 
-    ResourceLifecycleManager mgr;    
+    ResourceLifecycleManager mgr;
     DynamicDestinationResolver resolver;
     resolver.init(&mgr);
-    
+
     DummySession session(NULL);
-    
+
     // Queue topic
-    cms::Destination* testQueue = dynamic_cast<cms::Queue*>(resolver.resolveDestinationName(&session, 
+    cms::Destination* testQueue = dynamic_cast<cms::Queue*>(resolver.resolveDestinationName(&session,
             (std::string)"test", false ));
-    
+
     CPPUNIT_ASSERT(testQueue != NULL);
-    
+
     // Hello queue
-    cms::Destination* helloQueue = resolver.resolveDestinationName(&session, 
+    cms::Destination* helloQueue = resolver.resolveDestinationName(&session,
             (std::string)"hello", false );
-    
+
     CPPUNIT_ASSERT(helloQueue != NULL);
     CPPUNIT_ASSERT(helloQueue != testQueue);
-    
-    cms::Destination* testQueue2 = dynamic_cast<cms::Queue*>(resolver.resolveDestinationName(&session, 
+
+    cms::Destination* testQueue2 = dynamic_cast<cms::Queue*>(resolver.resolveDestinationName(&session,
                 (std::string)"test", false ));
-    
+
     CPPUNIT_ASSERT(testQueue2 != NULL);
     CPPUNIT_ASSERT(testQueue == testQueue2);
-    
+
     mgr.destroy();
 }

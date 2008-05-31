@@ -20,8 +20,6 @@
 #include <activemq/cmsutil/ResourceLifecycleManager.h>
 #include "DummyConnectionFactory.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::CmsAccessorTest );
-
 using namespace activemq;
 using namespace activemq::cmsutil;
 
@@ -33,7 +31,7 @@ void CmsAccessorTest::setUp() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsAccessorTest::tearDown() {    
+void CmsAccessorTest::tearDown() {
     delete accessor;
     delete cf;
 }
@@ -48,10 +46,10 @@ void CmsAccessorTest::testConnectionFactory() {
 void CmsAccessorTest::testAckMode() {
 
     CPPUNIT_ASSERT(accessor->getSessionAcknowledgeMode() == cms::Session::AUTO_ACKNOWLEDGE);
-    
+
     accessor->setSessionAcknowledgeMode(cms::Session::CLIENT_ACKNOWLEDGE);
-    
-    CPPUNIT_ASSERT(accessor->getSessionAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE) ;   
+
+    CPPUNIT_ASSERT(accessor->getSessionAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE) ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,17 +57,17 @@ void CmsAccessorTest::testCreateResources() {
 
     cms::Connection* c = accessor->createConnection();
     CPPUNIT_ASSERT( c != NULL);
-    
+
     cms::Session* s = accessor->createSession(c);
     CPPUNIT_ASSERT( s != NULL);
-    
+
     CPPUNIT_ASSERT(s->getAcknowledgeMode() == cms::Session::AUTO_ACKNOWLEDGE);
-    
+
     accessor->setSessionAcknowledgeMode(cms::Session::CLIENT_ACKNOWLEDGE);
-    
+
     s = accessor->createSession(c);
     CPPUNIT_ASSERT( s != NULL);
-    
+
     CPPUNIT_ASSERT(s->getAcknowledgeMode() == cms::Session::CLIENT_ACKNOWLEDGE);
 }
 

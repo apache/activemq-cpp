@@ -17,8 +17,6 @@
 
 #include "URISupportTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
-
 #include <activemq/util/URISupport.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/System.h>

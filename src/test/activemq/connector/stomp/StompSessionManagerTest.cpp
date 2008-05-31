@@ -17,8 +17,6 @@
 
 #include "StompSessionManagerTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompSessionManagerTest );
-
 #include <activemq/transport/TransportFactoryMap.h>
 
 using namespace activemq;

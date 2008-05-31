@@ -15,4 +15,34 @@
  * limitations under the License.
  */
 
-#include "AbortCommandTest.h"
+#ifndef ACTIVEMQ_UTIL_PRIMITIVEVALUENODETEST_H_
+#define ACTIVEMQ_UTIL_PRIMITIVEVALUENODETEST_H_
+
+#include <activemq/util/PrimitiveValueNode.h>
+
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+
+namespace activemq{
+namespace util{
+
+    class PrimitiveValueNodeTest : public CppUnit::TestFixture
+    {
+        CPPUNIT_TEST_SUITE( PrimitiveValueNodeTest );
+        CPPUNIT_TEST( testValueNode );
+        CPPUNIT_TEST( testValueNodeCtors );
+        CPPUNIT_TEST_SUITE_END();
+
+    public:
+
+        PrimitiveValueNodeTest(){}
+        virtual ~PrimitiveValueNodeTest(){}
+
+        void testValueNode();
+        void testValueNodeCtors();
+
+    };
+
+}}
+
+#endif /*ACTIVEMQ_UTIL_PRIMITIVEVALUENODETEST_H_*/

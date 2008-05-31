@@ -17,8 +17,6 @@
 
 #include "BrokerIdTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::BrokerIdTest );
-
 #include <activemq/connector/openwire/commands/BrokerId.h>
 
 using namespace std;
@@ -32,6 +30,6 @@ using namespace activemq::connector::openwire::commands;
 void BrokerIdTest::test()
 {
     BrokerId myCommand;
-    
+
     CPPUNIT_ASSERT( myCommand.getDataStructureType() == BrokerId::ID_BROKERID );
 }

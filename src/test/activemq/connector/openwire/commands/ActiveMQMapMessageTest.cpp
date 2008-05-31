@@ -17,8 +17,6 @@
 
 #include "ActiveMQMapMessageTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQMapMessageTest );
-
 #include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
 
 using namespace std;
@@ -33,20 +31,20 @@ using namespace activemq::connector::openwire::commands;
 void ActiveMQMapMessageTest::test()
 {
     ActiveMQMapMessage myMessage;
-    
+
     CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQMapMessage::ID_ACTIVEMQMAPMESSAGE );
 
     CPPUNIT_ASSERT( myMessage.getMapNames().size() == 0 );
     CPPUNIT_ASSERT( myMessage.itemExists( "Something" ) == false );
-    
+
     std::vector<unsigned char> data;
-    
+
     data.push_back( 2 );
     data.push_back( 4 );
     data.push_back( 8 );
     data.push_back( 16 );
     data.push_back( 32 );
-    
+
     myMessage.setBoolean( "boolean", false );
     myMessage.setByte( "byte", 127 );
     myMessage.setChar( "char", 'a' );

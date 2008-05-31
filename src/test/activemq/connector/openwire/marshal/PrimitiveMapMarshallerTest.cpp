@@ -17,8 +17,6 @@
 
 #include "PrimitiveMapMarshallerTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::PrimitiveMapMarshallerTest );
-
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 

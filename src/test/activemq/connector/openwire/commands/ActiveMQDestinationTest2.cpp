@@ -17,8 +17,6 @@
 
 #include "ActiveMQDestinationTest2.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQDestinationTest );
-
 #include <decaf/util/UUID.h>
 
 using namespace std;

@@ -17,8 +17,6 @@
 
 #include "ActiveMQTextMessageTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTextMessageTest );
-
 #include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
 
 using namespace std;
@@ -35,11 +33,11 @@ void ActiveMQTextMessageTest::test()
     ActiveMQTextMessage myMessage;
 
     CPPUNIT_ASSERT( myMessage.getDataStructureType() == ActiveMQTextMessage::ID_ACTIVEMQTEXTMESSAGE );
-    
+
     const char* testText = "This is some test Text";
-    
+
     myMessage.setText( testText );
-    
+
     CPPUNIT_ASSERT( myMessage.getText() == testText );
 
     cms::TextMessage* clonedMessage = myMessage.clone();

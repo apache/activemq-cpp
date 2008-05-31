@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 
 #include <cms/CMSException.h>
+#include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -79,7 +80,7 @@ namespace marshal{
          * @throws CMSException
          */
         static void marshalPrimitive( decaf::io::DataOutputStream& dataOut,
-                                      util::PrimitiveMap::ValueNode& value )
+                                      util::PrimitiveValueNode& value )
                                         throw ( decaf::io::IOException );
 
         /**

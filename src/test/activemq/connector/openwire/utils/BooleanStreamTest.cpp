@@ -17,8 +17,6 @@
 
 #include "BooleanStreamTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::BooleanStreamTest );
-
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/ByteArrayInputStream.h>

@@ -17,8 +17,6 @@
 
 #include "ActiveMQSessionTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
-
 #include <decaf/lang/Thread.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>

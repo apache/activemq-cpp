@@ -17,8 +17,6 @@
 
 #include "ActiveMQMessageTest.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQMessageTest );
-
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
 
 using namespace std;
