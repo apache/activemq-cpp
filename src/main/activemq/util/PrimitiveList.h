@@ -52,44 +52,64 @@ namespace util{
         std::string toString() const;
 
         virtual bool getBool( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setBool( std::size_t index, bool value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setBool( std::size_t index, bool value );
 
         virtual unsigned char getByte( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setByte( std::size_t index, unsigned char value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setByte( std::size_t index, unsigned char value );
 
         virtual char getChar( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setChar( std::size_t index, char value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setChar( std::size_t index, char value );
 
         virtual short getShort( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setShort( std::size_t index, short value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setShort( std::size_t index, short value );
 
         virtual int getInt( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setInt( std::size_t index, int value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setInt( std::size_t index, int value );
 
         virtual long long getLong( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setLong( std::size_t index, long long value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setLong( std::size_t index, long long value );
 
         virtual double getDouble( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setDouble( std::size_t index, double value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setDouble( std::size_t index, double value );
 
         virtual float getFloat( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setFloat( std::size_t index, float value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setFloat( std::size_t index, float value );
 
         virtual std::string getString( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setString( std::size_t index, const std::string& value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setString( std::size_t index, const std::string& value );
 
         virtual std::vector<unsigned char> getByteArray( std::size_t index ) const
+            throw( decaf::lang::exceptions::IndexOutOfBoundsException,
+                   decaf::lang::exceptions::NoSuchElementException );
+        virtual void setByteArray( std::size_t index, const std::vector<unsigned char>& value )
             throw( decaf::lang::exceptions::IndexOutOfBoundsException );
-        virtual void setByteArray( std::size_t index, const std::vector<unsigned char>& value );
 
     };
 

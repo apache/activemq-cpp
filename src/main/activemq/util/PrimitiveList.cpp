@@ -54,14 +54,15 @@ std::string PrimitiveList::toString() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool PrimitiveList::getBool( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getBool();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setBool( std::size_t index, bool value ){
+void PrimitiveList::setBool( std::size_t index, bool value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setBool( value );
@@ -71,14 +72,16 @@ void PrimitiveList::setBool( std::size_t index, bool value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char PrimitiveList::getByte( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getByte();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setByte( std::size_t index, unsigned char value ){
+void PrimitiveList::setByte( std::size_t index, unsigned char value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setByte( value );
 
@@ -87,14 +90,16 @@ void PrimitiveList::setByte( std::size_t index, unsigned char value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 char PrimitiveList::getChar( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getChar();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setChar( std::size_t index, char value ){
+void PrimitiveList::setChar( std::size_t index, char value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setChar( value );
 
@@ -103,14 +108,16 @@ void PrimitiveList::setChar( std::size_t index, char value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 short PrimitiveList::getShort( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getShort();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setShort( std::size_t index, short value ){
+void PrimitiveList::setShort( std::size_t index, short value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setShort( value );
 
@@ -119,14 +126,16 @@ void PrimitiveList::setShort( std::size_t index, short value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 int PrimitiveList::getInt( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getInt();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setInt( std::size_t index, int value ){
+void PrimitiveList::setInt( std::size_t index, int value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setInt( value );
 
@@ -135,14 +144,16 @@ void PrimitiveList::setInt( std::size_t index, int value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 long long PrimitiveList::getLong( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getLong();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setLong( std::size_t index, long long value ){
+void PrimitiveList::setLong( std::size_t index, long long value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setLong( value );
 
@@ -151,14 +162,16 @@ void PrimitiveList::setLong( std::size_t index, long long value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 double PrimitiveList::getDouble( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getDouble();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setDouble( std::size_t index, double value ){
+void PrimitiveList::setDouble( std::size_t index, double value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setDouble( value );
 
@@ -167,14 +180,16 @@ void PrimitiveList::setDouble( std::size_t index, double value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 float PrimitiveList::getFloat( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getFloat();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setFloat( std::size_t index, float value ){
+void PrimitiveList::setFloat( std::size_t index, float value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setFloat( value );
 
@@ -183,14 +198,16 @@ void PrimitiveList::setFloat( std::size_t index, float value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 string PrimitiveList::getString( std::size_t index ) const
-    throw( IndexOutOfBoundsException ){
+    throw( IndexOutOfBoundsException, NoSuchElementException ){
 
     PrimitiveValueNode node = this->get( index );
     return node.getString();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveList::setString( std::size_t index, const string& value ){
+void PrimitiveList::setString( std::size_t index, const string& value )
+    throw( IndexOutOfBoundsException ){
+
     PrimitiveValueNode node;
     node.setString( value );
 
@@ -199,7 +216,7 @@ void PrimitiveList::setString( std::size_t index, const string& value ){
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<unsigned char> PrimitiveList::getByteArray( std::size_t index ) const
-    throw( decaf::lang::exceptions::IndexOutOfBoundsException ) {
+    throw( IndexOutOfBoundsException, NoSuchElementException ) {
 
     PrimitiveValueNode node = this->get( index );
     return node.getByteArray();
@@ -207,7 +224,8 @@ std::vector<unsigned char> PrimitiveList::getByteArray( std::size_t index ) cons
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveList::setByteArray( std::size_t index,
-                                  const std::vector<unsigned char>& value ) {
+                                  const std::vector<unsigned char>& value )
+    throw( IndexOutOfBoundsException ){
 
     PrimitiveValueNode node;
     node.setByteArray( value );

@@ -29,12 +29,12 @@ namespace util{
     class PrimitiveListTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( PrimitiveListTest );
-//        CPPUNIT_TEST( testSetGet );
-//        CPPUNIT_TEST( testRemove );
-//        CPPUNIT_TEST( testCount );
-//        CPPUNIT_TEST( testClear );
-//        CPPUNIT_TEST( testCopy );
-//        CPPUNIT_TEST( testContains );
+        CPPUNIT_TEST( testSetGet );
+        CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testCount );
+        CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testCopy );
+        CPPUNIT_TEST( testContains );
         CPPUNIT_TEST_SUITE_END();
 
     public:

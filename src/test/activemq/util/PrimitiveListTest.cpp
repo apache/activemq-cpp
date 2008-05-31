@@ -26,68 +26,77 @@ void PrimitiveListTest::testSetGet(){
 
     PrimitiveList plist;
 
-    try{
-        plist.getBool( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
-    plist.setBool( 0, true );
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw IndexOutOfBoundsException",
+        plist.getBool( 0 ),
+        decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    plist.add( true );
     CPPUNIT_ASSERT( plist.getBool(0) == true );
-    plist.setBool( 1, false );
+    plist.add( false );
     CPPUNIT_ASSERT( plist.getBool(1) == false );
 
-    try{
-        plist.getByte( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getByte( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setByte( 0, 1 );
     CPPUNIT_ASSERT( plist.getByte(0) == 1 );
 
-    try{
-        plist.getChar( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getChar( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setChar( 0, 'a' );
     CPPUNIT_ASSERT( plist.getChar(0) == 'a' );
 
-    try{
-        plist.getShort( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getShort( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setShort( 0, 2 );
     CPPUNIT_ASSERT( plist.getShort(0) == 2 );
 
-    try{
-        plist.getInt( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getInt( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setInt( 0, 3 );
     CPPUNIT_ASSERT( plist.getInt(0) == 3 );
 
-    try{
-        plist.getLong( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getLong( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setLong( 0, 4L );
     CPPUNIT_ASSERT( plist.getLong(0) == 4L );
 
-    try{
-        plist.getDouble( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getDouble( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setDouble( 0, 2.3 );
     CPPUNIT_ASSERT( plist.getDouble(0) == 2.3 );
 
-    try{
-        plist.getFloat( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getFloat( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setFloat( 0, 3.2f );
     CPPUNIT_ASSERT( plist.getFloat(0) == 3.2f );
 
-    try{
-        plist.getString( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getString( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setString( 0, "hello" );
     CPPUNIT_ASSERT( plist.getString(0) == "hello" );
 
@@ -97,37 +106,43 @@ void PrimitiveListTest::testSetGet(){
     byteArray.push_back( 'c' );
     byteArray.push_back( 'd' );
 
-    try{
-        plist.getByteArray( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getByteArray( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
     plist.setByteArray( 0, byteArray );
     CPPUNIT_ASSERT( plist.getByteArray(0) == byteArray );
-
 }
 
 void PrimitiveListTest::testRemove(){
 
     PrimitiveList plist;
-    plist.setInt( 0, 5 );
-    plist.setFloat( 1, 5.5f );
-    plist.setInt( 2, 6 );
+    plist.add( 5 );
+    plist.add( 5.5f );
+    plist.add( 6 );
     plist.remove( 0 );
-    try{
-        plist.getInt(0);
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getInt( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
+    plist.remove( 0 );
+    plist.remove( 0 );
+
+    CPPUNIT_ASSERT( plist.isEmpty() );
 }
 
 void PrimitiveListTest::testCount(){
 
     PrimitiveList plist;
     CPPUNIT_ASSERT( plist.size() == 0 );
-    plist.setInt( 0, 5 );
+    plist.add( 5 );
     CPPUNIT_ASSERT( plist.size() == 1);
-    plist.setFloat( 1, 5.5f );
+    plist.add( 5.5f );
     CPPUNIT_ASSERT( plist.size() == 2 );
-    plist.setInt( 2, 6 );
+    plist.add( 6 );
     CPPUNIT_ASSERT( plist.size() == 3 );
     plist.remove( 0 );
     CPPUNIT_ASSERT( plist.size() == 2 );
@@ -138,9 +153,9 @@ void PrimitiveListTest::testCount(){
 void PrimitiveListTest::testCopy(){
 
     PrimitiveList plist;
-    plist.setInt( 0, 5 );
-    plist.setFloat( 1, 5.5f );
-    plist.setInt( 2, 6 );
+    plist.add( 5 );
+    plist.add( 5.5f );
+    plist.add( 6 );
 
     PrimitiveList copy;
     copy.copy( plist );
@@ -153,44 +168,44 @@ void PrimitiveListTest::testCopy(){
 void PrimitiveListTest::testClear(){
 
     PrimitiveList plist;
-    plist.setInt( 0, 5 );
-    plist.setFloat( 1, 5.5f );
-    plist.setInt( 2, 6 );
+    plist.add( 5 );
+    plist.add( 5.5f );
+    plist.add( 6 );
 
     plist.clear();
     CPPUNIT_ASSERT( plist.size() == 0 );
 
-    try{
-        plist.getInt( 0 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw IndexOutOfBoundsException",
+        plist.getInt( 0 ),
+        decaf::lang::exceptions::IndexOutOfBoundsException );
 
-    try{
-        plist.getFloat( 1 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw IndexOutOfBoundsException",
+        plist.getFloat( 1 ),
+        decaf::lang::exceptions::IndexOutOfBoundsException );
 
-    try{
-        plist.getInt( 2 );
-        CPPUNIT_ASSERT( false );
-    } catch( decaf::lang::exceptions::NoSuchElementException& e ){}
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw IndexOutOfBoundsException",
+        plist.getInt( 2 ),
+        decaf::lang::exceptions::IndexOutOfBoundsException );
 }
 
 void PrimitiveListTest::testContains(){
 
     PrimitiveList plist;
 
-//    CPPUNIT_ASSERT( plist.contains("int") == false );
-//
-//    plist.setInt("int", 5 );
-//    CPPUNIT_ASSERT( plist.contains("int") == true );
-//
-//    plist.setFloat( "float", 5.5f );
-//    CPPUNIT_ASSERT( plist.contains("float") == true );
-//
-//    plist.setInt("int2", 6 );
-//    CPPUNIT_ASSERT( plist.contains("int2") == true );
-//
-//    plist.remove("int");
-//    CPPUNIT_ASSERT( plist.contains("int") == false );
+    CPPUNIT_ASSERT( plist.contains( 255 ) == false );
+
+    plist.add( 5 );
+    CPPUNIT_ASSERT( plist.contains( 5 ) == true );
+
+    plist.add( 5.5f );
+    CPPUNIT_ASSERT( plist.contains( 5.5f ) == true );
+
+    plist.add( 6 );
+    CPPUNIT_ASSERT( plist.contains( 6 ) == true );
+
+    plist.remove( PrimitiveValueNode(5) );
+    CPPUNIT_ASSERT( plist.contains( 5 ) == false );
 }
