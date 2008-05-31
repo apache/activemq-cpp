@@ -31,6 +31,11 @@ PrimitiveList::PrimitiveList() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+PrimitiveList::PrimitiveList( const decaf::util::List<PrimitiveValueNode>& src )
+  : List<PrimitiveValueNode>( src ){
+}
+
+////////////////////////////////////////////////////////////////////////////////
 PrimitiveList::PrimitiveList( const PrimitiveList& src )
   : List<PrimitiveValueNode>( src ){
 }

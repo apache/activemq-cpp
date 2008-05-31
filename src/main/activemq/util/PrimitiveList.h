@@ -45,7 +45,13 @@ namespace util{
 
         /**
          * Copy Constructor
-         * @param list - the PrimitiveList to copy
+         * @param src - the Decaf List of PrimtiveNodeValues to copy
+         */
+        PrimitiveList( const decaf::util::List<PrimitiveValueNode>& src );
+
+        /**
+         * Copy Constructor
+         * @param src - the PrimitiveList to copy
          */
         PrimitiveList( const PrimitiveList& src );
 

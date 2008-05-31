@@ -44,6 +44,12 @@ namespace util{
 
         /**
          * Copy Constructor
+         * @param map - the Decaf Map of PrimitiveValueNodes to copy
+         */
+        PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& src );
+
+        /**
+         * Copy Constructor
          * @param map - the PrimitiveMap to copy
          */
         PrimitiveMap( const PrimitiveMap& src );

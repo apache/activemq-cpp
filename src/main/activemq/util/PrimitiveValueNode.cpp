@@ -17,6 +17,7 @@
 
 #include "PrimitiveValueNode.h"
 
+#include <activemq/util/PrimitiveList.h>
 #include <activemq/util/PrimitiveMap.h>
 
 using namespace std;
@@ -89,6 +90,20 @@ PrimitiveValueNode::PrimitiveValueNode( const std::vector<unsigned char>& value 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+PrimitiveValueNode::PrimitiveValueNode(
+    const decaf::util::List<PrimitiveValueNode>& value ) {
+
+    this->setList( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+PrimitiveValueNode::PrimitiveValueNode(
+    const decaf::util::Map<std::string, PrimitiveValueNode>& value ) {
+
+    this->setMap( value );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( const PrimitiveValueNode& node ){
     valueType = NULL_TYPE;
     memset( &value, 0, sizeof(value) );
@@ -98,16 +113,7 @@ PrimitiveValueNode::PrimitiveValueNode( const PrimitiveValueNode& node ){
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode& PrimitiveValueNode::operator =( const PrimitiveValueNode& node ){
     clear();
-    valueType = node.valueType;
-
-    if( valueType == STRING_TYPE && node.value.stringValue != NULL ){
-        value.stringValue = new std::string( *node.value.stringValue );
-    } else if( valueType == BYTE_ARRAY_TYPE && node.value.byteArrayValue != NULL ){
-        value.byteArrayValue = new std::vector<unsigned char>( *node.value.byteArrayValue );
-    } else{
-        value = node.value;
-    }
-
+    this->setValue( node.getValue(), node.getValueType() );
     return *this;
 }
 
@@ -148,6 +154,12 @@ bool PrimitiveValueNode::operator==( const PrimitiveValueNode& node ) const{
     } else if( valueType == BYTE_ARRAY_TYPE &&
         *value.byteArrayValue == *node.value.byteArrayValue ) {
             return true;
+    } else if( valueType == LIST_TYPE &&
+        value.listValue->equals( *node.value.listValue ) ) {
+            return true;
+    } else if( valueType == MAP_TYPE &&
+        value.mapValue->equals( *node.value.mapValue ) ) {
+            return true;
     }
 
     return false;
@@ -155,14 +167,52 @@ bool PrimitiveValueNode::operator==( const PrimitiveValueNode& node ) const{
 
 ////////////////////////////////////////////////////////////////////////////////
 void PrimitiveValueNode::clear(){
+
     if( valueType == STRING_TYPE && value.stringValue != NULL ){
         delete value.stringValue;
-    }
-    if( valueType == BYTE_ARRAY_TYPE && value.byteArrayValue != NULL ){
+    } else if( valueType == BYTE_ARRAY_TYPE && value.byteArrayValue != NULL ){
         delete value.byteArrayValue;
+    } else if( valueType == LIST_TYPE && value.listValue != NULL ){
+        delete value.listValue;
+    } else if( valueType == MAP_TYPE && value.mapValue != NULL ){
+        delete value.mapValue;
     }
+
     valueType = NULL_TYPE;
     memset( &value, 0, sizeof(value) );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PrimitiveValueNode::setValue(
+    const PrimitiveValue& value, PrimitiveValueTypeEnum valueType ) {
+
+    if( valueType == BOOLEAN_TYPE ) {
+        this->setBool( value.boolValue );
+    } else if( valueType == BYTE_TYPE ) {
+        this->setByte( value.byteValue );
+    } else if( valueType == CHAR_TYPE ) {
+        this->setChar( value.charValue );
+    } else if( valueType == SHORT_TYPE ) {
+        this->setShort( value.shortValue );
+    } else if(  valueType == INTEGER_TYPE ) {
+        this->setInt( value.intValue );
+    } else if( valueType == LONG_TYPE ) {
+        this->setLong( value.longValue );
+    } else if( valueType == DOUBLE_TYPE ) {
+        this->setDouble( value.doubleValue );
+    } else if( valueType == FLOAT_TYPE ) {
+        this->setFloat( value.floatValue );
+    } else if( valueType == STRING_TYPE || valueType == BIG_STRING_TYPE ) {
+        this->setString( *value.stringValue );
+    } else if( valueType == BYTE_ARRAY_TYPE ) {
+        this->setByteArray( *value.byteArrayValue );
+    } else if( valueType == LIST_TYPE ) {
+        this->setList( *value.listValue );
+    } else if( valueType == MAP_TYPE ) {
+        this->setMap( *value.mapValue );
+    } else {
+        this->clear();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -349,6 +399,58 @@ std::vector<unsigned char> PrimitiveValueNode::getByteArray() const throw( decaf
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& lvalue ){
+    clear();
+    valueType = LIST_TYPE;
+    value.listValue = new decaf::util::List<PrimitiveValueNode>( lvalue );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::util::List<PrimitiveValueNode> PrimitiveValueNode::getList() const
+    throw( decaf::lang::exceptions::NoSuchElementException ) {
+
+    if( valueType != LIST_TYPE ){
+        throw decaf::lang::exceptions::NoSuchElementException(
+            __FILE__,
+            __LINE__,
+            "PrimitiveValue is not LIST_TYPE" );
+    }
+
+    if( value.listValue == NULL ){
+        return decaf::util::List<PrimitiveValueNode>();
+    }
+
+    return *value.listValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PrimitiveValueNode::setMap(
+    const decaf::util::Map<std::string, PrimitiveValueNode>& lvalue ){
+
+    clear();
+    valueType = MAP_TYPE;
+    value.mapValue = new decaf::util::Map<std::string, PrimitiveValueNode>( lvalue );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+decaf::util::Map<std::string, PrimitiveValueNode> PrimitiveValueNode::getMap() const
+    throw( decaf::lang::exceptions::NoSuchElementException ) {
+
+    if( valueType != MAP_TYPE ){
+        throw decaf::lang::exceptions::NoSuchElementException(
+            __FILE__,
+            __LINE__,
+            "PrimitiveValue is not MAP_TYPE" );
+    }
+
+    if( value.mapValue == NULL ){
+        return decaf::util::Map<std::string, PrimitiveValueNode>();
+    }
+
+    return *value.mapValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 std::string PrimitiveValueNode::toString() const {
     std::ostringstream stream;
 
@@ -368,7 +470,7 @@ std::string PrimitiveValueNode::toString() const {
         stream << value.doubleValue;
     } else if( valueType == FLOAT_TYPE ) {
         stream << value.floatValue;
-    } else if( valueType == STRING_TYPE ) {
+    } else if( valueType == STRING_TYPE || valueType == BIG_STRING_TYPE ) {
         stream << *value.stringValue;
     } else if( valueType == BYTE_ARRAY_TYPE ) {
         std::vector<unsigned char>::const_iterator iter =
@@ -376,7 +478,10 @@ std::string PrimitiveValueNode::toString() const {
         for( ; iter != value.byteArrayValue->end(); ++iter ) {
             stream << '[' << (int)(*iter) << ']';
         }
+    } else if( valueType == LIST_TYPE ) {
+        stream << PrimitiveList( *value.listValue ).toString();
+    } else if( valueType == MAP_TYPE ) {
+        stream << PrimitiveMap( *value.mapValue ).toString();
     }
-
     return stream.str();
 }

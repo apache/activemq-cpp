@@ -20,12 +20,11 @@
 
 #include <activemq/util/Config.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/util/Map.h>
+#include <decaf/util/List.h>
 
 namespace activemq{
 namespace util{
-
-    class PrimitiveMap;
-    class PrimitiveList;
 
     /**
      * Class that wraps around a single value of one of the
@@ -73,9 +72,9 @@ namespace util{
             double doubleValue;
             float floatValue;
             std::string* stringValue;
-            PrimitiveMap* mapValue;
-            PrimitiveList* listValue;
             std::vector<unsigned char>* byteArrayValue;
+            decaf::util::List<PrimitiveValueNode>* listValue;
+            decaf::util::Map<std::string, PrimitiveValueNode>* mapValue;
 
         };
 
@@ -158,6 +157,19 @@ namespace util{
         PrimitiveValueNode( const std::vector<unsigned char>& value );
 
         /**
+         * Primtive List Constructor
+         * @param value - the new value to store.
+         */
+        PrimitiveValueNode( const decaf::util::List<PrimitiveValueNode>& value );
+
+        /**
+         * Primtive Map Value Constructor
+         * @param value - the new value to store.
+         */
+        PrimitiveValueNode(
+            const decaf::util::Map<std::string, PrimitiveValueNode>& value );
+
+        /**
          * Copy constructor
          * @param another node to copy.
          */
@@ -200,10 +212,7 @@ namespace util{
          * Sets the internal PrimitiveVale object to the new value
          * along with the tag for the type that it consists of.
          */
-        void setValue( const PrimitiveValue& value, PrimitiveValueTypeEnum valueType ) {
-            this->value = value;
-            this->valueType = valueType;
-        }
+        void setValue( const PrimitiveValue& value, PrimitiveValueTypeEnum valueType );
 
         /**
          * Clears the value from this wrapper converting it back to a blank
@@ -379,6 +388,40 @@ namespace util{
          * requested type.
          */
         std::vector<unsigned char> getByteArray() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
+        void setList( const decaf::util::List<PrimitiveValueNode>& lvalue );
+
+        /**
+         * Gets the Primtive List value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
+        decaf::util::List<PrimitiveValueNode> getList() const
+            throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
+        void setMap( const decaf::util::Map<std::string, PrimitiveValueNode>& lvalue );
+
+        /**
+         * Gets the Primtive Map value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
+        decaf::util::Map<std::string, PrimitiveValueNode> getMap() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
