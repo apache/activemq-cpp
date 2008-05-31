@@ -191,43 +191,173 @@ namespace util{
          */
         void clear();
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setBool( bool lvalue );
+
+        /**
+         * Gets the Boolean value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         bool getBool() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setByte( unsigned char lvalue );
+
+        /**
+         * Gets the Byte value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         unsigned char getByte() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setChar( char lvalue );
+
+        /**
+         * Gets the Character value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         char getChar() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setShort( short lvalue );
+
+        /**
+         * Gets the Short value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         short getShort() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setInt( int lvalue );
+
+        /**
+         * Gets the Integer value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         int getInt() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setLong( long long lvalue );
+
+        /**
+         * Gets the Long value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         long long getLong() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
-        void setDouble( double lvalue );
-        double getDouble() const
-            throw(decaf::lang::exceptions::NoSuchElementException );
-
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setFloat( float lvalue );
+
+        /**
+         * Gets the Float value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         float getFloat() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
+        void setDouble( double lvalue );
+
+        /**
+         * Gets the Double value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
+        double getDouble() const
+            throw(decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setString( const std::string& lvalue );
+
+        /**
+         * Gets the String value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         std::string getString() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
+        /**
+         * Sets the value of this value node to the new value specified,
+         * this method overwrites any data that was previously at the index
+         * given.
+         * @param value - the new value to assign to the element at index
+         */
         void setByteArray( const std::vector<unsigned char>& lvalue );
+
+        /**
+         * Gets the Byte Array value of this Node.
+         * @return value contained at the given index
+         * @throw NoSuchElementException this node cannot be returned as the
+         * requested type.
+         */
         std::vector<unsigned char> getByteArray() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
