@@ -27,42 +27,42 @@ void PrimitiveValueNodeTest::testValueNode(){
     PrimitiveValueNode node;
 
     node.setBool( true );
-    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == true );
     node.setBool( false );
-    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == false );
 
     node.setByte( 5 );
-    CPPUNIT_ASSERT( node.getValueType() == BYTE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_TYPE );
     CPPUNIT_ASSERT( node.getByte() == 5 );
 
     node.setChar( 'a' );
-    CPPUNIT_ASSERT( node.getValueType() == CHAR_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::CHAR_TYPE );
     CPPUNIT_ASSERT( node.getChar() == 'a' );
 
     node.setShort( 10 );
-    CPPUNIT_ASSERT( node.getValueType() == SHORT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::SHORT_TYPE );
     CPPUNIT_ASSERT( node.getShort() == 10 );
 
     node.setInt( 10000 );
-    CPPUNIT_ASSERT( node.getValueType() == INTEGER_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::INTEGER_TYPE );
     CPPUNIT_ASSERT( node.getInt() == 10000 );
 
     node.setLong( 100000L );
-    CPPUNIT_ASSERT( node.getValueType() == LONG_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::LONG_TYPE );
     CPPUNIT_ASSERT( node.getLong() == 100000L );
 
     node.setDouble( 2.3 );
-    CPPUNIT_ASSERT( node.getValueType() == DOUBLE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::DOUBLE_TYPE );
     CPPUNIT_ASSERT( node.getDouble() == 2.3 );
 
     node.setFloat( 3.2f );
-    CPPUNIT_ASSERT( node.getValueType() == FLOAT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::FLOAT_TYPE );
     CPPUNIT_ASSERT( node.getFloat() == 3.2f );
 
     node.setString( "hello" );
-    CPPUNIT_ASSERT( node.getValueType() == STRING_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::STRING_TYPE );
     CPPUNIT_ASSERT( node.getString() == "hello" );
 
     std::vector<unsigned char> byteArray;
@@ -72,7 +72,7 @@ void PrimitiveValueNodeTest::testValueNode(){
     byteArray.push_back( 'd' );
 
     node.setByteArray( byteArray );
-    CPPUNIT_ASSERT( node.getValueType() == BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
     CPPUNIT_ASSERT( node.getByteArray() == byteArray );
 
     try{
@@ -82,7 +82,7 @@ void PrimitiveValueNodeTest::testValueNode(){
     }
 
     node.clear();
-    CPPUNIT_ASSERT( node.getValueType() == NULL_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::NULL_TYPE );
 }
 
 void PrimitiveValueNodeTest::testValueNodeCtors(){
@@ -99,22 +99,22 @@ void PrimitiveValueNodeTest::testValueNodeCtors(){
     PrimitiveValueNode bArrayValue = std::vector<unsigned char>();
 
     CPPUNIT_ASSERT( tfvalue.getBool() == true );
-    CPPUNIT_ASSERT( tfvalue.getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( tfvalue.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( bvalue.getByte() == 60 );
-    CPPUNIT_ASSERT( bvalue.getValueType() == BYTE_TYPE );
+    CPPUNIT_ASSERT( bvalue.getValueType() == PrimitiveValueNode::BYTE_TYPE );
     CPPUNIT_ASSERT( cvalue.getChar() == (char)60 );
-    CPPUNIT_ASSERT( cvalue.getValueType() == CHAR_TYPE );
+    CPPUNIT_ASSERT( cvalue.getValueType() == PrimitiveValueNode::CHAR_TYPE );
     CPPUNIT_ASSERT( svalue.getShort() == 32767 );
-    CPPUNIT_ASSERT( svalue.getValueType() == SHORT_TYPE );
+    CPPUNIT_ASSERT( svalue.getValueType() == PrimitiveValueNode::SHORT_TYPE );
     CPPUNIT_ASSERT( ivalue.getInt() == 4096 );
-    CPPUNIT_ASSERT( ivalue.getValueType() == INTEGER_TYPE );
+    CPPUNIT_ASSERT( ivalue.getValueType() == PrimitiveValueNode::INTEGER_TYPE );
     CPPUNIT_ASSERT( lvalue.getLong() == 555666777888LL );
-    CPPUNIT_ASSERT( lvalue.getValueType() == LONG_TYPE );
+    CPPUNIT_ASSERT( lvalue.getValueType() == PrimitiveValueNode::LONG_TYPE );
     CPPUNIT_ASSERT( fvalue.getFloat() == 0.125f );
-    CPPUNIT_ASSERT( fvalue.getValueType() == FLOAT_TYPE );
+    CPPUNIT_ASSERT( fvalue.getValueType() == PrimitiveValueNode::FLOAT_TYPE );
     CPPUNIT_ASSERT( dvalue.getDouble() == 10.056 );
-    CPPUNIT_ASSERT( dvalue.getValueType() == DOUBLE_TYPE );
+    CPPUNIT_ASSERT( dvalue.getValueType() == PrimitiveValueNode::DOUBLE_TYPE );
     CPPUNIT_ASSERT( strValue.getString() == "TEST" );
-    CPPUNIT_ASSERT( strValue.getValueType() == STRING_TYPE );
-    CPPUNIT_ASSERT( bArrayValue.getValueType() == BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( strValue.getValueType() == PrimitiveValueNode::STRING_TYPE );
+    CPPUNIT_ASSERT( bArrayValue.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
 }

@@ -27,42 +27,42 @@ void PrimitiveMapTest::testValueNode(){
     PrimitiveValueNode node;
 
     node.setBool( true );
-    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == true );
     node.setBool( false );
-    CPPUNIT_ASSERT( node.getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
     CPPUNIT_ASSERT( node.getBool() == false );
 
     node.setByte( 5 );
-    CPPUNIT_ASSERT( node.getValueType() == BYTE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_TYPE );
     CPPUNIT_ASSERT( node.getByte() == 5 );
 
     node.setChar( 'a' );
-    CPPUNIT_ASSERT( node.getValueType() == CHAR_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::CHAR_TYPE );
     CPPUNIT_ASSERT( node.getChar() == 'a' );
 
     node.setShort( 10 );
-    CPPUNIT_ASSERT( node.getValueType() == SHORT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::SHORT_TYPE );
     CPPUNIT_ASSERT( node.getShort() == 10 );
 
     node.setInt( 10000 );
-    CPPUNIT_ASSERT( node.getValueType() == INTEGER_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::INTEGER_TYPE );
     CPPUNIT_ASSERT( node.getInt() == 10000 );
 
     node.setLong( 100000L );
-    CPPUNIT_ASSERT( node.getValueType() == LONG_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::LONG_TYPE );
     CPPUNIT_ASSERT( node.getLong() == 100000L );
 
     node.setDouble( 2.3 );
-    CPPUNIT_ASSERT( node.getValueType() == DOUBLE_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::DOUBLE_TYPE );
     CPPUNIT_ASSERT( node.getDouble() == 2.3 );
 
     node.setFloat( 3.2f );
-    CPPUNIT_ASSERT( node.getValueType() == FLOAT_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::FLOAT_TYPE );
     CPPUNIT_ASSERT( node.getFloat() == 3.2f );
 
     node.setString( "hello" );
-    CPPUNIT_ASSERT( node.getValueType() == STRING_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::STRING_TYPE );
     CPPUNIT_ASSERT( node.getString() == "hello" );
 
     std::vector<unsigned char> byteArray;
@@ -72,7 +72,7 @@ void PrimitiveMapTest::testValueNode(){
     byteArray.push_back( 'd' );
 
     node.setByteArray( byteArray );
-    CPPUNIT_ASSERT( node.getValueType() == BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
     CPPUNIT_ASSERT( node.getByteArray() == byteArray );
 
     try{
@@ -82,7 +82,7 @@ void PrimitiveMapTest::testValueNode(){
     }
 
     node.clear();
-    CPPUNIT_ASSERT( node.getValueType() == NULL_TYPE );
+    CPPUNIT_ASSERT( node.getValueType() == PrimitiveValueNode::NULL_TYPE );
 }
 
 void PrimitiveMapTest::testSetGet(){
@@ -243,19 +243,19 @@ void PrimitiveMapTest::testContains(){
 
     PrimitiveMap pmap;
 
-    CPPUNIT_ASSERT( pmap.contains("int") == false );
+    CPPUNIT_ASSERT( pmap.containsKey("int") == false );
 
     pmap.setInt("int", 5 );
-    CPPUNIT_ASSERT( pmap.contains("int") == true );
+    CPPUNIT_ASSERT( pmap.containsKey("int") == true );
 
     pmap.setFloat( "float", 5.5f );
-    CPPUNIT_ASSERT( pmap.contains("float") == true );
+    CPPUNIT_ASSERT( pmap.containsKey("float") == true );
 
     pmap.setInt("int2", 6 );
-    CPPUNIT_ASSERT( pmap.contains("int2") == true );
+    CPPUNIT_ASSERT( pmap.containsKey("int2") == true );
 
     pmap.remove("int");
-    CPPUNIT_ASSERT( pmap.contains("int") == false );
+    CPPUNIT_ASSERT( pmap.containsKey("int") == false );
 }
 
 void PrimitiveMapTest::testGetKeys(){

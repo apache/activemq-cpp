@@ -270,7 +270,6 @@ h_sources = \
     activemq/util/PrimitiveValueNode.h \
     activemq/util/PrimitiveMap.h \
     activemq/util/PrimitiveList.h \
-    activemq/util/PrimitiveValueTypes.h \
     activemq/util/URISupport.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \

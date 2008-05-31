@@ -154,16 +154,16 @@ void PrimitiveListTest::testAdd(){
         plist.getInt( plist.size() ),
         decaf::lang::exceptions::IndexOutOfBoundsException );
 
-    CPPUNIT_ASSERT( plist.get(0).getValueType() == BOOLEAN_TYPE );
-    CPPUNIT_ASSERT( plist.get(1).getValueType() == BYTE_TYPE );
-    CPPUNIT_ASSERT( plist.get(2).getValueType() == CHAR_TYPE );
-    CPPUNIT_ASSERT( plist.get(3).getValueType() == SHORT_TYPE );
-    CPPUNIT_ASSERT( plist.get(4).getValueType() == INTEGER_TYPE );
-    CPPUNIT_ASSERT( plist.get(5).getValueType() == LONG_TYPE );
-    CPPUNIT_ASSERT( plist.get(6).getValueType() == FLOAT_TYPE );
-    CPPUNIT_ASSERT( plist.get(7).getValueType() == DOUBLE_TYPE );
-    CPPUNIT_ASSERT( plist.get(8).getValueType() == STRING_TYPE );
-    CPPUNIT_ASSERT( plist.get(9).getValueType() == BYTE_ARRAY_TYPE );
+    CPPUNIT_ASSERT( plist.get(0).getValueType() == PrimitiveValueNode::BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( plist.get(1).getValueType() == PrimitiveValueNode::BYTE_TYPE );
+    CPPUNIT_ASSERT( plist.get(2).getValueType() == PrimitiveValueNode::CHAR_TYPE );
+    CPPUNIT_ASSERT( plist.get(3).getValueType() == PrimitiveValueNode::SHORT_TYPE );
+    CPPUNIT_ASSERT( plist.get(4).getValueType() == PrimitiveValueNode::INTEGER_TYPE );
+    CPPUNIT_ASSERT( plist.get(5).getValueType() == PrimitiveValueNode::LONG_TYPE );
+    CPPUNIT_ASSERT( plist.get(6).getValueType() == PrimitiveValueNode::FLOAT_TYPE );
+    CPPUNIT_ASSERT( plist.get(7).getValueType() == PrimitiveValueNode::DOUBLE_TYPE );
+    CPPUNIT_ASSERT( plist.get(8).getValueType() == PrimitiveValueNode::STRING_TYPE );
+    CPPUNIT_ASSERT( plist.get(9).getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE );
 }
 
 void PrimitiveListTest::testRemove(){

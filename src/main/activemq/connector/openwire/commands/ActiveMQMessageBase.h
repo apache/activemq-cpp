@@ -268,7 +268,7 @@ namespace commands{
          * @return True if the property exists in this message.
          */
         virtual bool propertyExists( const std::string& name ) const {
-            return properties.contains( name );
+            return properties.containsKey( name );
         }
 
         /**

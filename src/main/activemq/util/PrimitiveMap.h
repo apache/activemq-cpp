@@ -20,9 +20,10 @@
 
 #include <string>
 #include <vector>
+#include <activemq/util/Config.h>
+#include <decaf/util/Config.h>
 #include <decaf/util/Map.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
-#include <activemq/util/PrimitiveValueTypes.h>
 #include <activemq/util/PrimitiveValueNode.h>
 
 namespace activemq{
@@ -31,14 +32,14 @@ namespace util{
     /**
      * Map of named primitives.
      */
-    class PrimitiveMap {
-    private:
-
-        decaf::util::Map<std::string, PrimitiveValueNode> valueNodeMap;
-
+    class AMQCPP_API PrimitiveMap : public decaf::util::Map<std::string, PrimitiveValueNode> {
     public:
 
+        /**
+         * Default Constructor, creates an empty map.
+         */
         PrimitiveMap();
+
         virtual ~PrimitiveMap() {}
 
         /**
@@ -48,13 +49,6 @@ namespace util{
         PrimitiveMap( const PrimitiveMap& src );
 
         /**
-         * Compares this PrimitiveMap to another
-         * @param source - Map to compare to
-         * @return true if the maps are equeal
-         */
-        bool equals( const PrimitiveMap& source ) const;
-
-        /**
          * Converts the contents into a formatted string that can be output
          * in a Log File or other debugging tool.
          * @returns formatted String of all elements in the map.
@@ -62,100 +56,214 @@ namespace util{
         std::string toString() const;
 
         /**
-         * Comparison Operator
-         * @param src - Map to compare to this one.
-         * @returns true if Maps are equal.
+         * Gets the Boolean value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
          */
-        void copy( const PrimitiveMap& src );
-
-        /**
-         * Removes all keys and values from all maps.
-         */
-        virtual void clear();
-
-        /**
-         * Indicates whether or this map contains a value for the
-         * given key.
-         * @param key The key to look up.
-         * @return true if this map contains the value, otherwise false.
-         */
-        virtual bool contains( const std::string& key ) const;
-
-        /**
-         * @return The number of elements (key/value pairs) in this map.
-         */
-        virtual std::size_t size() const;
-
-        /**
-         * @returns if there are any entries in the map.
-         */
-        virtual bool isEmpty() const;
-
         virtual bool getBool( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setBool( const std::string& key, bool value );
 
+        /**
+         * Gets the Byte value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual unsigned char getByte( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setByte( const std::string& key, unsigned char value );
 
+        /**
+         * Gets the Character value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual char getChar( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setChar( const std::string& key, char value );
 
+        /**
+         * Gets the Short value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual short getShort( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setShort( const std::string& key, short value );
 
+        /**
+         * Gets the Integer value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual int getInt( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setInt( const std::string& key, int value );
 
+        /**
+         * Gets the Long value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual long long getLong( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setLong( const std::string& key, long long value );
 
-        virtual double getDouble( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
-        virtual void setDouble( const std::string& key, double value );
-
+        /**
+         * Gets the Float value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual float getFloat( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setFloat( const std::string& key, float value );
 
+        /**
+         * Gets the Double value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
+        virtual double getDouble( const std::string& key ) const
+            throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
+        virtual void setDouble( const std::string& key, double value );
+
+        /**
+         * Gets the String value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual std::string getString( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setString( const std::string& key, const std::string& value );
 
+        /**
+         * Gets the Byte Array value at the given key, if the key is not
+         * in the map or cannot be returned as the requested value then
+         * an exception of type NoSuchElementException is thrown.
+         *
+         * @param key - the location to return the value from.
+         * @returns the value at key in the type requested.
+         * @throw NoSuchElementException if key is not in the map or cannot
+         * be returned as the requested type.
+         */
         virtual std::vector<unsigned char> getByteArray( const std::string& key ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
+
+        /**
+         * Sets the value at key to the specified type. Overwrites any data
+         * that was previously at this key or inserts a new element at key.
+         * @param key - the map key to set or insert.
+         * @param value - the new value to set at the key location.
+         */
         virtual void setByteArray( const std::string& key, const std::vector<unsigned char>& value );
-
-        /**
-         * Removes the value (key/value pair) for the specified key from
-         * the map.
-         * @param key The search key.
-         */
-        virtual void remove( const std::string& key );
-
-        /**
-         * @return the entire set of keys in this map as a std::vector.
-         */
-        virtual std::vector<std::string> getKeys() const;
-
-        /**
-         * @return the entire set of values in this map as a std::vector.
-         */
-        virtual std::vector<PrimitiveValueNode> getValues() const;
-
-        /**
-         * Get a Value from the Map, or throws a NoSuchElementException
-         * @param key - string key to lookup
-         * @return the concrete Value
-         * @throws NoSuchElementException
-         */
-        PrimitiveValueNode getValue( const std::string& key ) const
-            throw( decaf::lang::exceptions::NoSuchElementException );
 
     };
 

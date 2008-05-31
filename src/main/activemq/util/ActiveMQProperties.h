@@ -21,6 +21,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <activemq/util/Config.h>
 #include <cms/CMSProperties.h>
 #include <decaf/util/Properties.h>
 
@@ -31,7 +32,7 @@ namespace util{
      * Implementation of the CMSProperties interface that
      * delegates to a decaf::util::Properties object.
      */
-    class ActiveMQProperties : public cms::CMSProperties {
+    class AMQCPP_API ActiveMQProperties : public cms::CMSProperties {
     private:
 
         decaf::util::Properties properties;

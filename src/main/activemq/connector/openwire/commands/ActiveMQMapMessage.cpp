@@ -136,7 +136,7 @@ std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
 bool ActiveMQMapMessage::itemExists( const std::string& name ) const {
 
     try{
-        return getMap().contains( name );
+        return getMap().containsKey( name );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

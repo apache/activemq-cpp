@@ -17,7 +17,6 @@
 
 #include "PrimitiveMapMarshaller.h"
 
-#include <activemq/util/PrimitiveValueTypes.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -135,64 +134,64 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
     try {
 
-        if( value.getValueType() == BOOLEAN_TYPE ) {
+        if( value.getValueType() == PrimitiveValueNode::BOOLEAN_TYPE ) {
 
-            dataOut.writeByte( BOOLEAN_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::BOOLEAN_TYPE );
             dataOut.writeBoolean( value.getBool() );
 
-        } else if( value.getValueType() == BYTE_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::BYTE_TYPE ) {
 
-            dataOut.writeByte( BYTE_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::BYTE_TYPE );
             dataOut.writeByte( value.getByte() );
 
-        } else if( value.getValueType() == CHAR_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::CHAR_TYPE ) {
 
-            dataOut.writeByte( CHAR_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::CHAR_TYPE );
             dataOut.writeChar( value.getChar() );
 
-        } else if( value.getValueType() == SHORT_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::SHORT_TYPE ) {
 
-            dataOut.writeByte( SHORT_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::SHORT_TYPE );
             dataOut.writeShort( value.getShort() );
 
-        } else if( value.getValueType() == INTEGER_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::INTEGER_TYPE ) {
 
-            dataOut.writeByte( INTEGER_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::INTEGER_TYPE );
             dataOut.writeInt( value.getInt() );
 
-        } else if( value.getValueType() == LONG_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::LONG_TYPE ) {
 
-            dataOut.writeByte( LONG_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::LONG_TYPE );
             dataOut.writeLong( value.getLong() );
 
-        } else if( value.getValueType() == FLOAT_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::FLOAT_TYPE ) {
 
-            dataOut.writeByte( FLOAT_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::FLOAT_TYPE );
             dataOut.writeFloat( value.getFloat() );
 
-        } else if( value.getValueType() == DOUBLE_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::DOUBLE_TYPE ) {
 
-            dataOut.writeByte( DOUBLE_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::DOUBLE_TYPE );
             dataOut.writeDouble( value.getDouble() );
 
-        } else if( value.getValueType() == BYTE_ARRAY_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::BYTE_ARRAY_TYPE ) {
 
-            dataOut.writeByte( BYTE_ARRAY_TYPE );
+            dataOut.writeByte( PrimitiveValueNode::BYTE_ARRAY_TYPE );
 
             std::vector<unsigned char> data = value.getByteArray();
 
             dataOut.writeInt( (int)data.size() );
             dataOut.write( data );
 
-        } else if( value.getValueType() == STRING_TYPE ) {
+        } else if( value.getValueType() == PrimitiveValueNode::STRING_TYPE ) {
 
             std::string data = value.getString();
 
             // is the string big??
             if( data.size() > 8191 ) {
-                dataOut.writeByte( BIG_STRING_TYPE );
+                dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
             } else {
-                dataOut.writeByte( STRING_TYPE );
+                dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
             }
 
             OpenwireStringSupport::writeString( dataOut, &data );
@@ -221,34 +220,34 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
 
         switch( type )
         {
-            case NULL_TYPE:
+            case PrimitiveValueNode::NULL_TYPE:
                 map.setString( key, "" );
                 break;
-            case BYTE_TYPE:
+            case PrimitiveValueNode::BYTE_TYPE:
                 map.setByte( key, dataIn.readByte() );
                 break;
-            case BOOLEAN_TYPE:
+            case PrimitiveValueNode::BOOLEAN_TYPE:
                 map.setBool( key, dataIn.readBoolean() );
                 break;
-            case CHAR_TYPE:
+            case PrimitiveValueNode::CHAR_TYPE:
                 map.setChar( key, dataIn.readChar() );
                 break;
-            case SHORT_TYPE:
+            case PrimitiveValueNode::SHORT_TYPE:
                 map.setShort( key, dataIn.readShort() );
                 break;
-            case INTEGER_TYPE:
+            case PrimitiveValueNode::INTEGER_TYPE:
                 map.setInt( key, dataIn.readInt() );
                 break;
-            case LONG_TYPE:
+            case PrimitiveValueNode::LONG_TYPE:
                 map.setLong( key, dataIn.readLong() );
                 break;
-            case FLOAT_TYPE:
+            case PrimitiveValueNode::FLOAT_TYPE:
                 map.setFloat( key, dataIn.readFloat() );
                 break;
-            case DOUBLE_TYPE:
+            case PrimitiveValueNode::DOUBLE_TYPE:
                 map.setDouble( key, dataIn.readDouble() );
                 break;
-            case BYTE_ARRAY_TYPE:
+            case PrimitiveValueNode::BYTE_ARRAY_TYPE:
             {
                 int size = dataIn.readInt();
                 std::vector<unsigned char> data;
@@ -257,8 +256,8 @@ void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
                 map.setByteArray( key, data );
                 break;
             }
-            case STRING_TYPE:
-            case BIG_STRING_TYPE:
+            case PrimitiveValueNode::STRING_TYPE:
+            case PrimitiveValueNode::BIG_STRING_TYPE:
                 map.setString(
                     key,
                     OpenwireStringSupport::readString( dataIn ) );

@@ -29,7 +29,7 @@ namespace util{
      * are incremented each time a new value is requested.  This class is
      * thread safe so the ids can be requested in different threads safely.
      */
-    class LongSequenceGenerator {
+    class AMQCPP_API LongSequenceGenerator {
     private:
 
         long long lastSequenceId;

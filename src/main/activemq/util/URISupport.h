@@ -18,13 +18,14 @@
 #ifndef _ACTIVEMQ_UTIL_URISUPPORT_H_
 #define _ACTIVEMQ_UTIL_URISUPPORT_H_
 
+#include <activemq/util/Config.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq{
 namespace util{
 
-    class URISupport {
+    class AMQCPP_API URISupport {
     public:
 
         virtual ~URISupport();

@@ -23,7 +23,6 @@
 #include <decaf/util/List.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <stdio.h>
-#include <activemq/util/PrimitiveValueTypes.h>
 #include <activemq/util/PrimitiveValueNode.h>
 
 namespace activemq{
@@ -32,7 +31,7 @@ namespace util{
     /**
      * List of primitives.
      */
-    class PrimitiveList : public decaf::util::List<PrimitiveValueNode> {
+    class AMQCPP_API PrimitiveList : public decaf::util::List<PrimitiveValueNode> {
     public:
 
         /**

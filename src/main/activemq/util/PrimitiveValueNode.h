@@ -18,7 +18,7 @@
 #ifndef _ACTIVEMQ_UTIL_PRIMITIVEVALUENODE_H_
 #define _ACTIVEMQ_UTIL_PRIMITIVEVALUENODE_H_
 
-#include <activemq/util/PrimitiveValueTypes.h>
+#include <activemq/util/Config.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 
 namespace activemq{
@@ -36,8 +36,28 @@ namespace util{
      * we'll never extend this class, not having a virtual
      * destructor isn't a concern.
      */
-    class PrimitiveValueNode {
+    class AMQCPP_API PrimitiveValueNode {
     public:
+
+        /**
+         * Enumeration for the various primitive types.
+         */
+        enum PrimitiveValueTypeEnum{
+            NULL_TYPE          = 0,
+            BOOLEAN_TYPE       = 1,
+            BYTE_TYPE          = 2,
+            CHAR_TYPE          = 3,
+            SHORT_TYPE         = 4,
+            INTEGER_TYPE       = 5,
+            LONG_TYPE          = 6,
+            DOUBLE_TYPE        = 7,
+            FLOAT_TYPE         = 8,
+            STRING_TYPE        = 9,
+            BYTE_ARRAY_TYPE    = 10,
+            MAP_TYPE           = 11,
+            LIST_TYPE          = 12,
+            BIG_STRING_TYPE    = 13
+        };
 
         /**
          * Define a union type comprised of the various types.
