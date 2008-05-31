@@ -18,6 +18,7 @@
 #include "PrimitiveListTest.h"
 
 #include <activemq/util/PrimitiveValueNode.h>
+#include <activemq/util/PrimitiveMap.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -259,4 +260,46 @@ void PrimitiveListTest::testContains(){
 
     plist.remove( PrimitiveValueNode(5) );
     CPPUNIT_ASSERT( plist.contains( 5 ) == false );
+}
+
+void PrimitiveListTest::testListOfLists() {
+
+    PrimitiveList list;
+    PrimitiveList sublist1;
+    PrimitiveList sublist2;
+    PrimitiveList sublist3;
+
+    sublist1.add( 1 );
+    sublist2.add( 2 );
+    sublist3.add( 3 );
+
+    list.add( sublist1 );
+    list.add( sublist2 );
+    list.add( sublist3 );
+
+    CPPUNIT_ASSERT( list.get(0).getList().get(0).getInt() == 1 );
+    CPPUNIT_ASSERT( list.get(1).getList().get(0).getInt() == 2 );
+    CPPUNIT_ASSERT( list.get(2).getList().get(0).getInt() == 3 );
+
+}
+
+void PrimitiveListTest::testListOfMaps() {
+
+    PrimitiveList list;
+    PrimitiveMap map1;
+    PrimitiveMap map2;
+    PrimitiveMap map3;
+
+    map1.setInt( "1", 1 );
+    map2.setInt( "2", 2 );
+    map3.setInt( "3", 3 );
+
+    list.add( map1 );
+    list.add( map2 );
+    list.add( map3 );
+
+    CPPUNIT_ASSERT( list.get(0).getMap().getValue("1").getInt() == 1 );
+    CPPUNIT_ASSERT( list.get(1).getMap().getValue("2").getInt() == 2 );
+    CPPUNIT_ASSERT( list.get(2).getMap().getValue("3").getInt() == 3 );
+
 }

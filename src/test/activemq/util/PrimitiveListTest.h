@@ -36,6 +36,8 @@ namespace util{
         CPPUNIT_TEST( testClear );
         CPPUNIT_TEST( testCopy );
         CPPUNIT_TEST( testContains );
+        CPPUNIT_TEST( testListOfLists );
+        CPPUNIT_TEST( testListOfMaps );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -51,6 +53,9 @@ namespace util{
         void testCopy();
         void testClear();
         void testContains();
+        void testListOfLists();
+        void testListOfMaps();
+
     };
 
 }}
