@@ -30,6 +30,7 @@ namespace util{
     {
         CPPUNIT_TEST_SUITE( PrimitiveListTest );
         CPPUNIT_TEST( testSetGet );
+        CPPUNIT_TEST( testAdd );
         CPPUNIT_TEST( testRemove );
         CPPUNIT_TEST( testCount );
         CPPUNIT_TEST( testClear );
@@ -44,6 +45,7 @@ namespace util{
 
         void testValueNode();
         void testSetGet();
+        void testAdd();
         void testRemove();
         void testCount();
         void testCopy();

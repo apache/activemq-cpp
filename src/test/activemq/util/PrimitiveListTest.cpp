@@ -115,6 +115,57 @@ void PrimitiveListTest::testSetGet(){
     CPPUNIT_ASSERT( plist.getByteArray(0) == byteArray );
 }
 
+void PrimitiveListTest::testAdd(){
+
+    bool boolValue = true;
+    unsigned char byteValue = 65;
+    char charValue = 'A';
+    short shortValue = 32767;
+    int intValue = 65540;
+    long long longValue = 0xFFFFFFFFFFFFFFFFLL;
+    float floatValue = 5.55f;
+    double doubleValue = 687.021654;
+    std::string stringValue = "TEST";
+    std::vector<unsigned char> byteArrayValue;
+    byteArrayValue.push_back( 'a' );
+    byteArrayValue.push_back( 'b' );
+    byteArrayValue.push_back( 'c' );
+    byteArrayValue.push_back( 'd' );
+
+    PrimitiveList plist;
+    plist.add( boolValue );
+    plist.add( byteValue );
+    plist.add( charValue );
+    plist.add( shortValue );
+    plist.add( intValue );
+    plist.add( longValue );
+    plist.add( floatValue );
+    plist.add( doubleValue );
+    plist.add( stringValue );
+    plist.add( byteArrayValue );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw NoSuchElementException",
+        plist.getInt( 0 ),
+        decaf::lang::exceptions::NoSuchElementException );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw IndexOutOfBoundsException",
+        plist.getInt( plist.size() ),
+        decaf::lang::exceptions::IndexOutOfBoundsException );
+
+    CPPUNIT_ASSERT( plist.get(0).getValueType() == BOOLEAN_TYPE );
+    CPPUNIT_ASSERT( plist.get(1).getValueType() == BYTE_TYPE );
+    CPPUNIT_ASSERT( plist.get(2).getValueType() == CHAR_TYPE );
+    CPPUNIT_ASSERT( plist.get(3).getValueType() == SHORT_TYPE );
+    CPPUNIT_ASSERT( plist.get(4).getValueType() == INTEGER_TYPE );
+    CPPUNIT_ASSERT( plist.get(5).getValueType() == LONG_TYPE );
+    CPPUNIT_ASSERT( plist.get(6).getValueType() == FLOAT_TYPE );
+    CPPUNIT_ASSERT( plist.get(7).getValueType() == DOUBLE_TYPE );
+    CPPUNIT_ASSERT( plist.get(8).getValueType() == STRING_TYPE );
+    CPPUNIT_ASSERT( plist.get(9).getValueType() == BYTE_ARRAY_TYPE );
+}
+
 void PrimitiveListTest::testRemove(){
 
     PrimitiveList plist;
