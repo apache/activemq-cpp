@@ -290,49 +290,63 @@ PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
 
         unsigned char type = dataIn.readByte();
 
+        PrimitiveValueNode value;
+
         switch( type ) {
 
             case PrimitiveValueNode::NULL_TYPE:
-                return PrimitiveValueNode( "" );
+                value.clear();
+                break;
             case PrimitiveValueNode::BYTE_TYPE:
-                return PrimitiveValueNode( dataIn.readByte() );
+                value.setByte( dataIn.readByte() );
+                break;
             case PrimitiveValueNode::BOOLEAN_TYPE:
-                return PrimitiveValueNode( dataIn.readBoolean() );
+                value.setBool( dataIn.readBoolean() );
+                break;
             case PrimitiveValueNode::CHAR_TYPE:
-                return PrimitiveValueNode( dataIn.readChar() );
+                value.setChar( dataIn.readChar() );
+                break;
             case PrimitiveValueNode::SHORT_TYPE:
-                return PrimitiveValueNode( dataIn.readShort() );
+                value.setShort( dataIn.readShort() );
+                break;
             case PrimitiveValueNode::INTEGER_TYPE:
-                return PrimitiveValueNode( dataIn.readInt() );
+                value.setInt( dataIn.readInt() );
+                break;
             case PrimitiveValueNode::LONG_TYPE:
-                return PrimitiveValueNode( dataIn.readLong() );
+                value.setLong( dataIn.readLong() );
+                break;
             case PrimitiveValueNode::FLOAT_TYPE:
-                return PrimitiveValueNode( dataIn.readFloat() );
+                value.setFloat( dataIn.readFloat() );
+                break;
             case PrimitiveValueNode::DOUBLE_TYPE:
-                return PrimitiveValueNode( dataIn.readDouble() );
+                value.setDouble( dataIn.readDouble() );
+                break;
             case PrimitiveValueNode::BYTE_ARRAY_TYPE:
             {
                 int size = dataIn.readInt();
                 std::vector<unsigned char> data;
                 data.resize( size );
                 dataIn.readFully( data );
-                return PrimitiveValueNode( data );
+                value.setByteArray( data );
+                break;
             }
             case PrimitiveValueNode::STRING_TYPE:
             case PrimitiveValueNode::BIG_STRING_TYPE:
-                return PrimitiveValueNode(
-                    OpenwireStringSupport::readString( dataIn ) );
+                value.setString( OpenwireStringSupport::readString( dataIn ) );
+                break;
             case PrimitiveValueNode::LIST_TYPE:
             {
                 PrimitiveList list;
                 PrimitiveMapMarshaller::unmarshalPrimitiveList( dataIn, list );
-                return PrimitiveValueNode( list );
+                value.setList( list );
+                break;
             }
             case PrimitiveValueNode::MAP_TYPE:
             {
                 PrimitiveMap map;
                 PrimitiveMapMarshaller::unmarshalPrimitiveMap( dataIn, map );
-                return PrimitiveValueNode( map );
+                value.setMap( map );
+                break;
             }
             default:
                 throw IOException(
@@ -341,6 +355,8 @@ PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
                     "PrimitiveMapMarshaller::unmarshalPrimitive - "
                     "Unsupported data type: ");
         }
+
+        return value;
     }
     AMQ_CATCH_RETHROW( io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
