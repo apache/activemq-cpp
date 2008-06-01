@@ -48,9 +48,7 @@ void PrimitiveMapMarshaller::marshal( const activemq::util::PrimitiveMap* map,
         if( map == NULL ) {
             dataOut.writeInt( -1 );
         } else {
-            std::cout << std::endl << "Begin Marshalling" << std::endl;
             PrimitiveMapMarshaller::marshalPrimitiveMap( dataOut, *map );
-            std::cout << std::endl << "End Marshalling" << std::endl;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

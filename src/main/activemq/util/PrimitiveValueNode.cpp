@@ -32,60 +32,69 @@ PrimitiveValueNode::PrimitiveValueNode() {
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( bool value ) {
+    this->valueType = NULL_TYPE;
     this->setBool( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( unsigned char value ) {
+    this->valueType = NULL_TYPE;
     this->setByte( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( char value ) {
+    this->valueType = NULL_TYPE;
     this->setChar( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( short value ) {
+    this->valueType = NULL_TYPE;
     this->setShort( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( int value ) {
+    this->valueType = NULL_TYPE;
     this->setInt( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( long long value ) {
+    this->valueType = NULL_TYPE;
     this->setLong( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( float value ) {
+    this->valueType = NULL_TYPE;
     this->setFloat( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( double value ) {
+    this->valueType = NULL_TYPE;
     this->setDouble( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( const char* value ) {
-    if( value == NULL ) {
-        clear();
-    } else {
+    this->valueType = NULL_TYPE;
+    if( value != NULL ) {
         this->setString( string( value ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( const std::string& value ) {
+    this->valueType = NULL_TYPE;
     this->setString( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( const std::vector<unsigned char>& value ) {
+    this->valueType = NULL_TYPE;
     this->setByteArray( value );
 }
 
@@ -93,6 +102,7 @@ PrimitiveValueNode::PrimitiveValueNode( const std::vector<unsigned char>& value 
 PrimitiveValueNode::PrimitiveValueNode(
     const decaf::util::List<PrimitiveValueNode>& value ) {
 
+    this->valueType = NULL_TYPE;
     this->setList( value );
 }
 
@@ -100,13 +110,13 @@ PrimitiveValueNode::PrimitiveValueNode(
 PrimitiveValueNode::PrimitiveValueNode(
     const decaf::util::Map<std::string, PrimitiveValueNode>& value ) {
 
+    this->valueType = NULL_TYPE;
     this->setMap( value );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveValueNode::PrimitiveValueNode( const PrimitiveValueNode& node ){
     valueType = NULL_TYPE;
-    memset( &value, 0, sizeof(value) );
     (*this) = node;
 }
 
