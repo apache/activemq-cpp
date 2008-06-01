@@ -68,29 +68,24 @@ void PrimitiveMapMarshallerTest::test() {
     // Turn it into some bytes
     PrimitiveMapMarshaller::marshal( &myMap, marshaled );
 
-    // Try and get it back from those bytes.
-    PrimitiveMap* newMap = NULL;
-
     try {
-        newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+        this->unmarshaledMap = PrimitiveMapMarshaller::unmarshal( marshaled );
     } catch(...) {
         CPPUNIT_ASSERT( false );
     }
 
-    CPPUNIT_ASSERT( newMap != NULL );
+    CPPUNIT_ASSERT( this->unmarshaledMap != NULL );
 
-    CPPUNIT_ASSERT( myMap.getString( "stringKey" ) == stringValue );
-    CPPUNIT_ASSERT( myMap.getBool( "boolKey" ) == booleanValue );
-    CPPUNIT_ASSERT( myMap.getByte( "byteKey" ) == byteValue );
-    CPPUNIT_ASSERT( myMap.getChar( "charKey" ) == charValue );
-    CPPUNIT_ASSERT( myMap.getShort( "shortKey" ) == shortValue );
-    CPPUNIT_ASSERT( myMap.getInt( "intKey" ) == intValue );
-    CPPUNIT_ASSERT( myMap.getLong( "longKey" ) == longValue );
-    CPPUNIT_ASSERT( myMap.getFloat( "floatKey" ) == floatValue );
-    CPPUNIT_ASSERT( myMap.getDouble( "doubleKey" ) == doubleValue );
-    CPPUNIT_ASSERT( myMap.getByteArray( "bytesKey" ) == bytes );
-
-    delete newMap;
+    CPPUNIT_ASSERT( this->unmarshaledMap->getString( "stringKey" ) == stringValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getBool( "boolKey" ) == booleanValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getByte( "byteKey" ) == byteValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getChar( "charKey" ) == charValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getShort( "shortKey" ) == shortValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getInt( "intKey" ) == intValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getLong( "longKey" ) == longValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getFloat( "floatKey" ) == floatValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getDouble( "doubleKey" ) == doubleValue );
+    CPPUNIT_ASSERT( this->unmarshaledMap->getByteArray( "bytesKey" ) == bytes );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,6 +120,7 @@ void PrimitiveMapMarshallerTest::testLists() {
     }
 
     CPPUNIT_ASSERT( newMap != NULL );
+    CPPUNIT_ASSERT( newMap->size() == 3 );
 
     delete newMap;
 }
@@ -161,6 +157,7 @@ void PrimitiveMapMarshallerTest::testMaps() {
     }
 
     CPPUNIT_ASSERT( newMap != NULL );
+    CPPUNIT_ASSERT( newMap->size() == 3 );
 
     delete newMap;
 }

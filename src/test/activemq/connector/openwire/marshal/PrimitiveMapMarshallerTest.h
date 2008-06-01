@@ -20,6 +20,7 @@
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
+#include <activemq/util/PrimitiveMap.h>
 
 namespace activemq{
 namespace connector{
@@ -31,13 +32,26 @@ namespace marshal{
         CPPUNIT_TEST_SUITE( PrimitiveMapMarshallerTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST( testLists );
-        //CPPUNIT_TEST( testMaps );
+        CPPUNIT_TEST( testMaps );
         CPPUNIT_TEST_SUITE_END();
+
+    private:
+
+        activemq::util::PrimitiveMap* unmarshaledMap;
 
     public:
 
         PrimitiveMapMarshallerTest() {}
         virtual ~PrimitiveMapMarshallerTest() {}
+
+        virtual void setUp() {
+            this->unmarshaledMap = NULL;
+        }
+
+        virtual void tearDown() {
+            delete this->unmarshaledMap;
+            this->unmarshaledMap = NULL;
+        }
 
         void test();
         void testLists();
