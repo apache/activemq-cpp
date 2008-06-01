@@ -18,6 +18,7 @@
 #include "PrimitiveMapMarshallerTest.h"
 
 #include <activemq/util/PrimitiveMap.h>
+#include <activemq/util/PrimitiveList.h>
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 
 using namespace std;
@@ -30,8 +31,8 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshallerTest::test()
-{
+void PrimitiveMapMarshallerTest::test() {
+
     PrimitiveMap myMap;
 
     unsigned char byteValue = 'A';
@@ -88,6 +89,79 @@ void PrimitiveMapMarshallerTest::test()
     CPPUNIT_ASSERT( myMap.getFloat( "floatKey" ) == floatValue );
     CPPUNIT_ASSERT( myMap.getDouble( "doubleKey" ) == doubleValue );
     CPPUNIT_ASSERT( myMap.getByteArray( "bytesKey" ) == bytes );
+
+    delete newMap;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshallerTest::testLists() {
+
+    PrimitiveMap myMap;
+
+    PrimitiveList list1;
+    PrimitiveList list2;
+    PrimitiveList list3;
+
+    list1.add( 1 );
+    list2.add( 2 );
+    list3.add( 3 );
+
+    myMap.setValue( "1", list1 );
+    myMap.setValue( "2", list2 );
+    myMap.setValue( "3", list3 );
+
+    std::vector<unsigned char> marshaled;
+
+    // Turn it into some bytes
+    PrimitiveMapMarshaller::marshal( &myMap, marshaled );
+
+    // Try and get it back from those bytes.
+    PrimitiveMap* newMap = NULL;
+
+    try {
+        newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+    } catch(...) {
+        CPPUNIT_ASSERT( false );
+    }
+
+    CPPUNIT_ASSERT( newMap != NULL );
+
+    std::cout << std::endl << "Deleting Map" << std::endl;
+    delete newMap;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshallerTest::testMaps() {
+
+    PrimitiveMap myMap;
+
+    PrimitiveMap map1;
+    PrimitiveMap map2;
+    PrimitiveMap map3;
+
+    map1.setValue( "1", 1 );
+    map2.setValue( "2", 2 );
+    map3.setValue( "3", 3 );
+
+    myMap.setValue( "1", map1 );
+    myMap.setValue( "2", map2 );
+    myMap.setValue( "3", map3 );
+
+    std::vector<unsigned char> marshaled;
+
+    // Turn it into some bytes
+    PrimitiveMapMarshaller::marshal( &myMap, marshaled );
+
+    // Try and get it back from those bytes.
+    PrimitiveMap* newMap = NULL;
+
+    try {
+        newMap = PrimitiveMapMarshaller::unmarshal( marshaled );
+    } catch(...) {
+        CPPUNIT_ASSERT( false );
+    }
+
+    CPPUNIT_ASSERT( newMap != NULL );
 
     delete newMap;
 }

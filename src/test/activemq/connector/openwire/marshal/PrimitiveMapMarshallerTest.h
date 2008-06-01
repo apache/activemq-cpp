@@ -25,20 +25,24 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 namespace marshal{
-    
+
     class PrimitiveMapMarshallerTest : public CppUnit::TestFixture {
-        
+
         CPPUNIT_TEST_SUITE( PrimitiveMapMarshallerTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testLists );
+        //CPPUNIT_TEST( testMaps );
         CPPUNIT_TEST_SUITE_END();
 
     public:
-    
+
         PrimitiveMapMarshallerTest() {}
         virtual ~PrimitiveMapMarshallerTest() {}
 
         void test();
-        
+        void testLists();
+        void testMaps();
+
     };
 
 }}}}
