@@ -139,7 +139,7 @@ void PrimitiveMapMarshaller::marshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshalPrimitiveList(
     decaf::io::DataOutputStream& dataOut,
-    const decaf::util::List<util::PrimitiveValueNode>& list )
+    const decaf::util::List<PrimitiveValueNode>& list )
         throw ( decaf::io::IOException ) {
 
     try{
@@ -247,7 +247,7 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
-    decaf::io::DataInputStream& dataIn, util::PrimitiveMap& map )
+    decaf::io::DataInputStream& dataIn, PrimitiveMap& map )
         throw ( decaf::io::IOException ) {
 
     try{
@@ -269,7 +269,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
-    decaf::util::List<util::PrimitiveValueNode>& list )
+    decaf::util::List<PrimitiveValueNode>& list )
         throw ( decaf::io::IOException ) {
 
     try{
