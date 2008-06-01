@@ -414,7 +414,7 @@ namespace cmsutil {
          * @see #setDeliveryMode(int)
          */
         virtual void setDeliveryPersistent(bool deliveryPersistent) {
-            this->deliveryMode = (deliveryPersistent ? 0 : 1);
+            this->deliveryMode = (deliveryPersistent ? cms::DeliveryMode::PERSISTENT : cms::DeliveryMode::NON_PERSISTENT );
         }
 
         /**
