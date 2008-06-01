@@ -126,7 +126,6 @@ void PrimitiveMapMarshallerTest::testLists() {
 
     CPPUNIT_ASSERT( newMap != NULL );
 
-    std::cout << std::endl << "Deleting Map" << std::endl;
     delete newMap;
 }
 
