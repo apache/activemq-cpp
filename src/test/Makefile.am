@@ -233,8 +233,8 @@ h_sources = \
   decaf/util/concurrent/ThreadPoolTest.h \
   decaf/nio/BufferTest.h  
 
-##include activemq/connector/openwire/marshal/v1/srcmakefile.mk
-##include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+include activemq/connector/openwire/marshal/v1/srcmakefile.mk
+include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test
