@@ -445,11 +445,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveList.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveList.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\activemq\util\PrimitiveMap.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\util\PrimitiveMap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveValueNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\util\PrimitiveValueNode.h"
 					>
 				</File>
 				<File
@@ -5666,6 +5682,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\util\Iterator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\util\List.h"
 					>
 				</File>
 				<File
