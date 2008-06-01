@@ -48,17 +48,9 @@ void PrimitiveMapMarshaller::marshal( const activemq::util::PrimitiveMap* map,
         if( map == NULL ) {
             dataOut.writeInt( -1 );
         } else {
-            dataOut.writeInt( (int)map->size() );
-
-            std::vector<std::string> keys = map->getKeys();
-            std::vector<std::string>::const_iterator iter = keys.begin();
-
-            for(; iter != keys.end(); ++iter ) {
-
-                OpenwireStringSupport::writeString( dataOut, &(*iter) );
-                PrimitiveValueNode value = map->getValue( *iter );
-                marshalPrimitive( dataOut, value );
-            }
+            std::cout << std::endl << "Begin Marshalling" << std::endl;
+            PrimitiveMapMarshaller::marshalPrimitiveMap( dataOut, *map );
+            std::cout << std::endl << "End Marshalling" << std::endl;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -83,7 +75,7 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 
             for( int i=0; i < size; i++ ) {
                 std::string key = OpenwireStringSupport::readString( dataIn );
-                unmarshalPrimitive( dataIn, key, *map );
+                map->setValue( key, unmarshalPrimitive( dataIn ) );
             }
 
             return map;
@@ -112,15 +104,7 @@ void PrimitiveMapMarshaller::unmarshal(
 
         ByteArrayInputStream bytesIn( src );
         DataInputStream dataIn( &bytesIn );
-
-        int size = dataIn.readInt();
-
-        if( size > 0 ) {
-            for( int i=0; i < size; i++ ) {
-                std::string key = OpenwireStringSupport::readString( dataIn );
-                unmarshalPrimitive( dataIn, key, *map );
-            }
-        }
+        PrimitiveMapMarshaller::unmarshalPrimitiveMap( dataIn, *map );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -128,8 +112,51 @@ void PrimitiveMapMarshaller::unmarshal(
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::marshalPrimitiveMap(
+    decaf::io::DataOutputStream& dataOut,
+    const decaf::util::Map<std::string, PrimitiveValueNode>& map )
+        throw ( decaf::io::IOException ) {
+
+    try{
+
+        dataOut.writeInt( (int)map.size() );
+
+        std::vector<std::string> keys = map.getKeys();
+        std::vector<std::string>::const_iterator iter = keys.begin();
+
+        for(; iter != keys.end(); ++iter ) {
+
+            OpenwireStringSupport::writeString( dataOut, &(*iter) );
+            PrimitiveValueNode value = map.getValue( *iter );
+            marshalPrimitive( dataOut, value );
+        }
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::marshalPrimitiveList(
+    decaf::io::DataOutputStream& dataOut,
+    const decaf::util::List<util::PrimitiveValueNode>& list )
+        throw ( decaf::io::IOException ) {
+
+    try{
+        dataOut.writeInt( list.size() );
+
+        for( std::size_t ix = 0; ix < list.size(); ++ix ) {
+            marshalPrimitive( dataOut, list.get( ix ) );
+        }
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
-                                               activemq::util::PrimitiveValueNode& value )
+                                               const activemq::util::PrimitiveValueNode& value )
                                                     throw ( decaf::io::IOException ) {
 
     try {
@@ -196,6 +223,16 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 
             OpenwireStringSupport::writeString( dataOut, &data );
 
+        } else if( value.getValueType() == PrimitiveValueNode::LIST_TYPE ) {
+
+            dataOut.writeByte( PrimitiveValueNode::LIST_TYPE );
+            marshalPrimitiveList( dataOut, value.getList() );
+
+        } else if( value.getValueType() == PrimitiveValueNode::MAP_TYPE ) {
+
+            dataOut.writeByte( PrimitiveValueNode::MAP_TYPE );
+            marshalPrimitiveMap( dataOut, value.getMap() );
+
         } else {
             throw IOException(
                 __FILE__,
@@ -209,59 +246,96 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void PrimitiveMapMarshaller::unmarshalPrimitive( io::DataInputStream& dataIn,
-                                                 const std::string& key,
-                                                 activemq::util::PrimitiveMap& map )
-                                                    throw ( decaf::io::IOException ) {
+void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
+    decaf::io::DataInputStream& dataIn, util::PrimitiveMap& map )
+        throw ( decaf::io::IOException ) {
+
+    try{
+
+        int size = dataIn.readInt();
+
+        if( size > 0 ) {
+            for( int i=0; i < size; i++ ) {
+                std::string key = OpenwireStringSupport::readString( dataIn );
+                map.setValue( key, unmarshalPrimitive( dataIn ) );
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void PrimitiveMapMarshaller::unmarshalPrimitiveList(
+    decaf::io::DataInputStream& dataIn,
+    decaf::util::List<util::PrimitiveValueNode>& list )
+        throw ( decaf::io::IOException ) {
+
+    try{
+
+        int size = dataIn.readInt();
+        while( size-- > 0 ) {
+            list.add( unmarshalPrimitive( dataIn ) );
+        }
+    }
+    AMQ_CATCH_RETHROW( io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, io::IOException )
+    AMQ_CATCHALL_THROW( io::IOException )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
+    io::DataInputStream& dataIn ) throw ( decaf::io::IOException ) {
 
     try {
 
         unsigned char type = dataIn.readByte();
 
-        switch( type )
-        {
+        switch( type ) {
+
             case PrimitiveValueNode::NULL_TYPE:
-                map.setString( key, "" );
-                break;
+                return PrimitiveValueNode( "" );
             case PrimitiveValueNode::BYTE_TYPE:
-                map.setByte( key, dataIn.readByte() );
-                break;
+                return PrimitiveValueNode( dataIn.readByte() );
             case PrimitiveValueNode::BOOLEAN_TYPE:
-                map.setBool( key, dataIn.readBoolean() );
-                break;
+                return PrimitiveValueNode( dataIn.readBoolean() );
             case PrimitiveValueNode::CHAR_TYPE:
-                map.setChar( key, dataIn.readChar() );
-                break;
+                return PrimitiveValueNode( dataIn.readChar() );
             case PrimitiveValueNode::SHORT_TYPE:
-                map.setShort( key, dataIn.readShort() );
-                break;
+                return PrimitiveValueNode( dataIn.readShort() );
             case PrimitiveValueNode::INTEGER_TYPE:
-                map.setInt( key, dataIn.readInt() );
-                break;
+                return PrimitiveValueNode( dataIn.readInt() );
             case PrimitiveValueNode::LONG_TYPE:
-                map.setLong( key, dataIn.readLong() );
-                break;
+                return PrimitiveValueNode( dataIn.readLong() );
             case PrimitiveValueNode::FLOAT_TYPE:
-                map.setFloat( key, dataIn.readFloat() );
-                break;
+                return PrimitiveValueNode( dataIn.readFloat() );
             case PrimitiveValueNode::DOUBLE_TYPE:
-                map.setDouble( key, dataIn.readDouble() );
-                break;
+                return PrimitiveValueNode( dataIn.readDouble() );
             case PrimitiveValueNode::BYTE_ARRAY_TYPE:
             {
                 int size = dataIn.readInt();
                 std::vector<unsigned char> data;
                 data.resize( size );
                 dataIn.readFully( data );
-                map.setByteArray( key, data );
-                break;
+                return PrimitiveValueNode( data );
             }
             case PrimitiveValueNode::STRING_TYPE:
             case PrimitiveValueNode::BIG_STRING_TYPE:
-                map.setString(
-                    key,
+                return PrimitiveValueNode(
                     OpenwireStringSupport::readString( dataIn ) );
-                break;
+            case PrimitiveValueNode::LIST_TYPE:
+            {
+                PrimitiveList list;
+                PrimitiveMapMarshaller::unmarshalPrimitiveList( dataIn, list );
+                return PrimitiveValueNode( list );
+            }
+            case PrimitiveValueNode::MAP_TYPE:
+            {
+                PrimitiveMap map;
+                PrimitiveMapMarshaller::unmarshalPrimitiveMap( dataIn, map );
+                return PrimitiveValueNode( map );
+            }
             default:
                 throw IOException(
                     __FILE__,

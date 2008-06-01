@@ -21,9 +21,11 @@
 #include <cms/CMSException.h>
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveMap.h>
+#include <activemq/util/PrimitiveList.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/IOException.h>
+#include <string>
 
 namespace activemq{
 namespace connector{
@@ -73,28 +75,72 @@ namespace marshal{
     protected:
 
         /**
-         * Used to Marshal the Primitive types that are contianed in the
-         * map, out on the Wire.
+         * Marshal a Map of Primitives to the given OutputStream, can result
+         * in recursive calls to this method if the map contains maps of maps.
+         * @param dataOut - the DataOutputStream to write to
+         * @param map - the ValueNode to write.
+         * @throws IOException
+         */
+        static void marshalPrimitiveMap(
+            decaf::io::DataOutputStream& dataOut,
+            const decaf::util::Map<std::string, util::PrimitiveValueNode>& map )
+                throw ( decaf::io::IOException );
+
+        /**
+         * Marshal a List of Primitives to the given OutputStream, can result
+         * in recursive calls to this method if the list contains lists of lists.
+         * @param dataOut - the DataOutputStream to write to
+         * @param list - the ValueNode to write.
+         * @throws IOException
+         */
+        static void marshalPrimitiveList(
+            decaf::io::DataOutputStream& dataOut,
+            const decaf::util::List<util::PrimitiveValueNode>& list )
+                throw ( decaf::io::IOException );
+
+        /**
+         * Used to Marshal the Primitive types out on the Wire.
          * @param dataOut - the DataOutputStream to write to
          * @param value - the ValueNode to write.
-         * @throws CMSException
+         * @throws IOException
          */
         static void marshalPrimitive( decaf::io::DataOutputStream& dataOut,
-                                      util::PrimitiveValueNode& value )
+                                      const util::PrimitiveValueNode& value )
                                         throw ( decaf::io::IOException );
+
+        /**
+         * Unmarshals a Map of Primitives from the given InputStream, can result
+         * in recursive calls to this method if the map contains maps of maps.
+         * @param dataIn - DataInputStream to read from.
+         * @param map - the map to fill with data.
+         * @throws IOException
+         */
+        static void unmarshalPrimitiveMap(
+            decaf::io::DataInputStream& dataIn, util::PrimitiveMap& map )
+                throw ( decaf::io::IOException );
+
+        /**
+         * Unmarshals a List of Primitives from the given InputStream, can result
+         * in recursive calls to this method if the list contains lists of lists.
+         * @param dataIn - DataInputStream to read from.
+         * @param list - the ValueNode to write.
+         * @throws IOException
+         */
+        static void unmarshalPrimitiveList(
+            decaf::io::DataInputStream& dataIn,
+            decaf::util::List<util::PrimitiveValueNode>& list )
+                throw ( decaf::io::IOException );
 
         /**
          * Unmarshals a Primitive Type from the stream, and returns it as a
          * value Node.
          * @param dataIn - DataInputStream to read from.
-         * @param key - key where the element should be inserted
-         * @param map - Map to insert data into.
-         * @throws CMSException
+         * @return a PrimitiveValueNode containing the data.
+         * @throws IOException
          */
-        static void unmarshalPrimitive( decaf::io::DataInputStream& dataIn,
-                                        const std::string& key,
-                                        util::PrimitiveMap& map )
-                                            throw ( decaf::io::IOException );
+        static util::PrimitiveValueNode unmarshalPrimitive(
+            decaf::io::DataInputStream& dataIn )
+                throw ( decaf::io::IOException );
 
     };
 
