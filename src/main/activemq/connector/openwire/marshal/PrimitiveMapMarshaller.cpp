@@ -141,7 +141,7 @@ void PrimitiveMapMarshaller::marshalPrimitiveList(
         throw ( decaf::io::IOException ) {
 
     try{
-        dataOut.writeInt( list.size() );
+        dataOut.writeInt( (int)list.size() );
 
         for( std::size_t ix = 0; ix < list.size(); ++ix ) {
             marshalPrimitive( dataOut, list.get( ix ) );
