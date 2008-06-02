@@ -59,7 +59,7 @@ namespace transport{
          * Interface for all Protocols to implement that defines the behavior
          * of the Broker in response to messages of that protocol.
          */
-        class ResponseBuilder {
+        class AMQCPP_API ResponseBuilder {
         public:
 
             virtual ~ResponseBuilder() {}
