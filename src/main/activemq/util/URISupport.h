@@ -28,8 +28,6 @@ namespace util{
     class AMQCPP_API URISupport {
     public:
 
-        virtual ~URISupport();
-
         /**
          * Parses the properties out of the provided Broker URI and sets
          * them in the passed Properties Object.
