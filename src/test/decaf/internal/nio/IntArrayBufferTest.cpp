@@ -509,7 +509,7 @@ void IntArrayBufferTest::testPutIndexed() {
 
     for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
-        IntBuffer& ret = testBuffer1->put(i, i );
+        IntBuffer& ret = testBuffer1->put( i, (int)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (int)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
@@ -553,7 +553,7 @@ void IntArrayBufferTest::testToString() {
 
     std::string str = testBuffer1->toString();
     CPPUNIT_ASSERT( str.find("Int") != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->position() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->limit() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->capacity() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->position() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->limit() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->capacity() ) ) != string::npos );
 }

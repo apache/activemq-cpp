@@ -113,7 +113,7 @@ namespace nio{
 
         void loadTestData2( short* array, std::size_t offset, std::size_t length ) {
             for( std::size_t i = 0; i < length; i++ ) {
-                array[offset + i] = (short)length - i;
+                array[offset + i] = (short)(length - i);
             }
         }
 
@@ -127,7 +127,7 @@ namespace nio{
         void loadTestData2( decaf::nio::ShortBuffer* buf ) {
             buf->clear();
             for( std::size_t i = 0; i < buf->capacity(); i++ ) {
-                buf->put(i, (short) buf->capacity() - i);
+                buf->put(i, (short)( buf->capacity() - i) );
             }
         }
 

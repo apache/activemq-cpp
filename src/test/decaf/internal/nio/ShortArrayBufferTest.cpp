@@ -509,7 +509,7 @@ void ShortArrayBufferTest::testPutIndexed() {
 
     for( std::size_t i = 0; i < testBuffer1->capacity(); i++ ) {
         CPPUNIT_ASSERT( testBuffer1->position() == 0 );
-        ShortBuffer& ret = testBuffer1->put(i, i );
+        ShortBuffer& ret = testBuffer1->put( i, (short)i );
         CPPUNIT_ASSERT( testBuffer1->get(i) == (short)i );
         CPPUNIT_ASSERT( &ret == testBuffer1 );
     }
@@ -553,7 +553,7 @@ void ShortArrayBufferTest::testToString() {
 
     std::string str = testBuffer1->toString();
     CPPUNIT_ASSERT( str.find("Short") != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->position() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->limit() ) ) != string::npos );
-    CPPUNIT_ASSERT( str.find( Integer::toString( testBuffer1->capacity() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->position() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->limit() ) ) != string::npos );
+    CPPUNIT_ASSERT( str.find( Integer::toString( (int)testBuffer1->capacity() ) ) != string::npos );
 }
