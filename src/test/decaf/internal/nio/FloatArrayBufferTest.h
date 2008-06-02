@@ -154,7 +154,7 @@ namespace nio{
             float value = startValue;
             for( std::size_t i = 0; i < length; i++ ) {
                 CPPUNIT_ASSERT( buf->get( startIndex + i ) == value );
-                value = value + 1.0;
+                value = value + 1.0f;
             }
         }
 
