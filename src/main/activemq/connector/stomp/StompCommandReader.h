@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDREADER_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDREADER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/CommandReader.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
@@ -29,7 +30,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompCommandReader : public transport::CommandReader {
+    class AMQCPP_API StompCommandReader : public transport::CommandReader {
     private:
 
         /**

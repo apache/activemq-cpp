@@ -23,6 +23,7 @@
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
@@ -51,8 +52,7 @@ namespace core{
      *   Max number of times a message can be redelivered, if the session is
      *   rolled back more than this many time, the message is dropped.
      */
-    class ActiveMQTransaction : public connector::TransactionInfo
-    {
+    class AMQCPP_API ActiveMQTransaction : public connector::TransactionInfo {
     private:
 
         // List type for holding messages

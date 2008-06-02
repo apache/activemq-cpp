@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_RESPONSE_H_
 #define _ACTIVEMQ_TRANSPORT_RESPONSE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
 
 namespace activemq{
@@ -29,7 +30,7 @@ namespace transport{
      * transport layer.  Responses are mapped to the Command they are
      * linked to by a Correlation Id that is set by the Sedning Transport.
      */
-    class Response : public Command{
+    class AMQCPP_API Response : public Command{
     public:
 
         virtual ~Response() {}

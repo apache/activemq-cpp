@@ -19,13 +19,14 @@
 
 #include <cms/Destination.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/SessionInfo.h>
 
 namespace activemq{
 namespace connector{
 
-    class ProducerInfo : public BaseConnectorResource {
+    class AMQCPP_API ProducerInfo : public BaseConnectorResource {
     public:
 
         ProducerInfo() : BaseConnectorResource() {}

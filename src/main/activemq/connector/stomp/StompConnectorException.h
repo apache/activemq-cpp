@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOREXCEPTION_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOREXCEPTION_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorException.h>
 
 namespace activemq{
@@ -26,7 +27,7 @@ namespace stomp{
     /*
      * Signals that an Connector exception of some sort has occurred.
      */
-    class StompConnectorException : public connector::ConnectorException {
+    class AMQCPP_API StompConnectorException : public connector::ConnectorException {
     public:
 
         /**

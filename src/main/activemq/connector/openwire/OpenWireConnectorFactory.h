@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTORFACTORY_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTORFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorFactory.h>
 #include <activemq/connector/ConnectorFactoryMapRegistrar.h>
 #include <activemq/connector/openwire/OpenWireConnector.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireConnectorFactory : public connector::ConnectorFactory {
+    class AMQCPP_API OpenWireConnectorFactory : public connector::ConnectorFactory {
     public:
 
         virtual ~OpenWireConnectorFactory() {}

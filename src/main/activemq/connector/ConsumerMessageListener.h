@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_CONSUMERMESSAGELISTENER_H_
 #define _ACTIVEMQ_CONNECTOR_CONSUMERMESSAGELISTENER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/core/ActiveMQMessage.h>
 
@@ -27,7 +28,7 @@ namespace connector{
      * An observer of messages that are targeted at a
      * particular consumer.
      */
-    class ConsumerMessageListener{
+    class AMQCPP_API ConsumerMessageListener{
     public:
 
         virtual ~ConsumerMessageListener() {}

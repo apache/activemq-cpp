@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPQUEUE_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPQUEUE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/StompDestination.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <cms/Queue.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompQueue : public StompDestination< cms::Queue > {
+    class AMQCPP_API StompQueue : public StompDestination< cms::Queue > {
     public:
 
         /**

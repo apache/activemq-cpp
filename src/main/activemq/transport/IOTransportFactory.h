@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 #define _ACTIVEMQ_TRANSPORT_IOTRANSPORTFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
@@ -29,7 +30,7 @@ namespace transport{
      * Manufactures IOTransports, which are objects that
      * read from input streams and write to output streams.
      */
-    class IOTransportFactory : public TransportFactory {
+    class AMQCPP_API IOTransportFactory : public TransportFactory {
     private:
 
         static TransportFactoryMapRegistrar registrar;

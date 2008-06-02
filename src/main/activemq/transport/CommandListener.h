@@ -18,6 +18,8 @@
 #ifndef _ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
 #define _ACTIVEMQ_TRANSPORT_COMMANDLISTENER_H_
 
+#include <activemq/util/Config.h>
+
 namespace activemq{
 namespace transport{
 
@@ -26,7 +28,7 @@ namespace transport{
     /**
      * Interface for an observer of broker commands.
      */
-    class CommandListener{
+    class AMQCPP_API CommandListener{
     public:
 
         virtual ~CommandListener() {}

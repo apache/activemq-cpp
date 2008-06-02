@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTORFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorFactory.h>
 #include <activemq/connector/ConnectorFactoryMapRegistrar.h>
 #include <activemq/connector/stomp/StompConnector.h>
@@ -25,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompConnectorFactory : public connector::ConnectorFactory {
+    class AMQCPP_API StompConnectorFactory : public connector::ConnectorFactory {
     public:
 
         virtual ~StompConnectorFactory(void) {}

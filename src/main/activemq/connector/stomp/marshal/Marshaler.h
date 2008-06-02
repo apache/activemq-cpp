@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompFrame.h>
 #include <activemq/connector/stomp/marshal/MarshalException.h>
@@ -31,7 +32,7 @@ namespace marshal{
      * Interface for all marshallers between Commands and
      * stomp frames.
      */
-    class Marshaler {
+    class AMQCPP_API Marshaler {
     public:
 
         Marshaler(void) {}

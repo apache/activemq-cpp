@@ -20,6 +20,7 @@
 
 #include <decaf/util/concurrent/Mutex.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/util/LongSequenceGenerator.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConsumerInfo.h>
@@ -43,7 +44,7 @@ namespace stomp{
      * so that a transactional session can manage the lifetime of the
      * message.
      */
-    class StompSessionManager : public StompCommandListener {
+    class AMQCPP_API StompSessionManager : public StompCommandListener {
     private:
 
         // Map Types

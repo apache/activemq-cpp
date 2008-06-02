@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CONNECTOR_CONNECTORFACTORY_H_
 
 #include <decaf/util/Properties.h>
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/Connector.h>
 
@@ -27,7 +28,7 @@ namespace connector{
     /**
      * Interface class for all Connector Factory Classes
      */
-    class ConnectorFactory {
+    class AMQCPP_API ConnectorFactory {
     public:
 
         virtual ~ConnectorFactory() {}

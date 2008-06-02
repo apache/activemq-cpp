@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/CommandIOException.h>
@@ -29,7 +30,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireCommandWriter : public transport::CommandWriter {
+    class AMQCPP_API OpenWireCommandWriter : public transport::CommandWriter {
     private:
 
         /**

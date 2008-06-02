@@ -19,12 +19,13 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONSUMERINFO_H_
 
 #include <activemq/connector/ConsumerInfo.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompConsumerInfo : public ConsumerInfo {
+    class AMQCPP_API StompConsumerInfo : public ConsumerInfo {
     private:
 
         // Message Selector for this Consumer

@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_TRANSPORT_TRANSPORTFILTER_H_
 #define ACTIVEMQ_TRANSPORT_TRANSPORTFILTER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
@@ -32,7 +33,7 @@ namespace transport{
      * filters implement the Transport interface and
      * optionally delegate calls to another Transport object.
      */
-    class TransportFilter :
+    class AMQCPP_API TransportFilter :
         public Transport,
         public CommandListener,
         public TransportExceptionListener {

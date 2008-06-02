@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CMSUTIL_CMSDESTINATIONACCESSOR_H_
 #define _ACTIVEMQ_CMSUTIL_CMSDESTINATIONACCESSOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/cmsutil/CmsAccessor.h>
 #include <activemq/cmsutil/DynamicDestinationResolver.h>
 
@@ -31,7 +32,7 @@ namespace cmsutil {
      * @see CmsTemplate
      * @see CmsAccessor
      */
-    class CmsDestinationAccessor : public CmsAccessor {
+    class AMQCPP_API CmsDestinationAccessor : public CmsAccessor {
     
     private:
         

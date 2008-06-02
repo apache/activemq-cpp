@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMATFACTORY_H_
 #define _ACTIVEMQ_WIREFORMAT_WIREFORMATFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -31,7 +32,7 @@ namespace wireformat{
      * the properties that are set in the passed <code>Properties</code>
      * object.
      */
-    class WireFormatFactory {
+    class AMQCPP_API WireFormatFactory {
     public:
 
         virtual ~WireFormatFactory() {}

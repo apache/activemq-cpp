@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_IO_LOGGINGINPUTSTREAM_H_
 #define _ACTIVEMQ_IO_LOGGINGINPUTSTREAM_H_
 
+#include <activemq/util/Config.h>
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -25,7 +26,7 @@
 namespace activemq{
 namespace io{
 
-    class LoggingInputStream : public decaf::io::FilterInputStream {
+    class AMQCPP_API LoggingInputStream : public decaf::io::FilterInputStream {
     private:
 
         LOGDECAF_DECLARE(logger)

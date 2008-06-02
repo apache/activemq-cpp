@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDREADER_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDREADER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/CommandReader.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
@@ -30,7 +31,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireCommandReader : public transport::CommandReader {
+    class AMQCPP_API OpenWireCommandReader : public transport::CommandReader {
     private:
 
         /**

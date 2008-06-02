@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
 #define _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
 
 namespace activemq{
@@ -27,7 +28,7 @@ namespace transport{
      * Manufactures MockTransports, which are objects that
      * read from input streams and write to output streams.
      */
-    class MockTransportFactory : public TransportFactory{
+    class AMQCPP_API MockTransportFactory : public TransportFactory{
     public:
 
         virtual ~MockTransportFactory() {}

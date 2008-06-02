@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDLISTENER_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDLISTENER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/StompCommand.h>
 #include <activemq/connector/stomp/StompConnectorException.h>
 
@@ -29,7 +30,7 @@ namespace stomp{
      * Interface class for object that with to register with the Stomp
      * Connector in order to process a Command that was received.
      */
-    class StompCommandListener {
+    class AMQCPP_API StompCommandListener {
     public:
 
         virtual ~StompCommandListener(void) {}

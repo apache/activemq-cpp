@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPTOPIC_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPTOPIC_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/StompDestination.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <cms/Topic.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
     
-    class StompTopic : public StompDestination<cms::Topic> {
+    class AMQCPP_API StompTopic : public StompDestination<cms::Topic> {
     public:
 
         /**

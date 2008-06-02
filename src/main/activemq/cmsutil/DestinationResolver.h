@@ -18,48 +18,49 @@
 #define _ACTIVEMQ_CMSUTIL_DESTINATIONRESOLVER_H_
 
 #include <cms/Session.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
 
     // Forward declarations.
     class ResourceLifecycleManager;
-    
+
     /**
      * Resolves a CMS destination name to a <code>Destination</code>.
      */
-    class DestinationResolver {
-    
+    class AMQCPP_API DestinationResolver {
+
     public:
-    
+
         virtual ~DestinationResolver() {}
-    
+
         /**
-         * Initializes this destination resolver for use.  Ensures that any 
-         * previously allocated resources are first destroyed 
+         * Initializes this destination resolver for use.  Ensures that any
+         * previously allocated resources are first destroyed
          * (e.g. calls destroy()).
-         * 
+         *
          * @param mgr
          *      the resource lifecycle manager.
          */
         virtual void init( ResourceLifecycleManager* mgr) = 0;
-        
+
         /**
          * Destroys any allocated resources.
          */
         virtual void destroy() = 0;
-        
+
         /**
-         * Resolves the given name to a destination.  If 
-         * <code>pubSubDomain</code> is true, a topic will be returned, 
+         * Resolves the given name to a destination.  If
+         * <code>pubSubDomain</code> is true, a topic will be returned,
          * otherwise a queue will be returned.
-         * 
-         * @param session 
-         *      the session for which to retrieve resolve the 
+         *
+         * @param session
+         *      the session for which to retrieve resolve the
          *      destination.
-         * @param destName 
+         * @param destName
          *      the name to be resolved.
-         * @param pubSubDomain 
+         * @param pubSubDomain
          *      If true, the name will be resolved to a Topic,
          *      otherwise a Queue.
          * @return the resolved destination

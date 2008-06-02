@@ -52,7 +52,7 @@ namespace transport{
      * up to the builder to create appropriate responses and schedule any asynchronous
      * messages that might result from a message sent to the Broker.
      */
-    class MockTransport : public Transport{
+    class AMQCPP_API MockTransport : public Transport{
     public:
 
         /**

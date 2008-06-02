@@ -19,11 +19,12 @@
 #define _ACTIVEMQ_TRANSPORT_COMMAND_H_
 
 #include <string>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
 
-    class Command{
+    class AMQCPP_API Command{
     public:
 
         virtual ~Command() {}

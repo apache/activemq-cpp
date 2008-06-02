@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONDATA_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONDATA_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/transport/Transport.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -30,7 +31,7 @@ namespace core{
      * object.  Each ActiveMQConnection owns one of these objects.  This
      * object knows how to clean up the Connection Dependencies correctly
      */
-    class ActiveMQConnectionData {
+    class AMQCPP_API ActiveMQConnectionData {
     private:
 
         // Connector Object

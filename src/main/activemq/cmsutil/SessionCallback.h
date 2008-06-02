@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H
 
 #include <cms/Session.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -27,7 +28,7 @@ namespace cmsutil {
      * Callback for executing any number of operations on a provided
      * CMS Session.
      */
-    class SessionCallback {
+    class AMQCPP_API SessionCallback {
         
     public:
         

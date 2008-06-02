@@ -24,6 +24,7 @@
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -32,7 +33,7 @@ namespace openwire{
     /**
      * Base class for all classes that marshal commands for Openwire
      */
-    class DataStreamMarshaller {
+    class AMQCPP_API DataStreamMarshaller {
     public:
 
         virtual ~DataStreamMarshaller() {}

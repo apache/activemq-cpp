@@ -22,6 +22,7 @@
 #include <decaf/util/Map.h>
 #include <activemq/cmsutil/CachedProducer.h>
 #include <activemq/cmsutil/CachedConsumer.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -33,7 +34,7 @@ namespace cmsutil {
      * A pooled session object that wraps around a delegate session.  Calls
      * to close this session only result in giving the session back to the pool.
      */
-    class PooledSession : public cms::Session {
+    class AMQCPP_API PooledSession : public cms::Session {
     private:
         
         SessionPool* pool;

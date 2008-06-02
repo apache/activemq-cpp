@@ -21,6 +21,7 @@
 #include <decaf/io/OutputStream.h>
 #include <decaf/io/Writer.h>
 #include <activemq/transport/CommandIOException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -31,7 +32,7 @@ namespace transport{
      * Interface for an object responsible for writing a command
      * to an output stream.
      */
-    class CommandWriter : public decaf::io::Writer {
+    class AMQCPP_API CommandWriter : public decaf::io::Writer {
     public:
 
         virtual ~CommandWriter() {}

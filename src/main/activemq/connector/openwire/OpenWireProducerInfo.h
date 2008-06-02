@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREPRODUCERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREPRODUCERINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ProducerInfo.h>
 #include <activemq/connector/openwire/commands/ProducerInfo.h>
 #include <cms/Destination.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireProducerInfo : public ProducerInfo {
+    class AMQCPP_API OpenWireProducerInfo : public ProducerInfo {
     private:
 
         // Are Message Ids Disabled

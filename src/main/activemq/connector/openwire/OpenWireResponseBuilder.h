@@ -18,13 +18,14 @@
 #ifndef ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRERESPONSEBUILDER_H_
 #define ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRERESPONSEBUILDER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/MockTransport.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireResponseBuilder : public transport::MockTransport::ResponseBuilder{
+    class AMQCPP_API OpenWireResponseBuilder : public transport::MockTransport::ResponseBuilder{
     public:
 
         OpenWireResponseBuilder() {}

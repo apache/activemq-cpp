@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
 #define _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -29,7 +30,7 @@ namespace filters{
     /**
      * Factory Responsible for creating the AsyncSendTransport.
      */
-    class AsyncSendTransportFactory : public TransportFactory {
+    class AMQCPP_API AsyncSendTransportFactory : public TransportFactory {
     public:
 
         virtual ~AsyncSendTransportFactory() {}

@@ -19,6 +19,7 @@
 
 #include <cms/Session.h>
 #include <cms/ExceptionListener.h>
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConnectorResourceListener.h>
@@ -39,7 +40,7 @@ namespace core{
     class ActiveMQConsumer;
     class ActiveMQSessionExecutor;
 
-    class ActiveMQSession :
+    class AMQCPP_API ActiveMQSession :
         public cms::Session,
         public Dispatcher,
         public connector::ConnectorResourceListener

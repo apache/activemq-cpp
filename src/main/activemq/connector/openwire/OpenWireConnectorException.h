@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOREXCEPTION_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorException.h>
 
 namespace activemq{
@@ -27,7 +28,7 @@ namespace openwire{
     /*
      * Signals that an Connector exception of some sort has occurred.
      */
-    class OpenWireConnectorException : public connector::ConnectorException {
+    class AMQCPP_API OpenWireConnectorException : public connector::ConnectorException {
     public:
 
         OpenWireConnectorException() throw(){}

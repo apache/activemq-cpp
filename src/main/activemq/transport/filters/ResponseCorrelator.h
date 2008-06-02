@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
 #define ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/filters/FutureResponse.h>
 #include <activemq/transport/Command.h>
@@ -36,7 +37,7 @@ namespace filters{
      * are simply sent directly to the CommandListener.  It owns
      * the transport that it
      */
-    class ResponseCorrelator : public TransportFilter {
+    class AMQCPP_API ResponseCorrelator : public TransportFilter {
     private:
 
         /**

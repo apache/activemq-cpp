@@ -20,6 +20,7 @@
 
 #include <cms/Session.h>
 #include <cms/MessageProducer.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -27,7 +28,7 @@ namespace cmsutil {
     /**
      * Callback for sending a message to a CMS destination.
      */
-    class ProducerCallback {
+    class AMQCPP_API ProducerCallback {
     public:
         
         virtual ~ProducerCallback(){}

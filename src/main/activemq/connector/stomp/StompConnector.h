@@ -18,21 +18,22 @@
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOR_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/Properties.h>
 #include <activemq/connector/stomp/StompCommandReader.h>
 #include <activemq/connector/stomp/StompCommandWriter.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
 #include <activemq/connector/stomp/StompSessionManager.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/util/LongSequenceGenerator.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/logging/LoggerDefines.h>
-#include <activemq/util/LongSequenceGenerator.h>
 
 namespace activemq{
 namespace connector{
@@ -41,7 +42,7 @@ namespace stomp{
     /**
      * The connector implementation for the STOMP protocol.
      */
-    class StompConnector :
+    class AMQCPP_API StompConnector :
         public Connector,
         public transport::CommandListener,
         public transport::TransportExceptionListener,

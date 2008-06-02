@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONSUMERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONSUMERINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/connector/openwire/commands/ConsumerInfo.h>
 #include <cms/Destination.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireConsumerInfo : public ConsumerInfo {
+    class AMQCPP_API OpenWireConsumerInfo : public ConsumerInfo {
     private:
 
         // OpenWire's Consumer Info Command

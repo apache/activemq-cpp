@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDWRITER_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCOMMANDWRITER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/connector/stomp/StompConnectorException.h>
@@ -29,7 +30,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompCommandWriter : public transport::CommandWriter {
+    class AMQCPP_API StompCommandWriter : public transport::CommandWriter {
     private:
 
         /**

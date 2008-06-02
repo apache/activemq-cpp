@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMATNEGOTIATOR_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMATNEGOTIATOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
@@ -29,7 +30,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireFormatNegotiator : public transport::TransportFilter {
+    class AMQCPP_API OpenWireFormatNegotiator : public transport::TransportFilter {
     private:
 
         /**

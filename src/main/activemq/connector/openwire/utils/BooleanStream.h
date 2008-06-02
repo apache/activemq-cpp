@@ -20,6 +20,7 @@
 
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -45,7 +46,7 @@ namespace utils{
      * value.  If the first byte = 0xC0, the following unsigned byte is the size field.
      * If the first byte = 0x80, the following short (two bytes) are the size field.
      */
-    class BooleanStream {
+    class AMQCPP_API BooleanStream {
     public:
 
         BooleanStream();

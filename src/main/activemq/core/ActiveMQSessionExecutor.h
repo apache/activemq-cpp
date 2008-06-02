@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_CORE_ACTIVEMQSESSIONEXECUTOR_
 #define ACTIVEMQ_CORE_ACTIVEMQSESSIONEXECUTOR_
 
+#include <activemq/util/Config.h>
 #include <activemq/core/Dispatcher.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
@@ -35,7 +36,7 @@ namespace core{
      * Delegate dispatcher for a single session.  Contains a thread
      * to provide for asynchronous dispatching.
      */
-    class ActiveMQSessionExecutor :
+    class AMQCPP_API ActiveMQSessionExecutor :
         public Dispatcher,
         public decaf::lang::Runnable
     {

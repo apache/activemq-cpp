@@ -22,6 +22,7 @@
 #include <string.h>
 #include <map>
 #include <decaf/util/Properties.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -31,7 +32,7 @@ namespace stomp{
      * A Stomp-level message frame that encloses all messages
      * to and from the broker.
      */
-    class StompFrame{
+    class AMQCPP_API StompFrame{
     public:
 
         /**

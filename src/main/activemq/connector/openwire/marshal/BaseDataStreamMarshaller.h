@@ -34,7 +34,7 @@ namespace marshal{
      * Base class for all Marshallers that marshal DataStructures to and
      * from the wire using the OpenWire protocal.
      */
-    class BaseDataStreamMarshaller : public DataStreamMarshaller {
+    class AMQCPP_API BaseDataStreamMarshaller : public DataStreamMarshaller {
     private:
 
         // Table for converting bytes to Hex Strings.

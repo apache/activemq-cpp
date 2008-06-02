@@ -20,6 +20,7 @@
 
 #include <cms/Session.h>
 #include <cms/Message.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -28,7 +29,7 @@ namespace cmsutil {
      * Creates the user-defined message to be sent by the 
      * <code>CmsTemplate</code>.
      */
-    class MessageCreator {
+    class AMQCPP_API MessageCreator {
     public:
         
         virtual ~MessageCreator(){}

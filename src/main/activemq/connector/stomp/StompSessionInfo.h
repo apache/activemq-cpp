@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPSESSIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPSESSIONINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/SessionInfo.h>
 #include <cms/Session.h>
 #include <string>
@@ -25,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompSessionInfo : public SessionInfo {
+    class AMQCPP_API StompSessionInfo : public SessionInfo {
     private:
 
         // Acknowledge Mode of this Session

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMATFACTORY_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMATFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormatFactory.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -27,7 +28,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireFormatFactory : public wireformat::WireFormatFactory {
+    class AMQCPP_API OpenWireFormatFactory : public wireformat::WireFormatFactory {
     public:
 
         /**

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
 #define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/transport/IOTransportFactory.h>
@@ -30,7 +31,7 @@ namespace filters{
     /**
      * Factory Responsible for creating the TcpTransport.
      */
-    class TcpTransportFactory : public TransportFactory {
+    class AMQCPP_API TcpTransportFactory : public TransportFactory {
     public:
 
         virtual ~TcpTransportFactory() {}

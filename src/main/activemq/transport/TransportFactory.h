@@ -34,7 +34,7 @@ namespace transport{
      * wether the newly create transport owns the next and should delete
      * it on its own destruction.
      */
-    class TransportFactory{
+    class AMQCPP_API TransportFactory{
     public:
 
         virtual ~TransportFactory() {}

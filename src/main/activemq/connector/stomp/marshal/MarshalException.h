@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
@@ -27,7 +28,7 @@ namespace marshal{
     /*
      * Signals that an problem occurred during marshalling.
      */
-    class MarshalException : public exceptions::ActiveMQException {
+    class AMQCPP_API MarshalException : public exceptions::ActiveMQException {
     public:
 
         /**

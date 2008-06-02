@@ -19,6 +19,7 @@
 
 #include <string>
 #include <map>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace core{
@@ -28,7 +29,7 @@ namespace core{
      * Each constant is defined as an enumeration and has functions that
      * convert back an forth between string and enum values.
      */
-    class ActiveMQConstants{
+    class AMQCPP_API ActiveMQConstants{
     public:
 
         /**

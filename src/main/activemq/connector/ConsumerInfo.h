@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_CONSUMERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_CONSUMERINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/SessionInfo.h>
 #include <cms/Destination.h>
@@ -25,7 +26,7 @@
 namespace activemq{
 namespace connector{
 
-    class ConsumerInfo : public BaseConnectorResource {
+    class AMQCPP_API ConsumerInfo : public BaseConnectorResource {
     public:
 
         ConsumerInfo() : BaseConnectorResource() {}

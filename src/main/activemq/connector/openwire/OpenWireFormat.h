@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMAT_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIREFORMAT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
@@ -32,7 +33,7 @@ namespace openwire{
 
     class DataStreamMarshaller;
 
-    class OpenWireFormat : public wireformat::WireFormat {
+    class AMQCPP_API OpenWireFormat : public wireformat::WireFormat {
     public:
 
         /**

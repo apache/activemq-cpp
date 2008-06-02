@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
 #define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <decaf/net/Socket.h>
 #include <decaf/util/Properties.h>
@@ -36,7 +37,7 @@ namespace filters{
      * level transport should take care of manaing stream reads
      * and writes.
      */
-    class TcpTransport : public TransportFilter {
+    class AMQCPP_API TcpTransport : public TransportFilter {
     private:
 
         /**

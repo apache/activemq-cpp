@@ -28,6 +28,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/Set.h>
+#include <activemq/util/Config.h>
 
 #include <string>
 
@@ -47,7 +48,7 @@ namespace core{
      * Concrete connection used for all connectors to the
      * ActiveMQ broker.
      */
-    class ActiveMQConnection :
+    class AMQCPP_API ActiveMQConnection :
         public cms::Connection,
         public connector::ConsumerMessageListener,
         public cms::ExceptionListener

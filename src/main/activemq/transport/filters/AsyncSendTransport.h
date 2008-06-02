@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORT_H_
 #define _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <decaf/util/Queue.h>
 #include <decaf/lang/Runnable.h>
@@ -26,8 +27,8 @@ namespace activemq{
 namespace transport{
 namespace filters{
 
-    class AsyncSendTransport : public TransportFilter,
-                               public decaf::lang::Runnable {
+    class AMQCPP_API AsyncSendTransport : public TransportFilter,
+                                          public decaf::lang::Runnable {
     private:
 
         /**

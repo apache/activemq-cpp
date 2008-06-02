@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CMSUTIL_CACHEDCONSUMER_H_
 
 #include <cms/MessageConsumer.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -26,7 +27,7 @@ namespace cmsutil {
     /**
      * A cached message consumer contained within a pooled session.
      */
-    class CachedConsumer : public cms::MessageConsumer {
+    class AMQCPP_API CachedConsumer : public cms::MessageConsumer {
     private:
         
         cms::MessageConsumer* consumer;

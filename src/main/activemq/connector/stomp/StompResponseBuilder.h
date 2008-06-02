@@ -19,12 +19,14 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPRESPONSEBUILDER_H_
 
 #include <activemq/transport/MockTransport.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompResponseBuilder : public transport::MockTransport::ResponseBuilder{
+    class AMQCPP_API StompResponseBuilder :
+        public transport::MockTransport::ResponseBuilder{
     public:
 
         StompResponseBuilder() {}

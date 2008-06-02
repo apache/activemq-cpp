@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <decaf/io/IOException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -30,7 +31,7 @@ namespace openwire{
 
 namespace marshal{
 
-    class MarshalAware {
+    class AMQCPP_API MarshalAware {
     public:
 
         virtual ~MarshalAware() {}

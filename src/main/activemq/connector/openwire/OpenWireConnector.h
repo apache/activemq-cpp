@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOR_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECONNECTOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/Connector.h>
 
 #include <cms/Startable.h>
@@ -68,9 +69,10 @@ namespace openwire{
 
     class OpenWireFormat;
 
-    class OpenWireConnector : public Connector,
-                              public transport::CommandListener,
-                              public transport::TransportExceptionListener {
+    class AMQCPP_API OpenWireConnector :
+        public Connector,
+        public transport::CommandListener,
+        public transport::TransportExceptionListener {
     private:
 
         // Enumeration of Transaction State flags

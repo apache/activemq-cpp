@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_STOMPTRANSACTIONINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <activemq/connector/SessionInfo.h>
 
@@ -24,7 +25,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompTransactionInfo : public TransactionInfo {
+    class AMQCPP_API StompTransactionInfo : public TransactionInfo {
     private:
 
         // Transaction Id

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_BROKEREXCEPTION_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_BROKEREXCEPTION_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/OpenWireConnectorException.h>
 #include <activemq/connector/openwire/commands/BrokerError.h>
 #include <sstream>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class BrokerException : public OpenWireConnectorException {
+    class AMQCPP_API BrokerException : public OpenWireConnectorException {
     public:
 
         BrokerException() throw() {}

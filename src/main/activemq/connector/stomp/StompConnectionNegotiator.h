@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTIONNEGOTIATOR_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPCONNECTIONNEGOTIATOR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
@@ -29,7 +30,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompConnectionNegotiator : public transport::TransportFilter {
+    class AMQCPP_API StompConnectionNegotiator : public transport::TransportFilter {
     private:
 
         /**

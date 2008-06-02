@@ -22,6 +22,7 @@
 #include <cms/Destination.h>
 #include <cms/DeliveryMode.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorResourceListener.h>
 #include <activemq/connector/ProducerInfo.h>
 
@@ -30,8 +31,8 @@ namespace core{
 
     class ActiveMQSession;
 
-    class ActiveMQProducer : public cms::MessageProducer,
-                             public connector::ConnectorResourceListener
+    class AMQCPP_API ActiveMQProducer : public cms::MessageProducer,
+                                        public connector::ConnectorResourceListener
     {
     private:
 

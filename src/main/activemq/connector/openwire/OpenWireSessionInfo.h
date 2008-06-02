@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRESESSIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRESESSIONINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/openwire/commands/SessionInfo.h>
 #include <cms/Session.h>
@@ -27,7 +28,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireSessionInfo : public SessionInfo {
+    class AMQCPP_API OpenWireSessionInfo : public SessionInfo {
     private:
 
         // The OpenWire Session Info DataStructure for this Session

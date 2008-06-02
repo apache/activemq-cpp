@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CMSUTIL_CACHEDPRODUCER_H_
 
 #include <cms/MessageProducer.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -26,7 +27,7 @@ namespace cmsutil {
     /**
      * A cached message producer contained within a pooled session.
      */
-    class CachedProducer : public cms::MessageProducer {
+    class AMQCPP_API CachedProducer : public cms::MessageProducer {
     private:
         
         cms::MessageProducer* producer;

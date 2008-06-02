@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRETRANSACTIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRETRANSACTIONINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <activemq/connector/openwire/commands/TransactionInfo.h>
 #include <activemq/connector/SessionInfo.h>
@@ -26,7 +27,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class OpenWireTransactionInfo : public TransactionInfo {
+    class AMQCPP_API OpenWireTransactionInfo : public TransactionInfo {
     private:
 
         // OpenWire Tramsaction Info Command

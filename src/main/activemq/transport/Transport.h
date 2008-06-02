@@ -21,6 +21,7 @@
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <activemq/util/Config.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/Response.h>
@@ -47,8 +48,8 @@ namespace transport{
      * provide object(s) that implement the CommandReader and CommandWriter
      * interfaces.
      */
-    class Transport : public cms::Startable,
-                      public cms::Closeable {
+    class AMQCPP_API Transport : public cms::Startable,
+                                 public cms::Closeable {
     public:
 
         virtual ~Transport() {}

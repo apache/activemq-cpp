@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CORE_DISPATCHDATA_H_
 
 #include <stdlib.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
     
@@ -33,7 +34,7 @@ namespace core {
     /**
      * Contains information about dispatching to a particular consumer.
      */
-    class DispatchData {
+    class AMQCPP_API DispatchData {
     private:
     
         connector::ConsumerInfo* consumer;

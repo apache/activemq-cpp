@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_PRIMITIVEMAPMARSHALLER_H_
 
 #include <cms/CMSException.h>
+#include <activemq/util/Config.h>
 #include <activemq/util/PrimitiveValueNode.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/util/PrimitiveList.h>
@@ -37,7 +38,7 @@ namespace marshal{
      * map to the Openwire Format's expectation of what the map looks like
      * on the wire.
      */
-    class PrimitiveMapMarshaller {
+    class AMQCPP_API PrimitiveMapMarshaller {
     public:
 
         PrimitiveMapMarshaller() {}

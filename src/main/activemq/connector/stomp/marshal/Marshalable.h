@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHAL_MARSHALABLE_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_MARSHAL_MARSHALABLE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/StompFrame.h>
 #include <activemq/connector/stomp/marshal/MarshalException.h>
 
@@ -26,7 +27,7 @@ namespace connector{
 namespace stomp{
 namespace marshal{
 
-    class Marshalable {
+    class AMQCPP_API Marshalable {
     public:
 
         virtual ~Marshalable(void) {}

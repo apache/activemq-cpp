@@ -20,6 +20,7 @@
 #include <activemq/cmsutil/DestinationResolver.h>
 #include <cms/Session.h>
 #include <decaf/util/Map.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -27,10 +28,9 @@ namespace cmsutil {
     /**
      * Resolves a CMS destination name to a <code>Destination</code>.
      */
-    class DynamicDestinationResolver : public DestinationResolver {
-    
+    class AMQCPP_API DynamicDestinationResolver : public DestinationResolver {
     private:
-        
+
         /**
          * Manages maps of names to topics and queues for a single session.
          */
@@ -40,61 +40,61 @@ namespace cmsutil {
             cms::Session* session;
             decaf::util::Map<std::string, cms::Topic*> topicMap;
             decaf::util::Map<std::string, cms::Queue*> queueMap;
-            
+
         public:
-            
+
             SessionResolver(cms::Session* session,
                 ResourceLifecycleManager* resourceLifecycleManager ) {
-                
+
                 this->session = session;
                 this->resourceLifecycleManager = resourceLifecycleManager;
             }
-            
+
             virtual ~SessionResolver() {}
-            
-            cms::Topic* getTopic(const std::string& topicName ) 
+
+            cms::Topic* getTopic(const std::string& topicName )
                 throw (cms::CMSException);
-            
-            cms::Queue* getQueue(const std::string& queueName ) 
+
+            cms::Queue* getQueue(const std::string& queueName )
                 throw (cms::CMSException);
         };
-        
+
         /**
          * Maps a given session to the resolver for that session.
          */
         decaf::util::Map< cms::Session*, SessionResolver*> sessionResolverMap;
-        
+
         /**
          * Manages lifecycle of any allocated topics/queues.
          */
         ResourceLifecycleManager* resourceLifecycleManager;
-        
+
     public:
-    
-        virtual ~DynamicDestinationResolver();        
-    
+
+        virtual ~DynamicDestinationResolver();
+
         virtual void init( ResourceLifecycleManager* mgr) {
-            
+
             // since we're changing the lifecycle manager, clear out references
             // to old resources.
             destroy();
-            
+
             this->resourceLifecycleManager = mgr;
         }
-        
+
         virtual void destroy();
-                
+
         /**
-         * Resolves the given name to a destination.  If 
-         * <code>pubSubDomain</code> is true, a topic will be returned, 
+         * Resolves the given name to a destination.  If
+         * <code>pubSubDomain</code> is true, a topic will be returned,
          * otherwise a queue will be returned.
-         * 
-         * @param session 
-         *      the session for which to retrieve resolve the 
+         *
+         * @param session
+         *      the session for which to retrieve resolve the
          *      destination.
-         * @param destName 
+         * @param destName
          *      the name to be resolved.
-         * @param pubSubDomain 
+         * @param pubSubDomain
          *      If true, the name will be resolved to a Topic,
          *      otherwise a Queue.
          * @return the resolved destination

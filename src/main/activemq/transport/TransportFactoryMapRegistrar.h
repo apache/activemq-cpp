@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAPREGISTRAR_H_
 
 #include <activemq/transport/TransportFactoryMap.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -27,7 +28,7 @@ namespace transport{
      * Registers the passed in factory into the factory map, this class
      * can manage the lifetime of the registered factory (default behaviour).
      */
-    class TransportFactoryMapRegistrar {
+    class AMQCPP_API TransportFactoryMapRegistrar {
     public:
 
         /**

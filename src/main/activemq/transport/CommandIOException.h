@@ -19,11 +19,12 @@
 #define _ACTIVEMQ_TRANSPORT_COMMANDIOEXCEPTION_H_
 
 #include <decaf/io/IOException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
 
-    class CommandIOException : public decaf::io::IOException{
+    class AMQCPP_API CommandIOException : public decaf::io::IOException{
     public:
 
         /**

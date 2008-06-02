@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CORE_ACTIVEMQMESSAGE_H_
 
 #include <cms/Message.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace core{
@@ -32,11 +33,10 @@ namespace core{
      * interface.  This is only done when the Session that this message
      * passes through is in Client Acknowledge mode.
      */
-    class ActiveMQMessage
-    {
+    class AMQCPP_API ActiveMQMessage {
     public:
 
-        virtual ~ActiveMQMessage(void) {}
+        virtual ~ActiveMQMessage() {}
 
         /**
          * Sets the Acknowledgement Handler that this Message will use

@@ -19,6 +19,7 @@
 
 #include <string>
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 
 namespace activemq{
@@ -28,7 +29,7 @@ namespace connector{
      * Registers the passed in factory into the factory map, this class
      * can manage the lifetime of the registered factory (default behaviour).
      */
-    class ConnectorFactoryMapRegistrar {
+    class AMQCPP_API ConnectorFactoryMapRegistrar {
     public:
 
         /**

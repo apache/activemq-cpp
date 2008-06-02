@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_CONNECTORRESOURCE_H_
 
 #include <cms/Closeable.h>
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorResourceListener.h>
 
 namespace activemq{
@@ -37,7 +38,7 @@ namespace connector{
      * calling back to its owner through a registered
      * <code>ConnectorResouceListener</code> from its owner.
      */
-    class ConnectorResource : public cms::Closeable {
+    class AMQCPP_API ConnectorResource : public cms::Closeable {
     public:
 
         virtual ~ConnectorResource() {}

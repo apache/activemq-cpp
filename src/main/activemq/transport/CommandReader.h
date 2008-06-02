@@ -21,6 +21,7 @@
 #include <decaf/io/Reader.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -29,7 +30,7 @@ namespace transport{
      * Interface for an object responsible for reading a command
      * from an input stream.
      */
-    class CommandReader : public decaf::io::Reader {
+    class AMQCPP_API CommandReader : public decaf::io::Reader {
     public:
 
         virtual ~CommandReader() {}

@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CONNECTOR_CONNECTOREXCEPTION_H_
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -25,7 +26,7 @@ namespace connector{
     /*
      * Signals that an Connector exception of some sort has occurred.
      */
-    class ConnectorException : public exceptions::ActiveMQException {
+    class AMQCPP_API ConnectorException : public exceptions::ActiveMQException {
     public:
 
         /**

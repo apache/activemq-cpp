@@ -58,8 +58,7 @@ namespace cmsutil {
      * @see ProducerCallback
      * @see MessageCreator
      */
-    class CmsTemplate : public CmsDestinationAccessor
-    {
+    class AMQCPP_API CmsTemplate : public CmsDestinationAccessor {
     public:
 
         /**

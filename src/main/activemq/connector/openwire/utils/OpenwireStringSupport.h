@@ -21,13 +21,14 @@
 #include <string>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace utils{
 
-    class OpenwireStringSupport {
+    class AMQCPP_API OpenwireStringSupport {
     protected:
 
         OpenwireStringSupport() {}

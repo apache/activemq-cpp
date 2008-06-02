@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/connector/ConnectorFactory.h>
 
@@ -32,7 +33,7 @@ namespace connector{
      * find the associated factory.  This class does not take ownership
      * of the stored factories, they must be deallocated somewhere.
      */
-    class ConnectorFactoryMap {
+    class AMQCPP_API ConnectorFactoryMap {
     public:
 
         /**

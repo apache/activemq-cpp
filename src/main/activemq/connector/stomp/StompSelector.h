@@ -20,6 +20,7 @@
 
 #include <cms/Message.h>
 #include <string>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -32,7 +33,7 @@ namespace stomp{
      * needed to determine if a given message is to be selected for
      * a given consumer's selector string.
      */
-    class StompSelector{
+    class AMQCPP_API StompSelector{
     public:
     
         static bool isSelected( const std::string& selector, cms::Message* msg );

@@ -22,6 +22,7 @@
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/IOException.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
 
 namespace activemq{
@@ -33,7 +34,7 @@ namespace wireformat{
      *
      * @version $Revision: 1.1 $
      */
-    class WireFormat {
+    class AMQCPP_API WireFormat {
     public:
 
         virtual ~WireFormat() {}

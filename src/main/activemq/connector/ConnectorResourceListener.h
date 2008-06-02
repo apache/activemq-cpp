@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_CONNECTORRESOURCELISTENER_H_
 
 #include <cms/CMSException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -28,7 +29,7 @@ namespace connector{
     /**
      * Listener of events from a connector resource.
      */
-    class ConnectorResourceListener {
+    class AMQCPP_API ConnectorResourceListener {
     public:
 
         virtual ~ConnectorResourceListener() {}

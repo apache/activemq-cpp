@@ -18,6 +18,7 @@
 #ifndef ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
 #define ACTIVEMQ_IO_LOGGINGOUTPUTSTREAM_H_
 
+#include <activemq/util/Config.h>
 #include <decaf/io/FilterOutputStream.h>
 #include <decaf/util/logging/LoggerDefines.h>
 
@@ -28,7 +29,7 @@ namespace io{
      * OutputStream filter that just logs the data being
      * written.
      */
-    class LoggingOutputStream : public decaf::io::FilterOutputStream {
+    class AMQCPP_API LoggingOutputStream : public decaf::io::FilterOutputStream {
     private:
 
         LOGDECAF_DECLARE(logger)

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 #define _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandListener.h>
@@ -43,8 +44,8 @@ namespace transport{
      * destructor.  Once this object has been closed, it cannot be
      * restarted.
      */
-    class IOTransport : public Transport,
-                        public decaf::lang::Runnable {
+    class AMQCPP_API IOTransport : public Transport,
+                                   public decaf::lang::Runnable {
 
         LOGDECAF_DECLARE( logger )
 

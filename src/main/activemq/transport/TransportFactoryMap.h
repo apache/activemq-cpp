@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_TRANSPORT_TRANSPORTFACTORYMAP_H_
 
 #include <activemq/transport/TransportFactory.h>
+#include <activemq/util/Config.h>
 
 #include <map>
 #include <vector>
@@ -32,7 +33,7 @@ namespace transport{
      * of the TransportFactory class which create a particular type of
      * Transport.
      */
-    class TransportFactoryMap{
+    class AMQCPP_API TransportFactoryMap{
     private:
 
         // Map of Factories

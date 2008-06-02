@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_BASECONNECTORRESOURCE_H_
 #define _ACTIVEMQ_CONNECTOR_BASECONNECTORRESOURCE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ConnectorResource.h>
 #include <activemq/connector/ConnectorResourceListener.h>
 
@@ -32,8 +33,7 @@ namespace connector{
      * Base Class that implements the common functionality of a
      * <code>ConnectorResource</code>.
      */
-    class BaseConnectorResource : public ConnectorResource {
-
+    class AMQCPP_API BaseConnectorResource : public ConnectorResource {
     private:
 
         /** The main Connector to call back when closed */

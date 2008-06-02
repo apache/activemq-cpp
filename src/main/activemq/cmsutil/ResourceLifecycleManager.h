@@ -23,6 +23,7 @@
 #include <cms/Destination.h>
 #include <cms/MessageProducer.h>
 #include <cms/MessageConsumer.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
 namespace cmsutil {
@@ -32,7 +33,7 @@ namespace cmsutil {
      * <code>destroy</code> will close and destroy all of the contained
      * resources in the appropriate manner.
      */
-    class ResourceLifecycleManager {
+    class AMQCPP_API ResourceLifecycleManager {
     private:
     
         std::vector<cms::Connection*> connections;

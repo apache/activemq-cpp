@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTBUILDER_H_
 #define _ACTIVEMQ_TRANSPORT_TRANSPORTBUILDER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -29,7 +30,7 @@ namespace transport{
      * This class controls the creation of transports based on configuration
      * options set in a properties object.
      */
-    class TransportBuilder {
+    class AMQCPP_API TransportBuilder {
     public:
 
         TransportBuilder() {}

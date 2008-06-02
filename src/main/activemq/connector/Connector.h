@@ -35,6 +35,7 @@
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/connector/SessionInfo.h>
 #include <activemq/connector/ConsumerInfo.h>
@@ -47,8 +48,8 @@ namespace activemq{
 namespace connector{
 
     // Forward declarations.
-    class Connector : public cms::Startable,
-                      public cms::Closeable {
+    class AMQCPP_API Connector : public cms::Startable,
+                                 public cms::Closeable {
     protected:
 
         // Flags the state we are in for connection to broker.

@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
 
 #include <decaf/lang/Exception.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace transport{
@@ -29,7 +30,7 @@ namespace transport{
     /**
      * A listener of asynchronous exceptions from a command transport object.
      */
-    class TransportExceptionListener{
+    class AMQCPP_API TransportExceptionListener{
     public:
 
         virtual ~TransportExceptionListener() {}

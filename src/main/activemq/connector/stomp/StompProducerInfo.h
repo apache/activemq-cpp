@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPPRODUCERINFO_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_STOMPPRODUCERINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/ProducerInfo.h>
 #include <cms/Destination.h>
 
@@ -25,7 +26,7 @@ namespace activemq{
 namespace connector{
 namespace stomp{
 
-    class StompProducerInfo : public ProducerInfo {
+    class AMQCPP_API StompProducerInfo : public ProducerInfo {
     private:
 
         // Are Message Ids Disabled

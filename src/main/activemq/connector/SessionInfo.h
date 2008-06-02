@@ -17,6 +17,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_SESSIONINFO_H_
 #define _ACTIVEMQ_CONNECTOR_SESSIONINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/BaseConnectorResource.h>
 #include <activemq/connector/TransactionInfo.h>
 #include <cms/Session.h>
@@ -24,7 +25,7 @@
 namespace activemq{
 namespace connector{
 
-    class SessionInfo : public BaseConnectorResource {
+    class AMQCPP_API SessionInfo : public BaseConnectorResource {
     public:
 
         SessionInfo() : BaseConnectorResource() {}
