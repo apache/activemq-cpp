@@ -1,4 +1,60 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2                                 ==
+=========================================================================
+
+This release has seen a large restructuring of the codebase to separate
+out to platform code into a new package called decaf.  We are now making
+use of the APR and APR-Util libraries for platform independence.  Also
+many new tests and bug fixes have made their way into this release.
+
+Sub-task
+
+    * [AMQCPP-164] - Math functions don't all exist on the windows platform
+
+Bug
+
+    * [AMQCPP-136] - Some IO Stream classes don't honor the stream interface contract
+    * [AMQCPP-155] - Problem changing from "AUTO_ACKNOWLEDGE" to "SESSION_TRANSACTED"
+    * [AMQCPP-157] - Interoperability issues between C++ and .NET
+    * [AMQCPP-158] - libtool release and version-info arguments need to be set correctly
+    * [AMQCPP-159] - autogen.sh fails to create configure
+    * [AMQCPP-161] - CMS does not support prefetchSize=0 correctly
+    * [AMQCPP-163] - Durable Subscriber test fails consistantly on linux and windows
+    * [AMQCPP-165] - Core Dump on reconnect/open queue
+    * [AMQCPP-166] - MapMessage does not send mapped fields
+    * [AMQCPP-167] - Client has memory leaks when used in an MFC application
+    * [AMQCPP-170] - SEGV in activemq::connector::openwire::OpenWireConnector::createProducer
+    * [AMQCPP-173] - C++ Client has memory leaks
+    * [AMQCPP-174] - Deadlock on transacted session
+    * [AMQCPP-178] - Core dump in ActiveMQException::buildMessage
+
+Improvement
+
+    * [AMQCPP-103] - Pull out generic libraries from activemq-cpp namespace
+    * [AMQCPP-138] - Streams classes do not honor their Interface Contracts
+    * [AMQCPP-151] - Add a static create method to CMS ConnectionFactory
+    * [AMQCPP-168] - Create a connection can block for up to 4 mins under Linux when TCP socket connect() times out
+    * [AMQCPP-172] - Add support for MAP_TYPE and LIST_TYPE to the PrimitiveMap implementation
+    * [AMQCPP-177] - Defines for static linking with APR on Windows
+
+New Feature
+
+    * [AMQCPP-148] - Add support for embedding environment variables in connection URI
+    * [AMQCPP-152] - Create a CmsTemplate class
+
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.3                               ==
+=========================================================================
+
+This release adds support for building the library and tests, etc on the
+Solaris platform using the Sun Compiler in Sun Studio 11.
+
+Improvement
+
+    * [AMQCPP-154] - Improve build compatibility (Solaris)
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.1.2                               ==
 =========================================================================
 
