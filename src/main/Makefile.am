@@ -380,6 +380,7 @@ h_sources = \
     decaf/util/Date.h \
     decaf/util/UUID.h \
     decaf/util/Iterator.h \
+    decaf/util/ListIterator.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
     decaf/util/List.h \
