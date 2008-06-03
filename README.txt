@@ -5,7 +5,6 @@ ActiveMQ CPP Library
 ActiveMQ CPP is a messaging library that can use multiple protocols to
 talk to a MOM (e.g. ActiveMQ).
 
-
 1 Dependencies
 --------------------------------------------------------------------------
 
@@ -49,8 +48,16 @@ on the CPPUnit wiki under
 http://cppunit.sourceforge.net/cppunit-wiki/BuildingCppUnit1 this covers
 both MSVC along with many other platforms and tool suites.
 
+1.3 APR and APR Util
+-------------------------------------------------------------------------
 
-1.3 GNU Build System (for building on Unix/Linux/OS X/Cygwin)
+The build requires the APR library and the APR-Util.  These libraries can
+be obtained from the APR site at: http://apr.apache.org/  See the
+documentation there on how to build these libraries for your platform.  On
+many Unix system the libraries can be installed using the systems package
+installer.
+
+1.4 GNU Build System (for building on Unix/Linux/OS X/Cygwin)
 --------------------------------------------------------------------------
 
 To Generate the ./configure script use to create the Makefiles, you need
