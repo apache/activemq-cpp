@@ -106,9 +106,9 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>tools</artifactId>
-          <version>1.4.2</version>
-          <scope>system</scope>
-          <systemPath>/opt/local/jdk1.5.0_11/lib/tools.jar</systemPath>
+          <version>5.0</version>
+           <scope>system</scope>
+           <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
     </profile>
@@ -146,8 +146,8 @@
   </build>
 
   <properties>
-    <activemq-version>4.1.1</activemq-version>
-    <activemq-core-dir>../activemq-4.1.1/activemq-core</activemq-core-dir>
+    <activemq-version>5.1.0</activemq-version>
+    <activemq-core-dir>../../apache-activemq-5.1.0-src/src/activemq-core/</activemq-core-dir>
   </properties>
 
 </project>
