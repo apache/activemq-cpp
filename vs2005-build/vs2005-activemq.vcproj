@@ -5689,6 +5689,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\util\ListIterator.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\util\Map.h"
 					>
 				</File>
