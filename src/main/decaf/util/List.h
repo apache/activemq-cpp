@@ -98,7 +98,7 @@ namespace util{
          * one.
          * @param source The source set.
          */
-        List( const List& source ){
+        List( const List& source ) : decaf::util::concurrent::Synchronizable() {
             copy( source );
         }
 
