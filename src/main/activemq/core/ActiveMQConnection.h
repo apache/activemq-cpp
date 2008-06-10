@@ -40,7 +40,6 @@ namespace activemq{
 
 namespace core{
 
-    class cms::Session;
     class ActiveMQSession;
     class ActiveMQConsumer;
 

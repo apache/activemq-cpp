@@ -19,6 +19,7 @@
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Double.h>
 #include <decaf/lang/Float.h>
+#include <string.h>
 
 using namespace std;
 using namespace decaf;

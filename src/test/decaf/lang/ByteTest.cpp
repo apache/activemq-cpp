@@ -29,7 +29,7 @@ void ByteTest::test() {
 
     Byte ubyte( 'b' );
 
-    CPPUNIT_ASSERT( ubyte < 'a' == false );
+    CPPUNIT_ASSERT( ( ubyte < 'a' ) == false );
     CPPUNIT_ASSERT( ubyte.compareTo( 'a' ) == 1 );
     CPPUNIT_ASSERT( ubyte.compareTo( 'b' ) == 0 );
     CPPUNIT_ASSERT( ubyte.compareTo( 'c' ) == -1 );

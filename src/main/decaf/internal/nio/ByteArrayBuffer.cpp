@@ -21,6 +21,7 @@
 #include "decaf/lang/Long.h"
 #include "decaf/lang/Float.h"
 #include "decaf/lang/Double.h"
+#include <string.h>
 
 using namespace std;
 using namespace decaf;

@@ -23,7 +23,7 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ExceptionTest::testMessage0(){
-      char* text = "This is a test";
+      const char* text = "This is a test";
       Exception ex( __FILE__, __LINE__, text );
       CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
 }
