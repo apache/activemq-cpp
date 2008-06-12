@@ -44,24 +44,24 @@ double Math::abs( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::acos( double value ) {
-    return std::acos( value );
-}
+//double Math::acos( double value ) {
+//    return std::acos( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::asin( double value ) {
-    return std::asin( value );
-}
+//double Math::asin( double value ) {
+//    return std::asin( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::atan( double value ) {
-    return std::atan( value );
-}
+//double Math::atan( double value ) {
+//    return std::atan( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::atan2( double x, double y ) {
-    return std::atan2( x, y );
-}
+//double Math::atan2( double x, double y ) {
+//    return std::atan2( x, y );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 double Math::random() {
@@ -70,98 +70,96 @@ double Math::random() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32
-double Math::cbrt( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( Double::isInfinite( value ) ) {
-        return value;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
-
-    return ::cbrt( value );
-}
-#endif
+//double Math::cbrt( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( Double::isInfinite( value ) ) {
+//        return value;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return ::cbrt( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::cos( double value ) {
-
-    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
-        return Double::NaN;
-    }
-
-    return std::cos( value );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double Math::cosh( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( Double::isInfinite( value ) ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( value == 0.0 ) {
-        return 1.0;
-    }
-
-    return std::cosh( value );
-}
+//double Math::cos( double value ) {
+//
+//    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+//        return Double::NaN;
+//    }
+//
+//    return std::cos( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::sin( double value ) {
-
-    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
-        return Double::NaN;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
-
-    return std::sin( value );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double Math::sinh( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( Double::isInfinite( value ) ) {
-        return value;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
-
-    return std::sinh( value );
-}
+//double Math::cosh( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( Double::isInfinite( value ) ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( value == 0.0 ) {
+//        return 1.0;
+//    }
+//
+//    return std::cosh( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::tan( double value ) {
-
-    if( Double::isNaN( value ) || value < -1.0 ) {
-        return Double::NaN;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
-
-    return std::tan( value );
-}
+//double Math::sin( double value ) {
+//
+//    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+//        return Double::NaN;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return std::sin( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::tanh( double value ) {
+//double Math::sinh( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( Double::isInfinite( value ) ) {
+//        return value;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return std::sinh( value );
+//}
 
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return 1.0;
-    } else if( value == Double::NEGATIVE_INFINITY ) {
-        return -1.0;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
+////////////////////////////////////////////////////////////////////////////////
+//double Math::tan( double value ) {
+//
+//    if( Double::isNaN( value ) || value < -1.0 ) {
+//        return Double::NaN;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return std::tan( value );
+//}
 
-    return std::tanh( value );
-}
+////////////////////////////////////////////////////////////////////////////////
+//double Math::tanh( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return 1.0;
+//    } else if( value == Double::NEGATIVE_INFINITY ) {
+//        return -1.0;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return std::tanh( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 double Math::sqrt( double value ) {
@@ -178,50 +176,46 @@ double Math::sqrt( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32 
-double Math::rint( double value ) {
-
-    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
-        return value;
-    } else if( value == 0.0 || value == -0.0 ) {
-        return value;
-    }
-
-    return ::rint( value );
-}
-#endif
+//double Math::rint( double value ) {
+//
+//    if( Double::isNaN( value ) || Double::isInfinite( value ) ) {
+//        return value;
+//    } else if( value == 0.0 || value == -0.0 ) {
+//        return value;
+//    }
+//
+//    return ::rint( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::exp( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( value == Double::NEGATIVE_INFINITY ) {
-        return 0.0;
-    }
-
-    return std::exp( value );
-}
+//double Math::exp( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( value == Double::NEGATIVE_INFINITY ) {
+//        return 0.0;
+//    }
+//
+//    return std::exp( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32 
-double Math::expm1( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( value == Double::NEGATIVE_INFINITY ) {
-        return -1.0;
-    } else if( !( value > 0 || value < 0 ) ) {
-        return value;
-    }
-
-    return ::expm1( value );
-}
-#endif
+//double Math::expm1( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( value == Double::NEGATIVE_INFINITY ) {
+//        return -1.0;
+//    } else if( !( value > 0 || value < 0 ) ) {
+//        return value;
+//    }
+//
+//    return ::expm1( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 float Math::min( float a, float b ) {
@@ -317,50 +311,48 @@ double Math::max( double a, double b ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::log( double value ) {
-
-    if( Double::isNaN( value ) || value < 0.0 ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return Double::NEGATIVE_INFINITY;
-    }
-
-    return std::log( value );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double Math::log10( double value ) {
-
-    if( Double::isNaN( value ) || value < 0 ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return Double::NEGATIVE_INFINITY;
-    }
-
-    return std::log10( value );
-}
+//double Math::log( double value ) {
+//
+//    if( Double::isNaN( value ) || value < 0.0 ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return Double::NEGATIVE_INFINITY;
+//    }
+//
+//    return std::log( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32
-double Math::log1p( double value ) {
+//double Math::log10( double value ) {
+//
+//    if( Double::isNaN( value ) || value < 0 ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return Double::NEGATIVE_INFINITY;
+//    }
+//
+//    return std::log10( value );
+//}
 
-    if( Double::isNaN( value ) || value < -1.0 ) {
-        return Double::NaN;
-    } else if( value == Double::POSITIVE_INFINITY ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( value == -1.0 ) {
-        return Double::NEGATIVE_INFINITY;
-    } else if( !( value < 0 || value > 0 ) ) {
-        return value;
-    }
-
-    return ::log1p( value );
-}
-#endif
+////////////////////////////////////////////////////////////////////////////////
+//double Math::log1p( double value ) {
+//
+//    if( Double::isNaN( value ) || value < -1.0 ) {
+//        return Double::NaN;
+//    } else if( value == Double::POSITIVE_INFINITY ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( value == -1.0 ) {
+//        return Double::NEGATIVE_INFINITY;
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return value;
+//    }
+//
+//    return ::log1p( value );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 double Math::ceil( double value ) {
@@ -410,19 +402,17 @@ long long Math::round( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32
-double Math::IEEEremainder( double f1, double f2 ) {
-
-    if( Double::isNaN( f1 ) || Double::isNaN( f2 ) ||
-        Double::isInfinite( f1 ) || !( f2 < 0 || f2 > 0 ) ) {
-        return Double::NaN;
-    } else if( Double::isInfinite( f2 ) ) {
-        return f1;
-    }
-
-    return ::remainder( f1, f2 );
-}
-#endif
+//double Math::IEEEremainder( double f1, double f2 ) {
+//
+//    if( Double::isNaN( f1 ) || Double::isNaN( f2 ) ||
+//        Double::isInfinite( f1 ) || !( f2 < 0 || f2 > 0 ) ) {
+//        return Double::NaN;
+//    } else if( Double::isInfinite( f2 ) ) {
+//        return f1;
+//    }
+//
+//    return ::remainder( f1, f2 );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 float Math::signum( float value ) {
@@ -453,16 +443,16 @@ double Math::signum( double value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double Math::hypot( double x, double y ) {
-
-    if( Double::isInfinite( x ) || Double::isInfinite( y ) ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( Double::isNaN( x ) || Double::isNaN( y ) ) {
-        return Double::NaN;
-    }
-
-    return std::sqrt( ( x * x ) + ( y * y ) );
-}
+//double Math::hypot( double x, double y ) {
+//
+//    if( Double::isInfinite( x ) || Double::isInfinite( y ) ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( Double::isNaN( x ) || Double::isNaN( y ) ) {
+//        return Double::NaN;
+//    }
+//
+//    return std::sqrt( ( x * x ) + ( y * y ) );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 double Math::pow( double base, double exp ) {
@@ -479,39 +469,35 @@ double Math::pow( double base, double exp ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32 
-float Math::ulp( float value ) {
-
-    if( Float::isNaN( value ) ) {
-        return Float::NaN;
-    } else if( Float::isInfinite( value ) ) {
-        return Float::POSITIVE_INFINITY;
-    } else if( value == Float::MAX_VALUE || value == -Float::MAX_VALUE ) {
-        return (float)pow( 2, 104 );
-    } else if( !( value < 0 || value > 0 ) ) {
-        return Float::MIN_VALUE;
-    }
-
-    value = abs( value );
-    return ::nextafterf( value, Float::MAX_VALUE ) - value;
-}
-#endif
+//float Math::ulp( float value ) {
+//
+//    if( Float::isNaN( value ) ) {
+//        return Float::NaN;
+//    } else if( Float::isInfinite( value ) ) {
+//        return Float::POSITIVE_INFINITY;
+//    } else if( value == Float::MAX_VALUE || value == -Float::MAX_VALUE ) {
+//        return (float)pow( 2, 104 );
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return Float::MIN_VALUE;
+//    }
+//
+//    value = abs( value );
+//    return ::nextafterf( value, Float::MAX_VALUE ) - value;
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _WIN32
-double Math::ulp( double value ) {
-
-    if( Double::isNaN( value ) ) {
-        return Double::NaN;
-    } else if( Double::isInfinite( value ) ) {
-        return Double::POSITIVE_INFINITY;
-    } else if( value == Double::MAX_VALUE || value == -Double::MAX_VALUE ) {
-        return pow( 2, 971 );
-    } else if( !( value < 0 || value > 0 ) ) {
-        return Double::MIN_VALUE;
-    }
-
-    value = abs( value );
-    return ::nextafter( value, Double::MAX_VALUE ) - value;
-}
-#endif
+//double Math::ulp( double value ) {
+//
+//    if( Double::isNaN( value ) ) {
+//        return Double::NaN;
+//    } else if( Double::isInfinite( value ) ) {
+//        return Double::POSITIVE_INFINITY;
+//    } else if( value == Double::MAX_VALUE || value == -Double::MAX_VALUE ) {
+//        return pow( 2, 971 );
+//    } else if( !( value < 0 || value > 0 ) ) {
+//        return Double::MIN_VALUE;
+//    }
+//
+//    value = abs( value );
+//    return ::nextafter( value, Double::MAX_VALUE ) - value;
+//}
