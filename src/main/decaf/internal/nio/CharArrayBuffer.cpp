@@ -16,6 +16,7 @@
  */
 
 #include "CharArrayBuffer.h"
+#include <string.h>
 
 using namespace decaf;
 using namespace decaf::lang;

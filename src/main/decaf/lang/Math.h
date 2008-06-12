@@ -114,7 +114,7 @@ namespace lang{
          * @param value - the value to return the arc cosine of.
          * @returns arc cosine of value in radians.
          */
-        static double acos( double value );
+        //static double acos( double value );
 
         /**
          * Returns the arc sine of an angle, in the range of -pi/2 through pi/2.
@@ -128,7 +128,7 @@ namespace lang{
          * @param value - the value to return the arc cosine of.
          * @returns arc cosine of value in radians.
          */
-        static double asin( double value );
+        //static double asin( double value );
 
         /**
          * Returns the arc tangent of an angle, in the range of -pi/2 through pi/2.
@@ -141,7 +141,7 @@ namespace lang{
          * @param value - the value to return the arc cosine of.
          * @returns arc tangent of value in radians.
          */
-        static double atan( double value );
+        //static double atan( double value );
 
         /**
          * Converts rectangular coordinates (x, y) to polar (r, theta). This method
@@ -185,7 +185,7 @@ namespace lang{
          * @returns the theta component of the point (r, theta) in polar coordinates
          * that corresponds to the point (x, y) in Cartesian coordinates.
          */
-        static double atan2( double x, double y );
+        //static double atan2( double x, double y );
 
         /**
          * Returns the cube root of a double value. For positive finite x,
@@ -201,9 +201,7 @@ namespace lang{
          * @param value - the double to compute the cube root of
          * @returns the cube root of value
          */
-        #ifndef _WIN32
-        static double cbrt( double value );
-        #endif
+        //static double cbrt( double value );
 
         /**
          * Returns the trigonometric cosine of an angle. Special cases:
@@ -213,7 +211,7 @@ namespace lang{
          * @param value - an value in radians
          * @returns the cosine of the argument.
          */
-        static double cos( double value );
+        //static double cos( double value );
 
         /**
          * Returns the hyperbolic cosine of a double value. The hyperbolic cosine
@@ -227,7 +225,7 @@ namespace lang{
          * @param value - the number whose hyperbolic cosine is to be found
          * @return the hyperbolic cosine of value
          */
-        static double cosh( double value );
+        //static double cosh( double value );
 
         /**
          * Returns the trigonometric sine of an angle. Special case:
@@ -239,7 +237,7 @@ namespace lang{
          * @param value - the number whose sin is to be found
          * @return the sine of value
          */
-        static double sin( double value );
+        //static double sin( double value );
 
         /**
          * Returns the hyperbolic sine of a double value. The hyperbolic sine of x
@@ -255,7 +253,7 @@ namespace lang{
          * @param value - the number whose hyperbolic sin is to be found
          * @return the hyperbolic sine of value
          */
-        static double sinh( double value );
+        //static double sinh( double value );
 
         /**
          * Returns the trigonometric tangent of an angle. Special cases:
@@ -267,7 +265,7 @@ namespace lang{
          * @param value - the number whose tangent is to be found
          * @return the tangent of value
          */
-        static double tan( double value );
+        //static double tan( double value );
 
         /**
          * Returns the hyperbolic tangent of a double value. The hyperbolic
@@ -284,7 +282,7 @@ namespace lang{
          * @param value - the number whose hyperbolic tangent is to be found
          * @return the hyperbolic cosine of value
          */
-        static double tanh( double value );
+        //static double tanh( double value );
 
         /**
          * Returns the correctly rounded positive square root of a double value.
@@ -334,9 +332,7 @@ namespace lang{
          * @param value - the value to round to the nearest integer
          * @returns the rounded value
          */
-        #ifndef _WIN32
-        static double rint( double value );
-        #endif
+        //static double rint( double value );
 
         /**
          * Returns the smaller of two <code>short</code> values. That is,
@@ -496,7 +492,7 @@ namespace lang{
          * @param value the value to compute the natural log of.
          * @returns the natural log of value.
          */
-        static double log( double value );
+        //static double log( double value );
 
         /**
          * Returns the base 10 logarithm of a double value. Special cases:
@@ -511,7 +507,7 @@ namespace lang{
          * @param value - the value to operate on
          * @returns the long base 10 of value
          */
-        static double log10( double value );
+        //static double log10( double value );
 
         /**
          * Returns the natural logarithm of the sum of the argument and 1. Note that
@@ -530,9 +526,7 @@ namespace lang{
          * @param value - the value to operate on
          * @returns the the value ln(x + 1), the natural log of x + 1
          */
-        #ifndef _WIN32
-        static double log1p( double value );
-        #endif
+        //static double log1p( double value );
 
         /**
          * Returns the smallest (closest to negative infinity) double value that is
@@ -628,9 +622,7 @@ namespace lang{
          * @param f2 - the divisor
          * @return the IEEE remainder of value
          */
-        #ifndef _WIN32
-        static double IEEEremainder( double f1, double f2 );
-        #endif
+        //static double IEEEremainder( double f1, double f2 );
 
         /**
          * Returns a double value with a positive sign, greater than or equal to 0.0
@@ -661,7 +653,7 @@ namespace lang{
          * @param value - the exponent to raise e to
          * @returns the value e^a, where e is the base of the natural logarithms.
          */
-        static double exp( double value );
+        //static double exp( double value );
 
         /**
          * Returns e^x - 1. Note that for values of x near 0, the exact sum of
@@ -677,9 +669,7 @@ namespace lang{
          * @param the value to raise e^x - 1
          * @returns the value ex - 1.
          */
-        #ifndef _WIN32
-        static double expm1( double value );
-        #endif
+        //static double expm1( double value );
 
         /**
          * Returns sqrt(x^2 + y^2) without intermediate overflow or underflow.
@@ -693,7 +683,7 @@ namespace lang{
          * @param y - another argument
          * @returns the sqrt(x^2 + y^2) without intermediate overflow or underflow
          */
-        static double hypot( double x, double y );
+        //static double hypot( double x, double y );
 
         /**
          * Returns the signum function of the argument; zero if the argument is zero,
@@ -757,9 +747,7 @@ namespace lang{
          * @param value - the floating-point value whose ulp is to be returned
          * @returns the size of an ulp of the argument
          */
-        #ifndef _WIN32
-        static float ulp( float value );
-        #endif
+        //static float ulp( float value );
 
         /**
          * Returns the size of an ulp of the argument. An ulp of a double value is
@@ -777,9 +765,8 @@ namespace lang{
          * @param value - the floating-point value whose ulp is to be returned
          * @returns the size of an ulp of the argument
          */
-        #ifndef _WIN32
-        static double ulp( double value );
-        #endif
+        //static double ulp( double value );
+
     };
 
 }}

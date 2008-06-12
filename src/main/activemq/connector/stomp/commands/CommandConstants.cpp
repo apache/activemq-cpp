@@ -17,6 +17,7 @@
 
 #include "CommandConstants.h"
 #include <stdio.h>
+#include <string.h>
 
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>

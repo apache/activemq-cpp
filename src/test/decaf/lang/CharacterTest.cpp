@@ -29,7 +29,7 @@ void CharacterTest::test() {
 
     Character character( 'b' );
 
-    CPPUNIT_ASSERT( character < 'a' == false );
+    CPPUNIT_ASSERT( ( character < 'a' ) == false );
     CPPUNIT_ASSERT( character.compareTo( 'a' ) == 1 );
     CPPUNIT_ASSERT( character.compareTo( 'b' ) == 0 );
     CPPUNIT_ASSERT( character.compareTo( 'c' ) == -1 );

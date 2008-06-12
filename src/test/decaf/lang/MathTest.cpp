@@ -68,70 +68,68 @@ void MathTest::test_absJ() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_acosD() {
-    // Test for method double decaf.lang.Math::acos(double)
-    double r = Math::cos(Math::acos(ADJ / HYP));
-    long long lr = Double::doubleToLongBits(r);
-    long long t = Double::doubleToLongBits(ADJ / HYP);
-    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc cosine", lr == t || (lr + 1) == t
-            || (lr - 1) == t);
-}
+//void MathTest::test_acosD() {
+//    // Test for method double decaf.lang.Math::acos(double)
+//    double r = Math::cos(Math::acos(ADJ / HYP));
+//    long long lr = Double::doubleToLongBits(r);
+//    long long t = Double::doubleToLongBits(ADJ / HYP);
+//    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc cosine", lr == t || (lr + 1) == t
+//            || (lr - 1) == t);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_asinD() {
-    // Test for method double decaf.lang.Math::asin(double)
-    double r = Math::sin(Math::asin(OPP / HYP));
-    long long lr = Double::doubleToLongBits(r);
-    long long t = Double::doubleToLongBits(OPP / HYP);
-    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc sine", lr == t || (lr + 1) == t
-            || (lr - 1) == t);
-}
+//void MathTest::test_asinD() {
+//    // Test for method double decaf.lang.Math::asin(double)
+//    double r = Math::sin(Math::asin(OPP / HYP));
+//    long long lr = Double::doubleToLongBits(r);
+//    long long t = Double::doubleToLongBits(OPP / HYP);
+//    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc sine", lr == t || (lr + 1) == t
+//            || (lr - 1) == t);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_atanD() {
-    // Test for method double decaf.lang.Math::atan(double)
-    double answer = Math::tan(Math::atan(1.0));
-    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc tangent: ",
-            answer <= 1.0 && answer >= 9.9999999999999983E-1);
-}
+//void MathTest::test_atanD() {
+//    // Test for method double decaf.lang.Math::atan(double)
+//    double answer = Math::tan(Math::atan(1.0));
+//    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc tangent: ",
+//            answer <= 1.0 && answer >= 9.9999999999999983E-1);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_atan2DD() {
-    // Test for method double decaf.lang.Math::atan2(double, double)
-    double answer = Math::atan(Math::tan(1.0));
-    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc tangent: ",
-            answer <= 1.0 && answer >= 9.9999999999999983E-1);
-}
+//void MathTest::test_atan2DD() {
+//    // Test for method double decaf.lang.Math::atan2(double, double)
+//    double answer = Math::atan(Math::tan(1.0));
+//    CPPUNIT_ASSERT_MESSAGE("Returned incorrect arc tangent: ",
+//            answer <= 1.0 && answer >= 9.9999999999999983E-1);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_cbrt_D() {
-    //Test for special situations
-#ifndef _WIN32
-    CPPUNIT_ASSERT_MESSAGE("Should return Double::NaN",
-            Double::isNaN(Math::cbrt(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::POSITIVE_INFINITY",
-            Math::cbrt(Double::POSITIVE_INFINITY), Double::POSITIVE_INFINITY );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::NEGATIVE_INFINITY",
-            Math::cbrt(Double::NEGATIVE_INFINITY), Double::NEGATIVE_INFINITY);
-    CPPUNIT_ASSERT_EQUAL(
-            Double::doubleToLongBits(0.0),
-            Double::doubleToLongBits(Math::cbrt(0.0)));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(+0.0),
-                          Double::doubleToLongBits(Math::cbrt(+0.0)));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(-0.0),
-                          Double::doubleToLongBits(Math::cbrt(-0.0)));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 3.0", Math::cbrt(27.0), 3.0);
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.643803094122362E102",
-            5.643803094122362E102, Math::cbrt(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.01", 0.01, Math::cbrt(0.000001));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -3.0", -3.0, Math::cbrt(-27.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.7031839360032603E-108",
-            1.7031839360032603E-108, Math::cbrt(Double::MIN_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -0.01", -0.01, Math::cbrt(-0.000001));
-#endif
-}
+//void MathTest::test_cbrt_D() {
+//    //Test for special situations
+//    CPPUNIT_ASSERT_MESSAGE("Should return Double::NaN",
+//            Double::isNaN(Math::cbrt(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::POSITIVE_INFINITY",
+//            Math::cbrt(Double::POSITIVE_INFINITY), Double::POSITIVE_INFINITY );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::NEGATIVE_INFINITY",
+//            Math::cbrt(Double::NEGATIVE_INFINITY), Double::NEGATIVE_INFINITY);
+//    CPPUNIT_ASSERT_EQUAL(
+//            Double::doubleToLongBits(0.0),
+//            Double::doubleToLongBits(Math::cbrt(0.0)));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(+0.0),
+//                          Double::doubleToLongBits(Math::cbrt(+0.0)));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(-0.0),
+//                          Double::doubleToLongBits(Math::cbrt(-0.0)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 3.0", Math::cbrt(27.0), 3.0);
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.643803094122362E102",
+//            5.643803094122362E102, Math::cbrt(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.01", 0.01, Math::cbrt(0.000001));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -3.0", -3.0, Math::cbrt(-27.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.7031839360032603E-108",
+//            1.7031839360032603E-108, Math::cbrt(Double::MIN_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -0.01", -0.01, Math::cbrt(-0.000001));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_ceilD() {
@@ -143,80 +141,78 @@ void MathTest::test_ceilD() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_cosD() {
-    // Test for method double decaf.lang.Math::cos(double)
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer", 1.0, Math::cos(0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer", 0.5403023058681398, Math::cos(1));
-}
+//void MathTest::test_cosD() {
+//    // Test for method double decaf.lang.Math::cos(double)
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer", 1.0, Math::cos(0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer", 0.5403023058681398, Math::cos(1));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_cosh_D() {
-    // Test for special situations
-    CPPUNIT_ASSERT(Double::isNaN(Math::cosh(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::cosh(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::cosh(Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::cosh(+0.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::cosh(-0.0));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::cosh(1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::cosh(-1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000005",
-            1.0000000000005, Math::cosh(0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000005",
-            1.0000000000005, Math::cosh(-0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.212214351945598",
-            5.212214351945598, Math::cosh(2.33482));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::cosh(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0",
-            1.0, Math::cosh(Double::MIN_VALUE));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_expD() {
-    // Test for method double decaf.lang.Math::exp(double)
-    CPPUNIT_ASSERT_MESSAGE("Incorrect answer returned for simple power",
-            Math::abs(Math::exp(4.0) -
-            Math::E * Math::E * Math::E * Math::E) < 0.1 );
-    CPPUNIT_ASSERT_MESSAGE("Incorrect answer returned for larger power",
-            Math::log( Math::abs( Math::exp(5.5) ) - 5.5) < 10.0 );
-}
+//void MathTest::test_cosh_D() {
+//    // Test for special situations
+//    CPPUNIT_ASSERT(Double::isNaN(Math::cosh(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::cosh(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::cosh(Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::cosh(+0.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::cosh(-0.0));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::cosh(1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::cosh(-1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000005",
+//            1.0000000000005, Math::cosh(0.000001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000005",
+//            1.0000000000005, Math::cosh(-0.000001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.212214351945598",
+//            5.212214351945598, Math::cosh(2.33482));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::cosh(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0",
+//            1.0, Math::cosh(Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_expm1_D() {
+//void MathTest::test_expD() {
+//    // Test for method double decaf.lang.Math::exp(double)
+//    CPPUNIT_ASSERT_MESSAGE("Incorrect answer returned for simple power",
+//            Math::abs(Math::exp(4.0) -
+//            Math::E * Math::E * Math::E * Math::E) < 0.1 );
+//    CPPUNIT_ASSERT_MESSAGE("Incorrect answer returned for larger power",
+//            Math::log( Math::abs( Math::exp(5.5) ) - 5.5) < 10.0 );
+//}
 
-#ifndef _WIN32
-    // Test for special cases
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::expm1(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::expm1(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0,
-            Math::expm1(Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(0.0),
-                          Double::doubleToLongBits(Math::expm1(0.0)) );
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
-            Double::doubleToLongBits(Math::expm1(+0.0)));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
-            Double::doubleToLongBits(Math::expm1(-0.0)));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -9.999950000166666E-6",
-            -9.999950000166666E-6, Math::expm1(-0.00001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0145103074469635E60",
-            1.0145103074469635E60, Math::expm1(138.16951162));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY,
-            Math::expm1(123456789123456789123456789.4521584223));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::expm1(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return MIN_VALUE", Double::MIN_VALUE,
-            Math::expm1(Double::MIN_VALUE));
-#endif
-}
+////////////////////////////////////////////////////////////////////////////////
+//void MathTest::test_expm1_D() {
+//
+//    // Test for special cases
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::expm1(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::expm1(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0,
+//            Math::expm1(Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(0.0),
+//                          Double::doubleToLongBits(Math::expm1(0.0)) );
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
+//            Double::doubleToLongBits(Math::expm1(+0.0)));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
+//            Double::doubleToLongBits(Math::expm1(-0.0)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -9.999950000166666E-6",
+//            -9.999950000166666E-6, Math::expm1(-0.00001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0145103074469635E60",
+//            1.0145103074469635E60, Math::expm1(138.16951162));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY,
+//            Math::expm1(123456789123456789123456789.4521584223));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::expm1(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return MIN_VALUE", Double::MIN_VALUE,
+//            Math::expm1(Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_floorD() {
@@ -228,114 +224,109 @@ void MathTest::test_floorD() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_hypot_DD() {
-    // Test for special cases
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::hypot(Double::POSITIVE_INFINITY,
-                    1.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::hypot(Double::NEGATIVE_INFINITY,
-                    123.324));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY,
-            Math::hypot(-758.2587,Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY,
-            Math::hypot(5687.21, Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::hypot(Double::POSITIVE_INFINITY,
-                    Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::hypot(Double::NEGATIVE_INFINITY,
-                    Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_MESSAGE("Should be NaN", Double::isNaN(Math::hypot(Double::NaN,
-            2342301.89843)));
-    CPPUNIT_ASSERT_MESSAGE("Should be NaN", Double::isNaN(Math::hypot(-345.2680,
-            Double::NaN)));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 2396424.905416697",
-            2396424.905416697, Math::hypot(12322.12, -2396393.2258));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 138.16958070558556", 138.16958070558556,
-            Math::hypot(-138.16951162, 0.13817035864));
-#ifndef _WIN32
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.7976931348623157E308",
-            1.7976931348623157E308, Math::hypot(Double::MAX_VALUE, 211370.35));
-#endif
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5413.7185", 5413.7185, Math::hypot(
-            -5413.7185, Double::MIN_VALUE));
-}
+//void MathTest::test_hypot_DD() {
+//    // Test for special cases
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::hypot(Double::POSITIVE_INFINITY,
+//                    1.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::hypot(Double::NEGATIVE_INFINITY,
+//                    123.324));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY,
+//            Math::hypot(-758.2587,Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY,
+//            Math::hypot(5687.21, Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::hypot(Double::POSITIVE_INFINITY,
+//                    Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::hypot(Double::NEGATIVE_INFINITY,
+//                    Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_MESSAGE("Should be NaN", Double::isNaN(Math::hypot(Double::NaN,
+//            2342301.89843)));
+//    CPPUNIT_ASSERT_MESSAGE("Should be NaN", Double::isNaN(Math::hypot(-345.2680,
+//            Double::NaN)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 2396424.905416697",
+//            2396424.905416697, Math::hypot(12322.12, -2396393.2258));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 138.16958070558556", 138.16958070558556,
+//            Math::hypot(-138.16951162, 0.13817035864));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.7976931348623157E308",
+//            1.7976931348623157E308, Math::hypot(Double::MAX_VALUE, 211370.35));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5413.7185", 5413.7185, Math::hypot(
+//            -5413.7185, Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_IEEEremainderDD() {
-#ifndef _WIN32
-    // Test for method double decaf.lang.Math::IEEEremainder(double, double)
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect remainder returned",
-            0.0, Math::IEEEremainder(1.0, 1.0));
-    CPPUNIT_ASSERT_MESSAGE("Incorrect remainder returned",
-            Math::IEEEremainder(1.32,89.765) >= 1.4705063220631647E-2 ||
-            Math::IEEEremainder(1.32, 89.765) >= 1.4705063220631649E-2);
-#endif
-}
+//void MathTest::test_IEEEremainderDD() {
+//    // Test for method double decaf.lang.Math::IEEEremainder(double, double)
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect remainder returned",
+//            0.0, Math::IEEEremainder(1.0, 1.0));
+//    CPPUNIT_ASSERT_MESSAGE("Incorrect remainder returned",
+//            Math::IEEEremainder(1.32,89.765) >= 1.4705063220631647E-2 ||
+//            Math::IEEEremainder(1.32, 89.765) >= 1.4705063220631649E-2);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_logD() {
-    // Test for method double decaf.lang.Math::log(double)
-    for( double d = 10; d >= -10; d -= 0.5 ) {
-        double answer = Math::log( Math::exp(d) );
-
-        CPPUNIT_ASSERT_MESSAGE(
-                "Answer does not equal expected answer for d",
-                Math::abs( answer - d ) <= Math::abs(d * 0.00000001) );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_log10_D() {
-    // Test for special cases
-    CPPUNIT_ASSERT(Double::isNaN(Math::log10(Double::NaN)));
-    CPPUNIT_ASSERT(Double::isNaN(Math::log10(-2541.05745687234187532)));
-    CPPUNIT_ASSERT(Double::isNaN(Math::log10(-0.1)));
-    CPPUNIT_ASSERT_EQUAL(Double::POSITIVE_INFINITY, Math::log10(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(0.0));
-    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(+0.0));
-    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(-0.0));
-
-    CPPUNIT_ASSERT_EQUAL(3.0, Math::log10(1000.0));
-    CPPUNIT_ASSERT_EQUAL(14.0, Math::log10(Math::pow(10, 14)));
-    
-    CPPUNIT_ASSERT_EQUAL(3738956126954LL, (long long)(Math::log10(5482.2158)*1000000000000.0));
-    CPPUNIT_ASSERT_EQUAL(14661551142893LL, (long long)(Math::log10(458723662312872.125782332587)*1000000000000.0));
-    CPPUNIT_ASSERT_EQUAL(-908382862219LL, (long long)(Math::log10(0.12348583358871)*1000000000000.0));
-    CPPUNIT_ASSERT_EQUAL(308254715559916LL, (long long)(Math::log10(Double::MAX_VALUE)*1000000000000.0));
-}
+//void MathTest::test_logD() {
+//    // Test for method double decaf.lang.Math::log(double)
+//    for( double d = 10; d >= -10; d -= 0.5 ) {
+//        double answer = Math::log( Math::exp(d) );
+//
+//        CPPUNIT_ASSERT_MESSAGE(
+//                "Answer does not equal expected answer for d",
+//                Math::abs( answer - d ) <= Math::abs(d * 0.00000001) );
+//    }
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_log1p_D() {
-#ifndef _WIN32
-    // Test for special cases
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::log1p(Double::NaN)));
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::log1p(-32.0482175)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::log1p(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(0.0),
-                          Double::doubleToLongBits(Math::log1p(0.0)));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(+0.0),
-                          Double::doubleToLongBits(Math::log1p(+0.0)));
-    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(-0.0),
-                          Double::doubleToLongBits(Math::log1p(-0.0)));
+//void MathTest::test_log10_D() {
+//    // Test for special cases
+//    CPPUNIT_ASSERT(Double::isNaN(Math::log10(Double::NaN)));
+//    CPPUNIT_ASSERT(Double::isNaN(Math::log10(-2541.05745687234187532)));
+//    CPPUNIT_ASSERT(Double::isNaN(Math::log10(-0.1)));
+//    CPPUNIT_ASSERT_EQUAL(Double::POSITIVE_INFINITY, Math::log10(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(0.0));
+//    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(+0.0));
+//    CPPUNIT_ASSERT_EQUAL(Double::NEGATIVE_INFINITY, Math::log10(-0.0));
+//
+//    CPPUNIT_ASSERT_EQUAL(3.0, Math::log10(1000.0));
+//    CPPUNIT_ASSERT_EQUAL(14.0, Math::log10(Math::pow(10, 14)));
+//
+//    CPPUNIT_ASSERT_EQUAL(3738956126954LL, (long long)(Math::log10(5482.2158)*1000000000000.0));
+//    CPPUNIT_ASSERT_EQUAL(14661551142893LL, (long long)(Math::log10(458723662312872.125782332587)*1000000000000.0));
+//    CPPUNIT_ASSERT_EQUAL(-908382862219LL, (long long)(Math::log10(0.12348583358871)*1000000000000.0));
+//    CPPUNIT_ASSERT_EQUAL(308254715559916LL, (long long)(Math::log10(Double::MAX_VALUE)*1000000000000.0));
+//}
 
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -0.2941782295312541", -0.2941782295312541,
-            Math::log1p(-0.254856327));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 7.368050685564151", 7.368050685564151,
-            Math::log1p(1583.542));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.4633708685409921", 0.4633708685409921,
-            Math::log1p(0.5894227));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 709.782712893384", 709.782712893384,
-            Math::log1p(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::MIN_VALUE", Double::MIN_VALUE,
-            Math::log1p(Double::MIN_VALUE));
-#endif
-}
+////////////////////////////////////////////////////////////////////////////////
+//void MathTest::test_log1p_D() {
+//
+//	// Test for special cases
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::log1p(Double::NaN)));
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::log1p(-32.0482175)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::log1p(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(0.0),
+//                          Double::doubleToLongBits(Math::log1p(0.0)));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(+0.0),
+//                          Double::doubleToLongBits(Math::log1p(+0.0)));
+//    CPPUNIT_ASSERT_EQUAL( Double::doubleToLongBits(-0.0),
+//                          Double::doubleToLongBits(Math::log1p(-0.0)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -0.2941782295312541", -0.2941782295312541,
+//            Math::log1p(-0.254856327));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 7.368050685564151", 7.368050685564151,
+//            Math::log1p(1583.542));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.4633708685409921", 0.4633708685409921,
+//            Math::log1p(0.5894227));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 709.782712893384", 709.782712893384,
+//            Math::log1p(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return Double::MIN_VALUE", Double::MIN_VALUE,
+//            Math::log1p(Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_maxDD() {
@@ -436,19 +427,17 @@ void MathTest::test_powDD() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_rintD() {
-#ifndef _WIN32
-    // Test for method double decaf.lang.Math::rint(double)
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to round properly - up to odd",
-            3.0, Math::rint(2.9));
-    CPPUNIT_ASSERT_MESSAGE("Failed to round properly - NaN",
-            Double::isNaN(Math::rint(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to round properly down to even",
-            2.0, Math::rint(2.1));
-    CPPUNIT_ASSERT_MESSAGE("Failed to round properly to even",
-            Math::rint(2.5) == 2.0);
-#endif
-}
+//void MathTest::test_rintD() {
+//    // Test for method double decaf.lang.Math::rint(double)
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to round properly - up to odd",
+//            3.0, Math::rint(2.9));
+//    CPPUNIT_ASSERT_MESSAGE("Failed to round properly - NaN",
+//            Double::isNaN(Math::rint(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Failed to round properly down to even",
+//            2.0, Math::rint(2.1));
+//    CPPUNIT_ASSERT_MESSAGE("Failed to round properly to even",
+//            Math::rint(2.5) == 2.0);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_roundD() {
@@ -512,44 +501,44 @@ void MathTest::test_signum_F() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_sinD() {
-    // Test for method double decaf.lang.Math::sin(double)
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
-        0.0, Math::sin(0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
-        0.8414709848078965, Math::sin(1));
-}
+//void MathTest::test_sinD() {
+//    // Test for method double decaf.lang.Math::sin(double)
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
+//        0.0, Math::sin(0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
+//        0.8414709848078965, Math::sin(1));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_sinh_D() {
-    // Test for special situations
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::sinh(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::sinh(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return NEGATIVE_INFINITY",
-            Double::NEGATIVE_INFINITY, Math::sinh(Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(0.0),
-            Double::doubleToLongBits(Math::sinh(0.0)));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
-            Double::doubleToLongBits(Math::sinh(+0.0)));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
-            Double::doubleToLongBits(Math::sinh(-0.0)));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::sinh(1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return NEGATIVE_INFINITY",
-            Double::NEGATIVE_INFINITY, Math::sinh(-1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000001666E-6",
-            1.0000000000001666E-6, Math::sinh(0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0000000000001666E-6",
-            -1.0000000000001666E-6, Math::sinh(-0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.11538644196386",
-             5.11538644196386, Math::sinh( 2.33482 ) );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
-            Double::POSITIVE_INFINITY, Math::sinh(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
-            Math::sinh(Double::MIN_VALUE));
-}
+//void MathTest::test_sinh_D() {
+//    // Test for special situations
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::sinh(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::sinh(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return NEGATIVE_INFINITY",
+//            Double::NEGATIVE_INFINITY, Math::sinh(Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(0.0),
+//            Double::doubleToLongBits(Math::sinh(0.0)));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
+//            Double::doubleToLongBits(Math::sinh(+0.0)));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
+//            Double::doubleToLongBits(Math::sinh(-0.0)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::sinh(1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return NEGATIVE_INFINITY",
+//            Double::NEGATIVE_INFINITY, Math::sinh(-1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0000000000001666E-6",
+//            1.0000000000001666E-6, Math::sinh(0.000001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0000000000001666E-6",
+//            -1.0000000000001666E-6, Math::sinh(-0.000001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 5.11538644196386",
+//             5.11538644196386, Math::sinh( 2.33482 ) );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return POSITIVE_INFINITY",
+//            Double::POSITIVE_INFINITY, Math::sinh(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
+//            Math::sinh(Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_sqrtD() {
@@ -559,42 +548,41 @@ void MathTest::test_sqrtD() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_tanD() {
-    // Test for method double decaf.lang.Math::tan(double)
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
-            0.0, Math::tan(0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
-            1.5574077246549023, Math::tan(1));
-
-}
+//void MathTest::test_tanD() {
+//    // Test for method double decaf.lang.Math::tan(double)
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
+//            0.0, Math::tan(0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Incorrect answer",
+//            1.5574077246549023, Math::tan(1));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_tanh_D() {
-    // Test for special situations
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::tanh(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return +1.0", +1.0,
-            Math::tanh(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0,
-            Math::tanh(Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(0.0),
-            Double::doubleToLongBits(Math::tanh(0.0)));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
-            Double::doubleToLongBits(Math::tanh(+0.0)));
-    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
-            Double::doubleToLongBits(Math::tanh(-0.0)));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::tanh(1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0, Math::tanh(-1234.56));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 9.999999999996666E-7",
-            9.999999999996666E-7, Math::tanh(0.000001));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.981422884124941", 0.981422884124941,
-            Math::tanh(2.33482));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0",
-            1.0, Math::tanh(Double::MAX_VALUE));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
-            Math::tanh(Double::MIN_VALUE));
-}
+//void MathTest::test_tanh_D() {
+//    // Test for special situations
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::tanh(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return +1.0", +1.0,
+//            Math::tanh(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0,
+//            Math::tanh(Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(0.0),
+//            Double::doubleToLongBits(Math::tanh(0.0)));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(+0.0),
+//            Double::doubleToLongBits(Math::tanh(+0.0)));
+//    CPPUNIT_ASSERT_EQUAL(Double::doubleToLongBits(-0.0),
+//            Double::doubleToLongBits(Math::tanh(-0.0)));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0", 1.0, Math::tanh(1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return -1.0", -1.0, Math::tanh(-1234.56));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 9.999999999996666E-7",
+//            9.999999999996666E-7, Math::tanh(0.000001));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 0.981422884124941", 0.981422884124941,
+//            Math::tanh(2.33482));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 1.0",
+//            1.0, Math::tanh(Double::MAX_VALUE));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Should return 4.9E-324", 4.9E-324,
+//            Math::tanh(Double::MIN_VALUE));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void MathTest::test_random() {
@@ -630,72 +618,67 @@ void MathTest::test_toDegreesD() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_ulp_D() {
-#ifndef _WIN32
-    // Test for special cases
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::ulp(Double::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::POSITIVE_INFINITY,
-            Math::ulp(Double::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::POSITIVE_INFINITY,
-            Math::ulp(Double::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Double::MIN_VALUE, Math::ulp(0.0) );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::MIN_VALUE,
-            Math::ulp(+0.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::MIN_VALUE,
-            Math::ulp(-0.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Math::pow(2, 971),
-            Math::ulp(Double::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Math::pow(2, 971),
-            Math::ulp(-Double::MAX_VALUE));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Double::MIN_VALUE, Math::ulp(Double::MIN_VALUE) );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Double::MIN_VALUE, Math::ulp(-Double::MIN_VALUE) );
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.220446049250313E-16,
-            Math::ulp(1.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.220446049250313E-16,
-            Math::ulp(-1.0));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.2737367544323206E-13,
-            Math::ulp(1153.0));
-#endif
-}
+//void MathTest::test_ulp_D() {
+//    // Test for special cases
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Double::isNaN(Math::ulp(Double::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::POSITIVE_INFINITY,
+//            Math::ulp(Double::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::POSITIVE_INFINITY,
+//            Math::ulp(Double::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Double::MIN_VALUE, Math::ulp(0.0) );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::MIN_VALUE,
+//            Math::ulp(+0.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Double::MIN_VALUE,
+//            Math::ulp(-0.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Math::pow(2, 971),
+//            Math::ulp(Double::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Math::pow(2, 971),
+//            Math::ulp(-Double::MAX_VALUE));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Double::MIN_VALUE, Math::ulp(Double::MIN_VALUE) );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Double::MIN_VALUE, Math::ulp(-Double::MIN_VALUE) );
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.220446049250313E-16,
+//            Math::ulp(1.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.220446049250313E-16,
+//            Math::ulp(-1.0));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 2.2737367544323206E-13,
+//            Math::ulp(1153.0));
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-void MathTest::test_ulp_f() {
-#ifndef _WIN32
-    // Test for special cases
-    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Float::isNaN(Math::ulp(Float::NaN)));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Float::POSITIVE_INFINITY, Math::ulp(Float::POSITIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Float::POSITIVE_INFINITY, Math::ulp(Float::NEGATIVE_INFINITY));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Float::MIN_VALUE, Math::ulp(0.0f));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Float::MIN_VALUE, Math
-            ::ulp(+0.0f));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            Math::ulp(-0.0f), Float::MIN_VALUE );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            2.028241E31f, Math::ulp(Float::MAX_VALUE));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            2.028241E31f, Math::ulp(-Float::MAX_VALUE));
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            1.4E-45f, Math::ulp( Float::MIN_VALUE ) );
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            1.4E-45f, Math::ulp( -Float::MIN_VALUE ) );
-
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            1.1920929E-7f, Math::ulp(1.0f));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 1.1920929E-7f,
-            Math::ulp(-1.0f));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            1.2207031E-4f, Math::ulp(1153.0f));
-    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
-            5.6E-45f, Math::ulp(9.403954E-38f) );
-#endif
-}
-
+//void MathTest::test_ulp_f() {
+//    // Test for special cases
+//    CPPUNIT_ASSERT_MESSAGE("Should return NaN", Float::isNaN(Math::ulp(Float::NaN)));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Float::POSITIVE_INFINITY, Math::ulp(Float::POSITIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Float::POSITIVE_INFINITY, Math::ulp(Float::NEGATIVE_INFINITY));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Float::MIN_VALUE, Math::ulp(0.0f));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", Float::MIN_VALUE, Math
+//            ::ulp(+0.0f));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            Math::ulp(-0.0f), Float::MIN_VALUE );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            2.028241E31f, Math::ulp(Float::MAX_VALUE));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            2.028241E31f, Math::ulp(-Float::MAX_VALUE));
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            1.4E-45f, Math::ulp( Float::MIN_VALUE ) );
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            1.4E-45f, Math::ulp( -Float::MIN_VALUE ) );
+//
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            1.1920929E-7f, Math::ulp(1.0f));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value", 1.1920929E-7f,
+//            Math::ulp(-1.0f));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            1.2207031E-4f, Math::ulp(1153.0f));
+//    CPPUNIT_ASSERT_EQUAL_MESSAGE("Returned incorrect value",
+//            5.6E-45f, Math::ulp(9.403954E-38f) );
+//}

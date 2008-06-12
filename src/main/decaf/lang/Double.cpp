@@ -18,6 +18,7 @@
 #include "Double.h"
 #include <decaf/lang/Long.h>
 #include <limits>
+#include <string.h>
 
 using namespace std;
 using namespace decaf;

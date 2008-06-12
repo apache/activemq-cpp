@@ -18,6 +18,7 @@
 #include "Float.h"
 #include <decaf/lang/Integer.h>
 #include <limits>
+#include <string.h>
 
 using namespace std;
 using namespace decaf;

@@ -19,6 +19,7 @@
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Character.h>
+#include <decaf/lang/Long.h>
 
 using namespace std;
 using namespace activemq;
@@ -236,17 +237,12 @@ void StompCommandReader::readStompBody( StompFrame& frame )
             commands::CommandConstants::toString(
                 commands::CommandConstants::HEADER_CONTENTLENGTH))) {
 
-            char* stopped_string = NULL;
-
             string length =
                 frame.getProperties().getProperty(
                     commands::CommandConstants::toString(
                         commands::CommandConstants::HEADER_CONTENTLENGTH));
 
-            content_length = strtoul(
-                length.c_str(),
-                &stopped_string,
-                10 );
+            content_length = (unsigned long long)Long::parseLong( length );
          }
 
          if( content_length != 0 ) {
