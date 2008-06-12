@@ -27,6 +27,8 @@ Bug
     * [AMQCPP-173] - C++ Client has memory leaks
     * [AMQCPP-174] - Deadlock on transacted session
     * [AMQCPP-178] - Core dump in ActiveMQException::buildMessage
+    * [AMQCPP-181] - Failed unit tests in 2.2 RC1
+    * [AMQCPP-182] - Compile with GCC 4.3.0 fails
 
 Improvement
 
