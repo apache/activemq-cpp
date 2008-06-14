@@ -412,8 +412,13 @@ namespace net{
 
     private:
 
-        // Parses a URI string and fills in the member data, throws a
-        // URISyntaxException if things fail
+        /**
+         * Parses a URI string and fills in the member data, throws a
+         * URISyntaxException if things fail.
+         *
+         * @param uri - the URI to parse
+         * @throws URISyntaxException if an error occurs.
+         */
         void parseURI( const std::string& uri ) throw ( URISyntaxException );
 
         /*
