@@ -86,6 +86,21 @@ This should be run the first time and anytime you change configure.ac or
 any of the Makefile.am files.
 
     -----------------------------------------------------------------------
+    |MacOS X Note:                                                        |
+    | Make sure to set the LIBTOOLIZE environment variable to point to    |
+    | /usr/bin/glibtoolize for the build to complete successfully. Below  |
+    | is an example:                                                      |
+    |                                                                     |
+    | $ export LIBTOOLIZE=/usr/bin/glibtoolize                            |
+    |                                                                     |
+    | If you do not use this environment variable you will encounter an   |
+    | error stating:                                                      |
+    |                                                                     |
+    | Can't exec "libtoolize": No such file or directory at               |
+    | /opt/local/share/autoconf/Autom4te/FileUtils.pm line 290...         |
+    -----------------------------------------------------------------------
+
+    -----------------------------------------------------------------------
     |Solaris 10 Note:  CppUnit might not build until you correct the file |
     |  libstdc++.la to contain the correct data, see this discussion:     |
     |  http://forum.sun.com/jive/thread.jspa?threadID=73150               |
@@ -170,7 +185,9 @@ There are a couple or things that you will need to setup to ensure that
 the MSVC compile succeeds.
 
 * You need to download and install the Platform SDK if you don't have it
-  installed already.
+  installed already.  On machines where you intend to use the built libraries
+  and executable you will also need to install the MS Redistributable for the
+  version of Visual Studio which you used to build the library.
 
 * Ensure that the path to you MSVC install is set in the PATH env variable.
   You can test this by typing cl.exe at the command line, if you get an
