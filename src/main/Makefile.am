@@ -159,13 +159,19 @@ h_sources = \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
+    activemq/cmsutil/CachedConsumer.h \
+    activemq/cmsutil/CachedProducer.h \
     activemq/cmsutil/CmsAccessor.h \
     activemq/cmsutil/CmsDestinationAccessor.h \
+    activemq/cmsutil/CmsTemplate.h \
     activemq/cmsutil/DestinationResolver.h \
     activemq/cmsutil/DynamicDestinationResolver.h \
-    activemq/cmsutil/ResourceLifecycleManager.h \
-    activemq/cmsutil/SessionPool.h \
+    activemq/cmsutil/MessageCreator.h \
     activemq/cmsutil/PooledSession.h \
+    activemq/cmsutil/ProducerCallback.h \
+    activemq/cmsutil/ResourceLifecycleManager.h \
+    activemq/cmsutil/SessionCallback.h \
+    activemq/cmsutil/SessionPool.h \
     activemq/support/LibraryInit.h \
     activemq/support/InitDirector.h \
     activemq/io/LoggingInputStream.h \
