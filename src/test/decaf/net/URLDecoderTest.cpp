@@ -15,42 +15,32 @@
  * limitations under the License.
  */
 
-#include "URLEncoder.h"
-#include <decaf/lang/Character.h>
+#include "URLDecoderTest.h"
 
-using namespace std;
+#include <decaf/net/URLEncoder.h>
+
 using namespace decaf;
-using namespace decaf::lang;
 using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::string URLEncoder::digits = "0123456789ABCDEF";
-
-////////////////////////////////////////////////////////////////////////////////
-URLEncoder::URLEncoder() {
+URLDecoderTest::URLDecoderTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string URLEncoder::encode( const std::string& src ) {
+void URLDecoderTest::testDecode() {
 
-    string encoded = "";
-    string allowables = ".-*_";
+    const std::string URL = "http://127.0.0.1:80/%24%25";
+    const std::string URL2 = "telnet://justWantToHaveFun.com:400";
+    const std::string URL3 = "file://myServer.org/a file with spaces.jpg";
 
-    for( std::size_t i = 0; i < src.length(); i++ ) {
+    CPPUNIT_ASSERT_MESSAGE(
+        "1. Incorrect encoding/decoding",
+        URLDecoder::decode( URLEncoder::encode(URL) ) == URL );
+    CPPUNIT_ASSERT_MESSAGE(
+        "2. Incorrect encoding/decoding",
+        URLDecoder::decode( URLEncoder::encode(URL2) ) == URL2 );
+    CPPUNIT_ASSERT_MESSAGE(
+        "3. Incorrect encoding/decoding",
+        URLDecoder::decode( URLEncoder::encode(URL3) ) == URL3 );
 
-        char ch = src.at(i);
-        if( Character::isLetterOrDigit( ch ) ||
-            allowables.find_first_of( ch, 0 ) != std::string::npos ) {
-
-            encoded += ch;
-        } else if (ch == ' ') {
-            encoded += '+';
-        } else {
-            encoded += '%';
-            encoded += digits.at( (ch & 0xf0) >> 4 );
-            encoded += digits.at( ch & 0xf );
-        }
-    }
-
-    return encoded;
 }

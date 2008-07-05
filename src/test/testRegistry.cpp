@@ -224,6 +224,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 #include <decaf/net/URISyntaxExceptionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URISyntaxExceptionTest );
+#include <decaf/net/URLEncoderTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLEncoderTest );
+#include <decaf/net/URLDecoderTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 
 #include <decaf/util/concurrent/CountDownLatchTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );

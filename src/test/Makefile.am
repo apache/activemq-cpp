@@ -109,6 +109,8 @@ cc_sources = \
   decaf/net/SocketTest.cpp \
   decaf/net/URITest.cpp \
   decaf/net/URISyntaxExceptionTest.cpp \
+  decaf/net/URLEncoderTest.cpp \
+  decaf/net/URLDecoderTest.cpp \
   decaf/util/StringTokenizerTest.cpp \
   decaf/util/Endian.cpp \
   decaf/util/DateTest.cpp \
@@ -219,6 +221,8 @@ h_sources = \
   decaf/net/SocketTest.h \
   decaf/net/URITest.h \
   decaf/net/URISyntaxExceptionTest.h \
+  decaf/net/URLEncoderTest.h \
+  decaf/net/URLDecoderTest.h \
   decaf/util/StringTokenizerTest.h \
   decaf/util/Endian.h \
   decaf/util/DateTest.h \

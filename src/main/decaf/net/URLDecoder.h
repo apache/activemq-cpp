@@ -19,15 +19,34 @@
 #define _DECAF_NET_URLDECODER_H_
 
 #include <decaf/util/Config.h>
+#include <string>
 
 namespace decaf{
 namespace net{
 
     class DECAF_API URLDecoder {
-    public:
+    private:
 
         URLDecoder();
+
+    public:
+
         virtual ~URLDecoder() {}
+
+        /**
+         * Decodes the string argument which is assumed to be encoded in the
+         * <code>x-www-form-urlencoded</code> MIME content type.
+         * <p>
+         * '+' will be converted to space, '%' and two following hex digit
+         * characters are converted to the equivalent byte value. All other
+         * characters are passed through unmodified.
+         * <p>
+         * e.g. "A+B+C %24%25" -> "A B C $%"
+         *
+         * @param s - string The encoded string.
+         * @return The decoded version as a string.
+         */
+        static std::string decode( const std::string& src );
 
     };
 
