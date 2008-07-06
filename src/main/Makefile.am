@@ -93,6 +93,7 @@ cc_sources = \
     decaf/internal/nio/LongArrayBuffer.cpp \
     decaf/internal/nio/IntArrayBuffer.cpp \
     decaf/internal/nio/ShortArrayBuffer.cpp \
+    decaf/internal/net/URIEncoderDecoder.cpp \
     decaf/net/ServerSocket.cpp \
     decaf/net/SocketOutputStream.cpp \
     decaf/net/BufferedSocket.cpp \
@@ -425,6 +426,7 @@ h_sources = \
     decaf/internal/nio/LongArrayBuffer.h \
     decaf/internal/nio/IntArrayBuffer.h \
     decaf/internal/nio/ShortArrayBuffer.h \
+    decaf/internal/net/URIEncoderDecoder.h \
     decaf/nio/Buffer.h \
     decaf/nio/ByteBuffer.h \
     decaf/nio/CharBuffer.h \
