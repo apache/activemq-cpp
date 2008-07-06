@@ -34,6 +34,30 @@ namespace net {
         virtual ~URIHelper() {}
 
         /**
+         * Validates the string past to determine if it is a well formed
+         * domain name.
+         * @param host - domain name to validate.
+         * @return true if host is well formed.
+         */
+        bool isValidDomainName( const std::string& host );
+
+        /**
+         * Validate if the host value is a well formed IPv4 address, this is
+         * the form XXX.XXX.XXX.XXX were X is any number 0-9. and XXX is not
+         * greater than 255.
+         * @param host - IPv4 address string to parse.
+         * @return true if host is a well formed IPv4 address.
+         */
+        bool isValidIPv4Address( const std::string& host );
+
+        /**
+         * Determines if the given address is valid according to the IPv6 spec.
+         * @param ipAddress - string ip address value to validate.
+         * @return true if the address string is valid.
+         */
+        bool isValidIP6Address( const std::string& ipAddress );
+
+        /**
          * Check is the string passed contains a Valid IPv4 word, which is
          * an integer in the range of 0 to 255.
          * @param word - string value to check.
