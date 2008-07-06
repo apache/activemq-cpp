@@ -19,7 +19,7 @@
 #define _DECAF_INTERNAL_NET_URIENCODERDECODER_H_
 
 #include <decaf/util/Config.h>
-#include <decaf/net/URISyntaxException>
+#include <decaf/net/URISyntaxException.h>
 #include <string>
 
 namespace decaf{
@@ -48,7 +48,7 @@ namespace net{
          * @param legal - the characters allowed in the string s
          */
         static void validate( const std::string& s, const std::string& legal )
-            throw ( URISyntaxException );
+            throw ( decaf::net::URISyntaxException );
 
         /**
          * Validate a string by checking if it contains any characters other than:
@@ -61,7 +61,7 @@ namespace net{
          * @param legal - the characters allowed in the string s
          */
         static void validateSimple( const std::string& s, const std::string& legal )
-            throw ( URISyntaxException );
+            throw ( decaf::net::URISyntaxException );
 
         /**
          * All characters except letters ('a'..'z', 'A'..'Z') and numbers ('0'..'9')

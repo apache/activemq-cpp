@@ -18,10 +18,14 @@
 #include "URIEncoderDecoder.h"
 
 #include <decaf/lang/Character.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::internal;
-using namespace decaf::internal::net
+using namespace decaf::internal::net;
+using namespace decaf::net;
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string URIEncoderDecoder::digits = "0123456789ABCDEF";
@@ -36,7 +40,9 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
 
     std::string::const_iterator itr = s.begin();
 
-    for( int i = 0; itr != s.end(); ++i, ++iter ) {
+    for( std::size_t i = 0; itr != s.end(); ++i, ++itr ) {
+
+        char ch = s.at(i);
 
         if( ch == '%' ) {
             if( i + 2 >= s.length() ) {
@@ -45,8 +51,8 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
                     "invalid Encoded data", i );
             }
 
-            int d1 = Character::digit( *(++iter), 16 );
-            int d2 = Character::digit( *(++iter), 16 );
+            int d1 = Character::digit( *(++itr), 16 );
+            int d2 = Character::digit( *(++itr), 16 );
 
             if( d1 == -1 || d2 == -1 ) {
                 throw URISyntaxException(
@@ -59,9 +65,11 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
             continue;
         }
 
-        if( !Charactor::isLetterOrDigit( *itr ) &&
-            !Character::isSpaceChar( *itr ) &&
-            !Character::isISOControl( *itr ) ) {
+        if( ( !Character::isLetterOrDigit( *itr ) &&
+              legal.find( *itr, 0 ) == std::string::npos &&
+            ( (unsigned char)*itr > 127 &&
+              !Character::isWhitespace( *itr ) &&
+              !Character::isISOControl( *itr ) ) ) ) {
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,
@@ -79,7 +87,7 @@ void URIEncoderDecoder::validateSimple( const std::string& s,
 
     for( int i = 0; itr != s.end(); ++i, ++itr ) {
         if( !Character::isLetterOrDigit( *itr ) ||
-            !legal.find_first_of( *itr ) > std::string::npos ) {
+            !legal.find( *itr ) > std::string::npos ) {
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,
@@ -90,7 +98,7 @@ void URIEncoderDecoder::validateSimple( const std::string& s,
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
-                                             const std::string& legal );
+                                             const std::string& legal ) {
 
     std::string buf = "";
     std::string::const_iterator iter = s.begin();
@@ -100,16 +108,16 @@ std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
         char ch = *iter;
 
         if( Character::isLetterOrDigit( ch ) ||
-            legal.find( ch ) > string::npos ||
+            legal.find( ch ) > std::string::npos ||
             ( (unsigned char)ch > 127 &&
-              !Character.isSpaceChar(ch) &&
-              !Character.isISOControl(ch) ) ) {
+              !Character::isWhitespace(ch) &&
+              !Character::isISOControl(ch) ) ) {
 
-            buf.append(ch);
+            buf += ch;
         } else {
-            buf.append('%');
-            buf.append( digits.at( ( ch & 0xf0 ) >> 4 ) );
-            buf.append( digits.at( bytes[j] & 0xf ) );
+            buf += '%';
+            buf += digits.at( ( ch & 0xf0 ) >> 4 );
+            buf += digits.at( ch & 0xf );
         }
     }
 
@@ -119,14 +127,14 @@ std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
 ////////////////////////////////////////////////////////////////////////////////
 std::string URIEncoderDecoder::encodeOthers( const std::string& s ) {
     std::string buf = "";
-    for( int i = 0; i < s.length(); i++ ) {
+    for( std::size_t i = 0; i < s.length(); i++ ) {
         char ch = s.at(i);
-        if( ch <= 127 ) {
-            buf.append( ch );
+        if( (unsigned char)ch <= 127 ) {
+            buf += ch;
         } else {
-            buf.append('%');
-            buf.append( digits.at( ( ch & 0xf0 ) >> 4 ) );
-            buf.append( digits.at( ch & 0xf ) );
+            buf += '%';
+            buf += digits.at( ( ch & 0xf0 ) >> 4 );
+            buf += digits.at( ch & 0xf );
         }
     }
     return buf;
@@ -136,8 +144,10 @@ std::string URIEncoderDecoder::encodeOthers( const std::string& s ) {
 std::string URIEncoderDecoder::decode( const std::string& s ) {
 
     std::string result = "";
-    for( int i = 0; i < s.length(); ) {
-        char c = s.charAt(i);
+    for( std::size_t i = 0; i < s.length(); ) {
+
+        char c = s.at(i);
+
         if( c == '%' ) {
 
             do {
@@ -147,8 +157,8 @@ std::string URIEncoderDecoder::decode( const std::string& s ) {
                         "String has invalid encoding: %s", s.c_str() );
                 }
 
-                int d1 = Character.digit( s.at(i + 1), 16);
-                int d2 = Character.digit( s.at(i + 2), 16);
+                int d1 = Character::digit( s.at(i + 1), 16);
+                int d2 = Character::digit( s.at(i + 2), 16);
 
                 if( d1 == -1 || d2 == -1 ) {
                     throw IllegalArgumentException(
@@ -157,7 +167,7 @@ std::string URIEncoderDecoder::decode( const std::string& s ) {
                         s.c_str() );
                 }
 
-                result.append( (unsigned char)( ( d1 << 4 ) + d2 ) );
+                result += (unsigned char)( ( d1 << 4 ) + d2 );
                 i += 3;
 
             } while( i < s.length() && s.at(i) == '%' );
@@ -165,7 +175,7 @@ std::string URIEncoderDecoder::decode( const std::string& s ) {
             continue;
         }
 
-        result.append(c);
+        result += c;
         i++;
     }
 
