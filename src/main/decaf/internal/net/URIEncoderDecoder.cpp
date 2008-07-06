@@ -65,11 +65,11 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
             continue;
         }
 
-        if( ( !Character::isLetterOrDigit( *itr ) &&
-              legal.find( *itr, 0 ) == std::string::npos &&
-            ( (unsigned char)*itr > 127 &&
-              !Character::isWhitespace( *itr ) &&
-              !Character::isISOControl( *itr ) ) ) ) {
+        if( !( Character::isLetterOrDigit( *itr ) ||
+               legal.find( *itr, 0 ) != std::string::npos ||
+               ( (unsigned char)ch > 127 &&
+                 !Character::isWhitespace(ch) &&
+                 !Character::isISOControl(ch) ) ) ) {
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,

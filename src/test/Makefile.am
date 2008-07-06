@@ -85,6 +85,7 @@ cc_sources = \
   decaf/internal/nio/LongArrayBufferTest.cpp \
   decaf/internal/nio/IntArrayBufferTest.cpp \
   decaf/internal/nio/ShortArrayBufferTest.cpp \
+  decaf/internal/net/URIEncoderDecoderTest.cpp \
   decaf/lang/ByteTest.cpp \
   decaf/lang/CharacterTest.cpp \
   decaf/lang/BooleanTest.cpp \
@@ -197,6 +198,7 @@ h_sources = \
   decaf/internal/nio/LongArrayBufferTest.h \
   decaf/internal/nio/IntArrayBufferTest.h \
   decaf/internal/nio/ShortArrayBufferTest.h \
+  decaf/internal/net/URIEncoderDecoderTest.h \
   decaf/lang/ByteTest.h \
   decaf/lang/CharacterTest.h \
   decaf/lang/BooleanTest.h \
@@ -237,8 +239,8 @@ h_sources = \
   decaf/util/concurrent/ThreadPoolTest.h \
   decaf/nio/BufferTest.h  
 
-include activemq/connector/openwire/marshal/v1/srcmakefile.mk
-include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+## include activemq/connector/openwire/marshal/v1/srcmakefile.mk
+## include activemq/connector/openwire/marshal/v2/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test
