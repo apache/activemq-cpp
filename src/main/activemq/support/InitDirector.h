@@ -25,19 +25,18 @@ namespace support{
      * in order in this library.
      * Each package that needs initalization should create a set of
      * functions that control init and cleanup.  Each should be called
-     * by this class init in the constructor and cleanup in the 
+     * by this class init in the constructor and cleanup in the
      * destructor
      */
-    class InitDirector
-    {
+    class InitDirector {
     private:
-    
+
         static int refCount;
-        
+
     public:
 
-    	InitDirector(void);
-    	virtual ~InitDirector(void);
+        InitDirector();
+        virtual ~InitDirector();
 
     };
 

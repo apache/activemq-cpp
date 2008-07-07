@@ -33,8 +33,8 @@ using namespace decaf::util::logging;
 int InitDirector::refCount;
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::InitDirector(void)
-{
+InitDirector::InitDirector() {
+
     if( refCount == 0 ) {
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
@@ -50,8 +50,8 @@ InitDirector::InitDirector(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::~InitDirector(void)
-{
+InitDirector::~InitDirector() {
+
     refCount--;
 
     if( refCount == 0 ) {
