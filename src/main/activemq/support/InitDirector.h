@@ -23,7 +23,7 @@ namespace support{
     /*
      * Create a static instance of this class to init all static data
      * in order in this library.
-     * Each package that needs initalization should create a set of
+     * Each package that needs initialization should create a set of
      * functions that control init and cleanup.  Each should be called
      * by this class init in the constructor and cleanup in the
      * destructor
