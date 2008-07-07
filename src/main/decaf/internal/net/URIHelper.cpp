@@ -33,13 +33,192 @@ using namespace decaf::internal;
 using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIHelper::URIHelper( const std::string& allLegal ) {
-    this->allLegal = allLegal;
+URIHelper::URIHelper() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::parseURI( const std::string& uri, bool forceServer )
+    throw( URISyntaxException ) {
+
+//    std::string temp = uri;
+//
+//    std::size_t index, index1, index2, index3;
+//    // parse into Fragment, Scheme, and SchemeSpecificPart
+//    // then parse SchemeSpecificPart if necessary
+//
+//    // Fragment
+//    index = temp.find( '#' );
+//    if( index != std::string::npos ) {
+//        // remove the fragment from the end
+//
+//        // TODO - Replace vars from URI.java with something in this class
+////        fragment = temp.substr( index + 1, std::string::npos );
+////        validateFragment( uri, fragment, index + 1 );
+//        temp = temp.substr( 0, index );
+//    }
+//
+//    // Scheme and SchemeSpecificPart
+//    index = index1 = temp.find( ':' );
+//    index2 = temp.find( '/' );
+//    index3 = temp.find( '?' );
+//
+//    // if a '/' or '?' occurs before the first ':' the uri has no
+//    // specified scheme, and is therefore not absolute
+//    if( index != std::string::npos &&
+//        ( index2 >= index || index2 == std::string::npos ) &&
+//        ( index3 >= index || index3 == std::string::npos ) ) {
+//
+//        // the characters up to the first ':' comprise the scheme
+//        absolute = true;
+//        scheme = temp.substr( 0, index );
+//        if( scheme.length() == 0 ) {
+//            throw URISyntaxException(
+//                __FILE__, __LINE__,
+//                uri, "Scheme not specified.", index );
+//        }
+//        validateScheme( uri, scheme, 0 );
+//        schemespecificpart = temp.substr( index + 1, std::string::npos );
+//        if( schemespecificpart.length() == 0 ) {
+//            throw URISyntaxException(
+//                __FILE__, __LINE__,
+//                uri, "Scheme specific part is invalid..", index + 1 );
+//        }
+//    } else {
+//        absolute = false;
+//        schemespecificpart = temp;
+//    }
+//
+//    if( scheme == "" || schemespecificpart.length() > 0 &&
+//        schemespecificpart.at( 0 ) == '/' ) {
+//
+//        opaque = false;
+//        // the URI is hierarchical
+//
+//        // Query
+//        temp = schemespecificpart;
+//        index = temp.find( '?' );
+//        if( index != std::string::npos ) {
+//            query = temp.substr( index + 1, std::string::npos );
+//            temp = temp.substr( 0, index );
+//            validateQuery( uri, query, index2 + 1 + index );
+//        }
+//
+//        // Authority and Path
+//        if( temp.at(0) == '/' && temp.at(1) == '/' ) {
+//
+//            index = temp.find( '/', 2 );
+//            if( index != std::string::npos ) {
+//                authority = temp.substr( 2, index );
+//                path = temp.substr( index, std::string::npos );
+//            } else {
+//                authority = temp.substr( 2, std::string::npos );
+//                if( authority.length() == 0 && query == "" && fragment == "" ) {
+//                    throw URISyntaxException(
+//                        __FILE__, __LINE__,
+//                        uri, "Scheme specific part is invalid..", uri.length() );
+//                }
+//
+//                path = "";
+//                // nothing left, so path is empty (not null, path should
+//                // never be null)
+//            }
+//
+//            if( authority.length() == 0 ) {
+//                authority = "";
+//            } else {
+//                validateAuthority( uri, authority, index1 + 3 );
+//            }
+//        } else { // no authority specified
+//            path = temp;
+//        }
+//
+//        int pathIndex = 0;
+//        if( index2 != std::string::npos ) {
+//            pathIndex += index2;
+//        }
+//
+//        if( index != std::string::npos ) {
+//            pathIndex += index;
+//        }
+//
+//        validatePath( uri, path, pathIndex );
+//
+//    } else { // if not hierarchical, URI is opaque
+//        opaque = true;
+//        validateSsp( uri, schemespecificpart, index2 + 2 + index );
+//    }
+//
+//    parseAuthority( forceServer, authority );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validateScheme( const std::string& uri, const std::string& scheme, int index )
+    throw( URISyntaxException ) {
+
+    // first char needs to be an alpha char
+    if( !Character::isLetter( scheme.at(0) ) ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Schema must start with a Letter.", index );
+    }
+
+    try {
+        URIEncoderDecoder::validateSimple( scheme, "+-." );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid Schema", index + e.getIndex() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
+                             std::size_t index, const std::string& allLegal )
+    throw( URISyntaxException ) {
+
+    try {
+        URIEncoderDecoder::validate( ssp, allLegal );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid URI Ssp", index + e.getIndex() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validateAuthority( const std::string& uri, const std::string& authority,
+                                   std::size_t index, const std::string& allLegal )
+    throw( URISyntaxException ) {
+
+    try {
+        // "@[]" + someLegal
+        URIEncoderDecoder::validate( authority, allLegal );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid URI Authority", index + e.getIndex() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validatePath( const std::string& uri, const std::string& path,
+                              std::size_t index, const std::string& allLegal )
+    throw( URISyntaxException ) {
+
+    try {
+        // "/@" + someLegal
+        URIEncoderDecoder::validate( path, allLegal );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid URI Path", index + e.getIndex() );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateQuery( const std::string& uri, const std::string& query,
-                               std::size_t index ) throw( URISyntaxException ) {
+                               std::size_t index, const std::string& allLegal )
+    throw( URISyntaxException ) {
 
     try {
         URIEncoderDecoder::validate( query, allLegal );
@@ -52,7 +231,8 @@ void URIHelper::validateQuery( const std::string& uri, const std::string& query,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateFragment( const std::string& uri, const std::string& fragment,
-                                  std::size_t index ) throw( URISyntaxException ) {
+                                  std::size_t index, const std::string& allLegal )
+    throw( URISyntaxException ) {
 
     try {
         URIEncoderDecoder::validate( fragment, allLegal );

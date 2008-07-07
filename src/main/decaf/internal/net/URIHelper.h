@@ -29,32 +29,76 @@ namespace net {
      * Helper class used by the URI classes in encoding and decoding of URI's.
      */
     class URIHelper {
-    private:
-
-        /**
-         * All characters that are legal in a URI
-         */
-        std::string allLegal;
-
     public:
 
-        /**
-         * Create a URIHelper with the assigned set of Legal URI Characters.
-         * @param allLegal - All Characters that are legal in this URI instance.
-         */
-        URIHelper( const std::string& allLegal );
-
+        URIHelper();
         virtual ~URIHelper() {}
+
+        /**
+         * Parse the passed in URI.
+         * @param uri - the URI to Parse
+         * @param forceServer - if true invalid URI data throws an Exception
+         * @throws URISyntaxException if forceServer is true and the URI is invalid.
+         */
+        void parseURI( const std::string& uri, bool forceServer )
+            throw( decaf::net::URISyntaxException );
+
+        /**
+         * Validate the schema portin of the URI.
+         * @param uri - the URI to check.
+         * @param schema - the schema section of the URI.
+         * @param index - index in uri where schema starts.
+         * @throw URISyntaxException if the fragment has errors.
+         */
+        void validateScheme( const std::string& uri, const std::string& scheme, int index )
+            throw( decaf::net::URISyntaxException );
+
+        /**
+         * Validate that the URI Ssp Segment contains no invalid encodings.
+         * @param uri - the full uri.
+         * @param ssp - the SSP to check.
+         * @param index - position in the uri where Ssp starts.
+         * @param allLegal - all characters legal for this operation
+         * @throw URISyntaxException if the fragment has errors.
+         */
+        void validateSsp( const std::string& uri, const std::string& ssp,
+                          std::size_t index, const std::string& allLegal )
+            throw( decaf::net::URISyntaxException );
+
+        /**
+         * Validate that the URI Authority Segment contains no invalid encodings.
+         * @param uri - the full uri.
+         * @param authority - the Authority to check.
+         * @param index - position in the uri where Authority starts.
+         * @param allLegal - all characters legal for this operation
+         * @throw URISyntaxException if the fragment has errors.
+         */
+        void validateAuthority( const std::string& uri, const std::string& authority,
+                                std::size_t index, const std::string& allLegal )
+            throw( decaf::net::URISyntaxException );
+
+        /**
+         * Validate that the URI Path Segment contains no invalid encodings.
+         * @param uri - the full uri.
+         * @param path - the path to check.
+         * @param index - position in the uri where path starts.
+         * @param allLegal - all characters legal for this operation
+         * @throw URISyntaxException if the fragment has errors.
+         */
+        void validatePath( const std::string& uri, const std::string& path,
+                           std::size_t index, const std::string& allLegal )
+            throw( decaf::net::URISyntaxException );
 
         /**
          * Validate that the URI Query Segment contains no invalid encodings.
          * @param uri - the full uri.
          * @param query - the query to check.
          * @param index - position in the uri where fragment starts.
+         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateQuery( const std::string& uri, const std::string& query,
-                            std::size_t index )
+                            std::size_t index, const std::string& allLegal )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -62,10 +106,11 @@ namespace net {
          * @param uri - the full uri.
          * @param fragment - the fragment to check.
          * @param index - position in the uri where fragment starts.
+         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateFragment( const std::string& uri, const std::string& fragment,
-                               std::size_t index )
+                               std::size_t index, const std::string& allLegal )
             throw( decaf::net::URISyntaxException );
 
         /**
