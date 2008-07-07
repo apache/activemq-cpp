@@ -67,7 +67,32 @@ namespace net{
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the input string that caused the error
+         * this message occurred.  Sets the message to report, using an
+         * optional list of arguments to parse into the message
+         * @param file name where exception occurs
+         * @param line number where the exception occurred.
+         * @param message to report
+         * @param list of primitives that are formatted into the message
+         */
+        URISyntaxException( const char* file, const int lineNumber,
+                            const char* msg DECAF_UNUSED ) throw ()
+        : Exception()
+        {
+
+            this->reason = "<Unknown Reason>";
+            this->input = "<No Address Given>";
+            this->index = -1;
+
+            const char * message = "Input: %s, Reason it failed: %s";
+            this->setMessage( message, input.c_str(), reason.c_str() );
+
+            // Set the first mark for this exception.
+            setMark( file, lineNumber );
+        }
+
+        /**
+         * Constructor - Initializes the file name and line number where
+         * this message occurred.  Sets the input string that caused the error
          * and the reason for the error.
          * @param file name where exception occurs
          * @param line number where the exception occurred.
@@ -92,7 +117,7 @@ namespace net{
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the input string that caused the error
+         * this message occurred.  Sets the input string that caused the error
          * and the reason for the error.
          * @param file name where exception occurs
          * @param line number where the exception occurred.

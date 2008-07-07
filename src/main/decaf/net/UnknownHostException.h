@@ -53,7 +53,7 @@ namespace net{
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
+         * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          * @param file name where exception occurs
          * @param line number where the exception occurred.
@@ -61,7 +61,7 @@ namespace net{
          * @param list of primitives that are formatted into the message
          */
         UnknownHostException( const char* file, const int lineNumber,
-                            const char* msg, ... ) throw ()
+                              const char* msg, ... ) throw ()
         : io::IOException()
         {
             va_list vargs ;

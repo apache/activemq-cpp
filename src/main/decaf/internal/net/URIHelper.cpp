@@ -21,18 +21,222 @@
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/internal/net/URIEncoderDecoder.h>
-#include <decaf/net/URISyntaxException.h>
 #include <decaf/util/StringTokenizer.h>
+#include <decaf/lang/exceptions/NumberFormatException.h>
 
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::net;
 using namespace decaf::internal;
 using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIHelper::URIHelper() {
+URIHelper::URIHelper( const std::string& allLegal ) {
+    this->allLegal = allLegal;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validateQuery( const std::string& uri, const std::string& query,
+                               std::size_t index ) throw( URISyntaxException ) {
+
+    try {
+        URIEncoderDecoder::validate( query, allLegal );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid URI Query", index + e.getIndex() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::validateFragment( const std::string& uri, const std::string& fragment,
+                                  std::size_t index ) throw( URISyntaxException ) {
+
+    try {
+        URIEncoderDecoder::validate( fragment, allLegal );
+    } catch( URISyntaxException& e ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            uri, "Invalid URI Fragment", index + e.getIndex() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
+    throw( URISyntaxException ) {
+
+    try{
+
+        if( authority == "" ) {
+            return;
+        }
+
+        std::string temp, tempUserinfo = "", tempHost = "";
+        std::size_t index, hostindex = 0;
+        int tempPort = -1;
+
+        temp = authority;
+        index = temp.find( '@' );
+        if( index != std::string::npos ) {
+            // remove user info
+            tempUserinfo = temp.substr( 0, index );
+            validateUserinfo( authority, tempUserinfo, 0 );
+            temp = temp.substr( index + 1, std::string::npos ); // host[:port] is left
+            hostindex = index + 1;
+        }
+
+        index = temp.find_last_of( ':' );
+        std::size_t endindex = temp.find( ']' );
+
+        if( index != std::string::npos && endindex < index ) {
+            // determine port and host
+            tempHost = temp.substr( 0, index );
+
+            if( index < ( temp.length() - 1 ) ) { // port part is not empty
+                try {
+
+                    tempPort = Integer::parseInt( temp.substr( index + 1, std::string::npos ) );
+                    if( tempPort < 0 ) {
+
+                        if( forceServer ) {
+                            throw URISyntaxException(
+                                __FILE__, __LINE__,
+                                authority, "Port number is missing",
+                                hostindex + index + 1 );
+                        }
+
+                        return;
+                    }
+                } catch( NumberFormatException& e ) {
+
+                    if( forceServer ) {
+                        throw URISyntaxException(
+                            __FILE__, __LINE__,
+                            authority, "Port number is malformed.",
+                            hostindex + index + 1 );
+                    }
+
+                    return;
+                }
+            }
+
+        } else {
+            tempHost = temp;
+        }
+
+        if( tempHost == "" ) {
+            if( forceServer ) {
+                throw URISyntaxException(
+                    __FILE__, __LINE__,
+                    authority, "Host name is empty", hostindex );
+            }
+            return;
+        }
+
+        if( !isValidHost( forceServer, tempHost ) ) {
+            return;
+        }
+
+        // this is a server based uri,
+        // fill in the userinfo, host and port fields
+
+        // TODO - Get the parsed Data back to the caller.
+//        userinfo = tempUserinfo;
+//        host = tempHost;
+//        port = tempPort;
+//        serverAuthority = true;
+    }
+    DECAF_CATCH_RETHROW( URISyntaxException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
+    DECAF_CATCHALL_THROW( URISyntaxException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void validateUserinfo( const std::string& uri, const std::string& userinfo, std::size_t index )
+    throw( URISyntaxException ) {
+
+    for( std::size_t i = 0; i < userinfo.length(); i++ ) {
+
+        char ch = userinfo.at( i );
+        if( ch == ']' || ch == '[' ) {
+            throw URISyntaxException(
+                __FILE__, __LINE__,
+                uri, "User Info cannot contain '[' or ']'", index + i );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool URIHelper::isValidHost( bool forceServer, const std::string& host )
+    throw( URISyntaxException ) {
+
+    try{
+
+        if( host.at( 0 ) == '[' ) {
+
+            // ipv6 address
+            if( host.at( host.length() - 1 ) != ']' ) {
+                throw URISyntaxException(
+                    __FILE__, __LINE__,
+                    host, "Host address does not end in ']'", 0 );
+            }
+
+            if( !isValidIP6Address( host ) ) {
+                throw URISyntaxException(
+                    __FILE__, __LINE__,
+                    host, "Host IPv6 address is not valid" );
+            }
+
+            return true;
+        }
+
+        // '[' and ']' can only be the first char and last char
+        // of the host name
+        if( host.find( '[' ) != std::string::npos ||
+            host.find( ']' ) != std::string::npos ) {
+
+            throw URISyntaxException(
+                __FILE__, __LINE__,
+                host, "Unexpected '[' or ']' found in address" );
+        }
+
+        std::size_t index = host.find_last_of( '.' );
+
+        if( index == std::string::npos || index == host.length() - 1 ||
+            !Character::isDigit( host.at( index + 1 ) ) ) {
+
+            // domain name
+            if( isValidDomainName( host ) ) {
+                return true;
+            }
+
+            if( forceServer ) {
+                throw URISyntaxException(
+                    __FILE__, __LINE__,
+                    host, "Host address is not valid" );
+            }
+
+            return false;
+        }
+
+        // IPv4 address
+        if( isValidIPv4Address( host ) ) {
+            return true;
+        }
+
+        if( forceServer ) {
+            throw URISyntaxException(
+                __FILE__, __LINE__,
+                host, "Host IPv4 address is not valid" );
+        }
+
+        return false;
+    }
+    DECAF_CATCH_RETHROW( URISyntaxException )
+    DECAF_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
+    DECAF_CATCHALL_THROW( URISyntaxException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
