@@ -57,6 +57,9 @@ documentation there on how to build these libraries for your platform.  On
 many Unix system the libraries can be installed using the systems package
 installer.
 
+The Library has been tested using version v1.2 and higher of the APR libs,
+the older 0.9 version will definitely not work with this library.
+
 1.4 GNU Build System (for building on Unix/Linux/OS X/Cygwin)
 --------------------------------------------------------------------------
 
