@@ -107,6 +107,12 @@ void ActiveMQConsumer::close()
                     haveException = true;
                 }
             }
+            
+            // Wakeup any synchronous consumers.
+            synchronized( &unconsumedMessages )
+            {
+                unconsumedMessages.notifyAll(); 
+            }
 
             // If we encountered an error, propagate it.
             if( haveException ){
