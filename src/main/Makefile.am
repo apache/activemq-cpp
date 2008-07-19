@@ -429,6 +429,7 @@ h_sources = \
     decaf/internal/nio/ShortArrayBuffer.h \
     decaf/internal/net/URIEncoderDecoder.h \
     decaf/internal/net/URIHelper.h \
+    decaf/internal/net/URIType.h \
     decaf/nio/Buffer.h \
     decaf/nio/ByteBuffer.h \
     decaf/nio/CharBuffer.h \
