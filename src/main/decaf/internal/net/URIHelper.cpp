@@ -33,122 +33,157 @@ using namespace decaf::internal;
 using namespace decaf::internal::net;
 
 ////////////////////////////////////////////////////////////////////////////////
-URIHelper::URIHelper() {
+URIHelper::URIHelper( const std::string& unreserved,
+                      const std::string& punct,
+                      const std::string& reserved,
+                      const std::string& someLegal,
+                      const std::string& allLegal )
+:  unreserved( unreserved ),
+   punct( punct ),
+   reserved( reserved ),
+   someLegal( someLegal ),
+   allLegal( allLegal ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIHelper::parseURI( const std::string& uri, bool forceServer )
+URIHelper::URIHelper() : unreserved( "_-!.~\'()*" ),
+                         punct( ",;:$&+=" ),
+                         reserved( ",;:$&+=?/[]@" ),
+                         someLegal( "_-!.~\'()*,;:$&+=" ),
+                         allLegal( "_-!.~\'()*,;:$&+=?/[]@" ) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
     throw( URISyntaxException ) {
 
-//    std::string temp = uri;
-//
-//    std::size_t index, index1, index2, index3;
-//    // parse into Fragment, Scheme, and SchemeSpecificPart
-//    // then parse SchemeSpecificPart if necessary
-//
-//    // Fragment
-//    index = temp.find( '#' );
-//    if( index != std::string::npos ) {
-//        // remove the fragment from the end
-//
-//        // TODO - Replace vars from URI.java with something in this class
-////        fragment = temp.substr( index + 1, std::string::npos );
-////        validateFragment( uri, fragment, index + 1 );
-//        temp = temp.substr( 0, index );
-//    }
-//
-//    // Scheme and SchemeSpecificPart
-//    index = index1 = temp.find( ':' );
-//    index2 = temp.find( '/' );
-//    index3 = temp.find( '?' );
-//
-//    // if a '/' or '?' occurs before the first ':' the uri has no
-//    // specified scheme, and is therefore not absolute
-//    if( index != std::string::npos &&
-//        ( index2 >= index || index2 == std::string::npos ) &&
-//        ( index3 >= index || index3 == std::string::npos ) ) {
-//
-//        // the characters up to the first ':' comprise the scheme
-//        absolute = true;
-//        scheme = temp.substr( 0, index );
-//        if( scheme.length() == 0 ) {
-//            throw URISyntaxException(
-//                __FILE__, __LINE__,
-//                uri, "Scheme not specified.", index );
-//        }
-//        validateScheme( uri, scheme, 0 );
-//        schemespecificpart = temp.substr( index + 1, std::string::npos );
-//        if( schemespecificpart.length() == 0 ) {
-//            throw URISyntaxException(
-//                __FILE__, __LINE__,
-//                uri, "Scheme specific part is invalid..", index + 1 );
-//        }
-//    } else {
-//        absolute = false;
-//        schemespecificpart = temp;
-//    }
-//
-//    if( scheme == "" || schemespecificpart.length() > 0 &&
-//        schemespecificpart.at( 0 ) == '/' ) {
-//
-//        opaque = false;
-//        // the URI is hierarchical
-//
-//        // Query
-//        temp = schemespecificpart;
-//        index = temp.find( '?' );
-//        if( index != std::string::npos ) {
-//            query = temp.substr( index + 1, std::string::npos );
-//            temp = temp.substr( 0, index );
-//            validateQuery( uri, query, index2 + 1 + index );
-//        }
-//
-//        // Authority and Path
-//        if( temp.at(0) == '/' && temp.at(1) == '/' ) {
-//
-//            index = temp.find( '/', 2 );
-//            if( index != std::string::npos ) {
-//                authority = temp.substr( 2, index );
-//                path = temp.substr( index, std::string::npos );
-//            } else {
-//                authority = temp.substr( 2, std::string::npos );
-//                if( authority.length() == 0 && query == "" && fragment == "" ) {
-//                    throw URISyntaxException(
-//                        __FILE__, __LINE__,
-//                        uri, "Scheme specific part is invalid..", uri.length() );
-//                }
-//
-//                path = "";
-//                // nothing left, so path is empty (not null, path should
-//                // never be null)
-//            }
-//
-//            if( authority.length() == 0 ) {
-//                authority = "";
-//            } else {
-//                validateAuthority( uri, authority, index1 + 3 );
-//            }
-//        } else { // no authority specified
-//            path = temp;
-//        }
-//
-//        int pathIndex = 0;
-//        if( index2 != std::string::npos ) {
-//            pathIndex += index2;
-//        }
-//
-//        if( index != std::string::npos ) {
-//            pathIndex += index;
-//        }
-//
-//        validatePath( uri, path, pathIndex );
-//
-//    } else { // if not hierarchical, URI is opaque
-//        opaque = true;
-//        validateSsp( uri, schemespecificpart, index2 + 2 + index );
-//    }
-//
-//    parseAuthority( forceServer, authority );
+    URIType result( uri );
+
+    std::string temp = uri;
+
+    std::size_t index, index1, index2, index3;
+    // parse into Fragment, Scheme, and SchemeSpecificPart
+    // then parse SchemeSpecificPart if necessary
+
+    // Fragment
+    index = temp.find( '#' );
+    if( index != std::string::npos ) {
+        // remove the fragment from the end
+
+        result.setFragment( temp.substr( index + 1, std::string::npos ) );
+        validateFragment( uri, result.getFragment(), index + 1 );
+        temp = temp.substr( 0, index );
+    }
+
+    // Scheme and SchemeSpecificPart
+    index = index1 = temp.find( ':' );
+    index2 = temp.find( '/' );
+    index3 = temp.find( '?' );
+
+    // if a '/' or '?' occurs before the first ':' the uri has no
+    // specified scheme, and is therefore not absolute
+    if( index != std::string::npos &&
+        ( index2 >= index || index2 == std::string::npos ) &&
+        ( index3 >= index || index3 == std::string::npos ) ) {
+
+        // the characters up to the first ':' comprise the scheme
+        result.setAbsolute( true );
+        result.setScheme( temp.substr( 0, index ) );
+
+        if( result.getScheme().length() == 0 ) {
+            throw URISyntaxException(
+                __FILE__, __LINE__,
+                uri, "Scheme not specified.", index );
+        }
+
+        validateScheme( uri, result.getScheme(), 0 );
+        result.setSchemeSpecificPart( temp.substr( index + 1, std::string::npos ) );
+
+        if( result.getSchemeSpecificPart().length() == 0 ) {
+            throw URISyntaxException(
+                __FILE__, __LINE__,
+                uri, "Scheme specific part is invalid..", index + 1 );
+        }
+    } else {
+        result.setAbsolute( false );
+        result.setSchemeSpecificPart( temp );
+    }
+
+    if( result.getScheme() == "" ||
+        ( result.getSchemeSpecificPart().length() > 0 &&
+          result.getSchemeSpecificPart().at( 0 ) == '/' ) ) {
+
+        result.setOpaque( false );
+        // the URI is hierarchical
+
+        // Query
+        temp = result.getSchemeSpecificPart();
+        index = temp.find( '?' );
+        if( index != std::string::npos ) {
+            result.setQuery( temp.substr( index + 1, std::string::npos ) );
+            temp = temp.substr( 0, index );
+            validateQuery( uri, result.getQuery(), index2 + 1 + index );
+        }
+
+        // Authority and Path
+        if( temp.at(0) == '/' && temp.at(1) == '/' ) {
+
+            index = temp.find( '/', 2 );
+            if( index != std::string::npos ) {
+                result.setAuthority( temp.substr( 2, index ) );
+                result.setPath( temp.substr( index, std::string::npos ) );
+            } else {
+                result.setAuthority( temp.substr( 2, std::string::npos ) );
+
+                if( result.getAuthority().length() == 0 &&
+                    result.getQuery() == "" && result.getFragment() == "" ) {
+
+                    throw URISyntaxException(
+                        __FILE__, __LINE__,
+                        uri, "Scheme specific part is invalid..", uri.length() );
+                }
+
+                result.setPath( "" );
+                // nothing left, so path is empty (not null, path should
+                // never be null)
+            }
+
+            if( result.getAuthority().length() == 0 ) {
+                result.setAuthority( "" );
+            } else {
+                validateAuthority( uri, result.getAuthority(), index1 + 3 );
+            }
+        } else { // no authority specified
+            result.setPath( temp );
+        }
+
+        int pathIndex = 0;
+        if( index2 != std::string::npos ) {
+            pathIndex += index2;
+        }
+
+        if( index != std::string::npos ) {
+            pathIndex += index;
+        }
+
+        validatePath( uri, result.getPath(), pathIndex );
+
+    } else { // if not hierarchical, URI is opaque
+        result.setOpaque( true );
+        validateSsp( uri, result.getSchemeSpecificPart(), index2 + 2 + index );
+    }
+
+    URIType authority = parseAuthority( forceServer, result.getAuthority() );
+
+    // Authority was valid, so we capture the results
+    if( result.isValid() ) {
+        result.setUserinfo( authority.getUserinfo() );
+        result.setHost( authority.getHost() );
+        result.setPort( authority.getPort() );
+        result.setServerAuthority( true );
+    }
+
+    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +208,7 @@ void URIHelper::validateScheme( const std::string& uri, const std::string& schem
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
-                             std::size_t index, const std::string& allLegal )
+                             std::size_t index )
     throw( URISyntaxException ) {
 
     try {
@@ -187,12 +222,12 @@ void URIHelper::validateSsp( const std::string& uri, const std::string& ssp,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateAuthority( const std::string& uri, const std::string& authority,
-                                   std::size_t index, const std::string& allLegal )
+                                   std::size_t index )
     throw( URISyntaxException ) {
 
     try {
         // "@[]" + someLegal
-        URIEncoderDecoder::validate( authority, allLegal );
+        URIEncoderDecoder::validate( authority, "@[]" + someLegal );
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
@@ -202,12 +237,12 @@ void URIHelper::validateAuthority( const std::string& uri, const std::string& au
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validatePath( const std::string& uri, const std::string& path,
-                              std::size_t index, const std::string& allLegal )
+                              std::size_t index )
     throw( URISyntaxException ) {
 
     try {
         // "/@" + someLegal
-        URIEncoderDecoder::validate( path, allLegal );
+        URIEncoderDecoder::validate( path, "/@" + someLegal );
     } catch( URISyntaxException& e ) {
         throw URISyntaxException(
             __FILE__, __LINE__,
@@ -217,7 +252,7 @@ void URIHelper::validatePath( const std::string& uri, const std::string& path,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateQuery( const std::string& uri, const std::string& query,
-                               std::size_t index, const std::string& allLegal )
+                               std::size_t index )
     throw( URISyntaxException ) {
 
     try {
@@ -231,7 +266,7 @@ void URIHelper::validateQuery( const std::string& uri, const std::string& query,
 
 ////////////////////////////////////////////////////////////////////////////////
 void URIHelper::validateFragment( const std::string& uri, const std::string& fragment,
-                                  std::size_t index, const std::string& allLegal )
+                                  std::size_t index )
     throw( URISyntaxException ) {
 
     try {
@@ -244,13 +279,15 @@ void URIHelper::validateFragment( const std::string& uri, const std::string& fra
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
+URIType URIHelper::parseAuthority( bool forceServer, const std::string& authority )
     throw( URISyntaxException ) {
 
     try{
 
+        URIType result( authority );
+
         if( authority == "" ) {
-            return;
+            return result;
         }
 
         std::string temp, tempUserinfo = "", tempHost = "";
@@ -287,7 +324,7 @@ void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
                                 hostindex + index + 1 );
                         }
 
-                        return;
+                        return result;
                     }
                 } catch( NumberFormatException& e ) {
 
@@ -298,7 +335,7 @@ void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
                             hostindex + index + 1 );
                     }
 
-                    return;
+                    return result;
                 }
             }
 
@@ -312,21 +349,24 @@ void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
                     __FILE__, __LINE__,
                     authority, "Host name is empty", hostindex );
             }
-            return;
+            return result;
         }
 
         if( !isValidHost( forceServer, tempHost ) ) {
-            return;
+            return result;
         }
 
         // this is a server based uri,
         // fill in the userinfo, host and port fields
+        result.setUserinfo( tempUserinfo );
+        result.setHost( tempHost );
+        result.setPort( tempPort );
+        result.setServerAuthority( true );
 
-        // TODO - Get the parsed Data back to the caller.
-//        userinfo = tempUserinfo;
-//        host = tempHost;
-//        port = tempPort;
-//        serverAuthority = true;
+        // We know its valid now so tag it.
+        result.setValid( true );
+
+        return result;
     }
     DECAF_CATCH_RETHROW( URISyntaxException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
@@ -334,7 +374,8 @@ void URIHelper::parseAuthority( bool forceServer, const std::string& authority )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void validateUserinfo( const std::string& uri, const std::string& userinfo, std::size_t index )
+void URIHelper::validateUserinfo( const std::string& uri, const std::string& userinfo,
+                                  std::size_t index )
     throw( URISyntaxException ) {
 
     for( std::size_t i = 0; i < userinfo.length(); i++ ) {
@@ -447,7 +488,7 @@ bool URIHelper::isValidDomainName( const std::string& host ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool isValidIPv4Address( const std::string& host ) {
+bool URIHelper::isValidIPv4Address( const std::string& host ) {
 
     int index;
     int index2;

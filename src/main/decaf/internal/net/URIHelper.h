@@ -20,6 +20,7 @@
 
 #include <string>
 #include <decaf/net/URISyntaxException.h>
+#include <decaf/internal/net/URIType.h>
 
 namespace decaf {
 namespace internal {
@@ -29,18 +30,47 @@ namespace net {
      * Helper class used by the URI classes in encoding and decoding of URI's.
      */
     class URIHelper {
+    private:
+
+        const std::string unreserved;
+        const std::string punct;
+        const std::string reserved;
+        const std::string someLegal;
+        const std::string allLegal;
+
     public:
 
+        /**
+         * Setup the URIHelper with values assigned to the various fields that
+         * are used in the validation process.  The defaults are overriden by
+         * these values
+         * @param unreserved - characters not reserved for use
+         * @param punct - allowable punctuation symbols
+         * @param reserved - characters not allowed for general use in the URI
+         * @param someLegel - characters that are legal in certian cases
+         * @param allLegal - characters that are always legal.
+         */
+        URIHelper( const std::string& unreserved,
+                   const std::string& punct,
+                   const std::string& reserved,
+                   const std::string& someLegal,
+                   const std::string& allLegal );
+
+        /**
+         * Sets up the filter strings with sane defaults.
+         */
         URIHelper();
+
         virtual ~URIHelper() {}
 
         /**
          * Parse the passed in URI.
          * @param uri - the URI to Parse
          * @param forceServer - if true invalid URI data throws an Exception
+         * @returns a URIType instance containing the parsed data.
          * @throws URISyntaxException if forceServer is true and the URI is invalid.
          */
-        void parseURI( const std::string& uri, bool forceServer )
+        URIType parseURI( const std::string& uri, bool forceServer )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -58,11 +88,10 @@ namespace net {
          * @param uri - the full uri.
          * @param ssp - the SSP to check.
          * @param index - position in the uri where Ssp starts.
-         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateSsp( const std::string& uri, const std::string& ssp,
-                          std::size_t index, const std::string& allLegal )
+                          std::size_t index )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -70,11 +99,10 @@ namespace net {
          * @param uri - the full uri.
          * @param authority - the Authority to check.
          * @param index - position in the uri where Authority starts.
-         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateAuthority( const std::string& uri, const std::string& authority,
-                                std::size_t index, const std::string& allLegal )
+                                std::size_t index )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -82,11 +110,10 @@ namespace net {
          * @param uri - the full uri.
          * @param path - the path to check.
          * @param index - position in the uri where path starts.
-         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validatePath( const std::string& uri, const std::string& path,
-                           std::size_t index, const std::string& allLegal )
+                           std::size_t index )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -94,11 +121,10 @@ namespace net {
          * @param uri - the full uri.
          * @param query - the query to check.
          * @param index - position in the uri where fragment starts.
-         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateQuery( const std::string& uri, const std::string& query,
-                            std::size_t index, const std::string& allLegal )
+                            std::size_t index )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -106,11 +132,10 @@ namespace net {
          * @param uri - the full uri.
          * @param fragment - the fragment to check.
          * @param index - position in the uri where fragment starts.
-         * @param allLegal - all characters legal for this operation
          * @throw URISyntaxException if the fragment has errors.
          */
         void validateFragment( const std::string& uri, const std::string& fragment,
-                               std::size_t index, const std::string& allLegal )
+                               std::size_t index )
             throw( decaf::net::URISyntaxException );
 
         /**
@@ -127,9 +152,10 @@ namespace net {
          * <p>
          * @param forceServer
          * @param authority
+         * @returns a URIType instance containing the parsed data.
          * @throw URISyntaxException
          */
-        void parseAuthority( bool forceServer, const std::string& authority )
+        URIType parseAuthority( bool forceServer, const std::string& authority )
             throw( decaf::net::URISyntaxException );
 
         /**
