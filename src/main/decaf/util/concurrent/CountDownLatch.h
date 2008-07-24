@@ -26,8 +26,7 @@ namespace decaf{
 namespace util{
 namespace concurrent{
 
-    class DECAF_API CountDownLatch
-    {
+    class DECAF_API CountDownLatch {
     private:
 
         /**
@@ -61,7 +60,7 @@ namespace concurrent{
          * @param timeOut - time in milliseconds to wait.
          * @returns true if the wait made it to count zero, otherwise false
          */
-        virtual bool await( unsigned long timeOut )  throw ( lang::Exception );
+        virtual bool await( unsigned long timeOut ) throw ( lang::Exception );
 
         /**
          * Counts down the latch, releasing all waiting threads when
