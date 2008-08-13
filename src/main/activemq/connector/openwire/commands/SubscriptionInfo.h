@@ -25,6 +25,7 @@
 
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
+#include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <vector>
 #include <string>
 
@@ -51,6 +52,7 @@ namespace commands{
         ActiveMQDestination* destination;
         std::string selector;
         std::string subcriptionName;
+        ActiveMQDestination* subscribedDestination;
 
     public:
 
@@ -112,6 +114,10 @@ namespace commands{
         virtual const std::string& getSubcriptionName() const;
         virtual std::string& getSubcriptionName();
         virtual void setSubcriptionName( const std::string& subcriptionName );
+
+        virtual const ActiveMQDestination* getSubscribedDestination() const;
+        virtual ActiveMQDestination* getSubscribedDestination();
+        virtual void setSubscribedDestination( ActiveMQDestination* subscribedDestination );
 
     };
 

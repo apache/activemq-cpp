@@ -241,6 +241,7 @@ h_sources = \
 
 ## include activemq/connector/openwire/marshal/v1/srcmakefile.mk
 ## include activemq/connector/openwire/marshal/v2/srcmakefile.mk
+include activemq/connector/openwire/marshal/v3/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test

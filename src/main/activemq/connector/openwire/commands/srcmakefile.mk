@@ -60,6 +60,7 @@ cc_sources += \
     activemq/connector/openwire/commands/MessagePull.cpp \
     activemq/connector/openwire/commands/NetworkBridgeFilter.cpp \
     activemq/connector/openwire/commands/PartialCommand.cpp \
+    activemq/connector/openwire/commands/ProducerAck.cpp \
     activemq/connector/openwire/commands/ProducerId.cpp \
     activemq/connector/openwire/commands/ProducerInfo.cpp \
     activemq/connector/openwire/commands/RemoveInfo.cpp \
@@ -126,6 +127,7 @@ h_sources += \
     activemq/connector/openwire/commands/MessagePull.h \
     activemq/connector/openwire/commands/NetworkBridgeFilter.h \
     activemq/connector/openwire/commands/PartialCommand.h \
+    activemq/connector/openwire/commands/ProducerAck.h \
     activemq/connector/openwire/commands/ProducerId.h \
     activemq/connector/openwire/commands/ProducerInfo.h \
     activemq/connector/openwire/commands/RemoveInfo.h \

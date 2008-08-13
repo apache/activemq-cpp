@@ -43,12 +43,14 @@ SubscriptionInfo::SubscriptionInfo()
     this->destination = NULL;
     this->selector = "";
     this->subcriptionName = "";
+    this->subscribedDestination = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SubscriptionInfo::~SubscriptionInfo()
 {
     delete this->destination;
+    delete this->subscribedDestination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +85,11 @@ void SubscriptionInfo::copyDataStructure( const DataStructure* src ) {
     }
     this->setSelector( srcPtr->getSelector() );
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
+    if( srcPtr->getSubscribedDestination() != NULL ) {
+        this->setSubscribedDestination( 
+            dynamic_cast<ActiveMQDestination*>( 
+                srcPtr->getSubscribedDestination()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +113,12 @@ std::string SubscriptionInfo::toString() const {
     }
     stream << " Value of Selector = " << this->getSelector() << std::endl;
     stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
+    stream << " Value of SubscribedDestination is Below:" << std::endl;
+    if( this->getSubscribedDestination() != NULL ) {
+        stream << this->getSubscribedDestination()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
     stream << BaseDataStructure::toString();
     stream << "End Class = SubscriptionInfo" << std::endl;
 
@@ -133,6 +146,13 @@ bool SubscriptionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getSubcriptionName() != valuePtr->getSubcriptionName() ) {
+        return false;
+    }
+    if( this->getSubscribedDestination() != NULL ) {
+        if( !this->getSubscribedDestination()->equals( valuePtr->getSubscribedDestination() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getSubscribedDestination() != NULL ) {
         return false;
     }
     if( !BaseDataStructure::equals( value ) ) {
@@ -199,5 +219,20 @@ std::string& SubscriptionInfo::getSubcriptionName() {
 ////////////////////////////////////////////////////////////////////////////////
 void SubscriptionInfo::setSubcriptionName(const std::string& subcriptionName ) {
     this->subcriptionName = subcriptionName;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const ActiveMQDestination* SubscriptionInfo::getSubscribedDestination() const {
+    return subscribedDestination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQDestination* SubscriptionInfo::getSubscribedDestination() {
+    return subscribedDestination;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void SubscriptionInfo::setSubscribedDestination(ActiveMQDestination* subscribedDestination ) {
+    this->subscribedDestination = subscribedDestination;
 }
 

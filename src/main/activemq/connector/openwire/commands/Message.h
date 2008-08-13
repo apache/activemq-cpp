@@ -34,6 +34,7 @@
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/commands/ConsumerId.h>
 #include <activemq/connector/openwire/commands/BrokerId.h>
+#include <activemq/connector/openwire/commands/BrokerId.h>
 #include <vector>
 #include <string>
 
@@ -82,6 +83,9 @@ namespace commands{
         std::string userID;
         bool recievedByDFBridge;
         bool droppable;
+        std::vector<BrokerId*> cluster;
+        long long brokerInTime;
+        long long brokerOutTime;
 
     public:
 
@@ -221,6 +225,16 @@ namespace commands{
 
         virtual bool isDroppable() const;
         virtual void setDroppable( bool droppable );
+
+        virtual const std::vector<BrokerId*>& getCluster() const;
+        virtual std::vector<BrokerId*>& getCluster();
+        virtual void setCluster( const std::vector<BrokerId*>& cluster );
+
+        virtual long long getBrokerInTime() const;
+        virtual void setBrokerInTime( long long brokerInTime );
+
+        virtual long long getBrokerOutTime() const;
+        virtual void setBrokerOutTime( long long brokerOutTime );
 
     };
 

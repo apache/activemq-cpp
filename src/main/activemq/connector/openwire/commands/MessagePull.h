@@ -26,6 +26,7 @@
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <activemq/connector/openwire/commands/ConsumerId.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
+#include <activemq/connector/openwire/commands/MessageId.h>
 #include <vector>
 #include <string>
 
@@ -51,6 +52,8 @@ namespace commands{
         ConsumerId* consumerId;
         ActiveMQDestination* destination;
         long long timeout;
+        std::string correlationId;
+        MessageId* messageId;
 
     public:
 
@@ -107,6 +110,14 @@ namespace commands{
 
         virtual long long getTimeout() const;
         virtual void setTimeout( long long timeout );
+
+        virtual const std::string& getCorrelationId() const;
+        virtual std::string& getCorrelationId();
+        virtual void setCorrelationId( const std::string& correlationId );
+
+        virtual const MessageId* getMessageId() const;
+        virtual MessageId* getMessageId();
+        virtual void setMessageId( MessageId* messageId );
 
     };
 

@@ -58,6 +58,8 @@ namespace commands{
         bool duplexConnection;
         bool networkConnection;
         long long connectionId;
+        std::string brokerUploadUrl;
+        std::string networkProperties;
 
     public:
 
@@ -137,6 +139,14 @@ namespace commands{
 
         virtual long long getConnectionId() const;
         virtual void setConnectionId( long long connectionId );
+
+        virtual const std::string& getBrokerUploadUrl() const;
+        virtual std::string& getBrokerUploadUrl();
+        virtual void setBrokerUploadUrl( const std::string& brokerUploadUrl );
+
+        virtual const std::string& getNetworkProperties() const;
+        virtual std::string& getNetworkProperties();
+        virtual void setNetworkProperties( const std::string& networkProperties );
 
     };
 

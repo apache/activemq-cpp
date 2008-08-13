@@ -42,6 +42,8 @@ MessagePull::MessagePull()
     this->consumerId = NULL;
     this->destination = NULL;
     this->timeout = 0;
+    this->correlationId = "";
+    this->messageId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +51,7 @@ MessagePull::~MessagePull()
 {
     delete this->consumerId;
     delete this->destination;
+    delete this->messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +89,12 @@ void MessagePull::copyDataStructure( const DataStructure* src ) {
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setTimeout( srcPtr->getTimeout() );
+    this->setCorrelationId( srcPtr->getCorrelationId() );
+    if( srcPtr->getMessageId() != NULL ) {
+        this->setMessageId( 
+            dynamic_cast<MessageId*>( 
+                srcPtr->getMessageId()->cloneDataStructure() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +122,13 @@ std::string MessagePull::toString() const {
         stream << "   Object is NULL" << std::endl;
     }
     stream << " Value of Timeout = " << this->getTimeout() << std::endl;
+    stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
+    stream << " Value of MessageId is Below:" << std::endl;
+    if( this->getMessageId() != NULL ) {
+        stream << this->getMessageId()->toString() << std::endl;
+    } else {
+        stream << "   Object is NULL" << std::endl;
+    }
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = MessagePull" << std::endl;
 
@@ -141,6 +157,16 @@ bool MessagePull::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getTimeout() != valuePtr->getTimeout() ) {
+        return false;
+    }
+    if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
+        return false;
+    }
+    if( this->getMessageId() != NULL ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+            return false;
+        }
+    } else if( valuePtr->getMessageId() != NULL ) {
         return false;
     }
     if( !BaseCommand<transport::Command>::equals( value ) ) {
@@ -187,5 +213,35 @@ long long MessagePull::getTimeout() const {
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePull::setTimeout(long long timeout ) {
     this->timeout = timeout;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& MessagePull::getCorrelationId() const {
+    return correlationId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& MessagePull::getCorrelationId() {
+    return correlationId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessagePull::setCorrelationId(const std::string& correlationId ) {
+    this->correlationId = correlationId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const MessageId* MessagePull::getMessageId() const {
+    return messageId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+MessageId* MessagePull::getMessageId() {
+    return messageId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void MessagePull::setMessageId(MessageId* messageId ) {
+    this->messageId = messageId;
 }
 

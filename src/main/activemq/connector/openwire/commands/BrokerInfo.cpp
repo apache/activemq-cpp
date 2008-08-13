@@ -48,6 +48,8 @@ BrokerInfo::BrokerInfo()
     this->duplexConnection = false;
     this->networkConnection = false;
     this->connectionId = 0;
+    this->brokerUploadUrl = "";
+    this->networkProperties = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,6 +107,8 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
     this->setDuplexConnection( srcPtr->isDuplexConnection() );
     this->setNetworkConnection( srcPtr->isNetworkConnection() );
     this->setConnectionId( srcPtr->getConnectionId() );
+    this->setBrokerUploadUrl( srcPtr->getBrokerUploadUrl() );
+    this->setNetworkProperties( srcPtr->getNetworkProperties() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,6 +145,8 @@ std::string BrokerInfo::toString() const {
     stream << " Value of DuplexConnection = " << this->isDuplexConnection() << std::endl;
     stream << " Value of NetworkConnection = " << this->isNetworkConnection() << std::endl;
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
+    stream << " Value of BrokerUploadUrl = " << this->getBrokerUploadUrl() << std::endl;
+    stream << " Value of NetworkProperties = " << this->getNetworkProperties() << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = BrokerInfo" << std::endl;
 
@@ -192,6 +198,12 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConnectionId() != valuePtr->getConnectionId() ) {
+        return false;
+    }
+    if( this->getBrokerUploadUrl() != valuePtr->getBrokerUploadUrl() ) {
+        return false;
+    }
+    if( this->getNetworkProperties() != valuePtr->getNetworkProperties() ) {
         return false;
     }
     if( !BaseCommand<transport::Command>::equals( value ) ) {
@@ -318,5 +330,35 @@ long long BrokerInfo::getConnectionId() const {
 ////////////////////////////////////////////////////////////////////////////////
 void BrokerInfo::setConnectionId(long long connectionId ) {
     this->connectionId = connectionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& BrokerInfo::getBrokerUploadUrl() const {
+    return brokerUploadUrl;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& BrokerInfo::getBrokerUploadUrl() {
+    return brokerUploadUrl;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::setBrokerUploadUrl(const std::string& brokerUploadUrl ) {
+    this->brokerUploadUrl = brokerUploadUrl;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::string& BrokerInfo::getNetworkProperties() const {
+    return networkProperties;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string& BrokerInfo::getNetworkProperties() {
+    return networkProperties;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BrokerInfo::setNetworkProperties(const std::string& networkProperties ) {
+    this->networkProperties = networkProperties;
 }
 

@@ -80,6 +80,8 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             return true;
         } else if( answer.equals("ActiveMQStreamMessage") ) {
             return true;
+        } else if( answer.equals("ActiveMBlobMessage") ) {
+            return true;
         } else {
             return super.isMarshallAware(jclass);
         }

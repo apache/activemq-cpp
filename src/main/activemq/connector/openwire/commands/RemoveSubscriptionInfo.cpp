@@ -94,7 +94,7 @@ std::string RemoveSubscriptionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = RemoveSubscriptionInfo" << std::endl;
-    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 0" << std::endl; 
+    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 9" << std::endl; 
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {
         stream << this->getConnectionId()->toString() << std::endl;

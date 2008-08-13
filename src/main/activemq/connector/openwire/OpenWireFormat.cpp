@@ -28,6 +28,7 @@
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/marshal/MarshalAware.h>
 #include <activemq/connector/openwire/marshal/DataStreamMarshaller.h>
+#include <activemq/connector/openwire/marshal/v3/MarshallerFactory.h>
 #include <activemq/connector/openwire/marshal/v2/MarshallerFactory.h>
 #include <activemq/connector/openwire/marshal/v1/MarshallerFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -116,6 +117,9 @@ void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException 
             break;
         case 2:
             v2::MarshallerFactory().configure( this );
+            break;
+        case 3:
+            v3::MarshallerFactory().configure( this );
             break;
         default:
             throw IllegalArgumentException(

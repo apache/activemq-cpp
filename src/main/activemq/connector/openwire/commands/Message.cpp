@@ -62,6 +62,8 @@ Message::Message()
     this->userID = "";
     this->recievedByDFBridge = false;
     this->droppable = false;
+    this->brokerInTime = 0;
+    this->brokerOutTime = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +80,9 @@ Message::~Message()
     delete this->targetConsumerId;
     for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
         delete brokerPath[ibrokerPath];
+    }
+    for( size_t icluster = 0; icluster < cluster.size(); ++icluster ) {
+        delete cluster[icluster];
     }
 }
 
@@ -175,6 +180,17 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setUserID( srcPtr->getUserID() );
     this->setRecievedByDFBridge( srcPtr->isRecievedByDFBridge() );
     this->setDroppable( srcPtr->isDroppable() );
+    for( size_t icluster = 0; icluster < srcPtr->getCluster().size(); ++icluster ) {
+        if( srcPtr->getCluster()[icluster] != NULL ) {
+            this->getCluster().push_back( 
+                dynamic_cast<BrokerId*>( 
+                    srcPtr->getCluster()[icluster]->cloneDataStructure() ) );
+        } else {
+            this->getCluster().push_back( NULL );
+        }
+    }
+    this->setBrokerInTime( srcPtr->getBrokerInTime() );
+    this->setBrokerOutTime( srcPtr->getBrokerOutTime() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,6 +287,16 @@ std::string Message::toString() const {
     stream << " Value of UserID = " << this->getUserID() << std::endl;
     stream << " Value of RecievedByDFBridge = " << this->isRecievedByDFBridge() << std::endl;
     stream << " Value of Droppable = " << this->isDroppable() << std::endl;
+    for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
+        stream << " Value of Cluster[" << icluster << "] is Below:" << std::endl;
+        if( this->getCluster()[icluster] != NULL ) {
+            stream << this->getCluster()[icluster]->toString() << std::endl;
+        } else {
+            stream << "   Object is NULL" << std::endl;
+        }
+    }
+    stream << " Value of BrokerInTime = " << this->getBrokerInTime() << std::endl;
+    stream << " Value of BrokerOutTime = " << this->getBrokerOutTime() << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = Message" << std::endl;
 
@@ -406,6 +432,21 @@ bool Message::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->isDroppable() != valuePtr->isDroppable() ) {
+        return false;
+    }
+    for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
+        if( this->getCluster()[icluster] != NULL ) {
+            if( !this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster] ) ) {
+                return false;
+            }
+        } else if( valuePtr->getCluster()[icluster] != NULL ) {
+            return false;
+        }
+    }
+    if( this->getBrokerInTime() != valuePtr->getBrokerInTime() ) {
+        return false;
+    }
+    if( this->getBrokerOutTime() != valuePtr->getBrokerOutTime() ) {
         return false;
     }
     if( !BaseCommand<transport::Command>::equals( value ) ) {
@@ -752,5 +793,40 @@ bool Message::isDroppable() const {
 ////////////////////////////////////////////////////////////////////////////////
 void Message::setDroppable(bool droppable ) {
     this->droppable = droppable;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const std::vector<BrokerId*>& Message::getCluster() const {
+    return cluster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<BrokerId*>& Message::getCluster() {
+    return cluster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::setCluster(const std::vector<BrokerId*>& cluster ) {
+    this->cluster = cluster;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long Message::getBrokerInTime() const {
+    return brokerInTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::setBrokerInTime(long long brokerInTime ) {
+    this->brokerInTime = brokerInTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long Message::getBrokerOutTime() const {
+    return brokerOutTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::setBrokerOutTime(long long brokerOutTime ) {
+    this->brokerOutTime = brokerOutTime;
 }
 

@@ -53,6 +53,7 @@ namespace commands{
         ActiveMQDestination* destination;
         std::vector<BrokerId*> brokerPath;
         bool dispatchAsync;
+        int windowSize;
 
     public:
 
@@ -113,6 +114,9 @@ namespace commands{
 
         virtual bool isDispatchAsync() const;
         virtual void setDispatchAsync( bool dispatchAsync );
+
+        virtual int getWindowSize() const;
+        virtual void setWindowSize( int windowSize );
 
     };
 

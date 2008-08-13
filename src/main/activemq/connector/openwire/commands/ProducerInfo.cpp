@@ -42,6 +42,7 @@ ProducerInfo::ProducerInfo()
     this->producerId = NULL;
     this->destination = NULL;
     this->dispatchAsync = false;
+    this->windowSize = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,6 +99,7 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
         }
     }
     this->setDispatchAsync( srcPtr->isDispatchAsync() );
+    this->setWindowSize( srcPtr->getWindowSize() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +135,7 @@ std::string ProducerInfo::toString() const {
         }
     }
     stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
+    stream << " Value of WindowSize = " << this->getWindowSize() << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ProducerInfo" << std::endl;
 
@@ -170,6 +173,9 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
         }
     }
     if( this->isDispatchAsync() != valuePtr->isDispatchAsync() ) {
+        return false;
+    }
+    if( this->getWindowSize() != valuePtr->getWindowSize() ) {
         return false;
     }
     if( !BaseCommand<transport::Command>::equals( value ) ) {
@@ -231,5 +237,15 @@ bool ProducerInfo::isDispatchAsync() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ProducerInfo::setDispatchAsync(bool dispatchAsync ) {
     this->dispatchAsync = dispatchAsync;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ProducerInfo::getWindowSize() const {
+    return windowSize;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ProducerInfo::setWindowSize(int windowSize ) {
+    this->windowSize = windowSize;
 }
 
