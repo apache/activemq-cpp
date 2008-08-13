@@ -106,9 +106,10 @@
         <dependency>
           <groupId>com.sun</groupId>
           <artifactId>tools</artifactId>
-          <version>5.0</version>
+          <version>1.4.2</version>
            <scope>system</scope>
-           <systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+           <!-- Only a JDK of 1.5.0 B11 or greater seems to work. -->
+           <systemPath>/opt/local/jdk1.5.0_16/lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
     </profile>
@@ -123,7 +124,7 @@
         <configuration>
         <tasks>
           <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <generate version="2" source="${activemq-core-dir}" target="${basedir}"/>
+          <generate version="3" source="${activemq-core-dir}" target="${basedir}"/>
         </tasks>
         </configuration>
           <dependencies>
