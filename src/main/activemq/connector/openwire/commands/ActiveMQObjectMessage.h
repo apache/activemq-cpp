@@ -93,7 +93,7 @@ namespace commands{
     public:  // cms::Message
 
         /**
-         * Clonse this message exactly, returns a new instance that the
+         * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */

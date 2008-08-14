@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQSTREAMMESSAGE_H_
-#define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQSTREAMMESSAGE_H_
+#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQBLOBMESSAGE_H_
+#define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQBLOBMESSAGE_H_
 
 // Turn off warning message for ignored exception specification
 #ifdef _MSC_VER
@@ -24,22 +24,22 @@
 #endif
 
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
-#include <string>
 
-namespace activemq{
-namespace connector{
-namespace openwire{
-namespace commands{
+namespace activemq {
+namespace connector {
+namespace openwire {
+namespace commands {
 
-    class ActiveMQStreamMessage : public ActiveMQMessage {
-    public:
-
-        const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;
+    class ActiveMQBlobMessage : public ActiveMQMessage {
 
     public:
 
-        ActiveMQStreamMessage();
-        virtual ~ActiveMQStreamMessage();
+        const static unsigned char ID_ACTIVEMQBLOBMESSAGE = 29;
+
+    public:
+
+        ActiveMQBlobMessage();
+        virtual ~ActiveMQBlobMessage() {}
 
         virtual unsigned char getDataStructureType() const;
 
@@ -48,8 +48,8 @@ namespace commands{
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual ActiveMQStreamMessage* cloneDataStructure() const {
-            ActiveMQStreamMessage* message = new ActiveMQStreamMessage();
+        virtual ActiveMQBlobMessage* cloneDataStructure() const {
+            ActiveMQBlobMessage* message = new ActiveMQBlobMessage();
             message->copyDataStructure( this );
             return message;
         }
@@ -78,5 +78,4 @@ namespace commands{
 
 }}}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQSTREAMMESSAGE_H_*/
-
+#endif /* _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQBLOBMESSAGE_H_ */

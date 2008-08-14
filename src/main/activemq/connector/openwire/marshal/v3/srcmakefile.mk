@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources += \
+    activemq/connector/openwire/marshal/v3/ActiveMQBlobMessageMarshaller.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQBytesMessageMarshaller.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQDestinationMarshaller.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQMapMessageMarshaller.cpp \
@@ -79,6 +80,7 @@ cc_sources += \
     activemq/connector/openwire/marshal/v3/XATransactionIdMarshaller.cpp
 
 h_sources += \
+    activemq/connector/openwire/marshal/v3/ActiveMQBlobMessageMarshaller.h \
     activemq/connector/openwire/marshal/v3/ActiveMQBytesMessageMarshaller.h \
     activemq/connector/openwire/marshal/v3/ActiveMQDestinationMarshaller.h \
     activemq/connector/openwire/marshal/v3/ActiveMQMapMessageMarshaller.h \

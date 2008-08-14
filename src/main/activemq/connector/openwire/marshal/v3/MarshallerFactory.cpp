@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/connector/openwire/marshal/v3/MarshallerFactory.h>
+#include <activemq/connector/openwire/marshal/v3/ActiveMQBlobMessageMarshaller.h>
 #include <activemq/connector/openwire/marshal/v3/ActiveMQBytesMessageMarshaller.h>
 #include <activemq/connector/openwire/marshal/v3/ActiveMQMapMessageMarshaller.h>
 #include <activemq/connector/openwire/marshal/v3/ActiveMQMessageMarshaller.h>
@@ -91,6 +92,7 @@ using namespace activemq::connector::openwire::marshal::v3;
 ///////////////////////////////////////////////////////////////////////////////
 void MarshallerFactory::configure( OpenWireFormat* format ) {
 
+    format->addMarshaller( new ActiveMQBlobMessageMarshaller() );
     format->addMarshaller( new ActiveMQBytesMessageMarshaller() );
     format->addMarshaller( new ActiveMQMapMessageMarshaller() );
     format->addMarshaller( new ActiveMQMessageMarshaller() );

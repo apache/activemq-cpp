@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources += \
+    activemq/connector/openwire/marshal/v3/ActiveMQBlobMessageMarshallerTest.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQBytesMessageMarshallerTest.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQMapMessageMarshallerTest.cpp \
     activemq/connector/openwire/marshal/v3/ActiveMQMessageMarshallerTest.cpp \
@@ -73,6 +74,7 @@ cc_sources += \
     activemq/connector/openwire/marshal/v3/XATransactionIdMarshallerTest.cpp
 
 h_sources += \
+    activemq/connector/openwire/marshal/v3/ActiveMQBlobMessageMarshallerTest.h \
     activemq/connector/openwire/marshal/v3/ActiveMQBytesMessageMarshallerTest.h \
     activemq/connector/openwire/marshal/v3/ActiveMQMapMessageMarshallerTest.h \
     activemq/connector/openwire/marshal/v3/ActiveMQMessageMarshallerTest.h \

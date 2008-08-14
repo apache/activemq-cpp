@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources += \
+    activemq/connector/openwire/commands/ActiveMQBlobMessage.cpp \
     activemq/connector/openwire/commands/ActiveMQBytesMessage.cpp \
     activemq/connector/openwire/commands/ActiveMQDestination.cpp \
     activemq/connector/openwire/commands/ActiveMQMapMessage.cpp \
@@ -77,6 +78,7 @@ cc_sources += \
     activemq/connector/openwire/commands/XATransactionId.cpp
 
 h_sources += \
+    activemq/connector/openwire/commands/ActiveMQBlobMessage.h \
     activemq/connector/openwire/commands/ActiveMQBytesMessage.h \
     activemq/connector/openwire/commands/ActiveMQDestination.h \
     activemq/connector/openwire/commands/ActiveMQMapMessage.h \
