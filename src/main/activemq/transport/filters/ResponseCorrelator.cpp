@@ -109,8 +109,7 @@ Response* ResponseCorrelator::request( Command* command )
 
         // Add a future response object to the map indexed by this
         // command id.
-        FutureResponse* futureResponse =
-           new FutureResponse();
+        FutureResponse* futureResponse = new FutureResponse();
 
         synchronized( &mapMutex ){
             requestMap[command->getCommandId()] = futureResponse;
@@ -119,17 +118,12 @@ Response* ResponseCorrelator::request( Command* command )
         // Wait to be notified of the response via the futureResponse
         // object.
         Response* response = NULL;
-        synchronized( futureResponse ){
 
-            // Send the request.
-            next->oneway( command );
+        // Send the request.
+        next->oneway( command );
 
-            // Wait for the response to come in.
-            futureResponse->wait( maxResponseWaitTime );
-
-            // Get the response.
-            response = futureResponse->getResponse();
-        }
+        // Get the response.
+        response = futureResponse->getResponse( maxResponseWaitTime );
 
         // Perform cleanup on the map.
         synchronized( &mapMutex ){
@@ -166,8 +160,7 @@ Response* ResponseCorrelator::request( Command* command )
 void ResponseCorrelator::onCommand( Command* command ) {
 
     // Let's see if the incoming command is a response.
-    Response* response =
-       dynamic_cast<Response*>( command );
+    Response* response = dynamic_cast<Response*>( command );
 
     if( response == NULL ){
 
@@ -194,14 +187,8 @@ void ResponseCorrelator::onCommand( Command* command ) {
         FutureResponse* futureResponse = NULL;
         futureResponse = iter->second;
 
-        synchronized( futureResponse ){
-
-            // Set the response property in the future response.
-            futureResponse->setResponse( response );
-
-            // Notify all waiting for this response.
-            futureResponse->notifyAll();
-        }
+        // Set the response property in the future response.
+        futureResponse->setResponse( response );
     }
 }
 

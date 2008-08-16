@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 #include <activemq/transport/Response.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
@@ -30,92 +30,48 @@ namespace transport{
 namespace filters{
 
     /**
-     * A container that holds a response object.  Since this
-     * object is Synchronizable, callers can wait on this object
-     * and when a response comes in, notify can be called to
-     * inform those waiting that the response is now available.
+     * A container that holds a response object.  Callers of the getResponse
+     * method will block until a response has been receive unless they call
+     * the getRepsonse that takes a timeout.
      */
-    class AMQCPP_API FutureResponse : public decaf::util::concurrent::Synchronizable{
+    class AMQCPP_API FutureResponse {
     private:
 
+        mutable decaf::util::concurrent::CountDownLatch responseLatch;
         Response* response;
-        decaf::util::concurrent::Mutex mutex;
 
     public:
 
-        FutureResponse(){
+        FutureResponse() : responseLatch( 1 ) {
             response = NULL;
         }
 
         virtual ~FutureResponse(){}
 
         /**
-         * Locks the object.
-         * @throws ActiveMQException
-         */
-        virtual void lock() throw( exceptions::ActiveMQException ){
-            mutex.lock();
-        }
-
-        /**
-         * Unlocks the object.
-         * @throws ActiveMQException
-         */
-        virtual void unlock() throw( exceptions::ActiveMQException ){
-            mutex.unlock();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void wait() throw( exceptions::ActiveMQException ){
-            mutex.wait();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time in millisecsonds to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs )
-            throw( exceptions::ActiveMQException ) {
-            mutex.wait( millisecs );
-        }
-
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notify() throw( exceptions::ActiveMQException ){
-            mutex.notify();
-        }
-
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notifyAll() throw( exceptions::ActiveMQException ){
-            mutex.notifyAll();
-        }
-
-        /**
-         * Getters for the response property.
+         * Getters for the response property. Infinite Wait.
          * @return the response object for the request
          */
         virtual const Response* getResponse() const{
+            this->responseLatch.await();
             return response;
         }
         virtual Response* getResponse(){
+            this->responseLatch.await();
+            return response;
+        }
+
+        /**
+         * Getters for the response property. Timed Wait.
+         * @param timeout - time to wait in milliseconds
+         * @return the response object for the request
+         */
+        virtual const Response* getResponse( unsigned timeout ) const{
+            this->responseLatch.await( timeout );
+            return response;
+        }
+        virtual Response* getResponse( unsigned int timeout ){
+            this->responseLatch.await( timeout );
             return response;
         }
 
@@ -125,6 +81,7 @@ namespace filters{
          */
         virtual void setResponse( Response* response ){
             this->response = response;
+            this->responseLatch.countDown();
         }
 
     };
