@@ -37,7 +37,7 @@ namespace commands{
      * type.  The class implements the basic wrapper around the generated
      * Message class as well as satisfying the contract of the
      * core::ActiveMQMessage interface and the cms::Message method of which
-     * T must be a derviation of.
+     * T must be a derivation of.
      */
     template< typename T>
     class ActiveMQMessageBase : public T,
@@ -79,7 +79,7 @@ namespace commands{
         }
 
         /**
-         * Handles the marshalling of the objects properties into the
+         * Handles the marshaling of the objects properties into the
          * internal byte array before the object is marshalled to the
          * wire
          * @param wireFormat - the wireformatting controller
@@ -174,7 +174,7 @@ namespace commands{
     public:   // core::ActiveMQMessage
 
         /**
-         * Sets the Acknowledgement Handler that this Message will use
+         * Sets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler to call
          */
@@ -183,7 +183,7 @@ namespace commands{
         }
 
         /**
-         * Gets the Acknowledgement Handler that this Message will use
+         * Gets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
          * @returns handler ActiveMQAckHandler to call or NULL if not set
          */
@@ -254,7 +254,7 @@ namespace commands{
         }
 
         /**
-         * Retrieves the propery names.
+         * Retrieves the property names.
          * @return The complete set of property names currently in this
          * message.
          */
