@@ -213,6 +213,11 @@ namespace transport{
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
+
+        virtual Response* request( Command* command, unsigned int timeout )
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException);
+
         virtual void setCommandListener( CommandListener* listener ){
             this->commandListener = listener;
         }

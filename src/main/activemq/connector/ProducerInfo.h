@@ -87,6 +87,21 @@ namespace connector{
          */
         virtual bool isDisableMessageId() const = 0;
 
+        /**
+         * Gets the set send timeout for messages from this producer, a value of
+         * zero indicates that the Producer should wait forever for a response from
+         * the broker on the send.
+         * @return default time to wait for broker response to a message being sent.
+         */
+        virtual unsigned int getSendTimeout() const = 0;
+
+        /**
+         * Sets the time to wait for the broker to respond to a message being sent
+         * @param timeout - The time to wait for the broker to acknowledge that a
+         * message has been received.
+         */
+        virtual void setSendTimeout( unsigned int timeout ) = 0;
+
     };
 
 }}

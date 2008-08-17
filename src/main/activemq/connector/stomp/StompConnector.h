@@ -283,6 +283,7 @@ namespace stomp{
          * Create a Consumer for the given Session
          * @param destination Destination to Subscribe to.
          * @param session Session Information.
+         * @param sendTimeout The time to wait for an Ack from the Broker, zero = forever.
          * @return Producer Information
          * @throws ConnectorException
          */
@@ -363,7 +364,7 @@ namespace stomp{
         virtual void acknowledge( const SessionInfo* session,
                                   const ConsumerInfo* consumer,
                                   const cms::Message* message,
-                                  AckType ackType = ACK_TYPE_CONSUMED)
+                                  AckType ackType = ACK_TYPE_CONSUMED )
             throw ( ConnectorException );
 
         /**

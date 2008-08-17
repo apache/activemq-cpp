@@ -159,6 +159,16 @@ namespace transport{
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
+         * Not supported by this class - throws an exception.
+         * @param command the command to be sent.
+         * @param timeout the time to wait for a response.
+         * @returns the response to the command sent.
+         * @throws UnsupportedOperationException.
+         */
+        virtual Response* request( Command* command, unsigned int timeout )
+            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
          * Assigns the command listener for non-response commands.
          * @param listener the listener.
          */

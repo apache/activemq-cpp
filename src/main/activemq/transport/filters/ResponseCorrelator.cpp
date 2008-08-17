@@ -46,13 +46,9 @@ unsigned int ResponseCorrelator::getNextCommandId()
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::ResponseCorrelator( Transport* next, bool own )
 :
-    TransportFilter( next, own )
-{
+    TransportFilter( next, own ) {
+
     nextCommandId = 0;
-
-    // Default max response wait time to 3 seconds.
-    maxResponseWaitTime = 3000;
-
     // Start in the closed state.
     closed = true;
 }
@@ -65,16 +61,6 @@ ResponseCorrelator::~ResponseCorrelator(){
 
     // Don't do anything with the future responses -
     // they should be cleaned up by each requester.
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned long ResponseCorrelator::getMaxResponseWaitTime() const{
-    return maxResponseWaitTime;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::setMaxResponseWaitTime( const unsigned long milliseconds ){
-    maxResponseWaitTime = milliseconds;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +109,64 @@ Response* ResponseCorrelator::request( Command* command )
         next->oneway( command );
 
         // Get the response.
-        response = futureResponse->getResponse( maxResponseWaitTime );
+        response = futureResponse->getResponse();
+
+        // Perform cleanup on the map.
+        synchronized( &mapMutex ){
+
+            // We've done our waiting - get this thing out
+            // of the map.
+            requestMap.erase( command->getCommandId() );
+
+            // Destroy the futureResponse.  It is safe to
+            // do this now because the other thread only
+            // accesses the futureResponse within a lock on
+            // the map.
+            delete futureResponse;
+            futureResponse = NULL;
+        }
+
+        if( response == NULL ){
+
+            throw CommandIOException( __FILE__, __LINE__,
+                "No valid response received for command: %s, check broker.",
+                command->toString().c_str() );
+        }
+
+        return response;
+    }
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try{
+        command->setCommandId( getNextCommandId() );
+        command->setResponseRequired( true );
+
+        // Add a future response object to the map indexed by this
+        // command id.
+        FutureResponse* futureResponse = new FutureResponse();
+
+        synchronized( &mapMutex ){
+            requestMap[command->getCommandId()] = futureResponse;
+        }
+
+        // Wait to be notified of the response via the futureResponse
+        // object.
+        Response* response = NULL;
+
+        // Send the request.
+        next->oneway( command );
+
+        // Get the response.
+        response = futureResponse->getResponse( timeout );
 
         // Perform cleanup on the map.
         synchronized( &mapMutex ){
@@ -235,6 +278,14 @@ void ResponseCorrelator::close() throw( cms::CMSException ){
 
     try{
 
+        // Wake-up any outstanding requests.
+        synchronized( &mapMutex ){
+            std::map<unsigned int, FutureResponse*>::iterator iter = requestMap.begin();
+            for( ; iter != requestMap.end(); ++iter ){
+                iter->second->setResponse( NULL );
+            }
+        }
+
         if( !closed && next != NULL ){
             next->close();
         }
@@ -244,4 +295,21 @@ void ResponseCorrelator::close() throw( cms::CMSException ){
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResponseCorrelator::onTransportException(
+    Transport* source AMQCPP_UNUSED,
+    const decaf::lang::Exception& ex ) {
+
+    // Trigger each outstanding request to complete so that we don't hang
+    // forever waiting for one that has been sent without timeout.
+    synchronized( &mapMutex ){
+        std::map<unsigned int, FutureResponse*>::iterator iter = requestMap.begin();
+        for( ; iter != requestMap.end(); ++iter ){
+            iter->second->setResponse( NULL );
+        }
+    }
+
+    fire( ex );
 }

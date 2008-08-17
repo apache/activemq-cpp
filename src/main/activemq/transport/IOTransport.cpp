@@ -221,3 +221,12 @@ Response* IOTransport::request( Command* command AMQCPP_UNUSED )
         __FILE__, __LINE__,
         "IOTransport::request() - unsupported operation" );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+Response* IOTransport::request( Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation" );
+}

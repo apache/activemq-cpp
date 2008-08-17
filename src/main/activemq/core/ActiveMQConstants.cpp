@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #include "ActiveMQConstants.h"
 #include <stdio.h>
 
@@ -26,16 +26,16 @@ using namespace activemq::core;
 string ActiveMQConstants::StaticInitializer::destOptions[NUM_OPTIONS];
 string ActiveMQConstants::StaticInitializer::uriParams[NUM_PARAMS];
 
-map< std::string, ActiveMQConstants::DestinationOption > 
+map< std::string, ActiveMQConstants::DestinationOption >
     ActiveMQConstants::StaticInitializer::destOptionMap;
-map< std::string, ActiveMQConstants::URIParam > 
+map< std::string, ActiveMQConstants::URIParam >
     ActiveMQConstants::StaticInitializer::uriParamsMap;
 
 ActiveMQConstants::StaticInitializer ActiveMQConstants::staticInits;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConstants::StaticInitializer::StaticInitializer(){
-    
+
     destOptions[CONSUMER_PREFECTCHSIZE] = "consumer.prefetchSize";
     destOptions[CUNSUMER_MAXPENDINGMSGLIMIT] = "consumer.maximumPendingMessageLimit";
     destOptions[CONSUMER_NOLOCAL] = "consumer.noLocal";
@@ -44,10 +44,12 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     destOptions[CONSUMER_SELECTOR] = "consumer.selector";
     destOptions[CONSUMER_EXCLUSIVE] = "consumer.exclusive";
     destOptions[CONSUMER_PRIORITY] = "consumer.priority";
-    
+
+    uriParams[PARAM_SENDTIMEOUT] = "connection.sendTimeout";
+    uriParams[PARAM_PRODUCERWINDOWSIZE] = "connection.producerWidowSize";
     uriParams[PARAM_USERNAME] = "username";
     uriParams[PARAM_PASSWORD] = "password";
-    uriParams[PARAM_CLIENTID] = "client-id";    
+    uriParams[PARAM_CLIENTID] = "client-id";
 
     for( int ix=0; ix<NUM_OPTIONS; ++ix ){
         destOptionMap[destOptions[ix]] = (DestinationOption)ix;

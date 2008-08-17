@@ -190,15 +190,16 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
-        "&transport.useAsyncSend=true"
+        "&soKeepAlive=true";
+//        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true";
-        "&wireFormat.tightEncodingEnabled=true";
+//        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
     // Total number of messages for this producer to send.
     //============================================================
-    unsigned int numMessages = 2000;
+    unsigned int numMessages = 50000;
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to

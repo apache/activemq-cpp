@@ -165,6 +165,16 @@ namespace filters{
                     "stuff" );
             }
 
+            virtual Response* request( Command* command AMQCPP_UNUSED,
+                                       unsigned int timeout AMQCPP_UNUSED )
+                throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+            {
+                throw decaf::lang::exceptions::UnsupportedOperationException(
+                    __FILE__,
+                    __LINE__,
+                    "stuff" );
+            }
+
             virtual void setCommandListener( CommandListener* listener ){
                 this->listener = listener;
             }

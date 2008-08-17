@@ -127,6 +127,57 @@ Response* StompConnectionNegotiator::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Response* StompConnectionNegotiator::request( Command* command, unsigned int timeout )
+    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try{
+
+        if( closed || next == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "StompConnectionNegotiator::request - transport already closed" );
+        }
+
+        // Once connected we just pass through all requests.
+        if( connected ) {
+            return next->request( command, timeout );
+        } else {
+
+            ConnectCommand* connect = dynamic_cast<ConnectCommand*>( command );
+
+            if( connect == NULL ) {
+                throw CommandIOException(
+                    __FILE__,
+                    __LINE__,
+                    "StompConnectionNegotiator::request"
+                    "Invalid Command Received: only a connect command "
+                    "can be sent before connected." );
+            }
+
+            // Send the connect request
+            next->oneway( command );
+
+            if( !readyCountDownLatch.await( negotiationTimeout ) ) {
+                throw CommandIOException(
+                    __FILE__,
+                    __LINE__,
+                    "StompConnectionNegotiator::request"
+                    "Connection Negotiate timeout: peer did not "
+                    "send a connected command." );
+            }
+
+            // return the connected command
+            return connectedCmd;
+        }
+    }
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StompConnectionNegotiator::onCommand( Command* command ) {
 
     ConnectedCommand* response =

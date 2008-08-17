@@ -47,12 +47,6 @@ Transport* ResponseCorrelatorFactory::createTransport(
     try {
 
         ResponseCorrelator* transport = new ResponseCorrelator( next, own );
-
-        transport->setMaxResponseWaitTime(
-            (unsigned long)Long::parseLong(
-                properties.getProperty(
-                    "transport.ResponseCorrelator.maxResponseWaitTime", "3000" ) ) );
-
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

@@ -39,6 +39,9 @@ namespace openwire{
         // Session that this producer is attached to - we do not own this
         const SessionInfo* session;
 
+        // Send timeout, how long to wait for a response before failing.
+        unsigned int sendTimeout;
+
     public:
 
         OpenWireProducerInfo( Connector* connector ) :
@@ -47,11 +50,12 @@ namespace openwire{
             this->disableMessageIds = false;
             this->producerInfo = NULL;
             this->session = NULL;
+            this->sendTimeout = 0;
         }
 
-        virtual ~OpenWireProducerInfo() { 
+        virtual ~OpenWireProducerInfo() {
             this->close();
-            delete producerInfo; 
+            delete producerInfo;
         }
 
         /**
@@ -156,6 +160,25 @@ namespace openwire{
          */
         virtual bool isDisableMessageId() const {
             return this->disableMessageIds;
+        }
+
+        /**
+         * Gets the set send timeout for messages from this producer, a value of
+         * zero indicates that the Producer should wait forever for a response from
+         * the broker on the send.
+         * @return default time to wait for broker response to a message being sent.
+         */
+        virtual unsigned int getSendTimeout() const {
+            return this->sendTimeout;
+        }
+
+        /**
+         * Sets the time to wait for the broker to respond to a message being sent
+         * @param timeout - The time to wait for the broker to acknowledge that a
+         * message has been received.
+         */
+        virtual void setSendTimeout( unsigned int timeout ) {
+            this->sendTimeout = timeout;
         }
 
     };

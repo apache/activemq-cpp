@@ -133,7 +133,7 @@ void ResponseCorrelatorTest::testTransportException(){
         // Send one request.
         MyCommand cmd;
         try{
-            correlator.request( &cmd );
+            correlator.request( &cmd, 500 );
             CPPUNIT_ASSERT(false);
         }catch( CommandIOException& ex ){
             // Expected.

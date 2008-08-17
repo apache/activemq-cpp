@@ -655,12 +655,14 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         producer = new OpenWireProducerInfo( this );
         producer->setSessionInfo( session );
+        producer->setSendTimeout( this->getSendTimeout() );
 
         producerInfo = new commands::ProducerInfo();
         producer->setProducerInfo( producerInfo );
 
         commands::ProducerId* producerId = new commands::ProducerId();
         producerInfo->setProducerId( producerId );
+        producerInfo->setWindowSize( this->getProducerWindowSize( ));
 
         producerId->setConnectionId( session->getConnectionId() );
         producerId->setSessionId( session->getSessionId() );
@@ -853,7 +855,7 @@ void OpenWireConnector::send( cms::Message* message,
         }
 
         // Send the message to the broker.
-        Response* response = syncRequest( amqMessage );
+        Response* response = syncRequest( amqMessage, producerInfo->getSendTimeout() );
 
         // The broker did not return an error - this is good.
         // Just discard the response.
@@ -1013,6 +1015,7 @@ TransactionInfo* OpenWireConnector::startTransaction(
         transaction->setTransactionInfo( info );
 
         return transaction;
+
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
         ex.setMark(__FILE__,__LINE__);
@@ -1054,6 +1057,7 @@ void OpenWireConnector::commit( TransactionInfo* transaction,
         info->setType( (int)TRANSACTION_STATE_COMMITONEPHASE );
 
         oneway( info );
+
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
         ex.setMark(__FILE__,__LINE__);
@@ -1095,6 +1099,7 @@ void OpenWireConnector::rollback( TransactionInfo* transaction,
         info->setType( (int)TRANSACTION_STATE_ROLLBACK );
 
         oneway( info );
+
     } catch( ConnectorException& ex ){
         try{ transport->close(); } catch( ... ){}
         ex.setMark(__FILE__,__LINE__);
@@ -1183,7 +1188,7 @@ void OpenWireConnector::unsubscribe( const std::string& name )
         rsi->setClientId( connectionInfo.getClientId() );
 
         // Send the message to the broker.
-        Response* response = syncRequest(rsi);
+        Response* response = syncRequest( rsi );
 
         // The broker did not return an error - this is good.
         // Just discard the response.
@@ -1225,7 +1230,6 @@ void OpenWireConnector::pullMessage( const connector::ConsumerInfo* info, long l
                  consumer->getConsumerInfo()->getDestination()->cloneDataStructure() );
              messagePull.setTimeout( timeout );
 
-             // TODO - This should be Async
              this->oneway( &messagePull );
          }
     }
@@ -1422,12 +1426,18 @@ void OpenWireConnector::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireConnector::syncRequest( Command* command )
+Response* OpenWireConnector::syncRequest( Command* command, unsigned int timeout )
     throw ( ConnectorException ) {
 
     try {
 
-        Response* response = transport->request( command );
+        Response* response = NULL;
+
+        if( timeout == 0 ) {
+            response = transport->request( command );
+        } else {
+            response = transport->request( command, timeout );
+        }
 
         commands::ExceptionResponse* exceptionResponse =
             dynamic_cast<commands::ExceptionResponse*>( response );

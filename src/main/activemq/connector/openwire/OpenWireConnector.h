@@ -34,6 +34,7 @@
 #include <cms/TextMessage.h>
 #include <cms/MapMessage.h>
 
+#include <decaf/lang/Integer.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
@@ -370,7 +371,7 @@ namespace openwire{
          */
         virtual ProducerInfo* createProducer(
             const cms::Destination* destination,
-            SessionInfo* session)
+            SessionInfo* session )
                 throw ( ConnectorException );
 
         /**
@@ -605,6 +606,24 @@ namespace openwire{
 
     private:
 
+        // Gets the configured producer window size to use when creating new
+        // producers to control how much memory is used.
+        virtual unsigned int getProducerWindowSize() const {
+            return decaf::lang::Integer::parseInt(
+                properties.getProperty(
+                    core::ActiveMQConstants::toString(
+                        core::ActiveMQConstants::PARAM_PRODUCERWINDOWSIZE ), "0" ) );
+        }
+
+        // Gets the time to wait for a producer send to complete, meaning the time to
+        // wait for a response.  Zero indicates to wait forever.
+        virtual unsigned int getSendTimeout() const {
+            return decaf::lang::Integer::parseInt(
+                properties.getProperty(
+                    core::ActiveMQConstants::toString(
+                        core::ActiveMQConstants::PARAM_SENDTIMEOUT ), "0" ) );
+        }
+
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );
 
@@ -620,11 +639,12 @@ namespace openwire{
          * Sends a synchronous request and returns the response from the broker.
          * Converts any error responses into an exception.
          * @param command The request command.
+         * @param timeout The time to wait for a response, default is zero or infinite.
          * @returns The response sent from the broker.
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        transport::Response* syncRequest( transport::Command* command )
+        transport::Response* syncRequest( transport::Command* command, unsigned int timeout = 0 )
             throw (ConnectorException);
 
         /**

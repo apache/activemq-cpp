@@ -101,6 +101,19 @@ namespace openwire{
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
+         * Sends the given request to the server and waits for the response.
+         * First waits for the WireFormatInfo exchange to happen so that we
+         * know how to encode outbound data.
+         * @param command The request to send.
+         * @param timeout The time to wait for the response.
+         * @return the response from the server.
+         * @throws CommandIOException if an error occurs with the request.
+         */
+        virtual transport::Response* request( transport::Command* command, unsigned int timeout )
+            throw( transport::CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
          * This is called in the context of the nested transport's
          * reading thread.  In the case of a response object,
          * updates the request map and notifies those waiting on the

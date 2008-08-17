@@ -211,11 +211,11 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
-        "?wireFormat=openwire"
-        "&transport.useAsyncSend=true"
+        "?wireFormat=openwire";
+//        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true";
-        "&wireFormat.tightEncodingEnabled=true";
+//        "&wireFormat.tightEncodingEnabled=true";
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to

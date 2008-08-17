@@ -51,11 +51,6 @@ namespace filters{
         std::map<unsigned int, FutureResponse*> requestMap;
 
         /**
-         * Maximum amount of time in milliseconds to wait for a response.
-         */
-        unsigned long maxResponseWaitTime;
-
-        /**
          * Sync object for accessing the next command id variable.
          */
         decaf::util::concurrent::Mutex commandIdMutex;
@@ -89,18 +84,6 @@ namespace filters{
         virtual ~ResponseCorrelator();
 
         /**
-         * Gets the maximum wait time for a response in milliseconds.
-         * @return max time that a response can take
-         */
-        virtual unsigned long getMaxResponseWaitTime() const;
-
-        /**
-         * Sets the maximum wait time for a response in milliseconds.
-         * @param milliseconds the max time that a response can take.
-         */
-        virtual void setMaxResponseWaitTime( const unsigned long milliseconds );
-
-        /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
@@ -120,6 +103,17 @@ namespace filters{
          * @throws CommandIOException if an error occurs with the request.
          */
         virtual Response* request( Command* command )
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
+         * Sends the given request to the server and waits for the response.
+         * @param command The request to send.
+         * @param timeout The time to wait for a response.
+         * @return the response from the server.
+         * @throws CommandIOException if an error occurs with the request.
+         */
+        virtual Response* request( Command* command, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -151,6 +145,14 @@ namespace filters{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException );
+
+        /**
+         * Event handler for an exception from a command transport.
+         * @param source The source of the exception
+         * @param ex The exception.
+         */
+        virtual void onTransportException( Transport* source,
+                                           const decaf::lang::Exception& ex );
 
     };
 

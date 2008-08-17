@@ -93,3 +93,28 @@ Response* LoggingTransport::request( Command* command )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
     AMQ_CATCHALL_THROW( CommandIOException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+Response* LoggingTransport::request( Command* command, unsigned int timeout )
+    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
+
+    try {
+
+        // Delegate to the base class.
+        Response* response = TransportFilter::request( command, timeout );
+
+        ostringstream ostream;
+        ostream << "*** SENDING REQUEST COMMAND: Timeout = " << timeout << " ***" << endl;
+        ostream << command->toString() << endl;
+        ostream << "*** RECEIVED RESPONSE COMMAND ***" << endl;
+        ostream << ( response == NULL? "NULL" : response->toString() );
+
+        LOGDECAF_INFO( logger, ostream.str() );
+
+        return response;
+    }
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}

@@ -54,6 +54,8 @@ namespace core{
          */
         enum URIParam
         {
+            PARAM_SENDTIMEOUT,
+            PARAM_PRODUCERWINDOWSIZE,
             PARAM_USERNAME,
             PARAM_PASSWORD,
             PARAM_CLIENTID,

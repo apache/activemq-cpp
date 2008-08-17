@@ -57,7 +57,7 @@ MockTransport::~MockTransport(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int MockTransport::getNextCommandId() 
+unsigned int MockTransport::getNextCommandId()
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -120,6 +120,21 @@ Response* MockTransport::request( Command* command )
         throw CommandIOException(
             __FILE__, __LINE__,
             "MockTransport::request - no response builder available" );
+    }
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* MockTransport::request( Command* command, unsigned int timeout AMQCPP_UNUSED )
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException)
+{
+    try{
+        this->request( command );
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )

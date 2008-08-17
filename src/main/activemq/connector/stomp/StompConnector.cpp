@@ -345,6 +345,7 @@ ProducerInfo* StompConnector::createProducer(
         producer->setDestination( destination );
         producer->setProducerId( producerIds.getNextSequenceId() );
         producer->setSessionInfo( session );
+        producer->setSendTimeout( 0 );
 
         return producer;
     }

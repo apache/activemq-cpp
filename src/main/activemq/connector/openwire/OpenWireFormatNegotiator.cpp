@@ -109,6 +109,35 @@ Response* OpenWireFormatNegotiator::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Response* OpenWireFormatNegotiator::request( Command* command, unsigned int timeout )
+    throw( CommandIOException, UnsupportedOperationException ) {
+
+    try{
+
+        if( closed || next == NULL ){
+            throw CommandIOException(
+                __FILE__, __LINE__,
+                "OpenWireFormatNegotiator::request - transport already closed" );
+        }
+
+        if( !readyCountDownLatch.await( negotiationTimeout ) ) {
+            throw CommandIOException(
+                __FILE__,
+                __LINE__,
+                "OpenWireFormatNegotiator::request"
+                "Wire format negotiation timeout: peer did not "
+                "send his wire format." );
+        }
+
+        return next->request( command, timeout );
+    }
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
+    AMQ_CATCHALL_THROW( CommandIOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onCommand( Command* command ) {
 
     DataStructure* dataStructure =

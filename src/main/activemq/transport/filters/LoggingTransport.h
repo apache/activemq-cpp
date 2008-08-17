@@ -73,6 +73,16 @@ namespace filters{
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
+        /**
+         * Not supported by this class - throws an exception.
+         * @param command the command that is sent as a request
+         * @param timeout the time to wait for a response.
+         * @throws UnsupportedOperationException.
+         */
+        virtual Response* request( Command* command, unsigned int timeout )
+            throw( CommandIOException,
+                   decaf::lang::exceptions::UnsupportedOperationException);
+
     };
 
 }}}

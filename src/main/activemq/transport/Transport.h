@@ -81,6 +81,20 @@ namespace transport{
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
+         * Sends the given command to the broker and then waits for the response.
+         * @param command - The command to be sent.
+         * @param timeout - The time to wait for this response.
+         * @return the response from the broker.
+         * @throws CommandIOException if an exception occurs during the read of the
+         * command.
+         * @throws UnsupportedOperationException if this method is not implemented
+         * by this transport.
+         */
+        virtual Response* request( Command* command, unsigned int timeout )
+            throw( CommandIOException,
+                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+
+        /**
          * Assigns the command listener for non-response commands.
          * @param listener the listener.
          */
