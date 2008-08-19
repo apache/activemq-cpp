@@ -1400,10 +1400,8 @@ void OpenWireConnector::onTransportException(
             return;
         }
 
-        synchronized( &mutex ) {
-            // Mark the fact that we are in an error state
-            state = CONNECTION_STATE_ERROR;
-        }
+        // Mark the fact that we are in an error state
+        state = CONNECTION_STATE_ERROR;
 
         // Inform the user of the error.
         fire( ex );
