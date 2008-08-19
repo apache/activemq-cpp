@@ -149,6 +149,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveListTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapTest );
 #include <activemq/util/URISupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
+#include <activemq/util/MemoryUsageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MemoryUsageTest );
 
 #include <decaf/internal/util/ByteArrayAdapterTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::ByteArrayAdapterTest );

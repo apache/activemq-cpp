@@ -74,6 +74,7 @@ cc_sources = \
   activemq/util/PrimitiveListTest.cpp \
   activemq/util/PrimitiveMapTest.cpp \
   activemq/util/URISupportTest.cpp \
+  activemq/util/MemoryUsageTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
   decaf/internal/util/ByteArrayAdapterTest.cpp \
   decaf/internal/nio/ByteArrayPerspectiveTest.cpp \
@@ -187,6 +188,7 @@ h_sources = \
   activemq/util/PrimitiveListTest.h \
   activemq/util/PrimitiveMapTest.h \
   activemq/util/URISupportTest.h \
+  activemq/util/MemoryUsageTest.h \
   activemq/util/LongSequenceGeneratorTest.h \
   decaf/internal/util/ByteArrayAdapterTest.h \
   decaf/internal/nio/ByteArrayPerspectiveTest.h \

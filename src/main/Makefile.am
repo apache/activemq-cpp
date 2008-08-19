@@ -24,6 +24,7 @@ cc_sources = \
     activemq/util/PrimitiveValueNode.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/URISupport.cpp \
+    activemq/util/MemoryUsage.cpp \
     activemq/cmsutil/DynamicDestinationResolver.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
@@ -279,6 +280,7 @@ h_sources = \
     activemq/util/PrimitiveMap.h \
     activemq/util/PrimitiveList.h \
     activemq/util/URISupport.h \
+    activemq/util/MemoryUsage.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \
