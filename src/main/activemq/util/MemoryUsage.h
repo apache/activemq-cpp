@@ -30,7 +30,7 @@ namespace util {
         // The physical limit of memory usage this object allows.
         unsigned long long limit;
 
-        // Amount of memory currently used in Bytes.
+        // Amount of memory currently used in.
         unsigned long long usage;
 
         // Mutex to lock usage and wait on.
@@ -45,7 +45,7 @@ namespace util {
 
         /**
          * Creates an instance of an Usage monitor with a set limit.
-         * @param limit - amount in bytes of memory this manager allows.
+         * @param limit - amount of memory this manager allows.
          */
         MemoryUsage( unsigned long long limit );
 
@@ -74,14 +74,14 @@ namespace util {
         }
 
         /**
-         * Increases the usage by the value amount which is in bytes
-         * @param value Amount of usage in bytes to add.
+         * Increases the usage by the value amount
+         * @param value Amount of usage to add.
          */
         virtual void increaseUsage( unsigned long long value );
 
         /**
          * Decreases the usage by the value amount.
-         * @param value Amount of space to return to the pool, in Bytes
+         * @param value Amount of space to return to the pool
          */
         virtual void decreaseUsage( unsigned long long value );
 
@@ -100,7 +100,7 @@ namespace util {
 
         /**
          * Sets the current usage amount
-         * @param usage - The amount of bytes to tag as used.
+         * @param usage - The amount to tag as used.
          */
         void setUsage( unsigned long long usage ) {
             this->usage = usage;
@@ -108,7 +108,7 @@ namespace util {
 
         /**
          * Gets the current limit amount.
-         * @return the amount of bytes that can be used before full.
+         * @return the amount that can be used before full.
          */
         unsigned long long getLimit() const {
             return limit;
@@ -116,7 +116,7 @@ namespace util {
 
         /**
          * Sets the current limit amount
-         * @param limit - The amount of bytes that can be used before full.
+         * @param limit - The amount that can be used before full.
          */
         void setLimit( unsigned long long limit ) {
             this->limit = limit;
