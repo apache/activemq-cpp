@@ -107,7 +107,7 @@ void OpenWireFormat::setVersion( int version ) throw ( IllegalArgumentException 
             return;
         }
 
-        // Clear old marshalers in preperation for the new set.
+        // Clear old marshalers in preparation for the new set.
         this->destroyMarshalers();
         this->version = version;
 
