@@ -32,6 +32,10 @@ namespace lang{
         CPPUNIT_TEST_SUITE( ExceptionTest );
         CPPUNIT_TEST( testMessage0 );
         CPPUNIT_TEST( testMessage3 );
+        CPPUNIT_TEST( testClone );
+        CPPUNIT_TEST( testInitCause );
+        CPPUNIT_TEST( testCtors );
+        CPPUNIT_TEST( testAssign );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -41,6 +45,10 @@ namespace lang{
         virtual void setUp(){}
         virtual void tearDown(){}
 
+        void testCtors();
+        void testAssign();
+        void testClone();
+        void testInitCause();
         void testMessage0();
         void testMessage3();
 

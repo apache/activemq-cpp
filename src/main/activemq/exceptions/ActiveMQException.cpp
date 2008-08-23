@@ -29,30 +29,35 @@ using namespace std;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException::ActiveMQException() throw(){
+ActiveMQException::ActiveMQException() throw() : decaf::lang::Exception() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
-: cms::CMSException(),
-  decaf::lang::Exception() {
+:   cms::CMSException(),
+    decaf::lang::Exception() {
 
   this->message = ex.getMessage();
   this->stackTrace = ex.getStackTrace();
+  this->initCause( ex.cause );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const Exception& ex ) throw()
-: cms::CMSException() {
+:   cms::CMSException(),
+    decaf::lang::Exception() {
 
   this->message = ex.getMessage();
   this->stackTrace = ex.getStackTrace();
+  this->initCause( &ex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const char* file, const int lineNumber,
                    const char* msg, ... ) throw()
-{
+:   cms::CMSException(),
+    decaf::lang::Exception() {
+
     va_list vargs;
     va_start( vargs, msg ) ;
     buildMessage( msg, vargs );

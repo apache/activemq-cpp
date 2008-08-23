@@ -32,6 +32,7 @@ namespace exceptions{
       CPPUNIT_TEST_SUITE( ActiveMQExceptionTest );
       CPPUNIT_TEST( testMessage0 );
       CPPUNIT_TEST( testMessage3 );
+      CPPUNIT_TEST( testMacros );
       CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -41,6 +42,7 @@ namespace exceptions{
         virtual void setUp(){}
         virtual void tearDown(){}
 
+        void testMacros();
         void testMessage0();
         void testMessage3();
 

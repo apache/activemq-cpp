@@ -16,10 +16,103 @@
  */
 
 #include "ExceptionTest.h"
+#include <stdexcept>
 
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+
+////////////////////////////////////////////////////////////////////////////////
+void ExceptionTest::testCtors() {
+
+    Exception exception1;
+
+    CPPUNIT_ASSERT( exception1.getCause() == NULL );
+    CPPUNIT_ASSERT( exception1.getMessage() == "" );
+
+    exception1.setMessage( "EXCEPTION_1" );
+    CPPUNIT_ASSERT( exception1.getMessage() == "EXCEPTION_1" );
+
+    Exception exception2( __FILE__, __LINE__, "EXCEPTION_2" );
+
+    CPPUNIT_ASSERT( exception2.getCause() == NULL );
+    CPPUNIT_ASSERT( exception2.getMessage() == "EXCEPTION_2" );
+
+    Exception exception3( __FILE__, __LINE__, &exception1, "EXCEPTION_3" );
+
+    CPPUNIT_ASSERT( exception3.getCause() != NULL );
+    CPPUNIT_ASSERT( std::string( exception3.getCause()->what() ) == "EXCEPTION_1" );
+    CPPUNIT_ASSERT( exception3.getMessage() == "EXCEPTION_3" );
+
+    Exception exception4( exception1 );
+    CPPUNIT_ASSERT( exception4.getCause() == NULL );
+    CPPUNIT_ASSERT( exception4.getMessage() == "EXCEPTION_1" );
+
+    std::runtime_error runtime( "RUNTIME" );
+    Exception exception5( &runtime );
+    CPPUNIT_ASSERT( exception5.getCause() != NULL );
+    CPPUNIT_ASSERT( exception5.getMessage() == "RUNTIME" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExceptionTest::testAssign() {
+
+    Exception exception1;
+
+    CPPUNIT_ASSERT( exception1.getCause() == NULL );
+    CPPUNIT_ASSERT( exception1.getMessage() == "" );
+
+    exception1.setMessage( "EXCEPTION_1" );
+    CPPUNIT_ASSERT( exception1.getMessage() == "EXCEPTION_1" );
+
+    Exception exception2( __FILE__, __LINE__, "EXCEPTION_2" );
+
+    CPPUNIT_ASSERT( exception2.getCause() == NULL );
+    CPPUNIT_ASSERT( exception2.getMessage() == "EXCEPTION_2" );
+
+    exception1 = exception2;
+    CPPUNIT_ASSERT( exception1.getCause() == NULL );
+    CPPUNIT_ASSERT( exception1.getMessage() == "EXCEPTION_2" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExceptionTest::testClone() {
+
+    const char* text = "This is a test";
+    Exception ex( __FILE__, __LINE__, text );
+    CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
+    CPPUNIT_ASSERT( ex.getCause() == NULL );
+
+    Exception* cloned = ex.clone();
+
+    CPPUNIT_ASSERT( strcmp( cloned->getMessage().c_str(), text ) == 0 );
+    CPPUNIT_ASSERT( cloned->getCause() == NULL );
+
+    delete cloned;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ExceptionTest::testInitCause() {
+
+    const char* text = "This is a test";
+    Exception ex( __FILE__, __LINE__, text );
+    CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
+    CPPUNIT_ASSERT( ex.getCause() == NULL );
+
+    std::runtime_error exception1("RUNTIME");
+    Exception exception2( __FILE__, __LINE__, "EXCEPTION" );
+
+    ex.initCause( &exception1 );
+    CPPUNIT_ASSERT( ex.getCause() != NULL );
+    CPPUNIT_ASSERT( std::string( ex.getCause()->what() ) == "RUNTIME" );
+
+    ex.initCause( &exception2 );
+    CPPUNIT_ASSERT( ex.getCause() != NULL );
+    CPPUNIT_ASSERT( std::string( ex.getCause()->what() ) == "EXCEPTION" );
+
+    const Exception* test = dynamic_cast<const Exception*>( ex.getCause() );
+    CPPUNIT_ASSERT( test != NULL );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ExceptionTest::testMessage0(){

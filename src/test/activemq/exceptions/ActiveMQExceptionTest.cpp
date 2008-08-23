@@ -16,9 +16,40 @@
  */
 
 #include "ActiveMQExceptionTest.h"
+#include <activemq/exceptions/ExceptionDefines.h>
+#include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 using namespace activemq;
 using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQExceptionTest::testMacros() {
+
+    try{
+
+        try{
+            try{
+                throw UnsupportedOperationException( __FILE__, __LINE__, "EXCEPTION" );
+                CPPUNIT_FAIL( "Should not get this far." );
+            }
+            AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+        }
+        AMQ_CATCH_RETHROW( ActiveMQException )
+
+    } catch( ActiveMQException& ex ) {
+
+        CPPUNIT_ASSERT( ex.getCause() != NULL );
+
+        const UnsupportedOperationException* cause =
+            dynamic_cast<const UnsupportedOperationException*>( ex.getCause() );
+
+        CPPUNIT_ASSERT( cause != NULL );
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQExceptionTest::testMessage0(){

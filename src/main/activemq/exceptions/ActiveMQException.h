@@ -75,12 +75,6 @@ namespace exceptions{
          * Assignment operator.
          * @param const reference to another ActiveMQException
          */
-        //virtual ActiveMQException& operator =( const ActiveMQException& ex );
-
-        /**
-         * Assignment operator.
-         * @param const reference to another ActiveMQException
-         */
         virtual ActiveMQException& operator =( const Exception& ex );
 
         /**
@@ -90,6 +84,19 @@ namespace exceptions{
          */
         virtual std::string getMessage() const {
             return decaf::lang::Exception::getMessage();
+        }
+
+        /**
+         * Gets the exception that caused this one to be thrown, this allows
+         * for chaining of exceptions in the case of a method that throws only
+         * a particular exception but wishes to allow for the real causal
+         * exception to be passed only in case the caller knows about that
+         * type of exception and wishes to respond to it.
+         * @returns a const pointer reference to the causal exception, if there
+         * was no cause associated with this exception then NULL is returned.
+         */
+        virtual const std::exception* getCause() const {
+            return decaf::lang::Exception::getCause();
         }
 
         /**
@@ -103,15 +110,6 @@ namespace exceptions{
         virtual void setMark( const char* file, const int lineNumber ) {
             decaf::lang::Exception::setMark( file, lineNumber );
         }
-
-        /**
-         * Clones this exception.  This is useful for cases where you need
-         * to preserve the type of the original exception as well as the message.
-         * All subclasses should override.
-         *
-         * @return Copy of this Exception object
-         */
-        //virtual CMSException* clone() const = 0
 
         /**
          * Provides the stack trace for every point where

@@ -33,7 +33,6 @@ namespace lang{
      * This class represents an error that has occurred.
      */
     class DECAF_API Throwable : public std::exception {
-
     public:
 
         Throwable() throw() {}
@@ -41,10 +40,30 @@ namespace lang{
         virtual ~Throwable() throw() {}
 
         /**
-         * Gets the cause of the error.
+         * Gets the cause of the error, if no message was provided to the instance
+         * of this interface but a cause was then the value cause.getMessage is
+         * then returned.
          * @return string errors message
          */
         virtual std::string getMessage() const = 0;
+
+        /**
+         * Gets the exception that caused this one to be thrown, this allows
+         * for chaining of exceptions in the case of a method that throws only
+         * a particular exception but wishes to allow for the real causal
+         * exception to be passed only in case the caller knows about that
+         * type of exception and wishes to respond to it.
+         * @returns a const pointer reference to the causal exception, if there
+         * was no cause associated with this exception then NULL is returned.
+         */
+        virtual const std::exception* getCause() const = 0;
+
+        /**
+         * Initializes the contained cause exception with the one given.  A copy
+         * is made to avoid ownership issues.
+         * @param cause The exception that was the cause of this one.
+         */
+        virtual void initCause( const std::exception* cause ) = 0;
 
         /**
          * Adds a file/line number to the stack trace.

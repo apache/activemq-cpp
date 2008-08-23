@@ -42,6 +42,11 @@ namespace lang{
         std::string message;
 
         /**
+         * The Exception that caused this one to be thrown.
+         */
+        std::exception* cause;
+
+        /**
          * The stack trace.
          */
         std::vector< std::pair< std::string, int> > stackTrace;
@@ -59,8 +64,15 @@ namespace lang{
         Exception( const Exception& ex ) throw();
 
         /**
+         * Constructor
+         * @param cause Pointer to the exception that caused this one to
+         * be thrown, the object is cloned caller retains ownership.
+         */
+        Exception( const std::exception* cause ) throw();
+
+        /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
+         * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          * @param file name where exception occurs
          * @param line number where the exception occurred.
@@ -68,6 +80,20 @@ namespace lang{
          * @param list of primitives that are formatted into the message
          */
         Exception( const char* file, const int lineNumber,
+                   const char* msg, ... ) throw();
+
+        /**
+         * Constructor - Initializes the file name and line number where
+         * this message occurred.  Sets the message to report, using an
+         * optional list of arguments to parse into the message
+         * @param file name where exception occurs
+         * @param line number where the exception occurred.
+         * @param cause The exception that was the cause for this one to be thrown.
+         * @param message to report
+         * @param list of primitives that are formatted into the message
+         */
+        Exception( const char* file, const int lineNumber,
+                   const std::exception* cause,
                    const char* msg, ... ) throw();
 
         virtual ~Exception() throw();
@@ -79,6 +105,26 @@ namespace lang{
         virtual std::string getMessage() const{
             return message;
         }
+
+        /**
+         * Gets the exception that caused this one to be thrown, this allows
+         * for chaining of exceptions in the case of a method that throws only
+         * a particular exception but wishes to allow for the real causal
+         * exception to be passed only in case the caller knows about that
+         * type of exception and wishes to respond to it.
+         * @returns a const pointer reference to the causal exception, if there
+         * was no cause associated with this exception then NULL is returned.
+         */
+        virtual const std::exception* getCause() const {
+            return this->cause;
+        }
+
+        /**
+         * Initializes the contained cause exception with the one given.  A copy
+         * is made to avoid ownership issues.
+         * @param cause The exception that was the cause of this one.
+         */
+        virtual void initCause( const std::exception* cause );
 
         /**
          * Implement method from std::exception

@@ -29,17 +29,22 @@ using namespace decaf::lang;
 using namespace decaf::util::logging;
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception() throw(){
+Exception::Exception() throw() : Throwable(), cause( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Exception::Exception( const Exception& ex ) throw() : Throwable() {
+Exception::Exception( const Exception& ex ) throw() : Throwable(), cause( NULL ) {
     *this = ex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Exception::Exception( const std::exception* cause ) throw() : Throwable(), cause( NULL ) {
+    this->initCause( cause );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Exception::Exception( const char* file, const int lineNumber,
-                      const char* msg, ... ) throw() {
+                      const char* msg, ... ) throw() : Throwable(), cause( NULL ) {
     va_list vargs;
     va_start( vargs, msg ) ;
     buildMessage( msg, vargs );
@@ -50,7 +55,24 @@ Exception::Exception( const char* file, const int lineNumber,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Exception::Exception( const char* file, const int lineNumber,
+                      const std::exception* cause,
+                      const char* msg, ... ) throw() : Throwable(), cause( NULL ) {
+    va_list vargs;
+    va_start( vargs, msg ) ;
+    this->buildMessage( msg, vargs );
+    va_end( vargs );
+
+    // Store the cause
+    this->initCause( cause );
+
+    // Set the first mark for this exception.
+    this->setMark( file, lineNumber );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Exception::~Exception() throw(){
+    delete this->cause;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,5 +159,25 @@ std::string Exception::getStackTraceString() const {
 Exception& Exception::operator =( const Exception& ex ){
     this->message = ex.message;
     this->stackTrace = ex.stackTrace;
+    this->initCause( ex.cause );
     return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Exception::initCause( const std::exception* cause ) {
+
+    if( cause == NULL || cause == this ) {
+        return;
+    }
+
+    const Exception* ptrCause = dynamic_cast<const Exception*>( cause );
+    if( ptrCause == NULL ) {
+        this->cause = new Exception( __FILE__, __LINE__, cause->what() );
+    } else {
+        this->cause = ptrCause->clone();
+    }
+
+    if( this->message == "" ) {
+        this->message = cause->what();
+    }
 }

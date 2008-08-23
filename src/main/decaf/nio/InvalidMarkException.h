@@ -51,7 +51,38 @@ namespace nio{
 
         /**
          * Constructor - Initializes the file name and line number where
-         * this message occured.  Sets the message to report, using an
+         * this message occurred.  Sets the message to report, using an
+         * optional list of arguments to parse into the message
+         * @param file name where exception occurs
+         * @param line number where the exception occurred.
+         * @param cause The exception that was the cause for this one to be thrown.
+         * @param message to report
+         * @param list of primitives that are formatted into the message
+         */
+        InvalidMarkException( const char* file, const int lineNumber,
+                              const std::exception* cause,
+                              const char* msg, ... )
+            throw() : lang::exceptions::IllegalStateException( cause )
+        {
+            va_list vargs;
+            va_start( vargs, msg );
+            buildMessage( msg, vargs );
+
+            // Set the first mark for this exception.
+            setMark( file, lineNumber );
+        }
+
+        /**
+         * Constructor
+         * @param cause Pointer to the exception that caused this one to
+         * be thrown, the object is cloned caller retains ownership.
+         */
+        InvalidMarkException( const std::exception* cause )
+            throw() : lang::exceptions::IllegalStateException( cause ) {}
+
+        /**
+         * Constructor - Initializes the file name and line number where
+         * this message occurred.  Sets the message to report, using an
          * optional list of arguments to parse into the message
          * @param file name where exception occurs
          * @param line number where the exception occurred.
