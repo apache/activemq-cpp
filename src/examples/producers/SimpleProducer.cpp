@@ -173,7 +173,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
     // Set the URI to point to the IPAddress of your broker.
     // add any optional params to the url to enable things like
-    // tightMarshalling or tcp logging etc.  See the CMS website for
+    // tightMarshalling or tcp logging etc.  See the CMS web site for
     // a full list of configuration options.
     //
     //  http://activemq.apache.org/cms/
