@@ -135,32 +135,32 @@ private:
 
     void cleanup(){
 
-            // Destroy resources.
-            try{
-                if( destination != NULL ) delete destination;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            destination = NULL;
+        // Destroy resources.
+        try{
+            if( destination != NULL ) delete destination;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        destination = NULL;
 
-            try{
-                if( producer != NULL ) delete producer;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            producer = NULL;
+        try{
+            if( producer != NULL ) delete producer;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        producer = NULL;
 
-            // Close open resources.
-            try{
-                if( session != NULL ) session->close();
-                if( connection != NULL ) connection->close();
-            }catch ( CMSException& e ) { e.printStackTrace(); }
+        // Close open resources.
+        try{
+            if( session != NULL ) session->close();
+            if( connection != NULL ) connection->close();
+        }catch ( CMSException& e ) { e.printStackTrace(); }
 
-            try{
-                if( session != NULL ) delete session;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            session = NULL;
+        try{
+            if( session != NULL ) delete session;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        session = NULL;
 
-            try{
-                if( connection != NULL ) delete connection;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            connection = NULL;
+        try{
+            if( connection != NULL ) delete connection;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        connection = NULL;
     }
 };
 
@@ -178,7 +178,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //
     //  http://activemq.apache.org/cms/
     //
-    // Wire Foormat Options:
+    // Wire Format Options:
     // =====================
     // Use either stomp or openwire, the default ports are different for each
     //
@@ -189,8 +189,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
-        "?wireFormat=openwire"
-        "&soKeepAlive=true";
+        "?wireFormat=openwire";
 //        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true";
