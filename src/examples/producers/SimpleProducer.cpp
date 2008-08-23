@@ -199,7 +199,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     // Total number of messages for this producer to send.
     //============================================================
-    unsigned int numMessages = 50000;
+    unsigned int numMessages = 2000;
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to

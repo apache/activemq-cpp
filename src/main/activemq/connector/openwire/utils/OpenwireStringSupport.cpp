@@ -100,16 +100,16 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
         if( str != NULL ) {
 
             if( str->size() > 65536 ) {
+
                 throw IOException(
                     __FILE__,
                     __LINE__,
                     ( std::string( "OpenwireStringSupport::writeString - Cannot marshall " ) +
-                    "string longer than: 65536 characters, supplied steing was: " +
+                    "string longer than: 65536 characters, supplied string was: " +
                     Integer::toString( (int)str->size() ) + " characters long." ).c_str() );
             }
 
-            //short strlen = (short)str->size();
-            short utflen = 0;
+            unsigned short utflen = 0;
             int c, count = 0;
 
             std::string::const_iterator iter = str->begin();
@@ -125,7 +125,7 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
                 }
             }
 
-            dataOut.writeShort( utflen );
+            dataOut.writeUnsignedShort( utflen );
             std::vector<unsigned char> byteArr;
             byteArr.resize( utflen );
 
@@ -145,9 +145,8 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
             }
 
             dataOut.write( byteArr );
-        }
-        else
-        {
+
+        } else {
             dataOut.writeShort( (short)-1 );
         }
     }
