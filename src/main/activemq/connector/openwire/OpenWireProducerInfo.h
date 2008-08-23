@@ -42,6 +42,10 @@ namespace openwire{
         // Send timeout, how long to wait for a response before failing.
         unsigned int sendTimeout;
 
+        // Producer Window, number of messages to send before waiting for
+        // the broker to send ProducerAcks.  Openwire 3.0 only.
+        unsigned long long producerWindow;
+
     public:
 
         OpenWireProducerInfo( Connector* connector ) :
@@ -51,6 +55,7 @@ namespace openwire{
             this->producerInfo = NULL;
             this->session = NULL;
             this->sendTimeout = 0;
+            this->producerWindow = 0;
         }
 
         virtual ~OpenWireProducerInfo() {
@@ -178,6 +183,24 @@ namespace openwire{
          * message has been received.
          */
         virtual void setSendTimeout( unsigned int timeout ) {
+            this->sendTimeout = timeout;
+        }
+
+        /**
+         * Gets the currently Set Producer Window
+         * @return the set producer window.
+         */
+        virtual unsigned long long getProducerWindow() const {
+            return this->producerWindow;
+        }
+
+        /**
+         * Sets the Producer Window, which is the max number of messages to send before
+         * timing waiting for acks from the broker. (Openwire 3.0 only).
+         * @param windowSize - The number of message to send before a block to wait for
+         * the receipt of a ProducerAck.
+         */
+        virtual void setProducerWindow( unsigned long long timeout ) {
             this->sendTimeout = timeout;
         }
 

@@ -633,7 +633,7 @@ void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
                 "ActiveMQSession::acknowledgeMessage - Session Already Closed" );
         }
 
-        // Stores the Message and its consumer in the tranasction, if the
+        // Stores the Message and its consumer in the transaction, if the
         // session is a transactional one.
         if( isTransacted() ) {
             transaction->addToTransaction( message, consumer );

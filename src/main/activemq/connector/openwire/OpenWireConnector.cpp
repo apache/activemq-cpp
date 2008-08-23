@@ -50,6 +50,7 @@
 #include <activemq/connector/openwire/commands/MessagePull.h>
 #include <activemq/connector/openwire/commands/MessageAck.h>
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
+#include <activemq/connector/openwire/commands/ProducerAck.h>
 #include <activemq/connector/openwire/commands/RemoveInfo.h>
 #include <activemq/connector/openwire/commands/ShutdownInfo.h>
 #include <activemq/connector/openwire/commands/SessionInfo.h>
@@ -662,7 +663,7 @@ ProducerInfo* OpenWireConnector::createProducer(
 
         commands::ProducerId* producerId = new commands::ProducerId();
         producerInfo->setProducerId( producerId );
-        producerInfo->setWindowSize( this->getProducerWindowSize( ));
+        producerInfo->setWindowSize( this->getProducerWindowSize() );
 
         producerId->setConnectionId( session->getConnectionId() );
         producerId->setSessionId( session->getSessionId() );
@@ -1356,6 +1357,13 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
 
             }catch( ... ){/* do nothing*/}
 
+            delete command;
+
+        } else if( typeid( *command ) == typeid( commands::ProducerAck ) ) {
+            commands::ProducerAck* producerAck =
+                dynamic_cast<commands::ProducerAck*>( command );
+
+            // TODO - Apply The Ack.
             delete command;
 
         } else if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
