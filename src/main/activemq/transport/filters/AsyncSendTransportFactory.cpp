@@ -18,11 +18,14 @@
 #include "AsyncSendTransportFactory.h"
 
 #include <activemq/transport/filters/AsyncSendTransport.h>
+#include <decaf/lang/Integer.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::filters;
 using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFactory& AsyncSendTransportFactory::getInstance() {
@@ -42,7 +45,11 @@ Transport* AsyncSendTransportFactory::createTransport(
     bool own ) throw ( ActiveMQException ) {
 
     try{
-        return new AsyncSendTransport( next, own );
+
+        unsigned int maxBacklog = Integer::parseInt(
+            properties.getProperty( "transport.maxAsyncSendBacklog", "0" ) );
+
+        return new AsyncSendTransport( next, maxBacklog, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )

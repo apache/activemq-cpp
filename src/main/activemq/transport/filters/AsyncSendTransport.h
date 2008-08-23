@@ -32,6 +32,14 @@ namespace filters{
     private:
 
         /**
+         * Max pending out-bound messages, this limits the number of
+         * messages that will accumulate if the broker has blocked us or
+         * slowed its reads of our out-bound messages.  Default is zero
+         * or unlimited backlog.
+         */
+        unsigned int maxBacklog;
+
+        /**
          * Thread to send messages in when oneway is called.
          */
         decaf::lang::Thread* asyncThread;
@@ -54,6 +62,14 @@ namespace filters{
          * @param own - true if this filter owns the next and should delete it
          */
         AsyncSendTransport( Transport* next, bool own = true );
+
+        /**
+         * Constructor.
+         * @param next - the next Transport in the chain
+         * @param maxBacklog - the max number of pending messages to store.
+         * @param own - true if this filter owns the next and should delete it
+         */
+        AsyncSendTransport( Transport* next, unsigned int maxBacklog, bool own = true );
 
         virtual ~AsyncSendTransport();
 

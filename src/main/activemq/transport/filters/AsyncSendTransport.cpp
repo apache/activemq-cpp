@@ -33,6 +33,17 @@ AsyncSendTransport::AsyncSendTransport( Transport* next, bool own )
 
     this->closed = true;
     this->asyncThread = NULL;
+    this->maxBacklog = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AsyncSendTransport::AsyncSendTransport( Transport* next, unsigned int maxBacklog, bool own )
+ : TransportFilter( next, own ) {
+
+    std::cout << "Async Transport using max Backlog of :" << maxBacklog << std::endl;
+    this->closed = true;
+    this->asyncThread = NULL;
+    this->maxBacklog = maxBacklog;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +66,12 @@ void AsyncSendTransport::oneway( Command* command )
         // in case the client deletes their copy before we get a chance to
         // send it.
         synchronized( &msgQueue ) {
+
+            while( msgQueue.size() >= this->maxBacklog ) {
+                std::cout << "Max Backlog reached" << std::endl;
+                msgQueue.wait();
+            }
+
             msgQueue.push( command->cloneCommand() );
             msgQueue.notifyAll();
         }
@@ -130,6 +147,10 @@ void AsyncSendTransport::run() {
 
                 // get the data
                 command = msgQueue.pop();
+
+                // Notify the callers that we now have room for at least one more
+                // message to send.
+                msgQueue.notifyAll();
             }
 
             // Dispatch the message
