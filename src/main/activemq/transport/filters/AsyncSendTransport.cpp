@@ -40,7 +40,6 @@ AsyncSendTransport::AsyncSendTransport( Transport* next, bool own )
 AsyncSendTransport::AsyncSendTransport( Transport* next, unsigned int maxBacklog, bool own )
  : TransportFilter( next, own ) {
 
-    std::cout << "Async Transport using max Backlog of :" << maxBacklog << std::endl;
     this->closed = true;
     this->asyncThread = NULL;
     this->maxBacklog = maxBacklog;
@@ -67,8 +66,7 @@ void AsyncSendTransport::oneway( Command* command )
         // send it.
         synchronized( &msgQueue ) {
 
-            while( msgQueue.size() >= this->maxBacklog ) {
-                std::cout << "Max Backlog reached" << std::endl;
+            while( this->maxBacklog != 0 && msgQueue.size() >= this->maxBacklog ) {
                 msgQueue.wait();
             }
 
