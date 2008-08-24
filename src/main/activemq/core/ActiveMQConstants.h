@@ -59,6 +59,7 @@ namespace core{
             PARAM_USERNAME,
             PARAM_PASSWORD,
             PARAM_CLIENTID,
+            PARAM_CLOSETIMEOUT,
             NUM_PARAMS
         };
 

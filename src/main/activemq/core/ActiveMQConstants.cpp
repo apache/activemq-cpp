@@ -45,6 +45,7 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     destOptions[CONSUMER_EXCLUSIVE] = "consumer.exclusive";
     destOptions[CONSUMER_PRIORITY] = "consumer.priority";
 
+    uriParams[PARAM_CLOSETIMEOUT] = "connection.closeTimeout";
     uriParams[PARAM_SENDTIMEOUT] = "connection.sendTimeout";
     uriParams[PARAM_PRODUCERWINDOWSIZE] = "connection.producerWidowSize";
     uriParams[PARAM_USERNAME] = "username";
