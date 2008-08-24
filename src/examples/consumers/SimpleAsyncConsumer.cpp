@@ -143,7 +143,7 @@ public:
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
-        printf("CMS Exception occured.  Shutting down client.\n");
+        printf("CMS Exception occurred.  Shutting down client.\n");
         exit(1);
     }
 
@@ -211,11 +211,12 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //
     std::string brokerURI =
         "tcp://127.0.0.1:61616"
-        "?wireFormat=openwire";
+        "?wireFormat=openwire"
 //        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
-//        "&transport.tcpTracingEnabled=true";
-//        "&wireFormat.tightEncodingEnabled=true";
+//        "&transport.tcpTracingEnabled=true"
+//        "&wireFormat.tightEncodingEnabled=true"
+        ;
 
     //============================================================
     // This is the Destination Name and URI options.  Use this to
