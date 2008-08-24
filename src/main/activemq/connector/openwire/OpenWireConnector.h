@@ -639,6 +639,15 @@ namespace openwire{
                         core::ActiveMQConstants::PARAM_SENDTIMEOUT ), "0" ) );
         }
 
+        // Gets the time to wait for a response from the Broker when the close message
+        // is sent.
+        virtual unsigned int getCloseTimeout() const {
+            return decaf::lang::Integer::parseInt(
+                properties.getProperty(
+                    core::ActiveMQConstants::toString(
+                        core::ActiveMQConstants::PARAM_CLOSETIMEOUT ), "15000" ) );
+        }
+
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );
 
@@ -663,12 +672,24 @@ namespace openwire{
             throw (ConnectorException);
 
         /**
-         * Sends a message to the broker to dispose of the given resource.
+         * Sends a message to the broker to dispose of the given resource
+         * using an async oneway call.
          * @param objectId The ID of the resource to be released.
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
         void disposeOf( commands::DataStructure* objectId )
+            throw ( ConnectorException );
+
+        /**
+         * Sends a message to the broker to dispose of the given resource
+         * using a timed request.
+         * @param objectId The ID of the resource to be released.
+         * @param timeout The time to wait for a response that the object is disposed.
+         * @throw ConnectorException if any problems occur from sending
+         * the message.
+         */
+        void disposeOf( commands::DataStructure* objectId, unsigned int timeout )
             throw ( ConnectorException );
 
         /**

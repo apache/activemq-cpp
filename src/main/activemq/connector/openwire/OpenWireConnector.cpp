@@ -237,7 +237,7 @@ void OpenWireConnector::disconnect() throw ( ConnectorException ) {
         }
 
         // Remove our ConnectionId from the Broker
-        disposeOf( connectionInfo.getConnectionId() );
+        disposeOf( connectionInfo.getConnectionId(), this->getCloseTimeout() );
 
         // Send the disconnect command to the broker.
         commands::ShutdownInfo shutdown;
@@ -1570,6 +1570,21 @@ void OpenWireConnector::disposeOf(
         commands::RemoveInfo command;
         command.setObjectId( objectId->cloneDataStructure() );
         oneway( &command );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, OpenWireConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::disposeOf( commands::DataStructure* objectId,
+                                   unsigned int timeout )
+    throw ( ConnectorException ) {
+
+    try{
+        commands::RemoveInfo command;
+        command.setObjectId( objectId->cloneDataStructure() );
+        delete this->syncRequest( &command, timeout );
     }
     AMQ_CATCH_RETHROW( ConnectorException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, OpenWireConnectorException )
