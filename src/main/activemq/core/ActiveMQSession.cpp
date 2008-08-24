@@ -57,7 +57,7 @@ ActiveMQSession::ActiveMQSession( SessionInfo* sessionInfo,
     this->connection = connection;
     this->closed = false;
 
-    // Create a Transaction object only if the session is transactional
+    // Create a Transaction object only if the session is transacted
     if( isTransacted() ) {
         transaction =
             new ActiveMQTransaction(connection, this, properties );
@@ -87,7 +87,7 @@ void ActiveMQSession::fire( activemq::exceptions::ActiveMQException& ex ) {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::close() throw ( cms::CMSException )
 {
-    // If we're already close, just get outta' here.
+    // If we're already closed, just return.
     if( closed ) {
         return;
     }
@@ -241,8 +241,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         // Create the consumer instance.
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
-            consumerInfo, this );
-
+            consumerInfo, this, this->transaction );
 
         // Add the consumer to the map.
         synchronized( &consumers ) {
@@ -299,7 +298,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         // Create the consumer instance.
         ActiveMQConsumer* consumer = new ActiveMQConsumer(
-            consumerInfo, this );
+            consumerInfo, this, this->transaction );
 
         // Add the consumer to the map.
         synchronized( &consumers ) {
@@ -621,37 +620,6 @@ bool ActiveMQSession::isTransacted() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::acknowledge( ActiveMQConsumer* consumer,
-                                   ActiveMQMessage* message )
-    throw ( cms::CMSException ) {
-
-    try{
-
-        if( closed ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQSession::acknowledgeMessage - Session Already Closed" );
-        }
-
-        // Stores the Message and its consumer in the transaction, if the
-        // session is a transactional one.
-        if( isTransacted() ) {
-            transaction->addToTransaction( message, consumer );
-        }
-
-        // Delegate to connector to ack this message.
-        return connection->getConnectionData()->
-            getConnector()->acknowledge(
-                sessionInfo,
-                consumer->getConsumerInfo(),
-                dynamic_cast< cms::Message* >( message ) );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
     throw ( cms::CMSException ) {
 
@@ -663,7 +631,7 @@ void ActiveMQSession::send( cms::Message* message, ActiveMQProducer* producer )
                 "ActiveMQSession::onProducerClose - Session Already Closed" );
         }
 
-        // Send via the connection syncrhronously.
+        // Send via the connection synchronously.
         connection->getConnectionData()->
             getConnector()->send( message, producer->getProducerInfo() );
     }
@@ -698,11 +666,9 @@ void ActiveMQSession::onConnectorResourceClosed(
             // Remove the dispatcher for the Connection
             connection->removeDispatcher( consumer );
 
-            // Remove this consumer from the Transaction if we are
-            // transactional
+            // Remove this consumer from the Transaction if we are transacted
             if( transaction != NULL ) {
-                transaction->removeFromTransaction(
-                    consumer->getConsumerId() );
+                transaction->removeFromTransaction( consumer->getConsumerId() );
             }
 
             ActiveMQConsumer* obj = NULL;

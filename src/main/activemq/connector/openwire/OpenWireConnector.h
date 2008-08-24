@@ -452,6 +452,21 @@ namespace openwire{
             throw ( ConnectorException );
 
         /**
+         * Acknowledges a Message set, using the most efficient means possible
+         * for the type of connector being used,
+         * @param session the Session that the message is linked to
+         * @param consumer the Consumer that the message was linked to
+         * @param messages A set of ActiveMQMessages to Ack.
+         * @param ackType the type of ack to perform
+         * @throws ConnectorException
+         */
+        virtual void acknowledge( const SessionInfo* session,
+                                  const ConsumerInfo* consumer,
+                                  const std::list<const cms::Message*>& message,
+                                  AckType ackType = ACK_TYPE_CONSUMED)
+            throw ( ConnectorException );
+
+        /**
          * Starts a new Transaction.
          * @param Session Information
          * @throws ConnectorException

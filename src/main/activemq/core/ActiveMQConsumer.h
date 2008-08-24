@@ -36,6 +36,7 @@ namespace activemq{
 namespace core{
 
     class ActiveMQSession;
+    class ActiveMQTransaction;
 
     class AMQCPP_API ActiveMQConsumer :
         public cms::MessageConsumer,
@@ -49,6 +50,11 @@ namespace core{
          * The session that owns this Consumer
          */
         ActiveMQSession* session;
+
+        /**
+         * The Transaction Context, null if not in a Transacted Session.
+         */
+        ActiveMQTransaction* transaction;
 
         /**
          * The Consumer info for this Consumer
@@ -76,7 +82,8 @@ namespace core{
          * Constructor
          */
         ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
-                          ActiveMQSession* session );
+                          ActiveMQSession* session,
+                          ActiveMQTransaction* transaction );
 
         virtual ~ActiveMQConsumer();
 
@@ -138,8 +145,9 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Method called to acknowledge the message passed
-         * @param message the Message to Acknowlegde
+         * Method called to acknowledge the message passed, called from a message
+         * when the mode is client ack.
+         * @param message the Message to Acknowledge
          * @throw CMSException
          */
         virtual void acknowledgeMessage( const ActiveMQMessage* message )
@@ -154,6 +162,17 @@ namespace core{
         virtual void dispatch( DispatchData& message );
 
     public:  // ActiveMQConsumer Methods
+
+        /**
+         * Method called to acknowledge the message passed, ack it using
+         * the passed in ackType, see <code>Connector</code> for a list
+         * of the correct ack types.
+         * @param message the Message to Acknowledge
+         * @param ackType the Type of ack to send, (connector enum)
+         * @throw CMSException
+         */
+        virtual void acknowledge( const ActiveMQMessage* message, int ackType )
+            throw ( cms::CMSException );
 
         /**
          * Get the Consumer information for this consumer
@@ -193,14 +212,6 @@ namespace core{
          * result of a rollback, or of the consumer being shutdown.
          */
         virtual void purgeMessages() throw (exceptions::ActiveMQException);
-
-        /**
-         * Destroys the message if the session is transacted, otherwise
-         * does nothing.
-         * @param message the message to destroy
-         */
-        virtual void destroyMessage( ActiveMQMessage* message )
-            throw (exceptions::ActiveMQException);
 
         /**
          * Used by synchronous receive methods to wait for messages to come in.

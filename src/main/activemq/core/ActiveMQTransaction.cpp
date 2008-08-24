@@ -127,6 +127,24 @@ void ActiveMQTransaction::addToTransaction( ActiveMQMessage* message,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTransaction::addToTransaction( cms::Message* message,
+                                            ActiveMQConsumer* consumer ) {
+
+    synchronized( &rollbackLock ) {
+
+        ActiveMQMessage* coreMessage = dynamic_cast<ActiveMQMessage*>( message );
+
+        if( coreMessage == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Message is not a core::ActiveMQMessage derivation" );
+        }
+
+        // Store in the Multi Map
+        rollbackMap[consumer].push_back( coreMessage );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransaction::removeFromTransaction( ActiveMQConsumer* consumer ) {
 
     try{
@@ -183,7 +201,7 @@ void ActiveMQTransaction::removeFromTransaction( long long consumerId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::commit() 
+void ActiveMQTransaction::commit()
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -197,6 +215,17 @@ void ActiveMQTransaction::commit()
 
         // Stop any deliveries
         session->stop();
+
+        // Now that the session is stopped, ack all messages we've
+        // delivered to the clients and placed in the Rollback map.
+        synchronized( &rollbackLock ) {
+
+            RollbackMap::iterator itr = rollbackMap.begin();
+
+            for(; itr != rollbackMap.end(); ++itr) {
+                ackMessages( itr->first, itr->second );
+            }
+        }
 
         // Commit the current Transaction
         connection->getConnectionData()->getConnector()->
@@ -218,7 +247,7 @@ void ActiveMQTransaction::commit()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransaction::rollback() 
+void ActiveMQTransaction::rollback()
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -249,8 +278,8 @@ void ActiveMQTransaction::rollback()
         session->start();
 
         // Roolback the messages to the Session, since we have the lock on the
-        // rollbackLock, then no message will added to the transaction unitll we
-        // are done processing all the messages that we to redeliver and the map
+        // rollbackLock, then no message will added to the transaction until we
+        // are done processing all the messages that we to re-deliver and the map
         // is cleared.
         synchronized( &rollbackLock ) {
 
@@ -284,25 +313,54 @@ void ActiveMQTransaction::redeliverMessages( ActiveMQConsumer* consumer,
             ActiveMQMessage* message = *itr;
             message->setRedeliveryCount( message->getRedeliveryCount() + 1 );
 
-            if( message->getRedeliveryCount() >= maxRedeliveries )
-            {
+            if( message->getRedeliveryCount() >= maxRedeliveries ) {
+
                 // Poison Ack the Message, we give up processing this one
                 connection->getConnectionData()->getConnector()->
                     acknowledge(
                         session->getSessionInfo(),
                         consumer->getConsumerInfo(),
-                        dynamic_cast< Message* >( message ),
+                        dynamic_cast<Message*>( message ),
                         Connector::ACK_TYPE_POISON );
 
-                // Won't redeliver this so we kill it here.
+                // Won't be re-delivered so it must be destroyed here.
                 delete message;
 
-                return;
+                continue;
             }
 
             DispatchData data( consumer->getConsumerInfo(), message );
             session->dispatch( data );
         }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTransaction::ackMessages( ActiveMQConsumer* consumer,
+                                       MessageList& messages )
+    throw ( activemq::exceptions::ActiveMQException ) {
+
+    try {
+
+        std::list<const cms::Message*> cmsMessages;
+
+        MessageList::iterator iter = messages.begin();
+        for( ; iter != messages.end(); ++iter ) {
+            cmsMessages.insert( cmsMessages.end(),
+                dynamic_cast<const cms::Message*>( *iter ) );
+        }
+
+        // Acknowledge the Messages let the connector do it in the most
+        // efficient manner it can for large message block acks.
+        connection->getConnectionData()->getConnector()->
+            acknowledge(
+                session->getSessionInfo(),
+                consumer->getConsumerInfo(),
+                cmsMessages,
+                Connector::ACK_TYPE_CONSUMED );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

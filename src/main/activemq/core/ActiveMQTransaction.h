@@ -41,26 +41,26 @@ namespace core{
 
     /**
      * Transaction Management class, hold messages that are to be redelivered
-     * upon a request to rollback.  The Tranasction represents an always
+     * upon a request to roll-back.  The Transaction represents an always
      * running transaction, when it is committed or rolled back it silently
      * creates a new transaction for the next set of messages.  The only
-     * way to permanently end this tranaction is to delete it.
+     * way to permanently end this transaction is to delete it.
      *
      * Configuration options
      *
      * transaction.maxRedeliveryCount
-     *   Max number of times a message can be redelivered, if the session is
+     *   Max number of times a message can be re-delivered, if the session is
      *   rolled back more than this many time, the message is dropped.
      */
     class AMQCPP_API ActiveMQTransaction : public connector::TransactionInfo {
     private:
 
         // List type for holding messages
-        typedef std::list< ActiveMQMessage* > MessageList;
+        typedef std::list<ActiveMQMessage*> MessageList;
 
-        // Mapping of MessageListener Ids to Lists of Messages that are
-        // redelivered on a Rollback
-        typedef std::map< ActiveMQConsumer*, MessageList > RollbackMap;
+        // Mapping of MessageListener Id's to Lists of Messages that are
+        // re-delivered on a Rollback
+        typedef std::map<ActiveMQConsumer*, MessageList> RollbackMap;
 
     private:
 
@@ -79,11 +79,8 @@ namespace core{
         // Lock object to protect the rollback Map
         decaf::util::concurrent::Mutex rollbackLock;
 
-        // Max number of redeliveries before we quit
+        // Max number of re-deliveries before we quit
         int maxRedeliveries;
-
-        // Mutex that is signaled when all tasks complete.
-        decaf::util::concurrent::Mutex tasksDone;
 
     public:
 
@@ -91,7 +88,7 @@ namespace core{
          * Constructor
          * @param connection - Connection to the Broker
          * @param session - the session that contains this transaction
-         * @param properties - configuratoin parameters for this object
+         * @param properties - configuration parameters for this object
          */
         ActiveMQTransaction( ActiveMQConnection* connection,
                              ActiveMQSession* session,
@@ -106,6 +103,15 @@ namespace core{
          * @param consumer - Listener to redeliver to on Rollback
          */
         virtual void addToTransaction( ActiveMQMessage* message,
+                                       ActiveMQConsumer* consumer );
+
+        /**
+         * Adds the Message as a part of the Transaction for the specified
+         * ActiveMQConsumer.
+         * @param message - Message to Transact
+         * @param consumer - Listener to redeliver to on Rollback
+         */
+        virtual void addToTransaction( cms::Message* message,
                                        ActiveMQConsumer* consumer );
 
         /**
@@ -148,7 +154,7 @@ namespace core{
     public:   // TransactionInfo Interface
 
         /**
-         * Gets the Transction Id
+         * Gets the Transaction Id
          * @return integral value of Id
          */
         virtual long long getTransactionId() const {
@@ -156,7 +162,7 @@ namespace core{
         }
 
         /**
-         * Sets the Transction Id
+         * Sets the Transaction Id
          * @param id - integral value of Id
          */
         virtual void setTransactionId( long long id ) {
@@ -190,16 +196,28 @@ namespace core{
         virtual void clearTransaction();
 
         /**
-         * Redelivers each message that is in the Message List to the specified
-         * consumer, throwing messages away as they hit their max redilviery
+         * Re-delivers each message that is in the Message List to the specified
+         * consumer, throwing messages away as they hit their max re-delivery
          * count.
-         * @param consumer - the ActiveMQConsumer to redeliver to
+         * @param consumer - the ActiveMQConsumer to re-deliver to
          * @param messages - the list of messages that should be sent.
          * @throws ActiveMQException if an error occurs.
          */
         virtual void redeliverMessages( ActiveMQConsumer* consumer,
                                         MessageList& messages )
-                                            throw ( exceptions::ActiveMQException );
+            throw ( exceptions::ActiveMQException );
+
+        /**
+         * Acknowledges each message that is in the Message List to the specified
+         * consumer.
+         * @param consumer - the ActiveMQConsumer to acknowledge to
+         * @param messages - the list of messages that should be sent.
+         * @throws ActiveMQException if an error occurs.
+         */
+        virtual void ackMessages( ActiveMQConsumer* consumer,
+                                  MessageList& messages )
+            throw ( exceptions::ActiveMQException );
+
     };
 
 }}

@@ -524,6 +524,28 @@ void StompConnector::acknowledge( const SessionInfo* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StompConnector::acknowledge( const SessionInfo* session,
+                                  const ConsumerInfo* consumer,
+                                  const std::list<const cms::Message*>& messages,
+                                  AckType ackType )
+    throw ( ConnectorException ) {
+
+    try {
+
+        enforceConnected();
+
+        std::list<const cms::Message*>::const_iterator iter = messages.begin();
+
+        for( ; iter != messages.end(); ++iter ) {
+            this->acknowledge( session, consumer, *iter, ackType );
+        }
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
+    AMQ_CATCHALL_THROW( ConnectorException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* StompConnector::startTransaction(
     SessionInfo* session )
         throw ( ConnectorException ) {

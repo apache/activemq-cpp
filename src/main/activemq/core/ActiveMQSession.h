@@ -343,16 +343,6 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Called to acknowledge the receipt of a message.
-         * @param The consumer that received the message
-         * @param The Message to acknowledge.
-         * @throws CMSException
-         */
-        virtual void acknowledge( ActiveMQConsumer* consumer,
-                                  ActiveMQMessage* message )
-            throw ( cms::CMSException );
-
-        /**
          * This method gets any registered exception listener of this sessions
          * connection and returns it.  Mainly intended for use by the objects
          * that this session creates so that they can notify the client of
@@ -367,7 +357,14 @@ namespace core{
          * @return SessionInfo Pointer
          */
         virtual connector::SessionInfo* getSessionInfo() {
-            return sessionInfo;
+            return this->sessionInfo;
+        }
+
+        /**
+         * Gets the ActiveMQConnection that is associated with this session.
+         */
+        ActiveMQConnection* getConnection() const {
+            return this->connection;
         }
 
         /**

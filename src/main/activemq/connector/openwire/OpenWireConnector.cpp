@@ -987,6 +987,94 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::acknowledge( const SessionInfo* session,
+                                     const ConsumerInfo* consumer,
+                                     const std::list<const cms::Message*>& messages,
+                                     AckType ackType )
+    throw ( ConnectorException ) {
+
+    enforceConnected();
+
+    if( messages.empty() ) {
+        return;
+    }
+
+    try{
+
+        const commands::Message* amqMessage =
+            dynamic_cast<const commands::Message*>( *messages.rbegin() );
+
+        if( amqMessage == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::acknowledge - "
+                "Message was not a commands::Message derivation.");
+        }
+
+        const OpenWireConsumerInfo* consumerInfo =
+            dynamic_cast<const OpenWireConsumerInfo*>( consumer );
+
+        if( consumerInfo == NULL ) {
+            throw OpenWireConnectorException(
+                __FILE__, __LINE__,
+                "OpenWireConnector::acknowledge - "
+                "Consumer was not of the OpenWire flavor.");
+        }
+
+        commands::MessageAck ack;
+        ack.setAckType( (int)ackType );
+        ack.setConsumerId(
+            consumerInfo->getConsumerInfo()->getConsumerId()->cloneDataStructure() );
+        ack.setDestination( amqMessage->getDestination()->cloneDataStructure() );
+        ack.setLastMessageId( amqMessage->getMessageId()->cloneDataStructure() );
+        ack.setMessageCount( messages.size() );
+
+        if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            const OpenWireTransactionInfo* transactionInfo =
+                dynamic_cast<const OpenWireTransactionInfo*>(
+                    session->getTransactionInfo() );
+
+            if( transactionInfo == NULL ||
+                transactionInfo->getTransactionInfo() == NULL ||
+                transactionInfo->getTransactionInfo()->getTransactionId() == NULL ) {
+                throw OpenWireConnectorException(
+                    __FILE__, __LINE__,
+                    "OpenWireConnector::acknowledge - "
+                    "Transacted Session, has no Transaction Info.");
+            }
+
+            const commands::TransactionId* transactionId =
+                dynamic_cast<const commands::TransactionId*>(
+                    transactionInfo->getTransactionInfo()->getTransactionId() );
+
+            commands::TransactionId* clonedTransactionId =
+                transactionId->cloneDataStructure();
+
+            ack.setTransactionId( clonedTransactionId );
+        }
+
+        oneway( &ack );
+
+    } catch( ConnectorException& ex ){
+        try{ transport->close(); } catch( ... ){}
+
+        ex.setMark(__FILE__,__LINE__);
+        throw ex;
+    } catch( Exception& ex ){
+        try{ transport->close(); } catch( ... ){}
+
+        ex.setMark(__FILE__,__LINE__);
+        throw OpenWireConnectorException( ex );
+    } catch( ... ) {
+        try{ transport->close(); } catch( ... ){}
+
+        throw OpenWireConnectorException( __FILE__, __LINE__,
+            "Caught unknown exception" );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* OpenWireConnector::startTransaction(
     connector::SessionInfo* session )
         throw ( ConnectorException ) {
@@ -1360,10 +1448,11 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
             delete command;
 
         } else if( typeid( *command ) == typeid( commands::ProducerAck ) ) {
-            commands::ProducerAck* producerAck =
-                dynamic_cast<commands::ProducerAck*>( command );
 
             // TODO - Apply The Ack.
+            //commands::ProducerAck* producerAck =
+            //    dynamic_cast<commands::ProducerAck*>( command );
+
             delete command;
 
         } else if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
