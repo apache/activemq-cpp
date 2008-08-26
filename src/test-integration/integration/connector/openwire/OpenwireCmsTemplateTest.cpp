@@ -144,6 +144,7 @@ void OpenwireCmsTemplateTest::testReceiveException()
                 1);
         Thread st(&sender);
         st.start();
+        st.join();
         
         // Receive the message.
         cms::Message* message = cmsTemplate.receive();
