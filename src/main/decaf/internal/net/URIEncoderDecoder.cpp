@@ -48,7 +48,7 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
             if( i + 2 >= s.length() ) {
                 throw URISyntaxException(
                     __FILE__, __LINE__, s,
-                    "invalid Encoded data", i );
+                    "invalid Encoded data", (int)i );
             }
 
             int d1 = Character::digit( *(++itr), 16 );
@@ -57,7 +57,7 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
             if( d1 == -1 || d2 == -1 ) {
                 throw URISyntaxException(
                     __FILE__, __LINE__, s,
-                    "Invalid Hex Digit in char", i );
+                    "Invalid Hex Digit in char", (int)i );
             }
 
             i += 2;
@@ -73,7 +73,7 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,
-                "string contains Invalid Character", i );
+                "string contains Invalid Character", (int)i );
         }
     }
 }
@@ -87,11 +87,11 @@ void URIEncoderDecoder::validateSimple( const std::string& s,
 
     for( int i = 0; itr != s.end(); ++i, ++itr ) {
         if( !Character::isLetterOrDigit( *itr ) ||
-            !legal.find( *itr ) > std::string::npos ) {
+            !( legal.find( *itr ) > std::string::npos ) ) {
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,
-                "string contains invalid ASCII chars", i );
+                "string contains invalid ASCII chars", (int)i );
         }
     }
 }
