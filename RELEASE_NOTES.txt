@@ -1,4 +1,30 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.1                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2 release.
+
+Sub-task
+
+    * [AMQCPP-189] - the message producer core dump during sending lots of messages
+
+Bug
+
+    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling pointer during exception in ActiveMQConnectionFactory::createConnection()
+    * [AMQCPP-185] - Some CmsTemplate headers missing from headers section in Makefile.am
+    * [AMQCPP-188] - ActiveMQ message consumer waiting for receive to complete is not closing...
+    * [AMQCPP-190] - setStringProperty() max length
+    * [AMQCPP-191] - autogen.sh fails to create configure : doxygen-related
+    * [AMQCPP-194] - Potential Deadlock in OpenwireConnector on exception from transport
+    * [AMQCPP-195] - Message stuck in queue when using transactional sessions
+
+Improvement
+
+    * [AMQCPP-179] - Add support for the openwire 3.0 commands
+    * [AMQCPP-192] - Add getCause to the CMS and Decaf exception interfaces
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2                                 ==
 =========================================================================
 
