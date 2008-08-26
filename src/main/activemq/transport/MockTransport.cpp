@@ -134,7 +134,7 @@ Response* MockTransport::request( Command* command, unsigned int timeout AMQCPP_
            decaf::lang::exceptions::UnsupportedOperationException)
 {
     try{
-        this->request( command );
+        return this->request( command );
     }
     AMQ_CATCH_RETHROW( CommandIOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
