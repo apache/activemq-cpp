@@ -104,7 +104,7 @@ void URIEncoderDecoderTest::testEncodeOthers() {
     string test1;
     string test2;
 
-    test1 += 156;
+    test1 += (char)156;
     test2 += 'A';
 
     CPPUNIT_ASSERT_NO_THROW_MESSAGE(
