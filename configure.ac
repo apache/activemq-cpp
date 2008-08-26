@@ -27,8 +27,22 @@ AC_CONFIG_SRCDIR(src/main/activemq/core/ActiveMQConnection.cpp)
 ## -----------------------------------------------
 ACTIVEMQ_LIBRARY_NAME=activemq-cpp
 ACTIVEMQ_VERSION=2.2.1
-ACTIVEMQ_LIBRARY_VERSION=4:0:0
 ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
+
+##
+## When releasing a new version the ACTIVEMQ_LIBRARY_VERSION needs to be updated.
+## The following rules apply to the numbers in the version.
+##
+## MAJOR: a change in the MAJOR number is necessary for anything that changes
+##  binary compatibility (e.g. changing a function prototype or class definition),
+##  or when major internal changes occur
+## MINOR: a change in the MINOR number is necessary whenever new functionality is
+##  added without breaking binary compatibility (e.g. adding a new class), or when
+##  anything other than very minor internal changes occur
+## REVISION: a change in the REVISION number is made for any other type of change
+##  that does not justify a change to MINOR or MAJOR
+##
+ACTIVEMQ_LIBRARY_VERSION=4:0:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
