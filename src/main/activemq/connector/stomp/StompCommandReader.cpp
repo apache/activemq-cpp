@@ -20,6 +20,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Long.h>
+#include <decaf/lang/Integer.h>
 
 using namespace std;
 using namespace activemq;
@@ -231,7 +232,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
         // Clear any data from the buffer.
         buffer.clear();
 
-        unsigned long content_length = 0;
+        unsigned int content_length = 0;
 
         if(frame.getProperties().hasProperty(
             commands::CommandConstants::toString(
@@ -242,7 +243,7 @@ void StompCommandReader::readStompBody( StompFrame& frame )
                     commands::CommandConstants::toString(
                         commands::CommandConstants::HEADER_CONTENTLENGTH));
 
-            content_length = (unsigned long long)Long::parseLong( length );
+            content_length = (unsigned int)Integer::parseInt( length );
          }
 
          if( content_length != 0 ) {
@@ -261,8 +262,8 @@ void StompCommandReader::readStompBody( StompFrame& frame )
             // us to adapt to that size so that future messages that are
             // around that size won't alloc any new memory.
 
-            buffer.reserve( content_length );
-            buffer.resize( content_length );
+            buffer.reserve( (std::size_t)content_length );
+            buffer.resize( (std::size_t)content_length );
 
             // Read the Content Length now
             read( &buffer[0], content_length );

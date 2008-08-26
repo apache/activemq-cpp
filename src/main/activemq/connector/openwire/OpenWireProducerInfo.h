@@ -200,8 +200,8 @@ namespace openwire{
          * @param windowSize - The number of message to send before a block to wait for
          * the receipt of a ProducerAck.
          */
-        virtual void setProducerWindow( unsigned long long timeout ) {
-            this->sendTimeout = timeout;
+        virtual void setProducerWindow( unsigned long long window ) {
+            this->producerWindow = window;
         }
 
     };

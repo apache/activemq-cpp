@@ -1027,7 +1027,7 @@ void OpenWireConnector::acknowledge( const SessionInfo* session,
             consumerInfo->getConsumerInfo()->getConsumerId()->cloneDataStructure() );
         ack.setDestination( amqMessage->getDestination()->cloneDataStructure() );
         ack.setLastMessageId( amqMessage->getMessageId()->cloneDataStructure() );
-        ack.setMessageCount( messages.size() );
+        ack.setMessageCount( (int)messages.size() );
 
         if( session->getAckMode() == cms::Session::SESSION_TRANSACTED ) {
 
