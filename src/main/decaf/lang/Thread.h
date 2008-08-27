@@ -113,6 +113,12 @@ namespace lang{
         static void sleep( int millisecs );
 
         /**
+         * Causes the currently executing thread object to temporarily pause
+         * and allow other threads to execute.
+         */
+        static void yeild();
+
+        /**
          * Obtains the Thread Id of the current thread
          * @return Thread Id
          */
