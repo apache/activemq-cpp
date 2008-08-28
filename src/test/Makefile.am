@@ -125,6 +125,7 @@ cc_sources = \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
+  decaf/util/concurrent/atomic/AtomicBooleanTest.cpp \
   decaf/nio/BufferTest.cpp \
   testRegistry.cpp \
   main.cpp
@@ -239,11 +240,12 @@ h_sources = \
   decaf/util/concurrent/CountDownLatchTest.h \
   decaf/util/concurrent/MutexTest.h \
   decaf/util/concurrent/ThreadPoolTest.h \
+  decaf/util/concurrent/atomic/AtomicBooleanTest.h \
   decaf/nio/BufferTest.h  
 
 ## include activemq/connector/openwire/marshal/v1/srcmakefile.mk
 ## include activemq/connector/openwire/marshal/v2/srcmakefile.mk
-include activemq/connector/openwire/marshal/v3/srcmakefile.mk
+## include activemq/connector/openwire/marshal/v3/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test

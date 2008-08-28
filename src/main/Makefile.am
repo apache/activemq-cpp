@@ -130,6 +130,7 @@ cc_sources = \
     decaf/util/concurrent/CountDownLatch.cpp \
     decaf/util/concurrent/PooledThread.cpp \
     decaf/util/concurrent/ThreadPool.cpp \
+    decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/Date.cpp \
     decaf/util/UUID.cpp \
     decaf/util/StringTokenizer.cpp \
@@ -386,6 +387,7 @@ h_sources = \
     decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/TaskListener.h \
     decaf/util/concurrent/ThreadPool.h \
+    decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/Config.h \
     decaf/util/Date.h \
     decaf/util/UUID.h \

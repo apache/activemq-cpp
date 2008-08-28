@@ -34,7 +34,7 @@ namespace atomic {
     class DECAF_API AtomicBoolean {
     private:
 
-        volatile int value;
+        volatile unsigned int value;
 
     public:
 

@@ -18,6 +18,9 @@
 #include "AtomicBoolean.h"
 
 #include <decaf/lang/Boolean.h>
+#include <apr_atomic.h>
+
+#include <iostream>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -26,12 +29,19 @@ using namespace decaf::util::concurrent;
 using namespace decaf::util::concurrent::atomic;
 
 ////////////////////////////////////////////////////////////////////////////////
-AtomicBoolean::AtomicBoolean() {
+AtomicBoolean::AtomicBoolean() : value(0) {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+AtomicBoolean::AtomicBoolean( bool initialValue ) {
+    this->value = initialValue ? 1 : 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 bool AtomicBoolean::compareAndSet( bool expect, bool update ) {
-    // TODO
+    int upd = update ? 1 : 0;
+    int exp = expect ? 1 : 0;
+    return apr_atomic_cas32( &this->value, upd, exp ) == exp;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
