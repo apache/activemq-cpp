@@ -98,7 +98,7 @@ void Thread::sleep( int millisecs ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Thread::yeild() {
+void Thread::yield() {
     apr_thread_yield();
 }
 

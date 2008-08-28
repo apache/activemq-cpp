@@ -116,7 +116,7 @@ namespace lang{
          * Causes the currently executing thread object to temporarily pause
          * and allow other threads to execute.
          */
-        static void yeild();
+        static void yield();
 
         /**
          * Obtains the Thread Id of the current thread
