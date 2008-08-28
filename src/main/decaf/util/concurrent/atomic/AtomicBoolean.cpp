@@ -20,8 +20,6 @@
 #include <decaf/lang/Boolean.h>
 #include <apr_atomic.h>
 
-#include <iostream>
-
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
