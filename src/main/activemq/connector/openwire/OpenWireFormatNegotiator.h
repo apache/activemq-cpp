@@ -25,6 +25,7 @@
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
 namespace activemq{
 namespace connector{
@@ -41,7 +42,7 @@ namespace openwire{
         /**
          * Have we started already?
          */
-        bool firstTime;
+        decaf::util::concurrent::atomic::AtomicBoolean firstTime;
 
         /**
          * Latch objects to count down till we receive the wireFormat info

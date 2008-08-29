@@ -24,6 +24,7 @@
 #include <activemq/transport/Command.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <map>
 #include <stdio.h>
 
@@ -43,17 +44,12 @@ namespace filters{
         /**
          * The next command id for sent commands.
          */
-        unsigned int nextCommandId;
+        decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
 
         /**
          * Map of request ids to future response objects.
          */
         std::map<unsigned int, FutureResponse*> requestMap;
-
-        /**
-         * Sync object for accessing the next command id variable.
-         */
-        decaf::util::concurrent::Mutex commandIdMutex;
 
         /**
          * Sync object for accessing the request map.
@@ -64,13 +60,6 @@ namespace filters{
          * Flag to indicate the closed state.
          */
         bool closed;
-
-    private:
-
-        /**
-         * Returns the next available command id.
-         */
-        unsigned int getNextCommandId() throw ( exceptions::ActiveMQException );
 
     public:
 

@@ -25,30 +25,12 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int ResponseCorrelator::getNextCommandId()
-    throw ( activemq::exceptions::ActiveMQException ){
-
-    try{
-
-        synchronized( &commandIdMutex ){
-            return ++nextCommandId;
-        }
-
-        // Should never get here, but some compilers aren't
-        // smart enough to figure out we'll never get here.
-        return 0;
-    }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::ResponseCorrelator( Transport* next, bool own )
 :
     TransportFilter( next, own ) {
 
-    nextCommandId = 0;
+    //nextCommandId = 0;
+    nextCommandId.set(1);
     // Start in the closed state.
     closed = true;
 }
@@ -68,7 +50,7 @@ void ResponseCorrelator::oneway( Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
-        command->setCommandId( getNextCommandId() );
+        command->setCommandId( nextCommandId.getAndIncrement() );
         command->setResponseRequired( false );
 
         if( closed || next == NULL ){
@@ -90,7 +72,7 @@ Response* ResponseCorrelator::request( Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
-        command->setCommandId( getNextCommandId() );
+        command->setCommandId( nextCommandId.getAndIncrement() );
         command->setResponseRequired( true );
 
         // Add a future response object to the map indexed by this
@@ -147,7 +129,7 @@ Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
-        command->setCommandId( getNextCommandId() );
+        command->setCommandId( nextCommandId.getAndIncrement() );
         command->setResponseRequired( true );
 
         // Add a future response object to the map indexed by this

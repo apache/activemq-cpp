@@ -25,8 +25,7 @@
 namespace activemq{
 namespace core{
 
-    class AMQCPP_API ActiveMQConnectionFactory : public cms::ConnectionFactory
-    {
+    class AMQCPP_API ActiveMQConnectionFactory : public cms::ConnectionFactory {
     private:
 
         // The user name this factory will use to connect
@@ -41,7 +40,7 @@ namespace core{
 
     public:
 
-           ActiveMQConnectionFactory();
+        ActiveMQConnectionFactory();
 
         /**
          * Constructor
@@ -53,7 +52,7 @@ namespace core{
                                    const std::string& username = "",
                                    const std::string& password = "" );
 
-           virtual ~ActiveMQConnectionFactory() {}
+        virtual ~ActiveMQConnectionFactory() {}
 
         /**
          * Creates a connection with the default user identity. The

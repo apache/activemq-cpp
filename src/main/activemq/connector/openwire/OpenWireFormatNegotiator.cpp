@@ -38,7 +38,7 @@ OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireForm
     wireInfoSentDownLatch(1),
     readyCountDownLatch(1)
 {
-    this->firstTime = true;
+    this->firstTime.set( true );
     this->openWireFormat = openWireFormat;
     this->closed = true;
 }
@@ -224,12 +224,9 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
     // Start the delegate transport object.
     next->start();
 
-    if( firstTime == true ) {
+    if( firstTime.compareAndSet( true, false ) ) {
 
         try {
-
-            // The First Time is now over with
-            firstTime = false;
 
             // We first send the WireFormat that we'd prefer.
             next->oneway( openWireFormat->getPreferedWireFormatInfo() );
