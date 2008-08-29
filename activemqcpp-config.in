@@ -23,6 +23,7 @@ libdir="@libdir@"
 datadir="@datadir@"
 installbuilddir="@installbuilddir@"
 includedir="@includedir@"
+datarootdir="@datadir@"
 
 usage()
 {
