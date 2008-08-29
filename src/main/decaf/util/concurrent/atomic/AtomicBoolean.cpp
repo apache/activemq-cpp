@@ -53,6 +53,6 @@ bool AtomicBoolean::getAndSet( bool newValue ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string AtomicBoolean::toString() {
+std::string AtomicBoolean::toString() const {
     return Boolean::toString( this->value ? true : false );
 }

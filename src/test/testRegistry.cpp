@@ -243,6 +243,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolTest );
 
 #include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );
+#include <decaf/util/concurrent/atomic/AtomicIntegerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicIntegerTest );
 
 #include <decaf/util/DateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );

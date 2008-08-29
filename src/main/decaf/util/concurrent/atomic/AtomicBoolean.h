@@ -90,7 +90,7 @@ namespace atomic {
          * Returns the String representation of the current value.
          * @returns the String representation of the current value.
          */
-        std::string toString();
+        std::string toString() const;
 
     };
 
