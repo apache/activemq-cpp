@@ -38,6 +38,11 @@ namespace commands{
     class ActiveMQMapMessage :
         public ActiveMQMessageBase<cms::MapMessage> {
 
+    private:
+
+        // Map Structure to hold unmarshalled Map Data
+        mutable util::PrimitiveMap* map;
+
     public:
 
         const static unsigned char ID_ACTIVEMQMAPMESSAGE = 25;
@@ -335,11 +340,6 @@ namespace commands{
          */
         virtual void checkMapIsUnmarshalled() const
             throw ( decaf::lang::exceptions::NullPointerException );
-
-    private:
-
-        // Map Structure to hold unmarshalled Map Data
-        mutable util::PrimitiveMap* map;
 
     };
 

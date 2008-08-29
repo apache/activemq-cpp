@@ -71,7 +71,7 @@ namespace commands{
          * such as its type and value of its elements.
          * @return formatted string useful for debugging.
          */
-        virtual std::string toString() const{
+        virtual std::string toString() const {
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQTextMessage" << std::endl;

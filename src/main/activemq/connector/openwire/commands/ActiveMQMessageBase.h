@@ -43,6 +43,11 @@ namespace commands{
     class ActiveMQMessageBase : public T,
                                 public Message,
                                 public core::ActiveMQMessage {
+    private:
+
+        core::ActiveMQAckHandler* ackHandler;
+        int redeliveryCount;
+        util::PrimitiveMap properties;
 
     public:
 
@@ -228,7 +233,7 @@ namespace commands{
          * Acknowledges all consumed messages of the session
          * of this consumed message.
          */
-        virtual void acknowledge(void) const throw( cms::CMSException ) {
+        virtual void acknowledge() const throw( cms::CMSException ) {
             try{
                 this->getAckHandler()->acknowledgeMessage( this );
             }
@@ -555,7 +560,7 @@ namespace commands{
          * Get the Correlation Id for this message
          * @return string representation of the correlation Id
          */
-        virtual std::string getCMSCorrelationID(void) const {
+        virtual std::string getCMSCorrelationID() const {
             return this->getCorrelationId();
         }
 
@@ -571,7 +576,7 @@ namespace commands{
          * Gets the DeliveryMode for this message
          * @return DeliveryMode enumerated value.
          */
-        virtual int getCMSDeliveryMode(void) const {
+        virtual int getCMSDeliveryMode() const {
             return this->isPersistent();
         }
 
@@ -724,12 +729,6 @@ namespace commands{
         virtual void setCMSType( const std::string& type ) {
             this->setType( type );
         }
-
-    private:
-
-        core::ActiveMQAckHandler* ackHandler;
-        int redeliveryCount;
-        util::PrimitiveMap properties;
 
     };
 
