@@ -305,7 +305,7 @@ public:
     // If something bad happens you see it here as this class is also been
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
-        printf("CMS Exception occured.  Shutting down client.\n");
+        printf("CMS Exception occurred.  Shutting down client.\n");
         exit(1);
     }
 
@@ -354,7 +354,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
 
-    // Set the URI to point to the IPAddress of your broker.
+    // Set the URI to point to the IP Address of your broker.
     // add any optional params to the url to enable things like
     // tightMarshalling or tcp logging etc.  See the CMS web site for
     // a full list of configuration options.
