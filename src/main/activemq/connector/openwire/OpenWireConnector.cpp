@@ -88,6 +88,17 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
         this->state = CONNECTION_STATE_DISCONNECTED;
     }
 
+    // Check the connection options
+    this->setAlwaysSyncSend( Boolean::parseBoolean(
+        properties.getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND ), "false" ) ) );
+
+    this->setUseAsyncSend( Boolean::parseBoolean(
+        properties.getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_USEASYNCSEND ), "false" ) ) );
+
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->brokerInfo = NULL;
@@ -855,12 +866,24 @@ void OpenWireConnector::send( cms::Message* message,
                     getTransactionId()->cloneDataStructure() );
         }
 
-        // Send the message to the broker.
-        Response* response = syncRequest( amqMessage, producerInfo->getSendTimeout() );
+        if( producerInfo->getSendTimeout() <= 0 &&
+            !amqMessage->isResponseRequired() &&
+            !this->isAlwaysSyncSend() &&
+            ( !amqMessage->isPersistent() || this->isUseAsyncSend() ||
+              amqMessage->getTransactionId() != NULL ) ) {
 
-        // The broker did not return an error - this is good.
-        // Just discard the response.
-        delete response;
+            // No Response Required.
+            this->oneway( amqMessage );
+
+        } else {
+
+            // Send the message to the broker.
+            Response* response = syncRequest( amqMessage, producerInfo->getSendTimeout() );
+
+            // The broker did not return an error - this is good.
+            // Just discard the response.
+            delete response;
+        }
 
     } catch( ConnectorException& ex ){
 

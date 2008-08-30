@@ -45,9 +45,11 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     destOptions[CONSUMER_EXCLUSIVE] = "consumer.exclusive";
     destOptions[CONSUMER_PRIORITY] = "consumer.priority";
 
-    uriParams[PARAM_CLOSETIMEOUT] = "connection.closeTimeout";
-    uriParams[PARAM_SENDTIMEOUT] = "connection.sendTimeout";
-    uriParams[PARAM_PRODUCERWINDOWSIZE] = "connection.producerWidowSize";
+    uriParams[CONNECTION_CLOSETIMEOUT] = "connection.closeTimeout";
+    uriParams[CONNECTION_SENDTIMEOUT] = "connection.sendTimeout";
+    uriParams[CONNECTION_PRODUCERWINDOWSIZE] = "connection.producerWidowSize";
+    uriParams[CONNECTION_ALWAYSSYNCSEND] = "connection.alwaysSyncSend";
+    uriParams[CONNECTION_USEASYNCSEND] = "connection.useAsyncSend";
     uriParams[PARAM_USERNAME] = "username";
     uriParams[PARAM_PASSWORD] = "password";
     uriParams[PARAM_CLIENTID] = "client-id";
@@ -58,4 +60,5 @@ ActiveMQConstants::StaticInitializer::StaticInitializer(){
     for( int ix=0; ix<NUM_PARAMS; ++ix ){
         uriParamsMap[uriParams[ix]] = (URIParam)ix;
     }
+
 }

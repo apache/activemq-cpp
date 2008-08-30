@@ -188,6 +188,21 @@ namespace openwire{
          */
         decaf::util::Map< long long, OpenWireConsumerInfo* > consumerInfoMap;
 
+        /**
+         * Boolean indicating that we are to always send message Synchronously.
+         * This overrides the sending on non-persistent messages or transacted
+         * messages asynchronously, also fully overrides the useAsyncSend flag.
+         */
+        bool alwaysSyncSend;
+
+        /**
+         * Boolean indicating that we are to send any messages that we would normally
+         * send synchronously using an asynchronous send.  Normally we send all the
+         * persistent messages not in a transaction synchronously and all others are
+         * sent asynchronously.  Only applied though is alwaysSyncSend is false.
+         */
+        bool useAsyncSend;
+
     private:
 
         /**
@@ -619,6 +634,40 @@ namespace openwire{
             transport::Transport* source,
             const decaf::lang::Exception& ex );
 
+    public: // Local Getters and Setters
+
+        /**
+         * Gets if the alwaysSyncSend option is set
+         * @returns true if on false if not.
+         */
+        bool isAlwaysSyncSend() const {
+            return this->alwaysSyncSend;
+        }
+
+        /**
+         * Sets the alwaysSyncSend option
+         * @param value - true to activate, false to disable.
+         */
+        void setAlwaysSyncSend( bool value ) {
+            this->alwaysSyncSend = value;
+        }
+
+        /**
+         * Gets if the useAsyncSend option is set
+         * @returns true if on false if not.
+         */
+        bool isUseAsyncSend() const {
+            return this->useAsyncSend;
+        }
+
+        /**
+         * Sets the useAsyncSend option
+         * @param value - true to activate, false to disable.
+         */
+        void setUseAsyncSend( bool value ) {
+            this->useAsyncSend = value;
+        }
+
     private:
 
         // Gets the configured producer window size to use when creating new
@@ -627,7 +676,7 @@ namespace openwire{
             return decaf::lang::Integer::parseInt(
                 properties.getProperty(
                     core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::PARAM_PRODUCERWINDOWSIZE ), "0" ) );
+                        core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) );
         }
 
         // Gets the time to wait for a producer send to complete, meaning the time to
@@ -636,7 +685,7 @@ namespace openwire{
             return decaf::lang::Integer::parseInt(
                 properties.getProperty(
                     core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::PARAM_SENDTIMEOUT ), "0" ) );
+                        core::ActiveMQConstants::CONNECTION_SENDTIMEOUT ), "0" ) );
         }
 
         // Gets the time to wait for a response from the Broker when the close message
@@ -645,7 +694,7 @@ namespace openwire{
             return decaf::lang::Integer::parseInt(
                 properties.getProperty(
                     core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::PARAM_CLOSETIMEOUT ), "15000" ) );
+                        core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT ), "15000" ) );
         }
 
         // Check for Connected State and Throw an exception if not.

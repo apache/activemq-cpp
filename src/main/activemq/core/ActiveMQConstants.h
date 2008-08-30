@@ -54,12 +54,14 @@ namespace core{
          */
         enum URIParam
         {
-            PARAM_SENDTIMEOUT,
-            PARAM_PRODUCERWINDOWSIZE,
+            CONNECTION_SENDTIMEOUT,
+            CONNECTION_PRODUCERWINDOWSIZE,
+            CONNECTION_CLOSETIMEOUT,
+            CONNECTION_ALWAYSSYNCSEND,
+            CONNECTION_USEASYNCSEND,
             PARAM_USERNAME,
             PARAM_PASSWORD,
             PARAM_CLIENTID,
-            PARAM_CLOSETIMEOUT,
             NUM_PARAMS
         };
 
