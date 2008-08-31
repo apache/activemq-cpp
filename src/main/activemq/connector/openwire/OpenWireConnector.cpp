@@ -273,21 +273,21 @@ connector::SessionInfo* OpenWireConnector::createSession(
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
         sessionId->setValue( sessionIds.getNextSequenceId() );
         info->setSessionId( sessionId );
+
+        // Create and initialize the Connector's Session Info object, this will
+        // cleanup the SessionInfo command when destroyed.
         OpenWireSessionInfo* session = new OpenWireSessionInfo( this );
+        session->setSessionInfo( info );
+        session->setAckMode( ackMode );
 
         try{
 
             // Send the subscription message to the broker.
-            Response* response = syncRequest(info);
+            Response* response = syncRequest( info );
 
             // The broker did not return an error - this is good.
             // Just discard the response.
             delete response;
-
-            // Create the Connector Session Wrapper Object and fill in its
-            // data
-            session->setSessionInfo( info );
-            session->setAckMode( ackMode );
 
             // Return the session info.
             return session;
@@ -295,7 +295,6 @@ connector::SessionInfo* OpenWireConnector::createSession(
         } catch( ConnectorException& ex ) {
 
             // Something bad happened - free the session info object.
-            delete info;
             delete session;
 
             ex.setMark(__FILE__, __LINE__);
@@ -403,19 +402,16 @@ ConsumerInfo* OpenWireConnector::createDurableConsumer(
 
     } catch( ConnectorException& ex ) {
         delete consumer;
-        delete consumerInfo;
 
         ex.setMark( __FILE__, __LINE__ );
         throw ex;
     } catch( Exception& ex ) {
         delete consumer;
-        delete consumerInfo;
 
         ex.setMark( __FILE__, __LINE__ );
         throw OpenWireConnectorException( ex );
     } catch( ... ) {
         delete consumer;
-        delete consumerInfo;
 
         throw OpenWireConnectorException( __FILE__, __LINE__,
             "caught unknown exception" );
