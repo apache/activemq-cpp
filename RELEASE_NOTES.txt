@@ -11,6 +11,7 @@ Sub-task
 
 Bug
 
+    * [AMQCPP-165] - Core Dump on reconnect/open queue
     * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling pointer during exception in ActiveMQConnectionFactory::createConnection()
     * [AMQCPP-185] - Some CmsTemplate headers missing from headers section in Makefile.am
     * [AMQCPP-188] - ActiveMQ message consumer waiting for receive to complete is not closing...
