@@ -182,6 +182,7 @@ h_sources = \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
     activemq/exceptions/ActiveMQException.h \
+    activemq/exceptions/ExceptionDefines.h \
     activemq/connector/ConsumerMessageListener.h \
     activemq/connector/ConnectorException.h \
     activemq/connector/TransactionInfo.h \
