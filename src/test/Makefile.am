@@ -125,6 +125,7 @@ cc_sources = \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
+  decaf/util/concurrent/TimeUnitTest.cpp \
   decaf/util/concurrent/atomic/AtomicBooleanTest.cpp \
   decaf/util/concurrent/atomic/AtomicIntegerTest.cpp \
   decaf/nio/BufferTest.cpp \
@@ -241,6 +242,7 @@ h_sources = \
   decaf/util/concurrent/CountDownLatchTest.h \
   decaf/util/concurrent/MutexTest.h \
   decaf/util/concurrent/ThreadPoolTest.h \
+  decaf/util/concurrent/TimeUnitTest.h \
   decaf/util/concurrent/atomic/AtomicBooleanTest.h \
   decaf/util/concurrent/atomic/AtomicIntegerTest.h \
   decaf/nio/BufferTest.h  

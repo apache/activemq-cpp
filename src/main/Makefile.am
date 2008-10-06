@@ -129,6 +129,7 @@ cc_sources = \
     decaf/util/concurrent/Mutex.cpp \
     decaf/util/concurrent/CountDownLatch.cpp \
     decaf/util/concurrent/PooledThread.cpp \
+    decaf/util/concurrent/TimeUnit.cpp \
     decaf/util/concurrent/ThreadPool.cpp \
     decaf/util/concurrent/atomic/AtomicBoolean.cpp \
     decaf/util/concurrent/atomic/AtomicInteger.cpp \
@@ -388,6 +389,7 @@ h_sources = \
     decaf/util/concurrent/PooledThread.h \
     decaf/util/concurrent/PooledThreadListener.h \
     decaf/util/concurrent/TaskListener.h \
+    decaf/util/concurrent/TimeUnit.h \
     decaf/util/concurrent/ThreadPool.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \

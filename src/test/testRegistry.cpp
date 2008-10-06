@@ -240,6 +240,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::MutexTest );
 #include <decaf/util/concurrent/ThreadPoolTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolTest );
+#include <decaf/util/concurrent/TimeUnitTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::TimeUnitTest );
 
 #include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );

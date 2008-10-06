@@ -79,3 +79,8 @@ void SystemTest::test_unsetenv() {
 void SystemTest::test_currentTimeMillis() {
     CPPUNIT_ASSERT( System::currentTimeMillis() != 0 );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void SystemTest::test_nanoTime() {
+    CPPUNIT_ASSERT( System::nanoTime() != 0 );
+}

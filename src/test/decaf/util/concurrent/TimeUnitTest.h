@@ -42,6 +42,7 @@ namespace concurrent {
         CPPUNIT_TEST( testToMinutes );
         CPPUNIT_TEST( testToHours );
         CPPUNIT_TEST( testToDays );
+        CPPUNIT_TEST( testValueOf );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -63,6 +64,7 @@ namespace concurrent {
         void testToString();
         void testTimedWait();
         void testSleep();
+        void testValueOf();
 
     };
 

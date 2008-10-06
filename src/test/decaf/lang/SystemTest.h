@@ -32,6 +32,7 @@ namespace lang{
         CPPUNIT_TEST( test_setenv );
         CPPUNIT_TEST( test_unsetenv );
         CPPUNIT_TEST( test_currentTimeMillis );
+        CPPUNIT_TEST( test_nanoTime );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -44,6 +45,7 @@ namespace lang{
         void test_setenv();
         void test_unsetenv();
         void test_currentTimeMillis();
+        void test_nanoTime();
 
     };
 

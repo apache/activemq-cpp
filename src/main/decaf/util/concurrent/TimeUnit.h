@@ -21,6 +21,7 @@
 #include <string>
 #include <decaf/lang/Comparable.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace decaf {
 namespace util {
@@ -74,6 +75,9 @@ namespace concurrent {
         static const TimeUnit MINUTES;
         static const TimeUnit HOURS;
         static const TimeUnit DAYS;
+
+        /** The An Array of TimeUnit Instances */
+        static const TimeUnit* const values[];
 
     protected:
 
@@ -237,6 +241,23 @@ namespace concurrent {
          * @return String name of the TimeUnit
          */
         virtual std::string toString() const;
+
+    public:  // Static Methods
+
+        /**
+         * Returns the TimeUnit constant of this type with the specified name. The
+         * string must match exactly an identifier used to declare an TimeUnit constant
+         * in this type. (Extraneous whitespace characters are not permitted.)
+         *
+         * @param name
+         *          The Name of the TimeUnit constant to be returned.
+         * @returns
+         *          A constant reference to the TimeUnit Constant with the given name.
+         * @throws IllegalArgumentException
+         *          if this enum type has no constant with the specified name
+         */
+        static const TimeUnit& valueOf( const std::string& name )
+            throw ( decaf::lang::exceptions::IllegalArgumentException );
 
     public:
 

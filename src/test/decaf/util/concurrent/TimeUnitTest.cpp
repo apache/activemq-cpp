@@ -61,6 +61,12 @@ void TimeUnitTest::testConvert2() {
         CPPUNIT_ASSERT( t == TimeUnit::SECONDS.convert( t * 1000, TimeUnit::MILLISECONDS ) );
         CPPUNIT_ASSERT( t == TimeUnit::MILLISECONDS.convert( t * 1000, TimeUnit::MICROSECONDS ) );
         CPPUNIT_ASSERT( t == TimeUnit::MICROSECONDS.convert( t * 1000, TimeUnit::NANOSECONDS ) );
+        CPPUNIT_ASSERT( t * 24 == TimeUnit::HOURS.convert( t, TimeUnit::DAYS ) );
+        CPPUNIT_ASSERT( t * 60 == TimeUnit::MINUTES.convert( t, TimeUnit::HOURS ) );
+        CPPUNIT_ASSERT( t * 60 == TimeUnit::SECONDS.convert( t, TimeUnit::MINUTES ) );
+        CPPUNIT_ASSERT( t * 1000 == TimeUnit::MILLISECONDS.convert( t, TimeUnit::SECONDS ) );
+        CPPUNIT_ASSERT( t * 1000 == TimeUnit::MICROSECONDS.convert( t, TimeUnit::MILLISECONDS ) );
+        CPPUNIT_ASSERT( t * 1000 == TimeUnit::NANOSECONDS.convert( t, TimeUnit::MICROSECONDS ) );
     }
 }
 
@@ -190,4 +196,21 @@ void TimeUnitTest::testSleep() {
     TimeUnit::SECONDS.sleep( 1 );
     long long later = System::currentTimeMillis();
     CPPUNIT_ASSERT( later - now + 10 >= TimeUnit::SECONDS.toMillis( 1 ) );
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+void TimeUnitTest::testValueOf() {
+
+    CPPUNIT_ASSERT( TimeUnit::NANOSECONDS == TimeUnit::valueOf( "NANOSECONDS" ) );
+    CPPUNIT_ASSERT( TimeUnit::MICROSECONDS == TimeUnit::valueOf( "MICROSECONDS" ) );
+    CPPUNIT_ASSERT( TimeUnit::MILLISECONDS == TimeUnit::valueOf( "MILLISECONDS" ) );
+    CPPUNIT_ASSERT( TimeUnit::SECONDS == TimeUnit::valueOf( "SECONDS" ) );
+    CPPUNIT_ASSERT( TimeUnit::MINUTES == TimeUnit::valueOf( "MINUTES" ) );
+    CPPUNIT_ASSERT( TimeUnit::DAYS == TimeUnit::valueOf( "DAYS" ) );
+    CPPUNIT_ASSERT( TimeUnit::HOURS == TimeUnit::valueOf( "HOURS" ) );
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw an IllegalArgumentException",
+        TimeUnit::valueOf( "FOO" ),
+        decaf::lang::exceptions::IllegalArgumentException );
 }
