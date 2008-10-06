@@ -46,21 +46,6 @@ const long long TimeUnit::multipliers[] = {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// Lookup table to check saturation.  Note that because we are
-// dividing these down, we don't have to deal with asymmetry of
-// MIN/MAX values.
-//
-const long long TimeUnit::overflows[] = {
-    0, // unused
-    Long::MAX_VALUE / 1000LL,
-    Long::MAX_VALUE / ( 1000LL * 1000LL ),
-    Long::MAX_VALUE / ( 1000LL * 1000LL * 1000LL ),
-    Long::MAX_VALUE / ( 1000LL * 1000LL * 1000LL * 60LL ),
-    Long::MAX_VALUE / ( 1000LL * 1000LL * 1000LL * 60LL * 60LL ),
-    Long::MAX_VALUE / ( 1000LL * 1000LL * 1000LL * 60LL * 60LL * 24LL )
-};
-
-////////////////////////////////////////////////////////////////////////////////
 TimeUnit::TimeUnit( int index, const std::string& name ) {
     this->index = index;
     this->name = name;
@@ -68,23 +53,104 @@ TimeUnit::TimeUnit( int index, const std::string& name ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 long long TimeUnit::convert( long long sourceDuration, const TimeUnit& sourceUnit ) const {
-    return this->doConvert( sourceUnit.index - this->index, sourceDuration );
+    return this->doConvert( sourceUnit.index, this->index, sourceDuration );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-long long TimeUnit::doConvert( long long delta, long long duration ) const {
+long long TimeUnit::doConvert( int srcIndex, int destIndex, long long duration ) const {
 
-    if( delta == 0 ) {
+    if( duration == 0 ) {
         return duration;
-    } else if( delta < 0 ) {
-        return duration / multipliers[-delta];
-    } else if( duration > overflows[delta] ) {
-        return Long::MAX_VALUE;
-    } else if( duration < -overflows[delta] ) {
-        return Long::MIN_VALUE;
+    } else if( srcIndex > destIndex ) {
+        return scale( duration,
+                      multipliers[srcIndex] / multipliers[destIndex],
+                      Long::MAX_VALUE / ( multipliers[srcIndex] / multipliers[destIndex] ) );
+    } else if( srcIndex < destIndex ) {
+        return duration / ( multipliers[destIndex] / multipliers[srcIndex] );
     }
 
-    return duration * multipliers[delta];
+    // Same unit, no conversion.
+    return duration;
+
+    /*
+    NANOSECONDS {
+        public long toNanos(long d)   { return d; }
+        public long toMicros(long d)  { return d/(C1/C0); }
+        public long toMillis(long d)  { return d/(C2/C0); }
+        public long toSeconds(long d) { return d/(C3/C0); }
+        public long toMinutes(long d) { return d/(C4/C0); }
+        public long toHours(long d)   { return d/(C5/C0); }
+        public long toDays(long d)    { return d/(C6/C0); }
+        public long convert(long d, TimeUnit u) { return u.toNanos(d); }
+        int excessNanos(long d, long m) { return (int)(d - (m*C2)); }
+    },
+    MICROSECONDS {
+        public long toNanos(long d)   { return x(d, C1/C0, MAX/(C1/C0)); }
+        public long toMicros(long d)  { return d; }
+        public long toMillis(long d)  { return d/(C2/C1); }
+        public long toSeconds(long d) { return d/(C3/C1); }
+        public long toMinutes(long d) { return d/(C4/C1); }
+        public long toHours(long d)   { return d/(C5/C1); }
+        public long toDays(long d)    { return d/(C6/C1); }
+        public long convert(long d, TimeUnit u) { return u.toMicros(d); }
+        int excessNanos(long d, long m) { return (int)((d*C1) - (m*C2)); }
+    },
+    MILLISECONDS {
+        public long toNanos(long d)   { return x(d, C2/C0, MAX/(C2/C0)); }
+        public long toMicros(long d)  { return x(d, C2/C1, MAX/(C2/C1)); }
+        public long toMillis(long d)  { return d; }
+        public long toSeconds(long d) { return d/(C3/C2); }
+        public long toMinutes(long d) { return d/(C4/C2); }
+        public long toHours(long d)   { return d/(C5/C2); }
+        public long toDays(long d)    { return d/(C6/C2); }
+        public long convert(long d, TimeUnit u) { return u.toMillis(d); }
+        int excessNanos(long d, long m) { return 0; }
+    },
+    SECONDS {
+        public long toNanos(long d)   { return x(d, C3/C0, MAX/(C3/C0)); }
+        public long toMicros(long d)  { return x(d, C3/C1, MAX/(C3/C1)); }
+        public long toMillis(long d)  { return x(d, C3/C2, MAX/(C3/C2)); }
+        public long toSeconds(long d) { return d; }
+        public long toMinutes(long d) { return d/(C4/C3); }
+        public long toHours(long d)   { return d/(C5/C3); }
+        public long toDays(long d)    { return d/(C6/C3); }
+        public long convert(long d, TimeUnit u) { return u.toSeconds(d); }
+        int excessNanos(long d, long m) { return 0; }
+    },
+    MINUTES {
+        public long toNanos(long d)   { return x(d, C4/C0, MAX/(C4/C0)); }
+        public long toMicros(long d)  { return x(d, C4/C1, MAX/(C4/C1)); }
+        public long toMillis(long d)  { return x(d, C4/C2, MAX/(C4/C2)); }
+        public long toSeconds(long d) { return x(d, C4/C3, MAX/(C4/C3)); }
+        public long toMinutes(long d) { return d; }
+        public long toHours(long d)   { return d/(C5/C4); }
+        public long toDays(long d)    { return d/(C6/C4); }
+        public long convert(long d, TimeUnit u) { return u.toMinutes(d); }
+        int excessNanos(long d, long m) { return 0; }
+    },
+    HOURS {
+        public long toNanos(long d)   { return x(d, C5/C0, MAX/(C5/C0)); }
+        public long toMicros(long d)  { return x(d, C5/C1, MAX/(C5/C1)); }
+        public long toMillis(long d)  { return x(d, C5/C2, MAX/(C5/C2)); }
+        public long toSeconds(long d) { return x(d, C5/C3, MAX/(C5/C3)); }
+        public long toMinutes(long d) { return x(d, C5/C4, MAX/(C5/C4)); }
+        public long toHours(long d)   { return d; }
+        public long toDays(long d)    { return d/(C6/C5); }
+        public long convert(long d, TimeUnit u) { return u.toHours(d); }
+        int excessNanos(long d, long m) { return 0; }
+    },
+    DAYS {
+        public long toNanos(long d)   { return x(d, C6/C0, MAX/(C6/C0)); }
+        public long toMicros(long d)  { return x(d, C6/C1, MAX/(C6/C1)); }
+        public long toMillis(long d)  { return x(d, C6/C2, MAX/(C6/C2)); }
+        public long toSeconds(long d) { return x(d, C6/C3, MAX/(C6/C3)); }
+        public long toMinutes(long d) { return x(d, C6/C4, MAX/(C6/C4)); }
+        public long toHours(long d)   { return x(d, C6/C5, MAX/(C6/C5)); }
+        public long toDays(long d)    { return d; }
+        public long convert(long d, TimeUnit u) { return u.toDays(d); }
+        int excessNanos(long d, long m) { return 0; }
+    };
+    */
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,4 +210,15 @@ bool TimeUnit::operator==( const TimeUnit& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 bool TimeUnit::operator<( const TimeUnit& value ) const {
     return this->compareTo( value ) == -1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long TimeUnit::scale( long long duration, long long multiplier, long long overflow ) {
+    if( duration > overflow ) {
+        return Long::MAX_VALUE;
+    } else if( duration < -overflow ) {
+        return Long::MIN_VALUE;
+    }
+
+    return duration * multiplier;
 }

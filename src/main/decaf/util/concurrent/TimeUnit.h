@@ -61,23 +61,12 @@ namespace concurrent {
         /** Array of Time Unit multipliers */
         static const long long multipliers[];
 
-        /**
-         * Lookup table to check saturation.  Note that because we are
-         * dividing these down, we don't have to deal with asymmetry of
-         * MIN/MAX values.
-         */
-        static const long long overflows[];
-
-        /**
-         * Name of the Unit being represented.
-         */
+        /** Name of the Unit being represented. */
         std::string name;
 
     public:
 
-        /**
-         * The Actual TimeUnit enumerations
-         */
+        /** The Actual TimeUnit enumerations */
         static const TimeUnit NANOSECONDS;
         static const TimeUnit MICROSECONDS;
         static const TimeUnit MILLISECONDS;
@@ -125,7 +114,7 @@ namespace concurrent {
          * @see #convert
          */
         long long toNanos( long long duration ) const {
-            return doConvert( index, duration );
+            return doConvert( this->index, NANOSECONDS.index, duration );
         }
 
         /**
@@ -137,7 +126,7 @@ namespace concurrent {
          * @see #convert
          */
         long long toMicros( long long duration ) const {
-            return doConvert( index - MICROSECONDS.index, duration );
+            return doConvert( this->index, MICROSECONDS.index, duration );
         }
 
         /**
@@ -149,7 +138,7 @@ namespace concurrent {
          * @see #convert
          */
         long long toMillis( long long duration ) const {
-            return doConvert( index - MILLISECONDS.index, duration );
+            return doConvert( this->index, MILLISECONDS.index, duration );
         }
 
         /**
@@ -159,7 +148,37 @@ namespace concurrent {
          * @see #convert
          */
         long long toSeconds( long long duration ) const {
-            return doConvert( index - SECONDS.index, duration );
+            return doConvert( this->index, SECONDS.index, duration );
+        }
+
+        /**
+         * Equivalent to <tt>MINUTES.convert(duration, this)</tt>.
+         * @param duration the duration
+         * @return the converted duration.
+         * @see #convert
+         */
+        long long toMinutes( long long duration ) const {
+            return doConvert( this->index, MINUTES.index, duration );
+        }
+
+        /**
+         * Equivalent to <tt>HOURS.convert(duration, this)</tt>.
+         * @param duration the duration
+         * @return the converted duration.
+         * @see #convert
+         */
+        long long toHours( long long duration ) const {
+            return doConvert( this->index, HOURS.index, duration );
+        }
+
+        /**
+         * Equivalent to <tt>DAYS.convert(duration, this)</tt>.
+         * @param duration the duration
+         * @return the converted duration.
+         * @see #convert
+         */
+        long long toDays( long long duration ) const {
+            return doConvert( this->index, DAYS.index, duration );
         }
 
         /**
@@ -274,13 +293,21 @@ namespace concurrent {
     private:
 
         /* Perform the actual conversion */
-        long long doConvert( long long delta, long long duration ) const;
+        long long doConvert( int srcIndex, int destIndex, long long duration ) const;
 
         /*
          * Utility method to compute the excess-nanosecond argument to
          * wait, sleep, join.
          */
         int excessNanos( long long time, long long ms ) const;
+
+        /**
+         * Scale d by m, checking for overflow.
+         * @param duration - The amount of time to scale by the multiplier.
+         * @param multiplier - The scaling factor.
+         * @param overflow - The value at which d * m would cause an overflow.
+         */
+        static long long scale( long long duration, long long multiplier, long long overflow );
 
     };
 

@@ -28,7 +28,8 @@ namespace concurrent {
     class TimeUnitTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( TimeUnitTest );
-        CPPUNIT_TEST( testConvert );
+        CPPUNIT_TEST( testConvert1 );
+        CPPUNIT_TEST( testConvert2 );
         CPPUNIT_TEST( testToNanos );
         CPPUNIT_TEST( testToMicros );
         CPPUNIT_TEST( testToMillis );
@@ -38,6 +39,9 @@ namespace concurrent {
         CPPUNIT_TEST( testToString );
         CPPUNIT_TEST( testTimedWait );
         CPPUNIT_TEST( testSleep );
+        CPPUNIT_TEST( testToMinutes );
+        CPPUNIT_TEST( testToHours );
+        CPPUNIT_TEST( testToDays );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -45,11 +49,15 @@ namespace concurrent {
         TimeUnitTest() {}
         virtual ~TimeUnitTest() {}
 
-        void testConvert();
+        void testConvert1();
+        void testConvert2();
         void testToNanos();
         void testToMicros();
         void testToMillis();
         void testToSeconds();
+        void testToMinutes();
+        void testToHours();
+        void testToDays();
         void testConvertSaturate();
         void testToNanosSaturate();
         void testToString();
