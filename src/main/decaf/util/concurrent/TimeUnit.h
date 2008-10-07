@@ -19,6 +19,7 @@
 #define _DECAF_UTIL_CONCURRENT_TIMEUNIT_H_
 
 #include <string>
+#include <decaf/util/Config.h>
 #include <decaf/lang/Comparable.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -53,7 +54,7 @@ namespace concurrent {
      * will be able to notice the passage of time at the same granularity as the given
      * TimeUnit.
      */
-    class TimeUnit : public decaf::lang::Comparable<TimeUnit> {
+    class DECAF_API TimeUnit : public decaf::lang::Comparable<TimeUnit> {
     private:
 
         /** This TimeUnit's index */
