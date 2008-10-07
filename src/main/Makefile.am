@@ -382,6 +382,7 @@ h_sources = \
     decaf/io/IOException.h \
     decaf/io/InterruptedIOException.h \
     decaf/util/concurrent/Lock.h \
+    decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Synchronizable.h \
