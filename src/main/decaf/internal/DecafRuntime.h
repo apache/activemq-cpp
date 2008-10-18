@@ -15,22 +15,20 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_APRPOOL_H_
-#define _DECAF_INTERNAL_APRPOOL_H_
+#ifndef _DECAF_INTERNAL_DECAFRUNTIME_H
+#define _DECAF_INTERNAL_DECAFRUNTIME_H
 
 #include <decaf/util/Config.h>
-
+#include <decaf/lang/Runtime.h>
 #include <apr_pools.h>
 
-namespace decaf{
-namespace internal{
+namespace decaf {
+namespace internal {
 
     /**
-     * Wraps an APR pool object so that classes in decaf can create a static
-     * member for use in static methods where apr function calls that need a pool
-     * are made.
+     * Handles APR initialization and termination.
      */
-    class DECAF_API AprPool {
+    class DECAF_API DecafRuntime : public decaf::lang::Runtime {
     private:
 
         /**
@@ -40,35 +38,24 @@ namespace internal{
 
     public:
 
-        AprPool();
-        virtual ~AprPool();
+        /**
+         * Initializes the APR Runtime for a library.
+         */
+        DecafRuntime();
 
         /**
-         * Gets the internal APR Pool.
-         * @returns the internal APR pool
+         * Terminates the APR Runtime for a library.
          */
-        apr_pool_t* getAprPool() const;
+        virtual ~DecafRuntime();
 
         /**
-         * Clears data that was allocated by this pool.  Users should call this
-         * after getting the data from the APR functions and copying it to
-         * someplace safe.
+         * Grants access to the Global APR Pool instance that should be
+         * used when creating new threads.
          */
-        void cleanup();
+        apr_pool_t* getGlobalPool() const;
 
-    private:
-
-        /**
-         * Allocates the pool if it isn't already allocated.
-         */
-        void allocatePool() const;
-
-        /**
-         * Destroys the pool if it has been allocated.
-         */
-        void destroyPool();
     };
 
 }}
 
-#endif /*_DECAF_INTERNAL_APRPOOL_H_*/
+#endif /*_DECAF_INTERNAL_DECAFRUNTIME_H*/

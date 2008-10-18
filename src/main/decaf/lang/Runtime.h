@@ -15,30 +15,29 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_INTERNAL_APRRUNTIME_H
-#define _DECAF_INTERNAL_APRRUNTIME_H
+#ifndef _DECAF_LANG_RUNTIME_H_
+#define _DECAF_LANG_RUNTIME_H_
+
+#include <decaf/util/Config.h>
 
 namespace decaf {
-namespace internal {
+namespace lang {
 
-    /**
-     * Handles APR initialization and termination.
-     */
-    class AprRuntime {
+    class DECAF_API Runtime {
     public:
-    
+
+        virtual ~Runtime() {}
+
         /**
-         * Initializes the APR Runtime for a library.
+         * Gets the single instance of the Decaf Runtime for this Process.
+         *
+         * @returns pointer to the single Decaf Runtime instance that exists
+         *          for this process
          */
-        AprRuntime();
-    
-        /**
-         * Terminates the APR Runtime for a library.
-         */
-        virtual ~AprRuntime();
-    
+        static Runtime* getRuntime();
+
     };
-    
+
 }}
 
-#endif /*_DECAF_INTERNAL_APRRUNTIME_H*/
+#endif /*_DECAF_LANG_RUNTIME_H_*/

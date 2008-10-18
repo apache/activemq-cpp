@@ -16,6 +16,7 @@
  */
 
 #include "AprPool.h"
+#include <decaf/lang/Runtime.h>
 
 using namespace decaf;
 using namespace decaf::internal;
@@ -36,7 +37,7 @@ AprPool::~AprPool() {
 void AprPool::allocatePool() const {
 
     if( aprPool == NULL ) {
-        apr_pool_create( &aprPool, NULL );
+        apr_pool_create_unmanaged( &aprPool );
     }
 }
 
@@ -61,10 +62,8 @@ void AprPool::cleanup() {
 ////////////////////////////////////////////////////////////////////////////////
 apr_pool_t* AprPool::getAprPool() const {
 
-    // Creates a single static instance that will on the first call
-    // init apr and remain in memory until we shutdown and then free
-    // the apr resources.
-    static AprRuntime aprRuntime;
+    // Ensure there is a Runtime instance created.
+    decaf::lang::Runtime::getRuntime();
 
     // Ensure that the pool has been allocated.
     allocatePool();

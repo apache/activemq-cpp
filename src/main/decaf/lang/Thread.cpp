@@ -20,6 +20,7 @@
 #include <apr_time.h>
 #include <apr_portable.h>
 
+#include <decaf/internal/DecafRuntime.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/RuntimeException.h>
 
@@ -57,12 +58,14 @@ void Thread::start() throw ( Exception )
             "Thread::start - Thread already started");
     }
 
+    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
+
     apr_status_t err = apr_thread_create(
         &this->threadHandle,
         NULL,
         runCallback,
         this,
-        pool.getAprPool() );
+        runtime->getGlobalPool() );
 
     if( err != APR_SUCCESS ) {
         throw Exception(

@@ -17,7 +17,7 @@
 #include "InitDirector.h"
 
 #include <decaf/util/logging/LogWriter.h>
-#include <decaf/internal/AprPool.h>
+#include <decaf/lang/Runtime.h>
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/transport/filters/AsyncSendTransportFactory.h>
@@ -37,8 +37,7 @@ int InitDirector::refCount;
 InitDirector::InitDirector() {
 
     if( refCount == 0 ) {
-        decaf::internal::AprPool initPools;
-        initPools.getAprPool();
+        decaf::lang::Runtime::getRuntime();
         connector::stomp::StompConnectorFactory::getInstance();
         connector::openwire::OpenWireConnectorFactory::getInstance();
         transport::filters::TcpTransportFactory::getInstance();

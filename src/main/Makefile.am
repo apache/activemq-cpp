@@ -81,7 +81,7 @@ cc_sources = \
     activemq/transport/filters/TcpTransportFactory.cpp \
     activemq/transport/filters/LoggingTransport.cpp \
     activemq/transport/filters/LoggingTransportFactory.cpp \
-    decaf/internal/AprRuntime.cpp \
+    decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
@@ -348,6 +348,7 @@ h_sources = \
     decaf/lang/Thread.h \
     decaf/lang/Number.h \
     decaf/lang/Runnable.h \
+    decaf/lang/Runtime.h \
     decaf/lang/Math.h \
     decaf/lang/System.h \
     decaf/lang/Boolean.h \
@@ -425,7 +426,7 @@ h_sources = \
     decaf/util/logging/SimpleLogger.h \
     decaf/util/logging/PropertiesChangeListener.h \
     decaf/internal/AprPool.h \
-    decaf/internal/AprRuntime.h \
+    decaf/internal/DecafRuntime.h \
     decaf/internal/util/HexStringParser.h \
     decaf/internal/util/ByteArrayAdapter.h \
     decaf/internal/nio/BufferFactory.h \
