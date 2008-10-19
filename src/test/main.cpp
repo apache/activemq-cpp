@@ -20,9 +20,13 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Runtime.h>
 
 int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
 {
+    // ensure that we start the runtime.
+    decaf::lang::Runtime::getRuntime();
+
     CppUnit::TextUi::TestRunner runner;
     CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
     runner.addTest( registry.makeTest() );
@@ -30,7 +34,7 @@ int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
     // Shows a message as each test starts
     CppUnit::BriefTestProgressListener listener;
     runner.eventManager().addListener( &listener );
-    
+
     bool wasSuccessful = runner.run( "", false );
     return !wasSuccessful;
 }

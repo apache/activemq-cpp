@@ -15,25 +15,46 @@
  * limitations under the License.
  */
 
-#include "AprRuntime.h"
+#include "DecafRuntime.h"
 
 #include <apr.h>
 #include <apr_general.h>
 #include <apr_pools.h>
 
+using namespace decaf;
 using namespace decaf::internal;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-AprRuntime::AprRuntime() {
-            
+DecafRuntime::DecafRuntime() {
+
     // Initializes the APR Runtime from within a library.
     apr_initialize();
+
+    // Create a Global Pool for Threads to use
+    apr_pool_create_ex( &aprPool, NULL, NULL, NULL );
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-AprRuntime::~AprRuntime() {
-    
+DecafRuntime::~DecafRuntime() {
+
+    // Destroy the Global Thread Memory Pool
+    apr_pool_destroy( aprPool );
+
     // Cleans up APR data structures.
     apr_terminate();
-} 
+}
 
+////////////////////////////////////////////////////////////////////////////////
+apr_pool_t* DecafRuntime::getGlobalPool() const {
+    return this->aprPool;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Runtime* Runtime::getRuntime() {
+
+    static DecafRuntime runtime;
+
+    return &runtime;
+}

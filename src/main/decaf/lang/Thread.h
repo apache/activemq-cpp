@@ -23,7 +23,6 @@
 #include <stdexcept>
 #include <assert.h>
 
-#include <decaf/internal/AprPool.h>
 #include <apr_thread_proc.h>
 
 namespace decaf{
@@ -43,11 +42,6 @@ namespace lang{
          * this thread object.
          */
         Runnable* task;
-
-        /**
-         * APR Pool to allocate thread from
-         */
-        decaf::internal::AprPool pool;
 
         /**
          * APR Thread Handle
