@@ -36,10 +36,9 @@ Mutex::Mutex() {
 ////////////////////////////////////////////////////////////////////////////////
 Mutex::~Mutex() {
 
-    // Unlock the mutex.
+    // Unlock the mutex, the destruction of the AprPool will take care
+    // of cleaning up the apr_thread_mutex_t allocated in the ctor.
     unlock();
-
-    apr_thread_mutex_destroy( mutex );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
