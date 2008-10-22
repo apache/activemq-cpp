@@ -83,27 +83,27 @@ void OpenwireCmsTemplateTest::testBasics()
 {
     try {
         const unsigned int NUM_MESSAGES = IntegrationCommon::defaultMsgCount;
-        
-        Receiver receiver( IntegrationCommon::getInstance().getOpenwireURL(), 
-                false, 
-                "testBasics1", 
+
+        Receiver receiver( IntegrationCommon::getInstance().getOpenwireURL(),
+                false,
+                "testBasics1",
                 NUM_MESSAGES);
         Thread rt(&receiver);
         rt.start();
-        
+
         // Wait for receiver thread to start.
-        decaf::lang::Thread::sleep(100);
-        
-        Sender sender( IntegrationCommon::getInstance().getOpenwireURL(), 
-                false, 
-                "testBasics1", 
+        receiver.waitUntilReady();
+
+        Sender sender( IntegrationCommon::getInstance().getOpenwireURL(),
+                false,
+                "testBasics1",
                 NUM_MESSAGES);
         Thread st(&sender);
         st.start();
-        
+
         st.join();
         rt.join();
-        
+
         unsigned int numReceived = receiver.getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
@@ -124,28 +124,28 @@ void OpenwireCmsTemplateTest::testReceiveException()
         activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
         activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
         cmsTemplate.setDefaultDestinationName("testReceive1");
-        try {                
+        try {
             cmsTemplate.receive();
             CPPUNIT_FAIL("failed to throw expected exception");
         }
         catch( ActiveMQException& ex) {
             // Expected.
         }
-        
+
         // Now change to a good url and verify that we can reuse the same
         // CmsTemplate successfully.
         activemq::core::ActiveMQConnectionFactory cf2(IntegrationCommon::getInstance().getOpenwireURL());
         cmsTemplate.setConnectionFactory(&cf2);
-        
+
         // Send 1 message.
-        Sender sender( IntegrationCommon::getInstance().getOpenwireURL(), 
-                false, 
-                "testReceive1", 
+        Sender sender( IntegrationCommon::getInstance().getOpenwireURL(),
+                false,
+                "testReceive1",
                 1);
         Thread st(&sender);
         st.start();
         st.join();
-        
+
         // Receive the message.
         cms::Message* message = cmsTemplate.receive();
         CPPUNIT_ASSERT(message != NULL);
@@ -165,7 +165,7 @@ void OpenwireCmsTemplateTest::testSendException()
         activemq::core::ActiveMQConnectionFactory cf("tcp://localhost:61666"); // Invalid URL (at least by default)
         activemq::cmsutil::CmsTemplate cmsTemplate(&cf);
         cmsTemplate.setDefaultDestinationName("testSend1");
-        try {                      
+        try {
             TextMessageCreator msgCreator("hello world");
             cmsTemplate.send(&msgCreator);
             CPPUNIT_FAIL("failed to throw expected exception");
@@ -173,7 +173,7 @@ void OpenwireCmsTemplateTest::testSendException()
         catch( ActiveMQException& ex) {
             // Expected.
         }
-        
+
         // Now change to a good url and verify that we can reuse the same
         // CmsTemplate successfully.
         activemq::core::ActiveMQConnectionFactory cf2(IntegrationCommon::getInstance().getOpenwireURL());

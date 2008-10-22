@@ -26,6 +26,8 @@
 #include <activemq/cmsutil/CmsTemplate.h>
 #include <activemq/cmsutil/MessageCreator.h>
 
+#include <decaf/util/concurrent/CountDownLatch.h>
+
 namespace integration{
 namespace connector{
 namespace openwire{
@@ -35,9 +37,9 @@ namespace openwire{
         CPPUNIT_TEST_SUITE( OpenwireCmsTemplateTest );
         CPPUNIT_TEST( testBasics );
         CPPUNIT_TEST( testReceiveException );
-        CPPUNIT_TEST( testSendException );        
+        CPPUNIT_TEST( testSendException );
         CPPUNIT_TEST_SUITE_END();
-        
+
         class TextMessageCreator : public activemq::cmsutil::MessageCreator {
         private:
             std::string text;
@@ -46,26 +48,26 @@ namespace openwire{
                 this->text = text;
             }
             virtual ~TextMessageCreator() {}
-            
+
             std::string getText() const {
                 return text;
             }
-            
-            virtual cms::Message* createMessage(cms::Session* session ) 
+
+            virtual cms::Message* createMessage(cms::Session* session )
                         throw (cms::CMSException) {
                 return session->createTextMessage(text);
-            } 
+            }
         };
-        
+
         class Sender : public decaf::lang::Runnable {
         private:
-                    
+
             activemq::core::ActiveMQConnectionFactory cf;
             activemq::cmsutil::CmsTemplate cmsTemplate;
             int count;
-            
+
         public:
-            
+
             Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
                 cf.setBrokerURL(url);
                 cmsTemplate.setConnectionFactory(&cf);
@@ -73,36 +75,39 @@ namespace openwire{
                 cmsTemplate.setDefaultDestinationName(destName);
                 this->count = count;
             }
-            
+
             virtual ~Sender(){
             }
-            
-            virtual void run() {                
+
+            virtual void run() {
                 try {
-                                    
+
                     // Send a batch of messages.
                     TextMessageCreator tmc("hello world");
                     for( int ix=0; ix<count; ++ix ) {
                         cmsTemplate.send(&tmc);
                     }
-                                                        
+
                 } catch( cms::CMSException& ex) {
                     ex.printStackTrace();
                 }
             }
         };
-        
+
         class Receiver : public decaf::lang::Runnable {
         private:
-            
+
             activemq::core::ActiveMQConnectionFactory cf;
             activemq::cmsutil::CmsTemplate cmsTemplate;
             int count;
             int numReceived;
-            
+            decaf::util::concurrent::CountDownLatch ready;
+
         public:
-            
-            Receiver( const std::string& url, bool pubSub, const std::string& destName, int count ) {
+
+            Receiver( const std::string& url, bool pubSub, const std::string& destName, int count )
+                : ready(1) {
+
                 cf.setBrokerURL(url);
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
@@ -114,23 +119,28 @@ namespace openwire{
             int getNumReceived() const {
                 return numReceived;
             }
+            virtual void waitUntilReady() {
+                ready.await();
+            }
+
             virtual void run() {
-                
+
                 try {
                     numReceived = 0;
-                    
+
+                    ready.countDown();
                     // Receive a batch of messages.
                     for( int ix=0; ix<count; ++ix ) {
                         cms::Message* message = cmsTemplate.receive();
                         numReceived++;
-                        delete message;                    
+                        delete message;
                     }
                 } catch( cms::CMSException& ex) {
                     ex.printStackTrace();
                 }
             }
         };
-        
+
     public:
 
         OpenwireCmsTemplateTest(){}
@@ -138,7 +148,7 @@ namespace openwire{
 
         virtual void setUp();
         virtual void tearDown();
-                
+
         virtual void testBasics();
         virtual void testReceiveException();
         virtual void testSendException();
