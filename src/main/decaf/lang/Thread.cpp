@@ -70,7 +70,7 @@ void Thread::start() throw ( Exception )
     if( err != APR_SUCCESS ) {
         throw Exception(
             __FILE__, __LINE__,
-            "Thread::start - Coud not start thread");
+            "Thread::start - Could not start thread");
     }
 
     // Mark the thread as started.
