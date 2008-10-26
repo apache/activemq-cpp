@@ -31,7 +31,7 @@ private:
 
 public:
 
-    int value;
+    volatile int value;
     MyThread(){ value = 0;}
     virtual ~MyThread(){}
 
@@ -90,8 +90,9 @@ private:
 
 public:
 
-    int value;
-    MyWaitingThread(){ value = 0;}
+    volatile int value;
+    volatile bool started;
+    MyWaitingThread(){ value = 0; started = false; }
     virtual ~MyWaitingThread(){}
     virtual void lock() throw(lang::Exception){
         mutex.lock();
@@ -116,9 +117,9 @@ public:
 
         try {
 
-            synchronized(this) {
+            synchronized( this ) {
+                this->started = true;
                 this->wait();
-                std::cout.flush();
                 value = value * 25;
             }
 
@@ -136,7 +137,9 @@ void MutexTest::testWait(){
         MyWaitingThread test;
         test.start();
 
-        Thread::sleep( 1000 );
+        while( !test.started ) {
+            Thread::sleep(1);
+        }
 
         synchronized( &test )
         {
@@ -150,8 +153,10 @@ void MutexTest::testWait(){
         test.join();
 
         CPPUNIT_ASSERT( test.value == 2500 );
+
     } catch( lang::Exception& ex ) {
         ex.setMark( __FILE__, __LINE__ );
+        CPPUNIT_ASSERT( false );
     }
 }
 
@@ -163,8 +168,10 @@ private:
 
 public:
 
-    int value;
-    MyTimedWaitingThread(){ value = 0;}
+    volatile int value;
+    volatile bool started;
+
+    MyTimedWaitingThread(){ value = 0; started = false; }
     virtual ~MyTimedWaitingThread(){}
     virtual void lock() throw(lang::Exception){
         mutex.lock();
@@ -190,7 +197,8 @@ public:
         try {
             synchronized( this ) {
 
-                this->wait(2000);
+                this->started = true;
+                this->wait(1100);
                 value = 666;
             }
         } catch( lang::Exception& ex ) {
@@ -212,10 +220,11 @@ void MutexTest::testTimedWait(){
 
         time_t delta = endTime - startTime;
 
-        CPPUNIT_ASSERT( delta >= 1 && delta <= 3 );
+        CPPUNIT_ASSERT( delta >= 1 && delta <= 2 );
 
     } catch(lang::Exception& ex) {
         std::cout << ex.getMessage() << std::endl;
+        CPPUNIT_ASSERT( false );
     }
 }
 
@@ -223,7 +232,7 @@ void MutexTest::testTimedWait(){
 class MyNotifiedThread : public lang::Thread, public Synchronizable{
 public:
 
-    bool done;
+    volatile bool done;
     Mutex* mutex;
     Mutex* started;
     Mutex* completed;
@@ -301,7 +310,7 @@ void MutexTest::testNotify() {
             int count = 0;
 
             while( count < ( numThreads ) ) {
-                started.wait( 30 );
+                started.wait( 40 );
                 count++;
             }
         }
@@ -310,7 +319,7 @@ void MutexTest::testNotify() {
             mutex.notify();
         }
 
-        Thread::sleep( 1000 );
+        Thread::sleep( 1200 );
 
         int counter = 0;
         for( int ix=0; ix<numThreads; ++ix ){
@@ -333,7 +342,7 @@ void MutexTest::testNotify() {
             int count = 0;
 
             while( count < ( numThreads ) ) {
-                started.wait( 30 );
+                started.wait( 40 );
                 count++;
             }
         }
@@ -434,69 +443,64 @@ void MutexTest::testNotifyAll()
 
     }catch( lang::Exception& ex ){
         ex.setMark( __FILE__, __LINE__ );
+        CPPUNIT_ASSERT( false );
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyRecursiveLockThread
-:
-   public lang::Thread,
-   public Synchronizable{
+class MyRecursiveLockThread : public lang::Thread, public Synchronizable{
+public:
+
+    volatile bool done;
+    Mutex* mutex;
 
 public:
 
-   bool done;
-   Mutex* mutex;
+    volatile int value;
+    MyRecursiveLockThread(Mutex* mutex){ this->mutex = mutex; done = false; }
+    virtual ~MyRecursiveLockThread(){}
+    virtual void lock() throw(lang::Exception){
+        mutex->lock();
+    }
+    virtual void unlock() throw(lang::Exception){
+        mutex->unlock();
+    }
+    virtual void wait() throw(lang::Exception){
+        mutex->wait();
+    }
+    virtual void wait(unsigned long millisecs) throw(lang::Exception){
+        mutex->wait( millisecs );
+    }
+    virtual void notify() throw(lang::Exception){
+        mutex->notify();
+    }
+    virtual void notifyAll() throw(lang::Exception){
+        mutex->notifyAll();
+    }
 
-public:
+    virtual void run(){
 
-   int value;
-   MyRecursiveLockThread(Mutex* mutex){ this->mutex = mutex; done = false; }
-   virtual ~MyRecursiveLockThread(){}
-   virtual void lock() throw(lang::Exception){
-       mutex->lock();
-   }
-   virtual void unlock() throw(lang::Exception){
-       mutex->unlock();
-   }
-   virtual void wait() throw(lang::Exception){
-       mutex->wait();
-   }
-   virtual void wait(unsigned long millisecs) throw(lang::Exception){
-       mutex->wait( millisecs );
-   }
-   virtual void notify() throw(lang::Exception){
-       mutex->notify();
-   }
-   virtual void notifyAll() throw(lang::Exception){
-       mutex->notifyAll();
-   }
+        try {
 
-   virtual void run(){
-
-      try
-      {
-         done = false;
-         synchronized(this)
-         {
-            synchronized(this)
-            {
-               this->wait();
-               done = true;
+            done = false;
+            synchronized(this) {
+                synchronized(this) {
+                    this->wait();
+                    done = true;
+                }
             }
-         }
-      }
-      catch(lang::Exception& ex)
-      {
-         ex.setMark( __FILE__, __LINE__ );
-      }
-   }
+
+        } catch(lang::Exception& ex) {
+            ex.setMark( __FILE__, __LINE__ );
+        }
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void MutexTest::testRecursiveLock()
-{
-    try{
+void MutexTest::testRecursiveLock() {
+
+    try {
+
         Mutex mutex;
 
         const int numThreads = 30;
@@ -509,7 +513,7 @@ void MutexTest::testRecursiveLock()
         }
 
         // Sleep so all the threads can get to the wait.
-        Thread::sleep( 1000 );
+        Thread::sleep( 1100 );
 
         for( int ix=0; ix<numThreads; ++ix ){
             if( threads[ix]->done == true ){
@@ -520,16 +524,14 @@ void MutexTest::testRecursiveLock()
         }
 
         // Notify all threads.
-        synchronized( &mutex )
-        {
-            synchronized( &mutex )
-            {
+        synchronized( &mutex ) {
+            synchronized( &mutex ) {
                 mutex.notifyAll();
             }
         }
 
         // Sleep to give the threads time to wake up.
-        Thread::sleep( 1000 );
+        Thread::sleep( 1100 );
 
         for( int ix=0; ix<numThreads; ++ix ){
             if( threads[ix]->done != true ){
@@ -545,58 +547,52 @@ void MutexTest::testRecursiveLock()
 
     }catch( lang::Exception& ex ){
         ex.setMark( __FILE__, __LINE__ );
+        CPPUNIT_ASSERT( false );
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyDoubleLockThread
-:
-   public lang::Thread
-{
+class MyDoubleLockThread : public lang::Thread {
+public:
+
+    volatile bool done;
+    Mutex* mutex1;
+    Mutex* mutex2;
 
 public:
 
-   bool done;
-   Mutex* mutex1;
-   Mutex* mutex2;
+    volatile int value;
+    MyDoubleLockThread(Mutex* mutex1, Mutex* mutex2) {
+        this->mutex1 = mutex1;
+        this->mutex2 = mutex2;
+        done = false;
+    }
 
-public:
+    virtual ~MyDoubleLockThread(){}
 
-   int value;
-   MyDoubleLockThread(Mutex* mutex1, Mutex* mutex2)
-   {
-      this->mutex1 = mutex1;
-      this->mutex2 = mutex2;
-      done = false;
-   }
+    virtual void run() {
 
-   virtual ~MyDoubleLockThread(){}
+        try {
 
-   virtual void run(){
-
-      try
-      {
-         done = false;
-         synchronized(mutex1)
-         {
-            synchronized(mutex2)
-            {
-               mutex2->wait();
-               done = true;
+            done = false;
+            synchronized(mutex1) {
+                synchronized(mutex2) {
+                    mutex2->wait();
+                    done = true;
+                }
             }
-         }
-      }
-      catch(lang::Exception& ex)
-      {
-         ex.setMark( __FILE__, __LINE__ );
-      }
-   }
+
+        } catch(lang::Exception& ex) {
+            ex.setMark( __FILE__, __LINE__ );
+        }
+    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void MutexTest::testDoubleLock()
-{
-    try{
+void MutexTest::testDoubleLock() {
+
+    try {
+
         Mutex mutex1;
         Mutex mutex2;
 
@@ -605,11 +601,10 @@ void MutexTest::testDoubleLock()
         thread.start();
 
         // Let the thread get both locks
-        Thread::sleep( 200 );
+        Thread::sleep( 300 );
 
         // Lock mutex 2, thread is waiting on it
-        synchronized(&mutex2)
-        {
+        synchronized( &mutex2 ) {
            mutex2.notify();
         }
 
@@ -617,18 +612,19 @@ void MutexTest::testDoubleLock()
         thread.join();
 
         CPPUNIT_ASSERT( thread.done );
+
     }catch( lang::Exception& ex ){
         ex.setMark( __FILE__, __LINE__ );
+        CPPUNIT_ASSERT( false );
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-class MyStoppableThread : public lang::Runnable
-{
+class MyStoppableThread : public lang::Runnable {
 public:
 
-    bool started;
-    bool closed;
+    volatile bool started;
+    volatile bool closed;
     Mutex mutex;
     lang::Thread* thread;
     util::Random rand;
@@ -719,8 +715,10 @@ public:
                     if( !isStarted() ) {
                         mutex.notifyAll();
 
-                        // Wait for more data or to be woken up.
-                        mutex.wait();
+                        if( !closed ) {
+                            // Wait for more data or to be woken up.
+                            mutex.wait();
+                        }
                     }
                 }
             }
@@ -732,6 +730,7 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 void MutexTest::testStressMutex(){
+
     MyStoppableThread tester;
 
     tester.start();
