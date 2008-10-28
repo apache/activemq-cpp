@@ -139,9 +139,9 @@ void ActiveMQSessionExecutor::start() {
 void ActiveMQSessionExecutor::stop() {
 
     // We lock here to make sure that we wait until the thread
-    // is done with an internal dispatch operation, otherwise 
-    // we might return before that and cause the caller to be 
-    // in an inconsistant state.
+    // is done with an internal dispatch operation, otherwise
+    // we might return before that and cause the caller to be
+    // in an inconsistent state.
     synchronized( &dispatchMutex ) {
 
         if( closed || !started ) {
@@ -215,10 +215,10 @@ void ActiveMQSessionExecutor::run() {
                 }
 
                 // When stopped we hit this case and wait otherwise
-                // if there are messages we 
-                if( messageQueue.empty() || !started ) {
+                // if there are messages we
+                if( ( messageQueue.empty() || !started ) && !closed ) {
 
-                    // Wait for more data or to be woken up.
+                    // Wait for more data or to be woke up.
                     mutex.wait();
                 }
             }
@@ -240,9 +240,9 @@ void ActiveMQSessionExecutor::run() {
 void ActiveMQSessionExecutor::dispatchAll() {
 
     // Dispatch all currently available messages.  This lock allows the
-    // main thread to wait while we finish with a dispatch cycle, the 
+    // main thread to wait while we finish with a dispatch cycle, the
     // stop method for instance should try and lock this mutex so that
-    // it knows that we've had a chance to read the started flag and 
+    // it knows that we've had a chance to read the started flag and
     // detect that we are stopped, otherwise stop might return while
     // we are still dispatching messages.
     synchronized( &dispatchMutex ) {
