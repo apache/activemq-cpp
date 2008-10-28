@@ -34,16 +34,22 @@ namespace stomp{
         CPPUNIT_TEST_SUITE_END();
 
     private:
-    
-        TestSupport testSupport;
-        
+
+        TestSupport* testSupport;
+
     public:
 
-    	DurableTest();
-    	virtual ~DurableTest();
+        DurableTest();
+        virtual ~DurableTest();
+
+        virtual void setUp() {
+            testSupport = new TestSupport;
+            testSupport->initialize( IntegrationCommon::getInstance().getStompURL() );
+        };
+        virtual void tearDown() { delete testSupport; };
 
         virtual void test();
-        
+
     };
 
 }}}

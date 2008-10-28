@@ -43,16 +43,11 @@ using namespace decaf::lang;
 
 using namespace integration;
 
-TestSupport::TestSupport( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode )
- :  connection( NULL ),
-    session( NULL )
-{
-    this->ackMode = ackMode;
-    this->brokerUrl = brokerUrl;
-}
+TestSupport::TestSupport(  )
+ :  connection( NULL ), session( NULL )
+{}
 
-TestSupport::~TestSupport()
-{
+TestSupport::~TestSupport() {
     close();
 }
 
@@ -76,10 +71,12 @@ void TestSupport::close() {
     connection = NULL;
 }
 
-void TestSupport::initialize(){
+void TestSupport::initialize( const string& brokerUrl, cms::Session::AcknowledgeMode ackMode ){
     try
     {
-        numReceived = 0;
+        this->numReceived = 0;
+        this->ackMode = ackMode;
+        this->brokerUrl = brokerUrl;
 
         // Now create the connection
         connection = createDetachedConnection(

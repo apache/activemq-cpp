@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _INTEGRATION_CONNECTOR_OPENWIRE_OPENWIREASYNCSENDERTEST_H_
 #define _INTEGRATION_CONNECTOR_OPENWIRE_OPENWIREASYNCSENDERTEST_H_
 
@@ -28,20 +28,26 @@ namespace connector{
 namespace openwire{
 
     class OpenwireAsyncSenderTest : public CppUnit::TestFixture {
-        
+
         CPPUNIT_TEST_SUITE( OpenwireAsyncSenderTest );
         CPPUNIT_TEST( test1 );
         CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     private:
-    
-        TestSupport testSupport;
-        
+
+        TestSupport* testSupport;
+
     public:
-    
+
         OpenwireAsyncSenderTest();
         virtual ~OpenwireAsyncSenderTest();
+
+        virtual void setUp() {
+            testSupport = new TestSupport;
+            testSupport->initialize(IntegrationCommon::getInstance().getOpenwireURL() + "&transport.useAsyncSend=true");
+        };
+        virtual void tearDown() { delete testSupport; };
 
         virtual void test1();
         virtual void test2();

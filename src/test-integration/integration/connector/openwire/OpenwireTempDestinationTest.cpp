@@ -75,10 +75,7 @@ using namespace integration::connector;
 using namespace integration::connector::openwire;
 
 ///////////////////////////////////////////////////////////////////////////////
-OpenwireTempDestinationTest::OpenwireTempDestinationTest()
-  : testSupport( IntegrationCommon::getInstance().getOpenwireURL() )
-{
-    testSupport.initialize();
+OpenwireTempDestinationTest::OpenwireTempDestinationTest() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,15 +97,15 @@ void OpenwireTempDestinationTest::test()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
 
         cms::Destination* requestTopic = session->createTopic( UUID::randomUUID().toString() );
         cms::Destination* responseTopic = session->createTemporaryTopic();
 
-        Consumer* requestConsumer = new Consumer( testSupport.getConnection(),
+        Consumer* requestConsumer = new Consumer( testSupport->getConnection(),
                                                   session,
                                                   requestTopic );
-        Consumer* responseConsumer = new Consumer( testSupport.getConnection(),
+        Consumer* responseConsumer = new Consumer( testSupport->getConnection(),
                                                    session,
                                                    responseTopic );
 
@@ -123,7 +120,7 @@ void OpenwireTempDestinationTest::test()
             session->createProducer( requestTopic );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount, responseTopic );
 
         // Let the request consumer get all its messages

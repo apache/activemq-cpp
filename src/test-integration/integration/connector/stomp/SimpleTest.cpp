@@ -81,12 +81,12 @@ SimpleTest::~SimpleTest()
 {
 }
 
-void SimpleTest::testAutoAck()
-{
-    try
-    {
-        TestSupport testSupport( IntegrationCommon::getInstance().getStompURL() );
-        testSupport.initialize();
+void SimpleTest::testAutoAck() {
+
+    try {
+
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize(IntegrationCommon::getInstance().getStompURL());
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -98,26 +98,26 @@ void SimpleTest::testAutoAck()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -130,6 +130,7 @@ void SimpleTest::testAutoAck()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -138,8 +139,8 @@ void SimpleTest::testClientAck()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize(IntegrationCommon::getInstance().getStompURL());
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -151,26 +152,26 @@ void SimpleTest::testClientAck()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -183,6 +184,7 @@ void SimpleTest::testClientAck()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -191,8 +193,8 @@ void SimpleTest::testProducerWithNullDestination()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize(IntegrationCommon::getInstance().getStompURL());
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -204,10 +206,10 @@ void SimpleTest::testProducerWithNullDestination()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =  session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
 
         cms::TextMessage* textMsg = session->createTextMessage();
@@ -218,9 +220,9 @@ void SimpleTest::testProducerWithNullDestination()
         delete textMsg;
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( 1 );
+        testSupport->waitForMessages( 1 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -232,6 +234,7 @@ void SimpleTest::testProducerWithNullDestination()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -240,8 +243,8 @@ void SimpleTest::testSyncReceive()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::AUTO_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize(IntegrationCommon::getInstance().getStompURL());
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -253,7 +256,7 @@ void SimpleTest::testSyncReceive()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
@@ -275,6 +278,7 @@ void SimpleTest::testSyncReceive()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -283,8 +287,8 @@ void SimpleTest::testSyncReceiveClientAck()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getStompURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize(IntegrationCommon::getInstance().getStompURL());
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -296,7 +300,7 @@ void SimpleTest::testSyncReceiveClientAck()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
@@ -319,6 +323,7 @@ void SimpleTest::testSyncReceiveClientAck()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }

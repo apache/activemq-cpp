@@ -27,17 +27,21 @@
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 
+#include <integration/IntegrationCommon.h>
+
 namespace integration{
 
     class TestSupport : public cms::ExceptionListener, public cms::MessageListener
     {
     public:
 
-      TestSupport( const std::string& brokerUrl,
-                     cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
+      TestSupport();
       virtual ~TestSupport();
 
-        virtual void initialize();
+        virtual void initialize(
+            const std::string& brokerUrl,
+            cms::Session::AcknowledgeMode ackMode = cms::Session::AUTO_ACKNOWLEDGE );
+
         virtual void close();
 
         virtual decaf::util::concurrent::Mutex& getMutex() {

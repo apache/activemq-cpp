@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef _INTEGRATION_CONNECTOR_STOMP_ASYNCSENDERTEST_H_
 #define _INTEGRATION_CONNECTOR_STOMP_ASYNCSENDERTEST_H_
 
@@ -28,19 +28,25 @@ namespace connector{
 namespace stomp{
 
     class AsyncSenderTest : public CppUnit::TestFixture {
-        
+
         CPPUNIT_TEST_SUITE( AsyncSenderTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
     private:
-    
-        TestSupport testSupport;
-        
+
+        TestSupport* testSupport;
+
     public:
-    
+
         AsyncSenderTest();
         virtual ~AsyncSenderTest();
+
+        virtual void setUp() {
+            testSupport = new TestSupport;
+            testSupport->initialize( IntegrationCommon::getInstance().getStompURL() + "&transport.useAsyncSend=true" );
+        };
+        virtual void tearDown() { delete testSupport; };
 
         virtual void test();
 

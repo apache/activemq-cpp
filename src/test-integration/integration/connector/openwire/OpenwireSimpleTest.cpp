@@ -83,8 +83,8 @@ void OpenwireSimpleTest::testAutoAck() {
 
     try {
 
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL());
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -96,26 +96,26 @@ void OpenwireSimpleTest::testAutoAck() {
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -128,6 +128,7 @@ void OpenwireSimpleTest::testAutoAck() {
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -136,8 +137,8 @@ void OpenwireSimpleTest::testClientAck()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -149,26 +150,26 @@ void OpenwireSimpleTest::testClientAck()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -181,6 +182,7 @@ void OpenwireSimpleTest::testClientAck()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -189,8 +191,8 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -202,10 +204,10 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =  session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
 
         cms::TextMessage* textMsg = session->createTextMessage();
@@ -216,9 +218,9 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
         delete textMsg;
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( 1 );
+        testSupport->waitForMessages( 1 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
@@ -230,6 +232,7 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -238,8 +241,8 @@ void OpenwireSimpleTest::testSyncReceive()
 {
     try
     {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -251,7 +254,7 @@ void OpenwireSimpleTest::testSyncReceive()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
@@ -273,6 +276,7 @@ void OpenwireSimpleTest::testSyncReceive()
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -490,8 +494,8 @@ void OpenwireSimpleTest::testQuickCreateAndDestroy() {
 void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
 
     try {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -503,7 +507,7 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Queue* queue = session->createQueue(
             UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
         cms::MessageConsumer* consumer = session->createConsumer( queue );
@@ -527,6 +531,7 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
         delete producer;
         delete consumer;
         delete queue;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -534,8 +539,8 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
 void OpenwireSimpleTest::testMapMessageSend() {
 
     try {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -547,7 +552,7 @@ void OpenwireSimpleTest::testMapMessageSend() {
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Queue* queue = session->createQueue( UUID::randomUUID().toString() );
         cms::MessageConsumer* consumer = session->createConsumer( queue );
         cms::MessageProducer* producer = session->createProducer( queue );
@@ -612,6 +617,7 @@ void OpenwireSimpleTest::testMapMessageSend() {
         delete producer;
         delete consumer;
         delete queue;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }
@@ -619,8 +625,8 @@ void OpenwireSimpleTest::testMapMessageSend() {
 void OpenwireSimpleTest::testMapMessageSend2() {
 
     try {
-        TestSupport testSupport(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::CLIENT_ACKNOWLEDGE );
-        testSupport.initialize();
+        TestSupport* testSupport = new TestSupport;
+        testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
 
         if( IntegrationCommon::debug ) {
             cout << "Starting activemqcms test (sending "
@@ -632,7 +638,7 @@ void OpenwireSimpleTest::testMapMessageSend2() {
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic( UUID::randomUUID().toString() );
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
@@ -697,6 +703,7 @@ void OpenwireSimpleTest::testMapMessageSend2() {
         delete producer;
         delete consumer;
         delete topic;
+        delete testSupport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
 }

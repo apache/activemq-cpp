@@ -73,11 +73,7 @@ using namespace decaf::util::concurrent;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-DurableTest::DurableTest()
-:
-    testSupport( IntegrationCommon::getInstance().getStompURL() )
-{
-    testSupport.initialize();
+DurableTest::DurableTest() {
 }
 
 DurableTest::~DurableTest()
@@ -99,23 +95,23 @@ void DurableTest::test()
         std::string subName = UUID::randomUUID().toString();
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer =
             session->createDurableConsumer( topic, subName, "" );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         unsigned int sent;
 
         // Send some text messages
-        sent = testSupport.produceTextMessages( *producer, 3 );
+        sent = testSupport->produceTextMessages( *producer, 3 );
 
         // Wait for all messages
-        testSupport.waitForMessages( sent );
+        testSupport->waitForMessages( sent );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
 
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
@@ -127,18 +123,18 @@ void DurableTest::test()
         delete consumer;
 
         // Send some text messages
-        sent += testSupport.produceTextMessages( *producer, 3 );
+        sent += testSupport->produceTextMessages( *producer, 3 );
 
         consumer = session->createDurableConsumer( topic, subName, "" );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
 
         // Send some text messages
-        sent += testSupport.produceTextMessages( *producer, 3 );
+        sent += testSupport->produceTextMessages( *producer, 3 );
 
         // Wait for all remaining messages
-        testSupport.waitForMessages( sent );
+        testSupport->waitForMessages( sent );
 
-        numReceived = testSupport.getNumReceived();
+        numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }

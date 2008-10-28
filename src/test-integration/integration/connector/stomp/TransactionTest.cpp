@@ -72,11 +72,7 @@ using namespace decaf::util;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-TransactionTest::TransactionTest()
-:
-    testSupport( IntegrationCommon::getInstance().getStompURL(), cms::Session::SESSION_TRANSACTED )
-{
-    testSupport.initialize();
+TransactionTest::TransactionTest() {
 }
 
 TransactionTest::~TransactionTest()
@@ -96,48 +92,48 @@ void TransactionTest::test()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
+        cms::Session* session = testSupport->getSession();
         cms::Topic* topic = session->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         session->commit();
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         session->commit();
 
         // Wait till we get all the messages
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }
         CPPUNIT_ASSERT(
             numReceived == IntegrationCommon::defaultMsgCount * 2 );
 
-        testSupport.setNumReceived( 0 );
+        testSupport->setNumReceived( 0 );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         session->rollback();
 
         // Wait till we get all the messages
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount );
 
-        numReceived = testSupport.getNumReceived();
+        numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }

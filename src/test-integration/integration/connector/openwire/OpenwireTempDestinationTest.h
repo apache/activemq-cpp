@@ -37,7 +37,7 @@ namespace openwire{
 
     private:
 
-        TestSupport testSupport;
+        TestSupport* testSupport;
 
     public:
 
@@ -45,6 +45,12 @@ namespace openwire{
         virtual ~OpenwireTempDestinationTest();
 
         virtual void test();
+
+        virtual void setUp() {
+            testSupport = new TestSupport;
+            testSupport->initialize(IntegrationCommon::getInstance().getOpenwireURL());
+        };
+        virtual void tearDown() { delete testSupport; };
 
     protected:
 

@@ -72,10 +72,7 @@ using namespace integration;
 using namespace integration::connector::stomp;
 
 ////////////////////////////////////////////////////////////////////////////////
-AsyncSenderTest::AsyncSenderTest()
-:  testSupport( IntegrationCommon::getInstance().getStompURL() + "&transport.useAsyncSend=true")
-{
-    testSupport.initialize();
+AsyncSenderTest::AsyncSenderTest() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,26 +95,26 @@ void AsyncSenderTest::test()
         }
 
         // Create CMS Object for Comms
-        cms::Session* session = testSupport.getSession();
-        cms::Topic* topic = testSupport.getSession()->createTopic("mytopic");
+        cms::Session* session = testSupport->getSession();
+        cms::Topic* topic = testSupport->getSession()->createTopic("mytopic");
         cms::MessageConsumer* consumer =
             session->createConsumer( topic );
-        consumer->setMessageListener( &testSupport );
+        consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
 
         // Send some text messages
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Send some bytes messages.
-        testSupport.produceTextMessages(
+        testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
         // Wait for the messages to get here
-        testSupport.waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
+        testSupport->waitForMessages( IntegrationCommon::defaultMsgCount * 2 );
 
-        unsigned int numReceived = testSupport.getNumReceived();
+        unsigned int numReceived = testSupport->getNumReceived();
         if( IntegrationCommon::debug ) {
             printf("received: %d\n", numReceived );
         }

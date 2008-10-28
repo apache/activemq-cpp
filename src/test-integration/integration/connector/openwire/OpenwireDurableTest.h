@@ -34,16 +34,22 @@ namespace openwire{
         CPPUNIT_TEST_SUITE_END();
 
     private:
-    
-        TestSupport testSupport;
-        
+
+        TestSupport* testSupport;
+
     public:
 
-    	OpenwireDurableTest();
-    	virtual ~OpenwireDurableTest();
+        OpenwireDurableTest();
+        virtual ~OpenwireDurableTest() {}
+
+        virtual void setUp() {
+            testSupport = new TestSupport;
+            testSupport->initialize( IntegrationCommon::getInstance().getOpenwireURL() );
+        };
+        virtual void tearDown() { delete testSupport; };
 
         virtual void test();
-        
+
     };
 
 }}}
