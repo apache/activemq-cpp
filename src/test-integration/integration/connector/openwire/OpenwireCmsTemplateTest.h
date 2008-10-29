@@ -73,6 +73,7 @@ namespace openwire{
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
+                cmsTemplate.setDeliveryPersistent(false);
                 this->count = count;
             }
 
@@ -112,6 +113,7 @@ namespace openwire{
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
+                cmsTemplate.setDeliveryPersistent(false);
                 this->count = count;
             }
             virtual ~Receiver(){
