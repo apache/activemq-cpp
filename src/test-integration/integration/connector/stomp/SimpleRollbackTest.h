@@ -36,19 +36,22 @@ namespace stomp{
 
     class SimpleRollbackTest : public CppUnit::TestFixture,
                                public cms::ExceptionListener,
-                               public cms::MessageListener    
+                               public cms::MessageListener
     {
         CPPUNIT_TEST_SUITE( SimpleRollbackTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
 
     public:
-    
+
         SimpleRollbackTest();
         virtual ~SimpleRollbackTest();
-        
-        virtual void test(void);
-        
+
+        virtual void test();
+
+        virtual void setUp();
+        virtual void tearDown();
+
         virtual void onException( const cms::CMSException& error );
         virtual void onMessage( const cms::Message* message );
 

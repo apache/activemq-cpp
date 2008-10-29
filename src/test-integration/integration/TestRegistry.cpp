@@ -34,15 +34,15 @@
 #include "connector/stomp/TransactionTest.h"
 #include "connector/stomp/StompStressTests.h"
 
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireAsyncSenderTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireCmsTemplateTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireDurableTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireExpirationTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleRollbackTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSlowListenerTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
-CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireAsyncSenderTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireCmsTemplateTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireDurableTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireExpirationTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleRollbackTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSimpleTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireSlowListenerTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTempDestinationTest );
+//CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::openwire::OpenwireTransactionTest );
 
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::AsyncSenderTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::CmsTemplateTest );
@@ -52,4 +52,3 @@ CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleRollbackTe
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::SimpleTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::TransactionTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( integration::connector::stomp::StompStressTests );
-

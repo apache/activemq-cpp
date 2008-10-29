@@ -80,10 +80,16 @@ using namespace std;
 using namespace integration;
 using namespace integration::connector::stomp;
 
-SimpleRollbackTest::SimpleRollbackTest()
-{
-    try
-    {
+SimpleRollbackTest::SimpleRollbackTest() {
+}
+
+SimpleRollbackTest::~SimpleRollbackTest() {
+}
+
+void SimpleRollbackTest::setUp() {
+
+    try {
+
         string url = IntegrationCommon::getInstance().getStompURL();
         numReceived = 0;
 
@@ -108,10 +114,8 @@ SimpleRollbackTest::SimpleRollbackTest()
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
-SimpleRollbackTest::~SimpleRollbackTest()
-{
-    try
-    {
+void SimpleRollbackTest::tearDown() {
+    try {
         session->close();
         connection->close();
 
