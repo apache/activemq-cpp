@@ -118,6 +118,7 @@ void OpenwireTempDestinationTest::test()
 
         cms::MessageProducer* producer =
             session->createProducer( requestTopic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some bytes messages.
         testSupport->produceTextMessages(
@@ -245,6 +246,8 @@ void OpenwireTempDestinationTest::Consumer::onMessage(
         if( replyTo != NULL ) {
 
             cms::MessageProducer* producer = session->createProducer( replyTo );
+            producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
             cms::Message* response = session->createMessage();
 
             // Send it back to the replyTo Destination

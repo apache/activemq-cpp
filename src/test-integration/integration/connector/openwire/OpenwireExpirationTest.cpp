@@ -135,7 +135,7 @@ namespace openwire{
                 destination = session->createQueue( topic );
 
                 producer = session->createProducer( destination );
-                producer->setDeliveryMode( DeliveryMode::PERSISTENT );
+                producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
                 producer->setDisableMessageTimeStamp( disableTimeStamps );
 
                 //unsigned long ttt=getcurt();

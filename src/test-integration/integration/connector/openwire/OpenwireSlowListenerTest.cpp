@@ -107,6 +107,7 @@ void OpenwireSlowListenerTest::test()
         cms::Session* session = connection->createSession( cms::Session::AUTO_ACKNOWLEDGE );
         cms::Destination* destination = session->createTopic(UUID::randomUUID().toString());
         cms::MessageProducer* producer = session->createProducer( destination );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         const unsigned int numConsumers = 5;
         cms::MessageConsumer* consumers[numConsumers];

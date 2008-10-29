@@ -103,6 +103,7 @@ void OpenwireSimpleTest::testAutoAck() {
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some text messages
         testSupport->produceTextMessages(
@@ -157,6 +158,7 @@ void OpenwireSimpleTest::testClientAck()
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some text messages
         testSupport->produceTextMessages(
@@ -209,6 +211,7 @@ void OpenwireSimpleTest::testProducerWithNullDestination()
         cms::MessageConsumer* consumer =  session->createConsumer( topic );
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -258,6 +261,7 @@ void OpenwireSimpleTest::testSyncReceive()
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -317,6 +321,7 @@ void OpenwireSimpleTest::testMultipleConnections()
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
 
         cms::MessageProducer* producer = session2->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
 
@@ -383,6 +388,7 @@ void OpenwireSimpleTest::testMultipleSessions()
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
 
         cms::MessageProducer* producer = session2->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
 
@@ -444,6 +450,7 @@ void OpenwireSimpleTest::testReceiveAlreadyInQueue() {
         cms::MessageConsumer* consumer = session->createConsumer( topic );
 
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -512,6 +519,7 @@ void OpenwireSimpleTest::testWithZeroConsumerPrefetch() {
             UUID::randomUUID().toString() + "?consumer.prefetchSize=0" );
         cms::MessageConsumer* consumer = session->createConsumer( queue );
         cms::MessageProducer* producer = session->createProducer( queue );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -556,6 +564,7 @@ void OpenwireSimpleTest::testMapMessageSend() {
         cms::Queue* queue = session->createQueue( UUID::randomUUID().toString() );
         cms::MessageConsumer* consumer = session->createConsumer( queue );
         cms::MessageProducer* producer = session->createProducer( queue );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         unsigned char byteValue = 'A';
         char charValue = 'B';
@@ -642,6 +651,7 @@ void OpenwireSimpleTest::testMapMessageSend2() {
         cms::Topic* topic = session->createTopic( UUID::randomUUID().toString() );
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         unsigned char byteValue = 'A';
         char charValue = 'B';
