@@ -44,7 +44,6 @@ namespace concurrent{
 
         int tasksToComplete;
         int complete;
-        Mutex mutex;
         bool caughtEx;
         CountDownLatch* latch;
 
@@ -127,6 +126,10 @@ namespace concurrent{
         };
 
     public:
+
+        virtual void setUp() {
+            this->latch = NULL;
+        }
 
         virtual void test1();
         virtual void test2();
