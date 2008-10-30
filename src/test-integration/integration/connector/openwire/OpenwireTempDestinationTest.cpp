@@ -114,7 +114,9 @@ void OpenwireTempDestinationTest::test()
         Thread responderThread( responseConsumer );
         requestorThread.start();
         responderThread.start();
-        Thread::sleep( 100 );
+
+        requestConsumer->waitUnitReady();
+        responseConsumer->waitUnitReady();
 
         cms::MessageProducer* producer =
             session->createProducer( requestTopic );
@@ -187,7 +189,7 @@ void OpenwireTempDestinationTest::waitForMessages(
 OpenwireTempDestinationTest::Consumer::Consumer(
     cms::Connection* connection,
     cms::Session* session,
-    cms::Destination* destination )
+    cms::Destination* destination ) : ready(1)
 {
     this->connection = connection;
     this->destination = destination;
@@ -227,6 +229,7 @@ void OpenwireTempDestinationTest::Consumer::run() {
 
         // Sleep while asynchronous messages come in.
         synchronized( &mutex ) {
+            this->ready.countDown();
             mutex.wait();
         }
 

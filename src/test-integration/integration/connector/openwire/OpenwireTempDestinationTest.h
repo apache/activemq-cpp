@@ -19,6 +19,7 @@
 #define _INTEGRATION_CONNECTOR_OPENWIRE_OPENWIRETEMPDESTINATIONTEST_H_
 
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
@@ -66,6 +67,7 @@ namespace openwire{
             unsigned int numReceived;
             decaf::util::concurrent::Mutex mutex;
             decaf::util::concurrent::Mutex onMsgMutex;
+            decaf::util::concurrent::CountDownLatch ready;
 
         public:
 
@@ -81,6 +83,10 @@ namespace openwire{
 
             virtual unsigned int getNumReceived() const {
                 return this->numReceived;
+            }
+
+            virtual void waitUnitReady() {
+                this->ready.await();
             }
 
             virtual void stop();

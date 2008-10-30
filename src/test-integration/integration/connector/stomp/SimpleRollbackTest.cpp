@@ -138,6 +138,7 @@ void SimpleRollbackTest::test()
         consumer->setMessageListener( this );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg =
             session->createTextMessage();

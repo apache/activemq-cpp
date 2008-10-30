@@ -99,6 +99,7 @@ void OpenwireTransactionTest::test()
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some text messages
         testSupport->produceTextMessages(

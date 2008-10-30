@@ -37,7 +37,7 @@ namespace stomp{
         CPPUNIT_TEST( testReceiveException );
         CPPUNIT_TEST( testSendException );
         CPPUNIT_TEST_SUITE_END();
-        
+
         class TextMessageCreator : public activemq::cmsutil::MessageCreator {
         private:
             std::string text;
@@ -46,66 +46,68 @@ namespace stomp{
                 this->text = text;
             }
             virtual ~TextMessageCreator() {}
-            
+
             std::string getText() const {
                 return text;
             }
-            
-            virtual cms::Message* createMessage(cms::Session* session ) 
+
+            virtual cms::Message* createMessage(cms::Session* session )
                         throw (cms::CMSException) {
                 return session->createTextMessage(text);
-            } 
+            }
         };
-        
+
         class Sender : public decaf::lang::Runnable {
         private:
-                    
+
             activemq::core::ActiveMQConnectionFactory cf;
             activemq::cmsutil::CmsTemplate cmsTemplate;
             int count;
-            
+
         public:
-            
+
             Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
                 cf.setBrokerURL(url);
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
+                cmsTemplate.setDeliveryPersistent(false);
                 this->count = count;
             }
-            
+
             virtual ~Sender(){
             }
-            
-            virtual void run() {                
+
+            virtual void run() {
                 try {
                     // Send a batch of messages.
                     TextMessageCreator tmc("hello world");
                     for( int ix=0; ix<count; ++ix ) {
                         cmsTemplate.send(&tmc);
                     }
-                    
+
                 } catch( cms::CMSException& ex) {
                     ex.printStackTrace();
                 }
             }
         };
-        
+
         class Receiver : public decaf::lang::Runnable {
         private:
-            
+
             activemq::core::ActiveMQConnectionFactory cf;
             activemq::cmsutil::CmsTemplate cmsTemplate;
             int count;
             int numReceived;
-            
+
         public:
-            
+
             Receiver( const std::string& url, bool pubSub, const std::string& destName, int count ) {
                 cf.setBrokerURL(url);
                 cmsTemplate.setConnectionFactory(&cf);
                 cmsTemplate.setPubSubDomain(pubSub);
                 cmsTemplate.setDefaultDestinationName(destName);
+                cmsTemplate.setDeliveryPersistent(false);
                 this->count = count;
             }
             virtual ~Receiver(){
@@ -114,22 +116,22 @@ namespace stomp{
                 return numReceived;
             }
             virtual void run() {
-                
+
                 try {
                     numReceived = 0;
-                    
+
                     // Receive a batch of messages.
                     for( int ix=0; ix<count; ++ix ) {
                         cms::Message* message = cmsTemplate.receive();
                         numReceived++;
-                        delete message;                    
+                        delete message;
                     }
                 } catch( cms::CMSException& ex) {
                     ex.printStackTrace();
                 }
             }
         };
-        
+
     public:
 
         CmsTemplateTest(){}
@@ -137,7 +139,7 @@ namespace stomp{
 
         virtual void setUp();
         virtual void tearDown();
-                
+
         virtual void testBasics();
         virtual void testReceiveException();
         virtual void testSendException();

@@ -105,6 +105,7 @@ void SimpleTest::testAutoAck() {
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some text messages
         testSupport->produceTextMessages(
@@ -159,6 +160,7 @@ void SimpleTest::testClientAck()
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer =
             session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // Send some text messages
         testSupport->produceTextMessages(
@@ -211,6 +213,7 @@ void SimpleTest::testProducerWithNullDestination()
         cms::MessageConsumer* consumer =  session->createConsumer( topic );
         consumer->setMessageListener( testSupport );
         cms::MessageProducer* producer = session->createProducer( NULL );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -260,6 +263,7 @@ void SimpleTest::testSyncReceive()
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -304,6 +308,7 @@ void SimpleTest::testSyncReceiveClientAck()
         cms::Topic* topic = session->createTopic(UUID::randomUUID().toString());
         cms::MessageConsumer* consumer = session->createConsumer( topic );
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
@@ -364,6 +369,7 @@ void SimpleTest::testMultipleConnections()
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
 
         cms::MessageProducer* producer = session2->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
 
@@ -429,6 +435,7 @@ void SimpleTest::testMultipleSessions()
         cms::MessageConsumer* consumer2 = session2->createConsumer( topic );
 
         cms::MessageProducer* producer = session2->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session2->createTextMessage();
 
@@ -490,6 +497,7 @@ void SimpleTest::testReceiveAlreadyInQueue() {
         cms::MessageConsumer* consumer = session->createConsumer( topic );
 
         cms::MessageProducer* producer = session->createProducer( topic );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         cms::TextMessage* textMsg = session->createTextMessage();
 
