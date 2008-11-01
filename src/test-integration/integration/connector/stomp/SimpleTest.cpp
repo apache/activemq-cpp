@@ -373,6 +373,8 @@ void SimpleTest::testMultipleConnections()
 
         cms::TextMessage* textMsg = session2->createTextMessage();
 
+        Thread::sleep(50);
+
         // Send some text messages
         producer->send( textMsg );
 
