@@ -107,4 +107,7 @@ void MemoryUsageTest::testWait() {
 
     usage.waitForSpace();
     CPPUNIT_ASSERT( usage.getUsage() == 0 );
+
+    myThread.join();
+
 }
