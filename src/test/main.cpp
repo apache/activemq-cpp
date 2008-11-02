@@ -21,21 +21,26 @@
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Runtime.h>
+#include <iostream>
 
 int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
 {
     // ensure that we start the runtime.
     decaf::lang::Runtime::getRuntime();
+    bool wasSuccessful = false;
 
-    CppUnit::TextUi::TestRunner runner;
-    CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
-    runner.addTest( registry.makeTest() );
+    for( int i = 0; i < 1; ++i ) {
+        CppUnit::TextUi::TestRunner runner;
+        CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+        runner.addTest( registry.makeTest() );
 
-    // Shows a message as each test starts
-    CppUnit::BriefTestProgressListener listener;
-    runner.eventManager().addListener( &listener );
+        // Shows a message as each test starts
+        CppUnit::BriefTestProgressListener listener;
+        runner.eventManager().addListener( &listener );
 
-    bool wasSuccessful = runner.run( "", false );
+        wasSuccessful = runner.run( "", false );
+    }
+
     return !wasSuccessful;
 }
 
