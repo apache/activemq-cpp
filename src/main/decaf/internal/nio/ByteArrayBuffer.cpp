@@ -190,9 +190,9 @@ ByteArrayBuffer& ByteArrayBuffer::compact() throw( decaf::nio::ReadOnlyBufferExc
 
         // copy from the current pos to the beginning all the remaining bytes
         // the set pos to the
-        memcpy( this->array() + offset,
-                this->array() + offset + this->position(),
-                this->remaining() );
+        for( std::size_t ix = 0; ix < this->remaining(); ++ix ) {
+            this->put( ix, this->get( this->position() + ix ) );
+        }
 
         this->position( this->limit() - this->position() );
         this->limit( this->capacity() );
