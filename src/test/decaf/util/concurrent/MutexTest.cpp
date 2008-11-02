@@ -365,6 +365,7 @@ void MutexTest::testNotify() {
 
         // Delete all the threads.
         for( int ix=0; ix<numThreads; ++ix ){
+            threads[ix]->join();
             delete threads[ix];
         }
 
@@ -542,6 +543,7 @@ void MutexTest::testRecursiveLock() {
 
         // Delete all the threads.
         for( int ix=0; ix<numThreads; ++ix ){
+            threads[ix]->join();
             delete threads[ix];
         }
 
