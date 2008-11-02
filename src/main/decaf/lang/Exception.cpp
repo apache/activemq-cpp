@@ -170,6 +170,11 @@ void Exception::initCause( const std::exception* cause ) {
         return;
     }
 
+    if( this->cause != NULL ) {
+        std::cout << "Deleting old Cause" << std::endl;
+        delete this->cause;
+    }
+
     const Exception* ptrCause = dynamic_cast<const Exception*>( cause );
     if( ptrCause == NULL ) {
         this->cause = new Exception( __FILE__, __LINE__, cause->what() );
