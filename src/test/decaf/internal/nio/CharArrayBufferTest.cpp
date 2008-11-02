@@ -460,6 +460,13 @@ void CharArrayBufferTest::testPutbyteArray2() {
     char* array = new char[testBuffer1->capacity()];
     char* array2 = new char[testBuffer1->capacity() + 1];
 
+    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ){
+        array[ix] = 0;
+    }
+    for( std::size_t ix = 0; ix < testBuffer1->capacity() + 1; ++ix ){
+        array2[ix] = 0;
+    }
+
     CharBuffer* readOnly = testBuffer1->asReadOnlyBuffer();
     readOnly->clear();
     CPPUNIT_ASSERT_THROW_MESSAGE(
