@@ -17,6 +17,7 @@
 
 #include "CharArrayBuffer.h"
 #include <string.h>
+#include <memory>
 
 using namespace decaf;
 using namespace decaf::lang;
@@ -305,6 +306,8 @@ CharBuffer* CharArrayBuffer::slice() const {
 CharSequence* CharArrayBuffer::subSequence( std::size_t start, std::size_t end ) const
     throw ( decaf::lang::exceptions::IndexOutOfBoundsException ) {
 
+    CharArrayBuffer* buffer = NULL;
+
     try{
 
         if( start > end ) {
@@ -319,12 +322,11 @@ CharSequence* CharArrayBuffer::subSequence( std::size_t start, std::size_t end )
                 "CharArrayBuffer::subSequence - Sequence exceed limit" );
         }
 
-        CharArrayBuffer* buffer = new CharArrayBuffer( *this );
-
+        std::auto_ptr<CharArrayBuffer> buffer( new CharArrayBuffer( *this ) );
         buffer->position( this->position() + start );
         buffer->limit( this->position() + end );
 
-        return buffer;
+        return buffer.release();
     }
     DECAF_CATCH_RETHROW( IndexOutOfBoundsException )
     DECAF_CATCH_EXCEPTION_CONVERT( Exception, IndexOutOfBoundsException )

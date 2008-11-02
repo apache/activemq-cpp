@@ -19,6 +19,7 @@
 #include <decaf/lang/Character.h>
 #include <decaf/lang/Math.h>
 #include "decaf/internal/nio/BufferFactory.h"
+#include <memory>
 
 using namespace std;
 using namespace decaf;
@@ -135,9 +136,8 @@ CharBuffer& CharBuffer::append( const CharSequence* value, std::size_t start, st
     try{
 
         if( value != NULL ) {
-            CharSequence* temp = value->subSequence( start, end );
-            this->append( temp );
-            delete temp;
+            auto_ptr<CharSequence> temp( value->subSequence( start, end ) );
+            this->append( temp.get() );
 
             return *this;
         }
@@ -391,10 +391,9 @@ std::size_t CharBuffer::read( CharBuffer* target )
         std::size_t result = (std::size_t)Math::min(
                 (int)target->remaining(),
                 (int)this->remaining() );
-        char* chars = new char[result];
-        get( chars, 0, result );
-        target->put( chars, 0, result );
-        delete [] chars;
+        std::vector<char> chars( result, 0 );
+        get( &chars[0], 0, result );
+        target->put( &chars[0], 0, result );
 
         return result;
     }
