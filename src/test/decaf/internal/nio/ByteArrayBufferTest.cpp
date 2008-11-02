@@ -460,6 +460,13 @@ void ByteArrayBufferTest::testPutbyteArray2() {
     unsigned char* array = new unsigned char[testBuffer1->capacity()];
     unsigned char* array2 = new unsigned char[testBuffer1->capacity() + 1];
 
+    for( std::size_t ix = 0; ix < testBuffer1->capacity(); ++ix ){
+        array[ix] = 0;
+    }
+    for( std::size_t ix = 0; ix < testBuffer1->capacity()+1; ++ix ){
+        array2[ix] = 0;
+    }
+
     ByteBuffer* readOnly = testBuffer1->asReadOnlyBuffer();
     readOnly->clear();
     CPPUNIT_ASSERT_THROW_MESSAGE(
