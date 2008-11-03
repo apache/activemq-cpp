@@ -146,7 +146,7 @@ namespace transport{
                 }
             }
 
-            void run(void) {
+            void run() {
                 try {
 
                     synchronized( &inboundQueue ) {
