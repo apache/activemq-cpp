@@ -171,7 +171,6 @@ void Exception::initCause( const std::exception* cause ) {
     }
 
     if( this->cause != NULL ) {
-        std::cout << "Deleting old Cause" << std::endl;
         delete this->cause;
     }
 
