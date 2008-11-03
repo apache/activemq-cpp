@@ -26,10 +26,8 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ResponseCorrelator::ResponseCorrelator( Transport* next, bool own )
-:
-    TransportFilter( next, own ) {
+ :  TransportFilter( next, own ) {
 
-    //nextCommandId = 0;
     nextCommandId.set(1);
     // Start in the closed state.
     closed = true;
