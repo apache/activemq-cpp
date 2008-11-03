@@ -713,11 +713,10 @@ namespace openwire{
          * Converts any error responses into an exception.
          * @param command The request command.
          * @param timeout The time to wait for a response, default is zero or infinite.
-         * @returns The response sent from the broker.
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        transport::Response* syncRequest( transport::Command* command, unsigned int timeout = 0 )
+        void syncRequest( transport::Command* command, unsigned int timeout = 0 )
             throw (ConnectorException);
 
         /**
