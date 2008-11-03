@@ -77,6 +77,7 @@ Response* ResponseCorrelator::request( Command* command )
 
         // Add a future response object to the map indexed by this
         // command id.
+        // TODO = This might not get deleted if an exception is thrown.
         FutureResponse* futureResponse = new FutureResponse();
 
         synchronized( &mapMutex ){
@@ -134,6 +135,7 @@ Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
 
         // Add a future response object to the map indexed by this
         // command id.
+        // TODO = This might not get deleted if an exception is thrown.
         FutureResponse* futureResponse = new FutureResponse();
 
         synchronized( &mapMutex ){
