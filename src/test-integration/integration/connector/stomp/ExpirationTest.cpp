@@ -22,25 +22,26 @@
 
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <decaf/lang/Thread.h>
 #include <activemq/connector/stomp/StompConnector.h>
-#include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
-#include <decaf/util/UUID.h>
-#include <decaf/util/Properties.h>
-#include <decaf/util/StringTokenizer.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <decaf/net/SocketFactory.h>
 #include <activemq/transport/TransportFactory.h>
-#include <decaf/net/Socket.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
+
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/net/Socket.h>
+#include <decaf/net/SocketFactory.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/util/StringTokenizer.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/Thread.h>
 
 #include <cms/Connection.h>
 #include <cms/MessageConsumer.h>
@@ -231,14 +232,9 @@ namespace stomp{
 
             try {
 
-                string user,passwd,sID;
-                user="default";
-                passwd="";
-                sID="lsgID";
-
                 // Create a Connection
                 connection = ActiveMQConnectionFactory::createConnection(
-                    IntegrationCommon::getInstance().getStompURL(), user, passwd, sID );
+                    IntegrationCommon::getInstance().getStompURL(), "", "", "" );
 
                 connection->start();
 
