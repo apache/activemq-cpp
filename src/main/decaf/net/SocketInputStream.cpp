@@ -70,6 +70,13 @@ void SocketInputStream::close() throw( lang::Exception ){
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t SocketInputStream::available() const throw ( io::IOException ){
 
+    // Check for a closed call from socket class, if closed then this read fails.
+    if( closed ){
+        throw IOException(
+            __FILE__, __LINE__,
+            "decaf::io::SocketInputStream::available - The stream is closed" );
+    }
+
     // Convert to an OS level socket.
     apr_os_sock_t oss;
     apr_os_sock_get( (apr_os_sock_t*)&oss, socket );
@@ -129,6 +136,13 @@ std::size_t SocketInputStream::available() const throw ( io::IOException ){
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char SocketInputStream::read() throw ( IOException ){
 
+    // Check for a closed call from socket class, if closed then this read fails.
+    if( closed ){
+        throw IOException(
+            __FILE__, __LINE__,
+            "decaf::io::SocketInputStream::read - The Stream has been closed" );
+    }
+
     apr_status_t result = APR_SUCCESS;
     char c;
     apr_size_t size = 1;
@@ -149,6 +163,13 @@ int SocketInputStream::read( unsigned char* buffer,
                              std::size_t bufferSize )
     throw ( IOException, lang::exceptions::NullPointerException ) {
 
+    // Check for a closed call from socket class, if closed then this read fails.
+    if( closed ){
+        throw IOException(
+            __FILE__, __LINE__,
+            "decaf::io::SocketInputStream::read - The Stream has been closed" );
+    }
+
     apr_size_t size = (apr_size_t)bufferSize;
     apr_status_t result = APR_SUCCESS;
 
@@ -167,7 +188,7 @@ int SocketInputStream::read( unsigned char* buffer,
     if( closed ){
         throw IOException(
             __FILE__, __LINE__,
-            "activemq::io::SocketInputStream::read - The connection is broken" );
+            "decaf::io::SocketInputStream::read - The connection is broken" );
     }
 
     // Check for error.

@@ -79,6 +79,12 @@ void SocketOutputStream::write( const unsigned char* buffer,
             "SocketOutputStream::write - passed buffer is null" );
     }
 
+    if( closed ) {
+        throw IOException(
+            __FILE__, __LINE__,
+            "decaf::net::SocketOutputStream::write - This Stream has been closed." );
+    }
+
     apr_size_t remaining = (apr_size_t)len;
     apr_status_t result = APR_SUCCESS;
 
