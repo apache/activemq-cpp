@@ -50,6 +50,12 @@ BufferedOutputStream::BufferedOutputStream( OutputStream* stream,
 BufferedOutputStream::~BufferedOutputStream() {
     try{
         this->close();
+
+        // Destroy the buffer.
+        if( buffer != NULL ){
+            delete [] buffer;
+            buffer = NULL;
+        }
     }
     DECAF_CATCH_NOTHROW( IOException )
     DECAF_CATCHALL_NOTHROW()
@@ -75,12 +81,6 @@ void BufferedOutputStream::close() throw( lang::Exception ){
 
     // let parent close the inputStream
     FilterOutputStream::close();
-
-    // Destroy the buffer.
-    if( buffer != NULL ){
-        delete [] buffer;
-        buffer = NULL;
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
