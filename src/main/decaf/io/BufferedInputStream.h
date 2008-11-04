@@ -94,7 +94,7 @@ namespace io{
          * input stream.
          */
         virtual std::size_t available() const throw ( IOException ) {
-            if( buffer == NULL ) {
+            if( buffer == NULL || this->isClosed() ) {
                 throw IOException(
                     __FILE__, __LINE__,
                     "BufferedInputStream::available - Buffer was closed");
