@@ -59,7 +59,7 @@ namespace io{
         bool own;
 
         // Indicates that this stream was closed
-        bool closed;
+        volatile bool closed;
 
     public:
 
@@ -78,6 +78,11 @@ namespace io{
         virtual ~FilterOutputStream() {
             try {
                 this->close();
+
+                if( own ) {
+                    delete outputStream;
+                }
+                outputStream = NULL;
             }
             DECAF_CATCH_NOTHROW( IOException )
             DECAF_CATCHALL_NOTHROW( )
@@ -195,13 +200,9 @@ namespace io{
          */
         virtual void close() throw ( lang::Exception ) {
             try {
-                if( outputStream != NULL ) {
+                if( !closed && outputStream != NULL ) {
                     outputStream->flush();
                     outputStream->close();
-                    if( own ) {
-                        delete outputStream;
-                    }
-                    outputStream = NULL;
                 }
                 this->closed = true;
             }
