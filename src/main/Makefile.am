@@ -383,6 +383,7 @@ h_sources = \
     decaf/io/IOException.h \
     decaf/io/InterruptedIOException.h \
     decaf/util/concurrent/Lock.h \
+    decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/CountDownLatch.h \
@@ -395,6 +396,9 @@ h_sources = \
     decaf/util/concurrent/ThreadPool.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \
+    decaf/util/concurrent/locks/Lock.h \
+    decaf/util/concurrent/locks/Condition.h \
+    decaf/util/concurrent/locks/ReadWriteLock.h \
     decaf/util/Config.h \
     decaf/util/Date.h \
     decaf/util/UUID.h \
