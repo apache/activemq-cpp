@@ -382,18 +382,25 @@ h_sources = \
     decaf/io/InputStream.h \
     decaf/io/IOException.h \
     decaf/io/InterruptedIOException.h \
-    decaf/util/concurrent/Lock.h \
+    decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/Callable.h \
+    decaf/util/concurrent/CancelationException.h \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/CountDownLatch.h \
-    decaf/util/concurrent/Synchronizable.h \
+    decaf/util/concurrent/Executor.h \
+    decaf/util/concurrent/ExecutionException.h \
+    decaf/util/concurrent/Lock.h \
     decaf/util/concurrent/Mutex.h \
     decaf/util/concurrent/PooledThread.h \
     decaf/util/concurrent/PooledThreadListener.h \
+    decaf/util/concurrent/RejectedExecutionException.h \
+    decaf/util/concurrent/Synchronizable.h \
     decaf/util/concurrent/TaskListener.h \
     decaf/util/concurrent/TimeUnit.h \
     decaf/util/concurrent/ThreadPool.h \
+    decaf/util/concurrent/ThreadFactory.h \
+    decaf/util/concurrent/TimeoutException.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \
     decaf/util/concurrent/locks/Lock.h \
