@@ -385,7 +385,7 @@ h_sources = \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Delayed.h \
     decaf/util/concurrent/Callable.h \
-    decaf/util/concurrent/CancelationException.h \
+    decaf/util/concurrent/CancellationException.h \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Executor.h \
