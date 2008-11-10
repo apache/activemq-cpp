@@ -46,7 +46,7 @@ namespace nio{
          * with all elements initialized to zero.
          * @param capacity - size of the array, this is the limit we read and write to.
          */
-        ByteArrayPerspective( int capacity );
+        ByteArrayPerspective( std::size_t capacity );
 
         /**
          * Creates a byte array object that wraps the given array.  If the own flag

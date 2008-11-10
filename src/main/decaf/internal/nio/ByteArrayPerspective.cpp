@@ -23,7 +23,7 @@ using namespace decaf::internal::nio;
 using namespace decaf::internal::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-ByteArrayPerspective::ByteArrayPerspective( int capacity ) : ByteArrayAdapter( capacity ){
+ByteArrayPerspective::ByteArrayPerspective( std::size_t capacity ) : ByteArrayAdapter( capacity ){
     this->references = 1;
 }
 
