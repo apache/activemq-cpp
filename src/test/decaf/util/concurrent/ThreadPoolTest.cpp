@@ -38,6 +38,9 @@ void ThreadPoolTest::test1()
 
     ThreadPool* pool = ThreadPool::getInstance();
 
+    pool->setMaxThreads( ThreadPool::DEFAULT_MAX_POOL_SIZE );
+    pool->setBlockSize( ThreadPool::DEFAULT_MAX_BLOCK_SIZE );
+
     pool->queueTask( ThreadPool::Task( &task1, this ) );
     pool->queueTask( ThreadPool::Task( &task2, this ) );
     pool->queueTask( ThreadPool::Task( &task3, this ) );

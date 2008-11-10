@@ -21,15 +21,25 @@
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
 #include <decaf/lang/Runtime.h>
+#include <decaf/lang/Integer.h>
 #include <iostream>
 
-int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
-{
+int main( int argc, char **argv ) {
+
     // ensure that we start the runtime.
     decaf::lang::Runtime::getRuntime();
     bool wasSuccessful = false;
+    int iterations = 1;
 
-    for( int i = 0; i < 1; ++i ) {
+    if( argc > 1 ) {
+        try {
+            iterations = decaf::lang::Integer::parseInt( argv[1] );
+        } catch( decaf::lang::exceptions::NumberFormatException& ex ) {
+            iterations = 1;
+        }
+    }
+
+    for( int i = 0; i < iterations; ++i ) {
         CppUnit::TextUi::TestRunner runner;
         CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
         runner.addTest( registry.makeTest() );
