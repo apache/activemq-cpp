@@ -27,6 +27,7 @@
 #include <activemq/transport/Response.h>
 #include <cms/Startable.h>
 #include <cms/Closeable.h>
+#include <typeinfo>
 
 namespace activemq{
 namespace transport{
@@ -118,6 +119,17 @@ namespace transport{
          */
         virtual void setTransportExceptionListener(
             TransportExceptionListener* listener ) = 0;
+
+        /**
+         * Narrows down a Chain of Transports to a specific Transport to allow a
+         * higher level transport to skip intermediate Transports in certain
+         * circumstances.
+         *
+         * @param typeId - The type_info of the Object we are searching for.
+         *
+         * @return the requested Object. or NULL if its not in this chain.
+         */
+        virtual Transport* narrow( const std::type_info& typeId ) = 0;
 
     };
 

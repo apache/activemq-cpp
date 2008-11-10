@@ -33,6 +33,7 @@ namespace transport{
         CPPUNIT_TEST( testRead );
         CPPUNIT_TEST( testWrite );
         CPPUNIT_TEST( testException );
+        CPPUNIT_TEST( testNarrow );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -44,6 +45,7 @@ namespace transport{
         void testRead();
         void testStartClose();
         void testStressTransportStartClose();
+        void testNarrow();
 
     };
 

@@ -19,6 +19,7 @@
 
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/transport/IOTransport.h>
 
 using namespace std;
 using namespace activemq;
@@ -228,8 +229,18 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
 
         try {
 
+            // Circumvent all other Transport filters and go straight for the base
+            // IOTransport, this should guarantee that there's no funny business done
+            // like async dispatch etc.  If it can't be found just use next and hope that
+            // there's nothing that will break the necessary thread locking that protects
+            // the message as it marshaled out to the wire
+            Transport* transport = this->next->narrow( typeid( transport::IOTransport ) );
+            if( transport == NULL ) {
+                transport = this->next;
+            }
+
             // We first send the WireFormat that we'd prefer.
-            next->oneway( openWireFormat->getPreferedWireFormatInfo() );
+            transport->oneway( openWireFormat->getPreferedWireFormatInfo() );
 
             // Mark the latch
             wireInfoSentDownLatch.countDown();

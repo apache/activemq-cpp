@@ -24,6 +24,7 @@
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/TransportExceptionListener.h>
+#include <typeinfo>
 
 namespace activemq{
 namespace transport{
@@ -220,6 +221,25 @@ namespace transport{
          */
         virtual void close() throw( cms::CMSException ){
             next->close();
+        }
+
+        /**
+         * Narrows down a Chain of Transports to a specific Transport to allow a
+         * higher level transport to skip intermediate Transports in certain
+         * circumstances.
+         *
+         * @param typeId - The type_info of the Object we are searching for.
+         *
+         * @return the requested Object. or NULL if its not in this chain.
+         */
+        virtual Transport* narrow( const std::type_info& typeId ) {
+            if( typeid( *this ) == typeId ) {
+                return this;
+            } else if( this->next != NULL ) {
+                return this->next->narrow( typeId );
+            }
+
+            return NULL;
         }
 
     };

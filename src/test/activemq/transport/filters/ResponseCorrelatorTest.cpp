@@ -223,3 +223,26 @@ void ResponseCorrelatorTest::testMultiRequests(){
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ResponseCorrelatorTest::testNarrow(){
+
+    MyTransport transport;
+    ResponseCorrelator correlator( &transport, false );
+
+    Transport* narrowed = correlator.narrow( typeid( transport ) );
+    CPPUNIT_ASSERT( narrowed == &transport );
+
+    narrowed = correlator.narrow( typeid( std::string() ) );
+    CPPUNIT_ASSERT( narrowed == NULL );
+
+    narrowed = correlator.narrow( typeid( MyTransport ) );
+    CPPUNIT_ASSERT( narrowed == &transport );
+
+    narrowed = correlator.narrow( typeid( transport::filters::ResponseCorrelator ) );
+    CPPUNIT_ASSERT( narrowed == &correlator );
+
+    narrowed = correlator.narrow( typeid( correlator ) );
+    CPPUNIT_ASSERT( narrowed == &correlator );
+
+}

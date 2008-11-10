@@ -39,6 +39,7 @@ namespace filters{
         CPPUNIT_TEST( testOneway );
         CPPUNIT_TEST( testTransportException );
         CPPUNIT_TEST( testMultiRequests );
+        CPPUNIT_TEST( testNarrow );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -277,6 +278,14 @@ namespace filters{
                     }
                 }
             }
+
+            virtual Transport* narrow( const std::type_info& typeId ) {
+                if( typeid( *this ) == typeId ) {
+                    return this;
+                }
+
+                return NULL;
+            }
         };
 
         class MyBrokenTransport : public MyTransport{
@@ -370,6 +379,7 @@ namespace filters{
         void testOneway();
         void testTransportException();
         void testMultiRequests();
+        void testNarrow();
 
     };
 

@@ -423,3 +423,19 @@ void IOTransportTest::testException(){
 
     transport.close();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransportTest::testNarrow(){
+
+    IOTransport transport;
+
+    Transport* narrowed = transport.narrow( typeid( transport ) );
+    CPPUNIT_ASSERT( narrowed == &transport );
+
+    narrowed = transport.narrow( typeid( std::string() ) );
+    CPPUNIT_ASSERT( narrowed == NULL );
+
+    narrowed = transport.narrow( typeid( transport::IOTransport ) );
+    CPPUNIT_ASSERT( narrowed == &transport );
+
+}

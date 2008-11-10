@@ -240,6 +240,22 @@ namespace transport{
          */
         virtual void run();
 
+        /**
+         * Narrows down a Chain of Transports to a specific Transport to allow a
+         * higher level transport to skip intermediate Transports in certain
+         * circumstances.
+         *
+         * @param typeId - The type_info of the Object we are searching for.
+         *
+         * @return the requested Object. or NULL if its not in this chain.
+         */
+        virtual Transport* narrow( const std::type_info& typeId ) {
+            if( typeid( *this ) == typeId ) {
+                return this;
+            }
+
+            return NULL;
+        }
     };
 
 }}
