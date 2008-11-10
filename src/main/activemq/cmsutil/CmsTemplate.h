@@ -42,7 +42,7 @@ namespace cmsutil {
      * CMS resources internally.
      * <p>
      * Before using <code>CmsTemplate</code> the user must first set
-     * the destination (either by name or by setting the destiation
+     * the destination (either by name or by setting the destination
      * object directly) and then call <code>init</code> to initialize
      * the object for use.
      * <p>
@@ -98,8 +98,10 @@ namespace cmsutil {
 
         public:
 
-            ProducerExecutor(ProducerCallback* action,
-                    CmsTemplate* parent, cms::Destination* destination){
+            ProducerExecutor( ProducerCallback* action,
+                              CmsTemplate* parent,
+                              cms::Destination* destination ){
+
                 this->action = action;
                 this->parent = parent;
                 this->destination = destination;
@@ -107,10 +109,10 @@ namespace cmsutil {
 
             virtual ~ProducerExecutor() {}
 
-            virtual void doInCms(cms::Session* session) throw (cms::CMSException);
+            virtual void doInCms( cms::Session* session ) throw ( cms::CMSException );
 
-            virtual cms::Destination* getDestination(cms::Session* session AMQCPP_UNUSED)
-                throw (cms::CMSException) {
+            virtual cms::Destination* getDestination( cms::Session* session AMQCPP_UNUSED )
+                throw ( cms::CMSException ) {
                 return destination;
             }
         };
@@ -127,18 +129,19 @@ namespace cmsutil {
 
         public:
 
-            ResolveProducerExecutor(ProducerCallback* action,
-                    CmsTemplate* parent, const std::string& destinationName)
+            ResolveProducerExecutor( ProducerCallback* action,
+                                     CmsTemplate* parent,
+                                     const std::string& destinationName )
             :
-                ProducerExecutor(action, parent, NULL) {
+                ProducerExecutor( action, parent, NULL ) {
 
                 this->destinationName = destinationName;
             }
 
             virtual ~ResolveProducerExecutor() {}
 
-            virtual cms::Destination* getDestination(cms::Session* session)
-                throw (cms::CMSException) ;
+            virtual cms::Destination* getDestination( cms::Session* session )
+                throw ( cms::CMSException );
         };
 
         /**
@@ -155,16 +158,16 @@ namespace cmsutil {
         public:
 
             SendExecutor( MessageCreator* messageCreator,
-                    CmsTemplate* parent) {
+                          CmsTemplate* parent ) {
                 this->messageCreator = messageCreator;
                 this->parent = parent;
             }
 
             virtual ~SendExecutor() {}
 
-            virtual void doInCms(cms::Session* session,
-                    cms::MessageProducer* producer) throw (cms::CMSException) {
-                parent->doSend(session, producer, messageCreator);
+            virtual void doInCms( cms::Session* session,
+                                  cms::MessageProducer* producer ) throw ( cms::CMSException ) {
+                parent->doSend( session, producer, messageCreator );
             }
         };
 
@@ -183,10 +186,11 @@ namespace cmsutil {
             CmsTemplate* parent;
 
         public:
+
             ReceiveExecutor( CmsTemplate* parent,
-                    cms::Destination* destination,
-                    const std::string& selector,
-                    bool noLocal) {
+                             cms::Destination* destination,
+                             const std::string& selector,
+                             bool noLocal ) {
                 this->parent = parent;
                 this->destination = destination;
                 this->selector = selector;
@@ -196,11 +200,11 @@ namespace cmsutil {
 
             virtual ~ReceiveExecutor() {}
 
-            virtual void doInCms(cms::Session* session)
+            virtual void doInCms( cms::Session* session )
                 throw (cms::CMSException);
 
-            virtual cms::Destination* getDestination(cms::Session* session AMQCPP_UNUSED)
-                throw (cms::CMSException) {
+            virtual cms::Destination* getDestination( cms::Session* session AMQCPP_UNUSED )
+                throw ( cms::CMSException ) {
                 return destination;
             }
 
@@ -221,10 +225,10 @@ namespace cmsutil {
 
         public:
 
-            ResolveReceiveExecutor(CmsTemplate* parent,
-                    const std::string& selector,
-                    bool noLocal,
-                    const std::string& destinationName)
+            ResolveReceiveExecutor( CmsTemplate* parent,
+                                    const std::string& selector,
+                                    bool noLocal,
+                                    const std::string& destinationName )
             :
                 ReceiveExecutor( parent, NULL, selector, noLocal) {
 
@@ -233,8 +237,8 @@ namespace cmsutil {
 
             virtual ~ResolveReceiveExecutor() {}
 
-            virtual cms::Destination* getDestination(cms::Session* session)
-                throw (cms::CMSException);
+            virtual cms::Destination* getDestination( cms::Session* session )
+                throw ( cms::CMSException );
         };
 
     private:
@@ -283,7 +287,7 @@ namespace cmsutil {
          * @param defaultDestination
          *          the default destination
          */
-        virtual void setDefaultDestination(cms::Destination* defaultDestination) {
+        virtual void setDefaultDestination( cms::Destination* defaultDestination ) {
             this->defaultDestination = defaultDestination;
         }
 
@@ -312,7 +316,7 @@ namespace cmsutil {
          * @param defaultDestinationName
          *          the name of the destination for send/receive to by default.
          */
-        virtual void setDefaultDestinationName(const std::string& defaultDestinationName) {
+        virtual void setDefaultDestinationName( const std::string& defaultDestinationName ) {
             if( defaultDestinationName != this->defaultDestinationName ) {
                 this->defaultDestination = NULL;
                 this->defaultDestinationName = defaultDestinationName;
@@ -340,11 +344,11 @@ namespace cmsutil {
         virtual void setPubSubDomain( bool pubSubDomain ) {
             if( pubSubDomain != isPubSubDomain() ) {
                 this->defaultDestination = NULL;
-                CmsDestinationAccessor::setPubSubDomain(pubSubDomain);
+                CmsDestinationAccessor::setPubSubDomain( pubSubDomain );
             }
         }
 
-        virtual void setMessageIdEnabled(bool messageIdEnabled) {
+        virtual void setMessageIdEnabled( bool messageIdEnabled ) {
             this->messageIdEnabled = messageIdEnabled;
         }
 
@@ -352,7 +356,7 @@ namespace cmsutil {
             return this->messageIdEnabled;
         }
 
-        virtual void setMessageTimestampEnabled(bool messageTimestampEnabled) {
+        virtual void setMessageTimestampEnabled( bool messageTimestampEnabled ) {
             this->messageTimestampEnabled = messageTimestampEnabled;
         }
 
@@ -360,7 +364,7 @@ namespace cmsutil {
             return this->messageTimestampEnabled;
         }
 
-        virtual void setNoLocal(bool noLocal) {
+        virtual void setNoLocal( bool noLocal ) {
             this->noLocal = noLocal;
         }
 
@@ -368,7 +372,7 @@ namespace cmsutil {
             return this->noLocal;
         }
 
-        virtual void setReceiveTimeout(long long receiveTimeout) {
+        virtual void setReceiveTimeout( long long receiveTimeout ) {
             this->receiveTimeout = receiveTimeout;
         }
 
@@ -384,7 +388,7 @@ namespace cmsutil {
          * @see #setPriority
          * @see #setTimeToLive
          */
-        virtual void setExplicitQosEnabled(bool explicitQosEnabled) {
+        virtual void setExplicitQosEnabled( bool explicitQosEnabled ) {
             this->explicitQosEnabled = explicitQosEnabled;
         }
 
@@ -412,7 +416,7 @@ namespace cmsutil {
          *
          * @see #setDeliveryMode(int)
          */
-        virtual void setDeliveryPersistent(bool deliveryPersistent) {
+        virtual void setDeliveryPersistent( bool deliveryPersistent ) {
             this->deliveryMode = (deliveryPersistent ? 0 : 1 );
         }
 
@@ -424,7 +428,7 @@ namespace cmsutil {
          * @param deliveryMode the delivery mode to use
          * @see #isExplicitQosEnabled
          */
-        virtual void setDeliveryMode(int deliveryMode) {
+        virtual void setDeliveryMode( int deliveryMode ) {
             this->deliveryMode = deliveryMode;
         }
 
@@ -442,7 +446,7 @@ namespace cmsutil {
          *
          * @see #isExplicitQosEnabled
          */
-        virtual void setPriority(int priority) {
+        virtual void setPriority( int priority ) {
             this->priority = priority;
         }
 
@@ -461,7 +465,7 @@ namespace cmsutil {
          *
          * @see #isExplicitQosEnabled
          */
-        virtual void setTimeToLive(long long timeToLive) {
+        virtual void setTimeToLive( long long timeToLive ) {
             this->timeToLive = timeToLive;
         }
 
@@ -478,7 +482,7 @@ namespace cmsutil {
          *          the action to perform within a CMS Session
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void execute(SessionCallback* action) throw (cms::CMSException);
+        virtual void execute( SessionCallback* action ) throw ( cms::CMSException );
 
         /**
          * Executes the given action and provides it with a CMS Session and
@@ -488,7 +492,7 @@ namespace cmsutil {
          *          the action to perform
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void execute(ProducerCallback* action) throw (cms::CMSException);
+        virtual void execute( ProducerCallback* action ) throw ( cms::CMSException );
 
         /**
          * Executes the given action and provides it with a CMS Session and
@@ -500,8 +504,8 @@ namespace cmsutil {
          *          the action to perform
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void execute(cms::Destination* dest,
-                ProducerCallback* action) throw (cms::CMSException);
+        virtual void execute( cms::Destination* dest, ProducerCallback* action )
+            throw (cms::CMSException);
 
         /**
          * Executes the given action and provides it with a CMS Session and
@@ -514,8 +518,9 @@ namespace cmsutil {
          *          the action to perform
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void execute(const std::string& destinationName,
-                ProducerCallback* action) throw (cms::CMSException);
+        virtual void execute( const std::string& destinationName,
+                              ProducerCallback* action )
+                                throw ( cms::CMSException );
 
         /**
          * Convenience method for sending a message to the default destination.
@@ -525,7 +530,7 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs.
          */
         virtual void send(MessageCreator* messageCreator)
-        throw (cms::CMSException);
+            throw ( cms::CMSException );
 
         /**
          * Convenience method for sending a message to the specified destination.
@@ -536,9 +541,9 @@ namespace cmsutil {
          *          Responsible for creating the message to be sent
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void send(cms::Destination* dest,
-                MessageCreator* messageCreator)
-        throw (cms::CMSException);
+        virtual void send( cms::Destination* dest,
+                           MessageCreator* messageCreator )
+            throw ( cms::CMSException );
 
         /**
          * Convenience method for sending a message to the specified destination.
@@ -549,9 +554,9 @@ namespace cmsutil {
          *          Responsible for creating the message to be sent
          * @throws cms::CMSException thrown if an error occurs.
          */
-        virtual void send(const std::string& destinationName,
-                MessageCreator* messageCreator)
-        throw (cms::CMSException);
+        virtual void send( const std::string& destinationName,
+                           MessageCreator* messageCreator )
+            throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read from the default destination.
@@ -559,7 +564,7 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs
          */
         virtual cms::Message* receive()
-        throw (cms::CMSException);
+            throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read from the specified destination.
@@ -568,8 +573,8 @@ namespace cmsutil {
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
          */
-        virtual cms::Message* receive(cms::Destination* destination )
-        throw (cms::CMSException);
+        virtual cms::Message* receive( cms::Destination* destination )
+            throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read from the specified destination.
@@ -579,8 +584,8 @@ namespace cmsutil {
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
          */
-        virtual cms::Message* receive(const std::string& destinationName )
-        throw (cms::CMSException);
+        virtual cms::Message* receive( const std::string& destinationName )
+            throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read consuming only messages identified by the
@@ -591,8 +596,8 @@ namespace cmsutil {
          * @return the message
          * @throws cms::CMSException thrown if an error occurs
          */
-        virtual cms::Message* receiveSelected(const std::string& selector )
-        throw (cms::CMSException);
+        virtual cms::Message* receiveSelected( const std::string& selector )
+            throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read from the specified destination, consuming
@@ -606,8 +611,8 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs
          */
         virtual cms::Message* receiveSelected( cms::Destination* destination,
-                const std::string& selector )
-                throw (cms::CMSException);
+                                               const std::string& selector )
+                                                   throw ( cms::CMSException );
 
         /**
          * Performs a synchronous read from the specified destination, consuming
@@ -622,8 +627,8 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs
          */
         virtual cms::Message* receiveSelected( const std::string& destinationName,
-                const std::string& selector )
-                throw (cms::CMSException);
+                                               const std::string& selector )
+                                                   throw ( cms::CMSException );
 
     protected:
 
@@ -632,13 +637,13 @@ namespace cmsutil {
          * before any other methds are called.
          */
         void init()
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Clears all internal resources.
          */
         void destroy()
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
 
     private:
 
@@ -664,14 +669,14 @@ namespace cmsutil {
          * if the default destination is invalid.
          */
         void checkDefaultDestination()
-        throw (decaf::lang::exceptions::IllegalStateException);
+            throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Gets the connection, creating it if it doesn't already exist.
          * @return the connection
          * @throws cms::CMSException if any of the CMS methods throw.
          */
-        cms::Connection* getConnection() throw (cms::CMSException);
+        cms::Connection* getConnection() throw ( cms::CMSException );
 
         /**
          * Creates a session initialized with the proper values.
@@ -679,7 +684,7 @@ namespace cmsutil {
          * @return the session
          * @throws cms::CMSException if any of the CMS methods throw.
          */
-        PooledSession* takeSession() throw (cms::CMSException);
+        PooledSession* takeSession() throw ( cms::CMSException );
 
         /**
          * Closes, but does not destroy the pooled session resource.
@@ -687,7 +692,7 @@ namespace cmsutil {
          *          a pooled session resource
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void returnSession( PooledSession*& session ) throw (cms::CMSException);
+        void returnSession( PooledSession*& session ) throw ( cms::CMSException );
 
         /**
          * Allocates a producer initialized with the proper values.
@@ -700,8 +705,8 @@ namespace cmsutil {
          * @return the producer
          * @throws cms::CMSException thrown by the CMS API
          */
-        cms::MessageProducer* createProducer(cms::Session* session,
-                cms::Destination* dest) throw (cms::CMSException);
+        cms::MessageProducer* createProducer( cms::Session* session,
+                                              cms::Destination* dest ) throw ( cms::CMSException );
 
         /**
          * Closes and destroys a producer resource
@@ -722,10 +727,10 @@ namespace cmsutil {
          * @return the consumer
          * @throws cms::CMSException thrown by the CMS API
          */
-        cms::MessageConsumer* createConsumer(cms::Session* session,
-                cms::Destination* dest,
-                const std::string& selector,
-                bool noLocal ) throw (cms::CMSException);
+        cms::MessageConsumer* createConsumer( cms::Session* session,
+                                              cms::Destination* dest,
+                                              const std::string& selector,
+                                              bool noLocal ) throw ( cms::CMSException );
 
         /**
          * Closes and destroys a consumer resource
@@ -752,9 +757,9 @@ namespace cmsutil {
          *          creates the message to be sent
          * @throws cms::CMSException thrown if the CMS API throws.
          */
-        void doSend(cms::Session* session,
-                cms::MessageProducer* producer,
-                MessageCreator* messageCreator) throw (cms::CMSException);
+        void doSend( cms::Session* session,
+                     cms::MessageProducer* producer,
+                     MessageCreator* messageCreator ) throw ( cms::CMSException );
 
         /**
          * Receives a message from a destination.
@@ -763,8 +768,8 @@ namespace cmsutil {
          * @return the message that was read
          * @throws cms::CMSException thrown if the CMS API throws.
          */
-        cms::Message* doReceive(cms::MessageConsumer* consumer )
-        throw (cms::CMSException);
+        cms::Message* doReceive( cms::MessageConsumer* consumer )
+            throw ( cms::CMSException );
 
         /**
          * Resolves the default destination and returns it.
@@ -773,8 +778,9 @@ namespace cmsutil {
          * @return the default destination
          * @throws cms::CMSException if an error occurs
          */
-        cms::Destination* resolveDefaultDestination(cms::Session* session)
-        throw (cms::CMSException);
+        cms::Destination* resolveDefaultDestination( cms::Session* session )
+            throw ( cms::CMSException );
+
     };
 
 }}
