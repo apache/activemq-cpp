@@ -63,9 +63,9 @@ namespace cmsutil {
          *          the object responsible for managing the lifecycle of
          *          any allocated cms::Session resources.
          */
-        SessionPool(cms::Connection* connection,
-                cms::Session::AcknowledgeMode ackMode,
-                ResourceLifecycleManager* resourceLifecycleManager );
+        SessionPool( cms::Connection* connection,
+                     cms::Session::AcknowledgeMode ackMode,
+                     ResourceLifecycleManager* resourceLifecycleManager );
 
         /**
          * Destroys the pooled session objects, but not the underlying session
@@ -80,14 +80,14 @@ namespace cmsutil {
          *
          * @throws cms::CMSException if an error occurred
          */
-        virtual PooledSession* takeSession() throw (cms::CMSException);
+        virtual PooledSession* takeSession() throw ( cms::CMSException );
 
         /**
          * Returns a session to the pool.
          * @param session
          *         the session to be returned.
          */
-        virtual void returnSession(PooledSession* session);
+        virtual void returnSession( PooledSession* session );
 
         ResourceLifecycleManager* getResourceLifecycleManager() {
             return resourceLifecycleManager;

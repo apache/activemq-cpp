@@ -26,26 +26,26 @@ namespace activemq {
 namespace cmsutil {
 
     /**
-     * Creates the user-defined message to be sent by the 
+     * Creates the user-defined message to be sent by the
      * <code>CmsTemplate</code>.
      */
     class AMQCPP_API MessageCreator {
     public:
-        
+
         virtual ~MessageCreator(){}
-    
+
         /**
          * Creates a message from the given session.
-         * 
-         * @param session 
+         *
+         * @param session
          *          the CMS <code>Session</code>
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Message* createMessage(cms::Session* session ) 
-            throw (cms::CMSException) = 0;
-    
+        virtual cms::Message* createMessage( cms::Session* session )
+            throw ( cms::CMSException ) = 0;
+
     };
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H*/    
+#endif /*ACTIVEMQ_CMSUTIL_MESSAGECREATOR_H*/

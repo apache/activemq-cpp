@@ -26,61 +26,61 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
-        const std::string& topicName ) throw (cms::CMSException) {
+        const std::string& topicName ) throw ( cms::CMSException ) {
 
     cms::Topic* topic = NULL;
     try {
-        
+
         // See if we already have a topic with this name.
-        topic = topicMap.getValue(topicName);
-        
-    } catch (decaf::lang::exceptions::NoSuchElementException& ex) {
-        
+        topic = topicMap.getValue( topicName );
+
+    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+
         // Create a new topic.
-        topic = session->createTopic(topicName);
-        
+        topic = session->createTopic( topicName );
+
         // Add the topic to the lifecycle manager.
-        resourceLifecycleManager->addDestination(topic);
-        
+        resourceLifecycleManager->addDestination( topic );
+
         // Add the topic to the map.
-        topicMap.setValue(topicName, topic);
+        topicMap.setValue( topicName, topic );
     }
     return topic;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
-        const std::string& queueName) throw (cms::CMSException) {
+        const std::string& queueName ) throw ( cms::CMSException ) {
 
     cms::Queue* queue = NULL;
     try {
-        
+
         // See if we already have a queue with this name.
-        queue = queueMap.getValue(queueName);
-        
-    } catch (decaf::lang::exceptions::NoSuchElementException& ex) {
-        
+        queue = queueMap.getValue( queueName );
+
+    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+
         // Create a new queue.
-        queue = session->createQueue(queueName);
-        
+        queue = session->createQueue( queueName );
+
         // Add the queue to the lifecycle manager.
-        resourceLifecycleManager->addDestination(queue);
-        
+        resourceLifecycleManager->addDestination( queue );
+
         // Add the queue to the map.
-        queueMap.setValue(queueName, queue);
+        queueMap.setValue( queueName, queue );
     }
     return queue;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DynamicDestinationResolver::~DynamicDestinationResolver() {
-    
+
     destroy();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void DynamicDestinationResolver::destroy() {
-    
+
     // Destroy the session resolvers.
     vector<SessionResolver*> r = sessionResolverMap.getValues();
     for( size_t ix=0; ix<r.size(); ++ix ) {
@@ -93,24 +93,24 @@ void DynamicDestinationResolver::destroy() {
 cms::Destination* DynamicDestinationResolver::resolveDestinationName(
         cms::Session* session, const std::string& destName, bool pubSubDomain)
         throw (cms::CMSException) {
- 
+
     if( destName == "" ) {
-        throw ActiveMQException(__FILE__, __LINE__, "destination name is invalid");
+        throw ActiveMQException( __FILE__, __LINE__, "destination name is invalid" );
     }
-    
+
     // Get the resolver for this session.
     SessionResolver* resolver = NULL;
     try {
-        resolver = sessionResolverMap.getValue(session);
-    } catch (decaf::lang::exceptions::NoSuchElementException& ex) {
-        resolver = new SessionResolver(session, resourceLifecycleManager);
-        sessionResolverMap.setValue(session, resolver);
+        resolver = sessionResolverMap.getValue( session );
+    } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
+        resolver = new SessionResolver( session, resourceLifecycleManager );
+        sessionResolverMap.setValue( session, resolver );
     }
-    
+
     // Return the appropriate destination.
     if( pubSubDomain ) {
-        return resolver->getTopic(destName);
+        return resolver->getTopic( destName );
     } else {
-        return resolver->getQueue(destName);
+        return resolver->getQueue( destName );
     }
 }

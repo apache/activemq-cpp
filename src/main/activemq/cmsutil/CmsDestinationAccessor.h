@@ -26,71 +26,70 @@ namespace cmsutil {
 
     /**
      * Extends the <code>CmsAccessor</code> to add support for resolving destination names.
-     * 
+     *
      * <p>Not intended to be used directly.
-     * 
+     *
      * @see CmsTemplate
      * @see CmsAccessor
      */
     class AMQCPP_API CmsDestinationAccessor : public CmsAccessor {
-    
     private:
-        
+
         /**
          * The default destination resolver.
          */
         DynamicDestinationResolver defaultDestinationResolver;
-        
+
         /**
          * The destination resolver to use.
          */
         DestinationResolver* destinationResolver;
-    
+
         /**
          * Determines whether to use topics or queues by default.
          */
         bool pubSubDomain;
-    
+
     public:
-        
+
         CmsDestinationAccessor();
-        
-        virtual ~CmsDestinationAccessor();        
-                
+
+        virtual ~CmsDestinationAccessor();
+
         virtual bool isPubSubDomain() const {
             return this->pubSubDomain;
         }
-        
+
         virtual void setPubSubDomain( bool pubSubDomain ) {
             this->pubSubDomain = pubSubDomain;
         }
-    
+
         virtual DestinationResolver* getDestinationResolver() {
             return destinationResolver;
         }
-        
+
         virtual const DestinationResolver* getDestinationResolver() const {
             return destinationResolver;
         }
-        
+
         virtual void setDestinationResolver( DestinationResolver* destRes ) {
-            this->destinationResolver = destRes;     
+            this->destinationResolver = destRes;
         }
-        
+
     protected:
-        
+
         /**
          * Initializes the destination resolver.
          */
-        virtual void init() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-                
+        virtual void init()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+
         /**
          * Calls destroy() on the destination resolver.
          */
-        virtual void destroy() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-                
+        virtual void destroy()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+
         /**
          * Resolves the destination via the <code>DestinationResolver</code>.
          * @param session
@@ -99,18 +98,20 @@ namespace cmsutil {
          *      the name of the destination.
          * @return the destination
          * @throws cms::CMSException if resolution failed.
-         * @throws decaf::lang::exceptions::IllegalStateException if the destiation
+         * @throws decaf::lang::exceptions::IllegalStateException if the destination
          *      resolver property is NULL.
          */
-        virtual cms::Destination* resolveDestinationName( 
-                cms::Session* session, 
-                const std::string& destName ) 
-                throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-        
+        virtual cms::Destination* resolveDestinationName(
+            cms::Session* session,
+            const std::string& destName )
+                throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+
         /**
          * Verifies that the destination resolver is valid.
          */
-        virtual void checkDestinationResolver() throw (decaf::lang::exceptions::IllegalStateException);
+        virtual void checkDestinationResolver()
+            throw ( decaf::lang::exceptions::IllegalStateException );
+
     };
 
 }}

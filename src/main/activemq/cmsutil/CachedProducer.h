@@ -29,17 +29,17 @@ namespace cmsutil {
      */
     class AMQCPP_API CachedProducer : public cms::MessageProducer {
     private:
-        
+
         cms::MessageProducer* producer;
-        
+
     public:
-        
+
         CachedProducer( cms::MessageProducer* producer ) {
             this->producer = producer;
         }
-        
+
         virtual ~CachedProducer() {}
-        
+
         /**
          * Does nothing - the real producer resource will be closed
          * by the lifecycle manager.
@@ -49,36 +49,41 @@ namespace cmsutil {
         }
 
         virtual void send( cms::Message* message ) throw ( cms::CMSException ){
-            producer->send(message);
+            producer->send( message );
         }
 
-        virtual void send( cms::Message* message, int deliveryMode, int priority, 
-            long long timeToLive) throw ( cms::CMSException ){
-            producer->send(message, deliveryMode, priority, timeToLive);
+        virtual void send( cms::Message* message, int deliveryMode,
+                           int priority, long long timeToLive )
+            throw ( cms::CMSException ){
+
+            producer->send( message, deliveryMode, priority, timeToLive );
         }
-            
+
 
         virtual void send( const cms::Destination* destination,
                            cms::Message* message ) throw ( cms::CMSException ){
-            producer->send(destination, message);
+
+            producer->send( destination, message );
         }
 
         virtual void send( const cms::Destination* destination,
-            cms::Message* message, int deliveryMode, int priority, 
-            long long timeToLive) throw ( cms::CMSException ){
-            producer->send(destination, message, deliveryMode, priority, timeToLive);
+                           cms::Message* message, int deliveryMode,
+                           int priority, long long timeToLive )
+            throw ( cms::CMSException ){
+
+            producer->send( destination, message, deliveryMode, priority, timeToLive );
         }
 
         virtual void setDeliveryMode( int mode ) {
-            producer->setDeliveryMode(mode);
+            producer->setDeliveryMode( mode );
         }
 
         virtual int getDeliveryMode() const {
             return producer->getDeliveryMode();
         }
-      
+
         virtual void setDisableMessageID( bool value ) {
-            producer->setDisableMessageID(value);
+            producer->setDisableMessageID( value );
         }
 
         virtual bool getDisableMessageID() const {
@@ -86,7 +91,7 @@ namespace cmsutil {
         }
 
         virtual void setDisableMessageTimeStamp( bool value ) {
-            producer->setDisableMessageTimeStamp(value);
+            producer->setDisableMessageTimeStamp( value );
         }
 
         virtual bool getDisableMessageTimeStamp() const {
@@ -94,7 +99,7 @@ namespace cmsutil {
         }
 
         virtual void setPriority( int priority ) {
-            producer->setPriority(priority);
+            producer->setPriority( priority );
         }
 
         virtual int getPriority() const {
@@ -102,13 +107,13 @@ namespace cmsutil {
         }
 
         virtual void setTimeToLive( long long time ) {
-            producer->setTimeToLive(time);
+            producer->setTimeToLive( time );
         }
 
         virtual long long getTimeToLive() const {
             return producer->getTimeToLive();
         }
-        
+
     };
 
 }}

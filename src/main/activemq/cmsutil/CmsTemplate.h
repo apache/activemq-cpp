@@ -230,7 +230,7 @@ namespace cmsutil {
                                     bool noLocal,
                                     const std::string& destinationName )
             :
-                ReceiveExecutor( parent, NULL, selector, noLocal) {
+                ReceiveExecutor( parent, NULL, selector, noLocal ) {
 
                 this->destinationName = destinationName;
             }
@@ -274,7 +274,7 @@ namespace cmsutil {
     public:
 
         CmsTemplate();
-        CmsTemplate(cms::ConnectionFactory* connectionFactory);
+        CmsTemplate( cms::ConnectionFactory* connectionFactory );
 
         virtual ~CmsTemplate();
 
@@ -505,7 +505,7 @@ namespace cmsutil {
          * @throws cms::CMSException thrown if an error occurs.
          */
         virtual void execute( cms::Destination* dest, ProducerCallback* action )
-            throw (cms::CMSException);
+            throw ( cms::CMSException );
 
         /**
          * Executes the given action and provides it with a CMS Session and
@@ -714,7 +714,7 @@ namespace cmsutil {
          *          a producer to destroy
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void destroyProducer( cms::MessageProducer*& producer ) throw (cms::CMSException);
+        void destroyProducer( cms::MessageProducer*& producer ) throw ( cms::CMSException );
 
         /**
          * Allocates a consumer initialized with the proper values.
@@ -738,7 +738,7 @@ namespace cmsutil {
          *          a consumer to destroy
          * @throws cms::CMSException thrown if the CMS methods throw.
          */
-        void destroyConsumer( cms::MessageConsumer*& consumer ) throw (cms::CMSException);
+        void destroyConsumer( cms::MessageConsumer*& consumer ) throw ( cms::CMSException );
 
         /**
          * Destroys the given message

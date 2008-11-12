@@ -36,6 +36,7 @@ namespace cmsutil {
          */
         class SessionResolver {
         private:
+
             ResourceLifecycleManager* resourceLifecycleManager;
             cms::Session* session;
             decaf::util::Map<std::string, cms::Topic*> topicMap;
@@ -53,10 +54,11 @@ namespace cmsutil {
             virtual ~SessionResolver() {}
 
             cms::Topic* getTopic(const std::string& topicName )
-                throw (cms::CMSException);
+                throw ( cms::CMSException );
 
             cms::Queue* getQueue(const std::string& queueName )
-                throw (cms::CMSException);
+                throw ( cms::CMSException );
+
         };
 
         /**
@@ -73,7 +75,7 @@ namespace cmsutil {
 
         virtual ~DynamicDestinationResolver();
 
-        virtual void init( ResourceLifecycleManager* mgr) {
+        virtual void init( ResourceLifecycleManager* mgr ) {
 
             // since we're changing the lifecycle manager, clear out references
             // to old resources.
@@ -101,9 +103,11 @@ namespace cmsutil {
          * @throws cms::CMSException if resolution failed.
          */
         virtual cms::Destination* resolveDestinationName(
-                cms::Session* session,
-                const std::string& destName,
-                bool pubSubDomain ) throw (cms::CMSException);
+            cms::Session* session,
+            const std::string& destName,
+            bool pubSubDomain )
+                throw ( cms::CMSException );
+
     };
 
 }}

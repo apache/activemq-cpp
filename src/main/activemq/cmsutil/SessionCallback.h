@@ -29,23 +29,22 @@ namespace cmsutil {
      * CMS Session.
      */
     class AMQCPP_API SessionCallback {
-        
     public:
-        
+
         virtual ~SessionCallback(){}
-    
+
         /**
          * Execute any number of operations against the supplied CMS
          * session.
-         * 
-         * @param session 
+         *
+         * @param session
          *          the CMS <code>Session</code>
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual void doInCms(cms::Session* session) throw (cms::CMSException) = 0;
-    
+        virtual void doInCms( cms::Session* session ) throw ( cms::CMSException ) = 0;
+
     };
 
 }}
 
-#endif /*ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H*/    
+#endif /*ACTIVEMQ_CMSUTIL_SESSIONCALLBACK_H*/

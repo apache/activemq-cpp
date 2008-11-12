@@ -22,63 +22,61 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 CmsDestinationAccessor::CmsDestinationAccessor() {
-    
+
     // Default to using queues.
     pubSubDomain = false;
-    
+
     // Start with the default destinationResolver.
     destinationResolver = &defaultDestinationResolver;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-CmsDestinationAccessor::~CmsDestinationAccessor() {    
+CmsDestinationAccessor::~CmsDestinationAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::init() 
-throw (cms::CMSException, IllegalStateException) {
-    
+void CmsDestinationAccessor::init()
+    throw ( cms::CMSException, IllegalStateException ) {
+
     CmsAccessor::init();
-    
+
     // Make sure we have a destination resolver.
     checkDestinationResolver();
-    
+
     // Give the resolver our lifecycle manager.
-    destinationResolver->init(getResourceLifecycleManager());    
+    destinationResolver->init( getResourceLifecycleManager() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::destroy() 
-throw (cms::CMSException, IllegalStateException) {        
-    
+void CmsDestinationAccessor::destroy()
+    throw ( cms::CMSException, IllegalStateException ) {
+
     if( destinationResolver != NULL ) {
         destinationResolver->destroy();
-    }   
-    
+    }
+
     CmsAccessor::destroy();
 }
-  
+
 ////////////////////////////////////////////////////////////////////////////////
-cms::Destination* CmsDestinationAccessor::resolveDestinationName( 
-    cms::Session* session, 
-    const std::string& destName ) 
-throw (cms::CMSException, IllegalStateException) {
-    
+cms::Destination* CmsDestinationAccessor::resolveDestinationName(
+    cms::Session* session,
+    const std::string& destName )
+        throw ( cms::CMSException, IllegalStateException ) {
+
     checkDestinationResolver();
-    
-    return getDestinationResolver()->resolveDestinationName(session, 
-            destName, 
-            isPubSubDomain());
+
+    return getDestinationResolver()->resolveDestinationName(
+        session, destName, isPubSubDomain() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsDestinationAccessor::checkDestinationResolver() throw (IllegalStateException) {
-    if (getDestinationResolver() == NULL) {
-            throw IllegalStateException(
-                    __FILE__, __LINE__,
-                    "Property 'destinationResolver' is required");
+void CmsDestinationAccessor::checkDestinationResolver()
+    throw ( IllegalStateException ) {
+
+    if( getDestinationResolver() == NULL ) {
+        throw IllegalStateException(
+                __FILE__, __LINE__,
+                "Property 'destinationResolver' is required" );
     }
 }
-
-
-

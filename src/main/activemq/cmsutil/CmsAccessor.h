@@ -33,41 +33,40 @@ namespace cmsutil {
      * adds further, destination-related properties.
      *
      * <p>Not intended to be used directly.
-     * 
+     *
      * @see activemq.cms.CmsDestinationAccessor
      * @see activemq.cms.CmsTemplate
      */
     class AMQCPP_API CmsAccessor {
-    
     private:
-    
+
         ResourceLifecycleManager resourceLifecycleManager;
-        
+
         cms::ConnectionFactory* connectionFactory;
-    
+
         cms::Session::AcknowledgeMode sessionAcknowledgeMode;
-    
+
     public:
-        
+
         CmsAccessor();
-        
-        virtual ~CmsAccessor();                
-        
+
+        virtual ~CmsAccessor();
+
         virtual ResourceLifecycleManager* getResourceLifecycleManager() {
             return &resourceLifecycleManager;
         }
-        
+
         virtual const ResourceLifecycleManager* getResourceLifecycleManager() const {
             return &resourceLifecycleManager;
         }
-    
+
         /**
          * Set the ConnectionFactory to use for obtaining CMS Connections.
          */
-        virtual void setConnectionFactory(cms::ConnectionFactory* connectionFactory) {
+        virtual void setConnectionFactory( cms::ConnectionFactory* connectionFactory ) {
             this->connectionFactory = connectionFactory;
         }
-    
+
         /**
          * Return the ConnectionFactory that this accessor uses for
          * obtaining CMS Connections.
@@ -75,7 +74,7 @@ namespace cmsutil {
         virtual const cms::ConnectionFactory* getConnectionFactory() const {
             return this->connectionFactory;
         }
-    
+
         /**
          * Return the ConnectionFactory that this accessor uses for
          * obtaining CMS Connections.
@@ -83,66 +82,66 @@ namespace cmsutil {
         virtual cms::ConnectionFactory* getConnectionFactory() {
             return this->connectionFactory;
         }
-    
+
         /**
-         * Set the CMS acknowledgement mode that is used when creating a CMS
+         * Set the CMS acknowledgment mode that is used when creating a CMS
          * Session to send a message.
          * <p>Default is <code>AUTO_ACKNOWLEDGE</code>.
-         * @param sessionAcknowledgeMode the acknowledgement mode
+         * @param sessionAcknowledgeMode the acknowledgment mode
          */
         virtual void setSessionAcknowledgeMode(
-                cms::Session::AcknowledgeMode sessionAcknowledgeMode) {
+                cms::Session::AcknowledgeMode sessionAcknowledgeMode ) {
             this->sessionAcknowledgeMode = sessionAcknowledgeMode;
         }
-    
+
         /**
-         * Return the acknowledgement mode for CMS sessions.
-         * @return the acknowledgement mode applied by this accessor
+         * Return the acknowledgment mode for CMS sessions.
+         * @return the acknowledgment mode applied by this accessor
          */
         virtual cms::Session::AcknowledgeMode getSessionAcknowledgeMode() const {
             return this->sessionAcknowledgeMode;
         }
-    
+
     protected:
-    
+
         /**
          * Initializes this object and prepares it for use.  This should be called
-         * before any other methds are called.  This version does nothing.
+         * before any other methods are called.  This version does nothing.
          */
-        virtual void init() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
-        }
-        
+        virtual void init()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException ) {}
+
         /**
          * Shuts down this object and destroys any allocated resources.
          */
-        virtual void destroy() 
-        throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException) {
+        virtual void destroy()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException ) {
             resourceLifecycleManager.destroy();
         }
-                
+
         /**
          * Create a CMS Connection via this template's ConnectionFactory.
          * @return the new CMS Connection
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Connection* createConnection() 
-            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-    
+        virtual cms::Connection* createConnection()
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+
         /**
          * Create a CMS Session for the given Connection.
          * @param con the CMS Connection to create a Session for
          * @return the new CMS Session
          * @throws cms::CMSException if thrown by CMS API methods
          */
-        virtual cms::Session* createSession(cms::Connection* con) 
-            throw (cms::CMSException, decaf::lang::exceptions::IllegalStateException);
-        
+        virtual cms::Session* createSession( cms::Connection* con )
+            throw ( cms::CMSException, decaf::lang::exceptions::IllegalStateException );
+
         /**
          * Verifies that the connection factory is valid.
          */
-        virtual void checkConnectionFactory() throw (decaf::lang::exceptions::IllegalStateException);
-    
+        virtual void checkConnectionFactory()
+            throw ( decaf::lang::exceptions::IllegalStateException );
+
     };
 
 }}

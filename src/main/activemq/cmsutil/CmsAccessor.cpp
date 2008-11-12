@@ -33,19 +33,19 @@ CmsAccessor::~CmsAccessor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Connection* CmsAccessor::createConnection() 
-throw (cms::CMSException,IllegalStateException) {
-    
+cms::Connection* CmsAccessor::createConnection()
+    throw ( cms::CMSException,IllegalStateException ) {
+
     try {
-        
+
         checkConnectionFactory();
-        
+
         // Create the connection.
         cms::Connection* c = getConnectionFactory()->createConnection();
-        
+
         // Manage the lifecycle of this resource.
-        getResourceLifecycleManager()->addConnection(c);
-        
+        getResourceLifecycleManager()->addConnection( c );
+
         return c;
     }
     AMQ_CATCH_RETHROW( IllegalStateException )
@@ -54,20 +54,23 @@ throw (cms::CMSException,IllegalStateException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-cms::Session* CmsAccessor::createSession(cms::Connection* con) 
-throw (cms::CMSException,IllegalStateException) {
-    
+cms::Session* CmsAccessor::createSession( cms::Connection* con )
+    throw ( cms::CMSException,IllegalStateException ) {
+
     try {
+
         if( con == NULL ) {
-            throw ActiveMQException(__FILE__, __LINE__, "connection object is invalid");
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "connection object is invalid" );
         }
-        
+
         // Create the session.
-        cms::Session* s = con->createSession(getSessionAcknowledgeMode());
-        
+        cms::Session* s = con->createSession( getSessionAcknowledgeMode() );
+
         // Manage the lifecycle of this resource.
-        getResourceLifecycleManager()->addSession(s);
-        
+        getResourceLifecycleManager()->addSession( s );
+
         return s;
     }
     AMQ_CATCH_RETHROW( IllegalStateException )
@@ -76,11 +79,10 @@ throw (cms::CMSException,IllegalStateException) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void CmsAccessor::checkConnectionFactory() throw (IllegalStateException) {
-    if (getConnectionFactory() == NULL) {
-            throw IllegalStateException(
-                    __FILE__, __LINE__,
-                    "Property 'connectionFactory' is required");
+void CmsAccessor::checkConnectionFactory() throw ( IllegalStateException ) {
+    if( getConnectionFactory() == NULL ) {
+        throw IllegalStateException(
+            __FILE__, __LINE__,
+            "Property 'connectionFactory' is required" );
     }
 }
-

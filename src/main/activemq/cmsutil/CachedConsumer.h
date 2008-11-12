@@ -29,17 +29,17 @@ namespace cmsutil {
      */
     class AMQCPP_API CachedConsumer : public cms::MessageConsumer {
     private:
-        
+
         cms::MessageConsumer* consumer;
-        
+
     public:
-        
+
         CachedConsumer( cms::MessageConsumer* consumer ) {
             this->consumer = consumer;
         }
-        
+
         virtual ~CachedConsumer() {}
-        
+
         /**
          * Does nothing - the real producer resource will be closed
          * by the lifecycle manager.
@@ -61,18 +61,19 @@ namespace cmsutil {
         }
 
         virtual void setMessageListener( cms::MessageListener* listener ) {
-            consumer->setMessageListener(listener);
+            consumer->setMessageListener( listener );
         }
 
         virtual cms::MessageListener* getMessageListener() const {
             return consumer->getMessageListener();
         }
 
-        virtual std::string getMessageSelector() const 
+        virtual std::string getMessageSelector() const
             throw ( cms::CMSException ) {
+
             return consumer->getMessageSelector();
         }
-        
+
     };
 
 }}

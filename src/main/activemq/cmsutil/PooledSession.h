@@ -36,77 +36,77 @@ namespace cmsutil {
      */
     class AMQCPP_API PooledSession : public cms::Session {
     private:
-        
-        SessionPool* pool;
-        
-        cms::Session* session;
-        
-        decaf::util::Map<std::string, CachedProducer*> producerCache;
-        
-        decaf::util::Map<std::string, CachedConsumer*> consumerCache;
-        
-    public:
-        
-    	PooledSession( SessionPool* pool, cms::Session* session );
-    	
-    	/**
-    	 * Does nothing
-    	 */
-    	virtual ~PooledSession();
 
-    	/**
+        SessionPool* pool;
+
+        cms::Session* session;
+
+        decaf::util::Map<std::string, CachedProducer*> producerCache;
+
+        decaf::util::Map<std::string, CachedConsumer*> consumerCache;
+
+    public:
+
+        PooledSession( SessionPool* pool, cms::Session* session );
+
+        /**
+         * Does nothing
+         */
+        virtual ~PooledSession();
+
+        /**
          * Returns a non-constant reference to the internal session object.
-         * 
+         *
          * @return the session object.
          */
-    	virtual cms::Session* getSession() {
-    	    return session;
-    	}
-    	
-    	/**
-    	 * Returns a constant reference to the internal session object.
-    	 * 
-    	 * @return the session object.
-    	 */
-    	virtual const cms::Session* getSession() const {
+        virtual cms::Session* getSession() {
             return session;
         }
-    	
-    	/**
-    	 * Returns this session back to the pool, but does not close 
-    	 * or destroy the internal session object.
-    	 */
+
+        /**
+         * Returns a constant reference to the internal session object.
+         *
+         * @return the session object.
+         */
+        virtual const cms::Session* getSession() const {
+            return session;
+        }
+
+        /**
+         * Returns this session back to the pool, but does not close
+         * or destroy the internal session object.
+         */
         virtual void close() throw( cms::CMSException );
-        
+
         virtual void commit() throw ( cms::CMSException ) {
             session->commit();
         }
-        
+
         virtual void rollback() throw ( cms::CMSException ) {
             session->rollback();
         }
-        
+
         virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination )
                 throw ( cms::CMSException ) {
             return session->createConsumer(destination);
         }
-        
-        virtual cms::MessageConsumer* createConsumer( 
+
+        virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination,
             const std::string& selector )
                 throw ( cms::CMSException ) {
             return session->createConsumer(destination, selector);
         }
-        
-        virtual cms::MessageConsumer* createConsumer( 
+
+        virtual cms::MessageConsumer* createConsumer(
             const cms::Destination* destination,
             const std::string& selector,
             bool noLocal )
                 throw ( cms::CMSException ) {
             return session->createConsumer(destination, selector, noLocal);
         }
-        
+
         virtual cms::MessageConsumer* createDurableConsumer(
             const cms::Topic* destination,
             const std::string& name,
@@ -115,13 +115,13 @@ namespace cmsutil {
                 throw ( cms::CMSException ) {
             return session->createDurableConsumer(destination, name, selector, noLocal);
         }
-        
+
         /**
          * First checks the internal consumer cache and creates on if none exist
          * for the given destination, selector, noLocal.  If created, the consumer is
          * added to the pool's lifecycle manager.
-         * 
-         * @param destiation
+         *
+         * @param destination
          *          the destination to receive on
          * @param selector
          *          the selector to use
@@ -134,17 +134,17 @@ namespace cmsutil {
                 const cms::Destination* destination,
                 const std::string& selector,
                 bool noLocal) throw ( cms::CMSException );
-        
+
         virtual cms::MessageProducer* createProducer( const cms::Destination* destination )
             throw ( cms::CMSException ) {
             return session->createProducer(destination);
         }
-        
+
         /**
-         * First checks the internal producer cache and creates one if none exist 
-         * for the given destination.  If created, the producer is added to the 
+         * First checks the internal producer cache and creates one if none exist
+         * for the given destination.  If created, the producer is added to the
          * pool's lifecycle manager.
-         * 
+         *
          * @param destination
          *          the destination to send on
          * @return the producer resource
@@ -152,15 +152,15 @@ namespace cmsutil {
          */
         virtual cms::MessageProducer* createCachedProducer( const cms::Destination* destination )
             throw ( cms::CMSException );
-        
+
         virtual cms::Queue* createQueue( const std::string& queueName )
             throw ( cms::CMSException ) {
-            return session->createQueue(queueName);
+            return session->createQueue( queueName );
         }
-        
+
         virtual cms::Topic* createTopic( const std::string& topicName )
             throw ( cms::CMSException ) {
-            return session->createTopic(topicName);
+            return session->createTopic( topicName );
         }
 
         virtual cms::TemporaryQueue* createTemporaryQueue()
@@ -173,54 +173,55 @@ namespace cmsutil {
             return session->createTemporaryTopic();
         }
 
-        virtual cms::Message* createMessage() 
-            throw ( cms::CMSException ) {            
+        virtual cms::Message* createMessage()
+            throw ( cms::CMSException ) {
             return session->createMessage();
         }
 
-        virtual cms::BytesMessage* createBytesMessage() 
-            throw ( cms::CMSException) {            
+        virtual cms::BytesMessage* createBytesMessage()
+            throw ( cms::CMSException) {
             return session->createBytesMessage();
         }
-        
+
         virtual cms::BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            std::size_t bytesSize ) 
-                throw ( cms::CMSException) {            
-            return session->createBytesMessage(bytes, bytesSize);
+            std::size_t bytesSize )
+                throw ( cms::CMSException) {
+            return session->createBytesMessage( bytes, bytesSize );
         }
-        
-        virtual cms::TextMessage* createTextMessage() 
+
+        virtual cms::TextMessage* createTextMessage()
             throw ( cms::CMSException ) {
             return session->createTextMessage();
         }
 
-        virtual cms::TextMessage* createTextMessage( const std::string& text ) 
+        virtual cms::TextMessage* createTextMessage( const std::string& text )
             throw ( cms::CMSException ) {
-            return session->createTextMessage(text);
+            return session->createTextMessage( text );
         }
-        
-        virtual cms::MapMessage* createMapMessage() 
+
+        virtual cms::MapMessage* createMapMessage()
             throw ( cms::CMSException ) {
             return session->createMapMessage();
         }
-        
+
         virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const {
             return session->getAcknowledgeMode();
         }
-        
+
         virtual bool isTransacted() const {
             return session->isTransacted();
         }
 
-        virtual void unsubscribe( const std::string& name ) 
+        virtual void unsubscribe( const std::string& name )
             throw ( cms::CMSException ) {
-            session->unsubscribe(name);
+            session->unsubscribe( name );
         }
-        
+
     private:
-        
+
         std::string getUniqueDestName( const cms::Destination* dest );
+
     };
 
 }}

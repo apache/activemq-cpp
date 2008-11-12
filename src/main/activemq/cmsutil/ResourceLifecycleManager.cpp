@@ -27,11 +27,11 @@ ResourceLifecycleManager::ResourceLifecycleManager() {
 ResourceLifecycleManager::~ResourceLifecycleManager() {
 
     try {
-        
+
         // Destroy all the resources
         destroy();
-        
-    } catch( cms::CMSException& e ) { /* Absorb*/}
+
+    } catch( cms::CMSException& e ) { /* Absorb*/ }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ void ResourceLifecycleManager::releaseAll() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResourceLifecycleManager::destroy() throw (cms::CMSException) {
+void ResourceLifecycleManager::destroy() throw ( cms::CMSException ) {
 
     // Close all the connections.
     for (std::size_t ix=0; ix<connections.size(); ++ix) {
@@ -92,4 +92,3 @@ void ResourceLifecycleManager::destroy() throw (cms::CMSException) {
     // Empty all the vectors.
     releaseAll();
 }
-

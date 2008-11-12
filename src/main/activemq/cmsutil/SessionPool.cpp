@@ -23,8 +23,8 @@ using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionPool::SessionPool( cms::Connection* connection,
-    cms::Session::AcknowledgeMode ackMode,
-    ResourceLifecycleManager* resourceLifecycleManager) {
+                          cms::Session::AcknowledgeMode ackMode,
+                          ResourceLifecycleManager* resourceLifecycleManager) {
 
     this->connection = connection;
     this->acknowledgeMode = ackMode;
@@ -44,7 +44,7 @@ SessionPool::~SessionPool() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-PooledSession* SessionPool::takeSession() throw (cms::CMSException){
+PooledSession* SessionPool::takeSession() throw ( cms::CMSException ){
 
     synchronized(&mutex) {
 
@@ -54,17 +54,17 @@ PooledSession* SessionPool::takeSession() throw (cms::CMSException){
         if( available.size() == 0 ) {
 
             // No sessions were available - create a new one.
-            cms::Session* session = connection->createSession(acknowledgeMode);
+            cms::Session* session = connection->createSession( acknowledgeMode );
 
-            // Give this resource to the lifecycle manager to manage. The pool
+            // Give this resource to the life-cycle manager to manage. The pool
             // will not be in charge of destroying this resource.
-            resourceLifecycleManager->addSession(session);
+            resourceLifecycleManager->addSession( session );
 
             // Now wrap the session with a pooled session.
-            pooledSession = new PooledSession(this, session);
+            pooledSession = new PooledSession( this, session );
 
             // Add to the sessions list.
-            sessions.push_back(pooledSession);
+            sessions.push_back( pooledSession );
 
         } else {
 
@@ -85,9 +85,9 @@ PooledSession* SessionPool::takeSession() throw (cms::CMSException){
 ////////////////////////////////////////////////////////////////////////////////
 void SessionPool::returnSession( PooledSession* session ) {
 
-    synchronized(&mutex) {
+    synchronized( &mutex ) {
 
         // Add to the available list.
-        available.push_back(session);
+        available.push_back( session );
     }
 }

@@ -35,88 +35,89 @@ namespace cmsutil {
      */
     class AMQCPP_API ResourceLifecycleManager {
     private:
-    
+
         std::vector<cms::Connection*> connections;
         std::vector<cms::Session*> sessions;
         std::vector<cms::Destination*> destinations;
         std::vector<cms::MessageProducer*> producers;
         std::vector<cms::MessageConsumer*> consumers;
-    
+
     public:
-    
+
         ResourceLifecycleManager();
-        
+
         /**
          * Destructor - calls <code>destroy</code>
          */
         virtual ~ResourceLifecycleManager();
-    
+
         /**
          * Adds a connection so that its life will be managed by
          * this object.
-         * 
+         *
          * @param connection
          *         the object to be managed
          */
-        void addConnection(cms::Connection* connection) {
-            connections.push_back(connection);
+        void addConnection( cms::Connection* connection ) {
+            connections.push_back( connection );
         }
-    
+
         /**
          * Adds a session so that its life will be managed by
          * this object.
-         * 
+         *
          * @param session
          *         the object to be managed
          */
-        void addSession(cms::Session* session) {
-            sessions.push_back(session);
+        void addSession( cms::Session* session ) {
+            sessions.push_back( session );
         }
-        
+
         /**
          * Adds a destination so that its life will be managed by
          * this object.
-         * 
+         *
          * @param dest
          *         the object to be managed
          */
-        void addDestination(cms::Destination* dest) {
-            destinations.push_back(dest);
+        void addDestination( cms::Destination* dest ) {
+            destinations.push_back( dest );
         }
-        
+
         /**
          * Adds a message producer so that its life will be managed by
          * this object.
-         * 
+         *
          * @param producer
          *         the object to be managed
          */
-        void addMessageProducer(cms::MessageProducer* producer) {
-            producers.push_back(producer);
+        void addMessageProducer( cms::MessageProducer* producer ) {
+            producers.push_back( producer );
         }
-        
+
         /**
          * Adds a message consumer so that its life will be managed by
          * this object.
-         * 
+         *
          * @param consumer
          *         the object to be managed
          */
-        void addMessageConsumer(cms::MessageConsumer* consumer) {
-            consumers.push_back(consumer);
+        void addMessageConsumer( cms::MessageConsumer* consumer ) {
+            consumers.push_back( consumer );
         }
-    
+
         /**
          * Closes and destroys the contained CMS resources.
          * @throws cms::CMSException thrown if an error occurs.
          */
-        void destroy() throw (cms::CMSException);
-    
+        void destroy() throw ( cms::CMSException );
+
         /**
-         * Releases all of the contained resources so that this 
-         * object will no longer control their lifetimes. 
+         * Releases all of the contained resources so that this
+         * object will no longer control their lifetimes.
          */
         void releaseAll();
+
     };
 
 }}
