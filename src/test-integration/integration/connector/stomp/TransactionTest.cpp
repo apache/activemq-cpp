@@ -129,6 +129,9 @@ void TransactionTest::test()
         testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
+        // Need to allow some time for the messages to arrive.
+        Thread::sleep(150);
+
         session->rollback();
 
         // Wait till we get all the messages
