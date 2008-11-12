@@ -107,7 +107,7 @@ void TransactionTest::test()
 
         session->commit();
 
-        // Send some bytes messages.
+        // Send some messages.
         testSupport->produceTextMessages(
             *producer, IntegrationCommon::defaultMsgCount );
 
