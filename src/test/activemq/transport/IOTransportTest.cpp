@@ -123,7 +123,7 @@ public:
                 try{
 
                     // Throw a little uncertainty into the test.
-                    unsigned int randWait = randGen.nextInt() % 50;
+                    unsigned int randWait = randGen.nextInt( 50 );
                     decaf::lang::Thread::sleep( randWait );
 
                     command->c = inputStream->read();
