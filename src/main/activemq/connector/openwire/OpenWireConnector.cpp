@@ -618,10 +618,11 @@ ProducerInfo* OpenWireConnector::createProducer(
                 options.getProperty( "producer.dispatchAsync", "false" )) );
         }
 
-        // Send the message to the broker.
-        syncRequest( producerInfo.get() );
-
+        // Store the completed ProducerInfo Command in the Producer object.
         producer->setProducerInfo( producerInfo.release() );
+
+        // Send the message to the broker.
+        syncRequest( producer->getProducerInfo() );
 
         return producer.release();
     }
