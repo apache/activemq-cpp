@@ -7629,11 +7629,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\internal\AprRuntime.cpp"
+					RelativePath="..\src\main\decaf\internal\DecafRuntime.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\decaf\internal\AprRuntime.h"
+					RelativePath="..\src\main\decaf\internal\DecafRuntime.h"
 					>
 				</File>
 				<Filter
@@ -7842,6 +7842,10 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\lang\Runnable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\decaf\lang\Runtime.h"
 					>
 				</File>
 				<File
@@ -8428,6 +8432,18 @@
 					Name="concurrent"
 					>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\BrokenBarrierException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Callable.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\CancellationException.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Concurrent.h"
 						>
 					</File>
@@ -8437,6 +8453,22 @@
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\CountDownLatch.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Delayed.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ExecutionException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Executor.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\Future.h"
 						>
 					</File>
 					<File
@@ -8464,11 +8496,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\decaf\util\concurrent\RejectedExecutionException.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\decaf\util\concurrent\Synchronizable.h"
 						>
 					</File>
 					<File
 						RelativePath="..\src\main\decaf\util\concurrent\TaskListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\ThreadFactory.h"
 						>
 					</File>
 					<File
@@ -8479,6 +8519,54 @@
 						RelativePath="..\src\main\decaf\util\concurrent\ThreadPool.h"
 						>
 					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\TimeoutException.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\TimeUnit.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\util\concurrent\TimeUnit.h"
+						>
+					</File>
+					<Filter
+						Name="atomic"
+						>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicBoolean.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicBoolean.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicInteger.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\atomic\AtomicInteger.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="locks"
+						>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\Condition.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\Lock.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\decaf\util\concurrent\locks\ReadWriteLock.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="logging"

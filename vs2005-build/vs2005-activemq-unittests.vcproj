@@ -6591,6 +6591,34 @@
 						RelativePath="..\src\test\decaf\util\concurrent\ThreadPoolTest.h"
 						>
 					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\TimeUnitTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\util\concurrent\TimeUnitTest.h"
+						>
+					</File>
+					<Filter
+						Name="atomic"
+						>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\atomic\AtomicBooleanTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\atomic\AtomicBooleanTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\atomic\AtomicIntegerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\decaf\util\concurrent\atomic\AtomicIntegerTest.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="logging"
