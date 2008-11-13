@@ -37,7 +37,7 @@ AprPool::~AprPool() {
 void AprPool::allocatePool() const {
 
     if( aprPool == NULL ) {
-        apr_pool_create_unmanaged( &aprPool );
+        apr_pool_create_unmanaged_ex( &aprPool, NULL, NULL );
     }
 }
 
