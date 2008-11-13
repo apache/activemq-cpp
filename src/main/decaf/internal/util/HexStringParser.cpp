@@ -233,7 +233,7 @@ void HexStringParser::fitMantissaInDesiredWidth(int desiredWidth){
 ////////////////////////////////////////////////////////////////////////////////
 void HexStringParser::discardTrailingBits( long long num ) {
     long long mask = ~( -1L << num );
-    abandonedNumber += ( mantissa & mask );
+    abandonedNumber += (char)( mantissa & mask );
     mantissa >>= num;
 }
 
@@ -284,14 +284,14 @@ int HexStringParser::getOffset(
 
     replaceFirst( strIntegerPart2, "^0+", "" );
 
-    //If the Interger part is a nonzero number.
+    //If the Integer part is a nonzero number.
     if( strIntegerPart.length() != 0 ) {
         std::string leadingNumber = strIntegerPart.substr( 0, 1 );
-        return ( strIntegerPart.length() - 1) * 4 +
-               countBitsLength(Long::parseLong( leadingNumber,HEX_RADIX ) ) - 1;
+        return (int)( ( strIntegerPart.length() - 1) * 4 +
+               countBitsLength(Long::parseLong( leadingNumber,HEX_RADIX ) ) - 1 );
     }
 
-    //If the Interger part is a zero number.
+    //If the Integer part is a zero number.
     int i;
     for( i = 0; (std::size_t)i < strDecimalPart.length() && strDecimalPart.at(i) == '0'; i++ );
 

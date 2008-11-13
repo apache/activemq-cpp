@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 
+#ifdef _WIN32
+#pragma warning( disable: 4146 )
+#endif
+
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Character.h>
 #include <sstream>

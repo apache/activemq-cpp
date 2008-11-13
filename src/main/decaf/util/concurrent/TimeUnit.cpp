@@ -102,7 +102,7 @@ void TimeUnit::sleep( long long timeout ) const {
     if( timeout > 0 ) {
         long long ms = toMillis( timeout );
         int ns = excessNanos( timeout, ms );
-        Thread::sleep( ms );
+        Thread::sleep( (int)ms );
         // TODO - Only have a wait for Milliseconds currently.
         //Thread::sleep( ms, ns );
     }
@@ -113,7 +113,7 @@ void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const {
     if( timeout > 0 ) {
         long ms = toMillis( timeout );
         int ns = excessNanos( timeout, ms );
-        obj->wait( ms );
+        obj->wait( (unsigned long)ms );
         // TODO - Only have a wait for Milliseconds currently.
         //obj.wait( ms, ns );
     }

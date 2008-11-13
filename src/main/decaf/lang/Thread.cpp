@@ -17,6 +17,10 @@
 
 #include "Thread.h"
 
+#ifdef _WIN32
+#pragma warning( disable: 4311 )
+#endif
+
 #include <apr_time.h>
 #include <apr_portable.h>
 
