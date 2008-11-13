@@ -111,7 +111,7 @@ void TimeUnit::sleep( long long timeout ) const {
 ////////////////////////////////////////////////////////////////////////////////
 void TimeUnit::timedWait( Synchronizable* obj, long long timeout ) const {
     if( timeout > 0 ) {
-        long ms = toMillis( timeout );
+        long long ms = toMillis( timeout );
         int ns = excessNanos( timeout, ms );
         obj->wait( (unsigned long)ms );
         // TODO - Only have a wait for Milliseconds currently.
