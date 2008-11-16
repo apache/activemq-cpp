@@ -55,15 +55,6 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
             properties,
             transport );
 
-        // If async sends are enabled, wrap the transport with a AsyncSendTransport
-        // do this before the response correlator so that all commands go out on the
-        // send message queue, otherwise messages could get sent out of order.
-        if( properties.getProperty( "transport.useAsyncSend", "false" ) == "true" ) {
-            // Create the Transport for response correlator
-            transport = this->createTransport(
-                "transport.filters.AsyncSendTransport", properties, transport );
-        }
-
         // Create the Transport for response correlator
         transport = this->createTransport(
             "transport.filters.ResponseCorrelator", properties, transport );

@@ -27,6 +27,9 @@ namespace activemq{
 namespace transport{
 namespace filters{
 
+    /**
+     * @Deprecated
+     */
     class AMQCPP_API AsyncSendTransport : public TransportFilter,
                                           public decaf::lang::Runnable {
     private:
