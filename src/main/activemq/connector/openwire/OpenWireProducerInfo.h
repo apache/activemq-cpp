@@ -22,6 +22,8 @@
 #include <activemq/connector/ProducerInfo.h>
 #include <activemq/connector/openwire/commands/ProducerInfo.h>
 #include <cms/Destination.h>
+#include <activemq/util/MemoryUsage.h>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -42,9 +44,8 @@ namespace openwire{
         // Send timeout, how long to wait for a response before failing.
         unsigned int sendTimeout;
 
-        // Producer Window, number of messages to send before waiting for
-        // the broker to send ProducerAcks.  Openwire 3.0 only.
-        unsigned long long producerWindow;
+        // Memory Usage if we are using Producer Window Sizes
+        std::auto_ptr<activemq::util::MemoryUsage> usage;
 
     public:
 
@@ -55,7 +56,6 @@ namespace openwire{
             this->producerInfo = NULL;
             this->session = NULL;
             this->sendTimeout = 0;
-            this->producerWindow = 0;
         }
 
         virtual ~OpenWireProducerInfo() {
@@ -95,8 +95,7 @@ namespace openwire{
          */
         virtual long long getProducerId() const {
             if( this->producerInfo != NULL ) {
-                return (unsigned int)
-                    this->producerInfo->getProducerId()->getValue();
+                return (unsigned int)this->producerInfo->getProducerId()->getValue();
             }
 
             return 0;
@@ -147,6 +146,11 @@ namespace openwire{
          */
         virtual void setProducerInfo( commands::ProducerInfo* producerInfo ) {
             this->producerInfo = producerInfo;
+
+            if( this->producerInfo != NULL && this->producerInfo->getWindowSize() > 0 ) {
+                this->usage.reset( new activemq::util::MemoryUsage(
+                    this->producerInfo->getWindowSize() ) );
+            }
         }
 
         /**
@@ -187,21 +191,39 @@ namespace openwire{
         }
 
         /**
-         * Gets the currently Set Producer Window
-         * @return the set producer window.
+         * Queries if this Producer is tracking memory usage, returns true if so.
+         * @return true if this producer is tracking memory usage.
          */
-        virtual unsigned long long getProducerWindow() const {
-            return this->producerWindow;
+        virtual bool isUsageTrackingEnabled() const {
+            return this->usage.get() != NULL;
         }
 
         /**
-         * Sets the Producer Window, which is the max number of messages to send before
-         * timing waiting for acks from the broker. (Openwire 3.0 only).
-         * @param windowSize - The number of message to send before a block to wait for
-         * the receipt of a ProducerAck.
+         * Enqueues more usage on this producer's current Memory usage, if there
+         * is not enough space, then this call blocks until there is room for the
+         * requested space.  If Memory Usage tracking is not enabled then this method
+         * does nothing.
+         *
+         * @param usage - Size in bytes of the usage to enqueue
          */
-        virtual void setProducerWindow( unsigned long long window ) {
-            this->producerWindow = window;
+        virtual void enqueUsage( unsigned int usage ) {
+            if( this->usage.get() != NULL ) {
+                this->usage->enqueueUsage( usage );
+            }
+        }
+
+        /**
+         * Frees up a given amount of usage from the usage being tracked for this
+         * Producer.  If a previous call to enqueueUsage was blocked and enough space
+         * is freed for it to continue then it will be woken up.  If memory usage
+         * tracking is not enabled then this method has no effect.
+         *
+         * @param usage - Size in bytes of the usage to enqueue
+         */
+        virtual void decreaseUsage( unsigned int usage ) {
+            if( this->usage.get() != NULL ) {
+                this->usage->decreaseUsage( usage );
+            }
         }
 
     };

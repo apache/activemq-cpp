@@ -105,39 +105,39 @@ void Message::copyDataStructure( const DataStructure* src ) {
     const Message* srcPtr = dynamic_cast<const Message*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "Message::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId( 
-            dynamic_cast<ProducerId*>( 
+        this->setProducerId(
+            dynamic_cast<ProducerId*>(
                 srcPtr->getProducerId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getTransactionId()->cloneDataStructure() ) );
     }
     if( srcPtr->getOriginalDestination() != NULL ) {
-        this->setOriginalDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setOriginalDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getOriginalDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getMessageId()->cloneDataStructure() ) );
     }
     if( srcPtr->getOriginalTransactionId() != NULL ) {
-        this->setOriginalTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setOriginalTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getOriginalTransactionId()->cloneDataStructure() ) );
     }
     this->setGroupID( srcPtr->getGroupID() );
@@ -147,8 +147,8 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setExpiration( srcPtr->getExpiration() );
     this->setPriority( srcPtr->getPriority() );
     if( srcPtr->getReplyTo() != NULL ) {
-        this->setReplyTo( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setReplyTo(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getReplyTo()->cloneDataStructure() ) );
     }
     this->setTimestamp( srcPtr->getTimestamp() );
@@ -156,21 +156,21 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setContent( srcPtr->getContent() );
     this->setMarshalledProperties( srcPtr->getMarshalledProperties() );
     if( srcPtr->getDataStructure() != NULL ) {
-        this->setDataStructure( 
-            dynamic_cast<DataStructure*>( 
+        this->setDataStructure(
+            dynamic_cast<DataStructure*>(
                 srcPtr->getDataStructure()->cloneDataStructure() ) );
     }
     if( srcPtr->getTargetConsumerId() != NULL ) {
-        this->setTargetConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setTargetConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
     }
     this->setCompressed( srcPtr->isCompressed() );
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getBrokerPath().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
         } else {
             this->getBrokerPath().push_back( NULL );
@@ -182,8 +182,8 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setDroppable( srcPtr->isDroppable() );
     for( size_t icluster = 0; icluster < srcPtr->getCluster().size(); ++icluster ) {
         if( srcPtr->getCluster()[icluster] != NULL ) {
-            this->getCluster().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getCluster().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getCluster()[icluster]->cloneDataStructure() ) );
         } else {
             this->getCluster().push_back( NULL );
@@ -195,7 +195,7 @@ void Message::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char Message::getDataStructureType() const {
-    return Message::ID_MESSAGE; 
+    return Message::ID_MESSAGE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ std::string Message::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = Message" << std::endl;
-    stream << " Value of Message::ID_MESSAGE = 0" << std::endl; 
+    stream << " Value of Message::ID_MESSAGE = 0" << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;
@@ -453,6 +453,17 @@ bool Message::equals( const DataStructure* value ) const {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int Message::getSize() const {
+
+    long long size = DEFAULT_MESSAGE_SIZE;
+
+    size += this->getContent().size();
+    size += this->getMarshalledProperties().size();
+
+    return size;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

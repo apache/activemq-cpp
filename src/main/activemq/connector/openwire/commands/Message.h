@@ -57,6 +57,8 @@ namespace commands{
     {
     protected:
 
+        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
+
         ProducerId* producerId;
         ActiveMQDestination* destination;
         TransactionId* transactionId;
@@ -131,6 +133,12 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        /**
+         * Returns the Size of this message in Bytes.
+         * @returns number of bytes this message equates to.
+         */
+        virtual unsigned int getSize() const;
 
         virtual const ProducerId* getProducerId() const;
         virtual ProducerId* getProducerId();

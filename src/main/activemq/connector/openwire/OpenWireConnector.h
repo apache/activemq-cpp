@@ -56,6 +56,7 @@
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
 #include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
+#include <activemq/connector/openwire/OpenWireProducerInfo.h>
 
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
@@ -96,8 +97,8 @@ namespace openwire{
         transport::Transport* transport;
 
         /**
-         * The OpenWireFormat class that controls Protocal versions and
-         * marshalling details.
+         * The OpenWireFormat class that controls Protocol versions and
+         * marshaling details.
          */
         OpenWireFormat* wireFormat;
 
@@ -148,22 +149,22 @@ namespace openwire{
         OpenWireCommandWriter writer;
 
         /**
-         * Next avaliable Producer Id
+         * Next available Producer Id
          */
         util::LongSequenceGenerator producerIds;
 
         /**
-         * Next avaliable Producer Sequence Id
+         * Next available Producer Sequence Id
          */
         util::LongSequenceGenerator producerSequenceIds;
 
         /**
-         * Next avaliable Consumer Id
+         * Next available Consumer Id
          */
         util::LongSequenceGenerator consumerIds;
 
         /**
-         * Next avaliable Transaction Id
+         * Next available Transaction Id
          */
         util::LongSequenceGenerator transactionIds;
 
@@ -183,10 +184,14 @@ namespace openwire{
         decaf::util::Properties properties;
 
         /**
-         * Mapping of consumer IDs to their respective
-         * consumer info object.
+         * Mapping of consumer IDs to their respective consumer info object.
          */
         decaf::util::Map< long long, OpenWireConsumerInfo* > consumerInfoMap;
+
+        /**
+         * Mapping of producer IDs to their respective producer info object.
+         */
+        decaf::util::Map< long long, OpenWireProducerInfo* > producerInfoMap;
 
         /**
          * Boolean indicating that we are to always send message Synchronously.
@@ -202,6 +207,23 @@ namespace openwire{
          * sent asynchronously.  Only applied though is alwaysSyncSend is false.
          */
         bool useAsyncSend;
+
+        /**
+         * Send Timeout, forces all messages to be sent Synchronously.
+         */
+        unsigned int sendTimeout;
+
+        /**
+         * Close Timeout, time to wait for a Closed message from the broker before
+         * giving up and just shutting down the connection.
+         */
+        unsigned int closeTimeout;
+
+        /**
+         * Producer Window Size, amount of memory that can be used before the producer
+         * blocks and waits for ProducerAck messages.
+         */
+        unsigned int producerWindowSize;
 
     private:
 
@@ -322,7 +344,7 @@ namespace openwire{
 
         /**
          * Creates a Session Info object for this connector
-         * @param Acknowledgement Mode of the Session
+         * @param Acknowledgment Mode of the Session
          * @returns Session Info Object
          * @throws ConnectorException
          */
@@ -582,7 +604,7 @@ namespace openwire{
         }
 
         /**
-         * Sets the Listner of exceptions for this connector
+         * Sets the Listener of exceptions for this connector
          * @param ExceptionListener the observer.
          */
         virtual void setExceptionListener(
@@ -604,7 +626,7 @@ namespace openwire{
         /**
          * Pulls a message from the the service provider that this Connector is
          * associated with. This could be because the service has a prefetch
-         * policy that is set to zero and therefor requires each message to
+         * policy that is set to zero and therefore requires each message to
          * be pulled from the server to the client via a poll.
          * @param info - the consumer info for the consumer to pull for
          * @param timeout - the time that the caller is going to wait for new messages
@@ -668,34 +690,61 @@ namespace openwire{
             this->useAsyncSend = value;
         }
 
+        /**
+         * Gets the assigned send timeout for this Connector
+         * @return the send timeout configured in the connection uri
+         */
+        unsigned int getSendTimeout() const {
+            return this->sendTimeout;
+        }
+
+        /**
+         * Sets the send timeout to use when sending Message objects, this will
+         * cause all messages to be sent using a Synchronous request is non-zero.
+         * @param timeout - The time to wait for a response.
+         */
+        void setSendTimeout( unsigned int timeout ) {
+            this->sendTimeout = timeout;
+        }
+
+        /**
+         * Gets the assigned close timeout for this Connector
+         * @return the close timeout configured in the connection uri
+         */
+        unsigned int getCloseTimeout() const {
+            return this->closeTimeout;
+        }
+
+        /**
+         * Sets the close timeout to use when sending the disconnect request.
+         * @param timeout - The time to wait for a close message.
+         */
+        void setCloseTimeout( unsigned int timeout ) {
+            this->closeTimeout = timeout;
+        }
+
+        /**
+         * Gets the configured producer window size for Producers that are created
+         * from this connector.  This only applies if there is no send timeout and the
+         * producer is able to send asynchronously.
+         * @return size in bytes of messages that this producer can produce before
+         *         it must block and wait for ProducerAck messages to free resources.
+         */
+        unsigned int getProducerWindowSize() const {
+            return this->producerWindowSize;
+        }
+
+        /**
+         * Sets the size in Bytes of messages that a producer can send before it is blocked
+         * to await a ProducerAck from the broker that frees enough memory to allow another
+         * message to be sent.
+         * @param windowSize - The size in bytes of the Producers memory window.
+         */
+        void setProducerWindowSize( unsigned int windowSize ) {
+            this->producerWindowSize = windowSize;
+        }
+
     private:
-
-        // Gets the configured producer window size to use when creating new
-        // producers to control how much memory is used.
-        virtual unsigned int getProducerWindowSize() const {
-            return decaf::lang::Integer::parseInt(
-                properties.getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) );
-        }
-
-        // Gets the time to wait for a producer send to complete, meaning the time to
-        // wait for a response.  Zero indicates to wait forever.
-        virtual unsigned int getSendTimeout() const {
-            return decaf::lang::Integer::parseInt(
-                properties.getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_SENDTIMEOUT ), "0" ) );
-        }
-
-        // Gets the time to wait for a response from the Broker when the close message
-        // is sent.
-        virtual unsigned int getCloseTimeout() const {
-            return decaf::lang::Integer::parseInt(
-                properties.getProperty(
-                    core::ActiveMQConstants::toString(
-                        core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT ), "15000" ) );
-        }
 
         // Check for Connected State and Throw an exception if not.
         void enforceConnected() throw ( ConnectorException );

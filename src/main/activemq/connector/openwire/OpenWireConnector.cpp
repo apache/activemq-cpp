@@ -100,6 +100,21 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_USEASYNCSEND ), "false" ) ) );
 
+    this->setProducerWindowSize( decaf::lang::Integer::parseInt(
+        properties.getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) ) );
+
+    this->setSendTimeout( decaf::lang::Integer::parseInt(
+        properties.getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_SENDTIMEOUT ), "0" ) ) );
+
+    this->setCloseTimeout( decaf::lang::Integer::parseInt(
+        properties.getProperty(
+            core::ActiveMQConstants::toString(
+                core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT ), "15000" ) ) );
+
     this->exceptionListener = NULL;
     this->messageListener = NULL;
     this->brokerInfo = NULL;
@@ -624,6 +639,11 @@ ProducerInfo* OpenWireConnector::createProducer(
         // Send the message to the broker.
         syncRequest( producer->getProducerInfo() );
 
+        synchronized( &this->producerInfoMap ) {
+            // Place the Producer into the Map.
+            producerInfoMap.setValue( producer->getProducerId(), producer.get() );
+        }
+
         return producer.release();
     }
     AMQ_CATCH_RETHROW( ConnectorException )
@@ -773,6 +793,10 @@ void OpenWireConnector::send( cms::Message* message,
             !this->isAlwaysSyncSend() &&
             ( !amqMessage->isPersistent() || this->isUseAsyncSend() ||
               amqMessage->getTransactionId() != NULL ) ) {
+
+            if( producer->isUsageTrackingEnabled() ) {
+                producer->enqueUsage( amqMessage->getSize() );
+            }
 
             // No Response Required.
             this->oneway( amqMessage );
@@ -1255,20 +1279,28 @@ void OpenWireConnector::closeResource( ConnectorResource* resource )
                 dynamic_cast<OpenWireConsumerInfo*>( resource );
 
             // Remove this consumer from the consumer info map
-            synchronized( &consumerInfoMap ) {
-                consumerInfoMap.remove(
+            synchronized( &this->consumerInfoMap ) {
+                this->consumerInfoMap.remove(
                     consumer->getConsumerInfo()->getConsumerId()->getValue() );
             }
 
-            // Unstarted Consumers can just be deleted.
+            // Non-started Consumers can just be deleted.
             if( consumer->isStarted() == false ) {
                 return;
             }
 
             dataStructure = consumer->getConsumerInfo()->getConsumerId();
         } else if( typeid( *resource ) == typeid( OpenWireProducerInfo ) ) {
+
             OpenWireProducerInfo* producer =
                 dynamic_cast<OpenWireProducerInfo*>( resource );
+
+            // Remove this consumer from the consumer info map
+            synchronized( &this->producerInfoMap ) {
+                this->producerInfoMap.remove(
+                    producer->getProducerInfo()->getProducerId()->getValue() );
+            }
+
             dataStructure = producer->getProducerInfo()->getProducerId();
         } else if( typeid( *resource ) == typeid( OpenWireSessionInfo ) ) {
             OpenWireSessionInfo* session =
@@ -1310,10 +1342,11 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
                 dynamic_cast<commands::MessageDispatch*>( command );
 
             // Due to the severe suckiness of C++, in order to cast to
-            // a type that is in a different branch of the inheritence hierarchy
+            // a type that is in a different branch of the inheritance hierarchy
             // we have to cast to the type at the "crotch" of the branch and then
             // we can implicitly cast up the other branch.
-            core::ActiveMQMessage* message = dynamic_cast<core::ActiveMQMessage*>(dispatch->getMessage());
+            core::ActiveMQMessage* message =
+                dynamic_cast<core::ActiveMQMessage*>( dispatch->getMessage() );
             if( message == NULL ) {
                 delete command;
                 throw OpenWireConnectorException(
@@ -1354,9 +1387,17 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
 
         } else if( typeid( *command ) == typeid( commands::ProducerAck ) ) {
 
-            // TODO - Apply The Ack.
-            //commands::ProducerAck* producerAck =
-            //    dynamic_cast<commands::ProducerAck*>( command );
+            commands::ProducerAck* producerAck =
+                dynamic_cast<commands::ProducerAck*>( command );
+
+            // Get the consumer info object for this consumer.
+            OpenWireProducerInfo* info = NULL;
+            synchronized( &this->producerInfoMap ) {
+                info = producerInfoMap.getValue( producerAck->getProducerId()->getValue() );
+                if( info != NULL && info->isUsageTrackingEnabled() ){
+                    info->decreaseUsage( producerAck->getSize() );
+                }
+            }
 
             delete command;
 

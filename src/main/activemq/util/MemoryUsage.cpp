@@ -80,7 +80,7 @@ void MemoryUsage::decreaseUsage( unsigned long long value ) {
     }
 
     synchronized( &mutex ) {
-        this->usage -= value;
+        value > this->usage ? this->usage = 0 : this->usage -= value;
         mutex.notifyAll();
     }
 }
