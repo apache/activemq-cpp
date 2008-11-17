@@ -20,7 +20,7 @@
 #include <integration/IntegrationCommon.h>
 
 #include <decaf/lang/Thread.h>
-#include <activemq/connector/stomp/StompConnector.h>
+#include <activemq/connector/openwire/OpenWireConnector.h>
 #include <decaf/util/Properties.h>
 #include <activemq/transport/TransportFactory.h>
 #include <decaf/util/UUID.h>
@@ -55,7 +55,7 @@
 #include <cms/TextMessage.h>
 #include <cms/MapMessage.h>
 
-using namespace activemq::connector::stomp;
+using namespace activemq::connector::openwire;
 using namespace activemq::transport;
 using namespace activemq::util;
 using namespace std;
@@ -86,10 +86,21 @@ void OpenwireAsyncSenderTest::test1()
     try{
         std::string brokerURI =
             IntegrationCommon::getInstance().getOpenwireURL() +
-            "&transport.useAsyncSend=true";
+            "&connection.useAsyncSend=true";
         ActiveMQConnectionFactory* connectionFactory =
             new ActiveMQConnectionFactory(brokerURI);
         cms::Connection* connection = connectionFactory->createConnection();
+
+        ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>( connection );
+        CPPUNIT_ASSERT( amqConnection != NULL );
+
+        OpenWireConnector* connector =
+            dynamic_cast<OpenWireConnector*>( amqConnection->getConnectionData()->getConnector() );
+        CPPUNIT_ASSERT( amqConnection != NULL );
+
+        CPPUNIT_ASSERT( connector->isUseAsyncSend() );
+        CPPUNIT_ASSERT( !connector->isAlwaysSyncSend() );
+
         delete connectionFactory;
         connection->start();
         connection->stop();

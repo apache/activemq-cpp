@@ -45,7 +45,7 @@ namespace openwire{
 
         virtual void setUp() {
             testSupport = new TestSupport;
-            testSupport->initialize(IntegrationCommon::getInstance().getOpenwireURL() + "&transport.useAsyncSend=true");
+            testSupport->initialize(IntegrationCommon::getInstance().getOpenwireURL() + "&connection.useAsyncSend=true");
         };
         virtual void tearDown() { delete testSupport; };
 

@@ -44,7 +44,8 @@ namespace stomp{
 
         virtual void setUp() {
             testSupport = new TestSupport;
-            testSupport->initialize( IntegrationCommon::getInstance().getStompURL() + "&transport.useAsyncSend=true" );
+            testSupport->initialize( IntegrationCommon::getInstance().getStompURL() +
+                                     "&connection.useAsyncSend=true" );
         };
         virtual void tearDown() { delete testSupport; };
 
