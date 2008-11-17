@@ -375,7 +375,6 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
         "?wireFormat=openwire"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
-//        "&transport.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
