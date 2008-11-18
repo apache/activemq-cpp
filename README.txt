@@ -46,7 +46,10 @@ Windows users will need to build the CppUnit library using the CPPUnit
 MSVC project files. A discussion of the build process can be found
 on the CPPUnit wiki under
 http://cppunit.sourceforge.net/cppunit-wiki/BuildingCppUnit1 this covers
-both MSVC along with many other platforms and tool suites.
+both MSVC along with many other platforms and tool suites.  The included
+Visual Studio Project files are configured to search for CPPUnit in the
+directory C:\Program Files\CPPUnit, you will need to make changes to
+reflect your own configuration if it differs.
 
 1.3 APR and APR Util
 -------------------------------------------------------------------------
@@ -181,8 +184,11 @@ command, but can easily be compiled manually using the command:
 
 6 Notes for Windows users
 --------------------------------------------------------------------------
-We support using the GNU compiler on Windows, using the Cygwin package.
-However we also support using the MSVC compiler on Windows.
+We do not support using the GNU compiler on Windows, using the Cygwin package
+or the MinGW platform, several issues with sockets and threading were found to
+exist when trying to use these solutions.
+
+However we do support using the MSVC compiler on Windows.
 
 There are a couple or things that you will need to setup to ensure that
 the MSVC compile succeeds.
