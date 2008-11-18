@@ -27,8 +27,8 @@ dnl
 AC_DEFUN([DECAF_CONFIGURE_APR],
 [
   AC_MSG_NOTICE([Apache Portable Runtime (APR) library configuration])
-  APR_FIND_APR([], [], 1, [0 1])
-  APR_FIND_APU([], [], 1, [0 1])
+  APR_FIND_APR([], [], 1, [1])
+  APR_FIND_APU([], [], 1, [1])
 
   if test $apr_found = "no"; then
     AC_MSG_WARN([APR not found])
