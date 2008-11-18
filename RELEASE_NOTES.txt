@@ -6,7 +6,8 @@ This is a minor release that contains bugfixes that were found since the
 2.2.1 release.  Also in this release the there have been several meory leak
 fixes and threading issues resolved.  The connection URI options have
 changed to reflect improved asynchronous message send capabilities as well,
-see the wiki for the new configuration option documentation.
+see the wiki for the new configuration option documentation.  This version
+of the library now requires APR 1.3 or higher to compile.
 
 Sub-task
 
