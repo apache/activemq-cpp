@@ -40,6 +40,53 @@ AC_DEFUN([DECAF_CONFIGURE_APR],
     DECAF_DOWNLOAD_APU
   fi
 
+  APR_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] "]
+  APU_VER_REGEXES=["1\.2\.[0-9] 1\.2\.1[0-9] 1\.3\.[0-9]"]
+
+  dnl check APR version number against regex
+
+  AC_MSG_CHECKING([APR version])
+  apr_version="`$apr_config --version`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([apr-config --version failed])
+  fi
+  AC_MSG_RESULT([$apr_version])
+
+  APR_WANTED_REGEX_MATCH=0
+  for apr_wanted_regex in $APR_VER_REGEXES; do
+    if test `expr $apr_version : $apr_wanted_regex` -ne 0; then
+      APR_WANTED_REGEX_MATCH=1
+      break
+    fi
+  done
+
+  if test $APR_WANTED_REGEX_MATCH -eq 0; then
+    echo "wanted regexes are $APR_VER_REGEXES"
+    AC_MSG_ERROR([invalid apr version found, check the README for supported versions.])
+  fi
+
+  dnl check APU version number against regex
+
+  AC_MSG_CHECKING([APU version])
+  apu_version="`$apu_config --version`"
+  if test $? -ne 0; then
+    AC_MSG_ERROR([apu-config --version failed])
+  fi
+  AC_MSG_RESULT([$apu_version])
+
+  APU_WANTED_REGEX_MATCH=0
+  for apu_wanted_regex in $APU_VER_REGEXES; do
+    if test `expr $apr_version : $apu_wanted_regex` -ne 0; then
+      APU_WANTED_REGEX_MATCH=1
+      break
+    fi
+  done
+
+  if test $APU_WANTED_REGEX_MATCH -eq 0; then
+    echo "wanted regexes are $APU_VER_REGEXES"
+    AC_MSG_ERROR([invalid apr-util version found, check the README for supported versions.])
+  fi
+
   dnl Get build information from APR
 
   APR_CPPFLAGS="`$apr_config --cppflags`"
