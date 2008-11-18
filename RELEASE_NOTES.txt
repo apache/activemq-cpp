@@ -1,4 +1,35 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.2                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2.1 release.  Also in this release the there have been several meory leak
+fixes and threading issues resolved.  The connection URI options have
+changed to reflect improved asynchronous message send capabilities as well,
+see the wiki for the new configuration option documentation.
+
+Sub-task
+
+    * [AMQCPP-202] - Occasional Deadlocks when Integration tests are run in a
+                     long loop on CentOS and REHL.
+    * [AMQCPP-203] - Segmentation Fault in Integration tests occurs occasionally.
+
+Bug
+
+    * [AMQCPP-197] - include file activemq/exceptions/ExceptionDefines.h missing
+    * [AMQCPP-198] - File activemq/exceptions/ActiveMQException.h isn't installed
+                     during make install
+    * [AMQCPP-199] - Segmentation fault at decaf/net/SocketInputStream.cpp (line 108)
+    * [AMQCPP-200] - activemq-cpp-2.2.1 test fails for
+                     decaf::io::ByteArrayInputStreamTest::testConstructor (segmentation fault)
+
+Improvement
+
+    * [AMQCPP-196] - Make the openwire connecter handle sending messages sync or async
+                     based on rules and settings
+    * [AMQCPP-206] - Fix warnings generated when compiling the library on Windows.
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2.1                               ==
 =========================================================================
 
@@ -12,7 +43,8 @@ Sub-task
 Bug
 
     * [AMQCPP-165] - Core Dump on reconnect/open queue
-    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling pointer during exception in ActiveMQConnectionFactory::createConnection()
+    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling
+                     pointer during exception in ActiveMQConnectionFactory::createConnection()
     * [AMQCPP-185] - Some CmsTemplate headers missing from headers section in Makefile.am
     * [AMQCPP-188] - ActiveMQ message consumer waiting for receive to complete is not closing...
     * [AMQCPP-190] - setStringProperty() max length
