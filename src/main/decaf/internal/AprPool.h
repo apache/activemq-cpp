@@ -56,6 +56,12 @@ namespace internal{
          */
         void cleanup();
 
+        /**
+         * Gets a pointer to the Global APR Pool used for the Application
+         * @return pointer to the global APR Pool
+         */
+        static apr_pool_t* getGlobalPool();
+
     private:
 
         /**
@@ -67,6 +73,7 @@ namespace internal{
          * Destroys the pool if it has been allocated.
          */
         void destroyPool();
+
     };
 
 }}

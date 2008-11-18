@@ -16,9 +16,10 @@
  */
 
 #include "AprPool.h"
-#include <decaf/lang/Runtime.h>
+#include <decaf/internal/DecafRuntime.h>
 
 using namespace decaf;
+using namespace decaf::lang;
 using namespace decaf::internal;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +64,18 @@ void AprPool::cleanup() {
 apr_pool_t* AprPool::getAprPool() const {
 
     // Ensure there is a Runtime instance created.
-    decaf::lang::Runtime::getRuntime();
+    Runtime::getRuntime();
 
     // Ensure that the pool has been allocated.
     allocatePool();
 
     return aprPool;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+apr_pool_t* AprPool::getGlobalPool() {
+
+    // Ensure there is a Runtime instance created so we have a global pool
+    DecafRuntime* runtime = dynamic_cast<DecafRuntime*>( Runtime::getRuntime() );
+    return runtime->getGlobalPool();
 }
