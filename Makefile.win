@@ -105,22 +105,26 @@ clean:
 		CTARGET=CLEAN build
 
 build:
-	$(MAKE) $(MAKEOPT) -f apr.mak         CFG="apr - $(ARCH)" RECURSE=0 $(CTARGET)
-	$(MAKE) $(MAKEOPT) -f libapr.mak      CFG="libapr - $(ARCH)" RECURSE=0 $(CTARGET)
+	$(MAKE) $(MAKEOPT) -f activemq-cpp.mak         CFG="activemq - $(ARCH)" RECURSE=0 $(CTARGET)
+	$(MAKE) $(MAKEOPT) -f libactivemq-cpp.mak      CFG="libactivemq - $(ARCH)" RECURSE=0 $(CTARGET)
 
 !ELSEIF $(USESLN) == 1
 
 clean:
-	-devenv apr.sln /useenv /clean "$(SLNARCH)" /project libapr_app
-	-devenv apr.sln /useenv /clean "$(SLNARCH)" /project libapr
-	-devenv apr.sln /useenv /clean "$(SLNARCH)" /project apr_app
-	-devenv apr.sln /useenv /clean "$(SLNARCH)" /project apr
+    cd vs2005-build
+	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-cpp
+	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-example
+	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-integration
+	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-test
+	cd ..
 
 build:
-	devenv apr.sln /useenv /build "$(SLNARCH)" /project apr
-	devenv apr.sln /useenv /build "$(SLNARCH)" /project apr_app
-	devenv apr.sln /useenv /build "$(SLNARCH)" /project libapr
-	devenv apr.sln /useenv /build "$(SLNARCH)" /project libapr_app
+    cd vs2005-build
+	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-cpp
+	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-example
+	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-integration
+	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project activemq-test
+    cd ..
 
 !ENDIF
 
@@ -133,7 +137,7 @@ checkamq:
 		OUTDIR=$(ARCHOSPATH) check
 	 cd ..
 
-checkall: checkamq
+check: checkamq
 
 
 install:
