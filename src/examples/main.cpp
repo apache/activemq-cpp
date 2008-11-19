@@ -33,6 +33,7 @@
 #include <cms/MessageListener.h>
 #include <stdlib.h>
 #include <iostream>
+#include <memory>
 
 using namespace activemq::core;
 using namespace decaf::util::concurrent;
@@ -75,20 +76,14 @@ public:
 
     virtual void run() {
 
-        ConnectionFactory* connectionFactory = NULL;
-
         try {
             // Create a ConnectionFactory
-            ConnectionFactory* connectionFactory =
-                ConnectionFactory::createCMSConnectionFactory( brokerURI );
+            auto_ptr<ConnectionFactory> connectionFactory(
+                ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
             connection->start();
-
-            // free the factory, we are done with it.
-            delete connectionFactory;
-            connectionFactory = NULL;
 
             // Create a Session
             if( this->sessionTransacted ) {
@@ -127,9 +122,6 @@ public:
             }
 
         }catch ( CMSException& e ) {
-            delete connectionFactory;
-            connectionFactory = NULL;
-
             e.printStackTrace();
         }
     }
@@ -138,32 +130,32 @@ private:
 
     void cleanup(){
 
-            // Destroy resources.
-            try{
-                if( destination != NULL ) delete destination;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            destination = NULL;
+        // Destroy resources.
+        try{
+            if( destination != NULL ) delete destination;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        destination = NULL;
 
-            try{
-                if( producer != NULL ) delete producer;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            producer = NULL;
+        try{
+            if( producer != NULL ) delete producer;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        producer = NULL;
 
-            // Close open resources.
-            try{
-                if( session != NULL ) session->close();
-                if( connection != NULL ) connection->close();
-            }catch ( CMSException& e ) { e.printStackTrace(); }
+        // Close open resources.
+        try{
+            if( session != NULL ) session->close();
+            if( connection != NULL ) connection->close();
+        }catch ( CMSException& e ) { e.printStackTrace(); }
 
-            try{
-                if( session != NULL ) delete session;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            session = NULL;
+        try{
+            if( session != NULL ) delete session;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        session = NULL;
 
-            try{
-                if( connection != NULL ) delete connection;
-            }catch ( CMSException& e ) { e.printStackTrace(); }
-            connection = NULL;
+        try{
+            if( connection != NULL ) delete connection;
+        }catch ( CMSException& e ) { e.printStackTrace(); }
+        connection = NULL;
     }
 };
 
@@ -211,22 +203,15 @@ public:
 
     virtual void run() {
 
-        ConnectionFactory* connectionFactory = NULL;
-
         try {
 
             // Create a ConnectionFactory
-            connectionFactory =
-                ConnectionFactory::createCMSConnectionFactory( brokerURI );
+            auto_ptr<ConnectionFactory> connectionFactory(
+                ConnectionFactory::createCMSConnectionFactory( brokerURI ) );
 
             // Create a Connection
             connection = connectionFactory->createConnection();
-
-            delete connectionFactory;
-            connectionFactory = NULL;
-
             connection->start();
-
             connection->setExceptionListener(this);
 
             // Create a Session
@@ -257,13 +242,10 @@ public:
             // Wait while asynchronous messages come in.
             doneLatch.await( waitMillis );
 
-        } catch (CMSException& e) {
+        } catch( CMSException& e ) {
 
             // Indicate we are ready for messages.
             latch.countDown();
-
-            delete connectionFactory;
-            connectionFactory = NULL;
 
             e.printStackTrace();
         }
