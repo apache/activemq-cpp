@@ -26,7 +26,9 @@
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/transport/MockTransportFactory.h>
 #include <activemq/connector/Connector.h>
+#include <memory>
 
+using namespace std;
 using namespace activemq;
 using namespace activemq::core;
 
@@ -158,4 +160,22 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
     AMQ_CATCHALL_NOTHROW( )
 
     CPPUNIT_ASSERT( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionFactoryTest::testExceptionOnCreate() {
+    try
+    {
+        std::string URI =
+            "tcp://127.0.0.2:23232&wireFormat=openwire";
+
+        ActiveMQConnectionFactory connectionFactory( URI );
+
+        auto_ptr<cms::Connection> connection(
+            connectionFactory.createConnection() );
+
+        CPPUNIT_ASSERT( false );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW( )
 }

@@ -31,6 +31,7 @@ namespace core{
         CPPUNIT_TEST( test2WithStomp );
         CPPUNIT_TEST( test1WithOpenWire );
         CPPUNIT_TEST( test2WithOpenWire );
+        CPPUNIT_TEST( testExceptionOnCreate );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -50,6 +51,7 @@ namespace core{
         void test2WithStomp();
         void test1WithOpenWire();
         void test2WithOpenWire();
+        void testExceptionOnCreate();
 
     };
 
