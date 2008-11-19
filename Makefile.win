@@ -112,18 +112,18 @@ build:
 
 clean:
     cd vs2005-build
-	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-cpp
-	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-example
-	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-integration
-	-msbuild vs2005-activemq-cpp.sln /useenv /clean "$(SLNARCH)" /project vs2005-activemq-test
+	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-cpp
+	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-example
+	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-integration
+	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-test
 	cd ..
 
 build:
     cd vs2005-build
-	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-cpp
-	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-example
-	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project vs2005-activemq-integration
-	msbuild vs2005-activemq-cpp.sln /useenv /build "$(SLNARCH)" /project activemq-test
+	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-cpp
+	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-example
+	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-integration
+	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-test
     cd ..
 
 !ENDIF
