@@ -460,8 +460,8 @@ unsigned int Message::getSize() const {
 
     unsigned int size = DEFAULT_MESSAGE_SIZE;
 
-    size += this->getContent().size();
-    size += this->getMarshalledProperties().size();
+    size += (unsigned int)this->getContent().size();
+    size += (unsigned int)this->getMarshalledProperties().size();
 
     return size;
 }
