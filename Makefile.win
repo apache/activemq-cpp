@@ -15,21 +15,30 @@
 # Define ARCH to your desired preference (your PATH must point
 # to the correct compiler tools!)  Choose only one;
 #
-#     ARCH="Win32 Release"
-#     ARCH="Win32 Debug"
-#     ARCH="Win32 ReleaseDLL"
-#     ARCH="Win32 DebugDLL"
-#     ARCH="x64 Release"
-#     ARCH="x64 Debug"
-#     ARCH="x64 ReleaseDLL"
-#     ARCH="x64 DebugDLL"
+#     ARCH="Win32"
+#     ARCH="x64"
+#
+# Set CONFIG to your desired build type.
+#
+#     CONFIG="ReleaseDLL"
+#     CONFIG="DebugDLL"
+#     CONFIG="Release"
+#     CONFIG="Debug"
+#
+# Set VERBOCITY to indicate how much information is logged about the build.
+#
+#     VERBOCITY=quiet
+#     VERBOCITY=minimal
+#     VERBOCITY=normal
+#     VERBOCITY=detailed
+#     VERBOCITY=diagnostic
 #
 # For example;
 #
 #   nmake -f Makefile.win PREFIX=C:\ActiveMQ-CPP build check install clean
 #
 
-!IF EXIST("vs2005-build\vs2005-activemq-cpp.sln") && ([msbuild /help > NUL 2>&1] == 0) \
+!IF EXIST(".\vs2005-build\vs2005-activemq-cpp.sln") && ([msbuild /help > NUL 2>&1] == 0) \
     && !defined(USEMAK)
 USESLN=1
 USEMAK=0
@@ -39,62 +48,22 @@ USEMAK=1
 !ENDIF
 
 PREFIX=..\ActiveMQ-CPP
+CONFIG=Debug
+VERBOCITY=Normal
 
 !IF [$(COMSPEC) /c cl /nologo /? \
 	| $(SystemRoot)\System32\find.exe "x64" >NUL ] == 0
-ARCH=x64 Release
+ARCH=x64
 !ELSE
-ARCH=Win32 Release
+ARCH=Win32
 !ENDIF
 
-!MESSAGE ARCH        = $(ARCH)
-!MESSAGE PREFIX      = $(PREFIX)  (install path)
+!MESSAGE ARCH          = $(ARCH)
+!MESSAGE CONFIG        = $(CONFIG)
+!MESSAGE VERBOCITY     = $(VERBOCITY)
+!MESSAGE PREFIX        = $(PREFIX)  (install path)
 
-
-# Utility and Translation things, nothing here for the user
-#
-!IF "$(ARCH)" == "Win32 Release"
-SLNARCH=Release|Win32
-ARCHOSPATH=Release
-LIBSOSPATH=LibR
-!ELSEIF "$(ARCH)" == "Win32 Debug"
-SLNARCH=Debug|Win32
-ARCHOSPATH=Debug
-LIBSOSPATH=LibD
-!ELSEIF "$(ARCH)" == "Win32 ReleaseDLL"
-SLNARCH=Release|Win32
-ARCHOSPATH=Release
-LIBSOSPATH=LibR
-!ELSEIF "$(ARCH)" == "Win32 DebugDLL"
-SLNARCH=Debug|Win32
-ARCHOSPATH=Debug
-LIBSOSPATH=LibD
-!ELSEIF "$(ARCH)" == "x64 Release"
-SLNARCH=Release|x64
-ARCHOSPATH=x64\Release
-LIBSOSPATH=x64\LibR
-!ELSEIF "$(ARCH)" == "x64 Debug"
-SLNARCH=Debug|x64
-ARCHOSPATH=x64\Debug
-LIBSOSPATH=x64\LibD
-!ELSEIF "$(ARCH)" == "x64 ReleaseDLL"
-SLNARCH=Release|x64
-ARCHOSPATH=x64\Release
-LIBSOSPATH=x64\LibR
-!ELSEIF "$(ARCH)" == "x64 DebugDLL"
-SLNARCH=Debug|x64
-ARCHOSPATH=x64\Debug
-LIBSOSPATH=x64\LibD
-!ENDIF
-
-!IFNDEF MAKEOPT
-# Only default the behavior if MAKEOPT= is omitted
-!IFDEF _NMAKE_VER
-# Microsoft NMake options
-MAKEOPT=-nologo
-!ENDIF
-!ENDIF
-
+rebuild: clean build
 
 all: build check
 
@@ -111,20 +80,20 @@ build:
 !ELSEIF $(USESLN) == 1
 
 clean:
-    cd vs2005-build
-	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-cpp
-	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-example
-	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-integration
-	-msbuild vs2005-activemq-cpp.sln /target:clean "$(SLNARCH)" /project vs2005-activemq-test
+	cd vs2005-build
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH) /verbosity:$(VERBOCITY)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-example:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-integration-tests:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-unittests:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
 	cd ..
 
 build:
-    cd vs2005-build
-	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-cpp
-	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-example
-	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-integration
-	msbuild vs2005-activemq-cpp.sln /target:build "$(SLNARCH)" /project vs2005-activemq-test
-    cd ..
+	cd vs2005-build
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq /p:Configuration=$(CONFIG);Platform=$(ARCH) /verbosity:$(VERBOCITY)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-example /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-integration-tests /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-unittests /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	cd ..
 
 !ENDIF
 
