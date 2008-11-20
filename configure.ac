@@ -44,7 +44,7 @@ ACTIVEMQ_API_VERSION=${ACTIVEMQ_VERSION}
 ## REVISION: a change in the REVISION number is made for any other type of change
 ##  that does not justify a change to MINOR or MAJOR
 ##
-ACTIVEMQ_LIBRARY_VERSION=4:1:0
+ACTIVEMQ_LIBRARY_VERSION=5:0:0
 
 AC_SUBST(ACTIVEMQ_LIBRARY_NAME)
 AC_SUBST(ACTIVEMQ_VERSION)
