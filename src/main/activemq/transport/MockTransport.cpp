@@ -37,7 +37,7 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
     this->exceptionListener = NULL;
     this->responseBuilder = responseBuilder;
     this->own = own;
-    this->nextCommandId = 0;
+    this->nextCommandId.set( 0 );
     this->instance = this;
 
     // Configure the Internal Listener this is the Fake Broker.
@@ -54,25 +54,6 @@ MockTransport::~MockTransport(){
         }
     }
     AMQ_CATCHALL_NOTHROW()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned int MockTransport::getNextCommandId()
-    throw ( activemq::exceptions::ActiveMQException ) {
-
-    try{
-
-        synchronized( &commandIdMutex ){
-            return ++nextCommandId;
-        }
-
-        // Should never get here, but some compilers aren't
-        // smart enough to figure out we'll never get here.
-        return 0;
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +93,7 @@ Response* MockTransport::request( Command* command )
                 outgoingCommandListener->onCommand( command );
             }
 
-            command->setCommandId( getNextCommandId() );
+            command->setCommandId( this->nextCommandId.incrementAndGet() );
             command->setResponseRequired( true );
             return responseBuilder->buildResponse( command );
         }

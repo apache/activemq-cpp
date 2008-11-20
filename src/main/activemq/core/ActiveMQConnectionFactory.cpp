@@ -19,11 +19,13 @@
 #include <decaf/util/UUID.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/transport/TransportBuilder.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/support/LibraryInit.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -95,17 +97,15 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
        throw ( cms::CMSException ) {
 
     // Declared here so that they can be deleted in the catch block
-    Properties* properties = NULL;
-    Transport* transport = NULL;
-    Connector* connector = NULL;
-    ActiveMQConnectionData* connectionData = NULL;
-    ActiveMQConnection* connection = NULL;
+    auto_ptr<Properties> properties( new Properties() );
+    auto_ptr<Transport> transport;
+    auto_ptr<Connector> connector;
+    auto_ptr<ActiveMQConnectionData> connectionData;
+    auto_ptr<ActiveMQConnection> connection;
     std::string clientIdLocal = clientId;
     TransportBuilder transportBuilder;
 
     try{
-
-        properties = new Properties;
 
         // if no Client Id specified, create one
         if( clientIdLocal == "" ) {
@@ -124,9 +124,9 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
                 ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
 
         // Use the TransportBuilder to get our Transport
-        transport = transportBuilder.buildTransport( url, *properties );
+        transport.reset( transportBuilder.buildTransport( url, *properties ) );
 
-        if( transport == NULL ){
+        if( transport.get() == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
@@ -149,9 +149,9 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         }
 
         // Create the Connector.
-        connector = connectorfactory->createConnector( *properties, transport );
+        connector.reset( connectorfactory->createConnector( *properties, transport.get() ) );
 
-        if( connector == NULL ) {
+        if( connector.get() == NULL ) {
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
@@ -162,35 +162,15 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         connector->start();
 
         // Create Holder and store the data for the Connection
-        connectionData = new ActiveMQConnectionData(
-            connector, transport, properties );
+        connectionData.reset( new ActiveMQConnectionData(
+            connector.release(), transport.release(), properties.release() ) );
 
         // Create and Return the new connection object.
-        connection = new ActiveMQConnection( connectionData );
+        connection.reset( new ActiveMQConnection( connectionData.release() ) );
 
-        return connection;
-
-    } catch( exceptions::ActiveMQException& ex ) {
-        ex.setMark( __FILE__, __LINE__ );
-
-        delete connection;
-        delete connector;
-        delete transport;
-        delete properties;
-
-        throw ex;
-
-    } catch( ... ) {
-        exceptions::ActiveMQException ex(
-            __FILE__, __LINE__,
-            "ActiveMQConnectionFactory::create - "
-            "caught unknown exception" );
-
-        delete connection;
-        delete connector;
-        delete transport;
-        delete properties;
-
-        throw ex;
+        return connection.release();
     }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

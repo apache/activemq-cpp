@@ -193,6 +193,11 @@ However we do support using the MSVC compiler on Windows.
 There are a couple or things that you will need to setup to ensure that
 the MSVC compile succeeds.
 
+* When linking your application to the DLL version of the ActiveMQ-CPP library
+  you must link your app the the same runtime version that the DLL is linked to,
+  otherwise your application will cause heap corruption when you delete objects
+  that are created in the ActiveMQ-CPP DLL's heap.
+
 * You need to download and install the Platform SDK if you don't have it
   installed already.  On machines where you intend to use the built libraries
   and executable you will also need to install the MS Redistributable for the
@@ -201,6 +206,7 @@ the MSVC compile succeeds.
 * Ensure that the path to you MSVC install is set in the PATH env variable.
   You can test this by typing cl.exe at the command line, if you get an
   error complaining that its not found, then you'll need to fix your PATH.
+
 * Set the INCLUDE env variable to include the path to your MSVC includes,
   and the platform SDK includes. For example:
 

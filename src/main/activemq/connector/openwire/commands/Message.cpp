@@ -458,10 +458,10 @@ bool Message::equals( const DataStructure* value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Message::getSize() const {
 
-    long long size = DEFAULT_MESSAGE_SIZE;
+    unsigned int size = DEFAULT_MESSAGE_SIZE;
 
-    size += this->getContent().size();
-    size += this->getMarshalledProperties().size();
+    size += (unsigned int)this->getContent().size();
+    size += (unsigned int)this->getMarshalledProperties().size();
 
     return size;
 }

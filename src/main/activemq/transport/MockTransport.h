@@ -26,11 +26,10 @@
 #include <activemq/transport/CommandIOException.h>
 
 #include <decaf/lang/Thread.h>
-#include <decaf/util/concurrent/Concurrent.h>
-#include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Queue.h>
-#include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/concurrent/CountDownLatch.h>
 
 #include <cms/Message.h>
 
@@ -105,7 +104,7 @@ namespace transport{
 
         public:
 
-            InternalCommandListener(void) : startedLatch(1) {
+            InternalCommandListener() : startedLatch(1) {
                 transport = NULL;
                 responseBuilder = NULL;
                 done = false;
@@ -179,8 +178,7 @@ namespace transport{
         CommandListener* commandListener;
         CommandListener* outgoingCommandListener;
         TransportExceptionListener* exceptionListener;
-        unsigned int nextCommandId;
-        decaf::util::concurrent::Mutex commandIdMutex;
+        decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
         bool own;
         InternalCommandListener internalListener;
         static MockTransport* instance;
@@ -284,10 +282,6 @@ namespace transport{
 
             return NULL;
         }
-
-    protected:
-
-        unsigned int getNextCommandId() throw( exceptions::ActiveMQException );
 
     };
 
