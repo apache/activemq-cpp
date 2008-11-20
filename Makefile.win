@@ -48,7 +48,7 @@ USEMAK=1
 !ENDIF
 
 PREFIX=..\ActiveMQ-CPP
-CONFIG=Debug
+CONFIG=Release
 VERBOCITY=Normal
 
 !IF [$(COMSPEC) /c cl /nologo /? \
@@ -56,6 +56,10 @@ VERBOCITY=Normal
 ARCH=x64
 !ELSE
 ARCH=Win32
+!ENDIF
+
+!IF "$(CONFIG)" == "Debug" || "$(CONFIG)" == "DebugDLL"
+POSTFIX="d"
 !ENDIF
 
 !MESSAGE ARCH          = $(ARCH)
@@ -99,15 +103,11 @@ build:
 
 
 checkamq:
-	cd test
-	 $(MAKE) $(MAKEOPT) -f Makefile.win MODEL=static \
-		OUTDIR=$(LIBSOSPATH) check
-	 $(MAKE) $(MAKEOPT) -f Makefile.win MODEL=dynamic \
-		OUTDIR=$(ARCHOSPATH) check
-	 cd ..
+	cd vs2005-build\$(CONFIG)
+	.\vs2005-activemq-unittests.exe
+	cd ..\..\
 
 check: checkamq
-
 
 install:
 	echo Y >.y
@@ -116,16 +116,18 @@ install:
 	@if NOT EXIST "$(PREFIX)\bin\."		mkdir "$(PREFIX)\bin"
 	@if NOT EXIST "$(PREFIX)\include\."	mkdir "$(PREFIX)\include"
 	@if NOT EXIST "$(PREFIX)\lib\."		mkdir "$(PREFIX)\lib"
-	copy CHANGES "$(PREFIX)\CHANGES.txt" <.y
-	copy LICENSE "$(PREFIX)\LICENSE.txt" <.y
-	copy NOTICE  "$(PREFIX)\NOTICE.txt"  <.y
-	xcopy src\main\*.h		"$(PREFIX)\include\" /d < .a
-	copy $(LIBSOSPATH)\apr-1.lib		"$(PREFIX)\lib\" <.y
-	copy $(LIBSOSPATH)\apr-1.pdb		"$(PREFIX)\lib\" <.y
-	copy $(ARCHOSPATH)\libapr-1.lib		"$(PREFIX)\lib\" <.y
-	copy $(ARCHOSPATH)\libapr-1.exp		"$(PREFIX)\lib\" <.y
-	copy $(ARCHOSPATH)\libapr-1.dll		"$(PREFIX)\bin\" <.y
-	copy $(ARCHOSPATH)\libapr-1.pdb		"$(PREFIX)\bin\" <.y
+	copy RELEASE_NOTES.txt "$(PREFIX)\RELEASE_NOTES.txt" <.y
+	copy LICENSE.txt "$(PREFIX)\LICENSE.txt" <.y
+	copy NOTICE.txt  "$(PREFIX)\NOTICE.txt"  <.y
+	xcopy src\main\*.h		"$(PREFIX)\include\" /s /d < .a
+!IF "$(CONFIG)" == "Debug" || "$(CONFIG)" == "Release"
+	copy .\vs2005-build\$(CONFIG)\libactivemq-cpp$(POSTFIX).lib		"$(PREFIX)\lib\" <.y
+!ELSE
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).lib		"$(PREFIX)\lib\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).exp		"$(PREFIX)\lib\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).dll		"$(PREFIX)\bin\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).pdb		"$(PREFIX)\bin\" <.y
+!ENDIF
 	del .y
 	del .a
 
