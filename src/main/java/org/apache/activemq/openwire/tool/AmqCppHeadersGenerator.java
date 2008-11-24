@@ -47,6 +47,7 @@ out.println("#ifdef _MSC_VER");
 out.println("#pragma warning( disable : 4290 )");
 out.println("#endif");
 out.println("");
+out.println("#include <activemq/util/Config.h>");
 out.println("#include <activemq/connector/openwire/commands/"+baseClass+".h>");
 
 List properties = getProperties();
@@ -89,10 +90,18 @@ out.println("     *         if you need to make a change, please see the Java Cl
 out.println("     *         in the activemq-openwire-generator module");
 out.println("     *");
 out.println("     */");
-out.println("    class "+className+" : public "+getProperBaseClassName( className, baseClass ) );
+out.println("    class AMQCPP_API "+className+" : public "+getProperBaseClassName( className, baseClass ) );
 out.println("    {");
 out.println("    protected:");
 out.println("");
+
+
+            if( className.equals( "Message" ) ) {
+
+out.println("        static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;");
+out.println("");
+
+            }
 
        for (Iterator iter = properties.iterator(); iter.hasNext();) {
             JProperty property = (JProperty) iter.next();
@@ -111,7 +120,7 @@ out.println("");
 
        }
 
-        String typeName = className.toUpperCase();
+       String typeName = className.toUpperCase();
 
 out.println("");
 out.println("    public:");
@@ -159,6 +168,17 @@ out.println("         * @returns true if DataStructure's are Equal." );
 out.println("         */" );
 out.println("        virtual bool equals( const DataStructure* value ) const;" );
 out.println("");
+
+        if( className.equals( "Message" ) ) {
+
+out.println("        /**");
+out.println("         * Returns the Size of this message in Bytes.");
+out.println("         * @returns number of bytes this message equates to.");
+out.println("         */");
+out.println("        virtual unsigned int getSize() const;");
+out.println("");
+
+        }
 
         for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
             JProperty property = (JProperty) iter.next();

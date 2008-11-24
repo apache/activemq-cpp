@@ -245,7 +245,7 @@ out.println("");
 out.println("    const "+className+"* srcPtr = dynamic_cast<const "+className+"*>( src );");
 out.println("");
 out.println("    if( srcPtr == NULL || src == NULL ) {");
-out.println("    ");
+out.println("");
 out.println("        throw decaf::lang::exceptions::NullPointerException(");
 out.println("            __FILE__, __LINE__,");
 out.println("            \""+className+"::copyDataStructure - src is NULL or invalid\" );");
@@ -271,8 +271,8 @@ out.println("    }");
 
     out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
     out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
-    out.println("            this->"+getter+"().push_back( ");
-    out.println("                dynamic_cast<"+arrayType+"*>( ");
+    out.println("            this->"+getter+"().push_back(");
+    out.println("                dynamic_cast<"+arrayType+"*>(");
     out.println("                    srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");
     out.println("        } else {");
     out.println("            this->"+getter+"().push_back( NULL );");
@@ -283,8 +283,8 @@ out.println("    }");
     out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
         } else {
     out.println("    if( srcPtr->"+getter+"() != NULL ) {");
-    out.println("        this->"+setter+"( ");
-    out.println("            dynamic_cast<"+type+"*>( ");
+    out.println("        this->"+setter+"(");
+    out.println("            dynamic_cast<"+type+"*>(");
     out.println("                srcPtr->"+getter+"()->cloneDataStructure() ) );");
     out.println("    }");
         }
@@ -298,7 +298,7 @@ out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("unsigned char "+className+"::getDataStructureType() const {");
-out.println("    return "+className+"::ID_" + className.toUpperCase() + "; ");
+out.println("    return "+className+"::ID_" + className.toUpperCase() + ";");
 out.println("}");
 
 // toString
@@ -311,7 +311,7 @@ out.println("");
 out.println("    ostringstream stream;" );
 out.println("");
 out.println("    stream << \"Begin Class = "+className+"\" << std::endl;" );
-out.println("    stream << \" Value of "+className+"::ID_" + className.toUpperCase() + " = "+getOpenWireOpCode(jclass)+"\" << std::endl; ");
+out.println("    stream << \" Value of "+className+"::ID_" + className.toUpperCase() + " = "+getOpenWireOpCode(jclass)+"\" << std::endl;");
 
 for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
     JProperty property = (JProperty) iter.next();
@@ -450,6 +450,20 @@ out.println("    }");
 
 out.println("    return true;" );
 out.println("}");
+
+   if( className.equals( "Message" ) ) {
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("unsigned int "+className+"::getSize() const {");
+out.println("");
+out.println("    unsigned int size = DEFAULT_MESSAGE_SIZE;");
+out.println("");
+out.println("    size += (unsigned int)this->getContent().size();");
+out.println("    size += (unsigned int)this->getMarshalledProperties().size();");
+out.println("");
+out.println("    return size;");
+out.println("}");
+   }
 
        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
             JProperty property = (JProperty) iter.next();
