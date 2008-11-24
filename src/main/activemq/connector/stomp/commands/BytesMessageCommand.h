@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_BYTESMESSAGECOMMAND_H_
 
 #include <cms/BytesMessage.h>
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -38,7 +39,7 @@ namespace commands{
      * class StompMessage to implement all cms::Message type functionality
      * and implements the BytesMessage interface here.
      */
-    class BytesMessageCommand : public StompMessage< cms::BytesMessage > {
+    class AMQCPP_API BytesMessageCommand : public StompMessage< cms::BytesMessage > {
     private:
 
         /**

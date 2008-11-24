@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMITCOMMAND_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMITCOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
@@ -31,7 +32,7 @@ namespace commands{
     /**
      * Commits a Transaction.
      */
-    class CommitCommand  : public AbstractCommand< transport::Command > {
+    class AMQCPP_API CommitCommand  : public AbstractCommand< transport::Command > {
     public:
 
         CommitCommand() :

@@ -21,13 +21,14 @@
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/connector/stomp/marshal/Marshalable.h>
 #include <activemq/connector/stomp/marshal/MarshalException.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
 namespace stomp{
 namespace commands{
 
-    class StompCommand : public marshal::Marshalable {
+    class AMQCPP_API StompCommand : public marshal::Marshalable {
     protected:
 
         /**

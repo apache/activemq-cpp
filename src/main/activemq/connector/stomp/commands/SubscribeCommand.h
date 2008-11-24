@@ -21,6 +21,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
+#include <activemq/util/Config.h>
 #include <decaf/lang/Boolean.h>
 
 namespace activemq{
@@ -32,7 +33,7 @@ namespace commands{
      * Command sent to the broker to subscribe to a topic
      * or queue.
      */
-    class SubscribeCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API SubscribeCommand : public AbstractCommand< transport::Command > {
     public:
 
         SubscribeCommand() :

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_BEGINCOMMAND_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_BEGINCOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
@@ -36,7 +37,7 @@ namespace commands{
      * A transaction Identifier is required and this id will be used
      * for all sends, commits, aborts, or acks.
      */
-    class BeginCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API BeginCommand : public AbstractCommand< transport::Command > {
     public:
 
         BeginCommand() :

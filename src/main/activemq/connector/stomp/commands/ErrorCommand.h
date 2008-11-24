@@ -31,8 +31,7 @@ namespace commands{
      * Message sent from the broker when an error
      * occurs.
      */
-    class ErrorCommand : public AbstractCommand< transport::Command >
-    {
+    class AMQCPP_API ErrorCommand : public AbstractCommand< transport::Command > {
     public:
 
         ErrorCommand() :
@@ -122,8 +121,8 @@ namespace commands{
                (frame.getProperties().hasProperty(
                     CommandConstants::toString(
                         CommandConstants::HEADER_MESSAGE ) ) ) ) {
-                
-            	return true;
+
+                return true;
             }
 
             return false;

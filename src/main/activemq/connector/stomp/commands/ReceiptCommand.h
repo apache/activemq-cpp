@@ -21,6 +21,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Response.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -31,7 +32,7 @@ namespace commands{
      * Message sent from the Broker when a receipt is requested
      * for messages that are sent.
      */
-    class ReceiptCommand : public AbstractCommand< transport::Response > {
+    class AMQCPP_API ReceiptCommand : public AbstractCommand< transport::Response > {
     public:
 
         ReceiptCommand() :

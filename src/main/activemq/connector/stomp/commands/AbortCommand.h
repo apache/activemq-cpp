@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABORTCOMMAND_H_
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABORTCOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
@@ -31,7 +32,7 @@ namespace commands{
      * Represents the Stomp Abort Command which rolls back a
      * transaction in progress.
      */
-    class AbortCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API AbortCommand : public AbstractCommand< transport::Command > {
     public:
 
         AbortCommand() :

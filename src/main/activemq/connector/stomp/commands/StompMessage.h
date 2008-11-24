@@ -24,6 +24,7 @@
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/util/Config.h>
 
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
@@ -51,7 +52,7 @@ namespace commands{
      * ActiveMQMessage interface.
      */
     template<typename T>
-    class StompMessage :
+    class AMQCPP_API StompMessage :
         public AbstractCommand< transport::Command >,
         public T,
         public core::ActiveMQMessage

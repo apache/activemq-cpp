@@ -21,6 +21,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -31,7 +32,7 @@ namespace commands{
      * Sent to the broker to disconnect gracefully before closing
      * the transport.
      */
-    class DisconnectCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API DisconnectCommand : public AbstractCommand< transport::Command > {
     public:
 
         DisconnectCommand() :

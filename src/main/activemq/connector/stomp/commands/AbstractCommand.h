@@ -18,13 +18,13 @@
 #ifndef ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABSTRACTCOMMAND_H_
 #define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABSTRACTCOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/StompFrame.h>
 #include <activemq/connector/stomp/commands/StompCommand.h>
 #include <activemq/transport/Command.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/Integer.h>
 #include <decaf/lang/Long.h>
-#include <activemq/util/Config.h>
 #include <decaf/lang/Character.h>
 #include <typeinfo>
 #include <sstream>
@@ -43,8 +43,7 @@ namespace commands{
      * more user-friendly interface to the frame content.
      */
     template<typename T>
-    class AbstractCommand : public StompCommand,
-                            public T {
+    class AMQCPP_API AbstractCommand : public StompCommand, public T {
     protected:
 
         // Frame that contains the actual message

@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNCETOR_STOMP_COMMANDS_ACKCOMMAND_H_
 #define _ACTIVEMQ_CONNCETOR_STOMP_COMMANDS_ACKCOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Command.h>
@@ -28,14 +29,14 @@ namespace stomp{
 namespace commands{
 
     /**
-     * Stomp Command that Represents Acknowledgement of a message
+     * Stomp Command that Represents Acknowledgment of a message
      * receive.  The Ack Command has one required attribute, message
      * Id.  For each message sent to the client from the broker, the
      * message will not be considered consumed until an Ack is sent.
      * Optionally a Transaction Id can be set that indicates that the
-     * message acknowledgement should be part of a named transaction.
+     * message acknowledgment should be part of a named transaction.
      */
-    class AckCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API AckCommand : public AbstractCommand< transport::Command > {
     public:
 
         AckCommand() :

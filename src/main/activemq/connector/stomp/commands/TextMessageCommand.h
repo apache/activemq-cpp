@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_TEXTMESSAGECOMMAND_H_
 
 #include <cms/TextMessage.h>
+#include <activemq/util/Config.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <string.h>
@@ -28,7 +29,7 @@ namespace connector{
 namespace stomp{
 namespace commands{
 
-    class TextMessageCommand : public StompMessage< cms::TextMessage > {
+    class AMQCPP_API TextMessageCommand : public StompMessage< cms::TextMessage > {
     public:
 
         TextMessageCommand() :

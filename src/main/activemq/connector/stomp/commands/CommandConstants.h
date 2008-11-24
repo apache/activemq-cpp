@@ -18,6 +18,7 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_COMMANDCONSTANTS_H_
 
 #include <cms/Destination.h>
+#include <activemq/util/Config.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 #include <string>
@@ -28,7 +29,7 @@ namespace connector{
 namespace stomp{
 namespace commands{
 
-    class CommandConstants{
+    class AMQCPP_API CommandConstants{
     public:
 
         enum CommandId{

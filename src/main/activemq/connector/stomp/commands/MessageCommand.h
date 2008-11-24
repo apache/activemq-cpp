@@ -21,6 +21,7 @@
 #include <cms/Message.h>
 #include <activemq/connector/stomp/commands/StompMessage.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -31,7 +32,7 @@ namespace commands{
      * Message command which represents a ActiveMQMessage with no body
      * can be sent or recieved.
      */
-    class MessageCommand : public StompMessage< cms::Message > {
+    class AMQCPP_API MessageCommand : public StompMessage< cms::Message > {
     public:
 
         MessageCommand() :

@@ -21,6 +21,7 @@
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/transport/Response.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -31,7 +32,7 @@ namespace commands{
      * The stomp command returned from the broker indicating
      * a connection has been established.
      */
-    class ConnectedCommand : public AbstractCommand< transport::Command > {
+    class AMQCPP_API ConnectedCommand : public AbstractCommand< transport::Command > {
     public:
 
         ConnectedCommand() :
