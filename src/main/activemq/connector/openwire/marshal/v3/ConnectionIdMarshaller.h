@@ -28,6 +28,7 @@
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/IOException.h>
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
@@ -45,7 +46,7 @@ namespace v3{
      *         if you need to make a change, please see the Java Classes
      *         in the activemq-openwire-generator module
      */
-    class ConnectionIdMarshaller : public BaseDataStreamMarshaller
+    class AMQCPP_API ConnectionIdMarshaller : public BaseDataStreamMarshaller
     {
     public:
 
