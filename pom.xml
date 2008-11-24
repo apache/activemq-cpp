@@ -147,7 +147,7 @@
   </build>
 
   <properties>
-    <activemq-version>5.1.0</activemq-version>
+    <activemq-version>5.2.0</activemq-version>
     <activemq-core-dir>${ACTIVEMQ_SRC_HOME}/activemq-core/</activemq-core-dir>
   </properties>
 
