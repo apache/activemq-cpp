@@ -68,15 +68,15 @@ void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
     const DataArrayResponse* srcPtr = dynamic_cast<const DataArrayResponse*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "DataArrayResponse::copyDataStructure - src is NULL or invalid" );
     }
     for( size_t idata = 0; idata < srcPtr->getData().size(); ++idata ) {
         if( srcPtr->getData()[idata] != NULL ) {
-            this->getData().push_back( 
-                dynamic_cast<DataStructure*>( 
+            this->getData().push_back(
+                dynamic_cast<DataStructure*>(
                     srcPtr->getData()[idata]->cloneDataStructure() ) );
         } else {
             this->getData().push_back( NULL );
@@ -86,7 +86,7 @@ void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char DataArrayResponse::getDataStructureType() const {
-    return DataArrayResponse::ID_DATAARRAYRESPONSE; 
+    return DataArrayResponse::ID_DATAARRAYRESPONSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ std::string DataArrayResponse::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = DataArrayResponse" << std::endl;
-    stream << " Value of DataArrayResponse::ID_DATAARRAYRESPONSE = 33" << std::endl; 
+    stream << " Value of DataArrayResponse::ID_DATAARRAYRESPONSE = 33" << std::endl;
     for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
         stream << " Value of Data[" << idata << "] is Below:" << std::endl;
         if( this->getData()[idata] != NULL ) {

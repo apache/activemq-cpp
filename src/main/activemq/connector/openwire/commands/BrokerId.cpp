@@ -66,7 +66,7 @@ void BrokerId::copyDataStructure( const DataStructure* src ) {
     const BrokerId* srcPtr = dynamic_cast<const BrokerId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "BrokerId::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void BrokerId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char BrokerId::getDataStructureType() const {
-    return BrokerId::ID_BROKERID; 
+    return BrokerId::ID_BROKERID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string BrokerId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = BrokerId" << std::endl;
-    stream << " Value of BrokerId::ID_BROKERID = 124" << std::endl; 
+    stream << " Value of BrokerId::ID_BROKERID = 124" << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
     stream << BaseDataStructure::toString();
     stream << "End Class = BrokerId" << std::endl;

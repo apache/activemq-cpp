@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/Response.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
 #include <vector>
@@ -43,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class DataArrayResponse : public Response
+    class AMQCPP_API DataArrayResponse : public Response
     {
     protected:
 

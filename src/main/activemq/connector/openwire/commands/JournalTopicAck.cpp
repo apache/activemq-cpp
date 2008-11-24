@@ -74,34 +74,34 @@ void JournalTopicAck::copyDataStructure( const DataStructure* src ) {
     const JournalTopicAck* srcPtr = dynamic_cast<const JournalTopicAck*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "JournalTopicAck::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getMessageId()->cloneDataStructure() ) );
     }
     this->setMessageSequenceId( srcPtr->getMessageSequenceId() );
     this->setSubscritionName( srcPtr->getSubscritionName() );
     this->setClientId( srcPtr->getClientId() );
     if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getTransactionId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char JournalTopicAck::getDataStructureType() const {
-    return JournalTopicAck::ID_JOURNALTOPICACK; 
+    return JournalTopicAck::ID_JOURNALTOPICACK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ std::string JournalTopicAck::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = JournalTopicAck" << std::endl;
-    stream << " Value of JournalTopicAck::ID_JOURNALTOPICACK = 50" << std::endl; 
+    stream << " Value of JournalTopicAck::ID_JOURNALTOPICACK = 50" << std::endl;
     stream << " Value of Destination is Below:" << std::endl;
     if( this->getDestination() != NULL ) {
         stream << this->getDestination()->toString() << std::endl;

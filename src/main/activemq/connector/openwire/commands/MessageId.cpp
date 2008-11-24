@@ -69,14 +69,14 @@ void MessageId::copyDataStructure( const DataStructure* src ) {
     const MessageId* srcPtr = dynamic_cast<const MessageId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "MessageId::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId( 
-            dynamic_cast<ProducerId*>( 
+        this->setProducerId(
+            dynamic_cast<ProducerId*>(
                 srcPtr->getProducerId()->cloneDataStructure() ) );
     }
     this->setProducerSequenceId( srcPtr->getProducerSequenceId() );
@@ -85,7 +85,7 @@ void MessageId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessageId::getDataStructureType() const {
-    return MessageId::ID_MESSAGEID; 
+    return MessageId::ID_MESSAGEID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ std::string MessageId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = MessageId" << std::endl;
-    stream << " Value of MessageId::ID_MESSAGEID = 110" << std::endl; 
+    stream << " Value of MessageId::ID_MESSAGEID = 110" << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;

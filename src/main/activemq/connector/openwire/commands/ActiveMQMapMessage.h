@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -35,7 +36,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQMapMessage :
+    class AMQCPP_API ActiveMQMapMessage :
         public ActiveMQMessageBase<cms::MapMessage> {
 
     private:

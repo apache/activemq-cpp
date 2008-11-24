@@ -74,27 +74,27 @@ void DestinationInfo::copyDataStructure( const DataStructure* src ) {
     const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "DestinationInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setOperationType( srcPtr->getOperationType() );
     this->setTimeout( srcPtr->getTimeout() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getBrokerPath().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
         } else {
             this->getBrokerPath().push_back( NULL );
@@ -104,7 +104,7 @@ void DestinationInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char DestinationInfo::getDataStructureType() const {
-    return DestinationInfo::ID_DESTINATIONINFO; 
+    return DestinationInfo::ID_DESTINATIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ std::string DestinationInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = DestinationInfo" << std::endl;
-    stream << " Value of DestinationInfo::ID_DESTINATIONINFO = 8" << std::endl; 
+    stream << " Value of DestinationInfo::ID_DESTINATIONINFO = 8" << std::endl;
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {
         stream << this->getConnectionId()->toString() << std::endl;

@@ -76,14 +76,14 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     const ConnectionInfo* srcPtr = dynamic_cast<const ConnectionInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConnectionInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
     this->setClientId( srcPtr->getClientId() );
@@ -91,8 +91,8 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
     this->setUserName( srcPtr->getUserName() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getBrokerPath().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
         } else {
             this->getBrokerPath().push_back( NULL );
@@ -105,7 +105,7 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConnectionInfo::getDataStructureType() const {
-    return ConnectionInfo::ID_CONNECTIONINFO; 
+    return ConnectionInfo::ID_CONNECTIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ std::string ConnectionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConnectionInfo" << std::endl;
-    stream << " Value of ConnectionInfo::ID_CONNECTIONINFO = 3" << std::endl; 
+    stream << " Value of ConnectionInfo::ID_CONNECTIONINFO = 3" << std::endl;
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {
         stream << this->getConnectionId()->toString() << std::endl;

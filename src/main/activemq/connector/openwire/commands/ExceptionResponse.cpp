@@ -67,21 +67,21 @@ void ExceptionResponse::copyDataStructure( const DataStructure* src ) {
     const ExceptionResponse* srcPtr = dynamic_cast<const ExceptionResponse*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ExceptionResponse::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getException() != NULL ) {
-        this->setException( 
-            dynamic_cast<BrokerError*>( 
+        this->setException(
+            dynamic_cast<BrokerError*>(
                 srcPtr->getException()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ExceptionResponse::getDataStructureType() const {
-    return ExceptionResponse::ID_EXCEPTIONRESPONSE; 
+    return ExceptionResponse::ID_EXCEPTIONRESPONSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ std::string ExceptionResponse::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ExceptionResponse" << std::endl;
-    stream << " Value of ExceptionResponse::ID_EXCEPTIONRESPONSE = 31" << std::endl; 
+    stream << " Value of ExceptionResponse::ID_EXCEPTIONRESPONSE = 31" << std::endl;
     stream << " Value of Exception is Below:" << std::endl;
     if( this->getException() != NULL ) {
         stream << this->getException()->toString() << std::endl;

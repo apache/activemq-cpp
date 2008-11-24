@@ -26,6 +26,7 @@
 #include <decaf/util/Date.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <cms/DeliveryMode.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
@@ -40,9 +41,9 @@ namespace commands{
      * T must be a derivation of.
      */
     template< typename T>
-    class ActiveMQMessageBase : public T,
-                                public Message,
-                                public core::ActiveMQMessage {
+    class AMQCPP_API ActiveMQMessageBase : public T,
+                                           public Message,
+                                           public core::ActiveMQMessage {
     private:
 
         core::ActiveMQAckHandler* ackHandler;

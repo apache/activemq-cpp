@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <cms/TextMessage.h>
 #include <vector>
@@ -33,7 +34,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQTextMessage :
+    class AMQCPP_API ActiveMQTextMessage :
         public ActiveMQMessageBase<cms::TextMessage> {
     public:
 

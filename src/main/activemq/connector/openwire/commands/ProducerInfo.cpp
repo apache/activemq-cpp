@@ -74,25 +74,25 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
     const ProducerInfo* srcPtr = dynamic_cast<const ProducerInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ProducerInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId( 
-            dynamic_cast<ProducerId*>( 
+        this->setProducerId(
+            dynamic_cast<ProducerId*>(
                 srcPtr->getProducerId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getBrokerPath().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
         } else {
             this->getBrokerPath().push_back( NULL );
@@ -104,7 +104,7 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ProducerInfo::getDataStructureType() const {
-    return ProducerInfo::ID_PRODUCERINFO; 
+    return ProducerInfo::ID_PRODUCERINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ std::string ProducerInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ProducerInfo" << std::endl;
-    stream << " Value of ProducerInfo::ID_PRODUCERINFO = 6" << std::endl; 
+    stream << " Value of ProducerInfo::ID_PRODUCERINFO = 6" << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;

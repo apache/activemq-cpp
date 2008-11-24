@@ -67,7 +67,7 @@ void SessionId::copyDataStructure( const DataStructure* src ) {
     const SessionId* srcPtr = dynamic_cast<const SessionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "SessionId::copyDataStructure - src is NULL or invalid" );
@@ -78,7 +78,7 @@ void SessionId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char SessionId::getDataStructureType() const {
-    return SessionId::ID_SESSIONID; 
+    return SessionId::ID_SESSIONID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ std::string SessionId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = SessionId" << std::endl;
-    stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl; 
+    stream << " Value of SessionId::ID_SESSIONID = 121" << std::endl;
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
     stream << BaseDataStructure::toString();

@@ -66,7 +66,7 @@ void PartialCommand::copyDataStructure( const DataStructure* src ) {
     const PartialCommand* srcPtr = dynamic_cast<const PartialCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "PartialCommand::copyDataStructure - src is NULL or invalid" );
@@ -77,7 +77,7 @@ void PartialCommand::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char PartialCommand::getDataStructureType() const {
-    return PartialCommand::ID_PARTIALCOMMAND; 
+    return PartialCommand::ID_PARTIALCOMMAND;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ std::string PartialCommand::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = PartialCommand" << std::endl;
-    stream << " Value of PartialCommand::ID_PARTIALCOMMAND = 60" << std::endl; 
+    stream << " Value of PartialCommand::ID_PARTIALCOMMAND = 60" << std::endl;
     stream << " Value of CommandId = " << this->getCommandId() << std::endl;
     for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
         stream << " Value of Data[" << idata << "] = " << this->getData()[idata] << std::endl;

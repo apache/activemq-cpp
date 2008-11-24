@@ -72,32 +72,32 @@ void MessageDispatchNotification::copyDataStructure( const DataStructure* src ) 
     const MessageDispatchNotification* srcPtr = dynamic_cast<const MessageDispatchNotification*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "MessageDispatchNotification::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setDeliverySequenceId( srcPtr->getDeliverySequenceId() );
     if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getMessageId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessageDispatchNotification::getDataStructureType() const {
-    return MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION; 
+    return MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ std::string MessageDispatchNotification::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = MessageDispatchNotification" << std::endl;
-    stream << " Value of MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION = 90" << std::endl; 
+    stream << " Value of MessageDispatchNotification::ID_MESSAGEDISPATCHNOTIFICATION = 90" << std::endl;
     stream << " Value of ConsumerId is Below:" << std::endl;
     if( this->getConsumerId() != NULL ) {
         stream << this->getConsumerId()->toString() << std::endl;

@@ -67,21 +67,21 @@ void RemoveInfo::copyDataStructure( const DataStructure* src ) {
     const RemoveInfo* srcPtr = dynamic_cast<const RemoveInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "RemoveInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getObjectId() != NULL ) {
-        this->setObjectId( 
-            dynamic_cast<DataStructure*>( 
+        this->setObjectId(
+            dynamic_cast<DataStructure*>(
                 srcPtr->getObjectId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char RemoveInfo::getDataStructureType() const {
-    return RemoveInfo::ID_REMOVEINFO; 
+    return RemoveInfo::ID_REMOVEINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ std::string RemoveInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = RemoveInfo" << std::endl;
-    stream << " Value of RemoveInfo::ID_REMOVEINFO = 12" << std::endl; 
+    stream << " Value of RemoveInfo::ID_REMOVEINFO = 12" << std::endl;
     stream << " Value of ObjectId is Below:" << std::endl;
     if( this->getObjectId() != NULL ) {
         stream << this->getObjectId()->toString() << std::endl;

@@ -72,24 +72,24 @@ void MessageDispatch::copyDataStructure( const DataStructure* src ) {
     const MessageDispatch* srcPtr = dynamic_cast<const MessageDispatch*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "MessageDispatch::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getMessage() != NULL ) {
-        this->setMessage( 
-            dynamic_cast<Message*>( 
+        this->setMessage(
+            dynamic_cast<Message*>(
                 srcPtr->getMessage()->cloneDataStructure() ) );
     }
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
@@ -97,7 +97,7 @@ void MessageDispatch::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessageDispatch::getDataStructureType() const {
-    return MessageDispatch::ID_MESSAGEDISPATCH; 
+    return MessageDispatch::ID_MESSAGEDISPATCH;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ std::string MessageDispatch::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = MessageDispatch" << std::endl;
-    stream << " Value of MessageDispatch::ID_MESSAGEDISPATCH = 21" << std::endl; 
+    stream << " Value of MessageDispatch::ID_MESSAGEDISPATCH = 21" << std::endl;
     stream << " Value of ConsumerId is Below:" << std::endl;
     if( this->getConsumerId() != NULL ) {
         stream << this->getConsumerId()->toString() << std::endl;

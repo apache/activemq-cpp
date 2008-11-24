@@ -67,7 +67,7 @@ void DiscoveryEvent::copyDataStructure( const DataStructure* src ) {
     const DiscoveryEvent* srcPtr = dynamic_cast<const DiscoveryEvent*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "DiscoveryEvent::copyDataStructure - src is NULL or invalid" );
@@ -78,7 +78,7 @@ void DiscoveryEvent::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char DiscoveryEvent::getDataStructureType() const {
-    return DiscoveryEvent::ID_DISCOVERYEVENT; 
+    return DiscoveryEvent::ID_DISCOVERYEVENT;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ std::string DiscoveryEvent::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = DiscoveryEvent" << std::endl;
-    stream << " Value of DiscoveryEvent::ID_DISCOVERYEVENT = 40" << std::endl; 
+    stream << " Value of DiscoveryEvent::ID_DISCOVERYEVENT = 40" << std::endl;
     stream << " Value of ServiceName = " << this->getServiceName() << std::endl;
     stream << " Value of BrokerName = " << this->getBrokerName() << std::endl;
     stream << BaseDataStructure::toString();

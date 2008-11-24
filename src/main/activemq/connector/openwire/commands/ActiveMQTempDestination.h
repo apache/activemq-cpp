@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/connector/Connector.h>
 #include <activemq/connector/BaseConnectorResource.h>
@@ -35,8 +36,8 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQTempDestination : public ActiveMQDestination,
-                                    public BaseConnectorResource {
+    class AMQCPP_API ActiveMQTempDestination : public ActiveMQDestination,
+                                               public BaseConnectorResource {
     protected:
 
         /**

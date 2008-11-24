@@ -67,21 +67,21 @@ void DataResponse::copyDataStructure( const DataStructure* src ) {
     const DataResponse* srcPtr = dynamic_cast<const DataResponse*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "DataResponse::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getData() != NULL ) {
-        this->setData( 
-            dynamic_cast<DataStructure*>( 
+        this->setData(
+            dynamic_cast<DataStructure*>(
                 srcPtr->getData()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char DataResponse::getDataStructureType() const {
-    return DataResponse::ID_DATARESPONSE; 
+    return DataResponse::ID_DATARESPONSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ std::string DataResponse::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = DataResponse" << std::endl;
-    stream << " Value of DataResponse::ID_DATARESPONSE = 32" << std::endl; 
+    stream << " Value of DataResponse::ID_DATARESPONSE = 32" << std::endl;
     stream << " Value of Data is Below:" << std::endl;
     if( this->getData() != NULL ) {
         stream << this->getData()->toString() << std::endl;

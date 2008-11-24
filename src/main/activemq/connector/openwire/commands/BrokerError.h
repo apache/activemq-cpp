@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BROKERERROR_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BROKERERROR_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -33,7 +34,7 @@ namespace commands{
      * This class represents an Exception sent from the Broker.  The Broker
      * sends java Throwables, so we must mimic its structure here.
      */
-    class BrokerError : public BaseCommand<transport::Command> {
+    class AMQCPP_API BrokerError : public BaseCommand<transport::Command> {
     public:
 
         struct StackTraceElement

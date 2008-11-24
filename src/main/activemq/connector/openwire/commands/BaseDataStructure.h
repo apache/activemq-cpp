@@ -33,16 +33,15 @@ namespace openwire{
 
 namespace commands{
 
-    class BaseDataStructure : public DataStructure
-    {
+    class AMQCPP_API BaseDataStructure : public DataStructure {
     public:
 
         virtual ~BaseDataStructure() {}
 
         /**
-         * Determine if this object is aware of marshalling and should have
-         * its before and after marshalling methods called.  Defaults to false.
-         * @returns true if aware of marshalling
+         * Determine if this object is aware of marshaling and should have
+         * its before and after marshaling methods called.  Defaults to false.
+         * @returns true if aware of marshaling
          */
         virtual bool isMarshalAware() const {
             return false;

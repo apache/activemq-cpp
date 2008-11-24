@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_WIREFORMATINFO_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
 #include <activemq/transport/Command.h>
@@ -31,8 +32,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class WireFormatInfo : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API WireFormatInfo : public BaseCommand<transport::Command> {
     public:
 
         const static unsigned char ID_WIREFORMATINFO = 1;

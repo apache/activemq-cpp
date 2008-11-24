@@ -67,7 +67,7 @@ void ReplayCommand::copyDataStructure( const DataStructure* src ) {
     const ReplayCommand* srcPtr = dynamic_cast<const ReplayCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ReplayCommand::copyDataStructure - src is NULL or invalid" );
@@ -78,7 +78,7 @@ void ReplayCommand::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ReplayCommand::getDataStructureType() const {
-    return ReplayCommand::ID_REPLAYCOMMAND; 
+    return ReplayCommand::ID_REPLAYCOMMAND;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ std::string ReplayCommand::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ReplayCommand" << std::endl;
-    stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl; 
+    stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl;
     stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
     stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
     stream << BaseCommand<transport::Command>::toString();

@@ -68,7 +68,7 @@ void ProducerId::copyDataStructure( const DataStructure* src ) {
     const ProducerId* srcPtr = dynamic_cast<const ProducerId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ProducerId::copyDataStructure - src is NULL or invalid" );
@@ -80,7 +80,7 @@ void ProducerId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ProducerId::getDataStructureType() const {
-    return ProducerId::ID_PRODUCERID; 
+    return ProducerId::ID_PRODUCERID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@ std::string ProducerId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ProducerId" << std::endl;
-    stream << " Value of ProducerId::ID_PRODUCERID = 123" << std::endl; 
+    stream << " Value of ProducerId::ID_PRODUCERID = 123" << std::endl;
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
     stream << " Value of SessionId = " << this->getSessionId() << std::endl;

@@ -65,7 +65,7 @@ void FlushCommand::copyDataStructure( const DataStructure* src ) {
     const FlushCommand* srcPtr = dynamic_cast<const FlushCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "FlushCommand::copyDataStructure - src is NULL or invalid" );
@@ -74,7 +74,7 @@ void FlushCommand::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char FlushCommand::getDataStructureType() const {
-    return FlushCommand::ID_FLUSHCOMMAND; 
+    return FlushCommand::ID_FLUSHCOMMAND;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ std::string FlushCommand::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = FlushCommand" << std::endl;
-    stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl; 
+    stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = FlushCommand" << std::endl;
 

@@ -70,19 +70,19 @@ void TransactionInfo::copyDataStructure( const DataStructure* src ) {
     const TransactionInfo* srcPtr = dynamic_cast<const TransactionInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "TransactionInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
     if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getTransactionId()->cloneDataStructure() ) );
     }
     this->setType( srcPtr->getType() );
@@ -90,7 +90,7 @@ void TransactionInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char TransactionInfo::getDataStructureType() const {
-    return TransactionInfo::ID_TRANSACTIONINFO; 
+    return TransactionInfo::ID_TRANSACTIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ std::string TransactionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = TransactionInfo" << std::endl;
-    stream << " Value of TransactionInfo::ID_TRANSACTIONINFO = 7" << std::endl; 
+    stream << " Value of TransactionInfo::ID_TRANSACTIONINFO = 7" << std::endl;
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {
         stream << this->getConnectionId()->toString() << std::endl;

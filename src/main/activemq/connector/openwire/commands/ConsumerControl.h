@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <activemq/connector/openwire/commands/ConsumerId.h>
 #include <vector>
@@ -43,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConsumerControl : public BaseCommand<transport::Command>
+    class AMQCPP_API ConsumerControl : public BaseCommand<transport::Command>
     {
     protected:
 

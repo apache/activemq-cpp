@@ -65,7 +65,7 @@ void ShutdownInfo::copyDataStructure( const DataStructure* src ) {
     const ShutdownInfo* srcPtr = dynamic_cast<const ShutdownInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ShutdownInfo::copyDataStructure - src is NULL or invalid" );
@@ -74,7 +74,7 @@ void ShutdownInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ShutdownInfo::getDataStructureType() const {
-    return ShutdownInfo::ID_SHUTDOWNINFO; 
+    return ShutdownInfo::ID_SHUTDOWNINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ std::string ShutdownInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ShutdownInfo" << std::endl;
-    stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl; 
+    stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ShutdownInfo" << std::endl;
 

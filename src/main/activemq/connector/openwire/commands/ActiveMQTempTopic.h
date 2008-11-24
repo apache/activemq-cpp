@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 #include <cms/TemporaryTopic.h>
 #include <vector>
@@ -33,8 +34,8 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQTempTopic : public ActiveMQTempDestination,
-                              public cms::TemporaryTopic {
+    class AMQCPP_API ActiveMQTempTopic : public ActiveMQTempDestination,
+                                         public cms::TemporaryTopic {
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPTOPIC = 103;
@@ -156,7 +157,7 @@ namespace commands{
          */
         virtual std::string getTopicName()
             const throw( cms::CMSException ) {
-        	
+
             try{
                 return this->getPhysicalName();
             }

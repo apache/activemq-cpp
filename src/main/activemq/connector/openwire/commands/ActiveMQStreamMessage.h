@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessage.h>
 #include <string>
 
@@ -31,7 +32,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQStreamMessage : public ActiveMQMessage {
+    class AMQCPP_API ActiveMQStreamMessage : public ActiveMQMessage {
     public:
 
         const static unsigned char ID_ACTIVEMQSTREAMMESSAGE = 27;

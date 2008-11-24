@@ -65,7 +65,7 @@ void LastPartialCommand::copyDataStructure( const DataStructure* src ) {
     const LastPartialCommand* srcPtr = dynamic_cast<const LastPartialCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "LastPartialCommand::copyDataStructure - src is NULL or invalid" );
@@ -74,7 +74,7 @@ void LastPartialCommand::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char LastPartialCommand::getDataStructureType() const {
-    return LastPartialCommand::ID_LASTPARTIALCOMMAND; 
+    return LastPartialCommand::ID_LASTPARTIALCOMMAND;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ std::string LastPartialCommand::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = LastPartialCommand" << std::endl;
-    stream << " Value of LastPartialCommand::ID_LASTPARTIALCOMMAND = 61" << std::endl; 
+    stream << " Value of LastPartialCommand::ID_LASTPARTIALCOMMAND = 61" << std::endl;
     stream << PartialCommand::toString();
     stream << "End Class = LastPartialCommand" << std::endl;
 

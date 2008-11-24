@@ -26,8 +26,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class BooleanExpression : public BaseDataStructure
-    {
+    class AMQCPP_API BooleanExpression : public BaseDataStructure {
     public:
 
         BooleanExpression() {}

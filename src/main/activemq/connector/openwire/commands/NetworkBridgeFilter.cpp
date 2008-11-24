@@ -68,22 +68,22 @@ void NetworkBridgeFilter::copyDataStructure( const DataStructure* src ) {
     const NetworkBridgeFilter* srcPtr = dynamic_cast<const NetworkBridgeFilter*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "NetworkBridgeFilter::copyDataStructure - src is NULL or invalid" );
     }
     this->setNetworkTTL( srcPtr->getNetworkTTL() );
     if( srcPtr->getNetworkBrokerId() != NULL ) {
-        this->setNetworkBrokerId( 
-            dynamic_cast<BrokerId*>( 
+        this->setNetworkBrokerId(
+            dynamic_cast<BrokerId*>(
                 srcPtr->getNetworkBrokerId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char NetworkBridgeFilter::getDataStructureType() const {
-    return NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER; 
+    return NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ std::string NetworkBridgeFilter::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = NetworkBridgeFilter" << std::endl;
-    stream << " Value of NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER = 91" << std::endl; 
+    stream << " Value of NetworkBridgeFilter::ID_NETWORKBRIDGEFILTER = 91" << std::endl;
     stream << " Value of NetworkTTL = " << this->getNetworkTTL() << std::endl;
     stream << " Value of NetworkBrokerId is Below:" << std::endl;
     if( this->getNetworkBrokerId() != NULL ) {

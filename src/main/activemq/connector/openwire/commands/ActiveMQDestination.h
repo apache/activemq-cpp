@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 #include <activemq/util/ActiveMQProperties.h>
 #include <cms/Destination.h>
@@ -36,7 +37,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQDestination : public BaseDataStructure {
+    class AMQCPP_API ActiveMQDestination : public BaseDataStructure {
     protected:
 
         enum DESTINATION_TYPE_IDS {

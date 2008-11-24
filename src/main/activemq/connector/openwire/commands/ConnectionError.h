@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <activemq/connector/openwire/commands/BrokerError.h>
 #include <activemq/connector/openwire/commands/ConnectionId.h>
@@ -44,7 +45,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class ConnectionError : public BaseCommand<transport::Command>
+    class AMQCPP_API ConnectionError : public BaseCommand<transport::Command>
     {
     protected:
 

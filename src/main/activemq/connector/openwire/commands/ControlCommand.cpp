@@ -66,7 +66,7 @@ void ControlCommand::copyDataStructure( const DataStructure* src ) {
     const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ControlCommand::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void ControlCommand::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ControlCommand::getDataStructureType() const {
-    return ControlCommand::ID_CONTROLCOMMAND; 
+    return ControlCommand::ID_CONTROLCOMMAND;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string ControlCommand::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ControlCommand" << std::endl;
-    stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl; 
+    stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl;
     stream << " Value of Command = " << this->getCommand() << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = ControlCommand" << std::endl;

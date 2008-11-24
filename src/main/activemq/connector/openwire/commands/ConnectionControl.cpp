@@ -70,7 +70,7 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
     const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConnectionControl::copyDataStructure - src is NULL or invalid" );
@@ -84,7 +84,7 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConnectionControl::getDataStructureType() const {
-    return ConnectionControl::ID_CONNECTIONCONTROL; 
+    return ConnectionControl::ID_CONNECTIONCONTROL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +93,7 @@ std::string ConnectionControl::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConnectionControl" << std::endl;
-    stream << " Value of ConnectionControl::ID_CONNECTIONCONTROL = 18" << std::endl; 
+    stream << " Value of ConnectionControl::ID_CONNECTIONCONTROL = 18" << std::endl;
     stream << " Value of Close = " << this->isClose() << std::endl;
     stream << " Value of Exit = " << this->isExit() << std::endl;
     stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;

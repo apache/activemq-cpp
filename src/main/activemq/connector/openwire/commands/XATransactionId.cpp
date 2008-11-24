@@ -66,7 +66,7 @@ void XATransactionId::copyDataStructure( const DataStructure* src ) {
     const XATransactionId* srcPtr = dynamic_cast<const XATransactionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "XATransactionId::copyDataStructure - src is NULL or invalid" );
@@ -78,7 +78,7 @@ void XATransactionId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char XATransactionId::getDataStructureType() const {
-    return XATransactionId::ID_XATRANSACTIONID; 
+    return XATransactionId::ID_XATRANSACTIONID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ std::string XATransactionId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = XATransactionId" << std::endl;
-    stream << " Value of XATransactionId::ID_XATRANSACTIONID = 112" << std::endl; 
+    stream << " Value of XATransactionId::ID_XATRANSACTIONID = 112" << std::endl;
     stream << " Value of FormatId = " << this->getFormatId() << std::endl;
     for( size_t iglobalTransactionId = 0; iglobalTransactionId < this->getGlobalTransactionId().size(); ++iglobalTransactionId ) {
         stream << " Value of GlobalTransactionId[" << iglobalTransactionId << "] = " << this->getGlobalTransactionId()[iglobalTransactionId] << std::endl;

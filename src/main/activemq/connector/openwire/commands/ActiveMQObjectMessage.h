@@ -25,13 +25,14 @@
 
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <cms/ObjectMessage.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQObjectMessage :
+    class AMQCPP_API ActiveMQObjectMessage :
         public ActiveMQMessageBase<cms::ObjectMessage> {
 
     public:

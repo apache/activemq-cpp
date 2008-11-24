@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQMESSAGE_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_ACTIVEMQMESSAGE_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 
 namespace activemq{
@@ -25,7 +26,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQMessage :
+    class AMQCPP_API ActiveMQMessage :
         public ActiveMQMessageBase<cms::Message> {
 
     public:

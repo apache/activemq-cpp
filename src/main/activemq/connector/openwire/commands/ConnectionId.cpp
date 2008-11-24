@@ -66,7 +66,7 @@ void ConnectionId::copyDataStructure( const DataStructure* src ) {
     const ConnectionId* srcPtr = dynamic_cast<const ConnectionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConnectionId::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void ConnectionId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConnectionId::getDataStructureType() const {
-    return ConnectionId::ID_CONNECTIONID; 
+    return ConnectionId::ID_CONNECTIONID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string ConnectionId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConnectionId" << std::endl;
-    stream << " Value of ConnectionId::ID_CONNECTIONID = 120" << std::endl; 
+    stream << " Value of ConnectionId::ID_CONNECTIONID = 120" << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
     stream << BaseDataStructure::toString();
     stream << "End Class = ConnectionId" << std::endl;

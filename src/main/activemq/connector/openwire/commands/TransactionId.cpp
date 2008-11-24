@@ -65,7 +65,7 @@ void TransactionId::copyDataStructure( const DataStructure* src ) {
     const TransactionId* srcPtr = dynamic_cast<const TransactionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "TransactionId::copyDataStructure - src is NULL or invalid" );
@@ -74,7 +74,7 @@ void TransactionId::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char TransactionId::getDataStructureType() const {
-    return TransactionId::ID_TRANSACTIONID; 
+    return TransactionId::ID_TRANSACTIONID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ std::string TransactionId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = TransactionId" << std::endl;
-    stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl; 
+    stream << " Value of TransactionId::ID_TRANSACTIONID = 0" << std::endl;
     stream << BaseDataStructure::toString();
     stream << "End Class = TransactionId" << std::endl;
 

@@ -80,21 +80,21 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
     const BrokerInfo* srcPtr = dynamic_cast<const BrokerInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "BrokerInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getBrokerId() != NULL ) {
-        this->setBrokerId( 
-            dynamic_cast<BrokerId*>( 
+        this->setBrokerId(
+            dynamic_cast<BrokerId*>(
                 srcPtr->getBrokerId()->cloneDataStructure() ) );
     }
     this->setBrokerURL( srcPtr->getBrokerURL() );
     for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < srcPtr->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
         if( srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
-            this->getPeerBrokerInfos().push_back( 
-                dynamic_cast<BrokerInfo*>( 
+            this->getPeerBrokerInfos().push_back(
+                dynamic_cast<BrokerInfo*>(
                     srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() ) );
         } else {
             this->getPeerBrokerInfos().push_back( NULL );
@@ -113,7 +113,7 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char BrokerInfo::getDataStructureType() const {
-    return BrokerInfo::ID_BROKERINFO; 
+    return BrokerInfo::ID_BROKERINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ std::string BrokerInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = BrokerInfo" << std::endl;
-    stream << " Value of BrokerInfo::ID_BROKERINFO = 2" << std::endl; 
+    stream << " Value of BrokerInfo::ID_BROKERINFO = 2" << std::endl;
     stream << " Value of BrokerId is Below:" << std::endl;
     if( this->getBrokerId() != NULL ) {
         stream << this->getBrokerId()->toString() << std::endl;

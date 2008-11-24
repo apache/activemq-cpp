@@ -69,14 +69,14 @@ void JournalTransaction::copyDataStructure( const DataStructure* src ) {
     const JournalTransaction* srcPtr = dynamic_cast<const JournalTransaction*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "JournalTransaction::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getTransactionId()->cloneDataStructure() ) );
     }
     this->setType( srcPtr->getType() );
@@ -85,7 +85,7 @@ void JournalTransaction::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char JournalTransaction::getDataStructureType() const {
-    return JournalTransaction::ID_JOURNALTRANSACTION; 
+    return JournalTransaction::ID_JOURNALTRANSACTION;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ std::string JournalTransaction::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = JournalTransaction" << std::endl;
-    stream << " Value of JournalTransaction::ID_JOURNALTRANSACTION = 54" << std::endl; 
+    stream << " Value of JournalTransaction::ID_JOURNALTRANSACTION = 54" << std::endl;
     stream << " Value of TransactionId is Below:" << std::endl;
     if( this->getTransactionId() != NULL ) {
         stream << this->getTransactionId()->toString() << std::endl;

@@ -67,21 +67,21 @@ void SessionInfo::copyDataStructure( const DataStructure* src ) {
     const SessionInfo* srcPtr = dynamic_cast<const SessionInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "SessionInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getSessionId() != NULL ) {
-        this->setSessionId( 
-            dynamic_cast<SessionId*>( 
+        this->setSessionId(
+            dynamic_cast<SessionId*>(
                 srcPtr->getSessionId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char SessionInfo::getDataStructureType() const {
-    return SessionInfo::ID_SESSIONINFO; 
+    return SessionInfo::ID_SESSIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ std::string SessionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = SessionInfo" << std::endl;
-    stream << " Value of SessionInfo::ID_SESSIONINFO = 4" << std::endl; 
+    stream << " Value of SessionInfo::ID_SESSIONINFO = 4" << std::endl;
     stream << " Value of SessionId is Below:" << std::endl;
     if( this->getSessionId() != NULL ) {
         stream << this->getSessionId()->toString() << std::endl;

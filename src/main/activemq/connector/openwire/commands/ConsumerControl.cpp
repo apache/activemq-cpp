@@ -72,15 +72,15 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
     const ConsumerControl* srcPtr = dynamic_cast<const ConsumerControl*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConsumerControl::copyDataStructure - src is NULL or invalid" );
     }
     this->setClose( srcPtr->isClose() );
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     this->setPrefetch( srcPtr->getPrefetch() );
@@ -91,7 +91,7 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConsumerControl::getDataStructureType() const {
-    return ConsumerControl::ID_CONSUMERCONTROL; 
+    return ConsumerControl::ID_CONSUMERCONTROL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ std::string ConsumerControl::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConsumerControl" << std::endl;
-    stream << " Value of ConsumerControl::ID_CONSUMERCONTROL = 17" << std::endl; 
+    stream << " Value of ConsumerControl::ID_CONSUMERCONTROL = 17" << std::endl;
     stream << " Value of Close = " << this->isClose() << std::endl;
     stream << " Value of ConsumerId is Below:" << std::endl;
     if( this->getConsumerId() != NULL ) {

@@ -66,7 +66,7 @@ void Response::copyDataStructure( const DataStructure* src ) {
     const Response* srcPtr = dynamic_cast<const Response*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "Response::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void Response::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char Response::getDataStructureType() const {
-    return Response::ID_RESPONSE; 
+    return Response::ID_RESPONSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string Response::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = Response" << std::endl;
-    stream << " Value of Response::ID_RESPONSE = 30" << std::endl; 
+    stream << " Value of Response::ID_RESPONSE = 30" << std::endl;
     stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
     stream << BaseCommand<transport::Response>::toString();
     stream << "End Class = Response" << std::endl;

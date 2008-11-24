@@ -65,7 +65,7 @@ void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
     const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "KeepAliveInfo::copyDataStructure - src is NULL or invalid" );
@@ -74,7 +74,7 @@ void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char KeepAliveInfo::getDataStructureType() const {
-    return KeepAliveInfo::ID_KEEPALIVEINFO; 
+    return KeepAliveInfo::ID_KEEPALIVEINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ std::string KeepAliveInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = KeepAliveInfo" << std::endl;
-    stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl; 
+    stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl;
     stream << BaseCommand<transport::Command>::toString();
     stream << "End Class = KeepAliveInfo" << std::endl;
 

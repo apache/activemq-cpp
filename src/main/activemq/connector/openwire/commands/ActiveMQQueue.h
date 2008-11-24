@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Exception.h>
@@ -35,8 +36,8 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQQueue : public ActiveMQDestination,
-                          public cms::Queue {
+    class AMQCPP_API ActiveMQQueue : public ActiveMQDestination,
+                                     public cms::Queue {
     public:
 
         const static unsigned char ID_ACTIVEMQQUEUE = 100;

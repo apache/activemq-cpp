@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/connector/openwire/commands/TransactionId.h>
@@ -47,7 +48,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class MessageAck : public BaseCommand<transport::Command>
+    class AMQCPP_API MessageAck : public BaseCommand<transport::Command>
     {
     protected:
 

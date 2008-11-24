@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 #include <activemq/connector/openwire/commands/BrokerId.h>
 #include <vector>
@@ -43,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class NetworkBridgeFilter : public BaseDataStructure
+    class AMQCPP_API NetworkBridgeFilter : public BaseDataStructure
     {
     protected:
 

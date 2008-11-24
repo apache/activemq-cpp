@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BASECOMMAND_H_
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_BASECOMMAND_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/Response.h>
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
@@ -28,9 +29,8 @@ namespace openwire{
 namespace commands{
 
     template< typename T >
-    class BaseCommand : public T,
-                        public BaseDataStructure
-    {
+    class AMQCPP_API BaseCommand : public T,
+                                   public BaseDataStructure {
     public:
 
         BaseCommand() {

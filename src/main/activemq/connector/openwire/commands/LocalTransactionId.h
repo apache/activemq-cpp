@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/TransactionId.h>
 #include <activemq/connector/openwire/commands/ConnectionId.h>
 #include <vector>
@@ -43,7 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class LocalTransactionId : public TransactionId
+    class AMQCPP_API LocalTransactionId : public TransactionId
     {
     protected:
 

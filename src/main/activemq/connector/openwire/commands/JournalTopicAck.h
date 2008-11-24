@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseDataStructure.h>
 #include <activemq/connector/openwire/commands/ActiveMQDestination.h>
 #include <activemq/connector/openwire/commands/MessageId.h>
@@ -45,7 +46,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class JournalTopicAck : public BaseDataStructure
+    class AMQCPP_API JournalTopicAck : public BaseDataStructure
     {
     protected:
 

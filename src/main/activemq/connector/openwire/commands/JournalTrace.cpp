@@ -66,7 +66,7 @@ void JournalTrace::copyDataStructure( const DataStructure* src ) {
     const JournalTrace* srcPtr = dynamic_cast<const JournalTrace*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "JournalTrace::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void JournalTrace::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char JournalTrace::getDataStructureType() const {
-    return JournalTrace::ID_JOURNALTRACE; 
+    return JournalTrace::ID_JOURNALTRACE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string JournalTrace::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = JournalTrace" << std::endl;
-    stream << " Value of JournalTrace::ID_JOURNALTRACE = 53" << std::endl; 
+    stream << " Value of JournalTrace::ID_JOURNALTRACE = 53" << std::endl;
     stream << " Value of Message = " << this->getMessage() << std::endl;
     stream << BaseDataStructure::toString();
     stream << "End Class = JournalTrace" << std::endl;

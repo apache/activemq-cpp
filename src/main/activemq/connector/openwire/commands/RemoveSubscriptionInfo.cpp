@@ -69,14 +69,14 @@ void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
     const RemoveSubscriptionInfo* srcPtr = dynamic_cast<const RemoveSubscriptionInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
@@ -85,7 +85,7 @@ void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char RemoveSubscriptionInfo::getDataStructureType() const {
-    return RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO; 
+    return RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ std::string RemoveSubscriptionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = RemoveSubscriptionInfo" << std::endl;
-    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 9" << std::endl; 
+    stream << " Value of RemoveSubscriptionInfo::ID_REMOVESUBSCRIPTIONINFO = 9" << std::endl;
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {
         stream << this->getConnectionId()->toString() << std::endl;

@@ -72,29 +72,29 @@ void SubscriptionInfo::copyDataStructure( const DataStructure* src ) {
     const SubscriptionInfo* srcPtr = dynamic_cast<const SubscriptionInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "SubscriptionInfo::copyDataStructure - src is NULL or invalid" );
     }
     this->setClientId( srcPtr->getClientId() );
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setSelector( srcPtr->getSelector() );
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
     if( srcPtr->getSubscribedDestination() != NULL ) {
-        this->setSubscribedDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setSubscribedDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getSubscribedDestination()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char SubscriptionInfo::getDataStructureType() const {
-    return SubscriptionInfo::ID_SUBSCRIPTIONINFO; 
+    return SubscriptionInfo::ID_SUBSCRIPTIONINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ std::string SubscriptionInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = SubscriptionInfo" << std::endl;
-    stream << " Value of SubscriptionInfo::ID_SUBSCRIPTIONINFO = 55" << std::endl; 
+    stream << " Value of SubscriptionInfo::ID_SUBSCRIPTIONINFO = 55" << std::endl;
     stream << " Value of ClientId = " << this->getClientId() << std::endl;
     stream << " Value of Destination is Below:" << std::endl;
     if( this->getDestination() != NULL ) {

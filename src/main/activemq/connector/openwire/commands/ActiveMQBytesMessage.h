@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
@@ -37,7 +38,7 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQBytesMessage :
+    class AMQCPP_API ActiveMQBytesMessage :
         public ActiveMQMessageBase< cms::BytesMessage > {
 
     public:

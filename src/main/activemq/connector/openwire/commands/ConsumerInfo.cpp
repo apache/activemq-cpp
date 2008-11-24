@@ -87,20 +87,20 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
     const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConsumerInfo::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     this->setBrowser( srcPtr->isBrowser() );
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setPrefetchSize( srcPtr->getPrefetchSize() );
@@ -114,16 +114,16 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
     this->setPriority( srcPtr->getPriority() );
     for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
         if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back( 
-                dynamic_cast<BrokerId*>( 
+            this->getBrokerPath().push_back(
+                dynamic_cast<BrokerId*>(
                     srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
         } else {
             this->getBrokerPath().push_back( NULL );
         }
     }
     if( srcPtr->getAdditionalPredicate() != NULL ) {
-        this->setAdditionalPredicate( 
-            dynamic_cast<BooleanExpression*>( 
+        this->setAdditionalPredicate(
+            dynamic_cast<BooleanExpression*>(
                 srcPtr->getAdditionalPredicate()->cloneDataStructure() ) );
     }
     this->setNetworkSubscription( srcPtr->isNetworkSubscription() );
@@ -133,7 +133,7 @@ void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConsumerInfo::getDataStructureType() const {
-    return ConsumerInfo::ID_CONSUMERINFO; 
+    return ConsumerInfo::ID_CONSUMERINFO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ std::string ConsumerInfo::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConsumerInfo" << std::endl;
-    stream << " Value of ConsumerInfo::ID_CONSUMERINFO = 5" << std::endl; 
+    stream << " Value of ConsumerInfo::ID_CONSUMERINFO = 5" << std::endl;
     stream << " Value of ConsumerId is Below:" << std::endl;
     if( this->getConsumerId() != NULL ) {
         stream << this->getConsumerId()->toString() << std::endl;

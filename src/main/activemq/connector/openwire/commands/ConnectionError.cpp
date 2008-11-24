@@ -69,26 +69,26 @@ void ConnectionError::copyDataStructure( const DataStructure* src ) {
     const ConnectionError* srcPtr = dynamic_cast<const ConnectionError*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ConnectionError::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getException() != NULL ) {
-        this->setException( 
-            dynamic_cast<BrokerError*>( 
+        this->setException(
+            dynamic_cast<BrokerError*>(
                 srcPtr->getException()->cloneDataStructure() ) );
     }
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ConnectionError::getDataStructureType() const {
-    return ConnectionError::ID_CONNECTIONERROR; 
+    return ConnectionError::ID_CONNECTIONERROR;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ std::string ConnectionError::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ConnectionError" << std::endl;
-    stream << " Value of ConnectionError::ID_CONNECTIONERROR = 16" << std::endl; 
+    stream << " Value of ConnectionError::ID_CONNECTIONERROR = 16" << std::endl;
     stream << " Value of Exception is Below:" << std::endl;
     if( this->getException() != NULL ) {
         stream << this->getException()->toString() << std::endl;

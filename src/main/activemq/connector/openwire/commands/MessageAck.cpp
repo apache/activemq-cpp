@@ -77,35 +77,35 @@ void MessageAck::copyDataStructure( const DataStructure* src ) {
     const MessageAck* srcPtr = dynamic_cast<const MessageAck*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "MessageAck::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId( 
-            dynamic_cast<TransactionId*>( 
+        this->setTransactionId(
+            dynamic_cast<TransactionId*>(
                 srcPtr->getTransactionId()->cloneDataStructure() ) );
     }
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     this->setAckType( srcPtr->getAckType() );
     if( srcPtr->getFirstMessageId() != NULL ) {
-        this->setFirstMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setFirstMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getFirstMessageId()->cloneDataStructure() ) );
     }
     if( srcPtr->getLastMessageId() != NULL ) {
-        this->setLastMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setLastMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getLastMessageId()->cloneDataStructure() ) );
     }
     this->setMessageCount( srcPtr->getMessageCount() );
@@ -113,7 +113,7 @@ void MessageAck::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessageAck::getDataStructureType() const {
-    return MessageAck::ID_MESSAGEACK; 
+    return MessageAck::ID_MESSAGEACK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ std::string MessageAck::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = MessageAck" << std::endl;
-    stream << " Value of MessageAck::ID_MESSAGEACK = 22" << std::endl; 
+    stream << " Value of MessageAck::ID_MESSAGEACK = 22" << std::endl;
     stream << " Value of Destination is Below:" << std::endl;
     if( this->getDestination() != NULL ) {
         stream << this->getDestination()->toString() << std::endl;

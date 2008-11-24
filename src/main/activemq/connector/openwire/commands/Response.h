@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/BaseCommand.h>
 #include <vector>
 #include <string>
@@ -42,7 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class Response : public BaseCommand<transport::Response>
+    class AMQCPP_API Response : public BaseCommand<transport::Response>
     {
     protected:
 

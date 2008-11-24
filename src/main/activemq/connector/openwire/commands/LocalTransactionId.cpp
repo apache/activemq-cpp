@@ -68,22 +68,22 @@ void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
     const LocalTransactionId* srcPtr = dynamic_cast<const LocalTransactionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "LocalTransactionId::copyDataStructure - src is NULL or invalid" );
     }
     this->setValue( srcPtr->getValue() );
     if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId( 
-            dynamic_cast<ConnectionId*>( 
+        this->setConnectionId(
+            dynamic_cast<ConnectionId*>(
                 srcPtr->getConnectionId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char LocalTransactionId::getDataStructureType() const {
-    return LocalTransactionId::ID_LOCALTRANSACTIONID; 
+    return LocalTransactionId::ID_LOCALTRANSACTIONID;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ std::string LocalTransactionId::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = LocalTransactionId" << std::endl;
-    stream << " Value of LocalTransactionId::ID_LOCALTRANSACTIONID = 111" << std::endl; 
+    stream << " Value of LocalTransactionId::ID_LOCALTRANSACTIONID = 111" << std::endl;
     stream << " Value of Value = " << this->getValue() << std::endl;
     stream << " Value of ConnectionId is Below:" << std::endl;
     if( this->getConnectionId() != NULL ) {

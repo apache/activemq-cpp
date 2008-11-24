@@ -69,26 +69,26 @@ void JournalQueueAck::copyDataStructure( const DataStructure* src ) {
     const JournalQueueAck* srcPtr = dynamic_cast<const JournalQueueAck*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "JournalQueueAck::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     if( srcPtr->getMessageAck() != NULL ) {
-        this->setMessageAck( 
-            dynamic_cast<MessageAck*>( 
+        this->setMessageAck(
+            dynamic_cast<MessageAck*>(
                 srcPtr->getMessageAck()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char JournalQueueAck::getDataStructureType() const {
-    return JournalQueueAck::ID_JOURNALQUEUEACK; 
+    return JournalQueueAck::ID_JOURNALQUEUEACK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ std::string JournalQueueAck::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = JournalQueueAck" << std::endl;
-    stream << " Value of JournalQueueAck::ID_JOURNALQUEUEACK = 52" << std::endl; 
+    stream << " Value of JournalQueueAck::ID_JOURNALQUEUEACK = 52" << std::endl;
     stream << " Value of Destination is Below:" << std::endl;
     if( this->getDestination() != NULL ) {
         stream << this->getDestination()->toString() << std::endl;

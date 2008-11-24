@@ -23,6 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
 #include <cms/TemporaryQueue.h>
 #include <vector>
@@ -33,8 +34,8 @@ namespace connector{
 namespace openwire{
 namespace commands{
 
-    class ActiveMQTempQueue : public ActiveMQTempDestination,
-                              public cms::TemporaryQueue {
+    class AMQCPP_API ActiveMQTempQueue : public ActiveMQTempDestination,
+                                         public cms::TemporaryQueue {
     public:
 
         const static unsigned char ID_ACTIVEMQTEMPQUEUE = 102;

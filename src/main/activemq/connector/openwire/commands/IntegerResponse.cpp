@@ -66,7 +66,7 @@ void IntegerResponse::copyDataStructure( const DataStructure* src ) {
     const IntegerResponse* srcPtr = dynamic_cast<const IntegerResponse*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "IntegerResponse::copyDataStructure - src is NULL or invalid" );
@@ -76,7 +76,7 @@ void IntegerResponse::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char IntegerResponse::getDataStructureType() const {
-    return IntegerResponse::ID_INTEGERRESPONSE; 
+    return IntegerResponse::ID_INTEGERRESPONSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ std::string IntegerResponse::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = IntegerResponse" << std::endl;
-    stream << " Value of IntegerResponse::ID_INTEGERRESPONSE = 34" << std::endl; 
+    stream << " Value of IntegerResponse::ID_INTEGERRESPONSE = 34" << std::endl;
     stream << " Value of Result = " << this->getResult() << std::endl;
     stream << Response::toString();
     stream << "End Class = IntegerResponse" << std::endl;

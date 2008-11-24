@@ -68,14 +68,14 @@ void ProducerAck::copyDataStructure( const DataStructure* src ) {
     const ProducerAck* srcPtr = dynamic_cast<const ProducerAck*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "ProducerAck::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId( 
-            dynamic_cast<ProducerId*>( 
+        this->setProducerId(
+            dynamic_cast<ProducerId*>(
                 srcPtr->getProducerId()->cloneDataStructure() ) );
     }
     this->setSize( srcPtr->getSize() );
@@ -83,7 +83,7 @@ void ProducerAck::copyDataStructure( const DataStructure* src ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ProducerAck::getDataStructureType() const {
-    return ProducerAck::ID_PRODUCERACK; 
+    return ProducerAck::ID_PRODUCERACK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ std::string ProducerAck::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = ProducerAck" << std::endl;
-    stream << " Value of ProducerAck::ID_PRODUCERACK = 19" << std::endl; 
+    stream << " Value of ProducerAck::ID_PRODUCERACK = 19" << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;

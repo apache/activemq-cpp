@@ -73,33 +73,33 @@ void MessagePull::copyDataStructure( const DataStructure* src ) {
     const MessagePull* srcPtr = dynamic_cast<const MessagePull*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
-    
+
         throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "MessagePull::copyDataStructure - src is NULL or invalid" );
     }
     if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId( 
-            dynamic_cast<ConsumerId*>( 
+        this->setConsumerId(
+            dynamic_cast<ConsumerId*>(
                 srcPtr->getConsumerId()->cloneDataStructure() ) );
     }
     if( srcPtr->getDestination() != NULL ) {
-        this->setDestination( 
-            dynamic_cast<ActiveMQDestination*>( 
+        this->setDestination(
+            dynamic_cast<ActiveMQDestination*>(
                 srcPtr->getDestination()->cloneDataStructure() ) );
     }
     this->setTimeout( srcPtr->getTimeout() );
     this->setCorrelationId( srcPtr->getCorrelationId() );
     if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId( 
-            dynamic_cast<MessageId*>( 
+        this->setMessageId(
+            dynamic_cast<MessageId*>(
                 srcPtr->getMessageId()->cloneDataStructure() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessagePull::getDataStructureType() const {
-    return MessagePull::ID_MESSAGEPULL; 
+    return MessagePull::ID_MESSAGEPULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ std::string MessagePull::toString() const {
     ostringstream stream;
 
     stream << "Begin Class = MessagePull" << std::endl;
-    stream << " Value of MessagePull::ID_MESSAGEPULL = 20" << std::endl; 
+    stream << " Value of MessagePull::ID_MESSAGEPULL = 20" << std::endl;
     stream << " Value of ConsumerId is Below:" << std::endl;
     if( this->getConsumerId() != NULL ) {
         stream << this->getConsumerId()->toString() << std::endl;
