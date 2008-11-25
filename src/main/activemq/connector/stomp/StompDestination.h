@@ -20,6 +20,7 @@
 
 #include <string>
 
+#include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/ActiveMQProperties.h>
 #include <decaf/util/StringTokenizer.h>
@@ -37,7 +38,7 @@ namespace stomp{
      * one of Topic, Queue, TemporaryTopic, or TemporaryQueue.
      */
     template <typename T>
-    class StompDestination : public T {
+    class AMQCPP_API StompDestination : public T {
     private:
 
         // Params that are optional on the destination
