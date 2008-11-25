@@ -26,7 +26,7 @@ namespace decaf{
 namespace internal{
 namespace net{
 
-    class URIEncoderDecoder {
+    class DECAF_API URIEncoderDecoder {
     private:
 
         static const std::string digits;
