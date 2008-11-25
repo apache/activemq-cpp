@@ -62,6 +62,8 @@ void SubscriptionInfoMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, Dat
             tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );
         info->setSelector( tightUnmarshalString( dataIn, bs ) );
         info->setSubcriptionName( tightUnmarshalString( dataIn, bs ) );
+        info->setSubscribedDestination( dynamic_cast< ActiveMQDestination* >(
+            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -81,6 +83,7 @@ int SubscriptionInfoMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataS
         rc += tightMarshalCachedObject1( wireFormat, info->getDestination(), bs );
         rc += tightMarshalString1( info->getSelector(), bs );
         rc += tightMarshalString1( info->getSubcriptionName(), bs );
+        rc += tightMarshalNestedObject1( wireFormat, info->getSubscribedDestination(), bs );
 
         return rc + 0;
     }
@@ -102,6 +105,7 @@ void SubscriptionInfoMarshaller::tightMarshal2( OpenWireFormat* wireFormat, Data
         tightMarshalCachedObject2( wireFormat, info->getDestination(), dataOut, bs );
         tightMarshalString2( info->getSelector(), dataOut, bs );
         tightMarshalString2( info->getSubcriptionName(), dataOut, bs );
+        tightMarshalNestedObject2( wireFormat, info->getSubscribedDestination(), dataOut, bs );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -121,6 +125,8 @@ void SubscriptionInfoMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, Dat
             looseUnmarshalCachedObject( wireFormat, dataIn ) ) );
         info->setSelector( looseUnmarshalString( dataIn ) );
         info->setSubcriptionName( looseUnmarshalString( dataIn ) );
+        info->setSubscribedDestination( dynamic_cast< ActiveMQDestination* >( 
+            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -140,6 +146,7 @@ void SubscriptionInfoMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataS
         looseMarshalCachedObject( wireFormat, info->getDestination(), dataOut );
         looseMarshalString( info->getSelector(), dataOut );
         looseMarshalString( info->getSubcriptionName(), dataOut );
+        looseMarshalNestedObject( wireFormat, info->getSubscribedDestination(), dataOut );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )

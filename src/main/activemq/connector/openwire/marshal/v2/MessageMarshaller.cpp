@@ -93,6 +93,20 @@ void MessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, DataStructur
         info->setUserID( tightUnmarshalString( dataIn, bs ) );
         info->setRecievedByDFBridge( bs->readBoolean() );
         info->setDroppable( bs->readBoolean() );
+
+        if( bs->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getCluster().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getCluster().push_back( dynamic_cast< BrokerId* >(
+                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );
+            }
+        }
+        else {
+            info->getCluster().clear();
+        }
+        info->setBrokerInTime( tightUnmarshalLong( wireFormat, dataIn, bs ) );
+        info->setBrokerOutTime( tightUnmarshalLong( wireFormat, dataIn, bs ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -133,6 +147,9 @@ int MessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, DataStructure*
         rc += tightMarshalString1( info->getUserID(), bs );
         bs->writeBoolean( info->isRecievedByDFBridge() );
         bs->writeBoolean( info->isDroppable() );
+        rc += tightMarshalObjectArray1( wireFormat, info->getCluster(), bs );
+        rc += tightMarshalLong1( wireFormat, info->getBrokerInTime(), bs );
+        rc += tightMarshalLong1( wireFormat, info->getBrokerOutTime(), bs );
 
         return rc + 9;
     }
@@ -182,6 +199,9 @@ void MessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, DataStructure
         tightMarshalString2( info->getUserID(), dataOut, bs );
         bs->readBoolean();
         bs->readBoolean();
+        tightMarshalObjectArray2( wireFormat, info->getCluster(), dataOut, bs );
+        tightMarshalLong2( wireFormat, info->getBrokerInTime(), dataOut, bs );
+        tightMarshalLong2( wireFormat, info->getBrokerOutTime(), dataOut, bs );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -242,6 +262,20 @@ void MessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, DataStructur
         info->setUserID( looseUnmarshalString( dataIn ) );
         info->setRecievedByDFBridge( dataIn->readBoolean() );
         info->setDroppable( dataIn->readBoolean() );
+
+        if( dataIn->readBoolean() ) {
+            short size = dataIn->readShort();
+            info->getCluster().reserve( size );
+            for( int i = 0; i < size; i++ ) {
+                info->getCluster().push_back( dynamic_cast<BrokerId* >(
+                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );
+            }
+        }
+        else {
+            info->getCluster().clear();
+        }
+        info->setBrokerInTime( looseUnmarshalLong( wireFormat, dataIn ) );
+        info->setBrokerOutTime( looseUnmarshalLong( wireFormat, dataIn ) );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
@@ -291,6 +325,9 @@ void MessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, DataStructure*
         looseMarshalString( info->getUserID(), dataOut );
         dataOut->writeBoolean( info->isRecievedByDFBridge() );
         dataOut->writeBoolean( info->isDroppable() );
+        looseMarshalObjectArray( wireFormat, info->getCluster(), dataOut );
+        looseMarshalLong( wireFormat, info->getBrokerInTime(), dataOut );
+        looseMarshalLong( wireFormat, info->getBrokerOutTime(), dataOut );
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
