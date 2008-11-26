@@ -30,25 +30,27 @@ namespace openwire{
     class OpenwireTransactionTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( OpenwireTransactionTest );
-        CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testSendReceiveTransactedBatches );
+        CPPUNIT_TEST( testSendRollback );
         CPPUNIT_TEST_SUITE_END();
 
     private:
 
         TestSupport* testSupport;
 
+        static const int batchCount = 10;
+        static const int batchSize = 20;
+
     public:
 
         OpenwireTransactionTest();
         virtual ~OpenwireTransactionTest();
 
-        virtual void setUp() {
-            testSupport = new TestSupport;
-            testSupport->initialize(IntegrationCommon::getInstance().getOpenwireURL(), cms::Session::SESSION_TRANSACTED);
-        };
-        virtual void tearDown() { delete testSupport; };
+        virtual void setUp();
+        virtual void tearDown();
 
-        virtual void test();
+        virtual void testSendReceiveTransactedBatches();
+        virtual void testSendRollback();
 
     };
 
