@@ -155,8 +155,69 @@ void OpenwireTransactionTest::testSendRollback() {
         session->commit();
 
         // sends a message that gets rollbacked
-        producer->send( session->createTextMessage( "I'm going to get rolled back." ) );
+        auto_ptr<Message> rollback(
+            session->createTextMessage( "I'm going to get rolled back." ) );
+        producer->send( rollback.get() );
         session->rollback();
+
+        // sends a message
+        producer->send( outbound2.get() );
+        session->commit();
+
+        // receives the first message
+        auto_ptr<TextMessage> inbound1(
+            dynamic_cast<TextMessage*>( consumer->receive( 1500 ) ) );
+
+        // receives the second message
+        auto_ptr<TextMessage> inbound2(
+            dynamic_cast<TextMessage*>( consumer->receive( 4000 ) ) );
+
+        // validates that the rollbacked was not consumed
+        session->commit();
+
+        CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
+        CPPUNIT_ASSERT( outbound2->getText() == inbound2->getText() );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireTransactionTest::testSendSessionClose() {
+
+    try{
+
+        // Create CMS Object for Comms, this one is owned by the TestSupport
+        // class.
+        cms::Session* session = testSupport->getSession();
+
+        auto_ptr<cms::Topic> topic( session->createTopic("MYTOPIC") );
+        auto_ptr<cms::MessageConsumer> consumer( session->createConsumer( topic.get() ) );
+        auto_ptr<cms::MessageProducer> producer( session->createProducer( topic.get() ) );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+        auto_ptr<TextMessage> outbound1( session->createTextMessage( "First Message" ) );
+        auto_ptr<TextMessage> outbound2( session->createTextMessage( "Second Message" ) );
+
+        // sends a message
+        producer->send( outbound1.get() );
+        session->commit();
+
+        // sends a message that gets rollbacked
+        auto_ptr<Message> rollback(
+            session->createTextMessage( "I'm going to get rolled back." ) );
+        producer->send( rollback.get() );
+        consumer->close();
+
+        topic.reset( NULL );
+        consumer.reset( NULL );
+        producer.reset( NULL );
+        testSupport->reconnectSession();
+        session = testSupport->getSession();
+        topic.reset( session->createTopic("MYTOPIC") );
+        consumer.reset( session->createConsumer( topic.get() ) );
+        producer.reset( session->createProducer( topic.get() ) );
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
 
         // sends a message
         producer->send( outbound2.get() );

@@ -89,6 +89,9 @@ namespace integration{
             const std::string& password,
             const std::string& clientId );
 
+        virtual void reconnect();
+        virtual void reconnectSession();
+
     public:
 
         std::string brokerUrl;

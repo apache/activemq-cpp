@@ -32,6 +32,7 @@ namespace openwire{
         CPPUNIT_TEST_SUITE( OpenwireTransactionTest );
         CPPUNIT_TEST( testSendReceiveTransactedBatches );
         CPPUNIT_TEST( testSendRollback );
+//        CPPUNIT_TEST( testSendSessionClose );
         CPPUNIT_TEST_SUITE_END();
 
     private:
@@ -49,8 +50,9 @@ namespace openwire{
         virtual void setUp();
         virtual void tearDown();
 
-        virtual void testSendReceiveTransactedBatches();
-        virtual void testSendRollback();
+        void testSendReceiveTransactedBatches();
+        void testSendRollback();
+        void testSendSessionClose();
 
     };
 

@@ -84,10 +84,8 @@ void TestSupport::initialize( const string& brokerUrl, cms::Session::Acknowledge
 
         // Set ourself as a recipient of Exceptions
         connection->setExceptionListener( this );
+        reconnectSession();
         connection->start();
-
-        // Create a Session
-        session = connection->createSession( ackMode );
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
@@ -274,4 +272,25 @@ void TestSupport::onMessage( const cms::Message* message )
         return;
     }
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TestSupport::reconnect() {
+    if( connection != NULL ) {
+        connection->close();
+        delete connection;
+    }
+
+    this->initialize( this->brokerUrl, this->ackMode );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TestSupport::reconnectSession() {
+
+    if (session != NULL) {
+        session->close();
+        delete session;
+    }
+
+    session = connection->createSession( this->ackMode );
 }
