@@ -208,6 +208,25 @@ std::vector<std::string> System::getEnvArray() {
     return buffer;
 }
 
+#elif defined(_APPLE_)
+
+////////////////////////////////////////////////////////////////////////////////
+char*** _NSGetEnviron();
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> System::getEnvArray() {
+
+    std::vector<std::string> buffer;
+
+    char **environ = *_NSGetEnviron();
+
+    for( int i = 0; *(environ + i); i++ ){
+        buffer.push_back( environ[i] );
+    }
+
+    return buffer;
+}
+
 #else
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,11 +236,6 @@ extern char** environ;
 std::vector<std::string> System::getEnvArray() {
 
     std::vector<std::string> buffer;
-    int count = 0;
-
-    for( int i = 0; *(environ + i); i++ ){
-        count++;
-    }
 
     for( int i = 0; *(environ + i); i++ ){
         buffer.push_back( environ[i] );
