@@ -16,26 +16,35 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-  integration/IntegrationCommon.cpp \
-  integration/TestSupport.cpp \
-  integration/TestRegistry.cpp \
-  integration/connector/openwire/OpenwireAsyncSenderTest.cpp \
-  integration/connector/openwire/OpenwireCmsTemplateTest.cpp \
-  integration/connector/openwire/OpenwireDurableTest.cpp \
-  integration/connector/openwire/OpenwireExpirationTest.cpp \
-  integration/connector/openwire/OpenwireSimpleRollbackTest.cpp \
-  integration/connector/openwire/OpenwireSimpleTest.cpp \
-  integration/connector/openwire/OpenwireSlowListenerTest.cpp \
-  integration/connector/openwire/OpenwireTransactionTest.cpp \
-  integration/connector/openwire/OpenwireTempDestinationTest.cpp \
-  integration/connector/stomp/AsyncSenderTest.cpp \
-  integration/connector/stomp/CmsTemplateTest.cpp \
-  integration/connector/stomp/DurableTest.cpp \
-  integration/connector/stomp/ExpirationTest.cpp \
-  integration/connector/stomp/SimpleRollbackTest.cpp \
-  integration/connector/stomp/SimpleTest.cpp \
-  integration/connector/stomp/TransactionTest.cpp \
-  integration/connector/stomp/StompStressTests.cpp \
+  activemq/util/CMSListener.cpp \
+  activemq/util/CMSProvider.cpp \
+  activemq/util/IntegrationCommon.cpp \
+  activemq/test/AsyncSenderTest.cpp \
+  activemq/test/CmsTemplateTest.cpp \
+  activemq/test/DurableTest.cpp \
+  activemq/test/ExpirationTest.cpp \
+  activemq/test/SimpleRollbackTest.cpp \
+  activemq/test/SimpleTest.cpp \
+  activemq/test/TransactionTest.cpp \
+  activemq/test/SlowListenerTest.cpp \
+  activemq/test/stomp/StompAsyncSenderTest.cpp \
+  activemq/test/stomp/StompCmsTemplateTest.cpp \
+  activemq/test/stomp/StompDurableTest.cpp \
+  activemq/test/stomp/StompExpirationTest.cpp \
+  activemq/test/stomp/StompSimpleRollbackTest.cpp \
+  activemq/test/stomp/StompSimpleTest.cpp \
+  activemq/test/stomp/StompTransactionTest.cpp \
+  activemq/test/stomp/StompSlowListenerTest.cpp \
+  activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
+  activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
+  activemq/test/openwire/OpenwireDurableTest.cpp \
+  activemq/test/openwire/OpenwireExpirationTest.cpp \
+  activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
+  activemq/test/openwire/OpenwireSimpleTest.cpp \
+  activemq/test/openwire/OpenwireTransactionTest.cpp \
+  activemq/test/openwire/OpenwireTempDestinationTest.cpp \
+  activemq/test/openwire/OpenwireSlowListenerTest.cpp \
+  TestRegistry.cpp \
   main.cpp
 
 ## Compile this as part of make check
