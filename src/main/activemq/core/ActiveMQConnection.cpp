@@ -20,19 +20,18 @@
 #include <cms/Session.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/Boolean.h>
 #include <decaf/util/Iterator.h>
 
+using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::connector;
+using namespace activemq::exceptions;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
-using namespace activemq::connector;
-using namespace activemq::exceptions;
-using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData) {
@@ -288,6 +287,35 @@ void ActiveMQConnection::sendPullRequest( const connector::ConsumerInfo* consume
 
         this->connectionData->getConnector()->pullMessage( consumer, timeout );
     }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::destroyDestination( cms::Destination* destination )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::lang::exceptions::UnsupportedOperationException,
+           activemq::exceptions::ActiveMQException ) {
+
+    try{
+
+        if( destination == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Destination passed was NULL" );
+        }
+
+        if( this->isClosed() ) {
+            throw IllegalStateException(
+                __FILE__, __LINE__, "Connection Closed" );
+        }
+
+        // Ask the connector to perform a remove.
+        this->connectionData->getConnector()->destroyDestination( destination );
+    }
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

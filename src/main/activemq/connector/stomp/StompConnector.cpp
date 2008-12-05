@@ -752,6 +752,21 @@ void StompConnector::pullMessage( const connector::ConsumerInfo* info AMQCPP_UNU
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void StompConnector::destroyDestination( const cms::Destination* destination )
+    throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try {
+        throw UnsupportedOperationException(
+            __FILE__, __LINE__,
+            "StompConnector::destroyDestination - No Stomp Support for Destroying Destinations");
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ConnectorException )
+    AMQ_CATCHALL_THROW( ConnectorException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void StompConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException ) {
 

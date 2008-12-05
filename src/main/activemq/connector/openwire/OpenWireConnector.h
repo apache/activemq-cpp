@@ -636,6 +636,22 @@ namespace openwire{
         virtual void pullMessage( const connector::ConsumerInfo* info, long long timeout )
             throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
+        /**
+         * Requests that the Broker remove a Destination, destroying all resources that
+         * have been associated with it.  The Destination is removed and does not become
+         * valid again until a client creates a new Destination with that name again and
+         * sends a message that is bound to it.
+         *
+         * @param destination
+         *        The Destination to Remove.
+         *
+         * @throw ConnectorException if a communications error occurs
+         *
+         * @throw UnsupportedOperationException if the connector can't pull
+         */
+        virtual void destroyDestination( const cms::Destination* destination )
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
+
     public: // transport::CommandListener
 
         /**

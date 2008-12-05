@@ -20,6 +20,7 @@
 
 #include <cms/Connection.h>
 #include <cms/ExceptionListener.h>
+#include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/Dispatcher.h>
@@ -28,7 +29,9 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/Map.h>
 #include <decaf/util/Set.h>
-#include <activemq/util/Config.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
 
 #include <string>
 
@@ -125,6 +128,38 @@ namespace core{
          */
         virtual void sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
             throw ( exceptions::ActiveMQException );
+
+        /**
+         * Checks if this connection has been closed
+         * @return true if the connection is closed
+         */
+        bool isClosed() const {
+            return this->closed;
+        }
+
+        /**
+         * Requests that the Broker removes the given Destination.  Calling this
+         * method implies that the client is finished with the Destination and that
+         * no other messages will be sent or received for the given Destination.  The
+         * Broker frees all resources it has associated with this Destination.
+         *
+         * @param destination
+         *        The Destination the Broker will be requested to remove.
+         *
+         * @throws NullPointerException
+         *         If the passed Destination is Null
+         * @throws IllegalStateException
+         *         If the connection is closed.
+         * @throws UnsupportedOperationException
+         *         If the wire format in use does not support this operation.
+         * @throws ActiveMQException
+         *         If any other error occurs during the attempt to destroy the destination.
+         */
+        virtual void destroyDestination( cms::Destination* destination )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalStateException,
+                   decaf::lang::exceptions::UnsupportedOperationException,
+                   activemq::exceptions::ActiveMQException );
 
     public:   // Connection Interface Methods
 

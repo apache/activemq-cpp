@@ -1257,6 +1257,29 @@ void OpenWireConnector::pullMessage( const connector::ConsumerInfo* info, long l
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void OpenWireConnector::destroyDestination( const cms::Destination* destination )
+    throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try {
+
+        const commands::ActiveMQDestination* amqDestination =
+            dynamic_cast<const commands::ActiveMQDestination*>( destination );
+
+        commands::DestinationInfo command;
+
+        command.setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
+        command.setOperationType( DESTINATION_REMOVE_OPERATION );
+        command.setDestination( amqDestination->cloneDataStructure() );
+
+        // Send the message to the broker.
+        syncRequest( &command );
+    }
+    AMQ_CATCH_RETHROW( ConnectorException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, OpenWireConnectorException )
+    AMQ_CATCHALL_THROW( OpenWireConnectorException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void OpenWireConnector::closeResource( ConnectorResource* resource )
     throw ( ConnectorException ) {
 
@@ -1540,7 +1563,7 @@ void OpenWireConnector::createTemporaryDestination(
         commands::DestinationInfo command;
         command.setConnectionId(
             connectionInfo.getConnectionId()->cloneDataStructure() );
-        command.setOperationType( 0 ); // 0 is add
+        command.setOperationType( DESTINATION_ADD_OPERATION );
         command.setDestination( tempDestination->cloneDataStructure() );
 
         // Send the message to the broker.
@@ -1563,7 +1586,7 @@ void OpenWireConnector::destroyTemporaryDestination(
         commands::DestinationInfo command;
         command.setConnectionId(
             connectionInfo.getConnectionId()->cloneDataStructure() );
-        command.setOperationType( 1 ); // 1 is remove
+        command.setOperationType( DESTINATION_REMOVE_OPERATION );
         command.setDestination(
             tempDestination->cloneDataStructure() );
 

@@ -39,6 +39,7 @@ namespace openwire{
         CPPUNIT_TEST( testWithZeroConsumerPrefetch );
         CPPUNIT_TEST( testMapMessageSendToQueue );
         CPPUNIT_TEST( testMapMessageSendToTopic );
+        CPPUNIT_TEST( testDestroyDestination );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -53,6 +54,7 @@ namespace openwire{
         virtual void testWithZeroConsumerPrefetch();
         virtual void testMapMessageSendToQueue();
         virtual void testMapMessageSendToTopic();
+        virtual void testDestroyDestination();
 
     };
 

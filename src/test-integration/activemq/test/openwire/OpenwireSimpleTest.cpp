@@ -18,6 +18,7 @@
 #include "OpenwireSimpleTest.h"
 
 #include <activemq/util/CMSListener.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/util/UUID.h>
@@ -25,6 +26,7 @@
 using namespace std;
 using namespace cms;
 using namespace activemq;
+using namespace activemq::core;
 using namespace activemq::test;
 using namespace activemq::test::openwire;
 using namespace activemq::util;
@@ -201,4 +203,47 @@ void OpenwireSimpleTest::testMapMessageSendToTopic() {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireSimpleTest::testDestroyDestination() {
+
+    try {
+
+        cmsProvider->setDestinationName( "testDestroyDestination" );
+        cmsProvider->reconnectSession();
+
+        // Create CMS Object for Comms
+        cms::Session* session( cmsProvider->getSession() );
+        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+        cms::MessageProducer* producer = cmsProvider->getProducer();
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+        auto_ptr<cms::TextMessage> txtMessage( session->createTextMessage( "TEST MESSAGE" ) );
+
+        // Send some text messages
+        producer->send( txtMessage.get() );
+
+        auto_ptr<cms::Message> message( consumer->receive( 1000 ) );
+        CPPUNIT_ASSERT( message.get() != NULL );
+
+        ActiveMQConnection* connection =
+            dynamic_cast<ActiveMQConnection*>( cmsProvider->getConnection() );
+
+        CPPUNIT_ASSERT( connection != NULL );
+
+        try{
+            connection->destroyDestination( cmsProvider->getDestination() );
+            CPPUNIT_ASSERT_MESSAGE( "Destination Should be in use.", false );
+        } catch( ActiveMQException& ex ) {
+        }
+
+        cmsProvider->reconnectSession();
+
+        connection->destroyDestination( cmsProvider->getDestination() );
+
+    } catch( ActiveMQException& ex ) {
+        ex.printStackTrace();
+        CPPUNIT_ASSERT_MESSAGE( "CAUGHT EXCEPTION", false );
+    } AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -53,18 +53,22 @@ namespace connector{
     protected:
 
         // Flags the state we are in for connection to broker.
-        enum ConnectionState
-        {
+        enum ConnectionState {
             CONNECTION_STATE_DISCONNECTED,
             CONNECTION_STATE_ERROR,
             CONNECTION_STATE_CONNECTING,
             CONNECTION_STATE_CONNECTED
         };
 
+        // Flags to be applied when sending the Destination Info Command.
+        enum DestinationActions {
+            DESTINATION_ADD_OPERATION = 0,
+            DESTINATION_REMOVE_OPERATION = 1
+        };
+
     public:    // Connector Types
 
-        enum AckType
-        {
+        enum AckType {
             ACK_TYPE_DELIVERED = 0,  // Message delivered but not consumed
             ACK_TYPE_POISON    = 1,  // Message could not be processed due to
                                      // poison pill but discard anyway
@@ -383,14 +387,31 @@ namespace connector{
         /**
          * Pulls a message from the the service provider that this Connector is
          * associated with. This could be because the service has a prefetch
-         * policy that is set to zero and therefor requires each message to
+         * policy that is set to zero and therefore requires each message to
          * be pulled from the server to the client via a poll.
+         *
          * @param info - the consumer info for the consumer to pull for
          * @param timeout - the time that the caller is going to wait for new messages
          * @throw ConnectorException if a communications error occurs
          * @throw UnsupportedOperationException if the connector can't pull
          */
         virtual void pullMessage( const connector::ConsumerInfo* info, long long timeout )
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+
+        /**
+         * Requests that the Broker remove a Destination, destroying all resources that
+         * have been associated with it.  The Destination is removed and does not become
+         * valid again until a client creates a new Destination with that name again and
+         * sends a message that is bound to it.
+         *
+         * @param destination
+         *        The Destination to Remove.
+         *
+         * @throw ConnectorException if a communications error occurs
+         *
+         * @throw UnsupportedOperationException if the connector can't pull
+         */
+        virtual void destroyDestination( const cms::Destination* destination )
             throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
     };

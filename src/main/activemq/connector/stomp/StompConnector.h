@@ -105,12 +105,12 @@ namespace stomp{
         StompSessionManager* sessionManager;
 
         /**
-         * Next avaliable Producer Id
+         * Next available Producer Id
          */
         util::LongSequenceGenerator producerIds;
 
         /**
-         * Next avaliable Transaction Id
+         * Next available Transaction Id
          */
         util::LongSequenceGenerator transactionIds;
 
@@ -224,7 +224,7 @@ namespace stomp{
 
         /**
          * Creates a Session Info object for this connector
-         * @param ackMode Acknowledgement Mode of the Session
+         * @param ackMode Acknowledgment Mode of the Session
          * @returns Session Info Object
          * @throws ConnectorException
          */
@@ -486,7 +486,7 @@ namespace stomp{
         }
 
         /**
-         * Sets the Listner of exceptions for this connector
+         * Sets the Listener of exceptions for this connector
          * @param listener ExceptionListener the observer.
          */
         virtual void setExceptionListener(
@@ -507,7 +507,7 @@ namespace stomp{
         /**
          * Pulls a message from the the service provider that this Connector is
          * associated with. This could be because the service has a prefetch
-         * policy that is set to zero and therefor requires each message to
+         * policy that is set to zero and therefore requires each message to
          * be pulled from the server to the client via a poll.
          * @param info - the consumer info for the consumer to pull for
          * @param timeout - the time that the caller is going to wait for new messages
@@ -515,6 +515,22 @@ namespace stomp{
          * @throw UnsupportedOperationException if the connector can't pull
          */
         virtual void pullMessage( const connector::ConsumerInfo* info, long long timeout )
+            throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
+         * Requests that the Broker remove a Destination, destroying all resources that
+         * have been associated with it.  The Destination is removed and does not become
+         * valid again until a client creates a new Destination with that name again and
+         * sends a message that is bound to it.
+         *
+         * @param destination
+         *        The Destination to Remove.
+         *
+         * @throw ConnectorException if a communications error occurs
+         *
+         * @throw UnsupportedOperationException if the connector can't pull
+         */
+        virtual void destroyDestination( const cms::Destination* destination )
             throw ( ConnectorException, decaf::lang::exceptions::UnsupportedOperationException );
 
     public: // transport::CommandListener
