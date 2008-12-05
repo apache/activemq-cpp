@@ -222,6 +222,15 @@ void SimpleTest::testMultipleConnections() {
 
         message.reset( consumer2->receive( 2000 ) );
         CPPUNIT_ASSERT( message.get() != NULL );
+
+        // Clean up if we can
+        consumer1->close();
+        consumer2->close();
+        producer->close();
+        session1->close();
+        session2->close();
+
+        this->cmsProvider->destroyDestination( topic.get() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -253,6 +262,15 @@ void SimpleTest::testMultipleSessions() {
 
         message.reset( consumer2->receive( 2000 ) );
         CPPUNIT_ASSERT( message.get() != NULL );
+
+        // Clean up if we can
+        consumer1->close();
+        consumer2->close();
+        producer->close();
+        session1->close();
+        session2->close();
+
+        this->cmsProvider->destroyDestination( topic.get() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -283,6 +301,13 @@ void SimpleTest::testReceiveAlreadyInQueue() {
 
         auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
         CPPUNIT_ASSERT( message.get() != NULL );
+
+        // Clean up if we can
+        consumer->close();
+        producer->close();
+        session->close();
+
+        this->cmsProvider->destroyDestination( topic.get() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

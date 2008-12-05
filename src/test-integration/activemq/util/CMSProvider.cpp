@@ -21,6 +21,7 @@
 
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/util/IntegrationCommon.h>
 
 #include <decaf/util/UUID.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -393,7 +394,9 @@ void CMSProvider::destroyDestination( const cms::Destination* destination ) {
         try{
             amqConnection->destroyDestination( destination );
         } catch( decaf::lang::Exception& ex ) {
-            ex.printStackTrace();
+            if( IntegrationCommon::debug ) {
+                ex.printStackTrace();
+            }
         } catch( ... ) {
         }
     }
