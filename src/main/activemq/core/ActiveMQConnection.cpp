@@ -293,7 +293,7 @@ void ActiveMQConnection::sendPullRequest( const connector::ConsumerInfo* consume
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::destroyDestination( cms::Destination* destination )
+void ActiveMQConnection::destroyDestination( const cms::Destination* destination )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalStateException,
            decaf::lang::exceptions::UnsupportedOperationException,

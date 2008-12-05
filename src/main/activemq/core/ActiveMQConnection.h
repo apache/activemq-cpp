@@ -155,7 +155,7 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
-        virtual void destroyDestination( cms::Destination* destination )
+        virtual void destroyDestination( const cms::Destination* destination )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalStateException,
                    decaf::lang::exceptions::UnsupportedOperationException,
