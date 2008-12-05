@@ -185,6 +185,11 @@ namespace util {
          */
         virtual cms::Destination* getTempDestination();
 
+        /**
+         * Destroys a Destination at the Broker side, freeing the resources associated with it.
+         */
+        virtual void destroyDestination( const cms::Destination* destination );
+
     };
 
 }}

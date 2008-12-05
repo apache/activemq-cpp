@@ -20,6 +20,7 @@
 #include <cms/ConnectionFactory.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/core/ActiveMQConnection.h>
 
 #include <decaf/util/UUID.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -28,6 +29,7 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::util;
+using namespace activemq::core;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang::exceptions;
@@ -57,11 +59,34 @@ CMSProvider::~CMSProvider() {
 ////////////////////////////////////////////////////////////////////////////////
 void CMSProvider::close() throw( decaf::lang::Exception ) {
 
+    if( this->consumer.get() != NULL ) {
+        this->consumer->close();
+    }
+    if( this->producer.get() != NULL ) {
+        this->producer->close();
+    }
+    if( this->noDestProducer.get() != NULL ) {
+        this->noDestProducer->close();
+    }
+
+    if( this->destination.get() != NULL && !isDurable() ) {
+        this->destroyDestination( this->destination.get() );
+    }
+
+    this->destination.reset( NULL );
+    this->tempDestination.reset( NULL );
+
+    if( this->session.get() != NULL ) {
+        this->session->close();
+    }
+
+    if( this->connection.get() != NULL ) {
+        this->connection->close();
+    }
+
     this->consumer.reset( NULL );
     this->producer.reset( NULL );
     this->noDestProducer.reset( NULL );
-    this->destination.reset( NULL );
-    this->tempDestination.reset( NULL );
     this->session.reset( NULL );
     this->connection.reset( NULL );
 }
@@ -126,6 +151,16 @@ void CMSProvider::reconnectSession() {
                 "CMSProvider has not been Initialized or is closed." );
         }
 
+        if( this->consumer.get() != NULL ) {
+            this->consumer->close();
+        }
+        if( this->producer.get() != NULL ) {
+            this->producer->close();
+        }
+        if( this->noDestProducer.get() != NULL ) {
+            this->noDestProducer->close();
+        }
+
         // Free any previously held resources.
         this->destination.reset( NULL );
         this->tempDestination.reset( NULL );
@@ -145,6 +180,7 @@ void CMSProvider::reconnectSession() {
 void CMSProvider::unsubscribe() {
 
     try {
+
         if( this->connection.get() == NULL ) {
             throw decaf::lang::exceptions::IllegalStateException(
                 __FILE__, __LINE__,
@@ -335,6 +371,31 @@ cms::Destination* CMSProvider::getTempDestination() {
         }
 
         return this->tempDestination.get();
+    }
+    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CMSProvider::destroyDestination( const cms::Destination* destination ) {
+
+    try {
+
+        if( this->connection.get() == NULL ) {
+            throw decaf::lang::exceptions::IllegalStateException(
+                __FILE__, __LINE__,
+                "CMSProvider has not been Initialized or is closed." );
+        }
+
+        ActiveMQConnection* amqConnection =
+            dynamic_cast<ActiveMQConnection*>( this->connection.get() );
+
+        try{
+            amqConnection->destroyDestination( destination );
+        } catch( decaf::lang::Exception& ex ) {
+            ex.printStackTrace();
+        } catch( ... ) {
+        }
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
