@@ -137,7 +137,7 @@ namespace core{
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
-         * @param ackMode the Acknowledgement Mode to use.
+         * @param ackMode the Acknowledgment Mode to use.
          * @throws CMSException
          */
         virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
@@ -159,13 +159,13 @@ namespace core{
 
         /**
          * Gets the registered Exception Listener for this connection
-         * @return pointer to an exception listnener or NULL
+         * @return pointer to an exception listener or NULL
          */
         virtual cms::ExceptionListener* getExceptionListener() const{
             return exceptionListener; };
 
         /**
-         * Sets the registed Exception Listener for this connection
+         * Sets the registered Exception Listener for this connection
          * @param listener pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener( cms::ExceptionListener* listener ){
@@ -219,7 +219,7 @@ namespace core{
     public:
 
         /**
-         * Notify the excpetion listener
+         * Notify the exception listener
          * @param ex the exception to fire
          */
         void fire( exceptions::ActiveMQException& ex ) {
