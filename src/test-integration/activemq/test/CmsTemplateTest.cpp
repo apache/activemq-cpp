@@ -18,25 +18,13 @@
 #include "CmsTemplateTest.h"
 
 #include <activemq/util/IntegrationCommon.h>
+#include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/cmsutil/CmsTemplate.h>
+#include <activemq/cmsutil/MessageCreator.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
+#include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/lang/Thread.h>
-
-#include <cms/Connection.h>
-#include <cms/MessageConsumer.h>
-#include <cms/MessageProducer.h>
-#include <cms/MessageListener.h>
-#include <cms/Startable.h>
-#include <cms/Closeable.h>
-#include <cms/MessageListener.h>
-#include <cms/ExceptionListener.h>
-#include <cms/Topic.h>
-#include <cms/Queue.h>
-#include <cms/TemporaryTopic.h>
-#include <cms/TemporaryQueue.h>
-#include <cms/Session.h>
-#include <cms/BytesMessage.h>
-#include <cms/TextMessage.h>
 
 using namespace std;
 using namespace cms;
@@ -49,6 +37,123 @@ using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace decaf::lang;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace activemq {
+namespace test {
+
+    class TextMessageCreator : public activemq::cmsutil::MessageCreator {
+    private:
+
+        std::string text;
+
+    public:
+
+        TextMessageCreator( const std::string& text) {
+            this->text = text;
+        }
+
+        virtual ~TextMessageCreator() {}
+
+        std::string getText() const {
+            return text;
+        }
+
+        virtual cms::Message* createMessage( cms::Session* session )
+            throw ( cms::CMSException ) {
+
+            return session->createTextMessage(text);
+        }
+    };
+
+    class Sender : public decaf::lang::Runnable {
+    private:
+
+        activemq::core::ActiveMQConnectionFactory cf;
+        activemq::cmsutil::CmsTemplate cmsTemplate;
+        int count;
+
+    public:
+
+        Sender( const std::string& url, bool pubSub, const std::string& destName, int count ) {
+            cf.setBrokerURL(url);
+            cmsTemplate.setConnectionFactory(&cf);
+            cmsTemplate.setPubSubDomain(pubSub);
+            cmsTemplate.setDefaultDestinationName(destName);
+            cmsTemplate.setDeliveryPersistent(false);
+            this->count = count;
+        }
+
+        virtual ~Sender(){
+        }
+
+        virtual void run() {
+            try {
+
+                // Send a batch of messages.
+                TextMessageCreator tmc("hello world");
+                for( int ix=0; ix<count; ++ix ) {
+                    cmsTemplate.send( &tmc );
+                }
+
+            } catch( cms::CMSException& ex) {
+                ex.printStackTrace();
+            }
+        }
+    };
+
+    class Receiver : public decaf::lang::Runnable {
+    private:
+
+        activemq::core::ActiveMQConnectionFactory cf;
+        activemq::cmsutil::CmsTemplate cmsTemplate;
+        int count;
+        int numReceived;
+        decaf::util::concurrent::CountDownLatch ready;
+
+    public:
+
+        Receiver( const std::string& url, bool pubSub, const std::string& destName, int count )
+            : ready(1) {
+
+            cf.setBrokerURL(url);
+            cmsTemplate.setConnectionFactory(&cf);
+            cmsTemplate.setPubSubDomain(pubSub);
+            cmsTemplate.setDefaultDestinationName(destName);
+            cmsTemplate.setDeliveryPersistent(false);
+            this->count = count;
+        }
+
+        virtual ~Receiver(){
+        }
+
+        int getNumReceived() const {
+            return numReceived;
+        }
+
+        virtual void waitUntilReady() {
+            ready.await();
+        }
+
+        virtual void run() {
+
+            try {
+                numReceived = 0;
+
+                ready.countDown();
+                // Receive a batch of messages.
+                for( int ix=0; ix<count; ++ix ) {
+                    cms::Message* message = cmsTemplate.receive();
+                    numReceived++;
+                    delete message;
+                }
+
+            } catch( cms::CMSException& ex) {
+                ex.printStackTrace();
+            }
+        }
+    };
+}}
 
 ////////////////////////////////////////////////////////////////////////////////
 void CmsTemplateTest::testBasics() {
