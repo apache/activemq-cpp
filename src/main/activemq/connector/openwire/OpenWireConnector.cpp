@@ -1436,7 +1436,7 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
             if( command->isResponseRequired() ) {
                 command->setResponseRequired( false );
 
-                oneway( info );
+                oneway( command );
             }
 
             delete command;
