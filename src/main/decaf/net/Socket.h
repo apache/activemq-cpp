@@ -115,7 +115,7 @@ namespace net{
         virtual int getReceiveBufferSize() const throw( SocketException ) = 0;
 
         /**
-         * Sets the recieve buffer size.
+         * Sets the receive buffer size.
          * @param size Number of bytes to set the receive buffer to.
          * @throws SocketException if the operation fails.
          */
