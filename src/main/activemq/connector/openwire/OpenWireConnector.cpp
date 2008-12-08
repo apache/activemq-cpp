@@ -47,6 +47,7 @@
 #include <activemq/connector/openwire/commands/ConnectionId.h>
 #include <activemq/connector/openwire/commands/DestinationInfo.h>
 #include <activemq/connector/openwire/commands/ExceptionResponse.h>
+#include <activemq/connector/openwire/commands/KeepAliveInfo.h>
 #include <activemq/connector/openwire/commands/Message.h>
 #include <activemq/connector/openwire/commands/MessagePull.h>
 #include <activemq/connector/openwire/commands/MessageAck.h>
@@ -1430,6 +1431,16 @@ void OpenWireConnector::onCommand( transport::Command* command ) {
         } else if( typeid( *command ) == typeid( commands::BrokerInfo ) ) {
             this->brokerInfo =
                 dynamic_cast<commands::BrokerInfo*>( command );
+        } else if( typeid( *command ) == typeid( commands::KeepAliveInfo ) ) {
+
+            if( command->isResponseRequired() ) {
+                command->setResponseRequired( false );
+
+                oneway( info );
+            }
+
+            delete command;
+
         } else if( typeid( *command ) == typeid( commands::ShutdownInfo ) ) {
 
             try {
