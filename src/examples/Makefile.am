@@ -29,14 +29,21 @@ example_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
 ## Simple Async Consumer
 simple_async_consumer_sources = ./consumers/SimpleAsyncConsumer.cpp
-bin_PROGRAMS += simple_async_consumer 
+noinst_PROGRAMS = simple_async_consumer 
 simple_async_consumer_SOURCES = $(simple_async_consumer_sources)
 simple_async_consumer_LDADD= $(AMQ_TEST_LIBS)
 simple_async_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
 ## Simple Producer
 simple_producer_sources = ./producers/SimpleProducer.cpp
-bin_PROGRAMS += simple_producer 
+noinst_PROGRAMS += simple_producer 
 simple_producer_SOURCES = $(simple_producer_sources)
 simple_producer_LDADD= $(AMQ_TEST_LIBS)
 simple_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Chat Sample
+chat_sources = ./topics/chat/Chat.cpp
+noinst_PROGRAMS += chat 
+chat_SOURCES = $(chat_sources)
+chat_LDADD= $(AMQ_TEST_LIBS)
+chat_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
