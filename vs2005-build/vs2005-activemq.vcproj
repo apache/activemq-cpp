@@ -7744,6 +7744,34 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="io"
+					>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardErrorOutputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardErrorOutputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardInputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardInputStream.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardOutputStream.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\io\StandardOutputStream.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="lang"
@@ -8022,10 +8050,6 @@
 				</File>
 				<File
 					RelativePath="..\src\main\decaf\io\Reader.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\decaf\io\StandardErrorOutputStream.h"
 					>
 				</File>
 				<File

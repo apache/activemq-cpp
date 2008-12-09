@@ -374,176 +374,256 @@
 				RelativePath="..\src\test-integration\main.cpp"
 				>
 			</File>
-			<Filter
-				Name="integration"
+			<File
+				RelativePath="..\src\test-integration\TestRegistry.cpp"
 				>
-				<File
-					RelativePath="..\src\test-integration\integration\IntegrationCommon.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test-integration\integration\IntegrationCommon.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test-integration\integration\TestRegistry.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test-integration\integration\TestSupport.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test-integration\integration\TestSupport.h"
-					>
-				</File>
+			</File>
+			<Filter
+				Name="activemq"
+				>
 				<Filter
-					Name="connector"
+					Name="test"
 					>
-					<Filter
-						Name="stomp"
+					<File
+						RelativePath="..\src\test-integration\activemq\test\AsyncSenderTest.cpp"
 						>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\AsyncSenderTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\AsyncSenderTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\CmsTemplateTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\CmsTemplateTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\DurableTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\DurableTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\ExpirationTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\ExpirationTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\SimpleRollbackTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\SimpleRollbackTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\SimpleTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\SimpleTest.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\StompStressTests.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\StompStressTests.h"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\TransactionTest.cpp"
-							>
-						</File>
-						<File
-							RelativePath="..\src\test-integration\integration\connector\stomp\TransactionTest.h"
-							>
-						</File>
-					</Filter>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\AsyncSenderTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\CmsTemplateTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\CmsTemplateTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\CMSTestFixture.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\DurableTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\DurableTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\ExpirationTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\ExpirationTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SimpleRollbackTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SimpleRollbackTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SimpleTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SimpleTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SlowListenerTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\SlowListenerTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\TransactionTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\TransactionTest.h"
+						>
+					</File>
 					<Filter
 						Name="openwire"
 						>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireAsyncSenderTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireAsyncSenderTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireAsyncSenderTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireCmsTemplateTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireCmsTemplateTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireCmsTemplateTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireDurableTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireDurableTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireDurableTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireExpirationTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireExpirationTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSimpleRollbackTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSimpleRollbackTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSimpleRollbackTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSimpleTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSimpleTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSimpleTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSlowListenerTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireSlowListenerTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireSlowListenerTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTempDestinationTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTempDestinationTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireTempDestinationTest.h"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTransactionTest.cpp"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.cpp"
 							>
 						</File>
 						<File
-							RelativePath="..\src\test-integration\integration\connector\openwire\OpenwireTransactionTest.h"
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireTransactionTest.h"
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="stomp"
+						>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompAsyncSenderTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompCmsTemplateTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompDurableTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompDurableTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompExpirationTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompExpirationTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSimpleRollbackTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSimpleTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSimpleTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompSlowListenerTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompTransactionTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompTransactionTest.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\CMSListener.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\CMSListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\CMSProvider.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\CMSProvider.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\IntegrationCommon.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\util\IntegrationCommon.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
