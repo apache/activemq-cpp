@@ -84,7 +84,7 @@ namespace io{
         virtual bool markSupported() const = 0;
 
         /**
-         * Indcates the number of bytes avaialable.
+         * Indicates the number of bytes available.
          * @return the number of bytes available on this input stream.
          * @throws IOException if an error occurs.
          */
@@ -127,7 +127,7 @@ namespace io{
          * of the stream has been reached. Subclasses are encouraged to
          * provide a more efficient implementation of this method.
          * @param num - the number of bytes to skip
-         * @returns total butes skipped
+         * @returns total bytes skipped
          * @throws IOException if an error occurs
          */
         virtual std::size_t skip( std::size_t num )
