@@ -85,6 +85,9 @@ cc_sources = \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
     decaf/internal/util/HexStringParser.cpp \
+    decaf/internal/io/StandardErrorOutputStream.cpp \
+    decaf/internal/io/StandardOutputStream.cpp \
+    decaf/internal/io/StandardInputStream.cpp \
     decaf/internal/nio/BufferFactory.cpp \
     decaf/internal/nio/ByteArrayPerspective.cpp \
     decaf/internal/nio/ByteArrayBuffer.cpp \
@@ -365,7 +368,6 @@ h_sources = \
     decaf/lang/exceptions/InterruptedException.h \
     decaf/lang/exceptions/NumberFormatException.h \
     decaf/io/BufferedOutputStream.h \
-    decaf/io/StandardErrorOutputStream.h \
     decaf/io/OutputStream.h \
     decaf/io/Writer.h \
     decaf/io/ByteArrayOutputStream.h \
@@ -440,6 +442,9 @@ h_sources = \
     decaf/internal/DecafRuntime.h \
     decaf/internal/util/HexStringParser.h \
     decaf/internal/util/ByteArrayAdapter.h \
+    decaf/internal/io/StandardErrorOutputStream.h \
+    decaf/internal/io/StandardOutputStream.h \
+    decaf/internal/io/StandardInputStream.h \
     decaf/internal/nio/BufferFactory.h \
     decaf/internal/nio/ByteArrayPerspective.h \
     decaf/internal/nio/ByteArrayBuffer.h \

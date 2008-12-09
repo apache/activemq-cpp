@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _DECAF_IO_STANDARDERROROUTPUTSTREAM_H_
-#define _DECAF_IO_STANDARDERROROUTPUTSTREAM_H_
 
+#ifndef _DECAF_INTERNAL_IO_STANDARDOUTPUTSTREAM_H_
+#define _DECAF_INTERNAL_IO_STANDARDOUTPUTSTREAM_H_
+
+#include <decaf/util/Config.h>
 #include <decaf/io/OutputStream.h>
 #include <decaf/util/concurrent/Mutex.h>
 
-#include <iostream>
+namespace decaf {
+namespace internal {
+namespace io {
 
-namespace decaf{
-namespace io{
-
-    class DECAF_API StandardErrorOutputStream : public OutputStream {
+    class DECAF_API StandardOutputStream : public decaf::io::OutputStream {
     private:
 
         /**
@@ -35,12 +36,8 @@ namespace io{
 
     public:
 
-        /**
-         * Default Constructor
-         */
-        StandardErrorOutputStream(void) {}
-
-        virtual ~StandardErrorOutputStream(void) {}
+        StandardOutputStream();
+        virtual ~StandardOutputStream();
 
         /**
          * Writes a single byte to the output stream.
@@ -48,9 +45,7 @@ namespace io{
          * @throws IOException thrown if an error occurs.
          */
         virtual void write( unsigned char c )
-            throw ( IOException ) {
-           std::cerr << c;
-        }
+            throw ( decaf::io::IOException );
 
         /**
          * Writes an array of bytes to the output stream.
@@ -58,53 +53,33 @@ namespace io{
          * @throws IOException thrown if an error occurs.
          */
         virtual void write( const std::vector<unsigned char>& buffer )
-            throw ( IOException ) {
-
-            if( buffer.empty() ){
-                return;
-            }
-
-            this->write( &buffer[0], 0, buffer.size() );
-        }
+            throw ( decaf::io::IOException );
 
         /**
          * Writes an array of bytes to the output stream.
          * @param buffer The array of bytes to write.
          * @param offset, the position to start writing in buffer.
          * @param len The number of bytes from the buffer to be written.
-         * @throws IOException thrown if an error occurs.
+         * @throws decaf::io::IOException thrown if an error occurs.
          * @throws NullPointerException if buffer is null.
          */
         virtual void write( const unsigned char* buffer,
                             std::size_t offset,
                             std::size_t len )
-            throw ( IOException, lang::exceptions::NullPointerException ) {
-
-            if( buffer == NULL ) {
-                throw lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__,
-                    "StandardErrorOutputStream::write - Passed buffer is null." );
-            }
-
-            for( int i = 0; i < len; ++i ) {
-                std::cerr << buffer[i+offset];
-            }
-        }
+            throw ( decaf::io::IOException, lang::exceptions::NullPointerException );
 
         /**
          * Invokes flush on the target output stream.
-         * throws IOException if an error occurs
+         * throws decaf::io::IOException if an error occurs
          */
-        virtual void flush() throw ( IOException ){
-            std::cerr.flush();
-        }
+        virtual void flush() throw ( decaf::io::IOException );
 
         /**
          * Invokes close on the target output stream.
          * throws CMSException if an error occurs
          */
-        void close() throw( lang::Exception ){
-            std::cerr.flush();
+        virtual void close() throw( decaf::lang::Exception ){
+            this->flush();
         }
 
     public:
@@ -115,7 +90,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void lock() throw( Exception ){
+        virtual void lock() throw( decaf::lang::Exception ){
             mutex.lock();
         }
 
@@ -123,7 +98,7 @@ namespace io{
          * Unlocks the object.
          * @throws Exception
          */
-        virtual void unlock() throw( lang::Exception ){
+        virtual void unlock() throw( decaf::lang::Exception ){
             mutex.unlock();
         }
 
@@ -133,7 +108,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void wait() throw( lang::Exception ){
+        virtual void wait() throw( decaf::lang::Exception ){
             mutex.wait();
         }
 
@@ -142,10 +117,10 @@ namespace io{
          * by a call to Notify.  Must have this object locked before
          * calling.  This wait will timeout after the specified time
          * interval.
-         * @param time in millisecsonds to wait, or WAIT_INIFINITE
+         * @param time in milliseconds to wait, or WAIT_INIFINITE
          * @throws Exception
          */
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ){
+        virtual void wait( unsigned long millisecs ) throw( decaf::lang::Exception ){
             mutex.wait( millisecs );
         }
 
@@ -155,7 +130,7 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notify() throw( lang::Exception ){
+        virtual void notify() throw( decaf::lang::Exception ){
             mutex.notify();
         }
 
@@ -165,12 +140,11 @@ namespace io{
          * calling.
          * @throws Exception
          */
-        virtual void notifyAll() throw( lang::Exception ){
+        virtual void notifyAll() throw( decaf::lang::Exception ){
             mutex.notifyAll();
         }
-
     };
 
-}
+}}}
 
-#endif /*_DECAF_IO_STANDARDERROROUTPUTSTREAM_H_*/
+#endif /* _DECAF_INTERNAL_IO_STANDARDOUTPUTSTREAM_H_ */
