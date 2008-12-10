@@ -23,6 +23,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::exceptions;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
@@ -33,7 +34,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 MessagePropertyInterceptor::MessagePropertyInterceptor(
-    commands::Message* message, util::PrimitiveMap* properties )
+    commands::Message* message, PrimitiveMap* properties )
         throw( decaf::lang::exceptions::NullPointerException ) {
 
     if( message == NULL ) {
@@ -56,7 +57,7 @@ MessagePropertyInterceptor::~MessagePropertyInterceptor() {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool MessagePropertyInterceptor::getBooleanProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+	throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -75,7 +76,7 @@ bool MessagePropertyInterceptor::getBooleanProperty( const std::string& name ) c
 
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char MessagePropertyInterceptor::getByteProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -94,7 +95,7 @@ unsigned char MessagePropertyInterceptor::getByteProperty( const std::string& na
 
 ////////////////////////////////////////////////////////////////////////////////
 double MessagePropertyInterceptor::getDoubleProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -113,7 +114,7 @@ double MessagePropertyInterceptor::getDoubleProperty( const std::string& name ) 
 
 ////////////////////////////////////////////////////////////////////////////////
 float MessagePropertyInterceptor::getFloatProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -132,7 +133,7 @@ float MessagePropertyInterceptor::getFloatProperty( const std::string& name ) co
 
 ////////////////////////////////////////////////////////////////////////////////
 int MessagePropertyInterceptor::getIntProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -155,7 +156,7 @@ int MessagePropertyInterceptor::getIntProperty( const std::string& name ) const
 
 ////////////////////////////////////////////////////////////////////////////////
 long long MessagePropertyInterceptor::getLongProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -178,7 +179,7 @@ long long MessagePropertyInterceptor::getLongProperty( const std::string& name )
 
 ////////////////////////////////////////////////////////////////////////////////
 short MessagePropertyInterceptor::getShortProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -197,7 +198,7 @@ short MessagePropertyInterceptor::getShortProperty( const std::string& name ) co
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string MessagePropertyInterceptor::getStringProperty( const std::string& name ) const
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -217,9 +218,8 @@ std::string MessagePropertyInterceptor::getStringProperty( const std::string& na
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setBooleanProperty( const std::string& name,
-                                 bool value )
-                                    throw( exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setBooleanProperty( const std::string& name, bool value )
+	throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -237,9 +237,8 @@ void MessagePropertyInterceptor::setBooleanProperty( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setByteProperty( const std::string& name,
-                              unsigned char value )
-                                throw( exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setByteProperty( const std::string& name, unsigned char value )
+	throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -257,9 +256,8 @@ void MessagePropertyInterceptor::setByteProperty( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setDoubleProperty( const std::string& name,
-                                double value )
-                                    throw( exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setDoubleProperty( const std::string& name, double value )
+	throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -277,9 +275,8 @@ void MessagePropertyInterceptor::setDoubleProperty( const std::string& name,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePropertyInterceptor::setFloatProperty( const std::string& name,
-                               float value )
-                                throw( exceptions::ActiveMQException ) {
+void MessagePropertyInterceptor::setFloatProperty( const std::string& name, float value )
+	throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -298,7 +295,7 @@ void MessagePropertyInterceptor::setFloatProperty( const std::string& name,
 
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePropertyInterceptor::setIntProperty( const std::string& name, int value )
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -321,7 +318,7 @@ void MessagePropertyInterceptor::setIntProperty( const std::string& name, int va
 
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePropertyInterceptor::setLongProperty( const std::string& name, long long value )
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
         this->properties->setLong( name, value );
@@ -333,7 +330,7 @@ void MessagePropertyInterceptor::setLongProperty( const std::string& name, long 
 
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePropertyInterceptor::setShortProperty( const std::string& name, short value )
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -357,7 +354,7 @@ void MessagePropertyInterceptor::setShortProperty( const std::string& name, shor
 ////////////////////////////////////////////////////////////////////////////////
 void MessagePropertyInterceptor::setStringProperty( const std::string& name,
                                                     const std::string& value )
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
