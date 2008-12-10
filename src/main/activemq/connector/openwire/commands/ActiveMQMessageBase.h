@@ -22,11 +22,13 @@
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/connector/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <activemq/connector/openwire/utils/MessagePropertyInterceptor.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <decaf/util/Date.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <cms/DeliveryMode.h>
 #include <activemq/util/Config.h>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -49,12 +51,15 @@ namespace commands{
         core::ActiveMQAckHandler* ackHandler;
         int redeliveryCount;
         util::PrimitiveMap properties;
+        std::auto_ptr<utils::MessagePropertyInterceptor> propertiesInterceptor;
 
     public:
 
         ActiveMQMessageBase() {
             this->ackHandler = NULL;
             this->redeliveryCount = 0;
+            this->propertiesInterceptor.reset(
+                new utils::MessagePropertyInterceptor( this, &this->properties ) );
         }
 
         virtual ~ActiveMQMessageBase() {}
@@ -287,7 +292,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getBool( name );
+                return this->propertiesInterceptor->getBooleanProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -304,7 +309,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getByte( name );
+                return this->propertiesInterceptor->getByteProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -321,7 +326,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getDouble( name );
+                return this->propertiesInterceptor->getDoubleProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -338,7 +343,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getFloat( name );
+                return this->propertiesInterceptor->getFloatProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -355,7 +360,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getInt( name );
+                return this->propertiesInterceptor->getIntProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -372,7 +377,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getLong( name );
+                return this->propertiesInterceptor->getLongProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -389,7 +394,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getShort( name );
+                return this->propertiesInterceptor->getShortProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -406,7 +411,7 @@ namespace commands{
             throw( cms::CMSException ) {
 
             try{
-                return properties.getString( name );
+                return this->propertiesInterceptor->getStringProperty( name );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -424,7 +429,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
-                properties.setBool( name, value );
+                this->propertiesInterceptor->setBooleanProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -442,7 +447,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
-                properties.setByte( name, value );
+                this->propertiesInterceptor->setByteProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -460,7 +465,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
-                properties.setDouble( name, value );
+                this->propertiesInterceptor->setDoubleProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -478,7 +483,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
-                properties.setFloat( name, value );
+                this->propertiesInterceptor->setFloatProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -496,7 +501,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
-                properties.setInt( name, value );
+                this->propertiesInterceptor->setIntProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -514,7 +519,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
-                properties.setLong( name, value );
+                this->propertiesInterceptor->setLongProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -532,7 +537,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
-                properties.setShort( name, value );
+                this->propertiesInterceptor->setShortProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
@@ -550,7 +555,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
-                properties.setString( name, value );
+                this->propertiesInterceptor->setStringProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
             AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )

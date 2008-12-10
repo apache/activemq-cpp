@@ -63,6 +63,7 @@ cc_sources = \
     activemq/connector/openwire/utils/HexTable.cpp \
     activemq/connector/openwire/utils/BooleanStream.cpp \
     activemq/connector/openwire/utils/OpenwireStringSupport.cpp \
+    activemq/connector/openwire/utils/MessagePropertyInterceptor.cpp \
     activemq/connector/openwire/marshal/PrimitiveMapMarshaller.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/connector/BaseConnectorResource.cpp \
@@ -248,6 +249,7 @@ h_sources = \
     activemq/connector/openwire/utils/HexTable.h \
     activemq/connector/openwire/utils/BooleanStream.h \
     activemq/connector/openwire/utils/OpenwireStringSupport.h \
+    activemq/connector/openwire/utils/MessagePropertyInterceptor.h \
     activemq/connector/openwire/marshal/PrimitiveMapMarshaller.h \
     activemq/connector/ConnectorFactoryMap.h \
     activemq/connector/Connector.h \

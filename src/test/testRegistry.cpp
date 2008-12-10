@@ -99,6 +99,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::BooleanSt
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::HexTableTest );
 #include <activemq/connector/openwire/utils/OpenwireStringSupportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireStringSupportTest );
+#include <activemq/connector/openwire/utils/MessagePropertyInterceptorTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::MessagePropertyInterceptorTest );
 
 #include <activemq/connector/openwire/OpenWireFormatTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTest );

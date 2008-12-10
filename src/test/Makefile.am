@@ -46,6 +46,7 @@ cc_sources = \
   activemq/connector/openwire/utils/HexTableTest.cpp \
   activemq/connector/openwire/utils/BooleanStreamTest.cpp \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
+  activemq/connector/openwire/utils/MessagePropertyInterceptorTest.cpp \
   activemq/connector/openwire/commands/ActiveMQBytesMessageTest.cpp \
   activemq/connector/openwire/commands/ActiveMQMapMessageTest.cpp \
   activemq/connector/openwire/commands/ActiveMQMessageTest.cpp \
@@ -163,6 +164,7 @@ h_sources = \
   activemq/connector/openwire/utils/HexTableTest.h \
   activemq/connector/openwire/utils/BooleanStreamTest.h \
   activemq/connector/openwire/utils/OpenwireStringSupportTest.h \
+  activemq/connector/openwire/utils/MessagePropertyInterceptorTest.h \
   activemq/connector/openwire/commands/ActiveMQBytesMessageTest.h \
   activemq/connector/openwire/commands/ActiveMQMapMessageTest.h \
   activemq/connector/openwire/commands/ActiveMQMessageTest.h \
