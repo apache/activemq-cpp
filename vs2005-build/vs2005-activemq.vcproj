@@ -867,6 +867,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\main\activemq\connector\openwire\utils\MessagePropertyInterceptor.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\main\activemq\connector\openwire\utils\MessagePropertyInterceptor.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\main\activemq\connector\openwire\utils\OpenwireStringSupport.cpp"
 							>
 						</File>

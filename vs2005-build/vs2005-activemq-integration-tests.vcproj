@@ -421,6 +421,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\test-integration\activemq\test\JmsMessageGroupsTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test-integration\activemq\test\JmsMessageGroupsTest.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\test-integration\activemq\test\SimpleRollbackTest.cpp"
 						>
 					</File>
@@ -485,6 +493,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireExpirationTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\openwire\OpenwireJmsMessageGroupsTest.h"
 							>
 						</File>
 						<File
@@ -561,6 +577,14 @@
 						</File>
 						<File
 							RelativePath="..\src\test-integration\activemq\test\stomp\StompExpirationTest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test-integration\activemq\test\stomp\StompJmsMessageGroupsTest.h"
 							>
 						</File>
 						<File

@@ -5755,6 +5755,14 @@
 							>
 						</File>
 						<File
+							RelativePath="..\src\test\activemq\connector\openwire\utils\MessagePropertyInterceptorTest.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\src\test\activemq\connector\openwire\utils\MessagePropertyInterceptorTest.h"
+							>
+						</File>
+						<File
 							RelativePath="..\src\test\activemq\connector\openwire\utils\OpenwireStringSupportTest.cpp"
 							>
 						</File>
