@@ -54,7 +54,7 @@ Chat::~Chat() {
         }
 
     } catch( CMSException& ex ) {
-        onException( ex );
+        ex.printStackTrace();
     }
 }
 
@@ -115,14 +115,13 @@ void Chat::run() {
             char s[120];
 #ifdef AIX
             if( fgets( s, 120, stdin ) == NULL ) {
-                    break;
-            }
-            else if ( feof(stdin) || (strlen(s) == 0) || (s[0] == L'\n') ) {
+                break;
+            } else if ( feof( stdin ) || ( strlen(s) == 0 ) || ( s[0] == L'\n' ) ) {
                 break;
             }
 #else
 
-            std::cin.getline(s, 120, '\n');
+            std::cin.getline( s, 120, '\n' );
 
             // If there was an error reading input, or
             // the line was empty, exit the program.
@@ -214,7 +213,7 @@ int main( int argc, char *argv[] ) {
 
         char *arg = argv[i];
 
-        if( apr_strnatcmp(arg,"-b" ) == 0 ) {
+        if( apr_strnatcmp( arg,"-b" ) == 0 ) {
 
             if( i == argc - 1 || strncmp( argv[i+1], "-", 1 ) == 0 ) {
                 std::cout << "error: missing broker name:port" << "\n";
@@ -225,8 +224,8 @@ int main( int argc, char *argv[] ) {
             continue;
         }
 
-        if( apr_strnatcmp(arg, "-u") == 0 ) {
-            if (i == argc - 1 || strncmp( argv[i+1], "-", 1) == 0 ) {
+        if( apr_strnatcmp( arg, "-u" ) == 0 ) {
+            if( i == argc - 1 || strncmp( argv[i+1], "-", 1 ) == 0 ) {
                 std::cout << "error: missing user name" << "\n";
                 exit(1);
             }
@@ -235,7 +234,7 @@ int main( int argc, char *argv[] ) {
             continue;
         }
 
-        if( apr_strnatcmp(arg, "-p") == 0 ) {
+        if( apr_strnatcmp( arg, "-p" ) == 0 ) {
             if( i == argc - 1 || strncmp( argv[i+1], "-", 1 ) == 0 ) {
                 std::cout << "error: missing password" << "\n";
                 exit(1);
@@ -245,7 +244,7 @@ int main( int argc, char *argv[] ) {
             continue;
         }
 
-        if( apr_strnatcmp(arg, "-h") == 0 ) {
+        if( apr_strnatcmp( arg, "-h" ) == 0 ) {
             printUsage();
             exit(1);
         }
@@ -268,7 +267,3 @@ int main( int argc, char *argv[] ) {
 
     return 0;
 }
-
-
-
-
