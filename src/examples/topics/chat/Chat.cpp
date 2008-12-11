@@ -77,6 +77,15 @@ void Chat::run() {
         this->connection.reset(
             connectionFactory->createConnection( this->getUsername(), this->getPassword() ) );
 
+    } catch( cms::CMSException& ex ) {
+        std::cout << "==================================================" << std::endl;
+        std::cout << "= Failed to Connect To Broker, Is it Running?    =" << std::endl;
+        std::cout << "==================================================" << std::endl;
+        return;
+    }
+
+    try{
+
         this->session.reset( this->connection->createSession( cms::Session::AUTO_ACKNOWLEDGE ) );
         this->topic.reset( this->session->createTopic( this->getTopicName() ) );
         this->producer.reset( this->session->createProducer( this->topic.get() ) );
