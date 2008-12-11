@@ -77,6 +77,8 @@ void Chat::run() {
         this->connection.reset(
             connectionFactory->createConnection( this->getUsername(), this->getPassword() ) );
 
+        this->connection->setExceptionListener( this );
+
     } catch( cms::CMSException& ex ) {
         std::cout << "==================================================" << std::endl;
         std::cout << "= Failed to Connect To Broker, Is it Running?    =" << std::endl;
