@@ -24,7 +24,11 @@ using namespace activemq::connector::openwire;
 using namespace activemq::connector::openwire::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQBlobMessage::ActiveMQBlobMessage() {
+const std::string ActiveMQBlobMessage::BINARY_MIME_TYPE = "application/octet-stream";
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQBlobMessage::ActiveMQBlobMessage() :
+    mimeType( ActiveMQBlobMessage::BINARY_MIME_TYPE ), deletedByBroker( false ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

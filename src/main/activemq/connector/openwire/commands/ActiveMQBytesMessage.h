@@ -83,7 +83,7 @@ namespace commands{
 
             stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
             stream << ActiveMQMessageBase<cms::BytesMessage>::toString();
-            stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
+            stream << "End Class = ActiveMQBytesMessage" << std::endl;
 
             return stream.str();
         }

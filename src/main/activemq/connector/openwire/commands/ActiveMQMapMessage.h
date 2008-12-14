@@ -56,9 +56,9 @@ namespace commands{
         virtual unsigned char getDataStructureType() const;
 
         /**
-         * Determine if this object is aware of marshalling and should have
-         * its before and after marshalling methods called.  Defaults to false.
-         * @returns true if aware of marshalling
+         * Determine if this object is aware of marshaling and should have
+         * its before and after marshaling methods called.  Defaults to false.
+         * @returns true if aware of marshaling
          */
         virtual bool isMarshalAware() const {
             return true;
@@ -108,7 +108,7 @@ namespace commands{
 
             stream << "Begin Class = ActiveMQMapMessage" << std::endl;
             stream << ActiveMQMessageBase<cms::MapMessage>::toString();
-            stream << "Begin Class = ActiveMQMapMessage" << std::endl;
+            stream << "End Class = ActiveMQMapMessage" << std::endl;
 
             return stream.str();
         }
@@ -126,7 +126,7 @@ namespace commands{
     public:   // CMS Message
 
         /**
-         * Clonse this message exactly, returns a new instance that the
+         * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
@@ -330,7 +330,7 @@ namespace commands{
 
         /**
          * Fetches a reference to this objects PrimitiveMap, if one needs
-         * to be created or unmarshalled, this will perform the correct steps.
+         * to be created or unmarshaled, this will perform the correct steps.
          * @returns reference to a PrimtiveMap.
          */
         util::PrimitiveMap& getMap() throw ( decaf::lang::exceptions::NullPointerException );

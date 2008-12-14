@@ -77,7 +77,7 @@ namespace commands{
 
             stream << "Begin Class = ActiveMQTextMessage" << std::endl;
             stream << ActiveMQMessageBase<cms::TextMessage>::toString();
-            stream << "Begin Class = ActiveMQTextMessage" << std::endl;
+            stream << "End Class = ActiveMQTextMessage" << std::endl;
 
             return stream.str();
         }
@@ -95,7 +95,7 @@ namespace commands{
     public:   // CMS Message
 
         /**
-         * Clonse this message exactly, returns a new instance that the
+         * Clone this message exactly, returns a new instance that the
          * caller is required to delete.
          * @return new copy of this message
          */
