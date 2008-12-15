@@ -136,7 +136,7 @@ namespace net {
          * http://user:passwd@host:port/
          * @return user info part string.
          */
-        std::string getUserinfo() const {
+        std::string getUserInfo() const {
             return userinfo;
         }
 
@@ -145,7 +145,7 @@ namespace net {
          * http://user:passwd@host:port/
          * @param userinfo - user info part string.
          */
-        void setUserinfo( const std::string& userinfo ) {
+        void setUserInfo( const std::string& userinfo ) {
             this->userinfo = userinfo;
         }
 

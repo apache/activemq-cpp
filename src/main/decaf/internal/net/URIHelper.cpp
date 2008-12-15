@@ -177,7 +177,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
 
     // Authority was valid, so we capture the results
     if( result.isValid() ) {
-        result.setUserinfo( authority.getUserinfo() );
+        result.setUserInfo( authority.getUserInfo() );
         result.setHost( authority.getHost() );
         result.setPort( authority.getPort() );
         result.setServerAuthority( true );
@@ -358,7 +358,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
 
         // this is a server based uri,
         // fill in the userinfo, host and port fields
-        result.setUserinfo( tempUserinfo );
+        result.setUserInfo( tempUserinfo );
         result.setHost( tempHost );
         result.setPort( tempPort );
         result.setServerAuthority( true );
