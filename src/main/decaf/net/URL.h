@@ -19,6 +19,7 @@
 #define _DECAF_NET_URL_H_
 
 #include <decaf/util/Config.h>
+#include <string>
 
 namespace decaf{
 namespace net{
@@ -106,6 +107,7 @@ namespace net{
     public:
 
         URL();
+        URL( const std::string& url );
         virtual ~URL() {}
 
     };
