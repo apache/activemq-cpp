@@ -24,9 +24,8 @@
 #include <decaf/net/URISyntaxException.h>
 #include <decaf/net/MalformedURLException.h>
 #include <decaf/net/URL.h>
+#include <decaf/internal/net/URIType.h>
 #include <string>
-#include <apr_uri.h>
-#include <decaf/internal/AprPool.h>
 
 namespace decaf{
 namespace net{
@@ -37,12 +36,11 @@ namespace net{
     class DECAF_API URI : public lang::Comparable<URI> {
     private:
 
-        // Apr Data for parsing the uri.
-        apr_uri_t uri;
-        internal::AprPool pool;
+        // The structure that holds the parsed URI data.
+        decaf::internal::net::URIType uri;
 
         // The original string entered from URI( string ), empty if not set.
-        const char* uriString;
+        mutable std::string uriString;
 
         static const std::string unreserved;
         static const std::string punct;
@@ -66,7 +64,7 @@ namespace net{
          */
         URI( const std::string& scheme,
              const std::string& ssp,
-             const std::string& fragment) throw ( URISyntaxException );
+             const std::string& fragment ) throw ( URISyntaxException );
 
         /**
          * Constructs a URI from the given components.
@@ -329,7 +327,7 @@ namespace net{
          * @returns The resulting URI
          * @throws IllegalArgumentException - If the given string violates RFC 2396
          */
-        URI resolve( const std::string& str )
+        URI resolve( const std::string& str ) const
             throw ( lang::exceptions::IllegalArgumentException );
 
         /**
@@ -368,7 +366,7 @@ namespace net{
          * @param uri - The URI to be resolved against this URI
          * @returns The resulting URI
          */
-        URI resolve( const URI& uri );
+        URI resolve( const URI& uri ) const;
 
         /**
          * Returns the content of this URI as a string.
@@ -410,6 +408,13 @@ namespace net{
         static URI create( const std::string uri )
             throw ( lang::exceptions::IllegalArgumentException );
 
+    protected:
+
+        /**
+         * Default Constructor
+         */
+        URI();
+
     private:
 
         /**
@@ -417,9 +422,10 @@ namespace net{
          * URISyntaxException if things fail.
          *
          * @param uri - the URI to parse
+         * @param forceServer - should a server authority be enforced.
          * @throws URISyntaxException if an error occurs.
          */
-        void parseURI( const std::string& uri ) throw ( URISyntaxException );
+        void parseURI( const std::string& uri, bool forceServer ) throw ( URISyntaxException );
 
         /*
          * Quote illegal chars for each component, but not the others
@@ -430,6 +436,56 @@ namespace net{
          */
         std::string quoteComponent( const std::string& component,
                                     const std::string& legalset );
+
+        /*
+         * Encode unicode chars that are not part of US-ASCII char set into the
+         * escaped form
+         *
+         * i.e. The Euro currency symbol is encoded as "%E2%82%AC".
+         *
+         * @param component java.lang.String the component to be converted @param
+         * legalset java.lang.String the legal character set allowed in the
+         * component s @return java.lang.String the converted string
+         */
+        std::string encodeOthers( const std::string& src ) const;
+
+        /**
+         * Decode an encoded URI String.
+         *
+         * @param src - the encoded string
+         * @return the unencoded string version of src.
+         */
+        std::string decode( const std::string& src ) const;
+
+        /**
+         * Compare the Two Hexadecimal encoded strings and return if they are equal.
+         *
+         * @param first - First String to compare.
+         * @param second - The second string to compare.
+         */
+        bool equalsHexCaseInsensitive( const std::string& first,
+                                       const std::string& second ) const;
+
+        /*
+         * Takes a string that may contain hex sequences like %F1 or %2b and
+         * converts the hex values following the '%' to lowercase.
+         *
+         * @param s - String to convert the hex in.
+         */
+        std::string convertHexToLowerCase( const std::string& s ) const;
+
+        /*
+         * Normalize path, and return the resulting string.
+         *
+         * @param path - the path value to normalize.
+         */
+        std::string normalize( const std::string& path ) const;
+
+        /**
+         * Helper method used to re-calculate the scheme specific part of the
+         * resolved or normalized URIs
+         */
+        void setSchemeSpecificPart();
 
     };
 
