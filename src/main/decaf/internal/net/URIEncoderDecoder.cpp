@@ -68,8 +68,8 @@ void URIEncoderDecoder::validate( const std::string& s, const std::string& legal
         if( !( Character::isLetterOrDigit( *itr ) ||
                legal.find( *itr, 0 ) != std::string::npos ||
                ( (unsigned char)ch > 127 &&
-                 !Character::isWhitespace(ch) &&
-                 !Character::isISOControl(ch) ) ) ) {
+                 ( !Character::isWhitespace(ch) ||
+                   !Character::isISOControl(ch) ) ) ) ) {
 
             throw URISyntaxException(
                 __FILE__, __LINE__, s,
@@ -86,13 +86,16 @@ void URIEncoderDecoder::validateSimple( const std::string& s,
     std::string::const_iterator itr = s.begin();
 
     for( int i = 0; itr != s.end(); ++i, ++itr ) {
-        if( !Character::isLetterOrDigit( *itr ) ||
-            !( legal.find( *itr ) > std::string::npos ) ) {
 
-            throw URISyntaxException(
-                __FILE__, __LINE__, s,
-                "string contains invalid ASCII chars", (int)i );
+        if( Character::isLetterOrDigit( *itr ) ||
+            legal.find( *itr ) != std::string::npos ) {
+
+            continue;
         }
+
+        throw URISyntaxException(
+            __FILE__, __LINE__, s,
+            "string contains invalid ASCII chars", (int)i );
     }
 }
 

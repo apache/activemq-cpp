@@ -126,11 +126,11 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         }
 
         // Authority and Path
-        if( temp.at(0) == '/' && temp.at(1) == '/' ) {
+        if( temp != "" && temp.at(0) == '/' && temp.at(1) == '/' ) {
 
             index = temp.find( '/', 2 );
             if( index != std::string::npos ) {
-                result.setAuthority( temp.substr( 2, index ) );
+                result.setAuthority( temp.substr( 2, index - 2 ) );
                 result.setPath( temp.substr( index, std::string::npos ) );
             } else {
                 result.setAuthority( temp.substr( 2, std::string::npos ) );
@@ -148,11 +148,10 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
                 // never be null)
             }
 
-            if( result.getAuthority().length() == 0 ) {
-                result.setAuthority( "" );
-            } else {
+            if( result.getAuthority().length() != 0 ) {
                 validateAuthority( uri, result.getAuthority(), index1 + 3 );
             }
+
         } else { // no authority specified
             result.setPath( temp );
         }
