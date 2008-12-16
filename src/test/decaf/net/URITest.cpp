@@ -32,54 +32,51 @@ URITest::URITest() {
 ////////////////////////////////////////////////////////////////////////////////
 void URITest::test_Constructor_String() {
 
-//    const std::string constructorTests[27] = {
-//        "http://user@www.google.com:45/search?q=helpinfo#somefragment",
-//        // http with authority, query and fragment
-//        "ftp://ftp.is.co.za/rfc/rfc1808.txt", // ftp
-//        "gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles",
-//        // gopher
-//        "mailto:mduerst@ifi.unizh.ch", // mailto
-//        "news:comp.infosystems.www.servers.unix", // news
-//        "telnet://melvyl.ucop.edu/", // telnet
-//        "http://123.24.17.98/test", // IPv4 authority
-//        "http://www.google.com:80/test",// domain name authority
-//        "http://joe@[3ffe:2a00:100:7031::1]:80/test",
-//        // IPv6 authority, with userinfo and port
-//        "/relative", // relative starting with /
-//        "//relative", // relative starting with //
-//        "relative", // relative with no /
-//        "#fragment",// relative just with fragment
-//        "http://user@host:80", // UI, host,port
-//        "http://user@host", // ui, host
-//        "http://host", // host
-//        "http://host:80", // host,port
-//        "http://joe@:80", // ui, port (becomes registry-based)
-//        "file:///foo/bar", // empty authority, non empty path
-//        "ht?tp://hoe@host:80", // miscellaneous tests
-//        "mai/lto:hey?joe#man", "http://host/a%20path#frag",
-//        // path with an escaped octet for space char
-//        "http://host/a%E2%82%ACpath#frag",
-//        // path with escaped octet for unicode char, not USASCII
-//        "http://host/a\u20ACpath#frag",
-//        // path with unicode char, not USASCII equivalent to
-//        // = "http://host/a\u0080path#frag",
-//        "http://host%20name/", // escaped octets in host (becomes
-//        // registry based)
-//        "http://host\u00DFname/", // unicodechar in host (becomes
-//        // registry based)
-//        // equivalent to = "http://host\u00dfname/",
-//        "ht123-+tp://www.google.com:80/test", // legal chars in scheme
-//    };
-//
-//    for( int i = 0; i < 27; i++ ) {
-//        try {
-//            new URI(constructorTests[i]);
-//        } catch ( URISyntaxException e ) {
-//            CPPUNIT_FAIL( string( "Failed to construct URI for: " ) +
-//                          constructorTests[i] + " : " +
-//                          e.getMessage() );
-//        }
-//    }
+    std::vector<std::string> constructorTests;
+    constructorTests.push_back( "http://user@www.google.com:45/search?q=helpinfo#somefragment" );
+    // http with authority, query and fragment
+    constructorTests.push_back( "ftp://ftp.is.co.za/rfc/rfc1808.txt" ); // ftp
+    constructorTests.push_back(
+        "gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles" );
+    // gopher
+    constructorTests.push_back( "mailto:mduerst@ifi.unizh.ch" ); // mailto
+    constructorTests.push_back( "news:comp.infosystems.www.servers.unix" ); // news
+    constructorTests.push_back( "telnet://melvyl.ucop.edu/" ); // telnet
+    constructorTests.push_back( "http://123.24.17.98/test" ); // IPv4 authority
+    constructorTests.push_back( "http://www.google.com:80/test" );// domain name authority
+    constructorTests.push_back( "http://joe@[3ffe:2a00:100:7031::1]:80/test" );
+    // IPv6 authority, with userinfo and port
+    constructorTests.push_back( "/relative" ); // relative starting with /
+    constructorTests.push_back( "//relative" ); // relative starting with //
+    constructorTests.push_back( "relative" ); // relative with no /
+    constructorTests.push_back( "#fragment" );// relative just with fragment
+    constructorTests.push_back( "http://user@host:80" ); // UI, host,port
+    constructorTests.push_back( "http://user@host" ); // ui, host
+    constructorTests.push_back( "http://host" ); // host
+    constructorTests.push_back( "http://host:80" ); // host,port
+    constructorTests.push_back( "http://joe@:80" ); // ui, port (becomes registry-based)
+    constructorTests.push_back( "file:///foo/bar" ); // empty authority, non empty path
+    constructorTests.push_back( "ht?tp://hoe@host:80" ); // miscellaneous tests
+    constructorTests.push_back( "mai/lto:hey?joe#man" );
+    constructorTests.push_back( "http://host/a%20path#frag" );
+    // path with an escaped octet for space char
+    constructorTests.push_back( "http://host/a%E2%82%ACpath#frag" );
+    // path with escaped octet for unicode char, not USASCII
+    constructorTests.push_back( "http://host/a\u20ACpath#frag" );
+    // path with unicode char, not USASCII equivalent to
+    constructorTests.push_back( "http://host%20name/" );
+    // escaped octets in host (becomes registry based)
+    constructorTests.push_back( "http://host\u00DFname/" );
+    // unicodechar in host (becomes registry based)
+    // equivalent to = "http://host\u00dfname/",
+    constructorTests.push_back( "ht123-+tp://www.google.com:80/test" );
+    // legal chars in scheme
+
+    for( unsigned int i = 0; i < constructorTests.size(); i++ ) {
+        CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+            string( "Failed to construct URI for: " ) + constructorTests[i],
+            URI( constructorTests.at(i) ) );
+    }
 
     std::vector<const char*> constructorTestsInvalid;
     // space char in path, not in escaped
@@ -110,47 +107,72 @@ void URITest::test_Constructor_String() {
     // invalid char in scheme specific part
     constructorTestsInvalid.push_back( "mailto:user^name@fklkf.com"  );
 
-//    for( size_t i = 0; i < constructorTestsInvalid.size(); i++ ) {
-//        try {
-//            new URI( constructorTestsInvalid[i] );
-//            CPPUNIT_FAIL( string( "Failed to throw URISyntaxException for: " ) +
-//                          constructorTestsInvalid[i] );
-//        } catch( URISyntaxException e ) {}
-//    }
+    for( unsigned int i = 0; i < constructorTestsInvalid.size(); i++ ) {
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            string( "URI not caught as invalid: " ) + constructorTestsInvalid[i],
+            URI( constructorTestsInvalid.at(i) ),
+            URISyntaxException );
+    }
 
-//    std::string invalid2[18] = {
-//        // authority validation
-//        "http://user@[3ffe:2x00:100:7031::1]:80/test", // malformed
-//        // IPv6 authority
-//        "http://[ipv6address]/apath#frag", // malformed ipv6 address
-//        "http://[ipv6address/apath#frag", // malformed ipv6 address
-//        "http://ipv6address]/apath#frag", // illegal char in host name
-//        "http://ipv6[address/apath#frag",
-//        "http://ipv6addr]ess/apath#frag",
-//        "http://ipv6address[]/apath#frag",
-//        // illegal char in username...
-//        "http://us[]er@host/path?query#frag", "http://host name/path", // illegal
-//        // char
-//        // in
-//        // authority
-//        "http://host^name#fragment", // illegal char in authority
-//        "telnet://us er@hostname/", // illegal char in authority
-//        // missing components
-//        "//", // Authority expected
-//        "ascheme://", // Authority expected
-//        "ascheme:", // Scheme-specific part expected
-//        // scheme validation
-//        "a scheme://reg/", // illegal char
-//        "1scheme://reg/", // non alpha char as 1st char
-//        "asche\u00dfme:ssp", // unicode char , not USASCII
-//        "asc%20heme:ssp" // escape octets
-//    };
+    std::vector<const char*> constructorTestsInvalid2;
+    // authority validation
+    constructorTestsInvalid2.push_back( "http://user@[3ffe:2x00:100:7031::1]:80/test" );// malformed
+    // IPv6 authority
+    constructorTestsInvalid2.push_back( "http://[ipv6address]/apath#frag" ); // malformed ipv6 address
+    constructorTestsInvalid2.push_back( "http://[ipv6address/apath#frag" ); // malformed ipv6 address
+    constructorTestsInvalid2.push_back( "http://ipv6address]/apath#frag" ); // illegal char in host name
+    constructorTestsInvalid2.push_back( "http://ipv6[address/apath#frag" );
+    constructorTestsInvalid2.push_back( "http://ipv6addr]ess/apath#frag" );
+    constructorTestsInvalid2.push_back( "http://ipv6address[]/apath#frag" );
+    // illegal char in username...
+    constructorTestsInvalid2.push_back( "http://us[]er@host/path?query#frag" );
+    constructorTestsInvalid2.push_back( "http://host name/path" ); // illegal
+    // char in authority
+    constructorTestsInvalid2.push_back( "http://host^name#fragment" ); // illegal char in authority
+    constructorTestsInvalid2.push_back( "telnet://us er@hostname/" ); // illegal char in authority
+    // missing components
+    constructorTestsInvalid2.push_back( "//" ); // Authority expected
+    constructorTestsInvalid2.push_back( "ascheme://" ); // Authority expected
+    constructorTestsInvalid2.push_back( "ascheme:" ); // Scheme-specific part expected
+    // scheme validation
+    constructorTestsInvalid2.push_back( "a scheme://reg/" ); // illegal char
+    constructorTestsInvalid2.push_back( "1scheme://reg/" ); // non alpha char as 1st char
+    constructorTestsInvalid2.push_back( "asche\u00dfme:ssp" ); // unicode char , not USASCII
+    constructorTestsInvalid2.push_back( "asc%20heme:ssp" );// escape octets
+
+    for( unsigned int i = 0; i < constructorTestsInvalid2.size(); i++ ) {
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            string( "URI not caught as invalid: " ) + constructorTestsInvalid2[i],
+            URI( constructorTestsInvalid2.at(i) ),
+            URISyntaxException );
+    }
+
+    try {
+        URI("%3");
+        CPPUNIT_FAIL( "Assert 0: URI constructor failed to throw exception on invalid input." );
+    } catch( URISyntaxException& e ) {
+        CPPUNIT_ASSERT_MESSAGE(
+            "Assert 1: Wrong index in URISyntaxException.", 0 == e.getIndex() );
+    }
+
+    // Regression test for HARMONY-25
+    // if port value is negative, the authority should be considered
+    // registry-based.
+//    URI uri("http://host:-8096/path/index.html");
+//    CPPUNIT_ASSERT_MESSAGE(
+//        "Assert 2: returned wrong port value,", -1 == uri.getPort() );
+//    CPPUNIT_ASSERT_MESSAGE( "Assert 3: returned wrong host value,", uri.getHost() == "" );
+//    CPPUNIT_ASSERT_THROW_MESSAGE(
+//        "Assert 4: Expected URISyntaxException: ",
+//        uri.parseServerAuthority(),
+//        URISyntaxException );
 //
-//    for( int i = 0; i < 18; i++ ) {
-//        try {
-//            new URI( invalid2[i] );
-//            CPPUNIT_FAIL(
-//                string( "Failed to throw URISyntaxException for: " ) + invalid2[i] );
-//        } catch( URISyntaxException e ) {}
-//    }
+//    URI uri2( "http", "//myhost:-8096", "" );
+//    CPPUNIT_ASSERT_MESSAGE(
+//        "Assert 5: returned wrong port value,", -1 == uri2.getPort() );
+//    CPPUNIT_ASSERT_MESSAGE( "Assert 6: returned wrong host value,", uri2.getHost() == "" );
+//    CPPUNIT_ASSERT_THROW_MESSAGE(
+//        "Assert 7: Expected URISyntaxException: ",
+//        uri.parseServerAuthority(),
+//        URISyntaxException );
 }
