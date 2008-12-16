@@ -176,3 +176,31 @@ void URITest::test_Constructor_String() {
 //        uri.parseServerAuthority(),
 //        URISyntaxException );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::test_URI_String() {
+
+    try {
+        URI myUri(":abc@mymail.com");
+        CPPUNIT_FAIL("TestA, URISyntaxException expected, but not received.");
+    } catch( URISyntaxException& e ) {
+        CPPUNIT_ASSERT_MESSAGE(
+            "TestA, Wrong URISyntaxException index, ", 0 == e.getIndex());
+    }
+
+    try {
+        URI uri("path[one");
+        CPPUNIT_FAIL("TestB, URISyntaxException expected, but not received.");
+    } catch( URISyntaxException& e1 ) {
+        CPPUNIT_ASSERT_MESSAGE(
+            "TestB, Wrong URISyntaxException index, ", 4 == e1.getIndex());
+    }
+
+    try {
+        URI uri(" ");
+        CPPUNIT_FAIL("TestC, URISyntaxException expected, but not received.");
+    } catch( URISyntaxException& e2 ) {
+        CPPUNIT_ASSERT_MESSAGE(
+            "TestC, Wrong URISyntaxException index, ", 0 == e2.getIndex());
+    }
+}

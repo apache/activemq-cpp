@@ -28,6 +28,7 @@ namespace net{
 
         CPPUNIT_TEST_SUITE( URITest );
         CPPUNIT_TEST( test_Constructor_String );
+        CPPUNIT_TEST( test_URI_String );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +37,7 @@ namespace net{
         virtual ~URITest() {}
 
         void test_Constructor_String();
+        void test_URI_String();
 
     };
 
