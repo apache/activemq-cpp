@@ -26,6 +26,8 @@
 #include <activemq/util/CMSProvider.h>
 #include <activemq/util/IntegrationCommon.h>
 
+#include <decaf/lang/Thread.h>
+
 namespace activemq {
 namespace test {
 
@@ -50,7 +52,12 @@ namespace test {
             cmsProvider.reset( new util::CMSProvider( getBrokerURL() ) );
         };
 
-        virtual void tearDown() { cmsProvider.reset( NULL ); };
+        virtual void tearDown() {
+            // Wait a small period of time to allow the messages to all get
+            // processed.
+            decaf::lang::Thread::sleep( 50 );
+            cmsProvider.reset( NULL );
+        };
 
     };
 
