@@ -90,7 +90,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         result.setAbsolute( true );
         result.setScheme( temp.substr( 0, index ) );
 
-        if( result.getScheme().length() == 0 ) {
+        if( result.getScheme() == "" ) {
             throw URISyntaxException(
                 __FILE__, __LINE__,
                 uri, "Scheme not specified.", index );
@@ -99,18 +99,19 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         validateScheme( uri, result.getScheme(), 0 );
         result.setSchemeSpecificPart( temp.substr( index + 1, std::string::npos ) );
 
-        if( result.getSchemeSpecificPart().length() == 0 ) {
+        if( result.getSchemeSpecificPart() == "" ) {
             throw URISyntaxException(
                 __FILE__, __LINE__,
                 uri, "Scheme specific part is invalid..", index + 1 );
         }
+
     } else {
         result.setAbsolute( false );
         result.setSchemeSpecificPart( temp );
     }
 
     if( result.getScheme() == "" ||
-        ( result.getSchemeSpecificPart().length() > 0 &&
+        ( !result.getSchemeSpecificPart().empty() &&
           result.getSchemeSpecificPart().at( 0 ) == '/' ) ) {
 
         result.setOpaque( false );
@@ -135,20 +136,16 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
             } else {
                 result.setAuthority( temp.substr( 2, std::string::npos ) );
 
-                if( result.getAuthority().length() == 0 &&
+                if( result.getAuthority() == "" &&
                     result.getQuery() == "" && result.getFragment() == "" ) {
 
                     throw URISyntaxException(
                         __FILE__, __LINE__,
                         uri, "Scheme specific part is invalid..", uri.length() );
                 }
-
-                result.setPath( "" );
-                // nothing left, so path is empty (not null, path should
-                // never be null)
             }
 
-            if( result.getAuthority().length() != 0 ) {
+            if( result.getAuthority() != "" ) {
                 validateAuthority( uri, result.getAuthority(), index1 + 3 );
             }
 
@@ -175,7 +172,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
     URIType authority = parseAuthority( forceServer, result.getAuthority() );
 
     // Authority was valid, so we capture the results
-    if( result.isValid() ) {
+    if( authority.isValid() ) {
         result.setUserInfo( authority.getUserInfo() );
         result.setHost( authority.getHost() );
         result.setPort( authority.getPort() );
@@ -303,10 +300,10 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
             hostindex = index + 1;
         }
 
-        index = temp.find_last_of( ':' );
+        index = temp.rfind( ':' );
         std::size_t endindex = temp.find( ']' );
 
-        if( index != std::string::npos && endindex < index ) {
+        if( index != std::string::npos && ( endindex < index || endindex == std::string::npos ) ){
             // determine port and host
             tempHost = temp.substr( 0, index );
 
@@ -325,6 +322,7 @@ URIType URIHelper::parseAuthority( bool forceServer, const std::string& authorit
 
                         return result;
                     }
+
                 } catch( NumberFormatException& e ) {
 
                     if( forceServer ) {

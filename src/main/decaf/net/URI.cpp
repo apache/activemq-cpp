@@ -86,11 +86,10 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
     if( scheme == "" && userInfo == "" && host == "" &&
         path == "" && query == "" && fragment == "" ) {
 
-        this->uri.setPath( "" );
         return;
     }
 
-    if( scheme != "" && path.length() > 0 && path.at(0) != '/') {
+    if( scheme != "" && !path.empty() && path.at(0) != '/') {
 
         throw URISyntaxException(
             __FILE__, __LINE__, path,
@@ -705,7 +704,7 @@ URI URI::parseServerAuthority() const throw( URISyntaxException ) {
 
     URI newURI = *this;
 
-    if( newURI.uri.isServerAuthority() ) {
+    if( !newURI.uri.isServerAuthority() ) {
         newURI.uri = URIHelper().parseAuthority( true, this->uri.getAuthority() );
     }
 

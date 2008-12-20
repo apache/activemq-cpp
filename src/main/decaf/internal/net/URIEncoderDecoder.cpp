@@ -111,10 +111,10 @@ std::string URIEncoderDecoder::quoteIllegal( const std::string& s,
         char ch = *iter;
 
         if( Character::isLetterOrDigit( ch ) ||
-            legal.find( ch ) > std::string::npos ||
+            legal.find( ch ) != std::string::npos ||
             ( (unsigned char)ch > 127 &&
-              !Character::isWhitespace(ch) &&
-              !Character::isISOControl(ch) ) ) {
+              ( !Character::isWhitespace(ch) &&
+                !Character::isISOControl(ch) ) ) ) {
 
             buf += ch;
         } else {
