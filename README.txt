@@ -8,6 +8,24 @@ talk to a MOM (e.g. ActiveMQ).
 1 Dependencies
 --------------------------------------------------------------------------
 
+There are several dependencies that need to be met in order to build and
+install ActiveMQ-CPP on a Unix type system, the short list is shown below,
+read the sections that follow for more detailed information.  On Windows
+you will not need the Auto Tools since the library is built using Microsft's
+Visual Studio product.
+
+Tool        Recommended Version
+-------------------------------
+autoconf    >= 2.60
+automake    >= 1.10
+libtool     >= 1.5.24
+APR         >= 1.3*
+APR-Util    >= 1.3*
+CPPUnit     >= 1.10.2*
+libuuid     >= ?*
+
+* Requires that the Development package also be installed.
+
 1.1 libuuid
 --------------------------------------------------------------------------
 
@@ -22,7 +40,6 @@ On Fedora, type the following:
 On Debian/Ubuntu, type the following:
 
   sudo apt-get install uuid-dev
-
 
 1.2 CppUnit
 --------------------------------------------------------------------------
@@ -44,12 +61,14 @@ visible in your current shell before you try building the tests.
 
 Windows users will need to build the CppUnit library using the CPPUnit
 MSVC project files. A discussion of the build process can be found
-on the CPPUnit wiki under
-http://cppunit.sourceforge.net/cppunit-wiki/BuildingCppUnit1 this covers
-both MSVC along with many other platforms and tool suites.  The included
-Visual Studio Project files are configured to search for CPPUnit in the
-directory C:\Program Files\CPPUnit, you will need to make changes to
-reflect your own configuration if it differs.
+on the CPPUnit wiki under:
+
+http://cppunit.sourceforge.net/cppunit-wiki/BuildingCppUnit1
+
+This covers both MSVC along with many other platforms and tool suites.
+The included Visual Studio projects are configured with the assumption
+that you will configure Visual Studio with the locations of the Platform
+SDK and the CPPUnit and APR libraries and headers.
 
 1.3 APR and APR Util
 -------------------------------------------------------------------------
@@ -63,7 +82,11 @@ installer.
 The Library has been tested using version v1.3 and higher of the APR libs,
 the older 0.9 version will definitely not work with this library.
 
-1.4 GNU Build System (for building on Unix/Linux/OS X/Cygwin)
+Many of the Unix type OS'es currently shipping include APR 1.2.x and
+APR-Util 1.2.x, this implies that you will need to build and install APR from
+the source download at Apache.
+
+1.4 GNU Build System (for building on Unix/Linux/OS X)
 --------------------------------------------------------------------------
 
 To Generate the ./configure script use to create the Makefiles, you need
@@ -80,7 +103,7 @@ in separate packages. If you have multiple versions of autoconf or automake
 installed on your system, you may have to configure the versions to use
 using /usr/sbin/update-alternatives.
 
-2 Building on Unix/Linux/OS X/Cygwin
+2 Building on Unix/Linux/OS X
 --------------------------------------------------------------------------
 
 This assumes you have all of the project dependencies installed.  We're
@@ -88,7 +111,7 @@ now ready to create the configure script.  To do this, run:
 
   ./autogen.sh
 
-This should be run the first time and anytime you change configure.ac or
+This should be run the first time and any time you change configure.ac or
 any of the Makefile.am files.
 
     -----------------------------------------------------------------------
@@ -141,10 +164,9 @@ files.
 3 Doxygen
 --------------------------------------------------------------------------
 
-To generate the doxygen documentation for the project, just run:
+To generate the Doxygen documentation for the project, just run:
 
   make doxygen-run
-
 
 4 Running Tests
 --------------------------------------------------------------------------
@@ -164,7 +186,7 @@ The library also contains a set of tests that are run against a real AMQ
 broker.  These allow you to validate this distribution of ActiveMQ CPP
 against your broker.  Running these without a broker will result in failed
 tests.  The tests currently hard-code the broker url to be
-tcp://localhost:61613 for stomp and tcp://localhost:61616 for openwire.
+tcp://localhost:61613 for Stomp and tcp://localhost:61616 for Openwire.
 
 The integration tests are built via "make check".  To run them, first
 start a broker and then
@@ -172,15 +194,16 @@ start a broker and then
   cd src/test-integration
   ./activemq-test-integration
 
-This will take quite some time to complete, so be patient.
+This will take quite some time to complete, so be patient.  It is recommended
+that you restart the broker between successive runs of the integration tests.
 
 5 Example
 --------------------------------------------------------------------------
-There is an example application that ships with the distribution in
-src/examples.   The example is compiled by default with the "make"
-command, but can easily be compiled manually using the command:
-
-  g++ -o main -pthread -I ../main main.cpp ../../out/libactivemq-cpp-2_0.a -luuid
+There are example applications that ship with the distribution in
+src/examples.   The examples are compiled by default with the "make"
+command on Unix systems.  Only one sample is included in the Visual Studio
+projects supplied, the others can be easily added by examining the settings
+of the one supplied.
 
 6 Notes for Windows users
 --------------------------------------------------------------------------
@@ -207,18 +230,14 @@ the MSVC compile succeeds.
   You can test this by typing cl.exe at the command line, if you get an
   error complaining that its not found, then you'll need to fix your PATH.
 
-* Set the INCLUDE env variable to include the path to your MSVC includes,
-  and the platform SDK includes. For example:
-
-    INCLUDE = D:\Program Files\Microsoft Visual Studio 8\VC\include;D:\Program Files\Microsoft Platform SDK\Include\*
-
-* Set the LIB env variable to include the path to your MSVC libs, and the
-  Platform SDK libs. For example:
-
-    LIB = D:\Program Files\Microsoft Visual Studio 8\VC\lib;D:\Program Files\Microsoft Platform SDK\Lib
-
 * The Project files reference the CPPUnit libraries for the Integration and
   Unit tests builds. In order for these to build correctly you must
-  either place the CPPUnit libraries in a directory listed in the project
-  settings, or add a new location for your install of CPPUnit.
+  either configure the global settings in Visual Studio for include and library
+  folders or add new settings to each of the projects in the solution to point
+  to these locations.
 
+* The Project files reference the APR libraries for the Integration and
+  Unit tests builds. In order for these to build correctly you must
+  either configure the global settings in Visual Studio for include and library
+  folders or add new settings to each of the projects in the solution to point
+  to these locations.
