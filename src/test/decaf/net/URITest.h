@@ -27,8 +27,24 @@ namespace net{
     class URITest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE( URITest );
-        CPPUNIT_TEST( test_Constructor_String );
-        CPPUNIT_TEST( test_URI_String );
+        CPPUNIT_TEST( testConstructorOneString );
+        CPPUNIT_TEST( testConstructorThreeString );
+        CPPUNIT_TEST( testConstructorFourString );
+        CPPUNIT_TEST( testConstructorFiveString );
+        CPPUNIT_TEST( testConstructorFiveString2 );
+        CPPUNIT_TEST( testConstructorStringPlusInts );
+        CPPUNIT_TEST( testURIString );
+        CPPUNIT_TEST( testCompareToOne );
+        CPPUNIT_TEST( testCompareToTwo );
+        CPPUNIT_TEST( testCreate );
+        CPPUNIT_TEST( testEquals );
+        CPPUNIT_TEST( testEquals2 );
+        CPPUNIT_TEST( testGetAuthority );
+        CPPUNIT_TEST( testGetAuthority2 );
+        CPPUNIT_TEST( testGetFragment );
+        CPPUNIT_TEST( testGetHost );
+        CPPUNIT_TEST( testGetPath );
+        CPPUNIT_TEST( testGetPort );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,8 +52,24 @@ namespace net{
         URITest();
         virtual ~URITest() {}
 
-        void test_Constructor_String();
-        void test_URI_String();
+        void testURIString();
+        void testConstructorOneString();
+        void testConstructorThreeString();
+        void testConstructorFourString();
+        void testConstructorFiveString();
+        void testConstructorFiveString2();
+        void testConstructorStringPlusInts();
+        void testCompareToOne();
+        void testCompareToTwo();
+        void testCreate();
+        void testEquals();
+        void testEquals2();
+        void testGetAuthority();
+        void testGetAuthority2();
+        void testGetFragment();
+        void testGetHost();
+        void testGetPath();
+        void testGetPort();
 
     };
 

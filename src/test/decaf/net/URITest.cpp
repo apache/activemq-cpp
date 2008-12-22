@@ -18,6 +18,8 @@
 #include "URITest.h"
 
 #include <decaf/net/URI.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Boolean.h>
 
 using namespace std;
 using namespace decaf;
@@ -29,8 +31,41 @@ using namespace decaf::lang::exceptions;
 URITest::URITest() {
 }
 
+namespace decaf{
+namespace net{
+
 ////////////////////////////////////////////////////////////////////////////////
-void URITest::test_Constructor_String() {
+std::vector<URI> getUris() {
+
+    std::vector<URI> uris;
+
+    uris.push_back( URI( "http://user%60%20info@host/a%20path?qu%60%20ery#fr%5E%20ag" ) );
+    // escaped octets for illegal chars
+    uris.push_back( URI( "http", "user%60%20info", "host", 80, "/a%20path", "qu%60%20ery", "fr%5E%20ag" ) );
+    // escaped octets for illegal
+    uris.push_back( URI( "http", "user%C3%9F%C2%A3info", "host", -1,
+                         "/a%E2%82%ACpath", "qu%C2%A9%C2%AEery", "fr%C3%A4%C3%A8g" ) );
+    // Illegal Chars
+    uris.push_back( URI( "http", "user` info", "host", 81, "/a path", "qu` ery", "fr^ ag" ) );
+    // % as illegal char, not escaped octet
+    uris.push_back( URI( "http", "user%info", "host", 0, "/a%path", "que%ry", "f%rag" ) );
+    uris.push_back( URI( "mailto", "user@domain.com", "" ) );
+    // no host, path, query or fragment
+    uris.push_back( URI( "../adirectory/file.html#" ) );
+    // relative path with empty fragment;
+    uris.push_back( URI( "news", "comp.infosystems.www.servers.unix", "" ) );
+    uris.push_back( URI( "", "", "", "fragment" ) );
+    uris.push_back( URI( "telnet://server.org" ) );
+    uris.push_back( URI( "http://reg:istry?query" ) );
+    uris.push_back( URI( "file:///c:/temp/calculate.pl?" ) );
+
+    return uris;
+}
+
+}}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorOneString() {
 
     std::vector<std::string> constructorTests;
     constructorTests.push_back( "http://user@www.google.com:45/search?q=helpinfo#somefragment" );
@@ -158,27 +193,27 @@ void URITest::test_Constructor_String() {
     // Regression test for HARMONY-25
     // if port value is negative, the authority should be considered
     // registry-based.
-//    URI uri("http://host:-8096/path/index.html");
-//    CPPUNIT_ASSERT_MESSAGE(
-//        "Assert 2: returned wrong port value,", -1 == uri.getPort() );
-//    CPPUNIT_ASSERT_MESSAGE( "Assert 3: returned wrong host value,", uri.getHost() == "" );
-//    CPPUNIT_ASSERT_THROW_MESSAGE(
-//        "Assert 4: Expected URISyntaxException: ",
-//        uri.parseServerAuthority(),
-//        URISyntaxException );
-//
-//    URI uri2( "http", "//myhost:-8096", "" );
-//    CPPUNIT_ASSERT_MESSAGE(
-//        "Assert 5: returned wrong port value,", -1 == uri2.getPort() );
-//    CPPUNIT_ASSERT_MESSAGE( "Assert 6: returned wrong host value,", uri2.getHost() == "" );
-//    CPPUNIT_ASSERT_THROW_MESSAGE(
-//        "Assert 7: Expected URISyntaxException: ",
-//        uri.parseServerAuthority(),
-//        URISyntaxException );
+    URI uri("http://host:-8096/path/index.html");
+    CPPUNIT_ASSERT_MESSAGE(
+        "Assert 2: returned wrong port value,", -1 == uri.getPort() );
+    CPPUNIT_ASSERT_MESSAGE( "Assert 3: returned wrong host value,", uri.getHost() == "" );
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Assert 4: Expected URISyntaxException: ",
+        uri.parseServerAuthority(),
+        URISyntaxException );
+
+    URI uri2( "http", "//myhost:-8096", "" );
+    CPPUNIT_ASSERT_MESSAGE(
+        "Assert 5: returned wrong port value,", -1 == uri2.getPort() );
+    CPPUNIT_ASSERT_MESSAGE( "Assert 6: returned wrong host value,", uri2.getHost() == "" );
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Assert 7: Expected URISyntaxException: ",
+        uri.parseServerAuthority(),
+        URISyntaxException );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URITest::test_URI_String() {
+void URITest::testURIString() {
 
     try {
         URI myUri(":abc@mymail.com");
@@ -204,3 +239,1388 @@ void URITest::test_URI_String() {
             "TestC, Wrong URISyntaxException index, ", 0 == e2.getIndex());
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorThreeString() {
+
+    URI uri( "mailto", "mduerst@ifi.unizh.ch", "" );
+
+    CPPUNIT_ASSERT_MESSAGE( "wrong userinfo", uri.getUserInfo() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong hostname", uri.getHost() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong authority", uri.getAuthority() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong port number", -1 == uri.getPort() );
+    CPPUNIT_ASSERT_MESSAGE( "wrong path", uri.getPath() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong query", uri.getQuery() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong fragment", uri.getFragment() == "" );
+    CPPUNIT_ASSERT_MESSAGE(
+        "wrong SchemeSpecificPart", uri.getSchemeSpecificPart() == "mduerst@ifi.unizh.ch" );
+
+    // scheme specific part can not be null
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "mailto", "", "" ),
+        URISyntaxException );
+
+    // scheme needs to start with an alpha char
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "3scheme", "//authority/path", "fragment" ),
+        URISyntaxException );
+
+    // scheme can not be a colon
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( ":", "//authority/path", "fragment" ),
+        URISyntaxException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorStringPlusInts() {
+
+    // check for URISyntaxException for invalid Server Authority
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "host\u00DFname", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // escaped octets in host name
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "host%20name", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // illegal char in host name
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "host name", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // illegal char in host name
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "host]name", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // missing host name
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "", 80, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // missing host name
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // malformed ipv4 address
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "telnet", "", "256.197.221.200", -1, "", "", "" ),
+        URISyntaxException );
+
+    // malformed ipv4 address
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "ftp", "", "198.256.221.200", -1, "", "", "" ),
+        URISyntaxException );
+
+    // check for URISyntaxException for invalid scheme
+    // escaped octets in scheme
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "ht%20tp", "user", "hostname", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // illegal char in scheme
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "ht tp", "user", "hostname", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // illegal char in scheme
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "ht]tp", "user", "hostname", -1, "/file", "query", "fragment" ),
+        URISyntaxException );
+
+    // relative path with scheme
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "user", "hostname", -1, "relative", "query", "fragment" ),
+        URISyntaxException );
+
+    // functional test
+    try {
+
+        URI uri( "http", "us:e@r", "hostname", 85, "/file/dir#/qu?e/", "qu?er#y", "frag#me?nt" );
+
+        CPPUNIT_ASSERT_MESSAGE( "wrong userinfo", uri.getUserInfo() == "us:e@r" );
+        CPPUNIT_ASSERT_MESSAGE( "wrong hostname", uri.getHost() == "hostname" );
+        CPPUNIT_ASSERT_MESSAGE( "wrong port number", 85 == uri.getPort() );
+        CPPUNIT_ASSERT_MESSAGE( "wrong path", uri.getPath() =="/file/dir#/qu?e/" );
+        CPPUNIT_ASSERT_MESSAGE( "wrong query", uri.getQuery() == "qu?er#y" );
+        CPPUNIT_ASSERT_MESSAGE( "wrong fragment", uri.getFragment() == "frag#me?nt" );
+        CPPUNIT_ASSERT_MESSAGE( "wrong SchemeSpecificPart",
+            uri.getSchemeSpecificPart() == "//us:e@r@hostname:85/file/dir#/qu?e/?qu?er#y" );
+
+    } catch( URISyntaxException& e ) {
+        CPPUNIT_FAIL( "Unexpected Exception: " + e.getMessage() );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorFourString() {
+
+    // relative path
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "www.joe.com", "relative", "jimmy" ),
+        URISyntaxException );
+
+    // valid parameters for this constructor
+    {
+        URI uri( "http", "www.joe.com", "/path", "jimmy" );
+    }
+
+    // illegal char in path
+    {
+        URI uri( "http", "www.host.com", "/path?q", "somefragment" );
+    }
+
+    // empty fragment
+    {
+        URI uri( "ftp", "ftp.is.co.za", "/rfc/rfc1808.txt", "" );
+    }
+
+    // path with escaped octet for unicode char, not USASCII
+    {
+        URI uri( "http", "host", "/a%E2%82%ACpath", "frag" );
+    }
+
+    // All fields empty
+    {
+        URI uri( "", "", "", "" );
+    }
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", ":2:3:4:5:6:7:8", "/apath", "\u20ACfrag" ),
+        URISyntaxException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorFiveString() {
+
+    // URISyntaxException on relative path
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException: ",
+        URI( "http", "www.joe.com", "relative", "query", "jimmy" ),
+        URISyntaxException );
+
+    // test if empty authority is parsed into undefined host, userinfo and port
+    // and if escaped octets in components are preserved, illegal chars are quoted
+    URI uri("ht12-3+tp", "", "/p#a%E2%82%ACth", "q^u%25ery", "fragment");
+
+    CPPUNIT_ASSERT_MESSAGE( "wrong scheme", uri.getScheme() == "ht12-3+tp" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong port number", -1 == uri.getPort() );
+    CPPUNIT_ASSERT_MESSAGE( "wrong path", uri.getPath() == "/p#a%E2%82%ACth" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong query", uri.getQuery() == "q^u%25ery" );
+    CPPUNIT_ASSERT_MESSAGE( "wrong fragment", uri.getFragment() == "fragment" );
+
+    CPPUNIT_ASSERT_MESSAGE( "wrong SchemeSpecificPart",
+        uri.getSchemeSpecificPart() == "///p#a%E2%82%ACth?q^u%25ery" );
+
+    CPPUNIT_ASSERT_MESSAGE( "wrong RawSchemeSpecificPart",
+        uri.getRawSchemeSpecificPart() == "///p%23a%25E2%2582%25ACth?q%5Eu%2525ery" );
+
+    CPPUNIT_ASSERT_MESSAGE( "incorrect toString()",
+        uri.toString() == "ht12-3+tp:///p%23a%25E2%2582%25ACth?q%5Eu%2525ery#fragment" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testConstructorFiveString2() {
+
+    // accept [] as part of valid ipv6 host name
+    URI uri( "ftp", "[0001:1234::0001]", "/dir1/dir2", "query", "frag" );
+
+    CPPUNIT_ASSERT_MESSAGE( "Returned incorrect host",
+                            uri.getHost() == "[0001:1234::0001]" );
+
+    // do not accept [] as part of invalid ipv6 address
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException for invalid ipv6 address",
+        URI( "ftp", "[www.abc.com]", "/dir1/dir2", "query", "frag" ),
+        URISyntaxException );
+
+    // do not accept [] as part of user info
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Expected URISyntaxException for invalid user info",
+        URI( "ftp", "[user]@host", "/dir1/dir2", "query", "frag" ),
+        URISyntaxException );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testCompareToOne() {
+
+    // compareTo tests
+    const char* compareToData[34][2] = {
+        // scheme tests
+        { "http:test", "" }, // scheme null, scheme not null
+        { "", "http:test" }, // reverse
+        { "http:test", "ftp:test" }, // schemes different
+        { "/test", "/test" }, // schemes null
+        { "http://joe", "http://joe" }, // schemes same
+        { "http://joe", "hTTp://joe" }, // schemes same ignoring case
+
+        // opacity : one opaque, the other not
+        { "http:opaque", "http://nonopaque" },
+        { "http://nonopaque", "http:opaque" },
+        { "mailto:abc", "mailto:abc" }, // same ssp
+        { "mailto:abC", "mailto:Abc" }, // different, by case
+        { "mailto:abc", "mailto:def" }, // different by letter
+        { "mailto:abc#ABC", "mailto:abc#DEF" },
+        { "mailto:abc#ABC", "mailto:abc#ABC" },
+        { "mailto:abc#DEF", "mailto:abc#ABC" },
+
+        // hierarchical tests..
+
+        // different authorities
+        { "//www.test.com/test", "//www.test2.com/test" },
+
+        { "/nullauth", "//nonnullauth/test" }, // one null authority
+        { "//nonnull", "/null" },
+        { "/hello", "/hello" }, // both authorities null
+        // different userinfo
+        { "http://joe@test.com:80", "http://test.com" },
+        { "http://jim@test.com", "http://james@test.com" },
+        // different hostnames
+        { "http://test.com", "http://toast.com" },
+        { "http://test.com:80", "test.com:87" }, // different ports
+        { "http://test.com", "http://test.com:80" },
+        // different paths
+        { "http://test.com:91/dir1", "http://test.com:91/dir2" },
+        // one null host
+        { "http:/hostless", "http://hostfilled.com/hostless" },
+
+        // queries
+        { "http://test.com/dir?query", "http://test.com/dir?koory" },
+        { "/test?query", "/test" },
+        { "/test", "/test?query" },
+        { "/test", "/test" },
+
+        // fragments
+        { "ftp://test.com/path?query#frag", "ftp://test.com/path?query" },
+        { "ftp://test.com/path?query", "ftp://test.com/path?query#frag" },
+        { "#frag", "#frag" },
+        { "p", "" },
+
+        { "http://www.google.com", "#test" } // miscellaneous
+    };
+
+    int compareToResults[34] = {
+        1, -1, 1, 0, 0, 0, 1, -1, 0, 1, -1, -1, 0, 1, -1, -1, 1, 0, 1, 1,
+        -1, -1, -1, -1, -1, 1, 1, -1, 0, 1, -1, 0, 1, 1
+    };
+
+    // test compareTo functionality
+    for( unsigned int i = 0; i < 34; i++ ) {
+
+        URI b( compareToData[i][0] );
+        URI r( compareToData[i][1] );
+
+        if( b.compareTo( r ) != compareToResults[i] ) {
+            CPPUNIT_FAIL( std::string("Test ") + decaf::lang::Integer::toString(i)
+                        + std::string(": ") + compareToData[i][0] + " compared to "
+                        + compareToData[i][1] + " -> "
+                        + decaf::lang::Integer::toString( b.compareTo(r) )
+                        + " rather than "
+                        + decaf::lang::Integer::toString( compareToResults[i] ) );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testCompareToTwo() {
+
+    {
+        // test URIs with host names with different casing
+        URI uri1( "http://AbC.cOm/root/news" );
+        URI uri2( "http://aBc.CoM/root/news" );
+        CPPUNIT_ASSERT_MESSAGE( "TestA", 0 == uri1.compareTo( uri2 ) );
+        CPPUNIT_ASSERT_MESSAGE( "TestB", 0 == uri2.compareTo( uri1 ) );
+    }
+
+    {
+        // test URIs with one undefined component
+        URI uri1( "http://abc.com:80/root/news" );
+        URI uri2( "http://abc.com/root/news" );
+        CPPUNIT_ASSERT_MESSAGE( "TestC", uri1.compareTo( uri2 ) > 0 );
+        CPPUNIT_ASSERT_MESSAGE( "TestD", uri2.compareTo( uri1 ) < 0 );
+    }
+
+    {
+        // test URIs with one undefined component
+        URI uri1( "http://user@abc.com/root/news" );
+        URI uri2( "http://abc.com/root/news" );
+        CPPUNIT_ASSERT_MESSAGE( "TestE", uri1.compareTo( uri2 ) > 0 );
+        CPPUNIT_ASSERT_MESSAGE( "TestF", uri2.compareTo( uri1 ) < 0 );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testCreate() {
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "IllegalArgumentException expected but not received.",
+        URI::create( "a scheme://reg/" ),
+        IllegalArgumentException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testEquals() {
+
+    const char* equalsData[30][2] = {
+        { "", "" }, // null frags
+        { "/path", "/path#frag" },
+        { "#frag", "#frag2" },
+        { "#frag", "#FRag" },
+        // case insensitive on hex escapes
+        { "#fr%4F", "#fr%4f" },
+        { "scheme:test", "scheme2:test" }, // scheme stuff
+        { "test", "http:test" },
+        { "http:test", "test" },
+        { "SCheme:test", "schEMe:test" },
+        // hierarchical/opaque mismatch
+        { "mailto:jim", "mailto://jim" },
+        { "mailto://test", "mailto:test" },
+        // opaque
+        { "mailto:name", "mailto:name" },
+        { "mailtO:john", "mailto:jim" },
+        // test hex case insensitivity on ssp
+        { "mailto:te%4Fst", "mailto:te%4fst" },
+        { "mailto:john#frag", "mailto:john#frag2" },
+        // hierarchical
+        { "/test", "/test" }, // paths
+        { "/te%F4st", "/te%f4st" },
+        { "/TEst", "/teSt" },
+        { "", "/test" },
+        // registry based because they don't resolve properly to
+        // server-based add more tests here
+        { "//host.com:80err", "//host.com:80e" },
+        { "//host.com:81e%Abrr", "//host.com:81e%abrr" },
+        { "/test", "//auth.com/test" },
+        { "//test.com", "/test" },
+        { "//test.com", "//test.com" }, // hosts
+        // case insensitivity for hosts
+        { "//HoSt.coM/", "//hOsT.cOm/" },
+        { "//te%ae.com", "//te%aE.com" },
+        { "//test.com:80", "//test.com:81" },
+        { "//joe@test.com:80", "//test.com:80" },
+        { "//jo%3E@test.com:82", "//jo%3E@test.com:82" },
+        { "//test@test.com:85", "//test@test.com" },
+    };
+
+    bool equalsResults[30] = {
+        true, false, false, false, true, false, false, false,
+        true, false, false, true, false, true, false, true,
+        true, false, false, false, true, false, false, true,
+        true, true, false, false, true, false, };
+
+    // test equals functionality
+    for( int i = 0; i < 30; i++ ) {
+        URI b( equalsData[i][0] );
+        URI r( equalsData[i][1] );
+        if( b.equals( r ) != equalsResults[i] ) {
+            CPPUNIT_FAIL( std::string( "Error: " ) + equalsData[i][0] +
+                          std::string( " == " ) + equalsData[i][1] + "? -> " +
+                          Boolean::toString( b.equals( r ) ) + " expected " +
+                          Boolean::toString( equalsResults[i] ) );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testEquals2() {
+
+    {
+        // test URIs with empty string authority
+        URI uri1( "http:///~/dictionary" );
+        URI uri2( uri1.getScheme(), uri1.getAuthority(), uri1.getPath(),
+                  uri1.getQuery(), uri1.getFragment() );
+
+        CPPUNIT_ASSERT( uri2.equals( uri1 ) );
+    }
+
+    {
+        // test URIs with port number
+        URI uri1( "http://abc.com%E2%82%AC:88/root/news" );
+        URI uri2( "http://abc.com%E2%82%AC/root/news" );
+        CPPUNIT_ASSERT( !uri1.equals( uri2 ) );
+        CPPUNIT_ASSERT( !uri2.equals( uri1 ) );
+    }
+
+    {
+        // test URIs with host names with different casing
+        URI uri1( "http://AbC.cOm/root/news" );
+        URI uri2( "http://aBc.CoM/root/news" );
+        CPPUNIT_ASSERT( uri1.equals( uri2 ) );
+        CPPUNIT_ASSERT( uri2.equals( uri1 ) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetAuthority() {
+
+    std::vector<URI> uris = getUris();
+
+    const char* getAuthorityResults[] = {
+        "user` info@host",
+        "user%60%20info@host:80",
+        "user%C3%9F%C2%A3info@host",
+        "user` info@host:81",
+        "user%info@host:0",
+        "",
+        "",
+        "",
+        "",
+        "server.org",
+        "reg:istry",
+        ""
+    };
+
+    for( unsigned int i = 0; i < uris.size(); i++) {
+
+        std::string result = uris[i].getAuthority();
+
+        if( getAuthorityResults[i] != result ) {
+
+            CPPUNIT_FAIL( std::string( "Error: For URI \"" ) + uris[i].toString() +
+                          std::string( "\"," ) + "\n" +
+                          string( "getAuthority() returned: " ) + result + "\n" +
+                          string( "expected: ") + getAuthorityResults[i] );
+        }
+    }
+
+    CPPUNIT_ASSERT(
+        URI( "", "", "", 127, "", "", "" ).getAuthority() == "" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetAuthority2() {
+
+    {
+        // tests for URIs with empty string authority component
+        URI uri( "file:///tmp/" );
+        CPPUNIT_ASSERT_MESSAGE( string( "Authority not empty for URI: " ) + uri.toString(),
+                                uri.getAuthority() == "" );
+        CPPUNIT_ASSERT_MESSAGE( string( "Host not empty for URI " ) + uri.toString(),
+                                uri.getHost() == "" );
+        CPPUNIT_ASSERT_MESSAGE( "testA, toString() returned incorrect value",
+                                string( "file:///tmp/" ) == uri.toString() );
+    }
+    {
+        URI uri( "file", "", "/tmp", "frag" );
+        CPPUNIT_ASSERT_MESSAGE( string( "Authority not null for URI: " ) + uri.toString(),
+                                uri.getAuthority() == "" );
+        CPPUNIT_ASSERT_MESSAGE( string( "Host not null for URI " ) + uri.toString(),
+                                uri.getHost() == "" );
+        CPPUNIT_ASSERT_MESSAGE( string( "testB, toString() returned incorrect value:" ) + uri.toString(),
+                                string( "file:///tmp#frag" ) == uri.toString() );
+    }
+    {
+        URI uri( "file", "", "/tmp", "query", "frag" );
+        CPPUNIT_ASSERT_MESSAGE( string( "Authority not null for URI: " ) + uri.toString(),
+                                uri.getAuthority() == "" );
+        CPPUNIT_ASSERT_MESSAGE( "Host not null for URI " + uri.toString(),
+                                uri.getHost() == "" );
+        CPPUNIT_ASSERT_MESSAGE( "test C, toString() returned incorrect value",
+                                string( "file:///tmp?query#frag" ) == uri.toString() );
+    }
+
+    // after normalization the host string info may be lost since the
+    // uri string is reconstructed
+    URI uri( "file", "", "/tmp/a/../b/c", "query", "frag" );
+    URI uri2 = uri.normalize();
+    CPPUNIT_ASSERT_MESSAGE( string( "Authority not null for URI: " ) + uri2.toString(),
+                            uri.getAuthority() == "" );
+    CPPUNIT_ASSERT_MESSAGE( string( "Host not null for URI " ) + uri2.toString(),
+                            uri.getHost() == "" );
+    CPPUNIT_ASSERT_MESSAGE( "test D, toString() returned incorrect value: " + uri.toString(),
+                            string( "file:///tmp/a/../b/c?query#frag" ) == uri.toString() );
+    CPPUNIT_ASSERT_MESSAGE( "test E, toString() returned incorrect value: " + uri2.toString(),
+                            string( "file:/tmp/b/c?query#frag" ) == uri2.toString() );
+
+    // the empty string host will give URISyntaxException
+    // for the 7 arg constructor
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "URISyntaxException expected but not received.",
+        URI("file", "user", "", 80, "/path", "query", "frag"),
+        URISyntaxException );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetFragment() {
+
+    std::vector<URI> uris = getUris();
+
+    const char* getFragmentResults[] = {
+        "fr^ ag",
+        "fr%5E%20ag",
+        "fr%C3%A4%C3%A8g",
+        "fr^ ag",
+        "f%rag", "", "", "",
+        "fragment", "", "", ""
+    };
+
+    for( unsigned int i = 0; i < uris.size(); i++ ) {
+        string result = uris[i].getFragment();
+        if( getFragmentResults[i] != result ) {
+            CPPUNIT_FAIL( string( "Error: For URI \"" ) + uris[i].toString() +
+                          string( "\", getFragment() returned: " ) + result +
+                          string( ", expected: " ) + getFragmentResults[i] );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetHost() {
+
+    std::vector<URI> uris = getUris();
+
+    const char* getHostResults[] = {
+        "host", "host", "host",
+        "host", "host", "",
+        "", "", "",
+        "server.org",
+        "", "" };
+
+    for( unsigned int i = 0; i < uris.size(); i++ ) {
+        string result = uris[i].getHost();
+        if( getHostResults[i] != result ) {
+            CPPUNIT_FAIL( string( "Error: For URI \"" ) + uris[i].toString() +
+                          string( "\", getHost() returned: " ) + result +
+                          string( ", expected: " ) + getHostResults[i] );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetPath() {
+
+    std::vector<URI> uris = getUris();
+
+    const char* getPathResults[] = {
+        "/a path",
+        "/a%20path",
+        "/a%E2%82%ACpath",
+        "/a path",
+        "/a%path", "",
+        "../adirectory/file.html",
+        "", "", "", "",
+        "/c:/temp/calculate.pl"
+    };
+
+    for( unsigned int i = 0; i < uris.size(); i++ ) {
+        string result = uris[i].getPath();
+        if( getPathResults[i] != result ) {
+            CPPUNIT_FAIL( string( "Error: For URI \"" ) + uris[i].toString() +
+                          string( "\", getHost() returned: " ) + result +
+                          string( ", expected: " ) + getPathResults[i] );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URITest::testGetPort() {
+
+    std::vector<URI> uris = getUris();
+
+    int getPortResults[] = {
+        -1, 80, -1, 81, 0, -1, -1, -1, -1, -1, -1, -1 };
+
+    for( unsigned int i = 0; i < uris.size(); i++ ) {
+        int result = uris[i].getPort();
+        CPPUNIT_ASSERT_MESSAGE( string( "Error: For URI \"" ) + uris[i].toString() +
+                                string( "\", getPort() returned: " ) +
+                                Integer::toString( result ) +
+                                string( ", expected: " ) +
+                                Integer::toString( getPortResults[i] ),
+                                result == getPortResults[i] );
+    }
+}
+
+/*
+public void test_getPort2() throws Exception {
+    // if port value is negative, the authority should be
+    // consider registry based.
+
+    URI uri = new URI("http://myhost:-8096/site/index.html");
+    assertEquals("TestA, returned wrong port value,", -1, uri.getPort());
+    assertNull("TestA, returned wrong host value,", uri.getHost());
+    try {
+        uri.parseServerAuthority();
+        fail("TestA, Expected URISyntaxException");
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+
+    uri = new URI("http", "//myhost:-8096", null);
+    assertEquals("TestB returned wrong port value,", -1, uri.getPort());
+    assertNull("TestB returned wrong host value,", uri.getHost());
+    try {
+        uri.parseServerAuthority();
+        fail("TestB, Expected URISyntaxException");
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+}
+
+/*
+public void test_getQuery() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getQueryResults = { "qu` ery", "qu\u00A9\u00AEery", // =
+            // "qu\u00a9\u00aeery",
+            "qu\u00A9\u00AEery", // = "qu\u00a9\u00aeery",
+            "qu%60%20ery", "qu%C2%A9%C2%AEery", "qu\u00A9\u00AEery", // =
+            // "qu\u00a9\u00aeery",
+            "qu` ery", "que%ry", null, null, null, null, null, "query", "" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getQuery();
+        if (getQueryResults[i] != result
+                && !getQueryResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getQuery() returned: " + result + ", expected: "
+                    + getQueryResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getRawAuthority() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawAuthorityResults = {
+            "user%60%20info@host",
+            "user%C3%9F%C2%A3info@host:80",
+            "user\u00DF\u00A3info@host:0", // =
+            // "user\u00df\u00a3info@host:0",
+            "user%2560%2520info@host:80",
+            "user%25C3%259F%25C2%25A3info@host",
+            "user\u00DF\u00A3info@host:80", // =
+            // "user\u00df\u00a3info@host:80",
+            "user%60%20info@host:81", "user%25info@host:0", null, null,
+            null, null, "server.org", "reg:istry", null };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawAuthority();
+        if (getRawAuthorityResults[i] != result
+                && !getRawAuthorityResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawAuthority() returned: " + result
+                    + ", expected: " + getRawAuthorityResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getRawFragment() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawFragmentResults = { "fr%5E%20ag",
+            "fr%C3%A4%C3%A8g",
+            "fr\u00E4\u00E8g", // = "fr\u00e4\u00e8g",
+            "fr%255E%2520ag", "fr%25C3%25A4%25C3%25A8g",
+            "fr\u00E4\u00E8g", // =
+            // "fr\u00e4\u00e8g",
+            "fr%5E%20ag", "f%25rag", null, "", null, "fragment", null,
+            null, null };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawFragment();
+        if (getRawFragmentResults[i] != result
+                && !getRawFragmentResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawFragment() returned: " + result
+                    + ", expected: " + getRawFragmentResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getRawPath() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawPathResults = { "/a%20path",
+            "/a%E2%82%ACpath",
+            "/a\u20ACpath", // = "/a\u0080path",
+            "/a%2520path", "/a%25E2%2582%25ACpath",
+            "/a\u20ACpath", // =
+            // "/a\u0080path",
+            "/a%20path", "/a%25path", null, "../adirectory/file.html",
+            null, "", "", "", "/c:/temp/calculate.pl" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawPath();
+        if (getRawPathResults[i] != result
+                && !getRawPathResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawPath() returned: " + result
+                    + ", expected: " + getRawPathResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getRawQuery() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawQueryResults = {
+            "qu%60%20ery",
+            "qu%C2%A9%C2%AEery",
+            "qu\u00A9\u00AEery", // = "qu\u00a9\u00aeery",
+            "qu%2560%2520ery",
+            "qu%25C2%25A9%25C2%25AEery",
+            "qu\u00A9\u00AEery", // = "qu\u00a9\u00aeery",
+            "qu%60%20ery", "que%25ry", null, null, null, null, null,
+            "query", "" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawQuery();
+        if (getRawQueryResults[i] != result
+                && !getRawQueryResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawQuery() returned: " + result
+                    + ", expected: " + getRawQueryResults[i]);
+        }
+    }
+
+}
+
+/*
+public void test_getRawSchemeSpecificPart() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawSspResults = {
+            "//user%60%20info@host/a%20path?qu%60%20ery",
+            "//user%C3%9F%C2%A3info@host:80/a%E2%82%ACpath?qu%C2%A9%C2%AEery",
+            "//user\u00DF\u00A3info@host:0/a\u20ACpath?qu\u00A9\u00AEery", // =
+            // "//user\u00df\u00a3info@host:0/a\u0080path?qu\u00a9\u00aeery"
+            "//user%2560%2520info@host:80/a%2520path?qu%2560%2520ery",
+            "//user%25C3%259F%25C2%25A3info@host/a%25E2%2582%25ACpath?qu%25C2%25A9%25C2%25AEery",
+            "//user\u00DF\u00A3info@host:80/a\u20ACpath?qu\u00A9\u00AEery", // =
+            // "//user\u00df\u00a3info@host:80/a\u0080path?qu\u00a9\u00aeery"
+            "//user%60%20info@host:81/a%20path?qu%60%20ery",
+            "//user%25info@host:0/a%25path?que%25ry", "user@domain.com",
+            "../adirectory/file.html", "comp.infosystems.www.servers.unix",
+            "", "//server.org", "//reg:istry?query",
+            "///c:/temp/calculate.pl?" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawSchemeSpecificPart();
+        if (!getRawSspResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawSchemeSpecificPart() returned: " + result
+                    + ", expected: " + getRawSspResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getRawUserInfo() throws URISyntaxException {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getRawUserInfoResults = {
+            "user%60%20info",
+            "user%C3%9F%C2%A3info",
+            "user\u00DF\u00A3info", // = "user\u00df\u00a3info",
+            "user%2560%2520info",
+            "user%25C3%259F%25C2%25A3info",
+            "user\u00DF\u00A3info", // = "user\u00df\u00a3info",
+            "user%60%20info", "user%25info", null, null, null, null, null,
+            null, null };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getRawUserInfo();
+        if (getRawUserInfoResults[i] != result
+                && !getRawUserInfoResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getRawUserInfo() returned: " + result
+                    + ", expected: " + getRawUserInfoResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getScheme() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getSchemeResults = { "http", "http", "ascheme", "http",
+            "http", "ascheme", "http", "http", "mailto", null, "news",
+            null, "telnet", "http", "file" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getScheme();
+        if (getSchemeResults[i] != result
+                && !getSchemeResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getScheme() returned: " + result
+                    + ", expected: " + getSchemeResults[i]);
+        }
+    }
+}
+
+/*
+public void test_getSchemeSpecificPart() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getSspResults = {
+            "//user` info@host/a path?qu` ery",
+            "//user\u00DF\u00A3info@host:80/a\u20ACpath?qu\u00A9\u00AEery", // =
+            // "//user\u00df\u00a3info@host:80/a\u0080path?qu\u00a9\u00aeery",
+            "//user\u00DF\u00A3info@host:0/a\u20ACpath?qu\u00A9\u00AEery", // =
+            // "//user\u00df\u00a3info@host:0/a\u0080path?qu\u00a9\u00aeery",
+            "//user%60%20info@host:80/a%20path?qu%60%20ery",
+            "//user%C3%9F%C2%A3info@host/a%E2%82%ACpath?qu%C2%A9%C2%AEery",
+            "//user\u00DF\u00A3info@host:80/a\u20ACpath?qu\u00A9\u00AEery", // =
+            // "//user\u00df\u00a3info@host:80/a\u0080path?qu\u00a9\u00aeery",
+            "//user` info@host:81/a path?qu` ery",
+            "//user%info@host:0/a%path?que%ry", "user@domain.com",
+            "../adirectory/file.html", "comp.infosystems.www.servers.unix",
+            "", "//server.org", "//reg:istry?query",
+            "///c:/temp/calculate.pl?" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getSchemeSpecificPart();
+        if (!getSspResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getSchemeSpecificPart() returned: " + result
+                    + ", expected: " + getSspResults[i]);
+        }
+    }
+
+}
+
+/*
+public void test_getUserInfo() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] getUserInfoResults = {
+            "user` info",
+            "user\u00DF\u00A3info", // =
+            // "user\u00df\u00a3info",
+            "user\u00DF\u00A3info", // = "user\u00df\u00a3info",
+            "user%60%20info",
+            "user%C3%9F%C2%A3info",
+            "user\u00DF\u00A3info", // = "user\u00df\u00a3info",
+            "user` info", "user%info", null, null, null, null, null, null,
+            null };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].getUserInfo();
+        if (getUserInfoResults[i] != result
+                && !getUserInfoResults[i].equals(result)) {
+            fail("Error: For URI \"" + uris[i].toString()
+                    + "\", getUserInfo() returned: " + result
+                    + ", expected: " + getUserInfoResults[i]);
+        }
+    }
+}
+
+/*
+public void test_isAbsolute() throws URISyntaxException {
+    String[] isAbsoluteData = new String[] { "mailto:user@ca.ibm.com",
+            "urn:isbn:123498989h", "news:software.ibm.com",
+            "http://www.amazon.ca", "file:///d:/temp/results.txt",
+            "scheme:ssp", "calculate.pl?isbn=123498989h",
+            "?isbn=123498989h", "//www.amazon.ca", "a.html", "#top",
+            "//pc1/", "//user@host/path/file" };
+
+    boolean results[] = new boolean[] { true, true, true, true, true, true,
+            false, false, false, false, false, false, false };
+
+    for (int i = 0; i < isAbsoluteData.length; i++) {
+        boolean result = new URI(isAbsoluteData[i]).isAbsolute();
+        assertEquals("new URI(" + isAbsoluteData[i] + ").isAbsolute()",
+                results[i], result);
+    }
+}
+
+/*
+public void test_isOpaque() throws URISyntaxException {
+    String[] isOpaqueData = new String[] { "mailto:user@ca.ibm.com",
+            "urn:isbn:123498989h", "news:software.ibm.com",
+            "http://www.amazon.ca", "file:///d:/temp/results.txt",
+            "scheme:ssp", "calculate.pl?isbn=123498989h",
+            "?isbn=123498989h", "//www.amazon.ca", "a.html", "#top",
+            "//pc1/", "//user@host/path/file" };
+
+    boolean results[] = new boolean[] { true, true, true, false, false,
+            true, false, false, false, false, false, false, false };
+
+    for (int i = 0; i < isOpaqueData.length; i++) {
+        boolean result = new URI(isOpaqueData[i]).isOpaque();
+        assertEquals("new URI(" + isOpaqueData[i] + ").isOpaque()",
+                results[i], result);
+    }
+}
+
+/*
+public void test_normalize() throws Exception {
+
+    String[] normalizeData = new String[] {
+            // normal
+            "/",
+            "/a",
+            "/a/b",
+            "/a/b/c",
+            // single, '.'
+            "/.", "/./", "/./.", "/././",
+            "/./a",
+            "/./a/",
+            "/././a",
+            "/././a/",
+            "/a/.",
+            "/a/./",
+            "/a/./.",
+            "/a/./b",
+            // double, '..'
+            "/a/..", "/a/../", "/a/../b", "/a/../b/..", "/a/../b/../",
+            "/a/../b/../c", "/..", "/../", "/../..", "/../../", "/../a",
+            "/../a/", "/../../a", "/../../a/", "/a/b/../../c",
+            "/a/b/../..",
+            "/a/b/../../",
+            "/a/b/../../c",
+            "/a/b/c/../../../d",
+            "/a/b/..",
+            "/a/b/../",
+            "/a/b/../c",
+            // miscellaneous
+            "/a/b/.././../../c/./d/../e",
+            "/a/../../.c././../././c/d/../g/..",
+            // '.' in the middle of segments
+            "/a./b", "/.a/b", "/a.b/c", "/a/b../c",
+            "/a/..b/c",
+            "/a/b..c/d",
+            // no leading slash, miscellaneous
+            "", "a", "a/b", "a/b/c", "../", ".", "..", "../g",
+            "g/a/../../b/c/./g", "a/b/.././../../c/./d/../e",
+            "a/../../.c././../././c/d/../g/..", };
+
+    String[] normalizeResults = new String[] { "/", "/a", "/a/b", "/a/b/c",
+            "/", "/", "/", "/", "/a", "/a/", "/a", "/a/", "/a/", "/a/",
+            "/a/", "/a/b", "/", "/", "/b", "/", "/", "/c", "/..", "/../",
+            "/../..", "/../../", "/../a", "/../a/", "/../../a",
+            "/../../a/", "/c", "/", "/", "/c", "/d", "/a/", "/a/", "/a/c",
+            "/../c/e", "/../c/", "/a./b", "/.a/b", "/a.b/c", "/a/b../c",
+            "/a/..b/c", "/a/b..c/d", "", "a", "a/b", "a/b/c", "../", "",
+            "..", "../g", "b/c/g", "../c/e", "../c/", };
+
+    for (int i = 0; i < normalizeData.length; i++) {
+        URI test = new URI(normalizeData[i]);
+        String result = test.normalize().toString();
+        assertEquals("Normalized incorrectly, ", normalizeResults[i],
+                result.toString());
+    }
+}
+
+/*
+public void test_normalize2() throws URISyntaxException {
+    URI uri1 = null, uri2 = null;
+    uri1 = new URI("file:/D:/one/two/../../three");
+    uri2 = uri1.normalize();
+
+    assertEquals("Normalized to incorrect URI", "file:/D:/three", uri2
+            .toString());
+    assertTrue("Resolved URI is not absolute", uri2.isAbsolute());
+    assertFalse("Resolved URI is opaque", uri2.isOpaque());
+    assertEquals("Resolved URI has incorrect scheme  specific part",
+            "/D:/three", uri2.getRawSchemeSpecificPart());
+}
+
+/*
+public void test_normalize3() throws URISyntaxException {
+    // return same URI if it has a normalized path already
+    URI uri1 = null, uri2 = null;
+    uri1 = new URI("http://host/D:/one/two/three");
+    uri2 = uri1.normalize();
+    assertSame("Failed to return same URI after normalization", uri1, uri2);
+
+    // try with empty path
+    uri1 = new URI("http", "host", null, "fragment");
+    uri2 = uri1.normalize();
+    assertSame("Failed to return same URI after normalization", uri1, uri2);
+}
+
+/*
+public void test_parseServerAuthority() throws URISyntaxException {
+    // registry based uris
+    URI[] uris = null;
+    uris = new URI[] {
+            // port number not digits
+            new URI("http://foo:bar/file#fragment"),
+            new URI("http", "//foo:bar/file", "fragment"),
+
+            // unicode char in the hostname = new
+            // URI("http://host\u00dfname/")
+            new URI("http://host\u00DFname/"),
+
+            new URI("http", "//host\u00DFname/", null),
+            // = new URI("http://host\u00dfname/", null),
+
+            // escaped octets in host name
+            new URI("http://host%20name/"),
+            new URI("http", "//host%20name/", null),
+
+            // missing host name, port number
+            new URI("http://joe@:80"),
+
+            // missing host name, no port number
+            new URI("http://user@/file?query#fragment"),
+
+            new URI("//host.com:80err"), // malformed port number
+            new URI("//host.com:81e%Abrr"),
+
+            // malformed ipv4 address
+            new URI("telnet", "//256.197.221.200", null),
+
+            new URI("telnet://198.256.221.200"),
+            new URI("//te%ae.com"), // misc ..
+            new URI("//:port"), new URI("//:80"),
+
+            // last label has to start with alpha char
+            new URI("//fgj234fkgj.jhj.123."),
+
+            new URI("//fgj234fkgj.jhj.123"),
+
+            // '-' cannot be first or last character in a label
+            new URI("//-domain.name"), new URI("//domain.name-"),
+            new URI("//domain-"),
+
+            // illegal char in host name
+            new URI("//doma*in"),
+
+            // host expected
+            new URI("http://:80/"), new URI("http://user@/"),
+
+            // ipv6 address not enclosed in "[]"
+            new URI("http://3ffe:2a00:100:7031:22:1:80:89/"),
+
+            // expected ipv6 addresses to be enclosed in "[]"
+            new URI("http", "34::56:78", "/path", "query", "fragment"),
+
+            // expected host
+            new URI("http", "user@", "/path", "query", "fragment") };
+    // these URIs do not have valid server based authorities,
+    // but single arg, 3 and 5 arg constructors
+    // parse them as valid registry based authorities
+
+    // exception should occur when parseServerAuthority is
+    // requested on these uris
+    for (int i = 0; i < uris.length; i++) {
+        try {
+            URI uri = uris[i].parseServerAuthority();
+            fail("URISyntaxException expected but not received for URI: "
+                    + uris[i].toString());
+        } catch (URISyntaxException e) {
+            // Expected
+        }
+    }
+
+    // valid Server based authorities
+    new URI("http", "3ffe:2a00:100:7031:2e:1:80:80", "/path", "fragment")
+            .parseServerAuthority();
+    new URI("http", "host:80", "/path", "query", "fragment")
+            .parseServerAuthority();
+    new URI("http://[::3abc:4abc]:80/").parseServerAuthority();
+    new URI("http", "34::56:78", "/path", "fragment")
+            .parseServerAuthority();
+    new URI("http", "[34:56::78]:80", "/path", "fragment")
+            .parseServerAuthority();
+
+    // invalid authorities (neither server nor registry)
+    try {
+        URI uri = new URI("http://us[er@host:80/");
+        fail("Expected URISyntaxException for URI " + uri.toString());
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+
+    try {
+        URI uri = new URI("http://[ddd::hgghh]/");
+        fail("Expected URISyntaxException for URI " + uri.toString());
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+
+    try {
+        URI uri = new URI("http", "[3ffe:2a00:100:7031:2e:1:80:80]a:80",
+                "/path", "fragment");
+        fail("Expected URISyntaxException for URI " + uri.toString());
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+
+    try {
+        URI uri = new URI("http", "host:80", "/path", "fragment");
+        fail("Expected URISyntaxException for URI " + uri.toString());
+    } catch (URISyntaxException e) {
+        // Expected
+    }
+
+    // regression test for HARMONY-1126
+    assertNotNull(URI.create("file://C:/1.txt").parseServerAuthority());
+}
+
+/*
+public void test_relativizeLjava_net_URI() throws URISyntaxException {
+    // relativization tests
+    String[][] relativizeData = new String[][] {
+            // first is base, second is the one to relativize
+            { "http://www.google.com/dir1/dir2", "mailto:test" }, // rel =
+            // opaque
+            { "mailto:test", "http://www.google.com" }, // base = opaque
+
+            // different authority
+            { "http://www.eclipse.org/dir1",
+                    "http://www.google.com/dir1/dir2" },
+
+            // different scheme
+            { "http://www.google.com", "ftp://www.google.com" },
+
+            { "http://www.google.com/dir1/dir2/",
+                    "http://www.google.com/dir3/dir4/file.txt" },
+            { "http://www.google.com/dir1/",
+                    "http://www.google.com/dir1/dir2/file.txt" },
+            { "./dir1/", "./dir1/hi" },
+            { "/dir1/./dir2", "/dir1/./dir2/hi" },
+            { "/dir1/dir2/..", "/dir1/dir2/../hi" },
+            { "/dir1/dir2/..", "/dir1/dir2/hi" },
+            { "/dir1/dir2/", "/dir1/dir3/../dir2/text" },
+            { "//www.google.com", "//www.google.com/dir1/file" },
+            { "/dir1", "/dir1/hi" }, { "/dir1/", "/dir1/hi" }, };
+
+    // expected results
+    String[] relativizeResults = new String[] { "mailto:test",
+            "http://www.google.com", "http://www.google.com/dir1/dir2",
+            "ftp://www.google.com",
+            "http://www.google.com/dir3/dir4/file.txt", "dir2/file.txt",
+            "hi", "hi", "hi", "dir2/hi", "text", "dir1/file", "hi", "hi", };
+
+    for (int i = 0; i < relativizeData.length; i++) {
+        try {
+            URI b = new URI(relativizeData[i][0]);
+            URI r = new URI(relativizeData[i][1]);
+            if (!b.relativize(r).toString().equals(relativizeResults[i])) {
+                fail("Error: relativize, " + relativizeData[i][0] + ", "
+                        + relativizeData[i][1] + " returned: "
+                        + b.relativize(r) + ", expected:"
+                        + relativizeResults[i]);
+            }
+        } catch (URISyntaxException e) {
+            fail("Exception on relativize test on data "
+                    + relativizeData[i][0] + ", " + relativizeData[i][1]
+                    + ": " + e);
+        }
+    }
+
+    URI a = new URI("http://host/dir");
+    URI b = new URI("http://host/dir/file?query");
+    assertEquals("Assert 0: URI relativized incorrectly,", new URI(
+            "file?query"), a.relativize(b));
+
+    // One URI with empty host
+    a = new URI("file:///~/first");
+    b = new URI("file://tools/~/first");
+    assertEquals("Assert 1: URI relativized incorrectly,", new URI(
+            "file://tools/~/first"), a.relativize(b));
+    assertEquals("Assert 2: URI relativized incorrectly,", new URI(
+            "file:///~/first"), b.relativize(a));
+
+    // Both URIs with empty hosts
+    b = new URI("file:///~/second");
+    assertEquals("Assert 3: URI relativized incorrectly,", new URI(
+            "file:///~/second"), a.relativize(b));
+    assertEquals("Assert 4: URI relativized incorrectly,", new URI(
+            "file:///~/first"), b.relativize(a));
+}
+
+/*
+public void test_relativize2() throws URISyntaxException {
+    URI a = new URI("http://host/dir");
+    URI b = new URI("http://host/dir/file?query");
+    assertEquals("relativized incorrectly,", new URI("file?query"), a
+            .relativize(b));
+
+    // one URI with empty host
+    a = new URI("file:///~/dictionary");
+    b = new URI("file://tools/~/dictionary");
+    assertEquals("relativized incorrectly,", new URI(
+            "file://tools/~/dictionary"), a.relativize(b));
+    assertEquals("relativized incorrectly,",
+            new URI("file:///~/dictionary"), b.relativize(a));
+
+    // two URIs with empty hosts
+    b = new URI("file:///~/therasus");
+    assertEquals("relativized incorrectly,", new URI("file:///~/therasus"),
+            a.relativize(b));
+    assertEquals("relativized incorrectly,",
+            new URI("file:///~/dictionary"), b.relativize(a));
+
+    URI one = new URI("file:/C:/test/ws");
+    URI two = new URI("file:/C:/test/ws");
+
+    URI empty = new URI("");
+    assertEquals(empty, one.relativize(two));
+
+    one = new URI("file:/C:/test/ws");
+    two = new URI("file:/C:/test/ws/p1");
+    URI result = new URI("p1");
+    assertEquals(result, one.relativize(two));
+
+    one = new URI("file:/C:/test/ws/");
+    assertEquals(result, one.relativize(two));
+}
+
+/*
+public void test_resolve() throws URISyntaxException {
+    URI uri1 = null, uri2 = null;
+    uri1 = new URI("file:/D:/one/two/three");
+    uri2 = uri1.resolve(new URI(".."));
+
+    assertEquals("Resolved to incorrect URI", "file:/D:/one/", uri2
+            .toString());
+    assertTrue("Resolved URI is not absolute", uri2.isAbsolute());
+    assertFalse("Resolved URI is opaque", uri2.isOpaque());
+    assertEquals("Resolved URI has incorrect scheme  specific part",
+            "/D:/one/", uri2.getRawSchemeSpecificPart());
+}
+
+/*
+public void test_resolveLjava_net_URI() {
+    // resolution tests
+    String[][] resolveData = new String[][] {
+            // authority in given URI
+            { "http://www.test.com/dir",
+                    "//www.test.com/hello?query#fragment" },
+            // no authority, absolute path
+            { "http://www.test.com/dir", "/abspath/file.txt" },
+            // no authority, relative paths
+            { "/", "dir1/file.txt" }, { "/dir1", "dir2/file.txt" },
+            { "/dir1/", "dir2/file.txt" }, { "", "dir1/file.txt" },
+            { "dir1", "dir2/file.txt" }, { "dir1/", "dir2/file.txt" },
+            // normalization required
+            { "/dir1/dir2/../dir3/./", "dir4/./file.txt" },
+            // allow a standalone fragment to be resolved
+            { "http://www.google.com/hey/joe?query#fragment", "#frag2" },
+            // return given when base is opaque
+            { "mailto:idontexist@uk.ibm.com", "dir1/dir2" },
+            // return given when given is absolute
+            { "http://www.google.com/hi/joe", "http://www.oogle.com" }, };
+
+    // expected results
+    String[] resolveResults = new String[] {
+            "http://www.test.com/hello?query#fragment",
+            "http://www.test.com/abspath/file.txt", "/dir1/file.txt",
+            "/dir2/file.txt", "/dir1/dir2/file.txt", "dir1/file.txt",
+            "dir2/file.txt", "dir1/dir2/file.txt",
+            "/dir1/dir3/dir4/file.txt",
+            "http://www.google.com/hey/joe?query#frag2", "dir1/dir2",
+            "http://www.oogle.com", };
+
+    for (int i = 0; i < resolveResults.length; i++) {
+        try {
+            URI b = new URI(resolveData[i][0]);
+            URI r = new URI(resolveData[i][1]);
+            URI result = b.resolve(r);
+            if (!result.toString().equals(resolveResults[i])) {
+                fail("Error: resolve, " + resolveData[i][0] + ", "
+                        + resolveData[i][1] + " returned: " + b.resolve(r)
+                        + ", expected:" + resolveResults[i]);
+            }
+            if (!b.isOpaque()) {
+                assertEquals(b + " and " + result
+                        + " incorrectly differ in absoluteness", b
+                        .isAbsolute(), result.isAbsolute());
+            }
+        } catch (URISyntaxException e) {
+            fail("Exception on resolve test on data " + resolveData[i][0]
+                    + ", " + resolveData[i][1] + ": " + e);
+        }
+    }
+}
+
+/*
+public void test_toString() throws Exception {
+
+    std::vector<URI> uris = getUris();
+
+    String[] toStringResults = {
+            "http://user%60%20info@host/a%20path?qu%60%20ery#fr%5E%20ag",
+            "http://user%C3%9F%C2%A3info@host:80/a%E2%82%ACpath?qu%C2%A9%C2%AEery#fr%C3%A4%C3%A8g",
+            "ascheme://user\u00DF\u00A3info@host:0/a\u20ACpath?qu\u00A9\u00AEery#fr\u00E4\u00E8g",
+            // =
+            // "ascheme://user\u00df\u00a3info@host:0/a\u0080path?qu\u00a9\u00aeery#fr\u00e4\u00e8g",
+            "http://user%2560%2520info@host:80/a%2520path?qu%2560%2520ery#fr%255E%2520ag",
+            "http://user%25C3%259F%25C2%25A3info@host/a%25E2%2582%25ACpath?qu%25C2%25A9%25C2%25AEery#fr%25C3%25A4%25C3%25A8g",
+            "ascheme://user\u00DF\u00A3info@host:80/a\u20ACpath?qu\u00A9\u00AEery#fr\u00E4\u00E8g",
+            // =
+            // "ascheme://user\u00df\u00a3info@host:80/a\u0080path?qu\u00a9\u00aeery#fr\u00e4\u00e8g",
+            "http://user%60%20info@host:81/a%20path?qu%60%20ery#fr%5E%20ag",
+            "http://user%25info@host:0/a%25path?que%25ry#f%25rag",
+            "mailto:user@domain.com", "../adirectory/file.html#",
+            "news:comp.infosystems.www.servers.unix", "#fragment",
+            "telnet://server.org", "http://reg:istry?query",
+            "file:///c:/temp/calculate.pl?" };
+
+    for (int i = 0; i < uris.length; i++) {
+        String result = uris[i].toString();
+        assertTrue("Error: For URI \"" + uris[i].toString()
+                + "\", toString() returned: " + result + ", expected: "
+                + toStringResults[i], result.equals(toStringResults[i]));
+    }
+}
+
+/*
+public void test_toURL() throws Exception {
+    String absoluteuris[] = new String[] { "mailto:noreply@apache.org",
+            "urn:isbn:123498989h", "news:software.ibm.com",
+            "http://www.apache.org", "file:///d:/temp/results.txt",
+            "scheme:ssp", };
+
+    String relativeuris[] = new String[] { "calculate.pl?isbn=123498989h",
+            "?isbn=123498989h", "//www.apache.org", "a.html", "#top",
+            "//pc1/", "//user@host/path/file" };
+
+    for (int i = 0; i < absoluteuris.length; i++) {
+        try {
+            new URI(absoluteuris[i]).toURL();
+        } catch (MalformedURLException e) {
+            // not all the URIs can be translated into valid URLs
+        }
+    }
+
+    for (int i = 0; i < relativeuris.length; i++) {
+        try {
+            new URI(relativeuris[i]).toURL();
+            fail("Expected IllegalArgumentException not thrown");
+        } catch (IllegalArgumentException e) {
+            // Expected
+        }
+    }
+}
+
+ */

@@ -102,9 +102,7 @@ URI::URI( const std::string& scheme, const std::string& userInfo,
         uri.append( ":" );
     }
 
-    if( userInfo != "" || host != "" || port != -1 ) {
-        uri.append( "//" );
-    }
+    uri.append( "//" );
 
     if( userInfo != "" ) {
         // QUOTE ILLEGAL CHARACTERS in userinfo
@@ -157,7 +155,53 @@ URI::URI( const std::string& scheme, const std::string& host,
           const std::string& path, const std::string& fragment )
             throw ( URISyntaxException ) {
 
-    URI::URI( scheme, "", host, -1, path, "", fragment );
+    if( scheme == "" && host == "" && path == "" && fragment == "" ) {
+        return;
+    }
+
+    if( scheme != "" && !path.empty() && path.at(0) != '/') {
+
+        throw URISyntaxException(
+            __FILE__, __LINE__, path,
+            "URI::URI - Path string: %s starts with invalid char '/'" );
+    }
+
+    std::string uri = "";
+    if( scheme != "" ) {
+        uri.append( scheme );
+        uri.append( ":" );
+    }
+
+    uri.append( "//" );
+
+    if( host != "" ) {
+        std::string newHost = host;
+
+        // check for ipv6 addresses that hasn't been enclosed
+        // in square brackets
+        if( host.find( ":" ) != std::string::npos &&
+            host.find( "]" ) == std::string::npos &&
+            host.find( "[" ) == std::string::npos ) {
+
+            newHost = std::string( "[" ) + host + "]";
+        }
+
+        uri.append( newHost );
+    }
+
+    if( path != "" ) {
+        // QUOTE ILLEGAL CHARS
+        uri.append( quoteComponent( path, "/@" + someLegal ) );
+    }
+
+    if( fragment != "" ) {
+        // QUOTE ILLEGAL CHARS
+        uri.append( "#" );
+        uri.append( quoteComponent( fragment, allLegal ) );
+    }
+
+    this->parseURI( uri, true );
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,19 +209,22 @@ URI::URI( const std::string& scheme, const std::string& authority,
           const std::string& path, const std::string& query,
           const std::string& fragment ) throw ( URISyntaxException ) {
 
-    if( scheme != "" && path.length() > 0 && path.at(0) != '/' ) {
+    if( scheme != "" && !path.empty() && path.at(0) != '/' ) {
          throw URISyntaxException(
             __FILE__, __LINE__, path,
             "URI::URI - Path String %s must start with a '/'" );
      }
 
      std::string uri = "";
+
      if( scheme != "" ) {
          uri.append( scheme );
          uri.append( ":" );
      }
+
+     uri.append("//");
+
      if( authority != "" ) {
-         uri.append("//");
          // QUOTE ILLEGAL CHARS
          uri.append( quoteComponent( authority, "@[]" + someLegal ) );
      }
@@ -186,11 +233,13 @@ URI::URI( const std::string& scheme, const std::string& authority,
          // QUOTE ILLEGAL CHARS
          uri.append( quoteComponent( path, "/@" + someLegal ) );
      }
+
      if( query != "" ) {
          // QUOTE ILLEGAL CHARS
          uri.append( "?" );
          uri.append( quoteComponent( query, allLegal ) );
      }
+
      if( fragment != "" ) {
          // QUOTE ILLEGAL CHARS
          uri.append( "#" );
@@ -223,7 +272,7 @@ int URI::compareTo( const URI& uri ) const {
     } else if( this->uri.getScheme() != "" && uri.getScheme() != "" ) {
         ret = apr_strnatcasecmp( this->uri.getScheme().c_str(), uri.getScheme().c_str() );
         if( ret != 0 ) {
-            return ret;
+            return ret > 0 ? 1 : -1;
         }
     }
 
@@ -236,7 +285,7 @@ int URI::compareTo( const URI& uri ) const {
         ret = apr_strnatcmp( this->getSchemeSpecificPart().c_str(),
                              uri.getSchemeSpecificPart().c_str() );
         if( ret != 0 ) {
-            return ret;
+            return ret > 0 ? 1 : -1;
         }
     } else {
 
@@ -260,19 +309,19 @@ int URI::compareTo( const URI& uri ) const {
                     ret = apr_strnatcmp( this->getUserInfo().c_str(),
                                          uri.getUserInfo().c_str() );
                     if( ret != 0 ) {
-                        return ret;
+                        return ret > 0 ? 1 : -1;
                     }
                 }
 
                 // userinfo's are the same, compare hostname
-                ret = apr_strnatcmp( this->uri.getHost().c_str(), uri.getHost().c_str() );
+                ret = apr_strnatcasecmp( this->uri.getHost().c_str(), uri.getHost().c_str() );
                 if( ret != 0 ) {
-                    return ret;
+                    return ret > 0 ? 1 : -1;
                 }
 
                 // compare port
                 if( this->getPort() != uri.getPort() ) {
-                    return getPort() - uri.getPort();
+                    return ( getPort() - uri.getPort() ) > 0 ? 1 : -1;
                 }
 
             } else {
@@ -281,7 +330,7 @@ int URI::compareTo( const URI& uri ) const {
                 ret = apr_strnatcmp( this->uri.getAuthority().c_str(),
                                      uri.getAuthority().c_str() );
                 if( ret != 0 ) {
-                    return ret;
+                    return ret > 0 ? 1 : -1;
                 }
             }
         }
@@ -290,7 +339,7 @@ int URI::compareTo( const URI& uri ) const {
         // compare paths
         ret = apr_strnatcmp( this->getPath().c_str(), uri.getPath().c_str() );
         if( ret != 0 ) {
-            return ret;
+            return ret > 0 ? 1 : -1;
         }
 
         // compare queries
@@ -301,7 +350,7 @@ int URI::compareTo( const URI& uri ) const {
         } else if( this->getQuery() != "" && uri.getQuery() != "" ) {
             ret = apr_strnatcmp( this->getQuery().c_str(), uri.getQuery().c_str() );
             if( ret != 0 ) {
-                return ret;
+                return ret > 0 ? 1 : -1;
             }
         }
     }
@@ -314,7 +363,7 @@ int URI::compareTo( const URI& uri ) const {
     } else if( this->getFragment() != "" && uri.getFragment() != "" ) {
         ret = apr_strnatcmp( this->getFragment().c_str(), uri.getFragment().c_str() );
         if( ret != 0 ) {
-            return ret;
+            return ret > 0 ? 1 : -1;
         }
     }
 
@@ -325,87 +374,88 @@ int URI::compareTo( const URI& uri ) const {
 ////////////////////////////////////////////////////////////////////////////////
 bool URI::equals( const URI& uri ) const {
 
-    if( ( uri.getFragment() == "" && this->getFragment() != "" ) ||
-        ( uri.getFragment() != "" && this->getFragment() == "" ) ) {
+    if( ( uri.uri.getFragment() == "" && this->uri.getFragment() != "" ) ||
+        ( uri.uri.getFragment() != "" && this->uri.getFragment() == "" ) ) {
 
         return false;
 
-    } else if( uri.getFragment() != "" && this->getFragment() != "" ) {
+    } else if( uri.uri.getFragment() != "" && this->uri.getFragment() != "" ) {
 
-        if( !equalsHexCaseInsensitive( uri.getFragment(), this->getFragment() ) ) {
+        if( !equalsHexCaseInsensitive( uri.uri.getFragment(), this->uri.getFragment() ) ) {
             return false;
         }
     }
 
-    if( ( uri.getScheme() == "" && this->getScheme() != "" ) ||
-        ( uri.getScheme() != "" && this->getScheme() == "" ) ) {
+    if( ( uri.uri.getScheme() == "" && this->uri.getScheme() != "" ) ||
+        ( uri.uri.getScheme() != "" && this->uri.getScheme() == "" ) ) {
 
         return false;
 
-    } else if( uri.getScheme() != "" && this->getScheme() != "" ) {
+    } else if( uri.uri.getScheme() != "" && this->uri.getScheme() != "" ) {
 
-        if( apr_strnatcasecmp( uri.getScheme().c_str(), this->getScheme().c_str() ) != 0 ) {
+        if( apr_strnatcasecmp( uri.uri.getScheme().c_str(), this->uri.getScheme().c_str() ) != 0 ) {
             return false;
         }
     }
 
-    if( uri.isOpaque() && this->isOpaque() ) {
+    if( uri.uri.isOpaque() && this->uri.isOpaque() ) {
 
         return equalsHexCaseInsensitive(
-            uri.getSchemeSpecificPart(), this->getSchemeSpecificPart() );
+            uri.uri.getSchemeSpecificPart(), this->uri.getSchemeSpecificPart() );
 
-    } else if( !uri.isOpaque() && !this->isOpaque() ) {
+    } else if( !uri.uri.isOpaque() && !this->uri.isOpaque() ) {
 
-        if( !equalsHexCaseInsensitive( this->getPath(), uri.getPath() ) ) {
+        if( !equalsHexCaseInsensitive( this->uri.getPath(), uri.uri.getPath() ) ) {
             return false;
         }
 
-        if( ( uri.getQuery() != "" && this->getQuery() == "" ) ||
-            ( uri.getQuery() == "" && this->getQuery() != "" ) ) {
+        if( ( uri.uri.getQuery() != "" && this->uri.getQuery() == "" ) ||
+            ( uri.uri.getQuery() == "" && this->uri.getQuery() != "" ) ) {
 
             return false;
 
-        } else if( uri.getQuery() != "" && this->getQuery() != "" ) {
+        } else if( uri.uri.getQuery() != "" && this->uri.getQuery() != "" ) {
 
-            if( !equalsHexCaseInsensitive( uri.getQuery(), this->getQuery() ) ) {
+            if( !equalsHexCaseInsensitive( uri.uri.getQuery(), this->uri.getQuery() ) ) {
                 return false;
             }
         }
 
-        if( ( uri.getAuthority() != "" && this->getAuthority() == "" ) ||
-            ( uri.getAuthority() == "" && this->getAuthority() != "" ) ) {
+        if( ( uri.uri.getAuthority() != "" && this->uri.getAuthority() == "" ) ||
+            ( uri.uri.getAuthority() == "" && this->uri.getAuthority() != "" ) ) {
 
             return false;
 
-        } else if( uri.getAuthority() != "" && this->getAuthority() != "" ) {
+        } else if( uri.uri.getAuthority() != "" && this->uri.getAuthority() != "" ) {
 
-            if( ( uri.getHost() != "" && this->getHost() == "" ) ||
-                ( uri.getHost() == "" && this->getHost() != "" ) ) {
+            if( ( uri.uri.getHost() != "" && this->uri.getHost() == "" ) ||
+                ( uri.uri.getHost() == "" && this->uri.getHost() != "" ) ) {
 
                 return false;
 
-            } else if( uri.getHost() == "" && this->getHost() == "" ) {
+            } else if( uri.uri.getHost() == "" && this->uri.getHost() == "" ) {
 
                 // both are registry based, so compare the whole authority
-                return equalsHexCaseInsensitive( uri.getAuthority(), this->getAuthority() );
+                return equalsHexCaseInsensitive(
+                    uri.uri.getAuthority(), this->uri.getAuthority() );
 
             } else { // uri.host != "" && host != "", so server-based
 
-                if( apr_strnatcasecmp( uri.getHost().c_str(), this->getHost().c_str() ) != 0 ) {
+                if( apr_strnatcasecmp( uri.uri.getHost().c_str(), this->uri.getHost().c_str() ) != 0 ) {
                     return false;
                 }
 
-                if( this->getPort() != uri.getPort() ) {
+                if( this->uri.getPort() != uri.uri.getPort() ) {
                     return false;
                 }
 
-                if( ( uri.getUserInfo() != "" && this->getUserInfo() == "" ) ||
-                    ( uri.getUserInfo() == "" && this->getUserInfo() != "" ) ) {
+                if( ( uri.uri.getUserInfo() != "" && this->uri.getUserInfo() == "" ) ||
+                    ( uri.uri.getUserInfo() == "" && this->uri.getUserInfo() != "" ) ) {
 
                     return false;
 
-                } else if( uri.getUserInfo() != "" && this->getUserInfo() != "" ) {
-                    return equalsHexCaseInsensitive( this->getUserInfo(), uri.getUserInfo() );
+                } else if( uri.uri.getUserInfo() != "" && this->uri.getUserInfo() != "" ) {
+                    return equalsHexCaseInsensitive( this->uri.getUserInfo(), uri.uri.getUserInfo() );
                 } else {
                     return true;
                 }
@@ -570,8 +620,8 @@ std::string URI::normalize( const std::string& path ) const {
         }
     }
 
-    std::vector<string> seglist;
-    std::vector<bool> include;
+    std::vector<string> seglist( size );
+    std::vector<bool> include( size );
 
     // break the path into segments and store in the list
     unsigned int current = 0;
@@ -631,7 +681,7 @@ std::string URI::normalize( const std::string& path ) const {
     // if we used at least one segment and the path previously ended with
     // a slash and the last segment is still used, then delete the extra
     // trailing '/'
-    if( !path.at( path.length() ) == '/' && seglist.size() > 0 &&
+    if( !path.at( path.length() - 1 ) == '/' && seglist.size() > 0 &&
         include[seglist.size() - 1] ) {
 
         newpath.erase( newpath.length() - 1, 1 );
@@ -845,8 +895,8 @@ string URI::toString() const {
             result.append( this->uri.getSchemeSpecificPart() );
         } else {
 
+            result.append( "//" );
             if( this->uri.getAuthority() != "" ) {
-                result.append( "//" );
                 result.append( this->uri.getAuthority() );
             }
 
