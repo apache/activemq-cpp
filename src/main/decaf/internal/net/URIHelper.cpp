@@ -127,7 +127,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
         }
 
         // Authority and Path
-        if( temp != "" && temp.at(0) == '/' && temp.at(1) == '/' ) {
+        if( temp.size() >= 2 && temp.at(0) == '/' && temp.at(1) == '/' ) {
 
             index = temp.find( '/', 2 );
             if( index != std::string::npos ) {

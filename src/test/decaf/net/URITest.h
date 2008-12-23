@@ -45,6 +45,28 @@ namespace net{
         CPPUNIT_TEST( testGetHost );
         CPPUNIT_TEST( testGetPath );
         CPPUNIT_TEST( testGetPort );
+        CPPUNIT_TEST( testGetPort2 );
+        CPPUNIT_TEST( testGetQuery );
+        CPPUNIT_TEST( testGetRawAuthority );
+        CPPUNIT_TEST( testGetRawFragment );
+        CPPUNIT_TEST( testGetRawPath );
+        CPPUNIT_TEST( testGetRawQuery );
+        CPPUNIT_TEST( testGetRawSchemeSpecificPart );
+        CPPUNIT_TEST( testGetRawUserInfo );
+        CPPUNIT_TEST( testGetScheme );
+        CPPUNIT_TEST( testGetSchemeSpecificPart );
+        CPPUNIT_TEST( testGetUserInfo );
+        CPPUNIT_TEST( testIsAbsolute );
+        CPPUNIT_TEST( testIsOpaque );
+        CPPUNIT_TEST( testNormalize );
+        CPPUNIT_TEST( testNormalize2 );
+        CPPUNIT_TEST( testNormalize3 );
+        CPPUNIT_TEST( testParseServerAuthority );
+        CPPUNIT_TEST( testRelativizeLURI );
+        CPPUNIT_TEST( testRelativize2 );
+        CPPUNIT_TEST( testResolveURI );
+        CPPUNIT_TEST( testResolve );
+        CPPUNIT_TEST( testToString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -70,6 +92,28 @@ namespace net{
         void testGetHost();
         void testGetPath();
         void testGetPort();
+        void testGetPort2();
+        void testGetQuery();
+        void testGetRawAuthority();
+        void testGetRawFragment();
+        void testGetRawPath();
+        void testGetRawQuery();
+        void testGetRawSchemeSpecificPart();
+        void testGetRawUserInfo();
+        void testGetScheme();
+        void testGetSchemeSpecificPart();
+        void testGetUserInfo();
+        void testIsAbsolute();
+        void testIsOpaque();
+        void testNormalize();
+        void testNormalize2();
+        void testNormalize3();
+        void testParseServerAuthority();
+        void testRelativizeLURI();
+        void testRelativize2();
+        void testResolveURI();
+        void testResolve();
+        void testToString();
 
     };
 

@@ -172,7 +172,9 @@ URI::URI( const std::string& scheme, const std::string& host,
         uri.append( ":" );
     }
 
-    uri.append( "//" );
+    if( host != "" ) {
+        uri.append( "//" );
+    }
 
     if( host != "" ) {
         std::string newHost = host;
@@ -605,6 +607,10 @@ std::string URI::convertHexToLowerCase( const std::string& s ) const {
 ////////////////////////////////////////////////////////////////////////////////
 std::string URI::normalize( const std::string& path ) const {
 
+    if( path == "" ) {
+        return path;
+    }
+
     // count the number of '/'s, to determine number of segments
     unsigned int index = -1;
     unsigned int pathlen = path.length();
@@ -681,7 +687,7 @@ std::string URI::normalize( const std::string& path ) const {
     // if we used at least one segment and the path previously ended with
     // a slash and the last segment is still used, then delete the extra
     // trailing '/'
-    if( !path.at( path.length() - 1 ) == '/' && seglist.size() > 0 &&
+    if( path.at( path.length() - 1 ) != '/' && seglist.size() > 0 &&
         include[seglist.size() - 1] ) {
 
         newpath.erase( newpath.length() - 1, 1 );
@@ -791,7 +797,7 @@ URI URI::relativize( const URI& relative ) const {
     if( thisPath != relativePath ) {
 
         // if this URI's path doesn't end in a '/', add one
-        if( thisPath.at( thisPath.length() ) != '/' ) {
+        if( thisPath.empty() || thisPath.at( thisPath.length() - 1 ) != '/' ) {
             thisPath = thisPath + '/';
         }
 
@@ -841,9 +847,10 @@ URI URI::resolve( const URI& relative ) const {
         // if the relative URI has authority,
         // the resolved URI is almost the same as the relative URI,
         // except that it has the scheme of this URI.
-        result = *this;
+        result = relative;
         result.uri.setScheme( this->uri.getScheme() );
         result.uri.setAbsolute( this->uri.isAbsolute() );
+        result.uriString = "";
 
     } else {
 
@@ -854,6 +861,7 @@ URI URI::resolve( const URI& relative ) const {
         result = *this;
         result.uri.setFragment( relative.uri.getFragment() );
         result.uri.setQuery( relative.uri.getQuery() );
+        result.uriString = "";
 
         if( relative.uri.getPath().at(0) == '/' ) {
             result.uri.setPath( relative.uri.getPath() );
@@ -895,9 +903,16 @@ string URI::toString() const {
             result.append( this->uri.getSchemeSpecificPart() );
         } else {
 
-            result.append( "//" );
             if( this->uri.getAuthority() != "" ) {
+                result.append( "//" );
                 result.append( this->uri.getAuthority() );
+            }
+
+            if( this->uri.getScheme() != "" &&
+                this->uri.getAuthority() == "" &&
+                this->uri.getPath() != "" ) {
+
+                result.append( "//" );
             }
 
             if( this->uri.getPath() != "" ) {

@@ -49,16 +49,16 @@ namespace net {
 
         URIType( const std::string& source ) : source( source ) {
             this->port = -1;
-            this->opaque = true;
-            this->absolute = true;
+            this->opaque = false;
+            this->absolute = false;
             this->serverAuthority = false;
             this->valid = false;
         }
 
         URIType() {
             this->port = -1;
-            this->opaque = true;
-            this->absolute = true;
+            this->opaque = false;
+            this->absolute = false;
             this->serverAuthority = false;
             this->valid = false;
         }
