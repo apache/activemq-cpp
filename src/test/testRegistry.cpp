@@ -177,6 +177,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::nio::ShortArrayBufferTest );
 
 #include <decaf/internal/net/URIEncoderDecoderTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::net::URIEncoderDecoderTest );
+#include <decaf/internal/net/URIHelperTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::net::URIHelperTest );
 
 #include <decaf/nio/BufferTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::nio::BufferTest );

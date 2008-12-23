@@ -88,6 +88,7 @@ cc_sources = \
   decaf/internal/nio/IntArrayBufferTest.cpp \
   decaf/internal/nio/ShortArrayBufferTest.cpp \
   decaf/internal/net/URIEncoderDecoderTest.cpp \
+  decaf/internal/net/URIHelperTest.cpp \
   decaf/lang/ByteTest.cpp \
   decaf/lang/CharacterTest.cpp \
   decaf/lang/BooleanTest.cpp \
@@ -206,6 +207,7 @@ h_sources = \
   decaf/internal/nio/IntArrayBufferTest.h \
   decaf/internal/nio/ShortArrayBufferTest.h \
   decaf/internal/net/URIEncoderDecoderTest.h \
+  decaf/internal/net/URIHelperTest.h \
   decaf/lang/ByteTest.h \
   decaf/lang/CharacterTest.h \
   decaf/lang/BooleanTest.h \
