@@ -67,6 +67,7 @@ namespace net{
         CPPUNIT_TEST( testResolveURI );
         CPPUNIT_TEST( testResolve );
         CPPUNIT_TEST( testToString );
+        CPPUNIT_TEST( testToURL );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -114,6 +115,7 @@ namespace net{
         void testResolveURI();
         void testResolve();
         void testToString();
+        void testToURL();
 
     };
 

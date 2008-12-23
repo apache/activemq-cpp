@@ -443,7 +443,7 @@ void URITest::testConstructorFiveString() {
 
     CPPUNIT_ASSERT_MESSAGE(
         string( "incorrect toString()" ) + uri.toString(),
-        uri.toString() == "ht12-3+tp:///p%23a%25E2%2582%25ACth?q%5Eu%2525ery#fragment" );
+        uri.toString() == "ht12-3+tp:/p%23a%25E2%2582%25ACth?q%5Eu%2525ery#fragment" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -735,7 +735,7 @@ void URITest::testGetAuthority2() {
         CPPUNIT_ASSERT_MESSAGE( string( "Host not null for URI " ) + uri.toString(),
                                 uri.getHost() == "" );
         CPPUNIT_ASSERT_MESSAGE( string( "testB, toString() returned incorrect value:" ) + uri.toString(),
-                                string( "file:///tmp#frag" ) == uri.toString() );
+                                string( "file:/tmp#frag" ) == uri.toString() );
     }
     {
         URI uri( "file", "", "/tmp", "query", "frag" );
@@ -744,21 +744,21 @@ void URITest::testGetAuthority2() {
         CPPUNIT_ASSERT_MESSAGE( "Host not null for URI " + uri.toString(),
                                 uri.getHost() == "" );
         CPPUNIT_ASSERT_MESSAGE( "test C, toString() returned incorrect value",
-                                string( "file:///tmp?query#frag" ) == uri.toString() );
+                                string( "file:/tmp?query#frag" ) == uri.toString() );
     }
 
     // after normalization the host string info may be lost since the
     // uri string is reconstructed
-    URI uri( "file", "", "/tmp/a/../b/c", "query", "frag" );
+    URI uri( "file", "www.google.com", "/tmp/a/../b/c", "query", "frag" );
     URI uri2 = uri.normalize();
     CPPUNIT_ASSERT_MESSAGE( string( "Authority not null for URI: " ) + uri2.toString(),
-                            uri.getAuthority() == "" );
+                            uri.getAuthority() == "www.google.com" );
     CPPUNIT_ASSERT_MESSAGE( string( "Host not null for URI " ) + uri2.toString(),
-                            uri.getHost() == "" );
+                            uri.getHost() == "www.google.com" );
     CPPUNIT_ASSERT_MESSAGE( "test D, toString() returned incorrect value: " + uri.toString(),
-                            string( "file:///tmp/a/../b/c?query#frag" ) == uri.toString() );
+                            string( "file://www.google.com/tmp/a/../b/c?query#frag" ) == uri.toString() );
     CPPUNIT_ASSERT_MESSAGE( "test E, toString() returned incorrect value: " + uri2.toString(),
-                            string( "file:/tmp/b/c?query#frag" ) == uri2.toString() );
+                            string( "file://www.google.com/tmp/b/c?query#frag" ) == uri2.toString() );
 
     // the empty string host will give URISyntaxException
     // for the 7 arg constructor
@@ -1585,7 +1585,7 @@ void URITest::testResolveURI() {
         "http://www.oogle.com",
     };
 
-    for( unsigned int i = 0; i < 0; i++ ) {
+    for( unsigned int i = 0; i < 12; i++ ) {
 
         try {
 
@@ -1643,33 +1643,40 @@ void URITest::testToString() {
     }
 }
 
-/*
 ////////////////////////////////////////////////////////////////////////////////
-void URITest::test_toURL() {
-    String absoluteuris[] = new const char* { "mailto:noreply@apache.org",
-            "urn:isbn:123498989h", "news:software.ibm.com",
-            "http://www.apache.org", "file:///d:/temp/results.txt",
-            "scheme:ssp", };
+void URITest::testToURL() {
 
-    String relativeuris[] = new const char* { "calculate.pl?isbn=123498989h",
-            "?isbn=123498989h", "//www.apache.org", "a.html", "#top",
-            "//pc1/", "//user@host/path/file" };
+    const char* absoluteuris[] = {
+        "mailto:noreply@apache.org",
+        "urn:isbn:123498989h",
+        "news:software.ibm.com",
+        "http://www.apache.org",
+        "file:///d:/temp/results.txt",
+        "scheme:ssp", };
 
-    for (int i = 0; i < absoluteuris.length; i++) {
+    const char* relativeuris[] = {
+        "calculate.pl?isbn=123498989h",
+        "?isbn=123498989h",
+        "//www.apache.org",
+        "a.html",
+        "#top",
+        "//pc1/",
+        "//user@host/path/file" };
+
+    for( int i = 0; i < 6; i++ ) {
         try {
-            new URI(absoluteuris[i]).toURL();
-        } catch (MalformedURLException e) {
+            URI( absoluteuris[i] ).toURL();
+        } catch( MalformedURLException& e ) {
             // not all the URIs can be translated into valid URLs
         }
     }
 
-    for (int i = 0; i < relativeuris.length; i++) {
+    for( int i = 0; i < 7; i++ ) {
         try {
-            new URI(relativeuris[i]).toURL();
-            fail("Expected IllegalArgumentException not thrown");
-        } catch (IllegalArgumentException e) {
+            URI( relativeuris[i] ).toURL();
+            CPPUNIT_FAIL( "Expected IllegalArgumentException not thrown" );
+        } catch( IllegalArgumentException& e ) {
             // Expected
         }
     }
 }
- */

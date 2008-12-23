@@ -837,6 +837,8 @@ URI URI::resolve( const URI& relative ) const {
         // except that it has the fragment from the relative URI.
         result = *this;
         result.uri.setFragment( relative.uri.getFragment() );
+        result.uriString = "";
+
         // no need to re-calculate the scheme specific part,
         // since fragment is not part of scheme specific part.
         return result;
@@ -906,13 +908,6 @@ string URI::toString() const {
             if( this->uri.getAuthority() != "" ) {
                 result.append( "//" );
                 result.append( this->uri.getAuthority() );
-            }
-
-            if( this->uri.getScheme() != "" &&
-                this->uri.getAuthority() == "" &&
-                this->uri.getPath() != "" ) {
-
-                result.append( "//" );
             }
 
             if( this->uri.getPath() != "" ) {
