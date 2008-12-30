@@ -612,8 +612,8 @@ std::string URI::normalize( const std::string& path ) const {
     }
 
     // count the number of '/'s, to determine number of segments
-    unsigned int index = -1;
-    unsigned int pathlen = path.length();
+    std::size_t index = -1;
+    std::size_t pathlen = path.length();
     unsigned int size = 0;
 
     if( pathlen > 0 && path.at(0) != '/' ) {
@@ -630,8 +630,8 @@ std::string URI::normalize( const std::string& path ) const {
     std::vector<bool> include( size );
 
     // break the path into segments and store in the list
-    unsigned int current = 0;
-    unsigned int index2 = 0;
+    std::size_t current = 0;
+    std::size_t index2 = 0;
 
     index = ( pathlen > 0 && path.at(0) == '/' ) ? 1 : 0;
     while( ( index2 = path.find( '/', index + 1 ) ) != string::npos ) {
