@@ -549,8 +549,8 @@ bool URI::equalsHexCaseInsensitive( const std::string& first, const std::string&
         return apr_strnatcmp( first.c_str(), second.c_str() ) == 0;
     }
 
-    unsigned int index = 0;
-    unsigned int previndex = 0;
+    std::size_t index = 0;
+    std::size_t previndex = 0;
 
     while( ( index = first.find( '%', previndex ) ) != string::npos &&
            second.find( '%', previndex ) == index ) {
@@ -585,8 +585,8 @@ std::string URI::convertHexToLowerCase( const std::string& s ) const {
         return s;
     }
 
-    unsigned int index = 0;
-    unsigned int previndex = 0;
+    std::size_t index = 0;
+    std::size_t previndex = 0;
 
     while( ( index = s.find( '%', previndex ) ) != string::npos ) {
         result.append( s.substr( previndex, ( index - previndex ) + 1 ) );
