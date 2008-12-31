@@ -29,7 +29,7 @@ namespace net{
 
         std::string reason;
         std::string input;
-        int index;
+		std::size_t index;
 
     public:
 
@@ -159,7 +159,7 @@ namespace net{
         URISyntaxException( const char* file, const int lineNumber,
                             const std::string& input,
                             const std::string& reason,
-                            int index ) throw () : Exception() {
+							std::size_t index ) throw () : Exception() {
 
             this->reason = reason;
             this->input = input;
@@ -203,7 +203,7 @@ namespace net{
         /**
          * @returns the index in the input string where the error occured or -1
          */
-        int getIndex() const {
+		std::size_t getIndex() const {
             return index;
         }
 

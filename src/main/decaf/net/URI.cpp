@@ -869,7 +869,7 @@ URI URI::resolve( const URI& relative ) const {
             result.uri.setPath( relative.uri.getPath() );
         } else {
             // resolve a relative reference
-            int endindex = this->uri.getPath().find_last_of('/') + 1;
+			std::size_t endindex = this->uri.getPath().find_last_of('/') + 1;
             result.uri.setPath( normalize(
                 this->uri.getPath().substr( 0, endindex ) + relative.uri.getPath() ) );
         }

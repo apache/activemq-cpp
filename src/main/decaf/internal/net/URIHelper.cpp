@@ -153,7 +153,7 @@ URIType URIHelper::parseURI( const std::string& uri, bool forceServer )
             result.setPath( temp );
         }
 
-        int pathIndex = 0;
+		std::size_t pathIndex = 0;
         if( index2 != std::string::npos ) {
             pathIndex += index2;
         }
@@ -487,8 +487,8 @@ bool URIHelper::isValidDomainName( const std::string& host ) {
 ////////////////////////////////////////////////////////////////////////////////
 bool URIHelper::isValidIPv4Address( const std::string& host ) {
 
-    int index;
-    int index2;
+	std::size_t index;
+    std::size_t index2;
 
     try {
 
@@ -526,7 +526,7 @@ bool URIHelper::isValidIPv4Address( const std::string& host ) {
 ////////////////////////////////////////////////////////////////////////////////
 bool URIHelper::isValidIP6Address( const std::string& ipAddress ) {
 
-    int length = ipAddress.length();
+    std::size_t length = ipAddress.length();
     bool doubleColon = false;
     int numberOfColons = 0;
     int numberOfPeriods = 0;
@@ -539,7 +539,7 @@ bool URIHelper::isValidIP6Address( const std::string& ipAddress ) {
         return false;
     }
 
-    for( int i = 0; i < length; i++ ) {
+    for( std::size_t i = 0; i < length; i++ ) {
 
         prevChar = c;
         c = ipAddress.at( i );

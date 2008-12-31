@@ -7655,6 +7655,18 @@
 						RelativePath="..\src\main\decaf\internal\net\URIEncoderDecoder.h"
 						>
 					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\URIHelper.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\URIHelper.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\decaf\internal\net\URIType.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="nio"

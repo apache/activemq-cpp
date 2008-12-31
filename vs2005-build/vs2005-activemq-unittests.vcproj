@@ -3342,14 +3342,6 @@
 							Name="v3"
 							>
 							<File
-								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQBlobMessageMarshallerTest.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQBlobMessageMarshallerTest.h"
-								>
-							</File>
-							<File
 								RelativePath="..\src\test\activemq\connector\openwire\marshal\v3\ActiveMQBytesMessageMarshallerTest.cpp"
 								>
 								<FileConfiguration
@@ -6257,6 +6249,14 @@
 					</File>
 					<File
 						RelativePath="..\src\test\decaf\internal\net\URIEncoderDecoderTest.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\net\URIHelperTest.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\test\decaf\internal\net\URIHelperTest.h"
 						>
 					</File>
 				</Filter>
