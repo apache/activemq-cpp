@@ -24,6 +24,7 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompConnectorTest::testSessions()

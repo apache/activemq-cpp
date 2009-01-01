@@ -22,12 +22,12 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Properties.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/transport/MockTransport.h>
+#include <activemq/transport/mock/MockTransport.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/openwire/OpenWireConnector.h>
-#include <activemq/transport/MockTransportFactory.h>
+#include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
@@ -71,8 +71,8 @@ void ActiveMQConnectionTest::test1WithStomp()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::MockTransport* dTransport =
-            dynamic_cast< transport::MockTransport*>( transport );
+        transport::mock::MockTransport* dTransport =
+            dynamic_cast< transport::mock::MockTransport*>( transport );
 
         CPPUNIT_ASSERT( dTransport != NULL );
 
@@ -209,8 +209,8 @@ void ActiveMQConnectionTest::test2WithStomp()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::MockTransport* dTransport =
-            dynamic_cast< transport::MockTransport*>( transport );
+        transport::mock::MockTransport* dTransport =
+            dynamic_cast< transport::mock::MockTransport*>( transport );
 
         CPPUNIT_ASSERT( dTransport != NULL );
 
@@ -266,8 +266,8 @@ void ActiveMQConnectionTest::test2WithOpenwire()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::MockTransport* dTransport =
-            dynamic_cast< transport::MockTransport*>( transport );
+        transport::mock::MockTransport* dTransport =
+            dynamic_cast< transport::mock::MockTransport*>( transport );
 
         CPPUNIT_ASSERT( dTransport != NULL );
 

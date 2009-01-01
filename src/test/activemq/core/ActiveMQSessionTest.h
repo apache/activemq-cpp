@@ -27,7 +27,7 @@
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <activemq/core/ActiveMQConnection.h>
-#include <activemq/transport/MockTransport.h>
+#include <activemq/transport/mock/MockTransport.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -109,7 +109,7 @@ namespace core{
         };
 
         ActiveMQConnection* connection;
-        transport::MockTransport* dTransport;
+        transport::mock::MockTransport* dTransport;
         MyExceptionListener exListener;
 
     public:    // CPPUNIT Method Overrides.

@@ -21,6 +21,7 @@
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace std;

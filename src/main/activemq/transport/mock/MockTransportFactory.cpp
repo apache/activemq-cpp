@@ -15,16 +15,17 @@
  * limitations under the License.
  */
 
-#include "MockTransportFactory.h"
+#include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/connector/stomp/StompResponseBuilder.h>
 #include <activemq/connector/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/MockTransport.h>
-#include <activemq/transport/MockTransportFactory.h>
+#include <activemq/transport/mock/MockTransport.h>
+#include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
 using namespace decaf::util;
 using namespace decaf::lang;

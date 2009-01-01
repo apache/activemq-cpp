@@ -17,14 +17,12 @@
 
 #include "ActiveMQConnectionFactoryTest.h"
 
+#include <cms/Connection.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Thread.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
-#include <cms/Connection.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
-#include <activemq/transport/MockTransportFactory.h>
 #include <activemq/connector/Connector.h>
 #include <memory>
 

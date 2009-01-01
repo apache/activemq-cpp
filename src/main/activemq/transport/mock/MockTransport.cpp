@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-#include <activemq/transport/MockTransport.h>
+#include <activemq/transport/mock/MockTransport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;

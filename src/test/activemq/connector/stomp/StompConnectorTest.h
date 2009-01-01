@@ -29,7 +29,7 @@
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
-#include <activemq/transport/MockTransport.h>
+#include <activemq/transport/mock/MockTransport.h>
 #include <activemq/util/Config.h>
 
 #include <decaf/io/ByteArrayOutputStream.h>
@@ -53,7 +53,7 @@ namespace stomp{
     private:
 
         StompConnector* connector;
-        transport::MockTransport* transport;
+        transport::mock::MockTransport* transport;
         std::string connectionId;
 
     public:

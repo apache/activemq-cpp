@@ -15,14 +15,15 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_MOCK_MOCKTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_MOCK_MOCKTRANSPORTFACTORY_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
 
 namespace activemq{
 namespace transport{
+namespace mock{
 
     /**
      * Manufactures MockTransports, which are objects that
@@ -50,6 +51,6 @@ namespace transport{
 
     };
 
-}}
+}}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_MOCKTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_MOCK_MOCKTRANSPORTFACTORY_H_*/

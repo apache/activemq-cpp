@@ -26,7 +26,7 @@
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>
-#include <activemq/transport/MockTransport.h>
+#include <activemq/transport/mock/MockTransport.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/SubscribeCommand.h>
 #include <activemq/transport/CommandListener.h>
@@ -52,7 +52,7 @@ namespace stomp{
 
         StompConnector* connector;
         StompSessionManager* manager;
-        transport::MockTransport* transport;
+        transport::mock::MockTransport* transport;
         std::string connectionId;
 
     public:

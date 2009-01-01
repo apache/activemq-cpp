@@ -28,6 +28,7 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::stomp;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 using namespace decaf;
 using namespace decaf::util;
 

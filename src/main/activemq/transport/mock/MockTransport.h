@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
-#define _ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_
+#ifndef _ACTIVEMQ_TANSPORT_MOCK_MOCKTRANSPORT_H_
+#define _ACTIVEMQ_TANSPORT_MOCK_MOCKTRANSPORT_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -38,6 +38,7 @@
 
 namespace activemq{
 namespace transport{
+namespace mock{
 
     /**
      * The MockTransport defines a base level Transport class that is intended to
@@ -285,6 +286,6 @@ namespace transport{
 
     };
 
-}}
+}}}
 
-#endif /*ACTIVEMQ_TANSPORT_MOCKTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TANSPORT_MOCK_MOCKTRANSPORT_H_*/

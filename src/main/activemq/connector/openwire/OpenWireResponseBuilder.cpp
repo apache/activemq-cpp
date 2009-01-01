@@ -39,6 +39,7 @@ using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
 using namespace activemq::transport;
+using namespace activemq::transport::mock;
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* OpenWireResponseBuilder::buildResponse(

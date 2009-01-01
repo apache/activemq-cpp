@@ -72,8 +72,8 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/IOTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
-    activemq/transport/MockTransport.cpp \
-    activemq/transport/MockTransportFactory.cpp \
+    activemq/transport/mock/MockTransport.cpp \
+    activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/filters/ResponseCorrelator.cpp \
     activemq/transport/filters/ResponseCorrelatorFactory.cpp \
     activemq/transport/filters/AsyncSendTransport.cpp \
@@ -271,8 +271,8 @@ h_sources = \
     activemq/transport/CommandIOException.h \
     activemq/transport/IOTransportFactory.h \
     activemq/transport/IOTransport.h \
-    activemq/transport/MockTransport.h \
-    activemq/transport/MockTransportFactory.h \
+    activemq/transport/mock/MockTransport.h \
+    activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/filters/FutureResponse.h \
     activemq/transport/filters/ResponseCorrelator.h \
     activemq/transport/filters/ResponseCorrelatorFactory.h \

@@ -18,7 +18,7 @@
 #include "ActiveMQSessionTest.h"
 
 #include <decaf/lang/Thread.h>
-#include <activemq/transport/MockTransportFactory.h>
+#include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportFactoryMap.h>
 #include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/connector/ConsumerInfo.h>
@@ -497,7 +497,7 @@ void ActiveMQSessionTest::setUp()
             factory.createConnection() );
 
         // Get the Transport and make sure we got a dummy Transport
-        dTransport = transport::MockTransport::getInstance();
+        dTransport = transport::mock::MockTransport::getInstance();
         CPPUNIT_ASSERT( dTransport != NULL );
 
         connection->setExceptionListener( &exListener );
