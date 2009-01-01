@@ -44,7 +44,7 @@ namespace transport {
          * @param uri
          *        The new URI to add to the set this composite maintains.
          */
-        virtual void addURI( const URI& uri ) = 0;
+        virtual void addURI( const decaf::net::URI& uri ) = 0;
 
         /**
          * Remove a URI from the set of URI's that represents the set of Transports
@@ -55,7 +55,7 @@ namespace transport {
          * @param uri
          *        The new URI to remove to the set this composite maintains.
          */
-        virtual void removeURI( const URI& uri ) = 0;
+        virtual void removeURI( const decaf::net::URI& uri ) = 0;
 
     };
 
