@@ -19,7 +19,7 @@
 
 #include <decaf/util/StringTokenizer.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMap.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/URISupport.h>
 
@@ -57,13 +57,13 @@ Transport* TransportBuilder::buildTransport( const std::string& url,
 
         // Create the Transport for response correlator
         transport = this->createTransport(
-            "transport.filters.ResponseCorrelator", properties, transport );
+            "transport.correlator.ResponseCorrelator", properties, transport );
 
         // If command tracing was enabled, wrap the transport with a logging transport.
         if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
             // Create the Transport for response correlator
             transport = this->createTransport(
-                "transport.filters.LoggingTransport", properties, transport );
+                "transport.logging.LoggingTransport", properties, transport );
         }
 
         return transport;
@@ -83,7 +83,7 @@ Transport* TransportBuilder::createTransport( const std::string& name,
 
         // Create the Transport that the Connector will use.
         TransportFactory* factory =
-            TransportFactoryMap::getInstance().lookup( name );
+            TransportRegistry::getInstance().findFactory( name );
 
         if( factory == NULL ){
             throw ActiveMQException(

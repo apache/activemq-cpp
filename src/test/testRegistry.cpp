@@ -128,15 +128,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/core/ActiveMQSessionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 
-#include <activemq/transport/filters/ResponseCorrelatorTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::filters::ResponseCorrelatorTest );
+#include <activemq/transport/correlator/ResponseCorrelatorTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
 
 #include <activemq/transport/IOTransportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::IOTransportTest );
-#include <activemq/transport/TransportFactoryMapRegistrarTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportFactoryMapRegistrarTest );
-#include <activemq/transport/TransportFactoryMapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportFactoryMapTest );
 
 #include <activemq/exceptions/ActiveMQExceptionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );

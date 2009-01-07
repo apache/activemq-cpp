@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-#include "WireFormatRegistry.h"
+#include "TransportRegistry.h"
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::wireformat;
+using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatRegistry::WireFormatRegistry() {
+TransportRegistry::TransportRegistry() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatRegistry::~WireFormatRegistry() {
+TransportRegistry::~TransportRegistry() {
 
-    std::vector<WireFormatFactory*> factories = this->registry.getValues();
+    std::vector<TransportFactory*> factories = this->registry.getValues();
 
-    std::vector<WireFormatFactory*>::iterator iter = factories.begin();
+    std::vector<TransportFactory*>::iterator iter = factories.begin();
 
     for( ; iter != factories.end(); ++iter ) {
         delete *iter;
@@ -43,7 +43,7 @@ WireFormatRegistry::~WireFormatRegistry() {
  }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) const
+TransportFactory* TransportRegistry::findFactory( const std::string& name ) const
     throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     if( !this->registry.containsKey( name ) ) {
@@ -55,25 +55,25 @@ WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) co
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFactory* factory )
+void TransportRegistry::registerFactory( const std::string& name, TransportFactory* factory )
     throw( decaf::lang::exceptions::IllegalArgumentException,
            decaf::lang::exceptions::NullPointerException ) {
 
     if( name == "" ) {
         throw IllegalArgumentException( __FILE__, __LINE__,
-            "WireFormatFactory name cannot be the empty string" );
+            "TransportFactory name cannot be the empty string" );
     }
 
     if( factory == NULL ) {
         throw NullPointerException( __FILE__, __LINE__,
-            "Supplied WireFormatFactory pointer was NULL" );
+            "Supplied TransportFactory pointer was NULL" );
     }
 
     this->registry.setValue( name, factory );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void WireFormatRegistry::unregisterFactory( const std::string& name ) {
+void TransportRegistry::unregisterFactory( const std::string& name ) {
     if( this->registry.containsKey( name ) ) {
         delete this->registry.getValue( name );
         this->registry.remove( name );
@@ -81,12 +81,12 @@ void WireFormatRegistry::unregisterFactory( const std::string& name ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<std::string> WireFormatRegistry::getWireFormatNames() const {
+std::vector<std::string> TransportRegistry::getTransportNames() const {
     return this->registry.getKeys();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatRegistry& WireFormatRegistry::getInstance() {
-    static WireFormatRegistry registry;
+TransportRegistry& TransportRegistry::getInstance() {
+    static TransportRegistry registry;
     return registry;
 }

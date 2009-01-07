@@ -15,18 +15,17 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace tcp{
 
     /**
      * Factory Responsible for creating the TcpTransport.
@@ -48,14 +47,8 @@ namespace filters{
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
 
-        /**
-         * Returns a reference to this TransportFactory
-         * @returns TransportFactory Reference
-         */
-        static TransportFactory& getInstance();
-
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_*/

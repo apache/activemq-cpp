@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
-#define _ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORT_H_
+#define _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORT_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
@@ -29,7 +29,7 @@
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace tcp{
 
     /**
      * Implements a TCP/IP based transport filter, this transport
@@ -75,4 +75,4 @@ namespace filters{
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_TCPTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORT_H_*/

@@ -19,7 +19,7 @@
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::transport::filters;
+using namespace activemq::transport::correlator;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testBasics(){
@@ -239,7 +239,7 @@ void ResponseCorrelatorTest::testNarrow(){
     narrowed = correlator.narrow( typeid( MyTransport ) );
     CPPUNIT_ASSERT( narrowed == &transport );
 
-    narrowed = correlator.narrow( typeid( transport::filters::ResponseCorrelator ) );
+    narrowed = correlator.narrow( typeid( transport::correlator::ResponseCorrelator ) );
     CPPUNIT_ASSERT( narrowed == &correlator );
 
     narrowed = correlator.narrow( typeid( correlator ) );

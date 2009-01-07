@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRY_H_
-#define _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_
 
 #include <activemq/util/Config.h>
 
 #include <string>
 #include <vector>
-#include <activemq/wireformat/WireFormatFactory.h>
+#include <activemq/transport/TransportFactory.h>
 
 #include <decaf/util/Map.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
@@ -30,37 +30,37 @@
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace activemq {
-namespace wireformat {
+namespace transport {
 
     /**
-     * Registry of all WireFormat Factories that are available to the client
-     * at runtime.  New WireFormat's must have a factory registered here before
+     * Registry of all Transport Factories that are available to the client
+     * at runtime.  New Transport's must have a factory registered here before
      * a connection attempt is made.
      *
      * @since 3.0
      */
-    class AMQCPP_API WireFormatRegistry {
+    class AMQCPP_API TransportRegistry {
     private:
 
-        decaf::util::Map<std::string, WireFormatFactory*> registry;
+        decaf::util::Map<std::string, TransportFactory*> registry;
 
     private:
 
         // Hidden Constructor, prevents instantiation
-        WireFormatRegistry();
+        TransportRegistry();
 
         // Hidden Copy Constructor
-        WireFormatRegistry( const WireFormatRegistry& registry );
+        TransportRegistry( const TransportRegistry& registry );
 
         // Hidden Assignment operator
-        WireFormatRegistry& operator=( const WireFormatRegistry& registry );
+        TransportRegistry& operator=( const TransportRegistry& registry );
 
     public:
 
-        virtual ~WireFormatRegistry();
+        virtual ~TransportRegistry();
 
         /**
-         * Gets a Registered WireFormatFactory from the Registry and returns it
+         * Gets a Registered TransportFactory from the Registry and returns it
          * if there is not a registered format factory with the given name an exception
          * is thrown.
          *
@@ -71,11 +71,11 @@ namespace wireformat {
          *
          * @throws NoSuchElementException if no factory is registered with that name.
          */
-        WireFormatFactory* findFactory( const std::string& name ) const
+        TransportFactory* findFactory( const std::string& name ) const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**
-         * Registers a new WireFormatFactory with this Registry.  If a Factory with the
+         * Registers a new TransportFactory with this Registry.  If a Factory with the
          * given name is already registered it is overwritten with the new one.  Once a
          * factory is added to the Registry its lifetime is controlled by the Registry, it
          * will be deleted once the Registry has been deleted.
@@ -88,7 +88,7 @@ namespace wireformat {
          * @throws IllegalArgumentException is name is the empty string.
          * @throws NullPointerException if the Factory is Null.
          */
-        void registerFactory( const std::string& name, WireFormatFactory* factory )
+        void registerFactory( const std::string& name, TransportFactory* factory )
             throw( decaf::lang::exceptions::IllegalArgumentException,
                    decaf::lang::exceptions::NullPointerException );
 
@@ -102,21 +102,21 @@ namespace wireformat {
         void unregisterFactory( const std::string& name );
 
         /**
-         * Retrieves a list of the names of all the Registered WireFormat's in this
+         * Retrieves a list of the names of all the Registered Transport's in this
          * Registry.
          *
-         * @returns stl vector of strings with all the WireFormat names registered.
+         * @returns stl vector of strings with all the Transport names registered.
          */
-        std::vector<std::string> getWireFormatNames() const;
+        std::vector<std::string> getTransportNames() const;
 
         /**
-         * Gets the single instance of the WireFormatRegistry
+         * Gets the single instance of the TransportRegistry
          * @return reference to the single instance of this Registry
          */
-        static WireFormatRegistry& getInstance();
+        static TransportRegistry& getInstance();
 
     };
 
 }}
 
-#endif /* _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRY_H_ */
+#endif /* _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRY_H_ */

@@ -21,7 +21,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 
 namespace activemq{
 namespace transport{
@@ -31,10 +30,6 @@ namespace transport{
      * read from input streams and write to output streams.
      */
     class AMQCPP_API IOTransportFactory : public TransportFactory {
-    private:
-
-        static TransportFactoryMapRegistrar registrar;
-
     public:
 
         virtual ~IOTransportFactory(){}
@@ -50,12 +45,6 @@ namespace transport{
             const decaf::util::Properties& properties,
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
-
-        /**
-         * Returns a reference to this TransportFactory
-         * @returns TransportFactory Reference
-         */
-        static TransportFactory& getInstance();
 
     };
 

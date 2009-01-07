@@ -21,7 +21,6 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 
 using namespace activemq;
 using namespace activemq::transport;
@@ -59,14 +58,4 @@ Transport* MockTransportFactory::createTransport(
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TransportFactory& MockTransportFactory::getInstance() {
-
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "mock", new MockTransportFactory() );
-
-    return registrar.getFactory();
 }

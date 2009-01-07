@@ -30,7 +30,7 @@ using namespace decaf::lang;
 Transport* IOTransportFactory::createTransport(
     const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next AMQCPP_UNUSED,
-    bool own AMQCPP_UNUSED ) 
+    bool own AMQCPP_UNUSED )
         throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -40,14 +40,4 @@ Transport* IOTransportFactory::createTransport(
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TransportFactory& IOTransportFactory::getInstance() {
-
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "transport.IOTransport", new IOTransportFactory() );
-
-    return registrar.getFactory();
 }

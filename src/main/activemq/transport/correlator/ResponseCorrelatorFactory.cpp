@@ -15,35 +15,28 @@
  * limitations under the License.
  */
 
-#include "LoggingTransportFactory.h"
+#include "ResponseCorrelatorFactory.h"
 
-#include <activemq/transport/filters/LoggingTransport.h>
+#include <activemq/transport/correlator/ResponseCorrelator.h>
+#include <decaf/lang/Long.h>
 
-using namespace decaf::lang;
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::transport::filters;
+using namespace activemq::transport::correlator;
 using namespace activemq::exceptions;
+using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& LoggingTransportFactory::getInstance() {
-
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "transport.filters.LoggingTransport",
-        new LoggingTransportFactory() );
-
-    return registrar.getFactory();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Transport* LoggingTransportFactory::createTransport(
+Transport* ResponseCorrelatorFactory::createTransport(
     const decaf::util::Properties& properties AMQCPP_UNUSED,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 
     try {
-        return new LoggingTransport( next, own );
+
+        ResponseCorrelator* transport = new ResponseCorrelator( next, own );
+        return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

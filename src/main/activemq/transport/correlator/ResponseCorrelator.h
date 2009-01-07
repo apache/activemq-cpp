@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
-#define ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_
+#ifndef _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATOR_H_
+#define _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATOR_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/transport/filters/FutureResponse.h>
+#include <activemq/transport/correlator/FutureResponse.h>
 #include <activemq/transport/Command.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/Concurrent.h>
@@ -30,7 +30,7 @@
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace correlator{
 
     /**
      * This type of transport filter is responsible for correlating
@@ -147,4 +147,4 @@ namespace filters{
 
 }}}
 
-#endif /*ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATOR_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATOR_H_*/

@@ -19,19 +19,24 @@
 
 #include <decaf/lang/Runtime.h>
 #include <activemq/wireformat/WireFormatRegistry.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/connector/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
-#include <activemq/transport/filters/AsyncSendTransportFactory.h>
-#include <activemq/transport/filters/TcpTransportFactory.h>
-#include <activemq/transport/filters/LoggingTransportFactory.h>
-#include <activemq/transport/filters/ResponseCorrelatorFactory.h>
+#include <activemq/transport/tcp/TcpTransportFactory.h>
+#include <activemq/transport/logging/LoggingTransportFactory.h>
+#include <activemq/transport/correlator/ResponseCorrelatorFactory.h>
 #include <activemq/connector/stomp/StompConnectorFactory.h>
 #include <activemq/connector/openwire/OpenWireConnectorFactory.h>
 
 using namespace activemq;
 using namespace activemq::library;
+using namespace activemq::transport;
+using namespace activemq::transport::tcp;
+using namespace activemq::transport::correlator;
+using namespace activemq::transport::logging;
+using namespace activemq::transport::mock;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,12 +47,6 @@ void ActiveMQCPP::initializeLibrary() {
 
     connector::stomp::StompConnectorFactory::getInstance();
     connector::openwire::OpenWireConnectorFactory::getInstance();
-    transport::filters::TcpTransportFactory::getInstance();
-    transport::filters::AsyncSendTransportFactory::getInstance();
-    transport::filters::LoggingTransportFactory::getInstance();
-    transport::filters::ResponseCorrelatorFactory::getInstance();
-    transport::IOTransportFactory::getInstance();
-    transport::mock::MockTransportFactory::getInstance();
 
     // Register all WireFormats
     ActiveMQCPP::registerWireFormats();
@@ -74,5 +73,19 @@ void ActiveMQCPP::registerWireFormats() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQCPP::registerTransports() {
+
+    // Each of the internally implemented WireFormat's is registered here
+    // with the WireFormat Registry
+
+    TransportRegistry::getInstance().registerFactory(
+        "tcp", new TcpTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "transport.logging.LoggingTransport", new LoggingTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "transport.correlator.ResponseCorrelator", new ResponseCorrelatorFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "transport.IOTransport", new IOTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "mock", new MockTransportFactory() );
 
 }

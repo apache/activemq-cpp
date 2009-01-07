@@ -68,20 +68,18 @@ cc_sources = \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/connector/BaseConnectorResource.cpp \
     activemq/transport/TransportBuilder.cpp \
-    activemq/transport/TransportFactoryMap.cpp \
     activemq/transport/TransportFilter.cpp \
+    activemq/transport/TransportRegistry.cpp \
     activemq/transport/IOTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
-    activemq/transport/filters/ResponseCorrelator.cpp \
-    activemq/transport/filters/ResponseCorrelatorFactory.cpp \
-    activemq/transport/filters/AsyncSendTransport.cpp \
-    activemq/transport/filters/AsyncSendTransportFactory.cpp \
-    activemq/transport/filters/TcpTransport.cpp \
-    activemq/transport/filters/TcpTransportFactory.cpp \
-    activemq/transport/filters/LoggingTransport.cpp \
-    activemq/transport/filters/LoggingTransportFactory.cpp \
+    activemq/transport/correlator/ResponseCorrelator.cpp \
+    activemq/transport/correlator/ResponseCorrelatorFactory.cpp \
+    activemq/transport/tcp/TcpTransport.cpp \
+    activemq/transport/tcp/TcpTransportFactory.cpp \
+    activemq/transport/logging/LoggingTransport.cpp \
+    activemq/transport/logging/LoggingTransportFactory.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
@@ -261,8 +259,7 @@ h_sources = \
     activemq/transport/TransportFilter.h \
     activemq/transport/TransportFactory.h \
     activemq/transport/TransportExceptionListener.h \
-    activemq/transport/TransportFactoryMapRegistrar.h \
-    activemq/transport/TransportFactoryMap.h \
+    activemq/transport/TransportRegistry.cpp \
     activemq/transport/Response.h \
     activemq/transport/Command.h \
     activemq/transport/CommandListener.h \
@@ -273,15 +270,13 @@ h_sources = \
     activemq/transport/IOTransport.h \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
-    activemq/transport/filters/FutureResponse.h \
-    activemq/transport/filters/ResponseCorrelator.h \
-    activemq/transport/filters/ResponseCorrelatorFactory.h \
-    activemq/transport/filters/AsyncSendTransport.h \
-    activemq/transport/filters/AsyncSendTransportFactory.h \
-    activemq/transport/filters/TcpTransport.h \
-    activemq/transport/filters/TcpTransportFactory.h \
-    activemq/transport/filters/LoggingTransport.h \
-    activemq/transport/filters/LoggingTransportFactory.h \
+    activemq/transport/correlator/FutureResponse.h \
+    activemq/transport/correlator/ResponseCorrelator.h \
+    activemq/transport/correlator/ResponseCorrelatorFactory.h \
+    activemq/transport/tcp/TcpTransport.h \
+    activemq/transport/tcp/TcpTransportFactory.h \
+    activemq/transport/logging/LoggingTransport.h \
+    activemq/transport/logging/LoggingTransportFactory.h \
     activemq/util/Config.h \
     activemq/util/ActiveMQProperties.h \
     activemq/util/LongSequenceGenerator.h \

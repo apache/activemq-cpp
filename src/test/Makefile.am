@@ -68,9 +68,7 @@ cc_sources = \
   activemq/cmsutil/CmsTemplateTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
   activemq/transport/IOTransportTest.cpp \
-  activemq/transport/filters/ResponseCorrelatorTest.cpp \
-  activemq/transport/TransportFactoryMapRegistrarTest.cpp \
-  activemq/transport/TransportFactoryMapTest.cpp \
+  activemq/transport/correlator/ResponseCorrelatorTest.cpp \
   activemq/util/PrimitiveValueNodeTest.cpp \
   activemq/util/PrimitiveListTest.cpp \
   activemq/util/PrimitiveMapTest.cpp \
@@ -188,9 +186,7 @@ h_sources = \
   activemq/cmsutil/CmsTemplateTest.h \
   activemq/exceptions/ActiveMQExceptionTest.h \
   activemq/transport/IOTransportTest.h \
-  activemq/transport/filters/ResponseCorrelatorTest.h \
-  activemq/transport/TransportFactoryMapRegistrarTest.h \
-  activemq/transport/TransportFactoryMapTest.h \
+  activemq/transport/correlator/ResponseCorrelatorTest.h \
   activemq/util/PrimitiveValueNodeTest.h \
   activemq/util/PrimitiveListTest.h \
   activemq/util/PrimitiveMapTest.h \

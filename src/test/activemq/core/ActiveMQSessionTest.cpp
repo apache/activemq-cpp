@@ -19,8 +19,7 @@
 
 #include <decaf/lang/Thread.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
-#include <activemq/transport/TransportFactoryMap.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/connector/ConsumerInfo.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>

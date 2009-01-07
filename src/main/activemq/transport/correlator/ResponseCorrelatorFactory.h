@@ -15,25 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORFACTORY_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace correlator{
 
     /**
-     * Factory Responsible for creating the LoggingTransport.
+     * Factory Responsible for creating the ResponseCorrelator.
      */
-    class AMQCPP_API LoggingTransportFactory : public TransportFactory {
+    class AMQCPP_API ResponseCorrelatorFactory : public TransportFactory {
     public:
 
-        virtual ~LoggingTransportFactory() {}
+        virtual ~ResponseCorrelatorFactory() {}
 
         /**
          * Creates a Transport instance.
@@ -47,14 +46,8 @@ namespace filters{
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
 
-        /**
-         * Returns a reference to this TransportFactory
-         * @returns TransportFactory Reference
-         */
-        static TransportFactory& getInstance();
-
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORFACTORY_H_*/

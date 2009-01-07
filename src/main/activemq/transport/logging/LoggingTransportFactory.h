@@ -15,25 +15,24 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
-#define _ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_
+#ifndef _ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORTFACTORY_H_
+#define _ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORTFACTORY_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/TransportFactoryMapRegistrar.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace logging{
 
     /**
-     * Factory Responsible for creating the AsyncSendTransport.
+     * Factory Responsible for creating the LoggingTransport.
      */
-    class AMQCPP_API AsyncSendTransportFactory : public TransportFactory {
+    class AMQCPP_API LoggingTransportFactory : public TransportFactory {
     public:
 
-        virtual ~AsyncSendTransportFactory() {}
+        virtual ~LoggingTransportFactory() {}
 
         /**
          * Creates a Transport instance.
@@ -47,14 +46,8 @@ namespace filters{
             Transport* next,
             bool own ) throw ( exceptions::ActiveMQException );
 
-        /**
-         * Returns a reference to this TransportFactory
-         * @returns TransportFactory Reference
-         */
-        static TransportFactory& getInstance();
-
     };
 
 }}}
 
-#endif /*_ACTIVEMQ_TRANSPORT_FILTERS_ASYNCSENDTRANSPORTFACTORY_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORTFACTORY_H_*/

@@ -15,43 +15,26 @@
  * limitations under the License.
  */
 
-#include "AsyncSendTransportFactory.h"
+#include "TcpTransportFactory.h"
 
-#include <activemq/transport/filters/AsyncSendTransport.h>
-#include <decaf/lang/Integer.h>
+#include <activemq/transport/tcp/TcpTransport.h>
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::transport::filters;
+using namespace activemq::transport::tcp;
 using namespace activemq::exceptions;
-using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFactory& AsyncSendTransportFactory::getInstance() {
-
-    // Create the one and only instance of the registrar
-    static TransportFactoryMapRegistrar registrar(
-        "transport.filters.AsyncSendTransport",
-        new AsyncSendTransportFactory() );
-
-    return registrar.getFactory();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Transport* AsyncSendTransportFactory::createTransport(
-    const decaf::util::Properties& properties AMQCPP_UNUSED,
+Transport* TcpTransportFactory::createTransport(
+    const decaf::util::Properties& properties,
     Transport* next,
     bool own ) throw ( ActiveMQException ) {
 
-    try{
-
-        unsigned int maxBacklog = Integer::parseInt(
-            properties.getProperty( "transport.maxAsyncSendBacklog", "0" ) );
-
-        return new AsyncSendTransport( next, maxBacklog, own );
+    try {
+        return new TcpTransport( properties, next, own );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }

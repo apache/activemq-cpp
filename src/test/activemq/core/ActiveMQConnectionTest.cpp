@@ -28,7 +28,7 @@
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/openwire/OpenWireConnector.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
-#include <activemq/transport/TransportFactoryMap.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/connector/stomp/StompConsumerInfo.h>
 #include <activemq/connector/stomp/StompProducerInfo.h>
 #include <activemq/connector/stomp/StompTransactionInfo.h>
@@ -60,7 +60,7 @@ void ActiveMQConnectionTest::test1WithStomp()
         properties->setProperty( "wireFormat", "stomp" );
 
         transport::TransportFactory* factory =
-            transport::TransportFactoryMap::getInstance().lookup( "mock" );
+            transport::TransportRegistry::getInstance().findFactory( "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -198,7 +198,7 @@ void ActiveMQConnectionTest::test2WithStomp()
         properties->setProperty( "wireFormat", "stomp" );
 
         transport::TransportFactory* factory =
-            transport::TransportFactoryMap::getInstance().lookup( "mock" );
+            transport::TransportRegistry::getInstance().findFactory( "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -255,7 +255,7 @@ void ActiveMQConnectionTest::test2WithOpenwire()
         properties->setProperty( "wireFormat", "openwire" );
 
         transport::TransportFactory* factory =
-            transport::TransportFactoryMap::getInstance().lookup( "mock" );
+            transport::TransportRegistry::getInstance().findFactory( "mock" );
         if( factory == NULL ){
             CPPUNIT_ASSERT( false );
         }

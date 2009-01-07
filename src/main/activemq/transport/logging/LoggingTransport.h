@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_
-#define ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_
+#ifndef _ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORT_H_
+#define _ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORT_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
@@ -24,7 +24,7 @@
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace logging{
 
     /**
      * A transport filter that logs commands as they are sent/received.
@@ -87,4 +87,4 @@ namespace filters{
 
 }}}
 
-#endif /*ACTIVEMQ_TRANSPORT_FILTERS_LOGGINGTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_LOGGING_LOGGINGTRANSPORT_H_*/

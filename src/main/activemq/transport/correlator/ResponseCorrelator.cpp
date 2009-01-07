@@ -19,7 +19,7 @@
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::transport::filters;
+using namespace activemq::transport::correlator;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;

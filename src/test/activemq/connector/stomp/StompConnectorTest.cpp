@@ -16,7 +16,7 @@
  */
 
 #include "StompConnectorTest.h"
-#include <activemq/transport/TransportFactoryMap.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 using namespace std;
@@ -289,7 +289,7 @@ void StompConnectorTest::setUp() {
     properties.setProperty( "client-id", connectionId );
 
     transport::TransportFactory* factory =
-        transport::TransportFactoryMap::getInstance().lookup( "mock" );
+        transport::TransportRegistry::getInstance().findFactory( "mock" );
     if( factory == NULL ){
         CPPUNIT_ASSERT( false );
     }

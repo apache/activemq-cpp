@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_
-#define ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_
+#ifndef _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORTEST_H_
+#define _ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/transport/filters/ResponseCorrelator.h>
+#include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -30,7 +30,7 @@
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace correlator{
 
     class ResponseCorrelatorTest : public CppUnit::TestFixture {
 
@@ -385,4 +385,4 @@ namespace filters{
 
 }}}
 
-#endif /*ACTIVEMQ_TRANSPORT_FILTERS_RESPONSECORRELATORTEST_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_CORRELATOR_RESPONSECORRELATORTEST_H_*/

@@ -21,7 +21,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
-using namespace activemq::transport::filters;
+using namespace activemq::transport::logging;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 

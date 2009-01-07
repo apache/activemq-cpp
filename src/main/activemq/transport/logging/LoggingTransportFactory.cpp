@@ -15,36 +15,26 @@
  * limitations under the License.
  */
 
-#include "TransportFactoryMapTest.h"
+#include "LoggingTransportFactory.h"
 
+#include <activemq/transport/logging/LoggingTransport.h>
+
+using namespace decaf::lang;
 using namespace activemq;
 using namespace activemq::transport;
+using namespace activemq::transport::logging;
+using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFactoryMapTest::test(){
+Transport* LoggingTransportFactory::createTransport(
+    const decaf::util::Properties& properties AMQCPP_UNUSED,
+    Transport* next,
+    bool own ) throw ( ActiveMQException ) {
 
-    TransportFactoryMap& factMap =
-        TransportFactoryMap::getInstance();
-    TestTransportFactory testFactory;
-
-    factMap.registerTransportFactory( "test", &testFactory );
-
-    CPPUNIT_ASSERT( factMap.lookup( "test" ) == &testFactory );
-
-    std::vector<std::string> names;
-    CPPUNIT_ASSERT( factMap.getFactoryNames( names ) >= 1 );
-
-    bool found = false;
-    for( unsigned int i = 0; i < names.size(); ++i )
-    {
-        if( names[i] == "test" )
-        {
-            found = true;
-            break;
-        }
+    try {
+        return new LoggingTransport( next, own );
     }
-    CPPUNIT_ASSERT( found );
-
-    factMap.unregisterTransportFactory( "test" );
-    CPPUNIT_ASSERT( factMap.lookup( "test" ) == NULL );
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

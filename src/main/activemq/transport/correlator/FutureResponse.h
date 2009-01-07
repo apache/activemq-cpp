@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
-#define ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_
+#ifndef _ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_
+#define _ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_
 
 #include <activemq/util/Config.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -27,7 +27,7 @@
 
 namespace activemq{
 namespace transport{
-namespace filters{
+namespace correlator{
 
     /**
      * A container that holds a response object.  Callers of the getResponse
@@ -88,4 +88,4 @@ namespace filters{
 
 }}}
 
-#endif /*ACTIVEMQ_TRANSPORT_FILTERS_FUTURERESPONSE_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_*/
