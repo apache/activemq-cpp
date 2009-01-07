@@ -77,6 +77,7 @@ cc_sources = \
   activemq/util/URISupportTest.cpp \
   activemq/util/MemoryUsageTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
+  activemq/wireformat/WireFormatRegistryTest.cpp \
   decaf/internal/util/ByteArrayAdapterTest.cpp \
   decaf/internal/nio/ByteArrayPerspectiveTest.cpp \
   decaf/internal/nio/ByteArrayBufferTest.cpp \
@@ -196,6 +197,7 @@ h_sources = \
   activemq/util/URISupportTest.h \
   activemq/util/MemoryUsageTest.h \
   activemq/util/LongSequenceGeneratorTest.h \
+  activemq/wireformat/WireFormatRegistryTest.h \
   decaf/internal/util/ByteArrayAdapterTest.h \
   decaf/internal/nio/ByteArrayPerspectiveTest.h \
   decaf/internal/nio/ByteArrayBufferTest.h \

@@ -23,6 +23,7 @@
 #include <decaf/util/UUID.h>
 #include <decaf/lang/Math.h>
 #include <decaf/io/ByteArrayOutputStream.h>
+#include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 #include <activemq/connector/openwire/utils/BooleanStream.h>
 #include <activemq/connector/openwire/commands/WireFormatInfo.h>
 #include <activemq/connector/openwire/commands/DataStructure.h>
@@ -85,6 +86,17 @@ OpenWireFormat::~OpenWireFormat() {
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+WireFormatNegotiator* OpenWireFormat::createNegotiator( transport::Transport* transport )
+    throw( decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try{
+        return new OpenWireFormatNegotiator( this, transport, false );
+    }
+    AMQ_CATCH_RETHROW( UnsupportedOperationException )
+    AMQ_CATCHALL_THROW( UnsupportedOperationException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

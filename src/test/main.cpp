@@ -20,14 +20,15 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
+#include <activemq/library/ActiveMQCPP.h>
 #include <decaf/lang/Runtime.h>
 #include <decaf/lang/Integer.h>
 #include <iostream>
 
 int main( int argc, char **argv ) {
 
-    // ensure that we start the runtime.
-    decaf::lang::Runtime::getRuntime();
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
     bool wasSuccessful = false;
     int iterations = 1;
 
@@ -50,6 +51,8 @@ int main( int argc, char **argv ) {
 
         wasSuccessful = runner.run( "", false );
     }
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
 
     return !wasSuccessful;
 }

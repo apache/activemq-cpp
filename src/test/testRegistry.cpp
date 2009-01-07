@@ -154,6 +154,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 #include <activemq/util/MemoryUsageTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MemoryUsageTest );
 
+#include <activemq/wireformat/WireFormatRegistryTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::WireFormatRegistryTest );
+
 #include <decaf/internal/util/ByteArrayAdapterTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::internal::util::ByteArrayAdapterTest );
 #include <decaf/internal/nio/ByteArrayPerspectiveTest.h>

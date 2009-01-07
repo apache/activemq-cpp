@@ -14,32 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_SUPPORT_INITDIRECTOR_H_
-#define _ACTIVEMQ_SUPPORT_INITDIRECTOR_H_
 
-namespace activemq{
-namespace support{
+#ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRYTEST_H_
+#define _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRYTEST_H_
 
-    /*
-     * Create a static instance of this class to init all static data
-     * in order in this library.
-     * Each package that needs initialization should create a set of
-     * functions that control init and cleanup.  Each should be called
-     * by this class init in the constructor and cleanup in the
-     * destructor
-     */
-    class InitDirector {
-    private:
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-        static int refCount;
+namespace activemq {
+namespace wireformat {
+
+    class WireFormatRegistryTest : public CppUnit::TestFixture {
+
+        CPPUNIT_TEST_SUITE( WireFormatRegistryTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        InitDirector();
-        virtual ~InitDirector();
+        WireFormatRegistryTest() {}
+        virtual ~WireFormatRegistryTest() {}
+
+        void test();
 
     };
 
 }}
 
-#endif /*_ACTIVEMQ_SUPPORT_INITDIRECTOR_H_*/
+#endif /* _ACTIVEMQ_WIREFORMAT_WIREFORMATREGISTRYTEST_H_ */

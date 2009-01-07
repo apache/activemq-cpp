@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "InitDirector.h"
 
-#include <decaf/util/logging/LogWriter.h>
+#include "ActiveMQCPP.h"
+
 #include <decaf/lang/Runtime.h>
+#include <activemq/wireformat/WireFormatRegistry.h>
+#include <activemq/connector/openwire/OpenWireFormatFactory.h>
+
 #include <activemq/transport/IOTransportFactory.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/filters/AsyncSendTransportFactory.h>
@@ -28,34 +31,48 @@
 #include <activemq/connector/openwire/OpenWireConnectorFactory.h>
 
 using namespace activemq;
-using namespace activemq::support;
-using namespace decaf::util::logging;
-
-int InitDirector::refCount;
+using namespace activemq::library;
+using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::InitDirector() {
+void ActiveMQCPP::initializeLibrary() {
 
-    if( refCount == 0 ) {
-        decaf::lang::Runtime::getRuntime();
-        connector::stomp::StompConnectorFactory::getInstance();
-        connector::openwire::OpenWireConnectorFactory::getInstance();
-        transport::filters::TcpTransportFactory::getInstance();
-        transport::filters::AsyncSendTransportFactory::getInstance();
-        transport::filters::LoggingTransportFactory::getInstance();
-        transport::filters::ResponseCorrelatorFactory::getInstance();
-        transport::IOTransportFactory::getInstance();
-        transport::mock::MockTransportFactory::getInstance();
-    }
+    // Initialize the Decaf Library by requesting its runtime.
+    decaf::lang::Runtime::getRuntime();
 
-    refCount++;
+    connector::stomp::StompConnectorFactory::getInstance();
+    connector::openwire::OpenWireConnectorFactory::getInstance();
+    transport::filters::TcpTransportFactory::getInstance();
+    transport::filters::AsyncSendTransportFactory::getInstance();
+    transport::filters::LoggingTransportFactory::getInstance();
+    transport::filters::ResponseCorrelatorFactory::getInstance();
+    transport::IOTransportFactory::getInstance();
+    transport::mock::MockTransportFactory::getInstance();
+
+    // Register all WireFormats
+    ActiveMQCPP::registerWireFormats();
+
+    // Registr all Transports
+    ActiveMQCPP::registerTransports();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-InitDirector::~InitDirector() {
+void ActiveMQCPP::shutdownLibrary() {
 
-    refCount--;
+}
 
-    if( refCount == 0 ) {
-    }
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQCPP::registerWireFormats() {
+
+    // Each of the internally implemented WireFormat's is registered here
+    // with the WireFormat Registry
+
+    WireFormatRegistry::getInstance().registerFactory(
+        "openwire", new connector::openwire::OpenWireFormatFactory() );
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQCPP::registerTransports() {
+
 }

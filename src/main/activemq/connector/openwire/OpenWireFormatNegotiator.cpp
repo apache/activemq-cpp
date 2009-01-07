@@ -24,6 +24,7 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
+using namespace activemq::wireformat;
 using namespace activemq::transport;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
@@ -35,7 +36,7 @@ using namespace decaf::lang::exceptions;
 OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
                                                     Transport* next,
                                                     bool own ) :
-    TransportFilter( next, own ),
+    WireFormatNegotiator( next, own ),
     wireInfoSentDownLatch(1),
     readyCountDownLatch(1)
 {

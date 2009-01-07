@@ -24,9 +24,14 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
+#include <activemq/transport/Transport.h>
+
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 namespace activemq{
 namespace wireformat{
+
+    class WireFormatNegotiator;
 
     /**
      * Provides a mechanism to marshal commands into and out of packets
@@ -68,6 +73,22 @@ namespace wireformat{
          * @return the version of the wire format
          */
         virtual int getVersion() const = 0;
+
+        /**
+         * Returns true if this WireFormat has a Negotiator that needs to wrap the
+         * Transport that uses it.
+         * @returns true if the WireFormat provides a Negotiator.
+         */
+        virtual bool hasNegotiator() const = 0;
+
+        /**
+         * If the Transport Provides a Negotiator this method will create and return
+         * a news instance of the Negotiator.
+         * @returns new instance of a WireFormatNegotiator.
+         * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
+         */
+        virtual WireFormatNegotiator* createNegotiator( transport::Transport* transport )
+            throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
     };
 

@@ -45,6 +45,23 @@ namespace openwire{
         virtual ~OpenWireFormat();
 
         /**
+         * Returns true if this WireFormat has a Negotiator that needs to wrap the
+         * Transport that uses it.
+         * @returns true if the WireFormat provides a Negotiator.
+         */
+        virtual bool hasNegotiator() const {
+            return true;
+        }
+
+        /**
+         * If the Transport Provides a Negotiator this method will create and return
+         * a news instance of the Negotiator.
+         * @returns new instance of a WireFormatNegotiator.
+         */
+        virtual wireformat::WireFormatNegotiator* createNegotiator( transport::Transport* transport )
+            throw( decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
          * Allows an external source to add marshallers to this object for
          * types that may be marshalled or unmarhsalled.
          * @param marshaller - the Marshaller to add to the collection.

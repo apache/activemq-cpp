@@ -123,7 +123,7 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->properties.copy( &properties );
     this->wireFormat = dynamic_cast<OpenWireFormat*>(
         wireFormatFactory.createWireFormat( properties ) );
-    this->transport = new OpenWireFormatNegotiator( wireFormat, transport, false );
+    this->transport = this->wireFormat->createNegotiator( transport );
 
     // Observe the transport for events.
     this->transport->setCommandListener( this );

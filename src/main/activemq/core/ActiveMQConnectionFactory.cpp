@@ -24,7 +24,6 @@
 #include <activemq/transport/TransportBuilder.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/support/LibraryInit.h>
 #include <memory>
 
 using namespace std;

@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    activemq/library/ActiveMQCPP.cpp \
     activemq/io/LoggingInputStream.cpp \
     activemq/io/LoggingOutputStream.cpp \
     activemq/exceptions/ActiveMQException.cpp \
@@ -40,7 +41,6 @@ cc_sources = \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
-    activemq/support/InitDirector.cpp \
     activemq/connector/stomp/StompSessionManager.cpp \
     activemq/connector/stomp/commands/CommandConstants.cpp \
     activemq/connector/stomp/StompCommandReader.cpp \
@@ -82,6 +82,7 @@ cc_sources = \
     activemq/transport/filters/TcpTransportFactory.cpp \
     activemq/transport/filters/LoggingTransport.cpp \
     activemq/transport/filters/LoggingTransportFactory.cpp \
+    activemq/wireformat/WireFormatRegistry.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
@@ -156,6 +157,7 @@ cc_sources = \
     decaf/nio/ShortBuffer.cpp
 
 h_sources = \
+    activemq/library/ActiveMQCPP.h \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQMessage.h \
     activemq/core/ActiveMQConnectionData.h \
@@ -182,8 +184,6 @@ h_sources = \
     activemq/cmsutil/ResourceLifecycleManager.h \
     activemq/cmsutil/SessionCallback.h \
     activemq/cmsutil/SessionPool.h \
-    activemq/support/LibraryInit.h \
-    activemq/support/InitDirector.h \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
     activemq/exceptions/ActiveMQException.h \
@@ -290,6 +290,10 @@ h_sources = \
     activemq/util/PrimitiveList.h \
     activemq/util/URISupport.h \
     activemq/util/MemoryUsage.h \
+    activemq/wireformat/WireFormat.h \
+    activemq/wireformat/WireFormatNegotiator.h \
+    activemq/wireformat/WireFormatFactory.h \
+    activemq/wireformat/WireFormatRegistry.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \

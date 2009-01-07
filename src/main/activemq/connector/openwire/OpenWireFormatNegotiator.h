@@ -22,6 +22,7 @@
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/wireformat/WireFormatNegotiator.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
@@ -31,7 +32,7 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 
-    class AMQCPP_API OpenWireFormatNegotiator : public transport::TransportFilter {
+    class AMQCPP_API OpenWireFormatNegotiator : public wireformat::WireFormatNegotiator {
     private:
 
         /**
