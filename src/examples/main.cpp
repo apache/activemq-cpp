@@ -17,6 +17,7 @@
 
 // START SNIPPET: demo
 
+#include <activemq/library/ActiveMQCPP.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
@@ -332,6 +333,8 @@ private:
 
 int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
     std::cout << "=====================================================\n";
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
@@ -398,6 +401,8 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
     std::cout << "=====================================================\n";
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
 }
 
 // END SNIPPET: demo

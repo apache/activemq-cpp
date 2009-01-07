@@ -22,6 +22,7 @@
 #include <decaf/util/Date.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/util/Config.h>
+#include <activemq/library/ActiveMQCPP.h>
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
@@ -187,6 +188,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
 
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
     std::cout << "=====================================================\n";
     std::cout << "Starting the example:" << std::endl;
     std::cout << "-----------------------------------------------------\n";
@@ -254,4 +257,6 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     std::cout << "-----------------------------------------------------\n";
     std::cout << "Finished with the example." << std::endl;
     std::cout << "=====================================================\n";
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
 }

@@ -27,6 +27,8 @@
 #include <cms/CMSException.h>
 #include <cms/ConnectionFactory.h>
 
+#include <activemq/library/ActiveMQCPP.h>
+
 using namespace std;
 using namespace cms;
 using namespace example;
@@ -200,6 +202,8 @@ static void printUsage() {
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char *argv[] ) {
 
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
     Chat chat;
 
     // Is there anything to do?
@@ -264,6 +268,8 @@ int main( int argc, char *argv[] ) {
 
     // Start the CMS client for the "chat".
     chat.run();
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
 
     return 0;
 }
