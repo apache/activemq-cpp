@@ -1,9 +1,45 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.3                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2.2 release.  This version adds support for responding to KeepAlive 
+requests from the broker, and it now properly sets JMSX properties on both
+stomp and openwire commands.  Users can now delete destinations using the 
+deleteDestination function in ActiveMQConnection.
+
+Bug
+
+    * [AMQCPP-158] - libtool release and version-info arguments need to be set correctly
+    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling pointer during exception in ActiveMQConnectionFactory::createConnection()
+    * [AMQCPP-193] - If activeMQ blocks due to reaching memory limit during a transaction, the last message sent is posted to the queue after the rollback occurs and persists
+    * [AMQCPP-210] - ActiveMQ-CPP on Mac OS X and iPhone OS link error
+    * [AMQCPP-213] - JMSXGroupID works with Stomp, not OpenWire.
+
+Improvement
+
+    * [AMQCPP-183] - Add a note about using LIBTOOLIZE environment variable when building on MacOS X
+    * [AMQCPP-208] - Update Openwire Command and Marshaler generator
+    * [AMQCPP-211] - Add support for responding to the KeepAliveInfo message from the Broker to Openwire
+
+New Feature
+
+    * [AMQCPP-169] - Add a new Broker managment interface in ActiveMQ Core.
+
+Task
+
+    * [AMQCPP-212] - Add more examples to the CPP Client
+
+Wish
+
+    * [AMQCPP-176] - Work around Visual Studio .NET 2003 covariant return issues
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2.2                               ==
 =========================================================================
 
 This is a minor release that contains bugfixes that were found since the
-2.2.1 release.  Also in this release the there have been several meory leak
+2.2.1 release.  Also in this release the there have been several memory leak
 fixes and threading issues resolved.  The connection URI options have
 changed to reflect improved asynchronous message send capabilities as well,
 see the wiki for the new configuration option documentation.  This version
