@@ -67,7 +67,7 @@ void ActiveMQConnectionTest::test1WithStomp()
         }
 
         // Create the transport.
-        transport = factory->create( uri );
+        transport = factory->createComposite( uri );
         if( transport == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -206,7 +206,7 @@ void ActiveMQConnectionTest::test2WithStomp()
         }
 
         // Create the transport.
-        transport = factory->create( uri );
+        transport = factory->createComposite( uri );
         if( transport == NULL ){
             CPPUNIT_ASSERT( false );
         }
@@ -255,7 +255,7 @@ void ActiveMQConnectionTest::test2WithOpenwire()
 
         // Default to Stomp
         properties->setProperty( "wireFormat", "openwire" );
-        decaf::net::URI uri( "mock://mock?wireFormat=stomp" );
+        decaf::net::URI uri( "mock://mock?wireFormat=openwire" );
 
         transport::TransportFactory* factory =
             transport::TransportRegistry::getInstance().findFactory( "mock" );
@@ -264,7 +264,7 @@ void ActiveMQConnectionTest::test2WithOpenwire()
         }
 
         // Create the transport.
-        transport = factory->create( uri );
+        transport = factory->createComposite( uri );
         if( transport == NULL ){
             CPPUNIT_ASSERT( false );
         }
