@@ -117,9 +117,6 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         // Try to convert the String URL into a valid URI
         URI uri( url );
 
-        // Parse out properties so they can be passed to the Connectors.
-        activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
-
         // Store login data in the properties
         properties->setProperty(
             ActiveMQConstants::toString(
@@ -130,6 +127,9 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         properties->setProperty(
             ActiveMQConstants::toString(
                 ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
+
+        // Parse out properties so they can be passed to the Connectors.
+        activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
 
         // Use the TransportBuilder to get our Transport
         transport.reset(
