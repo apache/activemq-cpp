@@ -36,7 +36,7 @@ void ActiveMQConnectionFactoryTest::test1WithStomp()
     try
     {
         std::string URI =
-            "mock://127.0.0.1:23232&wireFormat=stomp";
+            "mock://127.0.0.1:23232?wireFormat=stomp";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -61,9 +61,9 @@ void ActiveMQConnectionFactoryTest::test2WithStomp()
     try
     {
         std::string URI = std::string() +
-            "mock://127.0.0.1:23232&wireFormat=stomp?"
-            "username=" + username + "?password=" + password +
-            "?client-id=" + clientId;
+            "mock://127.0.0.1:23232?wireFormat=stomp&"
+            "username=" + username + "&password=" + password +
+            "&client-id=" + clientId;
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -101,7 +101,7 @@ void ActiveMQConnectionFactoryTest::test1WithOpenWire()
     try
     {
         std::string URI =
-            "mock://127.0.0.1:23232&wireFormat=openwire";
+            "mock://127.0.0.1:23232?wireFormat=openwire";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -126,9 +126,9 @@ void ActiveMQConnectionFactoryTest::test2WithOpenWire()
     try
     {
         std::string URI = std::string() +
-            "mock://127.0.0.1:23232&wireFormat=openwire?"
-            "username=" + username + "?password=" + password +
-            "?client-id=" + clientId;
+            "mock://127.0.0.1:23232?wireFormat=openwire&"
+            "username=" + username + "&password=" + password +
+            "&client-id=" + clientId;
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
@@ -165,7 +165,7 @@ void ActiveMQConnectionFactoryTest::testExceptionOnCreate() {
     try
     {
         std::string URI =
-            "tcp://127.0.0.2:23232&wireFormat=openwire";
+            "tcp://127.0.0.2:23232?wireFormat=openwire";
 
         ActiveMQConnectionFactory connectionFactory( URI );
 
