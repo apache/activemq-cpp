@@ -15,26 +15,30 @@
  * limitations under the License.
  */
 
-#include "LoggingTransportFactory.h"
+#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRYTEST_H_
+#define _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRYTEST_H_
 
-#include <activemq/transport/logging/LoggingTransport.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-using namespace decaf::lang;
-using namespace activemq;
-using namespace activemq::transport;
-using namespace activemq::transport::logging;
-using namespace activemq::exceptions;
+namespace activemq {
+namespace transport {
 
-////////////////////////////////////////////////////////////////////////////////
-Transport* LoggingTransportFactory::createTransport(
-    const decaf::util::Properties& properties AMQCPP_UNUSED,
-    Transport* next,
-    bool own ) throw ( ActiveMQException ) {
+    class TransportRegistryTest : public CppUnit::TestFixture {
 
-    try {
-        return new LoggingTransport( next, own );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
+        CPPUNIT_TEST_SUITE( TransportRegistryTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
+
+    public:
+
+        TransportRegistryTest() {}
+        virtual ~TransportRegistryTest() {}
+
+        void test();
+
+    };
+
+}}
+
+#endif /* _ACTIVEMQ_TRANSPORT_TRANSPORTREGISTRYTEST_H_ */

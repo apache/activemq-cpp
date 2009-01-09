@@ -20,36 +20,46 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/transport/Transport.h>
+#include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace transport{
 
-    class Transport;
-
     /**
      * Defines the interface for Factories that create Transports or
-     * TransportFilters.  Since Transports can be chained, the create
-     * method takes a pointer to the next transport in the list, and
-     * wether the newly create transport owns the next and should delete
-     * it on its own destruction.
+     * TransportFilters.
+     * <p>
+     * The factory should be able to create either a completely configured
+     * Transport meaning that it has all the appropriate filters wrapping it,
+     * or it should be able to create a slimed down version that is used in
+     * composite transports like Failover or Fanout.
+     *
+     * @since 3.0
      */
-    class AMQCPP_API TransportFactory{
+    class AMQCPP_API TransportFactory {
     public:
 
         virtual ~TransportFactory() {}
 
         /**
-         * Creates a Transport instance.
-         * @param properties - Object that will hold transport config values
-         * @param next - the next transport in the chain, or NULL
-         * @param own - does the new Transport own the next
+         * Creates a fully configured Transport instance which could be a chain
+         * of filters and transports.
+         * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* createTransport(
-            const decaf::util::Properties& properties,
-            Transport* next = NULL,
-            bool own = true ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual Transport* create( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException ) = 0;
+
+        /**
+         * Creates a slimed down Transport instance which can be used in composite
+         * transport instances.
+         * @param location - URI location to connect to plus any properties to assign.
+         * @throws ActiveMQexception if an error occurs
+         */
+        virtual Transport* createComposite( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException ) = 0;
 
     };
 

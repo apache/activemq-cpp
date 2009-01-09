@@ -67,20 +67,19 @@ cc_sources = \
     activemq/connector/openwire/marshal/PrimitiveMapMarshaller.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
     activemq/connector/BaseConnectorResource.cpp \
-    activemq/transport/TransportBuilder.cpp \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
-    activemq/transport/IOTransportFactory.cpp \
+    activemq/transport/AbstractTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/correlator/ResponseCorrelator.cpp \
-    activemq/transport/correlator/ResponseCorrelatorFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
     activemq/transport/logging/LoggingTransport.cpp \
-    activemq/transport/logging/LoggingTransportFactory.cpp \
     activemq/wireformat/WireFormatRegistry.cpp \
+    activemq/wireformat/stomp/StompWireFormat.cpp \
+    activemq/wireformat/stomp/StompWireFormatFactory.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
@@ -254,29 +253,26 @@ h_sources = \
     activemq/connector/ConnectorFactoryMapRegistrar.h \
     activemq/connector/ProducerInfo.h \
     activemq/connector/ConsumerInfo.h \
-    activemq/transport/TransportBuilder.h \
     activemq/transport/Transport.h \
     activemq/transport/TransportFilter.h \
     activemq/transport/TransportFactory.h \
+    activemq/transport/AbstractTransportFactory.h \
     activemq/transport/TransportExceptionListener.h \
-    activemq/transport/TransportRegistry.cpp \
+    activemq/transport/TransportRegistry.h \
     activemq/transport/Response.h \
     activemq/transport/Command.h \
     activemq/transport/CommandListener.h \
     activemq/transport/CommandReader.h \
     activemq/transport/CommandWriter.h \
     activemq/transport/CommandIOException.h \
-    activemq/transport/IOTransportFactory.h \
     activemq/transport/IOTransport.h \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/correlator/FutureResponse.h \
     activemq/transport/correlator/ResponseCorrelator.h \
-    activemq/transport/correlator/ResponseCorrelatorFactory.h \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/tcp/TcpTransportFactory.h \
     activemq/transport/logging/LoggingTransport.h \
-    activemq/transport/logging/LoggingTransportFactory.h \
     activemq/util/Config.h \
     activemq/util/ActiveMQProperties.h \
     activemq/util/LongSequenceGenerator.h \
@@ -289,6 +285,8 @@ h_sources = \
     activemq/wireformat/WireFormatNegotiator.h \
     activemq/wireformat/WireFormatFactory.h \
     activemq/wireformat/WireFormatRegistry.h \
+    activemq/wireformat/stomp/StompWireFormat.h \
+    activemq/wireformat/stomp/StompWireFormatFactory.h \
     cms/DeliveryMode.h \
     cms/TemporaryQueue.h \
     cms/MapMessage.h \

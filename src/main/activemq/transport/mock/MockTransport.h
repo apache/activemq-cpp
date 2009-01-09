@@ -186,8 +186,7 @@ namespace mock{
 
     public:
 
-        MockTransport( ResponseBuilder* responseBuilder ,
-                       bool own = false );
+        MockTransport( ResponseBuilder* responseBuilder, bool own = false );
 
         virtual ~MockTransport();
 

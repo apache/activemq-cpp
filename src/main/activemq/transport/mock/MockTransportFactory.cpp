@@ -20,27 +20,22 @@
 #include <activemq/connector/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
-#include <activemq/transport/mock/MockTransportFactory.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
+using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* MockTransportFactory::createTransport(
-    const decaf::util::Properties& properties,
-    Transport* next,
-    bool own ) throw ( activemq::exceptions::ActiveMQException ) {
+Transport* MockTransportFactory::doCreateComposite( const decaf::net::URI& location,
+                                                    wireformat::WireFormat* wireFormat,
+                                                    const decaf::util::Properties& properties )
+    throw ( exceptions::ActiveMQException ) {
 
-    try{
-
-        // We don't use the next here, so clean it up now.
-        if( own == true ) {
-            delete next;
-        }
+    try {
 
         std::string wireFormat =
             properties.getProperty( "wireFormat", "stomp" );

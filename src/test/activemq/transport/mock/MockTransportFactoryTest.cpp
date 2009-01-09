@@ -15,30 +15,35 @@
  * limitations under the License.
  */
 
-#include "ResponseCorrelatorFactory.h"
+#include "MockTransportFactoryTest.h"
 
-#include <activemq/transport/correlator/ResponseCorrelator.h>
-#include <decaf/lang/Long.h>
+#include <activemq/transport/mock/MockTransportFactory.h>
+#include <activemq/transport/mock/MockTransport.h>
+#include <decaf/net/URI.h>
+#include <memory>
 
+using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::transport::correlator;
-using namespace activemq::exceptions;
-using namespace decaf::util;
+using namespace activemq::transport::mock;
+using namespace decaf;
+using namespace decaf::net;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* ResponseCorrelatorFactory::createTransport(
-    const decaf::util::Properties& properties AMQCPP_UNUSED,
-    Transport* next,
-    bool own ) throw ( ActiveMQException ) {
+void MockTransportFactoryTest::test() {
 
-    try {
+    URI uri( "mock://mock?wireformat=openwire" );
 
-        ResponseCorrelator* transport = new ResponseCorrelator( next, own );
-        return transport;
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    MockTransportFactory factory;
+
+    auto_ptr<Transport> transport( factory.create( uri ) );
+
+    CPPUNIT_ASSERT( transport.get() != NULL );
+
+    transport.reset( factory.createComposite( uri ) );
+
+    CPPUNIT_ASSERT( transport.get() != NULL );
+
 }

@@ -17,6 +17,7 @@
 
 #include "TcpTransportFactory.h"
 
+#include <activemq/transport/IOTransport.h>
 #include <activemq/transport/tcp/TcpTransport.h>
 
 using namespace activemq;
@@ -26,13 +27,13 @@ using namespace activemq::exceptions;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* TcpTransportFactory::createTransport(
-    const decaf::util::Properties& properties,
-    Transport* next,
-    bool own ) throw ( ActiveMQException ) {
+Transport* TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
+                                                   wireformat::WireFormat* wireFormat,
+                                                   const decaf::util::Properties& properties )
+    throw ( exceptions::ActiveMQException ) {
 
     try {
-        return new TcpTransport( properties, next, own );
+        return new TcpTransport( properties, new IOTransport() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

@@ -19,8 +19,7 @@
 #define _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORTFACTORY_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/TransportFactory.h>
-#include <activemq/transport/IOTransportFactory.h>
+#include <activemq/transport/AbstractTransportFactory.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
@@ -30,22 +29,25 @@ namespace tcp{
     /**
      * Factory Responsible for creating the TcpTransport.
      */
-    class AMQCPP_API TcpTransportFactory : public TransportFactory {
+    class AMQCPP_API TcpTransportFactory : public AbstractTransportFactory {
     public:
 
         virtual ~TcpTransportFactory() {}
 
+    protected:
+
         /**
-         * Creates a Transport instance.
-         * @param properties - Object that will hold transport config values
-         * @param next - the next transport in the chain, or NULL
-         * @param own - does the new Transport own the next
-         * @throws ActiveMQException if an error occurs.
+         * Creates a slimed down Transport instance which can be used in composite
+         * transport instances.
+         * @param location - URI location to connect to.
+         * @param wireformat - the assigned WireFormat for the new Transport.
+         * @param properties - Properties to apply to the transport.
+         * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* createTransport(
-            const decaf::util::Properties& properties,
-            Transport* next,
-            bool own ) throw ( exceptions::ActiveMQException );
+        virtual Transport* doCreateComposite( const decaf::net::URI& location,
+                                              wireformat::WireFormat* wireFormat,
+                                              const decaf::util::Properties& properties )
+            throw ( exceptions::ActiveMQException );
 
     };
 

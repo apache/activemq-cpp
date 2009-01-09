@@ -16,14 +16,16 @@
 */
 #include "ActiveMQConnectionFactory.h"
 
+#include <decaf/net/URI.h>
 #include <decaf/util/UUID.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/transport/TransportBuilder.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
+#include <activemq/util/URISupport.h>
 #include <memory>
 
 using namespace std;
@@ -32,6 +34,8 @@ using namespace activemq::core;
 using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
+using namespace decaf;
+using namespace decaf::net;
 using namespace decaf::util;
 using namespace decaf::lang::exceptions;
 
@@ -102,7 +106,6 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     auto_ptr<ActiveMQConnectionData> connectionData;
     auto_ptr<ActiveMQConnection> connection;
     std::string clientIdLocal = clientId;
-    TransportBuilder transportBuilder;
 
     try{
 
@@ -110,6 +113,12 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         if( clientIdLocal == "" ) {
             clientIdLocal = UUID::randomUUID().toString();
         }
+
+        // Try to convert the String URL into a valid URI
+        URI uri( url );
+
+        // Parse out properties so they can be passed to the Connectors.
+        activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
 
         // Store login data in the properties
         properties->setProperty(
@@ -123,7 +132,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
                 ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
 
         // Use the TransportBuilder to get our Transport
-        transport.reset( transportBuilder.buildTransport( url, *properties ) );
+        transport.reset(
+            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( url ) );
 
         if( transport.get() == NULL ){
             throw ActiveMQException(

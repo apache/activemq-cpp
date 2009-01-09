@@ -336,6 +336,8 @@ void StompSessionManagerTest::setUp() {
     properties.setProperty( "wireFormat", "stomp" );
     properties.setProperty( "client-id", connectionId );
 
+    decaf::net::URI uri( "mock://mock?wireFormat=stomp" );
+
     transport::TransportFactory* factory =
         transport::TransportRegistry::getInstance().findFactory( "mock" );
     if( factory == NULL ){
@@ -344,7 +346,7 @@ void StompSessionManagerTest::setUp() {
 
     // Create the transport.
     this->transport =
-        dynamic_cast<MockTransport*>( factory->createTransport( properties ) );
+        dynamic_cast<MockTransport*>( factory->create( uri ) );
     if( transport == NULL ){
         CPPUNIT_ASSERT( false );
     }
