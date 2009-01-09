@@ -298,7 +298,7 @@ void StompConnectorTest::setUp() {
 
     // Create the transport->
     this->transport =
-        dynamic_cast<MockTransport*>( factory->create( uri ) );
+        dynamic_cast<MockTransport*>( factory->createComposite( uri ) );
     if( transport == NULL ){
         CPPUNIT_ASSERT( false );
     }
