@@ -119,19 +119,19 @@ public class AmqCppGeneratorTask extends Task {
             }
             {
                 AmqCppMakefileGenerator script = new AmqCppMakefileGenerator(
-                    "activemq/connector/openwire/commands" );
+                    "activemq/commands" );
                 script.setTargetDir(target+"/src/main");
                 script.run();
             }
             {
                 AmqCppMakefileGenerator script = new AmqCppMakefileGenerator(
-                    "activemq/connector/openwire/marshal/v" + version );
+                    "activemq/wireformat/openwire/marshal/v" + version );
                 script.setTargetDir(target+"/src/main");
                 script.run();
             }
             {
                 AmqCppMakefileGenerator script = new AmqCppMakefileGenerator(
-                    "activemq/connector/openwire/marshal/v" + version );
+                    "activemq/wireformat/openwire/marshal/v" + version );
                 script.setTargetDir(target+"/src/test");
                 script.run();
             }

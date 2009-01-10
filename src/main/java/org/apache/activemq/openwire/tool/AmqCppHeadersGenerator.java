@@ -39,8 +39,8 @@ public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
         generateLicence(out);
 
 out.println("");
-out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_");
-out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_");
+out.println("#ifndef _ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_");
+out.println("#define _ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_");
 out.println("");
 out.println("// Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -48,7 +48,7 @@ out.println("#pragma warning( disable : 4290 )");
 out.println("#endif");
 out.println("");
 out.println("#include <activemq/util/Config.h>");
-out.println("#include <activemq/connector/openwire/commands/"+baseClass+".h>");
+out.println("#include <activemq/commands/"+baseClass+".h>");
 
 List properties = getProperties();
 for (Iterator iter = properties.iterator(); iter.hasNext();) {
@@ -68,7 +68,7 @@ for (Iterator iter = properties.iterator(); iter.hasNext();) {
             includeName = includeName.substring(12, includeName.length()-2);
         }
 
-        out.println("#include <activemq/connector/openwire/commands/"+includeName+".h>");
+        out.println("#include <activemq/commands/"+includeName+".h>");
     }
 }
 
@@ -76,8 +76,6 @@ out.println("#include <vector>");
 out.println("#include <string>");
 out.println("");
 out.println("namespace activemq{");
-out.println("namespace connector{");
-out.println("namespace openwire{");
 out.println("namespace commands{");
 out.println("");
 out.println("    /*");
@@ -213,9 +211,9 @@ out.println("");
 
 out.println("    };");
 out.println("");
-out.println("}}}}");
+out.println("}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_COMMANDS_"+className.toUpperCase()+"_H_*/");
+out.println("#endif /*_ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_*/");
 out.println("");
 
     }

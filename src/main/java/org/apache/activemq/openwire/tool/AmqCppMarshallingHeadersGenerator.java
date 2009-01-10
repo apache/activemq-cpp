@@ -34,7 +34,7 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
     public Object run() {
         filePostFix = getFilePostFix();
         if (destDir == null) {
-            destDir = new File(targetDir+"/activemq/connector/openwire/marshal/v"+getOpenwireVersion());
+            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/v"+getOpenwireVersion());
         }
         return super.run();
     }
@@ -157,8 +157,8 @@ out.println(" */");
         generateLicence(out);
 
 out.println("");
-out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
-out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
 out.println("");
 out.println("// Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -167,9 +167,9 @@ out.println("#endif");
 out.println("");
 
     if( baseClass.equals("BaseDataStreamMarshaller") ) {
-        out.println("#include <activemq/connector/openwire/marshal/"+baseClass+".h>");
+        out.println("#include <activemq/wireformat/openwire/marshal/"+baseClass+".h>");
     } else {
-        out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+baseClass+".h>");
+        out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+baseClass+".h>");
     }
 
 out.println("");
@@ -177,12 +177,12 @@ out.println("#include <decaf/io/DataInputStream.h>");
 out.println("#include <decaf/io/DataOutputStream.h>");
 out.println("#include <decaf/io/IOException.h>");
 out.println("#include <activemq/util/Config.h>");
-out.println("#include <activemq/connector/openwire/OpenWireFormat.h>");
-out.println("#include <activemq/connector/openwire/commands/DataStructure.h>");
-out.println("#include <activemq/connector/openwire/utils/BooleanStream.h>");
+out.println("#include <activemq/commands/DataStructure.h>");
+out.println("#include <activemq/wireformat/openwire/OpenWireFormat.h>");
+out.println("#include <activemq/wireformat/openwire/utils/BooleanStream.h>");
 out.println("");
 out.println("namespace activemq{");
-out.println("namespace connector{");
+out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
 out.println("namespace v"+getOpenwireVersion()+"{");
@@ -282,18 +282,18 @@ out.println("");
 
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
-out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
-out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_MARSHALERFACTORY_H_");
 out.println("");
 out.println("//       Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
 out.println("#pragma warning( disable : 4290 )");
 out.println("#endif");
 out.println("");
-out.println("#include <activemq/connector/openwire/OpenWireFormat.h>");
+out.println("#include <activemq/wireformat/openwire/OpenWireFormat.h>");
 out.println("");
 out.println("namespace activemq{");
-out.println("namespace connector{");
+out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
 out.println("namespace v"+getOpenwireVersion()+"{");
@@ -318,7 +318,7 @@ out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSHAL_V"+getOpenwireVersion()+"_MARSHALLERFACTORY_H_*/");
     }
 
     public String getTargetDir() {

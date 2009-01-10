@@ -43,7 +43,7 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         filePostFix = getFilePostFix();
         if (destDir == null) {
             destDir = new File(
-                targetDir+"/activemq/connector/openwire/commands");
+                targetDir+"/activemq/commands");
         }
 
         return super.run();
@@ -152,16 +152,14 @@ out.println(" */");
 
     protected void generateFile(PrintWriter out) throws Exception {
         generateLicence(out);
-out.println("#include <activemq/connector/openwire/commands/"+className+".h>");
+out.println("#include <activemq/commands/"+className+".h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
 out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
 out.println("using namespace activemq::exceptions;");
-out.println("using namespace activemq::connector;");
-out.println("using namespace activemq::connector::openwire;");
-out.println("using namespace activemq::connector::openwire::commands;");
+out.println("using namespace activemq::commands;");
 out.println("using namespace decaf::lang::exceptions;");
 out.println("");
 out.println("/*");

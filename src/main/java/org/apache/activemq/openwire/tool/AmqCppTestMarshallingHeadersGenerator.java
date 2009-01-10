@@ -46,7 +46,7 @@ public class AmqCppTestMarshallingHeadersGenerator extends JavaMarshallingGenera
 
         filePostFix = getFilePostFix();
         if (destDir == null) {
-            destDir = new File(targetDir+"/activemq/connector/openwire/marshal/v"+getOpenwireVersion());
+            destDir = new File(targetDir+"/activemq/wireformat/openwire/marshal/v"+getOpenwireVersion());
         }
         return super.run();
     }
@@ -129,8 +129,8 @@ out.println(" */");
         generateLicence(out);
 
 out.println("");
-out.println("#ifndef _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
-out.println("#define _ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#ifndef _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
+out.println("#define _ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_");
 out.println("");
 out.println("// Turn off warning message for ignored exception specification");
 out.println("#ifdef _MSC_VER");
@@ -141,7 +141,7 @@ out.println("#include <cppunit/TestFixture.h>");
 out.println("#include <cppunit/extensions/HelperMacros.h>");
 out.println("");
 out.println("namespace activemq{");
-out.println("namespace connector{");
+out.println("namespace wireformat{");
 out.println("namespace openwire{");
 out.println("namespace marshal{");
 out.println("namespace v"+getOpenwireVersion()+"{");
@@ -177,7 +177,7 @@ out.println("    };");
 out.println("");
 out.println("}}}}}");
 out.println("");
-out.println("#endif /*_ACTIVEMQ_CONNECTOR_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
+out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
 out.println("");
         }
 
