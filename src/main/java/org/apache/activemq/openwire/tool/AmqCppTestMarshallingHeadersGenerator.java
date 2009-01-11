@@ -178,7 +178,6 @@ out.println("");
 out.println("}}}}}");
 out.println("");
 out.println("#endif /*_ACTIVEMQ_WIREFORMAT_OPENWIRE_MARSAHAL_V"+getOpenwireVersion()+"_"+className.toUpperCase()+"_H_*/");
-out.println("");
         }
 
     public String getTargetDir() {

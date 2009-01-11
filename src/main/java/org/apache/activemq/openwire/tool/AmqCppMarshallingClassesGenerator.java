@@ -673,7 +673,7 @@ out.println("");
     public void generateFactory(PrintWriter out) {
         generateLicence(out);
 
-out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/MarshallerFactory.h>");
+out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/MarshallerFactory.h>");
 
     List list = new ArrayList(getConcreteClasses());
     Collections.sort(list, new Comparator(){
@@ -685,7 +685,7 @@ out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion
 
     for (Iterator iter = list.iterator(); iter.hasNext();) {
         JClass jclass = (JClass) iter.next();
-out.println("#include <activemq/connector/openwire/marshal/v"+getOpenwireVersion()+"/"+jclass.getSimpleName()+"Marshaller.h>");
+out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersion()+"/"+jclass.getSimpleName()+"Marshaller.h>");
     }
 
 out.println("");

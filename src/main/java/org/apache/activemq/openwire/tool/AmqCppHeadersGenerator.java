@@ -88,11 +88,9 @@ out.println("     *         if you need to make a change, please see the Java Cl
 out.println("     *         in the activemq-openwire-generator module");
 out.println("     *");
 out.println("     */");
-out.println("    class AMQCPP_API "+className+" : public "+getProperBaseClassName( className, baseClass ) );
-out.println("    {");
+out.println("    class AMQCPP_API "+className+" : public "+getProperBaseClassName( className, baseClass )+" {" );
 out.println("    protected:");
 out.println("");
-
 
             if( className.equals( "Message" ) ) {
 
@@ -214,7 +212,6 @@ out.println("");
 out.println("}}");
 out.println("");
 out.println("#endif /*_ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_*/");
-out.println("");
 
     }
 
