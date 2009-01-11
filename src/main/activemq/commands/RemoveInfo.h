@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API RemoveInfo : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API RemoveInfo : public BaseCommand<transport::Command> {
     protected:
 
         DataStructure* objectId;
@@ -102,4 +101,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_REMOVEINFO_H_*/
-

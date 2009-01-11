@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API DataArrayResponse : public Response
-    {
+    class AMQCPP_API DataArrayResponse : public Response {
     protected:
 
         std::vector<DataStructure*> data;
@@ -102,4 +101,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_DATAARRAYRESPONSE_H_*/
-

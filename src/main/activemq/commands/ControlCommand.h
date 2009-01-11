@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ControlCommand : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ControlCommand : public BaseCommand<transport::Command> {
     protected:
 
         std::string command;
@@ -101,4 +100,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_CONTROLCOMMAND_H_*/
-

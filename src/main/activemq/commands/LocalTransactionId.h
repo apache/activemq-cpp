@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API LocalTransactionId : public TransactionId
-    {
+    class AMQCPP_API LocalTransactionId : public TransactionId {
     protected:
 
         long long value;
@@ -106,4 +105,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_LOCALTRANSACTIONID_H_*/
-

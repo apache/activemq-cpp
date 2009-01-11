@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API Response : public BaseCommand<transport::Response>
-    {
+    class AMQCPP_API Response : public BaseCommand<transport::Response> {
     protected:
 
         int correlationId;
@@ -100,4 +99,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_RESPONSE_H_*/
-

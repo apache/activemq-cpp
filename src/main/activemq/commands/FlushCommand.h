@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API FlushCommand : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API FlushCommand : public BaseCommand<transport::Command> {
     protected:
 
 
@@ -96,4 +95,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_FLUSHCOMMAND_H_*/
-

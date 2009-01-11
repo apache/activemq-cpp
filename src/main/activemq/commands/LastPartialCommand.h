@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API LastPartialCommand : public PartialCommand
-    {
+    class AMQCPP_API LastPartialCommand : public PartialCommand {
     protected:
 
 
@@ -96,4 +95,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_LASTPARTIALCOMMAND_H_*/
-

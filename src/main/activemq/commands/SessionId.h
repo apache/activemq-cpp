@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API SessionId : public BaseDataStructure
-    {
+    class AMQCPP_API SessionId : public BaseDataStructure {
     protected:
 
         std::string connectionId;
@@ -105,4 +104,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_SESSIONID_H_*/
-

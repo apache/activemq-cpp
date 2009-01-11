@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API SessionInfo : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API SessionInfo : public BaseCommand<transport::Command> {
     protected:
 
         SessionId* sessionId;
@@ -102,4 +101,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_SESSIONINFO_H_*/
-

@@ -44,8 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API JournalTopicAck : public BaseDataStructure
-    {
+    class AMQCPP_API JournalTopicAck : public BaseDataStructure {
     protected:
 
         ActiveMQDestination* destination;
@@ -128,4 +127,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_JOURNALTOPICACK_H_*/
-

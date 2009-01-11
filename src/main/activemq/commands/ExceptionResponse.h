@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ExceptionResponse : public Response
-    {
+    class AMQCPP_API ExceptionResponse : public Response {
     protected:
 
         BrokerError* exception;
@@ -102,4 +101,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_EXCEPTIONRESPONSE_H_*/
-

@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API XATransactionId : public TransactionId
-    {
+    class AMQCPP_API XATransactionId : public TransactionId {
     protected:
 
         int formatId;
@@ -110,4 +109,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_XATRANSACTIONID_H_*/
-

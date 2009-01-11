@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API DiscoveryEvent : public BaseDataStructure
-    {
+    class AMQCPP_API DiscoveryEvent : public BaseDataStructure {
     protected:
 
         std::string serviceName;
@@ -106,4 +105,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_DISCOVERYEVENT_H_*/
-

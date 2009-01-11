@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API IntegerResponse : public Response
-    {
+    class AMQCPP_API IntegerResponse : public Response {
     protected:
 
         int result;
@@ -100,4 +99,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_INTEGERRESPONSE_H_*/
-

@@ -43,8 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ConnectionInfo : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ConnectionInfo : public BaseCommand<transport::Command> {
     protected:
 
         ConnectionId* connectionId;
@@ -135,4 +134,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_CONNECTIONINFO_H_*/
-

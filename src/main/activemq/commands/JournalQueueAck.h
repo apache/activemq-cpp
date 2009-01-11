@@ -43,8 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API JournalQueueAck : public BaseDataStructure
-    {
+    class AMQCPP_API JournalQueueAck : public BaseDataStructure {
     protected:
 
         ActiveMQDestination* destination;
@@ -108,4 +107,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_JOURNALQUEUEACK_H_*/
-

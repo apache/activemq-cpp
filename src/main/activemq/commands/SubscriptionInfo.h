@@ -43,8 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API SubscriptionInfo : public BaseDataStructure
-    {
+    class AMQCPP_API SubscriptionInfo : public BaseDataStructure {
     protected:
 
         std::string clientId;
@@ -123,4 +122,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_SUBSCRIPTIONINFO_H_*/
-

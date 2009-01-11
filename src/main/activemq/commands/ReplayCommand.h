@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ReplayCommand : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ReplayCommand : public BaseCommand<transport::Command> {
     protected:
 
         int firstNakNumber;
@@ -104,4 +103,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_REPLAYCOMMAND_H_*/
-

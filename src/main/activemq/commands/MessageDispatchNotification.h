@@ -44,8 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API MessageDispatchNotification : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API MessageDispatchNotification : public BaseCommand<transport::Command> {
     protected:
 
         ConsumerId* consumerId;
@@ -118,4 +117,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_MESSAGEDISPATCHNOTIFICATION_H_*/
-

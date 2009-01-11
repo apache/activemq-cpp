@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API PartialCommand : public BaseDataStructure
-    {
+    class AMQCPP_API PartialCommand : public BaseDataStructure {
     protected:
 
         int commandId;
@@ -105,4 +104,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_PARTIALCOMMAND_H_*/
-

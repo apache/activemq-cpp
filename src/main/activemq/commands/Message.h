@@ -52,8 +52,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API Message : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API Message : public BaseCommand<transport::Command> {
     protected:
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
@@ -248,4 +247,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_MESSAGE_H_*/
-

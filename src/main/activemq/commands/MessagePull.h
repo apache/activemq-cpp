@@ -44,8 +44,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API MessagePull : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API MessagePull : public BaseCommand<transport::Command> {
     protected:
 
         ConsumerId* consumerId;
@@ -123,4 +122,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_MESSAGEPULL_H_*/
-

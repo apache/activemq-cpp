@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API MessageId : public BaseDataStructure
-    {
+    class AMQCPP_API MessageId : public BaseDataStructure {
     protected:
 
         ProducerId* producerId;
@@ -110,4 +109,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_MESSAGEID_H_*/
-

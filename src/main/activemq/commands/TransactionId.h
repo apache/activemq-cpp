@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API TransactionId : public BaseDataStructure
-    {
+    class AMQCPP_API TransactionId : public BaseDataStructure {
     protected:
 
 
@@ -96,4 +95,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_TRANSACTIONID_H_*/
-

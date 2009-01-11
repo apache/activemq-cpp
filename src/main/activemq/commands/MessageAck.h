@@ -46,8 +46,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API MessageAck : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API MessageAck : public BaseCommand<transport::Command> {
     protected:
 
         ActiveMQDestination* destination;
@@ -134,4 +133,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_MESSAGEACK_H_*/
-

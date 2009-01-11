@@ -43,8 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API BrokerInfo : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API BrokerInfo : public BaseCommand<transport::Command> {
     protected:
 
         BrokerId* brokerId;
@@ -152,4 +151,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_BROKERINFO_H_*/
-

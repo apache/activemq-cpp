@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ConsumerControl : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ConsumerControl : public BaseCommand<transport::Command> {
     protected:
 
         bool close;
@@ -122,4 +121,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_CONSUMERCONTROL_H_*/
-

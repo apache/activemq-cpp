@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API NetworkBridgeFilter : public BaseDataStructure
-    {
+    class AMQCPP_API NetworkBridgeFilter : public BaseDataStructure {
     protected:
 
         int networkTTL;
@@ -106,4 +105,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_NETWORKBRIDGEFILTER_H_*/
-

@@ -42,8 +42,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ProducerAck : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ProducerAck : public BaseCommand<transport::Command> {
     protected:
 
         ProducerId* producerId;
@@ -106,4 +105,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_PRODUCERACK_H_*/
-

@@ -43,8 +43,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API ConnectionError : public BaseCommand<transport::Command>
-    {
+    class AMQCPP_API ConnectionError : public BaseCommand<transport::Command> {
     protected:
 
         BrokerError* exception;
@@ -108,4 +107,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_CONNECTIONERROR_H_*/
-

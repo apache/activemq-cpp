@@ -41,8 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API JournalTrace : public BaseDataStructure
-    {
+    class AMQCPP_API JournalTrace : public BaseDataStructure {
     protected:
 
         std::string message;
@@ -101,4 +100,3 @@ namespace commands{
 }}
 
 #endif /*_ACTIVEMQ_COMMANDS_JOURNALTRACE_H_*/
-
