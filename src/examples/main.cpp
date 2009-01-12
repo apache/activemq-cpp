@@ -356,7 +356,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
     std::string brokerURI =
-        "tcp://127.1.0.1:61616"
+        "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
