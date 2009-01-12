@@ -19,7 +19,7 @@
 
 #include <activemq/wireformat/WireFormatRegistry.h>
 
-#include <activemq/connector/openwire/OpenWireFormatFactory.h>
+#include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
 using namespace activemq;
 using namespace activemq::wireformat;
@@ -30,7 +30,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 void WireFormatRegistryTest::test() {
 
-    connector::openwire::OpenWireFormatFactory factory;
+    wireformat::openwire::OpenWireFormatFactory factory;
 
     WireFormatRegistry& registry = WireFormatRegistry::getInstance();
 

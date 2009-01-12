@@ -24,6 +24,8 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::connector;
 using namespace activemq::connector::openwire;
+using namespace activemq::wireformat;
+using namespace activemq::wireformat::openwire;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace decaf::io;

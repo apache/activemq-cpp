@@ -22,7 +22,7 @@
 #include <activemq/transport/CommandReader.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/wireformat/openwire/OpenWireFormat.h>
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -42,7 +42,7 @@ namespace openwire{
         /**
          * Pointer to the OpenWireFormat object for this Reader
          */
-        OpenWireFormat* openWireFormat;
+        wireformat::openwire::OpenWireFormat* openWireFormat;
 
         /**
          * This is our DataInputStream that we will wrap around the target
@@ -63,7 +63,7 @@ namespace openwire{
          * @param owFormat the OpenWireFormat object that handles unmarshaling
          */
         OpenWireCommandReader( decaf::io::InputStream* inputStream,
-                               OpenWireFormat* openWireFormat );
+                               wireformat::openwire::OpenWireFormat* openWireFormat );
 
         virtual ~OpenWireCommandReader();
 
@@ -101,7 +101,7 @@ namespace openwire{
          * Sets the target input stream.
          * @param Target Input Stream
          */
-        virtual void setOpenWireFormat( OpenWireFormat* openWireFormat ){
+        virtual void setOpenWireFormat( wireformat::openwire::OpenWireFormat* openWireFormat ){
             this->openWireFormat = openWireFormat;
         }
 
@@ -109,7 +109,7 @@ namespace openwire{
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual OpenWireFormat* getOpenWireFormat(void){
+        virtual wireformat::openwire::OpenWireFormat* getOpenWireFormat(void){
             return this->openWireFormat;
         }
 

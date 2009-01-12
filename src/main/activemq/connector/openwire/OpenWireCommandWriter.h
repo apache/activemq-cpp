@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_CONNECTOR_OPENWIRE_OPENWIRECOMMANDWRITER_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/connector/openwire/OpenWireFormat.h>
+#include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/Command.h>
@@ -41,7 +41,7 @@ namespace openwire{
         /**
          * OpenWireFormat object we use to marshal.
          */
-        OpenWireFormat* openWireFormat;
+        wireformat::openwire::OpenWireFormat* openWireFormat;
 
         /**
          * DataOutputStream that wraps the supplied OutputStream
@@ -60,7 +60,7 @@ namespace openwire{
          * @param os the target output stream.
          */
         OpenWireCommandWriter( decaf::io::OutputStream* outputStream,
-                               OpenWireFormat* openWireFormat );
+                               wireformat::openwire::OpenWireFormat* openWireFormat );
 
         virtual ~OpenWireCommandWriter();
 
@@ -89,7 +89,7 @@ namespace openwire{
          * Sets the target input stream.
          * @param Target Input Stream
          */
-        virtual void setOpenWireFormat( OpenWireFormat* openWireFormat ){
+        virtual void setOpenWireFormat( wireformat::openwire::OpenWireFormat* openWireFormat ){
             this->openWireFormat = openWireFormat;
         }
 
@@ -97,7 +97,7 @@ namespace openwire{
          * Gets the target input stream.
          * @return Target Input Stream
          */
-        virtual OpenWireFormat* getOpenWireFormat(){
+        virtual wireformat::openwire::OpenWireFormat* getOpenWireFormat(){
             return this->openWireFormat;
         }
 

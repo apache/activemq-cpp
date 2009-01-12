@@ -54,22 +54,22 @@
 
 #include <activemq/connector/openwire/OpenWireCommandReader.h>
 #include <activemq/connector/openwire/OpenWireCommandWriter.h>
-#include <activemq/connector/openwire/OpenWireFormatNegotiator.h>
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 #include <activemq/connector/openwire/OpenWireProducerInfo.h>
 
-#include <activemq/connector/openwire/commands/ActiveMQTempDestination.h>
-#include <activemq/connector/openwire/commands/BrokerInfo.h>
-#include <activemq/connector/openwire/commands/ConnectionInfo.h>
-#include <activemq/connector/openwire/commands/ConsumerInfo.h>
-#include <activemq/connector/openwire/commands/LocalTransactionId.h>
-#include <activemq/connector/openwire/commands/WireFormatInfo.h>
+#include <activemq/wireformat/openwire/OpenWireFormat.h>
+#include <activemq/wireformat/openwire/OpenWireFormatNegotiator.h>
+
+#include <activemq/commands/ActiveMQTempDestination.h>
+#include <activemq/commands/BrokerInfo.h>
+#include <activemq/commands/ConnectionInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/LocalTransactionId.h>
+#include <activemq/commands/WireFormatInfo.h>
 
 namespace activemq{
 namespace connector{
 namespace openwire{
-
-    class OpenWireFormat;
 
     class AMQCPP_API OpenWireConnector :
         public Connector,
@@ -100,7 +100,7 @@ namespace openwire{
          * The OpenWireFormat class that controls Protocol versions and
          * marshaling details.
          */
-        OpenWireFormat* wireFormat;
+        wireformat::openwire::OpenWireFormat* wireFormat;
 
         /**
          * Connection Information for this connection to the Broker

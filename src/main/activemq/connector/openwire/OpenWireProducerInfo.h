@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/connector/ProducerInfo.h>
-#include <activemq/connector/openwire/commands/ProducerInfo.h>
+#include <activemq/commands/ProducerInfo.h>
 #include <cms/Destination.h>
 #include <activemq/util/MemoryUsage.h>
 #include <memory>

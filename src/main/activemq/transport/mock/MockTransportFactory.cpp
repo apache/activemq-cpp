@@ -16,8 +16,8 @@
  */
 
 #include <activemq/transport/mock/MockTransportFactory.h>
-#include <activemq/connector/stomp/StompResponseBuilder.h>
-#include <activemq/connector/openwire/OpenWireResponseBuilder.h>
+#include <activemq/wireformat/stomp/StompResponseBuilder.h>
+#include <activemq/wireformat/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
 
@@ -43,9 +43,9 @@ Transport* MockTransportFactory::doCreateComposite( const decaf::net::URI& locat
         MockTransport::ResponseBuilder* builder = NULL;
 
         if( wireFormat == "stomp" ) {
-            builder = new connector::stomp::StompResponseBuilder();
+            builder = new wireformat::stomp::StompResponseBuilder();
         } else if( wireFormat == "openwire" ) {
-            builder = new connector::openwire::OpenWireResponseBuilder();
+            builder = new wireformat::openwire::OpenWireResponseBuilder();
         }
 
         return new MockTransport( builder, true );

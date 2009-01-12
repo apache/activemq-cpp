@@ -21,7 +21,7 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/connector/stomp/StompResponseBuilder.h>
+#include <activemq/wireformat/stomp/StompResponseBuilder.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/transport/Command.h>
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>

@@ -65,45 +65,45 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompCommandWriterT
 #include <activemq/connector/stomp/StompCommandReaderTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompCommandReaderTest );
 
-#include <activemq/connector/openwire/commands/BrokerInfoTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::BrokerInfoTest );
-#include <activemq/connector/openwire/commands/BrokerIdTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::BrokerIdTest );
-#include <activemq/connector/openwire/commands/ActiveMQTopicTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTopicTest );
-#include <activemq/connector/openwire/commands/ActiveMQTextMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTextMessageTest );
-#include <activemq/connector/openwire/commands/ActiveMQTempTopicTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTempTopicTest );
-#include <activemq/connector/openwire/commands/ActiveMQTempQueueTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQTempQueueTest );
-#include <activemq/connector/openwire/commands/ActiveMQQueueTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQQueueTest );
-#include <activemq/connector/openwire/commands/ActiveMQMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQMessageTest );
-#include <activemq/connector/openwire/commands/ActiveMQMapMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQMapMessageTest );
-#include <activemq/connector/openwire/commands/ActiveMQDestinationTest2.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQDestinationTest );
-#include <activemq/connector/openwire/commands/ActiveMQBytesMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::commands::ActiveMQBytesMessageTest );
+#include <activemq/commands/BrokerInfoTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
+#include <activemq/commands/BrokerIdTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
+#include <activemq/commands/ActiveMQTopicTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
+#include <activemq/commands/ActiveMQTextMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTextMessageTest );
+#include <activemq/commands/ActiveMQTempTopicTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempTopicTest );
+#include <activemq/commands/ActiveMQTempQueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempQueueTest );
+#include <activemq/commands/ActiveMQQueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQQueueTest );
+#include <activemq/commands/ActiveMQMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMessageTest );
+#include <activemq/commands/ActiveMQMapMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
+#include <activemq/commands/ActiveMQDestinationTest2.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
+#include <activemq/commands/ActiveMQBytesMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 
-#include <activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::BaseDataStreamMarshallerTest );
-#include <activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::marshal::PrimitiveMapMarshallerTest );
+#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::BaseDataStreamMarshallerTest );
+#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::PrimitiveMapMarshallerTest );
 
-#include <activemq/connector/openwire/utils/BooleanStreamTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::BooleanStreamTest );
-#include <activemq/connector/openwire/utils/HexTableTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::HexTableTest );
-#include <activemq/connector/openwire/utils/OpenwireStringSupportTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::OpenwireStringSupportTest );
-#include <activemq/connector/openwire/utils/MessagePropertyInterceptorTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::utils::MessagePropertyInterceptorTest );
+#include <activemq/wireformat/openwire/utils/BooleanStreamTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::BooleanStreamTest );
+#include <activemq/wireformat/openwire/utils/HexTableTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::HexTableTest );
+#include <activemq/wireformat/openwire/utils/OpenwireStringSupportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::OpenwireStringSupportTest );
+#include <activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::utils::MessagePropertyInterceptorTest );
 
-#include <activemq/connector/openwire/OpenWireFormatTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::openwire::OpenWireFormatTest );
+#include <activemq/wireformat/openwire/OpenWireFormatTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::OpenWireFormatTest );
 
 #include <activemq/connector/ConnectorFactoryMapRegistrarTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::ConnectorFactoryMapRegistrarTest );

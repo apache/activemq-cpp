@@ -33,7 +33,7 @@ Transport* TcpTransportFactory::doCreateComposite( const decaf::net::URI& locati
     throw ( exceptions::ActiveMQException ) {
 
     try {
-        return new TcpTransport( properties, new IOTransport() );
+        return new TcpTransport( location, properties, new IOTransport() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

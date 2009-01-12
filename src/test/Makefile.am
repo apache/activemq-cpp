@@ -40,24 +40,17 @@ cc_sources = \
   activemq/connector/stomp/StompFrameTest.cpp \
   activemq/connector/stomp/StompDestinationTest.cpp \
   activemq/connector/stomp/StompSessionManagerTest.cpp \
-  activemq/connector/openwire/OpenWireFormatTest.cpp \
-  activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
-  activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
-  activemq/connector/openwire/utils/HexTableTest.cpp \
-  activemq/connector/openwire/utils/BooleanStreamTest.cpp \
-  activemq/connector/openwire/utils/OpenwireStringSupportTest.cpp \
-  activemq/connector/openwire/utils/MessagePropertyInterceptorTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQBytesMessageTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQMapMessageTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQMessageTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQDestinationTest2.cpp \
-  activemq/connector/openwire/commands/ActiveMQTopicTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQQueueTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQTempTopicTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQTempQueueTest.cpp \
-  activemq/connector/openwire/commands/ActiveMQTextMessageTest.cpp \
-  activemq/connector/openwire/commands/BrokerIdTest.cpp \
-  activemq/connector/openwire/commands/BrokerInfoTest.cpp \
+  activemq/commands/ActiveMQBytesMessageTest.cpp \
+  activemq/commands/ActiveMQMapMessageTest.cpp \
+  activemq/commands/ActiveMQMessageTest.cpp \
+  activemq/commands/ActiveMQDestinationTest2.cpp \
+  activemq/commands/ActiveMQTopicTest.cpp \
+  activemq/commands/ActiveMQQueueTest.cpp \
+  activemq/commands/ActiveMQTempTopicTest.cpp \
+  activemq/commands/ActiveMQTempQueueTest.cpp \
+  activemq/commands/ActiveMQTextMessageTest.cpp \
+  activemq/commands/BrokerIdTest.cpp \
+  activemq/commands/BrokerInfoTest.cpp \
   activemq/core/ActiveMQConnectionFactoryTest.cpp \
   activemq/core/ActiveMQConnectionTest.cpp \
   activemq/core/ActiveMQSessionTest.cpp \
@@ -78,6 +71,13 @@ cc_sources = \
   activemq/util/MemoryUsageTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
   activemq/wireformat/WireFormatRegistryTest.cpp \
+  activemq/wireformat/openwire/OpenWireFormatTest.cpp \
+  activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
+  activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.cpp \
+  activemq/wireformat/openwire/utils/HexTableTest.cpp \
+  activemq/wireformat/openwire/utils/BooleanStreamTest.cpp \
+  activemq/wireformat/openwire/utils/OpenwireStringSupportTest.cpp \
+  activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.cpp \
   decaf/internal/util/ByteArrayAdapterTest.cpp \
   decaf/internal/nio/ByteArrayPerspectiveTest.cpp \
   decaf/internal/nio/ByteArrayBufferTest.cpp \
@@ -160,24 +160,17 @@ h_sources = \
   activemq/connector/stomp/StompFrameTest.h \
   activemq/connector/stomp/StompDestinationTest.h \
   activemq/connector/stomp/StompSessionManagerTest.h \
-  activemq/connector/openwire/OpenWireFormatTest.h \
-  activemq/connector/openwire/marshal/PrimitiveMapMarshallerTest.h \
-  activemq/connector/openwire/marshal/BaseDataStreamMarshallerTest.h \
-  activemq/connector/openwire/utils/HexTableTest.h \
-  activemq/connector/openwire/utils/BooleanStreamTest.h \
-  activemq/connector/openwire/utils/OpenwireStringSupportTest.h \
-  activemq/connector/openwire/utils/MessagePropertyInterceptorTest.h \
-  activemq/connector/openwire/commands/ActiveMQBytesMessageTest.h \
-  activemq/connector/openwire/commands/ActiveMQMapMessageTest.h \
-  activemq/connector/openwire/commands/ActiveMQMessageTest.h \
-  activemq/connector/openwire/commands/ActiveMQDestinationTest2.h \
-  activemq/connector/openwire/commands/ActiveMQTopicTest.h \
-  activemq/connector/openwire/commands/ActiveMQQueueTest.h \
-  activemq/connector/openwire/commands/ActiveMQTempTopicTest.h \
-  activemq/connector/openwire/commands/ActiveMQTempQueueTest.h \
-  activemq/connector/openwire/commands/ActiveMQTextMessageTest.h \
-  activemq/connector/openwire/commands/BrokerIdTest.h \
-  activemq/connector/openwire/commands/BrokerInfoTest.h \
+  activemq/commands/ActiveMQBytesMessageTest.h \
+  activemq/commands/ActiveMQMapMessageTest.h \
+  activemq/commands/ActiveMQMessageTest.h \
+  activemq/commands/ActiveMQDestinationTest2.h \
+  activemq/commands/ActiveMQTopicTest.h \
+  activemq/commands/ActiveMQQueueTest.h \
+  activemq/commands/ActiveMQTempTopicTest.h \
+  activemq/commands/ActiveMQTempQueueTest.h \
+  activemq/commands/ActiveMQTextMessageTest.h \
+  activemq/commands/BrokerIdTest.h \
+  activemq/commands/BrokerInfoTest.h \
   activemq/core/ActiveMQConnectionFactoryTest.h \
   activemq/core/ActiveMQConnectionTest.h \
   activemq/core/ActiveMQSessionTest.h \
@@ -198,6 +191,13 @@ h_sources = \
   activemq/util/MemoryUsageTest.h \
   activemq/util/LongSequenceGeneratorTest.h \
   activemq/wireformat/WireFormatRegistryTest.h \
+  activemq/wireformat/openwire/OpenWireFormatTest.h \
+  activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.h \
+  activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h \
+  activemq/wireformat/openwire/utils/HexTableTest.h \
+  activemq/wireformat/openwire/utils/BooleanStreamTest.h \
+  activemq/wireformat/openwire/utils/OpenwireStringSupportTest.h \
+  activemq/wireformat/openwire/utils/MessagePropertyInterceptorTest.h \
   decaf/internal/util/ByteArrayAdapterTest.h \
   decaf/internal/nio/ByteArrayPerspectiveTest.h \
   decaf/internal/nio/ByteArrayBufferTest.h \
@@ -253,9 +253,9 @@ h_sources = \
   decaf/util/concurrent/atomic/AtomicIntegerTest.h \
   decaf/nio/BufferTest.h  
 
-## include activemq/connector/openwire/marshal/v1/srcmakefile.mk
-## include activemq/connector/openwire/marshal/v2/srcmakefile.mk
-## include activemq/connector/openwire/marshal/v3/srcmakefile.mk
+## include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk
+## include activemq/wireformat/openwire/marshal/v2/srcmakefile.mk
+## include activemq/wireformat/openwire/marshal/v3/srcmakefile.mk
 
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test

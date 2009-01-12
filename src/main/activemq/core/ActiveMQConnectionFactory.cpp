@@ -133,7 +133,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         // Use the TransportBuilder to get our Transport
         transport.reset(
-            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( url ) );
+            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( uri ) );
 
         if( transport.get() == NULL ){
             throw ActiveMQException(

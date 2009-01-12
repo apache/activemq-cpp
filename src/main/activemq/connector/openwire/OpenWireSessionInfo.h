@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/connector/SessionInfo.h>
-#include <activemq/connector/openwire/commands/SessionInfo.h>
+#include <activemq/commands/SessionInfo.h>
 #include <cms/Session.h>
 #include <string>
 
@@ -52,7 +52,7 @@ namespace openwire{
             transaction = NULL;
             sessionInfo = NULL;
         }
-        
+
         virtual ~OpenWireSessionInfo() {
             this->close();
             delete sessionInfo;

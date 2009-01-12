@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/connector/TransactionInfo.h>
-#include <activemq/connector/openwire/commands/TransactionInfo.h>
+#include <activemq/commands/TransactionInfo.h>
 #include <activemq/connector/SessionInfo.h>
 
 namespace activemq{

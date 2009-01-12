@@ -22,7 +22,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/connector/stomp/StompSessionManager.h>
-#include <activemq/connector/stomp/StompResponseBuilder.h>
+#include <activemq/wireformat/stomp/StompResponseBuilder.h>
 #include <activemq/connector/stomp/StompConnector.h>
 #include <activemq/connector/stomp/StompTopic.h>
 #include <activemq/connector/stomp/StompQueue.h>

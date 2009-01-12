@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <decaf/net/Socket.h>
+#include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
 #include <activemq/io/LoggingInputStream.h>
 #include <activemq/io/LoggingOutputStream.h>
@@ -63,6 +64,18 @@ namespace tcp{
                       Transport* next,
                       const bool own = true );
 
+        /**
+         * Constructor
+         * @param uri - The URI containing the host to connect to.
+         * @param properties the configuration properties for this transport
+         * @param next the next transport in the chain
+         * @param own indicates if this transport owns the next.
+         */
+        TcpTransport( const decaf::net::URI& uri,
+                      const decaf::util::Properties& properties,
+                      Transport* next,
+                      const bool own = true );
+
         virtual ~TcpTransport();
 
         /**
@@ -70,6 +83,11 @@ namespace tcp{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException );
+
+    private:
+
+        void initialize( const decaf::net::URI& uri,
+                         const decaf::util::Properties& properties );
 
     };
 

@@ -50,11 +50,12 @@ Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
 void StompResponseBuilder::buildIncomingCommands(
     const transport::Command* command, decaf::util::Queue<transport::Command*>& queue ){
 
-    const commands::ConnectCommand* connectCommand =
-        dynamic_cast<const commands::ConnectCommand*>( command );
+    const connector::stomp::commands::ConnectCommand* connectCommand =
+        dynamic_cast<const connector::stomp::commands::ConnectCommand*>( command );
 
     if( connectCommand != NULL ) {
-        commands::ConnectedCommand* resp = new commands::ConnectedCommand();
+        connector::stomp::commands::ConnectedCommand* resp =
+            new connector::stomp::commands::ConnectedCommand();
         resp->setCorrelationId( connectCommand->getCommandId() );
 
         if( connectCommand->getClientId() == NULL ) {

@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/connector/ConsumerInfo.h>
-#include <activemq/connector/openwire/commands/ConsumerInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
 #include <cms/Destination.h>
 
 namespace activemq{

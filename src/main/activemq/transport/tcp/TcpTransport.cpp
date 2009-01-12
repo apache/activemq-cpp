@@ -17,6 +17,7 @@
 
 #include "TcpTransport.h"
 
+#include <decaf/lang/Integer.h>
 #include <decaf/net/SocketFactory.h>
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/TransportFactory.h>
@@ -27,76 +28,49 @@ using namespace activemq::io;
 using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::exceptions;
+using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::io;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TcpTransport::TcpTransport( const decaf::util::Properties& properties,
-                            Transport* next,
-                            const bool own )
-:
-    TransportFilter( next, own ),
+TcpTransport::TcpTransport( const decaf::net::URI& uri,
+                            const decaf::util::Properties& properties,
+                            Transport* next, const bool own )
+:   TransportFilter( next, own ),
     socket( NULL ),
     loggingInputStream( NULL ),
     loggingOutputStream( NULL ),
     bufferedInputStream( NULL ),
     bufferedOutputStream( NULL )
 {
-    try{
+    this->initialize( uri, properties );
+}
 
-        if( !properties.hasProperty( "transport.uri" ) ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "TcpTransport::TcpTransport - "
-                "No URI set for this transport to connect to.");
-        }
-
-        // Create the IO device we will be communicating over the
-        // wire with.  This may need to change if we add more types
-        // of sockets, such as SSL.
-        socket = SocketFactory::createSocket(
-            properties.getProperty( "transport.uri" ), properties );
-
-        // Cast it to an IO transport so we can wire up the socket
-        // input and output streams.
-        IOTransport* ioTransport = dynamic_cast<IOTransport*>( next );
-        if( ioTransport == NULL ){
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "TcpTransport::TcpTransport - "
-                "transport must be of type IOTransport");
-        }
-
-        InputStream* inputStream = socket->getInputStream();
-        OutputStream* outputStream = socket->getOutputStream();
-
-        // If tcp tracing was enabled, wrap the iostreams with logging streams
-        if( properties.getProperty( "transport.tcpTracingEnabled", "false" ) == "true" ) {
-            loggingInputStream = new LoggingInputStream( inputStream );
-            loggingOutputStream = new LoggingOutputStream( outputStream );
-
-            inputStream = loggingInputStream;
-            outputStream = loggingOutputStream;
-        }
-
-        // Now wrap the input/output streams with buffered streams
-        bufferedInputStream = new BufferedInputStream(inputStream);
-        bufferedOutputStream = new BufferedOutputStream(outputStream);
-
-        // Give the IOTransport the streams.
-        ioTransport->setInputStream( bufferedInputStream );
-        ioTransport->setOutputStream( bufferedOutputStream );
+////////////////////////////////////////////////////////////////////////////////
+TcpTransport::TcpTransport( const decaf::util::Properties& properties,
+                            Transport* next, const bool own )
+:   TransportFilter( next, own ),
+    socket( NULL ),
+    loggingInputStream( NULL ),
+    loggingOutputStream( NULL ),
+    bufferedInputStream( NULL ),
+    bufferedOutputStream( NULL )
+{
+    if( !properties.hasProperty( "transport.uri" ) ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "TcpTransport::TcpTransport - "
+            "No URI set for this transport to connect to.");
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+
+    this->initialize( URI( properties.getProperty( "transport.uri" ) ), properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::~TcpTransport() {
 
-    try{
+    try {
 
         try{
             close();
@@ -135,8 +109,8 @@ TcpTransport::~TcpTransport() {
 ////////////////////////////////////////////////////////////////////////////////
 void TcpTransport::close() throw( cms::CMSException ) {
 
-    try
-    {
+    try {
+
         // Close the socket.
         if( socket != NULL ) {
             socket->close();
@@ -144,6 +118,52 @@ void TcpTransport::close() throw( cms::CMSException ) {
 
         // Invoke the paren't close first.
         TransportFilter::close();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TcpTransport::initialize( const decaf::net::URI& uri,
+                               const decaf::util::Properties& properties ) {
+
+    try {
+
+        // Create the IO device we will be communicating over the
+        // wire with.  This may need to change if we add more types
+        // of sockets, such as SSL.
+        socket = SocketFactory::createSocket( uri.getAuthority(), properties );
+
+        // Cast it to an IO transport so we can wire up the socket
+        // input and output streams.
+        IOTransport* ioTransport = dynamic_cast<IOTransport*>( next );
+        if( ioTransport == NULL ){
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "TcpTransport::TcpTransport - "
+                "transport must be of type IOTransport");
+        }
+
+        InputStream* inputStream = socket->getInputStream();
+        OutputStream* outputStream = socket->getOutputStream();
+
+        // If tcp tracing was enabled, wrap the iostreams with logging streams
+        if( properties.getProperty( "transport.tcpTracingEnabled", "false" ) == "true" ) {
+            loggingInputStream = new LoggingInputStream( inputStream );
+            loggingOutputStream = new LoggingOutputStream( outputStream );
+
+            inputStream = loggingInputStream;
+            outputStream = loggingOutputStream;
+        }
+
+        // Now wrap the input/output streams with buffered streams
+        bufferedInputStream = new BufferedInputStream(inputStream);
+        bufferedOutputStream = new BufferedOutputStream(outputStream);
+
+        // Give the IOTransport the streams.
+        ioTransport->setInputStream( bufferedInputStream );
+        ioTransport->setOutputStream( bufferedOutputStream );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

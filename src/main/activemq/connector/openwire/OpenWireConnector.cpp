@@ -31,43 +31,45 @@
 #include <activemq/connector/openwire/OpenWireProducerInfo.h>
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 #include <activemq/connector/openwire/OpenWireTransactionInfo.h>
-#include <activemq/connector/openwire/BrokerException.h>
-#include <activemq/connector/openwire/OpenWireFormatFactory.h>
+#include <activemq/wireformat/openwire/BrokerException.h>
+#include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
-#include <activemq/connector/openwire/commands/ActiveMQMessage.h>
-#include <activemq/connector/openwire/commands/ActiveMQBytesMessage.h>
-#include <activemq/connector/openwire/commands/ActiveMQTextMessage.h>
-#include <activemq/connector/openwire/commands/ActiveMQMapMessage.h>
-#include <activemq/connector/openwire/commands/ActiveMQTopic.h>
-#include <activemq/connector/openwire/commands/ActiveMQQueue.h>
-#include <activemq/connector/openwire/commands/ActiveMQTempTopic.h>
-#include <activemq/connector/openwire/commands/ActiveMQTempQueue.h>
-#include <activemq/connector/openwire/commands/BrokerInfo.h>
-#include <activemq/connector/openwire/commands/BrokerError.h>
-#include <activemq/connector/openwire/commands/ConnectionId.h>
-#include <activemq/connector/openwire/commands/DestinationInfo.h>
-#include <activemq/connector/openwire/commands/ExceptionResponse.h>
-#include <activemq/connector/openwire/commands/KeepAliveInfo.h>
-#include <activemq/connector/openwire/commands/Message.h>
-#include <activemq/connector/openwire/commands/MessagePull.h>
-#include <activemq/connector/openwire/commands/MessageAck.h>
-#include <activemq/connector/openwire/commands/MessageDispatch.h>
-#include <activemq/connector/openwire/commands/ProducerAck.h>
-#include <activemq/connector/openwire/commands/RemoveInfo.h>
-#include <activemq/connector/openwire/commands/ShutdownInfo.h>
-#include <activemq/connector/openwire/commands/SessionInfo.h>
-#include <activemq/connector/openwire/commands/TransactionInfo.h>
-#include <activemq/connector/openwire/commands/LocalTransactionId.h>
-#include <activemq/connector/openwire/commands/WireFormatInfo.h>
-#include <activemq/connector/openwire/commands/RemoveSubscriptionInfo.h>
+#include <activemq/commands/ActiveMQMessage.h>
+#include <activemq/commands/ActiveMQBytesMessage.h>
+#include <activemq/commands/ActiveMQTextMessage.h>
+#include <activemq/commands/ActiveMQMapMessage.h>
+#include <activemq/commands/ActiveMQTopic.h>
+#include <activemq/commands/ActiveMQQueue.h>
+#include <activemq/commands/ActiveMQTempTopic.h>
+#include <activemq/commands/ActiveMQTempQueue.h>
+#include <activemq/commands/BrokerInfo.h>
+#include <activemq/commands/BrokerError.h>
+#include <activemq/commands/ConnectionId.h>
+#include <activemq/commands/DestinationInfo.h>
+#include <activemq/commands/ExceptionResponse.h>
+#include <activemq/commands/KeepAliveInfo.h>
+#include <activemq/commands/Message.h>
+#include <activemq/commands/MessagePull.h>
+#include <activemq/commands/MessageAck.h>
+#include <activemq/commands/MessageDispatch.h>
+#include <activemq/commands/ProducerAck.h>
+#include <activemq/commands/RemoveInfo.h>
+#include <activemq/commands/ShutdownInfo.h>
+#include <activemq/commands/SessionInfo.h>
+#include <activemq/commands/TransactionInfo.h>
+#include <activemq/commands/LocalTransactionId.h>
+#include <activemq/commands/WireFormatInfo.h>
+#include <activemq/commands/RemoveSubscriptionInfo.h>
 
 using namespace std;
 using namespace activemq;
-using namespace activemq::connector;
 using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace activemq::connector;
 using namespace activemq::connector::openwire;
+using namespace activemq::wireformat;
+using namespace activemq::wireformat::openwire;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
