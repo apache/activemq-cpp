@@ -23,6 +23,7 @@ using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::commands;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 const std::string ActiveMQDestination::ADVISORY_PREFIX = "ActiveMQ.Advisory.";
@@ -86,7 +87,7 @@ void ActiveMQDestination::copyDataStructure( const DataStructure* src ) {
 
     if( srcPtr == NULL || src == NULL ) {
 
-        throw exceptions::NullPointerException(
+        throw decaf::lang::exceptions::NullPointerException(
             __FILE__, __LINE__,
             "BrokerId::copyDataStructure - src is NULL or invalid" );
     }
