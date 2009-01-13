@@ -61,21 +61,10 @@ namespace transport {
     protected:
 
         /**
-         * Creates a fully configured Transport instance which could be a chain
-         * of filters and transports.
-         * @param location - URI location to connect to.
-         * @param wireformat - the assigned WireFormat for the new Transport.
-         * @param properties - Properties to apply to the transport.
-         * @throws ActiveMQexception if an error occurs
-         */
-        virtual Transport* doCreate( const decaf::net::URI& location,
-                                     wireformat::WireFormat* wireFormat,
-                                     const decaf::util::Properties& properties )
-            throw ( exceptions::ActiveMQException );
-
-        /**
          * Creates a slimed down Transport instance which can be used in composite
-         * transport instances.
+         * transport instances or as the basis for a fully wrapped Transport.  This
+         * method must be implemented by the actual TransportFactory that extends this
+         * abstract base class.
          * @param location - URI location to connect to.
          * @param wireformat - the assigned WireFormat for the new Transport.
          * @param properties - Properties to apply to the transport.

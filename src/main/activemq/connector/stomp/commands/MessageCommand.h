@@ -40,7 +40,7 @@ namespace commands{
                 initialize( getFrame() );
         }
 
-        MessageCommand( StompFrame* frame ) :
+        MessageCommand( wireformat::stomp::StompFrame* frame ) :
             StompMessage< cms::Message >( frame ) {
                 validate( getFrame() );
         }

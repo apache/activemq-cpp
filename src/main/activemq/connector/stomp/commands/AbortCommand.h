@@ -40,7 +40,7 @@ namespace commands{
                 initialize( getFrame() );
         }
 
-        AbortCommand( StompFrame* frame ) :
+        AbortCommand( wireformat::stomp::StompFrame* frame ) :
             AbstractCommand<transport::Command>(frame) {
                 validate( getFrame() );
         }
@@ -62,7 +62,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame the Frame to init
          */
-        virtual void initialize( StompFrame& frame ) {
+        virtual void initialize( wireformat::stomp::StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::ABORT ) );
         }
@@ -73,7 +73,7 @@ namespace commands{
          * @param frame the Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const {
+        virtual bool validate( const wireformat::stomp::StompFrame& frame ) const {
 
             if((frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::ABORT ) ) &&

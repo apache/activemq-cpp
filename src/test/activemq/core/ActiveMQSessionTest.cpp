@@ -522,8 +522,8 @@ void ActiveMQSessionTest::injectTextMessage( const std::string message,
                                              const long long timeStamp,
                                              const long long timeToLive )
 {
-    connector::stomp::StompFrame* frame =
-        new connector::stomp::StompFrame();
+    wireformat::stomp::StompFrame* frame =
+        new wireformat::stomp::StompFrame();
     frame->setCommand( "MESSAGE" );
     frame->getProperties().setProperty(
         "destination", destination.toProviderString() );

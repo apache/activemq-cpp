@@ -165,27 +165,19 @@ namespace transport{
         }
 
         /**
-         * Sets the command reader.
-         * @param reader the object that will be used for reading command objects.
-         */
-        virtual void setCommandReader( CommandReader* reader ){
-            next->setCommandReader( reader );
-        }
-
-        /**
-         * Sets the command writer.
-         * @param writer the object that will be used for writing command objects.
-         */
-        virtual void setCommandWriter( CommandWriter* writer ){
-            next->setCommandWriter( writer );
-        }
-
-        /**
          * Sets the observer of asynchronous exceptions from this transport.
          * @param listener the listener of transport exceptions.
          */
         virtual void setTransportExceptionListener( TransportExceptionListener* listener ){
             this->exceptionListener = listener;
+        }
+
+        /**
+         * Sets the WireFormat instance to use.
+         * @param WireFormat the object used to encode / decode commands.
+         */
+        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {
+            next->setWireFormat( wireFormat );
         }
 
         /**

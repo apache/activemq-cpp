@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMETEST_H_
-#define _ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMETEST_H_
+#ifndef _ACTIVEMQ_CONNECTOR_STOMP_TEST_H_
+#define _ACTIVEMQ_CONNECTOR_STOMP_TEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <activemq/connector/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/StompFrame.h>
 
 namespace activemq{
 namespace connector{
@@ -40,30 +40,30 @@ namespace stomp{
 
       void test()
       {
-         StompFrame frame;
-         
+         wireformat::stomp::StompFrame frame;
+
          CPPUNIT_ASSERT( frame.getCommand() == "" );
          frame.setCommand("test");
          CPPUNIT_ASSERT( frame.getCommand() == "test" );
-                  
+
          frame.getProperties().setProperty("key", "value");
-         
+
          std::string result = frame.getProperties().getProperty("key");
-         
-         CPPUNIT_ASSERT( result == "value" );         
-         
+
+         CPPUNIT_ASSERT( result == "value" );
+
          CPPUNIT_ASSERT( frame.getBody().size() == 0 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 0 );
-         
+
          frame.setBody( (unsigned char*)"ABC", 4 );
-         
+
          CPPUNIT_ASSERT( frame.getBody().size() == 4 );
          CPPUNIT_ASSERT( frame.getBodyLength() == 4 );
          CPPUNIT_ASSERT( std::string((char*)&frame.getBody()[0]) == "ABC" );
       }
-      
+
    };
 
 }}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMETEST_H_*/
+#endif /*_ACTIVEMQ_CONNECTOR_STOMP_TEST_H_*/

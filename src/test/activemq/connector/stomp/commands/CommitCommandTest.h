@@ -58,7 +58,7 @@ namespace commands{
             CPPUNIT_ASSERT( std::string( cmd.getTransactionId() ) ==
                             "ID:123456" );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

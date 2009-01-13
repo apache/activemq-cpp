@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_
-#define _ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_STOMPFRAMEWRAPPER_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMP_STOMPFRAMEWRAPPER_H_
 
 #include <string>
 #include <string.h>
@@ -25,7 +25,7 @@
 #include <activemq/util/Config.h>
 
 namespace activemq{
-namespace connector{
+namespace wireformat{
 namespace stomp{
 
     /**
@@ -142,4 +142,4 @@ namespace stomp{
 
 }}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_STOMP_STOMPFRAMEWRAPPER_H_*/
+#endif /*_ACTIVEMQ_WIREFORMAT_STOMP_STOMPFRAMEWRAPPER_H_*/

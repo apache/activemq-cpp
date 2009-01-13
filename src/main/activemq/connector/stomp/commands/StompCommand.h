@@ -19,8 +19,8 @@
 #define _ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_STOMPCOMMAND_H_
 
 #include <activemq/connector/stomp/commands/CommandConstants.h>
-#include <activemq/connector/stomp/marshal/Marshalable.h>
-#include <activemq/connector/stomp/marshal/MarshalException.h>
+#include <activemq/wireformat/stomp/marshal/Marshalable.h>
+#include <activemq/wireformat/stomp/marshal/MarshalException.h>
 #include <activemq/util/Config.h>
 
 namespace activemq{
@@ -28,7 +28,7 @@ namespace connector{
 namespace stomp{
 namespace commands{
 
-    class AMQCPP_API StompCommand : public marshal::Marshalable {
+    class AMQCPP_API StompCommand : public wireformat::stomp::marshal::Marshalable {
     protected:
 
         /**
@@ -36,7 +36,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame ) = 0;
+        virtual void initialize( wireformat::stomp::StompFrame& frame ) = 0;
 
         /**
          * Inheritors are required to override this method to validate
@@ -44,7 +44,7 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const = 0;
+        virtual bool validate( const wireformat::stomp::StompFrame& frame ) const = 0;
 
     public:
 

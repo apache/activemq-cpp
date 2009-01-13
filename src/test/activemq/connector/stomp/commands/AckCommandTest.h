@@ -61,7 +61,7 @@ namespace commands{
             cmd.setMessageId( "ID:123456789" );
             CPPUNIT_ASSERT( std::string( cmd.getMessageId() ) == "ID:123456789" );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

@@ -122,8 +122,6 @@ namespace correlator{
             public Transport,
             public decaf::lang::Runnable{
         public:
-            CommandReader* reader;
-            CommandWriter* writer;
             CommandListener* listener;
             TransportExceptionListener* exListener;
             decaf::lang::Thread* thread;
@@ -135,8 +133,6 @@ namespace correlator{
         public:
 
             MyTransport(){
-                reader = NULL;
-                writer = NULL;
                 listener = NULL;
                 exListener = NULL;
                 thread = NULL;
@@ -180,12 +176,8 @@ namespace correlator{
                 this->listener = listener;
             }
 
-            virtual void setCommandReader( CommandReader* reader ){
-                this->reader = reader;
-            }
+            virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {
 
-            virtual void setCommandWriter( CommandWriter* writer ){
-                this->writer = writer;
             }
 
             virtual void setTransportExceptionListener(

@@ -90,7 +90,7 @@ namespace commands{
             StompTopic topic("testTopic");
             cmd.setCMSDestination( &topic );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

@@ -52,13 +52,8 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
-#include <activemq/connector/openwire/OpenWireCommandReader.h>
-#include <activemq/connector/openwire/OpenWireCommandWriter.h>
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 #include <activemq/connector/openwire/OpenWireProducerInfo.h>
-
-#include <activemq/wireformat/openwire/OpenWireFormat.h>
-#include <activemq/wireformat/openwire/OpenWireFormatNegotiator.h>
 
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/BrokerInfo.h>
@@ -97,12 +92,6 @@ namespace openwire{
         transport::Transport* transport;
 
         /**
-         * The OpenWireFormat class that controls Protocol versions and
-         * marshaling details.
-         */
-        wireformat::openwire::OpenWireFormat* wireFormat;
-
-        /**
          * Connection Information for this connection to the Broker
          */
         commands::ConnectionInfo connectionInfo;
@@ -137,16 +126,6 @@ namespace openwire{
          * Observer of connector exceptions.
          */
         cms::ExceptionListener* exceptionListener;
-
-        /**
-         * This Connector's Command Reader
-         */
-        OpenWireCommandReader reader;
-
-        /**
-         * This Connector's Command Writer
-         */
-        OpenWireCommandWriter writer;
 
         /**
          * Next available Producer Id

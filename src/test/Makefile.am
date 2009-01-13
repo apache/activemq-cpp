@@ -34,8 +34,6 @@ cc_sources = \
   activemq/connector/stomp/commands/TextMessageCommandTest.cpp \
   activemq/connector/stomp/commands/UnsubscribeCommandTest.cpp \
   activemq/connector/stomp/marshal/MarshalerTest.cpp \
-  activemq/connector/stomp/StompCommandReaderTest.cpp \
-  activemq/connector/stomp/StompCommandWriterTest.cpp \
   activemq/connector/stomp/StompConnectorTest.cpp \
   activemq/connector/stomp/StompFrameTest.cpp \
   activemq/connector/stomp/StompDestinationTest.cpp \
@@ -154,8 +152,6 @@ h_sources = \
   activemq/connector/stomp/commands/TextMessageCommandTest.h \
   activemq/connector/stomp/commands/UnsubscribeCommandTest.h \
   activemq/connector/stomp/marshal/MarshalerTest.h \
-  activemq/connector/stomp/StompCommandReaderTest.h \
-  activemq/connector/stomp/StompCommandWriterTest.h \
   activemq/connector/stomp/StompConnectorTest.h \
   activemq/connector/stomp/StompFrameTest.h \
   activemq/connector/stomp/StompDestinationTest.h \

@@ -20,12 +20,27 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
+#include <activemq/wireformat/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/marshal/Marshaler.h>
+#include <decaf/io/IOException.h>
 
 namespace activemq {
 namespace wireformat {
 namespace stomp {
 
     class AMQCPP_API StompWireFormat : public WireFormat {
+    private:
+
+        /**
+         * Vector Object used to buffer data
+         */
+        std::vector<unsigned char> buffer;
+
+        /**
+         * Marshaler of Stomp Commands
+         */
+        marshal::Marshaler marshaler;
+
     public:
 
         StompWireFormat();
@@ -80,6 +95,38 @@ namespace stomp {
          */
         virtual WireFormatNegotiator* createNegotiator( transport::Transport* transport )
             throw( decaf::lang::exceptions::UnsupportedOperationException );
+
+    private:
+
+        /**
+         * Read the Stomp Command from the Frame
+         * @param reference to a Stomp Frame
+         * @throws StompConnectorException
+         */
+        void readStompCommandHeader( StompFrame& frame, decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Read all the Stomp Headers for the incoming Frame
+         * @param Frame to place data into
+         * @throws StompConnectorException
+         */
+        void readStompHeaders( StompFrame& frame, decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Reads a Stomp Header line and stores it in the buffer object
+         * @return number of bytes read, zero if there was a problem.
+         * @throws StompConnectorException
+         */
+        std::size_t readStompHeaderLine( decaf::io::DataInputStream* in ) throw ( decaf::io::IOException );
+
+        /**
+         * Reads the Stomp Body from the Wire and store it in the frame.
+         * @param Stomp Frame to place data in
+         */
+        void readStompBody( StompFrame& frame, decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException );
 
     };
 

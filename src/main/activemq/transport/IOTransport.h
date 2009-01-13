@@ -22,19 +22,24 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportExceptionListener.h>
 #include <activemq/transport/CommandListener.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Command.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/Thread.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 #include <decaf/util/logging/LoggerDefines.h>
 
 namespace activemq{
+namespace wireformat{
+    class WireFormat;
+}
 namespace transport{
 
     /**
      * Implementation of the Transport interface that performs
-     * marshalling of commands to IO streams.  This class does not
+     * marshaling of commands to IO streams.  This class does not
      * implement the request method, it only handles oneway messages.
      * A thread polls on the input stream for in-coming commands.  When
      * a command is received, the command listener is notified.  The
@@ -57,14 +62,9 @@ namespace transport{
         CommandListener* listener;
 
         /**
-         * Reads commands from the input stream.
+         * WireFormat instance to use to Encode / Decode.
          */
-        CommandReader* reader;
-
-        /**
-         * Writes commands to the output stream.
-         */
-        CommandWriter* writer;
+        wireformat::WireFormat* wireFormat;
 
         /**
          * Listener of exceptions from this transport.
@@ -74,12 +74,12 @@ namespace transport{
         /**
          * The input stream for incoming commands.
          */
-        decaf::io::InputStream* inputStream;
+        decaf::io::DataInputStream* inputStream;
 
         /**
          * The output stream for out-going commands.
          */
-        decaf::io::OutputStream* outputStream;
+        decaf::io::DataOutputStream* outputStream;
 
         /**
          * The polling thread.
@@ -94,7 +94,7 @@ namespace transport{
     private:
 
         /**
-         * Notify the excpetion listener
+         * Notify the exception listener
          * @param ex the exception to send
          */
         void fire( decaf::lang::Exception& ex ){
@@ -134,7 +134,19 @@ namespace transport{
 
     public:
 
+        /**
+         * Default Constructor
+         */
         IOTransport();
+
+        /**
+         * Create an instance of this Transport and assign its WireFormat instance
+         * at creation time.
+         * @param wireFormat
+         *        Data encoder / decoder to use when reading and writing.
+         */
+        IOTransport( wireformat::WireFormat* wireFormat );
+
         virtual ~IOTransport();
 
         /**
@@ -177,19 +189,11 @@ namespace transport{
         }
 
         /**
-         * Sets the command reader.
-         * @param reader the object that will be used for reading command objects.
+         * Sets the WireFormat instance to use.
+         * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setCommandReader( CommandReader* reader ){
-            this->reader = reader;
-        }
-
-        /**
-         * Sets the command writer.
-         * @param writer the object that will be used for writing command objects.
-         */
-        virtual void setCommandWriter( CommandWriter* writer ){
-            this->writer = writer;
+        virtual void setWireFormat( wireformat::WireFormat* wireFormat ){
+            this->wireFormat = wireFormat;
         }
 
         /**
@@ -204,7 +208,7 @@ namespace transport{
          * Sets the input stream for in-coming commands.
          * @param is The input stream.
          */
-        virtual void setInputStream( decaf::io::InputStream* is ){
+        virtual void setInputStream( decaf::io::DataInputStream* is ){
             this->inputStream = is;
         }
 
@@ -212,7 +216,7 @@ namespace transport{
          * Sets the output stream for out-going commands.
          * @param os The output stream.
          */
-        virtual void setOutputStream( decaf::io::OutputStream* os ){
+        virtual void setOutputStream( decaf::io::DataOutputStream* os ){
             this->outputStream = os;
         }
 

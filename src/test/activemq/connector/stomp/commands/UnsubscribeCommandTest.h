@@ -61,7 +61,7 @@ namespace commands{
             CPPUNIT_ASSERT( std::string( cmd.getDestination() ) ==
                             "456987" );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

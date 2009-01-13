@@ -41,8 +41,6 @@ cc_sources = \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
-    activemq/connector/openwire/OpenWireCommandReader.cpp \
-    activemq/connector/openwire/OpenWireCommandWriter.cpp \
     activemq/connector/openwire/OpenWireConnector.cpp \
     activemq/connector/openwire/OpenWireConnectorFactory.cpp \
     activemq/connector/ConnectorFactoryMap.cpp \
@@ -71,6 +69,8 @@ cc_sources = \
     activemq/wireformat/stomp/StompWireFormat.cpp \
     activemq/wireformat/stomp/StompWireFormatFactory.cpp \
     activemq/wireformat/stomp/StompResponseBuilder.cpp \
+    activemq/wireformat/stomp/marshal/Marshaler.cpp \
+    activemq/wireformat/stomp/commands/CommandConstants.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
@@ -145,10 +145,7 @@ cc_sources = \
     decaf/nio/ShortBuffer.cpp \
     activemq/connector/stomp/StompSessionManager.cpp \
     activemq/connector/stomp/commands/CommandConstants.cpp \
-    activemq/connector/stomp/StompCommandReader.cpp \
-    activemq/connector/stomp/StompCommandWriter.cpp \
     activemq/connector/stomp/StompConnectorFactory.cpp \
-    activemq/connector/stomp/marshal/Marshaler.cpp \
     activemq/connector/stomp/StompConnector.cpp \
     activemq/connector/stomp/StompSelector.cpp \
     activemq/connector/stomp/StompConnectionNegotiator.cpp
@@ -193,8 +190,6 @@ h_sources = \
     activemq/connector/ConnectorResourceListener.h \
     activemq/connector/ConnectorFactory.h \
     activemq/connector/BaseConnectorResource.h \
-    activemq/connector/openwire/OpenWireCommandReader.h \
-    activemq/connector/openwire/OpenWireCommandWriter.h \
     activemq/connector/openwire/OpenWireConsumerInfo.h \
     activemq/connector/openwire/OpenWireProducerInfo.h \
     activemq/connector/openwire/OpenWireSessionInfo.h \
@@ -213,8 +208,6 @@ h_sources = \
     activemq/transport/Response.h \
     activemq/transport/Command.h \
     activemq/transport/CommandListener.h \
-    activemq/transport/CommandReader.h \
-    activemq/transport/CommandWriter.h \
     activemq/transport/CommandIOException.h \
     activemq/transport/IOTransport.h \
     activemq/transport/mock/MockTransport.h \
@@ -239,6 +232,11 @@ h_sources = \
     activemq/wireformat/stomp/StompWireFormat.h \
     activemq/wireformat/stomp/StompWireFormatFactory.h \
     activemq/wireformat/stomp/StompResponseBuilder.h \
+    activemq/wireformat/stomp/StompFrame.h \
+    activemq/wireformat/stomp/marshal/Marshalable.h \
+    activemq/wireformat/stomp/marshal/MarshalException.h \
+    activemq/wireformat/stomp/marshal/Marshaler.h \
+    activemq/wireformat/stomp/commands/CommandConstants.h \
     activemq/wireformat/openwire/OpenWireFormat.h \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.h \
     activemq/wireformat/openwire/OpenWireResponseBuilder.h \
@@ -435,7 +433,6 @@ h_sources = \
     activemq/connector/stomp/StompSessionManager.h \
     activemq/connector/stomp/StompQueue.h \
     activemq/connector/stomp/StompConnectorFactory.h \
-    activemq/connector/stomp/StompFrame.h \
     activemq/connector/stomp/commands/DisconnectCommand.h \
     activemq/connector/stomp/commands/AbortCommand.h \
     activemq/connector/stomp/commands/ErrorCommand.h \
@@ -455,11 +452,6 @@ h_sources = \
     activemq/connector/stomp/commands/MessageCommand.h \
     activemq/connector/stomp/commands/CommitCommand.h \
     activemq/connector/stomp/StompCommandListener.h \
-    activemq/connector/stomp/marshal/Marshalable.h \
-    activemq/connector/stomp/marshal/MarshalException.h \
-    activemq/connector/stomp/marshal/Marshaler.h \
-    activemq/connector/stomp/StompCommandReader.h \
-    activemq/connector/stomp/StompCommandWriter.h \
     activemq/connector/stomp/StompConnectorException.h \
     activemq/connector/stomp/StompConnectionNegotiator.h \
     activemq/connector/stomp/StompProducerInfo.h \

@@ -60,10 +60,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompFrameTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompDestinationTest );
 #include <activemq/connector/stomp/StompConnectorTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompConnectorTest );
-#include <activemq/connector/stomp/StompCommandWriterTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompCommandWriterTest );
-#include <activemq/connector/stomp/StompCommandReaderTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::connector::stomp::StompCommandReaderTest );
 
 #include <activemq/commands/BrokerInfoTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );

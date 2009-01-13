@@ -48,9 +48,8 @@ TransportFilter::~TransportFilter() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::onTransportException(
-    Transport* source AMQCPP_UNUSED,
-    const decaf::lang::Exception& ex ) {
+void TransportFilter::onTransportException( Transport* source AMQCPP_UNUSED,
+                                            const decaf::lang::Exception& ex ) {
 
     fire( ex );
 }

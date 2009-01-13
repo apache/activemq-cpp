@@ -18,6 +18,8 @@
 #ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMAT_H_
 #define _ACTIVEMQ_WIREFORMAT_WIREFORMAT_H_
 
+#include <activemq/wireformat/WireFormatNegotiator.h>
+
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/IOException.h>
@@ -30,8 +32,6 @@
 
 namespace activemq{
 namespace wireformat{
-
-    class WireFormatNegotiator;
 
     /**
      * Provides a mechanism to marshal commands into and out of packets

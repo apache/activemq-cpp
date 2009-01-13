@@ -49,7 +49,24 @@ Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
 
         WireFormat* wireFormat = this->createWireFormat( properties );
 
-        return this->doCreate( location, wireFormat, properties );
+        // Create the initial Transport, then wrap it in the normal Filters
+        Transport* transport = doCreateComposite( location, wireFormat, properties );
+
+        // If there is a negotiator need then we create and wrap here.
+        if( wireFormat->hasNegotiator() ) {
+            transport = wireFormat->createNegotiator( transport );
+        }
+
+        // Create the Transport for response correlator
+        transport = new ResponseCorrelator( transport );
+
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+            // Create the Transport for response correlator
+            transport = new LoggingTransport( transport );
+        }
+
+        return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -66,32 +83,12 @@ Transport* AbstractTransportFactory::createComposite( const decaf::net::URI& loc
 
         WireFormat* wireFormat = this->createWireFormat( properties );
 
-        return doCreateComposite( location, wireFormat, properties );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-Transport* AbstractTransportFactory::doCreate( const decaf::net::URI& location,
-                                               WireFormat* wireFormat,
-                                               const decaf::util::Properties& properties )
-    throw ( exceptions::ActiveMQException ) {
-
-    try{
-
         // Create the initial Transport, then wrap it in the normal Filters
-        Transport* transport = doCreateComposite(
-            location, wireFormat, properties );
+        Transport* transport = doCreateComposite( location, wireFormat, properties );
 
-        // Create the Transport for response correlator
-        transport = new ResponseCorrelator( transport );
-
-        // If command tracing was enabled, wrap the transport with a logging transport.
-        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
-            // Create the Transport for response correlator
-            transport = new LoggingTransport( transport );
+        // If there is a negotiator need then we create and wrap here.
+        if( wireFormat->hasNegotiator() ) {
+            transport = wireFormat->createNegotiator( transport );
         }
 
         return transport;

@@ -37,7 +37,7 @@ namespace commands{
                 initialize( getFrame() );
         }
 
-        TextMessageCommand( StompFrame* frame ) :
+        TextMessageCommand( wireformat::stomp::StompFrame* frame ) :
             StompMessage< cms::TextMessage >( frame ) {
                 validate( getFrame() );
         }

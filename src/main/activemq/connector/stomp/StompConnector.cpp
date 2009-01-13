@@ -78,10 +78,6 @@ StompConnector::StompConnector( Transport* transport,
     this->transport->setCommandListener( this );
     this->transport->setTransportExceptionListener( this );
 
-    // Setup the reader and writer in the transport.
-    this->transport->setCommandReader( &reader );
-    this->transport->setCommandWriter( &writer );
-
     // Register ourself for those commands that we process
     addCmdListener( CommandConstants::ERROR_CMD, this );
 }

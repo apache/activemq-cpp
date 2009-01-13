@@ -177,7 +177,7 @@ void StompConnectorTest::testCommand()
     MyMessageListener listener;
     connector->setConsumerMessageListener( &listener );
 
-    StompFrame* frame = new StompFrame();
+    wireformat::stomp::StompFrame* frame = new wireformat::stomp::StompFrame();
     frame->setCommand( "MESSAGE" );
     frame->getProperties().setProperty(
         "destination", dest1.toProviderString() );
@@ -197,7 +197,7 @@ void StompConnectorTest::testCommand()
     // Clean up the consumers list
     listener.consumers.clear();
 
-    frame = new StompFrame();
+    frame = new wireformat::stomp::StompFrame();
     frame->setCommand( "MESSAGE" );
     frame->getProperties().setProperty(
         "destination", dest2.toProviderString() );

@@ -15,22 +15,21 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
-#define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_MARSHALER_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHALER_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/Command.h>
-#include <activemq/connector/stomp/StompFrame.h>
-#include <activemq/connector/stomp/marshal/MarshalException.h>
+#include <activemq/wireformat/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/marshal/MarshalException.h>
 
 namespace activemq{
-namespace connector{
+namespace wireformat{
 namespace stomp{
 namespace marshal{
 
     /**
-     * Interface for all marshallers between Commands and
-     * stomp frames.
+     * Interface for all marshalers between Commands and stomp frames.
      */
     class AMQCPP_API Marshaler {
     public:
@@ -39,9 +38,9 @@ namespace marshal{
         virtual ~Marshaler(void) {}
 
         /**
-         * Marshall a Stomp Frame to a Stomp Command, the frame is now
+         * Marshal a Stomp Frame to a Stomp Command, the frame is now
          * owned by this Command, caller should not use the frame again.
-         * @param frame Frame to Marshall
+         * @param frame Frame to Marshal
          * @return Newly Marshaled Stomp Message
          * @throws MarshalException
          */
@@ -49,7 +48,7 @@ namespace marshal{
             throw ( MarshalException );
 
         /**
-         * Marshal a Stomp Command to a Stom Frame, if the command that
+         * Marshal a Stomp Command to a Stomp Frame, if the command that
          * is past is not castable to a Stomp Command an Exception will
          * be thrown
          * @param command The Stomp Command to Marshal
@@ -64,4 +63,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_STOMP_MARSHALER_H_*/
+#endif /*_ACTIVEMQ_WIREFORMAT_STOMP_MARSHALER_H_*/

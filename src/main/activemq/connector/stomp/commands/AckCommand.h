@@ -44,7 +44,7 @@ namespace commands{
                 initialize( getFrame() );
         }
 
-        AckCommand( StompFrame* frame ) :
+        AckCommand( wireformat::stomp::StompFrame* frame ) :
             AbstractCommand<transport::Command>( frame ) {
                 validate( getFrame() );
         }
@@ -87,7 +87,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame ) {
+        virtual void initialize( wireformat::stomp::StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::ACK ) );
         }
@@ -98,7 +98,7 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const {
+        virtual bool validate( const wireformat::stomp::StompFrame& frame ) const {
 
             // Make sure the message is an ACK message.
             bool isAck = frame.getCommand() ==

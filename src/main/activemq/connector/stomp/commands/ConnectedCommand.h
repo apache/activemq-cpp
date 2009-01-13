@@ -40,7 +40,7 @@ namespace commands{
                 initialize( getFrame() );
         }
 
-        ConnectedCommand( StompFrame* frame ) :
+        ConnectedCommand( wireformat::stomp::StompFrame* frame ) :
             AbstractCommand< transport::Command >( frame ) {
                 validate( getFrame() );
         }
@@ -88,7 +88,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame Frame to init
          */
-        virtual void initialize( StompFrame& frame ) {
+        virtual void initialize( wireformat::stomp::StompFrame& frame ) {
             frame.setCommand( CommandConstants::toString(
                 CommandConstants::CONNECTED ) );
         }
@@ -99,7 +99,7 @@ namespace commands{
          * @param frame Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const {
+        virtual bool validate( const wireformat::stomp::StompFrame& frame ) const {
             if( frame.getCommand() ==
                 CommandConstants::toString( CommandConstants::CONNECTED ) ) {
 

@@ -39,10 +39,8 @@ TcpTransport::TcpTransport( const decaf::net::URI& uri,
                             Transport* next, const bool own )
 :   TransportFilter( next, own ),
     socket( NULL ),
-    loggingInputStream( NULL ),
-    loggingOutputStream( NULL ),
-    bufferedInputStream( NULL ),
-    bufferedOutputStream( NULL )
+    dataInputStream( NULL ),
+    dataOutputStream( NULL )
 {
     this->initialize( uri, properties );
 }
@@ -52,10 +50,8 @@ TcpTransport::TcpTransport( const decaf::util::Properties& properties,
                             Transport* next, const bool own )
 :   TransportFilter( next, own ),
     socket( NULL ),
-    loggingInputStream( NULL ),
-    loggingOutputStream( NULL ),
-    bufferedInputStream( NULL ),
-    bufferedOutputStream( NULL )
+    dataInputStream( NULL ),
+    dataOutputStream( NULL )
 {
     if( !properties.hasProperty( "transport.uri" ) ) {
         throw ActiveMQException(
@@ -74,32 +70,18 @@ TcpTransport::~TcpTransport() {
 
         try{
             close();
-        } catch( cms::CMSException& ex ){ /* Absorb */ }
+        }
+        AMQ_CATCH_NOTHROW( ActiveMQException )
+        AMQ_CATCH_NOTHROW( Exception )
+        AMQ_CATCHALL_NOTHROW()
 
         if( socket != NULL ) {
             delete socket;
             socket = NULL;
         }
 
-        if( loggingInputStream != NULL ) {
-            delete loggingInputStream;
-            loggingInputStream = NULL;
-        }
-
-        if( loggingOutputStream != NULL ) {
-            delete loggingOutputStream;
-            loggingOutputStream = NULL;
-        }
-
-        if( bufferedInputStream != NULL ) {
-            delete bufferedInputStream;
-            bufferedInputStream = NULL;
-        }
-
-        if( bufferedOutputStream != NULL ) {
-            delete bufferedOutputStream;
-            bufferedOutputStream = NULL;
-        }
+        delete this->dataInputStream;
+        delete this->dataOutputStream;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCH_NOTHROW( Exception )
@@ -150,20 +132,31 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
 
         // If tcp tracing was enabled, wrap the iostreams with logging streams
         if( properties.getProperty( "transport.tcpTracingEnabled", "false" ) == "true" ) {
-            loggingInputStream = new LoggingInputStream( inputStream );
-            loggingOutputStream = new LoggingOutputStream( outputStream );
 
-            inputStream = loggingInputStream;
-            outputStream = loggingOutputStream;
+            // Wrap with logging stream, we don't own the wrapped streams
+            inputStream = new LoggingInputStream( inputStream );
+            outputStream = new LoggingOutputStream( outputStream );
+
+            // Now wrap with the Buffered streams, we own the source streams
+            inputStream = new BufferedInputStream( inputStream, true );
+            outputStream = new BufferedOutputStream( outputStream, true );
+
+        } else {
+
+            // Wrap with the Buffered streams, we don't own the source streams
+            inputStream = new BufferedInputStream( inputStream );
+            outputStream = new BufferedOutputStream( outputStream );
         }
 
-        // Now wrap the input/output streams with buffered streams
-        bufferedInputStream = new BufferedInputStream(inputStream);
-        bufferedOutputStream = new BufferedOutputStream(outputStream);
+        // Now wrap the Buffered Streams with DataInput based streams.  We own
+        // the Source streams, all the streams in the chain that we own are
+        // destroyed when these are.
+        this->dataInputStream = new DataInputStream( inputStream, true );
+        this->dataOutputStream = new DataOutputStream( outputStream, true );
 
         // Give the IOTransport the streams.
-        ioTransport->setInputStream( bufferedInputStream );
-        ioTransport->setOutputStream( bufferedOutputStream );
+        ioTransport->setInputStream( dataInputStream );
+        ioTransport->setOutputStream( dataOutputStream );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

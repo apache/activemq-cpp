@@ -19,10 +19,9 @@
 
 #include <activemq/transport/IOTransport.h>
 #include <activemq/transport/CommandListener.h>
-#include <activemq/transport/CommandReader.h>
-#include <activemq/transport/CommandWriter.h>
 #include <activemq/transport/Command.h>
 #include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/wireformat/WireFormat.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -86,30 +85,25 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class MyCommandReader : public CommandReader{
-private:
-
-    /**
-     * The target input stream.
-     */
-    decaf::io::InputStream* inputStream;
-
+class MyWireFormat : public wireformat::WireFormat {
 public:
 
-    MyCommandReader(){ throwException = false; }
-    virtual ~MyCommandReader(){}
+    MyWireFormat(){ throwException = false; }
+    virtual ~MyWireFormat(){}
 
     bool throwException;
 
-    virtual void setInputStream(decaf::io::InputStream* is){
-        inputStream = is;
-    }
+    virtual void setVersion( int version ) {}
 
-    virtual decaf::io::InputStream* getInputStream(void){
-        return inputStream;
-    }
+    virtual int getVersion() const { return 0; }
 
-    virtual Command* readCommand( void ) throw ( CommandIOException ){
+    virtual bool hasNegotiator() const { return false; }
+
+    virtual wireformat::WireFormatNegotiator* createNegotiator( transport::Transport* transport )
+        throw( decaf::lang::exceptions::UnsupportedOperationException ) { return NULL; }
+
+    virtual Command* unmarshal( decaf::io::DataInputStream* inputStream )
+        throw ( CommandIOException ){
 
         try{
             if( throwException ){
@@ -119,6 +113,7 @@ public:
             decaf::util::Random randGen;
 
             synchronized( inputStream ){
+
                 MyCommand* command = new MyCommand();
                 try{
 
@@ -126,7 +121,7 @@ public:
                     unsigned int randWait = randGen.nextInt( 50 );
                     decaf::lang::Thread::sleep( randWait );
 
-                    command->c = inputStream->read();
+                    command->c = inputStream->readByte();
 
                 } catch( decaf::lang::Exception& ex ){
 
@@ -145,7 +140,7 @@ public:
                 return command;
             }
 
-            assert(false);
+            CPPUNIT_ASSERT( false );
             return NULL;
 
         }catch( decaf::lang::Exception& ex ){
@@ -160,48 +155,18 @@ public:
         }
     }
 
-    virtual std::size_t read(unsigned char* buffer AMQCPP_UNUSED,
-                     std::size_t count AMQCPP_UNUSED)
-        throw( decaf::io::IOException ) {
-        return 0;
-    }
-
-    virtual unsigned char readByte() throw(decaf::io::IOException) {
-        return 0;
-    }
-};
-
-////////////////////////////////////////////////////////////////////////////////
-class MyCommandWriter : public CommandWriter{
-private:
-
-    /**
-     * Target output stream.
-     */
-    decaf::io::OutputStream* outputStream;
-
-public:
-
-    virtual ~MyCommandWriter(){}
-
-    virtual void setOutputStream(decaf::io::OutputStream* os){
-        outputStream = os;
-    }
-
-    virtual decaf::io::OutputStream* getOutputStream(void){
-        return outputStream;
-    }
-
-    virtual void writeCommand( Command* command )
+    virtual void marshal( Command* command, decaf::io::DataOutputStream* outputStream )
         throw (CommandIOException)
     {
         try{
+
             synchronized( outputStream ){
 
                 const MyCommand* m =
                     dynamic_cast<const MyCommand*>(command);
                 outputStream->write( m->c );
             }
+
         }catch( decaf::lang::Exception& ex ){
             ex.setMark( __FILE__, __LINE__ );
             throw CommandIOException( ex );
@@ -210,13 +175,6 @@ public:
             throw CommandIOException( __FILE__, __LINE__, "writeCommand");
         }
     }
-
-    virtual void write( const unsigned char* buffer AMQCPP_UNUSED,
-                        std::size_t count AMQCPP_UNUSED )
-        throw(decaf::io::IOException) {}
-
-    virtual void writeByte( unsigned char v AMQCPP_UNUSED )
-        throw( decaf::io::IOException ) {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -249,17 +207,16 @@ void IOTransportTest::testStartClose(){
 
     decaf::io::BlockingByteArrayInputStream is;
     decaf::io::ByteArrayOutputStream os;
+    decaf::io::DataInputStream input( &is );
+    decaf::io::DataOutputStream output( &os );
     MyCommandListener listener;
-    MyCommandReader reader;
-    MyCommandWriter writer;
+    MyWireFormat wireFormat;
     MyExceptionListener exListener;
-    IOTransport transport;
+    IOTransport transport( &wireFormat );
     transport.setCommandListener( &listener );
-    transport.setCommandReader( &reader );
-    transport.setCommandWriter( &writer );
-    transport.setInputStream( &is );
-    transport.setOutputStream( &os );
     transport.setTransportExceptionListener( &exListener );
+    transport.setInputStream( &input );
+    transport.setOutputStream( &output );
 
     transport.start();
     decaf::lang::Thread::sleep( 60 );
@@ -273,20 +230,20 @@ void IOTransportTest::testStressTransportStartClose(){
     decaf::io::ByteArrayOutputStream os;
     decaf::io::BufferedInputStream bis( &is );
     decaf::io::BufferedOutputStream bos( &os );
+    decaf::io::DataInputStream input( &bis );
+    decaf::io::DataOutputStream output( &bos );
 
     for( int i = 0; i < 50; ++i ) {
         MyCommandListener listener;
-        MyCommandReader reader;
-        MyCommandWriter writer;
+        MyWireFormat wireFormat;
         MyExceptionListener exListener;
 
         IOTransport transport;
         transport.setCommandListener( &listener );
-        transport.setCommandReader( &reader );
-        transport.setCommandWriter( &writer );
-        transport.setInputStream( &bis );
-        transport.setOutputStream( &bos );
+        transport.setWireFormat( &wireFormat );
         transport.setTransportExceptionListener( &exListener );
+        transport.setInputStream( &input );
+        transport.setOutputStream( &output );
 
         transport.start();
         unsigned char buffer[10] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
@@ -307,17 +264,18 @@ void IOTransportTest::testRead(){
 
     decaf::io::BlockingByteArrayInputStream is;
     decaf::io::ByteArrayOutputStream os;
+    decaf::io::DataInputStream input( &is );
+    decaf::io::DataOutputStream output( &os );
+
     MyCommandListener listener(10);
-    MyCommandReader reader;
-    MyCommandWriter writer;
+    MyWireFormat wireFormat;
     MyExceptionListener exListener;
     IOTransport transport;
     transport.setCommandListener( &listener );
-    transport.setCommandReader( &reader );
-    transport.setCommandWriter( &writer );
-    transport.setInputStream( &is );
-    transport.setOutputStream( &os );
+    transport.setInputStream( &input );
+    transport.setOutputStream( &output );
     transport.setTransportExceptionListener( &exListener );
+    transport.setWireFormat( &wireFormat );
 
     transport.start();
 
@@ -344,17 +302,18 @@ void IOTransportTest::testWrite(){
 
     decaf::io::BlockingByteArrayInputStream is;
     decaf::io::ByteArrayOutputStream os;
+    decaf::io::DataInputStream input( &is );
+    decaf::io::DataOutputStream output( &os );
+
     MyCommandListener listener;
-    MyCommandReader reader;
-    MyCommandWriter writer;
+    MyWireFormat wireFormat;
     MyExceptionListener exListener;
     IOTransport transport;
     transport.setCommandListener( &listener );
-    transport.setCommandReader( &reader );
-    transport.setCommandWriter( &writer );
-    transport.setInputStream( &is );
-    transport.setOutputStream( &os );
+    transport.setInputStream( &input );
+    transport.setOutputStream( &output );
     transport.setTransportExceptionListener( &exListener );
+    transport.setWireFormat( &wireFormat );
 
     transport.start();
 
@@ -387,18 +346,19 @@ void IOTransportTest::testException(){
 
     decaf::io::BlockingByteArrayInputStream is;
     decaf::io::ByteArrayOutputStream os;
+    decaf::io::DataInputStream input( &is );
+    decaf::io::DataOutputStream output( &os );
+
     MyCommandListener listener;
-    MyCommandReader reader;
-    MyCommandWriter writer;
+    MyWireFormat wireFormat;
     MyExceptionListener exListener;
     IOTransport transport;
     transport.setCommandListener( &listener );
-    transport.setCommandReader( &reader );
-    reader.throwException = true;
-    transport.setCommandWriter( &writer );
-    transport.setInputStream( &is );
-    transport.setOutputStream( &os );
+    wireFormat.throwException = true;
+    transport.setInputStream( &input );
+    transport.setOutputStream( &output );
     transport.setTransportExceptionListener( &exListener );
+    transport.setWireFormat( &wireFormat );
 
     unsigned char buffer[1] = { '1' };
     try{

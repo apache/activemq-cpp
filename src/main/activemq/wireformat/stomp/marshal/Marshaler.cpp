@@ -15,13 +15,14 @@
  * limitations under the License.
  */
 
-#include <activemq/connector/stomp/marshal/Marshaler.h>
+#include <activemq/wireformat/stomp/marshal/Marshaler.h>
 
 #include <activemq/transport/Command.h>
-#include <activemq/connector/stomp/marshal/MarshalException.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
 #include <activemq/connector/stomp/commands/AbstractCommand.h>
-#include <activemq/connector/stomp/StompFrame.h>
+
+#include <activemq/wireformat/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/marshal/MarshalException.h>
 
 // Commands we can receive
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
@@ -36,9 +37,10 @@
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
-using namespace activemq::connector::stomp;
 using namespace activemq::connector::stomp::commands;
-using namespace activemq::connector::stomp::marshal;
+using namespace activemq::wireformat;
+using namespace activemq::wireformat::stomp;
+using namespace activemq::wireformat::stomp::marshal;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -230,9 +230,11 @@ namespace mock{
             outgoingCommandListener = listener;
         }
 
-        // Not impl is needed in this transport for these methods.
-        virtual void setCommandReader( CommandReader* reader AMQCPP_UNUSED){}
-        virtual void setCommandWriter( CommandWriter* writer AMQCPP_UNUSED){}
+        /**
+         * Sets the WireFormat instance to use.
+         * @param WireFormat the object used to encode / decode commands.
+         */
+        virtual void setWireFormat( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {}
 
         virtual void setTransportExceptionListener(
             TransportExceptionListener* listener )

@@ -64,7 +64,7 @@ namespace commands{
             cmd.setErrorDetails( "ErrorD" );
             CPPUNIT_ASSERT( std::string( cmd.getErrorDetails() ) == "ErrorD" );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

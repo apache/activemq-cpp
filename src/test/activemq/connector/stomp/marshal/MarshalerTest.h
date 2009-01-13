@@ -26,7 +26,7 @@
 #include <activemq/connector/stomp/commands/ConnectedCommand.h>
 #include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <activemq/connector/stomp/commands/BytesMessageCommand.h>
-#include <activemq/connector/stomp/marshal/Marshaler.h>
+#include <activemq/wireformat/stomp/marshal/Marshaler.h>
 
 namespace activemq{
 namespace connector{
@@ -40,18 +40,18 @@ namespace marshal{
         CPPUNIT_TEST_SUITE_END();
 
     public:
-    
+
     	MarshalerTest() {}
     	virtual ~MarshalerTest() {}
 
         void test( void )
         {
-            Marshaler marshaler;
-            
+            wireformat::stomp::marshal::Marshaler marshaler;
+
             commands::ConnectedCommand   connectedCommand;
             commands::TextMessageCommand textCommand;
             commands::BytesMessageCommand bytesCommand;
-            
+
             // Sync to expected output
             connectedCommand.setSessionId( "test" );
 
@@ -60,23 +60,23 @@ namespace marshal{
             // Sync to expected output
             textCommand.setCMSDestination( &myTopic );
             textCommand.setCMSMessageID( "123" );
-            textCommand.getProperties().setProperty( 
+            textCommand.getProperties().setProperty(
                 "sampleProperty", "testvalue" );
             textCommand.setText( "testMessage" );
 
             // Sync to expected output
             bytesCommand.setCMSDestination( &myTopic );
             bytesCommand.setCMSMessageID( "123" );
-            bytesCommand.getProperties().setProperty( 
+            bytesCommand.getProperties().setProperty(
                 "sampleProperty", "testvalue" );
-            bytesCommand.setBodyBytes( 
+            bytesCommand.setBodyBytes(
                 (const unsigned char*)"123456789\0", 10 );
-            
-            StompFrame* connectedFrame = 
+
+            wireformat::stomp::StompFrame* connectedFrame =
                 marshaler.marshal( &connectedCommand ).clone();
-            StompFrame* textFrame = 
+            wireformat::stomp::StompFrame* textFrame =
                 marshaler.marshal( &textCommand ).clone();
-            StompFrame* bytesFrame = 
+            wireformat::stomp::StompFrame* bytesFrame =
                 marshaler.marshal( &bytesCommand ).clone();
 
             CPPUNIT_ASSERT( connectedFrame != NULL );
@@ -86,33 +86,33 @@ namespace marshal{
             commands::ConnectedCommand   connectedCommand1( connectedFrame );
             commands::TextMessageCommand textCommand1( textFrame );
             commands::BytesMessageCommand bytesCommand1( bytesFrame );
-            
+
             // Connected Tests
-            CPPUNIT_ASSERT( connectedCommand.getCommandId() == 
+            CPPUNIT_ASSERT( connectedCommand.getCommandId() ==
                             connectedCommand1.getCommandId() );
-            CPPUNIT_ASSERT( connectedCommand.getStompCommandId() == 
+            CPPUNIT_ASSERT( connectedCommand.getStompCommandId() ==
                             connectedCommand1.getStompCommandId() );
-            CPPUNIT_ASSERT( connectedCommand.isResponseRequired() == 
+            CPPUNIT_ASSERT( connectedCommand.isResponseRequired() ==
                             connectedCommand1.isResponseRequired() );
-            CPPUNIT_ASSERT( connectedCommand.getCorrelationId() == 
+            CPPUNIT_ASSERT( connectedCommand.getCorrelationId() ==
                             connectedCommand1.getCorrelationId() );
 
             // TextMessage Tests
-            CPPUNIT_ASSERT( textCommand.getCommandId() == 
+            CPPUNIT_ASSERT( textCommand.getCommandId() ==
                             textCommand1.getCommandId() );
-            CPPUNIT_ASSERT( textCommand.getStompCommandId() == 
+            CPPUNIT_ASSERT( textCommand.getStompCommandId() ==
                             textCommand1.getStompCommandId() );
-            CPPUNIT_ASSERT( std::string( textCommand.getText() ) == 
+            CPPUNIT_ASSERT( std::string( textCommand.getText() ) ==
                             textCommand1.getText() );
 
             // BytesMessage Tests
-            CPPUNIT_ASSERT( bytesCommand.getCommandId() == 
+            CPPUNIT_ASSERT( bytesCommand.getCommandId() ==
                             bytesCommand1.getCommandId() );
-            CPPUNIT_ASSERT( bytesCommand.getStompCommandId() == 
+            CPPUNIT_ASSERT( bytesCommand.getStompCommandId() ==
                             bytesCommand1.getStompCommandId() );
-            CPPUNIT_ASSERT( std::string( (const char*)bytesCommand.getBodyBytes() ) == 
+            CPPUNIT_ASSERT( std::string( (const char*)bytesCommand.getBodyBytes() ) ==
                             (const char*)bytesCommand1.getBodyBytes() );
-            
+
 
         }
 

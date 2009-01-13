@@ -123,21 +123,11 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
     this->brokerInfo = NULL;
     this->brokerWireFormatInfo = NULL;
     this->properties.copy( &properties );
-    this->wireFormat = dynamic_cast<OpenWireFormat*>(
-        wireFormatFactory.createWireFormat( properties ) );
-    this->transport = this->wireFormat->createNegotiator( transport );
+    this->transport = transport;
 
     // Observe the transport for events.
     this->transport->setCommandListener( this );
     this->transport->setTransportExceptionListener( this );
-
-    // Setup the Reader and Writer with a Wire Format pointer.
-    this->reader.setOpenWireFormat( wireFormat );
-    this->writer.setOpenWireFormat( wireFormat );
-
-    // Setup the reader and writer in the transport.
-    this->transport->setCommandReader( &reader );
-    this->transport->setCommandWriter( &writer );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,8 +136,6 @@ OpenWireConnector::~OpenWireConnector() {
 
         close();
 
-        delete transport;
-        delete wireFormat;
         delete brokerInfo;
         delete brokerWireFormatInfo;
     }

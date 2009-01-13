@@ -23,8 +23,6 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/CommandListener.h>
 #include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/connector/stomp/StompCommandReader.h>
-#include <activemq/connector/stomp/StompCommandWriter.h>
 #include <activemq/connector/stomp/StompCommandListener.h>
 #include <activemq/connector/stomp/StompSessionManager.h>
 #include <activemq/connector/stomp/commands/CommandConstants.h>
@@ -83,16 +81,6 @@ namespace stomp{
          * Observer of connector exceptions.
          */
         cms::ExceptionListener* exceptionListener;
-
-        /**
-         * This Connector's Command Reader
-         */
-        StompCommandReader reader;
-
-        /**
-         * This Connector's Command Writer
-         */
-        StompCommandWriter writer;
 
         /**
          * Map to hold StompCommandListeners

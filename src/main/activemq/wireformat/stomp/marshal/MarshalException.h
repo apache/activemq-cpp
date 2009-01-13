@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
-#define _ACTIVEMQ_CONNECTOR_STOMP_MARSHALL_MARSHALEXCEPTION_H_
+#ifndef _ACTIVEMQ_WIREFORMAT_STOMP_MARSHALL_MARSHALEXCEPTION_H_
+#define _ACTIVEMQ_WIREFORMAT_STOMP_MARSHALL_MARSHALEXCEPTION_H_
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
-namespace connector{
+namespace wireformat{
 namespace stomp{
 namespace marshal{
 
@@ -119,4 +119,4 @@ namespace marshal{
 
 }}}}
 
-#endif /*_ACTIVEMQ_CONNECTOR_STOMP_MARSHAL_MARSHALLEXCEPTION_H_*/
+#endif /*_ACTIVEMQ_WIREFORMAT_STOMP_MARSHALL_MARSHALEXCEPTION_H_*/

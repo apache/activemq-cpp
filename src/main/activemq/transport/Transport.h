@@ -30,12 +30,13 @@
 #include <typeinfo>
 
 namespace activemq{
+namespace wireformat{
+    class WireFormat;
+}
 namespace transport{
 
     // Forward declarations.
     class CommandListener;
-    class CommandReader;
-    class CommandWriter;
     class TransportExceptionListener;
 
     /**
@@ -44,10 +45,9 @@ namespace transport{
      * messages will be delivered to the specified listener object upon
      * receipt.  A user of the Transport can set an exception listener
      * to be notified of errors that occurs in Threads that the Transport
-     * layer runs.  Since a Transport doesn't know the Wire Format of the
-     * Commands it reads and writes, its up to the managing object to
-     * provide object(s) that implement the CommandReader and CommandWriter
-     * interfaces.
+     * layer runs.  Transports should be given an instance of a WireFormat
+     * object when created so that they can turn the built in Commands to /
+     * from the required wire format encoding.
      */
     class AMQCPP_API Transport : public cms::Startable,
                                  public cms::Closeable {
@@ -102,16 +102,10 @@ namespace transport{
         virtual void setCommandListener( CommandListener* listener ) = 0;
 
         /**
-         * Sets the command reader.
-         * @param reader the object that will be used for reading command objects.
+         * Sets the WireFormat instance to use.
+         * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setCommandReader( CommandReader* reader ) = 0;
-
-        /**
-         * Sets the command writer.
-         * @param writer the object that will be used for writing command objects.
-         */
-        virtual void setCommandWriter( CommandWriter* writer ) = 0;
+        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) = 0;
 
         /**
          * Sets the observer of asynchronous exceptions from this transport.

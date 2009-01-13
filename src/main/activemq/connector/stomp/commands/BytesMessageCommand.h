@@ -89,7 +89,7 @@ namespace commands{
          * Constructor for initialization in read-only mode.
          * @param frame The stomp frame that was received from the broker.
          */
-        BytesMessageCommand( StompFrame* frame ) :
+        BytesMessageCommand( wireformat::stomp::StompFrame* frame ) :
             StompMessage< cms::BytesMessage >( frame ),
             dataInputStream(&inputStream),
             dataOutputStream(&outputStream) {
@@ -130,7 +130,8 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal() throw ( marshal::MarshalException ) {
+        virtual const wireformat::stomp::StompFrame& marshal()
+            throw ( wireformat::stomp::marshal::MarshalException ) {
 
             try{
                 // Before we send out the frame tag it with the content length
@@ -143,8 +144,8 @@ namespace commands{
 
                 return StompMessage<cms::BytesMessage>::marshal();
             }
-            AMQ_CATCH_RETHROW( marshal::MarshalException )
-            AMQ_CATCHALL_THROW( marshal::MarshalException )
+            AMQ_CATCH_RETHROW( wireformat::stomp::marshal::MarshalException )
+            AMQ_CATCHALL_THROW( wireformat::stomp::marshal::MarshalException )
         }
 
         /**

@@ -19,7 +19,7 @@
 #define ACTIVEMQ_CONNECTOR_STOMP_COMMANDS_ABSTRACTCOMMAND_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/connector/stomp/StompFrame.h>
+#include <activemq/wireformat/stomp/StompFrame.h>
 #include <activemq/connector/stomp/commands/StompCommand.h>
 #include <activemq/transport/Command.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -47,11 +47,11 @@ namespace commands{
     protected:
 
         // Frame that contains the actual message
-        StompFrame* frame;
+        wireformat::stomp::StompFrame* frame;
 
     protected:
 
-        StompFrame& getFrame() {
+        wireformat::stomp::StompFrame& getFrame() {
             if( frame == NULL ){
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
@@ -61,7 +61,7 @@ namespace commands{
             return *frame;
         }
 
-        const StompFrame& getFrame() const {
+        const wireformat::stomp::StompFrame& getFrame() const {
             if( frame == NULL ){
                 throw decaf::lang::exceptions::NullPointerException(
                     __FILE__, __LINE__,
@@ -99,7 +99,7 @@ namespace commands{
          * frame with data appropriate for the command type.
          * @param frame the Frame to init
          */
-        virtual void initialize( StompFrame& frame ) = 0;
+        virtual void initialize( wireformat::stomp::StompFrame& frame ) = 0;
 
         /**
          * Inheritors are required to override this method to validate
@@ -107,7 +107,7 @@ namespace commands{
          * @param frame the Frame to validate
          * @returns true if frame is valid
          */
-        virtual bool validate( const StompFrame& frame ) const = 0;
+        virtual bool validate( const wireformat::stomp::StompFrame& frame ) const = 0;
 
         /**
          * Returns a provider-specific string that provides information
@@ -142,9 +142,9 @@ namespace commands{
     public:
 
         AbstractCommand(){
-            frame = new StompFrame;
+            frame = new wireformat::stomp::StompFrame;
         }
-        AbstractCommand( StompFrame* frame ){
+        AbstractCommand( wireformat::stomp::StompFrame* frame ){
             this->frame = frame;
         }
         virtual ~AbstractCommand(){
@@ -263,20 +263,20 @@ namespace commands{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal()
-            throw ( marshal::MarshalException ) {
+        virtual const wireformat::stomp::StompFrame& marshal()
+            throw ( wireformat::stomp::marshal::MarshalException ) {
 
             try{
                 if( frame == NULL || !validate( *frame ) ){
-                    throw marshal::MarshalException(
+                    throw wireformat::stomp::marshal::MarshalException(
                         __FILE__, __LINE__,
                         "AbstractCommand::marshal() - frame invalid" );
                 }
 
                 return getFrame();
             }
-            AMQ_CATCH_RETHROW( marshal::MarshalException )
-            AMQ_CATCHALL_THROW( marshal::MarshalException )
+            AMQ_CATCH_RETHROW( wireformat::stomp::marshal::MarshalException )
+            AMQ_CATCHALL_THROW( wireformat::stomp::marshal::MarshalException )
         }
 
         /**

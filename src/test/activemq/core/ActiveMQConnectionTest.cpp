@@ -269,12 +269,7 @@ void ActiveMQConnectionTest::test2WithOpenwire()
             CPPUNIT_ASSERT( false );
         }
 
-        transport::mock::MockTransport* dTransport =
-            dynamic_cast< transport::mock::MockTransport*>( transport );
-
-        CPPUNIT_ASSERT( dTransport != NULL );
-
-        dTransport->setCommandListener( &cmdListener );
+        transport->setCommandListener( &cmdListener );
 
         connector::Connector* connector =
             new connector::openwire::OpenWireConnector(

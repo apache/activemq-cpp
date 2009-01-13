@@ -16,17 +16,17 @@
  */
 
 #include "IOTransport.h"
-#include "CommandReader.h"
-#include "CommandWriter.h"
 
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <activemq/wireformat/WireFormat.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/Config.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace activemq::wireformat;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
 
@@ -36,14 +36,25 @@ LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport" )
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::IOTransport(){
 
-    listener = NULL;
-    reader = NULL;
-    writer = NULL;
-    exceptionListener = NULL;
-    inputStream = NULL;
-    outputStream = NULL;
-    closed = false;
-    thread = NULL;
+    this->listener = NULL;
+    this->exceptionListener = NULL;
+    this->inputStream = NULL;
+    this->outputStream = NULL;
+    this->closed = false;
+    this->thread = NULL;
+    this->wireFormat = NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IOTransport::IOTransport( WireFormat* wireFormat ) {
+
+    this->listener = NULL;
+    this->exceptionListener = NULL;
+    this->inputStream = NULL;
+    this->outputStream = NULL;
+    this->closed = false;
+    this->thread = NULL;
+    this->wireFormat = wireFormat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +90,7 @@ void IOTransport::oneway( Command* command )
                 "IOTransport::oneway() - attempting to write NULL command" );
         }
 
-        // Make sure we have an output strema to write to.
+        // Make sure we have an output stream to write to.
         if( outputStream == NULL ){
             throw CommandIOException(
                 __FILE__, __LINE__,
@@ -88,7 +99,7 @@ void IOTransport::oneway( Command* command )
 
         synchronized( outputStream ){
             // Write the command to the output stream.
-            writer->writeCommand( command );
+            this->wireFormat->marshal( command, this->outputStream );
         }
     }
     AMQ_CATCH_RETHROW( CommandIOException )
@@ -114,17 +125,12 @@ void IOTransport::start() throw( cms::CMSException ){
         }
 
         // Make sure all variables that we need have been set.
-        if( inputStream == NULL || outputStream == NULL ||
-            reader == NULL || writer == NULL ){
+        if( inputStream == NULL || outputStream == NULL || wireFormat == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "IOTransport::start() - "
-                "IO sreams and reader/writer must be set before calling start" );
+                "IO streams and wireFormat instances must be set before calling start" );
         }
-
-        // Init the Command Reader and Writer with the Streams
-        reader->setInputStream( inputStream );
-        writer->setOutputStream( outputStream );
 
         // Start the polling thread.
         thread = new Thread( this );
@@ -153,7 +159,6 @@ void IOTransport::close() throw( cms::CMSException ){
         // (which is likely).  Otherwise, the join that
         // follows will block forever.
         if( inputStream != NULL ){
-
             inputStream->close();
             inputStream = NULL;
         }
@@ -167,10 +172,12 @@ void IOTransport::close() throw( cms::CMSException ){
 
         // Close the output stream.
         if( outputStream != NULL ){
-
             outputStream->close();
             outputStream = NULL;
         }
+
+        // Clear the WireFormat so we can't use it anymore
+        this->wireFormat = NULL;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -185,12 +192,11 @@ void IOTransport::run(){
         while( !closed ){
 
             // Read the next command from the input stream.
-            Command* command = reader->readCommand();
+            Command* command = wireFormat->unmarshal( this->inputStream );
 
             // Notify the listener.
             fire( command );
         }
-
     }
     catch( exceptions::ActiveMQException& ex ){
         ex.setMark( __FILE__, __LINE__ );

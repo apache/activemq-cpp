@@ -78,7 +78,7 @@ namespace commands{
             cmd.setNoLocal( true );
             CPPUNIT_ASSERT( cmd.getNoLocal() == true );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 

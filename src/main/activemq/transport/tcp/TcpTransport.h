@@ -27,6 +27,8 @@
 #include <activemq/io/LoggingOutputStream.h>
 #include <decaf/io/BufferedInputStream.h>
 #include <decaf/io/BufferedOutputStream.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
 
 namespace activemq{
 namespace transport{
@@ -35,7 +37,7 @@ namespace tcp{
     /**
      * Implements a TCP/IP based transport filter, this transport
      * is meant to wrap an instance of an IOTransport.  The lower
-     * level transport should take care of manaing stream reads
+     * level transport should take care of managing stream reads
      * and writes.
      */
     class AMQCPP_API TcpTransport : public TransportFilter {
@@ -46,11 +48,15 @@ namespace tcp{
          */
         decaf::net::Socket* socket;
 
-        io::LoggingInputStream* loggingInputStream;
-        io::LoggingOutputStream* loggingOutputStream;
+        /**
+         * Input Stream for Reading in Messages
+         */
+        decaf::io::DataInputStream* dataInputStream;
 
-        decaf::io::BufferedInputStream* bufferedInputStream;
-        decaf::io::BufferedOutputStream* bufferedOutputStream;
+        /**
+         * Output Stream for Writing out Messages.
+         */
+        decaf::io::DataOutputStream* dataOutputStream;
 
     public:
 

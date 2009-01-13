@@ -89,7 +89,7 @@ namespace commands{
             CPPUNIT_ASSERT( cmd.getCMSDestination()->toProviderString() ==
                             "/topic/testTopic" );
 
-            StompFrame* frame = cmd.marshal().clone();
+            wireformat::stomp::StompFrame* frame = cmd.marshal().clone();
 
             CPPUNIT_ASSERT( frame != NULL );
 
@@ -203,7 +203,7 @@ namespace commands{
 
         void testReadOnly(){
 
-            StompFrame* frame = new StompFrame();
+            wireformat::stomp::StompFrame* frame = new wireformat::stomp::StompFrame();
             frame->setCommand( CommandConstants::toString( CommandConstants::MESSAGE ) );
             frame->getProperties().setProperty( CommandConstants::toString( CommandConstants::HEADER_DESTINATION ),
                 (std::string)CommandConstants::topicPrefix + "mytopic" );
