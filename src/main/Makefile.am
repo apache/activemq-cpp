@@ -252,6 +252,7 @@ h_sources = \
     cms/MapMessage.h \
     cms/Destination.h \
     cms/Connection.h \
+    cms/ConnectionMetaData.h \
     cms/TemporaryTopic.h \
     cms/Stoppable.h \
     cms/Topic.h \
