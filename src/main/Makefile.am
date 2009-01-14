@@ -35,6 +35,7 @@ cc_sources = \
     activemq/cmsutil/CmsTemplate.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
+    activemq/core/ActiveMQConnectionMetaData.cpp \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQTransaction.cpp \
@@ -156,6 +157,7 @@ h_sources = \
     activemq/core/ActiveMQMessage.h \
     activemq/core/ActiveMQConnectionData.h \
     activemq/core/ActiveMQConnection.h \
+    activemq/core/ActiveMQConnectionMetaData.h \
     activemq/core/ActiveMQTransaction.h \
     activemq/core/ActiveMQConnectionFactory.h \
     activemq/core/ActiveMQConsumer.h \
