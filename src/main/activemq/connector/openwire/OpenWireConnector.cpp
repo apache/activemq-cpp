@@ -32,7 +32,6 @@
 #include <activemq/connector/openwire/OpenWireConsumerInfo.h>
 #include <activemq/connector/openwire/OpenWireTransactionInfo.h>
 #include <activemq/wireformat/openwire/BrokerException.h>
-#include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/ActiveMQBytesMessage.h>
@@ -84,9 +83,6 @@ OpenWireConnector::OpenWireConnector( Transport* transport,
             __FILE__, __LINE__,
             "OpenWireConnector::OpenWireConnector - Transport cannot be NULL");
     }
-
-    // Create our WireFormatFactory on the stack, only need it once.
-    OpenWireFormatFactory wireFormatFactory;
 
     synchronized( &mutex ) {
         this->state = CONNECTION_STATE_DISCONNECTED;
