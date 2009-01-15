@@ -23,67 +23,80 @@
 #include <cms/Stoppable.h>
 #include <cms/Closeable.h>
 #include <cms/Session.h>
+#include <cms/ConnectionMetaData.h>
 
-namespace cms
-{
+namespace cms{
+
     class ExceptionListener;
-   
+
     /**
      * The client's connection to its provider.
      */
-    class CMS_API Connection :
-        public Startable,
-        public Stoppable,
-        public Closeable
+    class CMS_API Connection : public Startable,
+                               public Stoppable,
+                               public Closeable
     {
     public:
 
         virtual ~Connection() {}
 
         /**
-         * Closes this connection as well as any Sessions 
+         * Closes this connection as well as any Sessions
          * created from it (and those Sessions' consumers and
          * producers).
-         * 
+         *
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
 
+        /**
+         * Gets the metadata for this connection.
+         *
+         * @returns the connection MetaData pointer ( caller does not own it ).
+         *
+         * @throws CMSException
+         *         if the provider fails to get the connection metadata for this connection.
+         *
+         * @see ConnectionMetaData
+         * @since 2.0
+         */
+        virtual const ConnectionMetaData* getMetaData() const throw( CMSException ) = 0;
+
 		/**
          * Creates an AUTO_ACKNOWLEDGE Session.
-         * 
+         *
          * @throws CMSException
          */
         virtual Session* createSession() throw ( CMSException ) = 0;
-				
+
         /**
          * Creates a new Session to work for this Connection using the
          * specified acknowledgment mode
-         * 
+         *
          * @param ackMode
          *      the Acknowledgement Mode to use.
          * @throws CMSException
          */
-        virtual Session* createSession( Session::AcknowledgeMode ackMode ) 
+        virtual Session* createSession( Session::AcknowledgeMode ackMode )
             throw ( CMSException ) = 0;
 
         /**
          * Get the Client Id for this session
-         * 
+         *
          * @return Client Id String
          */
-        virtual std::string getClientID() const = 0;      
+        virtual std::string getClientID() const = 0;
 
         /**
          * Gets the registered Exception Listener for this connection
-         * 
+         *
          * @return pointer to an exception listnener or NULL
          */
         virtual ExceptionListener* getExceptionListener() const = 0;
 
         /**
          * Sets the registed Exception Listener for this connection
-         * 
+         *
          * @param listener
          *      pointer to and <code>ExceptionListener</code>
          */

@@ -28,3 +28,52 @@ ActiveMQConnectionMetaData::ActiveMQConnectionMetaData() {
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionMetaData::~ActiveMQConnectionMetaData() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQConnectionMetaData::getCMSVersion() const throw( cms::CMSException ) {
+    return "2.0";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionMetaData::getCMSMajorVersion() const throw( cms::CMSException ) {
+    return 2;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionMetaData::getCMSMinorVersion() const throw( cms::CMSException ) {
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQConnectionMetaData::getCMSProviderName() const throw( cms::CMSException ) {
+    return "ActiveMQ-CPP";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string ActiveMQConnectionMetaData::getProviderVersion() const throw( cms::CMSException ) {
+    return "3.0";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionMetaData::getProviderMajorVersion() const throw( cms::CMSException ) {
+    return 3;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int ActiveMQConnectionMetaData::getProviderMinorVersion() const throw( cms::CMSException ) {
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> ActiveMQConnectionMetaData::getCMSXPropertyNames() const
+    throw( cms::CMSException ) {
+
+    std::vector<std::string> jmxProperties;
+
+    jmxProperties.push_back( "JMSXGroupID" );
+    jmxProperties.push_back( "JMSXGroupSeq" );
+    jmxProperties.push_back( "JMSXDeliveryCount" );
+    jmxProperties.push_back( "JMSXProducerTXID" );
+
+    return jmxProperties;
+}

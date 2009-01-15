@@ -28,6 +28,8 @@ namespace core {
     /**
      * This class houses all the various settings and information that is used
      * by an instance of an ActiveMQConnection class.
+     *
+     * @since 3.0
      */
     class AMQCPP_API ActiveMQConnectionMetaData : public cms::ConnectionMetaData {
     private:
@@ -47,9 +49,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getCMSVersion() const throw( cms::CMSException ) {
-            return "2.0";
-        }
+        virtual std::string getCMSVersion() const throw( cms::CMSException );
 
         /**
          * Gets the CMS major version number.
@@ -59,9 +59,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getCMSMajorVersion() const throw( cms::CMSException ) {
-            return 2;
-        }
+        virtual int getCMSMajorVersion() const throw( cms::CMSException );
 
         /**
          * Gets the CMS minor version number.
@@ -71,9 +69,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getCMSMinorVersion() const throw( cms::CMSException ) {
-            return 0;
-        }
+        virtual int getCMSMinorVersion() const throw( cms::CMSException );
 
         /**
          * Gets the CMS provider name.
@@ -83,9 +79,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getCMSProviderName() const throw( cms::CMSException ) {
-            return "ActiveMQ-CPP";
-        }
+        virtual std::string getCMSProviderName() const throw( cms::CMSException );
 
         /**
          * Gets the CMS provider version.
@@ -95,9 +89,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::string getProviderVersion() const throw( cms::CMSException ) {
-            return "3.0";
-        }
+        virtual std::string getProviderVersion() const throw( cms::CMSException );
 
         /**
          * Gets the CMS provider major version number.
@@ -107,9 +99,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getProviderMajorVersion() const throw( cms::CMSException ) {
-            return 3;
-        }
+        virtual int getProviderMajorVersion() const throw( cms::CMSException );
 
         /**
          * Gets the CMS provider minor version number.
@@ -119,9 +109,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual int getProviderMinorVersion() const throw( cms::CMSException ) {
-            return 0;
-        }
+        virtual int getProviderMinorVersion() const throw( cms::CMSException );
 
         /**
          * Gets an Vector of the CMSX property names.
@@ -131,9 +119,7 @@ namespace core {
          * @throw CMSException
          *        If the CMS Provider fails to retrieve the metadata due to some internal error.
          */
-        virtual std::vector<std::string> getCMSXPropertyNames() const throw( cms::CMSException ) {
-            return std::vector<std::string>();
-        }
+        virtual std::vector<std::string> getCMSXPropertyNames() const throw( cms::CMSException );
 
     };
 

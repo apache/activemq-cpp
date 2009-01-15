@@ -22,6 +22,7 @@
 #include <cms/ExceptionListener.h>
 #include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnectionData.h>
+#include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/connector/ConsumerMessageListener.h>
@@ -34,6 +35,7 @@
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
 #include <string>
+#include <memory>
 
 namespace activemq{
 
@@ -66,6 +68,11 @@ namespace core{
          * All the data that is used to connect this Connection
          */
         ActiveMQConnectionData* connectionData;
+
+        /**
+         * The instance of ConnectionMetaData to return to clients.
+         */
+        std::auto_ptr<cms::ConnectionMetaData> connectionMetaData;
 
         /**
          * Indicates if this Connection is started
@@ -162,6 +169,21 @@ namespace core{
                    activemq::exceptions::ActiveMQException );
 
     public:   // Connection Interface Methods
+
+        /**
+         * Gets the metadata for this connection.
+         *
+         * @returns the connection MetaData pointer ( caller does not own it ).
+         *
+         * @throws CMSException
+         *         if the provider fails to get the connection metadata for this connection.
+         *
+         * @see ConnectionMetaData
+         * @since 2.0
+         */
+        virtual const cms::ConnectionMetaData* getMetaData() const throw( cms::CMSException ) {
+            return connectionMetaData.get();
+        }
 
         /**
          * Creates a new Session to work for this Connection

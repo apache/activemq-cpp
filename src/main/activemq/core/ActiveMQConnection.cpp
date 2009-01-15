@@ -39,6 +39,7 @@ ActiveMQConnection::ActiveMQConnection(ActiveMQConnectionData* connectionData) {
     this->started = false;
     this->closed = false;
     this->exceptionListener = NULL;
+    this->connectionMetaData.reset( new ActiveMQConnectionMetaData() );
 
     // Register for messages and exceptions from the connector.
     Connector* connector = connectionData->getConnector();
