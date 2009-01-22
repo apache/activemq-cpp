@@ -52,11 +52,6 @@ Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
         // Create the initial Transport, then wrap it in the normal Filters
         Transport* transport = doCreateComposite( location, wireFormat, properties );
 
-        // If there is a negotiator need then we create and wrap here.
-        if( wireFormat->hasNegotiator() ) {
-            transport = wireFormat->createNegotiator( transport );
-        }
-
         // Create the Transport for response correlator
         transport = new ResponseCorrelator( transport );
 
@@ -64,6 +59,11 @@ Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
         if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
             // Create the Transport for response correlator
             transport = new LoggingTransport( transport );
+        }
+
+        // If there is a negotiator need then we create and wrap here.
+        if( wireFormat->hasNegotiator() ) {
+            transport = wireFormat->createNegotiator( transport );
         }
 
         return transport;

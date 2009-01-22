@@ -21,7 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-
 namespace activemq{
 namespace cmsutil{
 

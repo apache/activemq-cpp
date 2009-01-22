@@ -22,6 +22,7 @@
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/Config.h>
+#include <typeinfo>
 
 using namespace activemq;
 using namespace activemq::transport;
@@ -66,6 +67,39 @@ IOTransport::~IOTransport(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void IOTransport::fire( decaf::lang::Exception& ex ){
+
+    if( this->exceptionListener != NULL && !this->closed ){
+
+        try{
+            this->exceptionListener->onTransportException( this, ex );
+        }catch( ... ){}
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::fire( Command* command ){
+
+    try{
+        // Since the listener is responsible for freeing the memory,
+        // if there is no listener - free the command here.  Also if
+        // we have been closed then we don't deliver any messages that
+        // might have sneaked in while we where closing.
+        if( this->listener == NULL || this->closed == true ){
+            delete command;
+            return;
+        }
+
+        this->listener->onCommand( command );
+
+    }catch( ... ){
+        try{
+            delete command;
+        } catch( ... ) {}
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void IOTransport::oneway( Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
@@ -100,6 +134,7 @@ void IOTransport::oneway( Command* command )
         synchronized( outputStream ){
             // Write the command to the output stream.
             this->wireFormat->marshal( command, this->outputStream );
+            this->outputStream->flush();
         }
     }
     AMQ_CATCH_RETHROW( CommandIOException )

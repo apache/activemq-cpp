@@ -21,19 +21,16 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
-using namespace activemq::connector;
 using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination() :
-    ActiveMQDestination(),
-    connector( NULL ) {
+    ActiveMQDestination() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
-    ActiveMQDestination( name ),
-    connector( NULL ) {
+    ActiveMQDestination( name ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,4 +40,13 @@ ActiveMQTempDestination::~ActiveMQTempDestination() {
 ////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQTempDestination::getDataStructureType() const {
     return ActiveMQTempDestination::ID_ACTIVEMQTEMPDESTINATION;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTempDestination::close() throw( cms::CMSException ) {
+    try {
+        // TODO - Dispose of this Temp Dest.
+    }
+    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
 }

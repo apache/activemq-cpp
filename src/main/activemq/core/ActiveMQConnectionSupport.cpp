@@ -34,7 +34,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionSupport::ActiveMQConnectionSupport( transport::Transport* transport,
-                                                      const decaf::util::Properties& properties ) {
+                                                      decaf::util::Properties* properties ) {
 
     if( transport  == NULL ) {
         throw decaf::lang::exceptions::IllegalArgumentException(
@@ -43,47 +43,44 @@ ActiveMQConnectionSupport::ActiveMQConnectionSupport( transport::Transport* tran
             "Required Parameter 'transport' was NULL.");
     }
 
-    this->properties = properties;
-    this->transport = transport;
-
-    // Start the Transport
-    this->transport->start();
+    this->properties.reset( properties );
+    this->transport.reset( transport );
 
     // Check the connection options
     this->setAlwaysSyncSend( Boolean::parseBoolean(
-        properties.getProperty(
+        properties->getProperty(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_ALWAYSSYNCSEND ), "false" ) ) );
 
     this->setUseAsyncSend( Boolean::parseBoolean(
-        properties.getProperty(
+        properties->getProperty(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_USEASYNCSEND ), "false" ) ) );
 
     this->setProducerWindowSize( decaf::lang::Integer::parseInt(
-        properties.getProperty(
+        properties->getProperty(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_PRODUCERWINDOWSIZE ), "0" ) ) );
 
     this->setSendTimeout( decaf::lang::Integer::parseInt(
-        properties.getProperty(
+        properties->getProperty(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_SENDTIMEOUT ), "0" ) ) );
 
     this->setCloseTimeout( decaf::lang::Integer::parseInt(
-        properties.getProperty(
+        properties->getProperty(
             core::ActiveMQConstants::toString(
                 core::ActiveMQConstants::CONNECTION_CLOSETIMEOUT ), "15000" ) ) );
 
-    this->setClientId( properties.getProperty(
+    this->setClientId( properties->getProperty(
         core::ActiveMQConstants::toString(
             core::ActiveMQConstants::PARAM_CLIENTID ), "" ) );
 
-    this->setUsername( properties.getProperty(
+    this->setUsername( properties->getProperty(
         core::ActiveMQConstants::toString(
             core::ActiveMQConstants::PARAM_USERNAME ), "" ) );
 
-    this->setPassword( properties.getProperty(
+    this->setPassword( properties->getProperty(
         core::ActiveMQConstants::toString(
             core::ActiveMQConstants::PARAM_PASSWORD ), "" ) );
 }
@@ -91,21 +88,38 @@ ActiveMQConnectionSupport::ActiveMQConnectionSupport( transport::Transport* tran
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConnectionSupport::~ActiveMQConnectionSupport() {
     try{
-        this->close();
+        this->shutdownTransport();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnectionSupport::close() throw( decaf::lang::Exception ) {
+void ActiveMQConnectionSupport::startupTransport() throw( decaf::lang::Exception ) {
+    try {
+
+        if( this->transport.get()  == NULL ) {
+            throw decaf::lang::exceptions::IllegalArgumentException(
+                __FILE__, __LINE__,
+                "ActiveMQConnectionSupport::startupTransport - "
+                "Required Object 'transport' was NULL.");
+        }
+
+        this->transport->start();
+    }
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnectionSupport::shutdownTransport() throw( decaf::lang::Exception ) {
 
     bool hasException = false;
     exceptions::ActiveMQException e;
 
     try {
 
-        if( transport != NULL ){
+        if( transport.get() != NULL ){
 
             try{
                 transport->close();
@@ -118,7 +132,7 @@ void ActiveMQConnectionSupport::close() throw( decaf::lang::Exception ) {
             }
 
             try{
-                delete transport;
+                transport.reset( NULL );
             }catch( exceptions::ActiveMQException& ex ){
                 if( !hasException ){
                     hasException = true;
@@ -126,8 +140,6 @@ void ActiveMQConnectionSupport::close() throw( decaf::lang::Exception ) {
                     e = ex;
                 }
             }
-
-            transport = NULL;
         }
 
         // If we encountered an exception - throw the first one we encountered.
@@ -136,6 +148,6 @@ void ActiveMQConnectionSupport::close() throw( decaf::lang::Exception ) {
             throw e;
         }
     }
-    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCH_RETHROW( decaf::lang::Exception )
+    AMQ_CATCHALL_THROW( decaf::lang::Exception )
 }

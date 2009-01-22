@@ -15,62 +15,59 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHDATA_H_
-#define ACTIVEMQ_CORE_DISPATCHDATA_H_
+#ifndef _ACTIVEMQ_CORE_DISPATCHDATA_H_
+#define _ACTIVEMQ_CORE_DISPATCHDATA_H_
 
 #include <stdlib.h>
+#include <memory>
 #include <activemq/util/Config.h>
+#include <activemq/commands/ConsumerId.h>
 
 namespace activemq {
-    
-    namespace connector {
-        class ConsumerInfo;
-    }
-    
 namespace core {
 
     class ActiveMQMessage;
-    
+
     /**
      * Contains information about dispatching to a particular consumer.
      */
     class AMQCPP_API DispatchData {
     private:
-    
-        connector::ConsumerInfo* consumer;
+
+        commands::ConsumerId* consumerId;
         ActiveMQMessage* message;
-        
+
     public:
-    
+
         DispatchData(){
-            consumer = NULL;
+            consumerId = NULL;
             message = NULL;
         }
-        
-        DispatchData( connector::ConsumerInfo* consumer, ActiveMQMessage* message ) {
-            this->consumer = consumer;
+
+        DispatchData( commands::ConsumerId* consumer, ActiveMQMessage* message ) {
+            this->consumerId = consumer;
             this->message = message;
         }
-        
+
         DispatchData( const DispatchData& d ) {
             (*this) = d;
         }
-        
+
         DispatchData& operator =( const DispatchData& d ) {
-            this->consumer = d.consumer;
+            this->consumerId = d.consumerId;
             this->message = d.message;
             return *this;
         }
-        
-        connector::ConsumerInfo* getConsumer() {
-            return consumer;
+
+        commands::ConsumerId* getConsumerId() {
+            return consumerId;
         }
-        
+
         ActiveMQMessage* getMessage() {
             return message;
         }
-          
-    };    
+
+    };
 }}
 
-#endif /*ACTIVEMQ_CORE_DISPATCHDATA_H_*/
+#endif /*_ACTIVEMQ_CORE_DISPATCHDATA_H_*/

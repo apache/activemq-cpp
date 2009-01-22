@@ -20,28 +20,22 @@
 #include <decaf/lang/Thread.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportRegistry.h>
-#include <activemq/connector/ConsumerInfo.h>
-#include <activemq/connector/stomp/StompConnector.h>
-#include <activemq/connector/stomp/StompConsumerInfo.h>
-#include <activemq/connector/stomp/StompProducerInfo.h>
-#include <activemq/connector/stomp/StompTransactionInfo.h>
-#include <activemq/connector/stomp/StompSessionInfo.h>
-#include <activemq/connector/stomp/StompTopic.h>
-#include <activemq/connector/stomp/commands/TextMessageCommand.h>
 #include <decaf/net/Socket.h>
 #include <decaf/net/ServerSocket.h>
+#include <activemq/commands/ActiveMQTextMessage.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/MessageDispatch.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
-#include <activemq/core/ActiveMQConnectionData.h>
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQConsumer.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/Date.h>
-#include <activemq/connector/ConsumerMessageListener.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::testAutoAcking() {
@@ -55,17 +49,17 @@ void ActiveMQSessionTest::testAutoAcking() {
     cms::Session* session = connection->createSession();
 
     // Create a Topic
-    cms::Topic* topic1 = session->createTopic( "TestTopic1");
-    cms::Topic* topic2 = session->createTopic( "TestTopic2");
+    cms::Topic* topic1 = session->createTopic( "TestTopic1" );
+    cms::Topic* topic2 = session->createTopic( "TestTopic2" );
 
     CPPUNIT_ASSERT( topic1 != NULL );
     CPPUNIT_ASSERT( topic2 != NULL );
 
     // Create a consumer
-    cms::MessageConsumer* consumer1 =
-        session->createConsumer( topic1 );
-    cms::MessageConsumer* consumer2 =
-        session->createConsumer( topic2 );
+    ActiveMQConsumer* consumer1 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1 ) );
+    ActiveMQConsumer* consumer2 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic2 ) );
 
     CPPUNIT_ASSERT( consumer1 != NULL );
     CPPUNIT_ASSERT( consumer2 != NULL );
@@ -81,7 +75,8 @@ void ActiveMQSessionTest::testAutoAcking() {
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1 );
+    injectTextMessage( "This is a Test 1" , *topic1,
+                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener1.mutex )
     {
@@ -93,7 +88,8 @@ void ActiveMQSessionTest::testAutoAcking() {
 
     CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
 
-    injectTextMessage( "This is a Test 2" , *topic2 );
+    injectTextMessage( "This is a Test 2" , *topic2,
+                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener2.mutex )
     {
@@ -150,10 +146,10 @@ void ActiveMQSessionTest::testClientAck()
     CPPUNIT_ASSERT( topic2 != NULL );
 
     // Create a consumer
-    cms::MessageConsumer* consumer1 =
-        session->createConsumer( topic1 );
-    cms::MessageConsumer* consumer2 =
-        session->createConsumer( topic2 );
+    ActiveMQConsumer* consumer1 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1 ) );
+    ActiveMQConsumer* consumer2 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic2 ) );
 
     CPPUNIT_ASSERT( consumer1 != NULL );
     CPPUNIT_ASSERT( consumer2 != NULL );
@@ -169,7 +165,8 @@ void ActiveMQSessionTest::testClientAck()
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1 );
+    injectTextMessage( "This is a Test 1" , *topic1,
+                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener1.mutex )
     {
@@ -183,7 +180,8 @@ void ActiveMQSessionTest::testClientAck()
 
     msgListener1.messages[0]->acknowledge();
 
-    injectTextMessage( "This is a Test 2" , *topic2 );
+    injectTextMessage( "This is a Test 2" , *topic2,
+                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener2.mutex )
     {
@@ -242,10 +240,10 @@ void ActiveMQSessionTest::testTransactional()
     CPPUNIT_ASSERT( topic2 != NULL );
 
     // Create a consumer
-    cms::MessageConsumer* consumer1 =
-        session->createConsumer( topic1 );
-    cms::MessageConsumer* consumer2 =
-        session->createConsumer( topic2 );
+    ActiveMQConsumer* consumer1 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1 ) );
+    ActiveMQConsumer* consumer2 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic2 ) );
 
     CPPUNIT_ASSERT( consumer1 != NULL );
     CPPUNIT_ASSERT( consumer2 != NULL );
@@ -261,7 +259,8 @@ void ActiveMQSessionTest::testTransactional()
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1 );
+    injectTextMessage( "This is a Test 1" , *topic1,
+                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener1.mutex )
     {
@@ -275,7 +274,8 @@ void ActiveMQSessionTest::testTransactional()
 
     session->commit();
 
-    injectTextMessage( "This is a Test 2" , *topic2 );
+    injectTextMessage( "This is a Test 2" , *topic2,
+                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
 
     synchronized( &msgListener2.mutex )
     {
@@ -316,7 +316,8 @@ void ActiveMQSessionTest::testTransactional()
 
         stream << "This is test message #" << i << std::ends;
 
-        injectTextMessage( stream.str() , *topic1 );
+        injectTextMessage( stream.str() , *topic1,
+                           *( consumer1->getConsumerInfo()->getConsumerId() ) );
     }
 
     for( unsigned int i = 0; i < msgCount; ++i )
@@ -325,7 +326,8 @@ void ActiveMQSessionTest::testTransactional()
 
         stream << "This is test message #" << i << std::ends;
 
-        injectTextMessage( stream.str() , *topic2 );
+        injectTextMessage( stream.str() , *topic2,
+                           *( consumer2->getConsumerInfo()->getConsumerId() ) );
     }
 
     synchronized( &msgListener1.mutex )
@@ -425,10 +427,10 @@ void ActiveMQSessionTest::testExpiration()
     CPPUNIT_ASSERT( topic2 != NULL );
 
     // Create a consumer
-    cms::MessageConsumer* consumer1 =
-        session->createConsumer( topic1 );
-    cms::MessageConsumer* consumer2 =
-        session->createConsumer( topic2 );
+    ActiveMQConsumer* consumer1 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic1 ) );
+    ActiveMQConsumer* consumer2 =
+        dynamic_cast<ActiveMQConsumer*>( session->createConsumer( topic2 ) );
 
     CPPUNIT_ASSERT( consumer1 != NULL );
     CPPUNIT_ASSERT( consumer2 != NULL );
@@ -438,6 +440,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 1" ,
                        *topic1,
+                       *( consumer1->getConsumerInfo()->getConsumerId() ),
                        decaf::util::Date::getCurrentTimeMilliseconds(),
                        50 );
 
@@ -453,6 +456,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 2" ,
                        *topic2,
+                       *( consumer2->getConsumerInfo()->getConsumerId() ),
                        decaf::util::Date::getCurrentTimeMilliseconds() - 100,
                        1 );
 
@@ -490,7 +494,7 @@ void ActiveMQSessionTest::setUp()
 {
     try
     {
-        ActiveMQConnectionFactory factory("mock://127.0.0.1:12345?wireFormat=stomp");
+        ActiveMQConnectionFactory factory("mock://127.0.0.1:12345?wireFormat=openwire");
 
         connection = dynamic_cast< ActiveMQConnection*>(
             factory.createConnection() );
@@ -511,32 +515,33 @@ void ActiveMQSessionTest::setUp()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionTest::tearDown()
-{
+void ActiveMQSessionTest::tearDown() {
     delete connection;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::injectTextMessage( const std::string message,
                                              const cms::Destination& destination,
+                                             const commands::ConsumerId& id,
                                              const long long timeStamp,
                                              const long long timeToLive )
 {
-    wireformat::stomp::StompFrame* frame =
-        new wireformat::stomp::StompFrame();
-    frame->setCommand( "MESSAGE" );
-    frame->getProperties().setProperty(
-        "destination", destination.toProviderString() );
-    const char* buffer = message.c_str();
-    frame->setBody( (unsigned char*)buffer, 12 );
+    ActiveMQTextMessage* msg = new ActiveMQTextMessage();
 
-    connector::stomp::commands::TextMessageCommand* msg =
-        new connector::stomp::commands::TextMessageCommand( frame );
+    ProducerId* producerId = new ProducerId();
+    producerId->setConnectionId( id.getConnectionId() );
+    producerId->setSessionId( id.getSessionId() );
+    producerId->setValue( 1 );
+
+    MessageId* messageId = new MessageId();
+    messageId->setProducerId( producerId );
+    messageId->setProducerSequenceId( 2 );
 
     // Init Message
     msg->setText( message.c_str() );
     msg->setCMSDestination( &destination );
     msg->setCMSMessageID( "Id: 123456" );
+    msg->setMessageId( messageId );
 
     long long expiration = 0LL;
 
@@ -553,5 +558,9 @@ void ActiveMQSessionTest::injectTextMessage( const std::string message,
     // Send the Message
     CPPUNIT_ASSERT( dTransport != NULL );
 
-    dTransport->fireCommand( msg );
+    MessageDispatch* dispatch = new MessageDispatch();
+    dispatch->setMessage( msg );
+    dispatch->setConsumerId( id.cloneDataStructure() );
+
+    dTransport->fireCommand( dispatch );
 }

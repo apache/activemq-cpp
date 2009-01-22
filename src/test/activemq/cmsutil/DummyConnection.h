@@ -28,11 +28,11 @@ namespace cmsutil {
 
     class DummyConnection : public cms::Connection {
     private:
-        
+
         cms::ExceptionListener* listener;
         std::string clientId;
         MessageContext* messageContext;
-        
+
     public:
 
         DummyConnection(MessageContext* messageContext ) {
@@ -40,22 +40,26 @@ namespace cmsutil {
         }
         virtual ~DummyConnection() {}
 
-        virtual void close() throw( cms::CMSException ) {            
+        virtual const cms::ConnectionMetaData* getMetaData() const throw( cms::CMSException ) {
+            return NULL;
         }
-        
-        virtual void start() throw( cms::CMSException ) {            
+
+        virtual void close() throw( cms::CMSException ) {
         }
-        
-        virtual void stop() throw( cms::CMSException ) {            
+
+        virtual void start() throw( cms::CMSException ) {
+        }
+
+        virtual void stop() throw( cms::CMSException ) {
         }
 
         virtual cms::Session* createSession() throw ( cms::CMSException ) {
             return new DummySession(messageContext);
         }
-                
-        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode ) 
+
+        virtual cms::Session* createSession( cms::Session::AcknowledgeMode ackMode )
             throw ( cms::CMSException ) {
-            
+
             DummySession* s = new DummySession(messageContext);
             s->setAcknowledgeMode(ackMode);
             return s;
@@ -64,7 +68,7 @@ namespace cmsutil {
         virtual std::string getClientID() const {
             return clientId;
         }
-        
+
         virtual void setClientID( const std::string& id ) {
             this->clientId = id;
         }
@@ -77,7 +81,7 @@ namespace cmsutil {
             this->listener = listener;
         }
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_CMSUTIL_DUMMYCONNECTION_H_*/

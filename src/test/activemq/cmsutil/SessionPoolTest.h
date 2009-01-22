@@ -21,7 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-
 namespace activemq{
 namespace cmsutil{
 
@@ -32,12 +31,12 @@ namespace cmsutil{
         CPPUNIT_TEST( testReturnSession );
         CPPUNIT_TEST( testCloseSession );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
 
         SessionPoolTest() {}
         virtual ~SessionPoolTest() {}
-                
+
         void testTakeSession();
         void testReturnSession();
         void testCloseSession();

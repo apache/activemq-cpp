@@ -21,7 +21,6 @@
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/exceptions/ExceptionDefines.h>
-#include <activemq/connector/ConnectorFactoryMap.h>
 #include <activemq/transport/TransportRegistry.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
@@ -31,7 +30,6 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace decaf;
@@ -102,8 +100,6 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     // Declared here so that they can be deleted in the catch block
     auto_ptr<Properties> properties( new Properties() );
     auto_ptr<Transport> transport;
-    auto_ptr<Connector> connector;
-    auto_ptr<ActiveMQConnectionData> connectionData;
     auto_ptr<ActiveMQConnection> connection;
     std::string clientIdLocal = clientId;
 
@@ -142,40 +138,9 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
                 "failed creating new Transport" );
         }
 
-        // What wire format are we using, defaults to Stomp
-        std::string wireFormat =
-            properties->getProperty( "wireFormat", "openwire" );
-
-        // Now try and find a factory to create the Connector
-        ConnectorFactory* connectorfactory =
-            ConnectorFactoryMap::getInstance()->lookup( wireFormat );
-
-        if( connectorfactory == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "Connector for Wire Format not registered in Map" );
-        }
-
-        // Create the Connector.
-        connector.reset( connectorfactory->createConnector( *properties, transport.get() ) );
-
-        if( connector.get() == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "Failed to Create the Connector" );
-        }
-
-        // Start the Connector
-        connector->start();
-
-        // Create Holder and store the data for the Connection
-        connectionData.reset( new ActiveMQConnectionData(
-            connector.release(), transport.release(), properties.release() ) );
-
         // Create and Return the new connection object.
-        connection.reset( new ActiveMQConnection( connectionData.release() ) );
+        connection.reset(
+            new ActiveMQConnection( transport.release(), properties.release() ) );
 
         return connection.release();
     }

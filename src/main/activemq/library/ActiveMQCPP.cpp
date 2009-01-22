@@ -21,13 +21,11 @@
 #include <activemq/wireformat/WireFormatRegistry.h>
 #include <activemq/transport/TransportRegistry.h>
 
-#include <activemq/wireformat/stomp/StompWireFormatFactory.h>
+//#include <activemq/wireformat/stomp/StompWireFormatFactory.h>
 #include <activemq/wireformat/openwire/OpenWireFormatFactory.h>
 
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/tcp/TcpTransportFactory.h>
-#include <activemq/connector/stomp/StompConnectorFactory.h>
-#include <activemq/connector/openwire/OpenWireConnectorFactory.h>
 
 using namespace activemq;
 using namespace activemq::library;
@@ -41,9 +39,6 @@ void ActiveMQCPP::initializeLibrary() {
 
     // Initialize the Decaf Library by requesting its runtime.
     decaf::lang::Runtime::getRuntime();
-
-    connector::stomp::StompConnectorFactory::getInstance();
-    connector::openwire::OpenWireConnectorFactory::getInstance();
 
     // Register all WireFormats
     ActiveMQCPP::registerWireFormats();
@@ -65,8 +60,8 @@ void ActiveMQCPP::registerWireFormats() {
 
     WireFormatRegistry::getInstance().registerFactory(
         "openwire", new wireformat::openwire::OpenWireFormatFactory() );
-    WireFormatRegistry::getInstance().registerFactory(
-        "stomp", new wireformat::stomp::StompWireFormatFactory() );
+//    WireFormatRegistry::getInstance().registerFactory(
+//        "stomp", new wireformat::stomp::StompWireFormatFactory() );
 
 }
 

@@ -14,36 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_
-#define _ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_
 
-#include <cms/CMSException.h>
+#ifndef _ACTIVEMQ_CORE_SYNCHRONIZATION_H_
+#define _ACTIVEMQ_CORE_SYNCHRONIZATION_H_
+
 #include <activemq/util/Config.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
-namespace activemq{
-namespace core{
-
-    class ActiveMQMessage;
+namespace activemq {
+namespace core {
 
     /**
-     * Interface class that is used to give CMS Messages an interface to
-     * Ack themselves with.
+     * Transacted Object Synchronization, used to sync the events of a Transaction
+     * with the items in the Transaction.
      */
-    class AMQCPP_API ActiveMQAckHandler {
+    class Synchronization {
     public:
 
-        virtual ~ActiveMQAckHandler() {};
+        virtual ~Synchronization() {}
 
-        /**
-         * Method called to acknowledge the message passed
-         * @param message Message to Acknowledge
-         * @throw CMSException
-         */
-        virtual void acknowledgeMessage( const ActiveMQMessage* message )
-            throw ( cms::CMSException ) = 0;
+        virtual void beforeCommit() throw( exceptions::ActiveMQException ) = 0;
+
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) = 0;
+
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) = 0;
 
     };
 
 }}
 
-#endif /*_ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_*/
+#endif /* _ACTIVEMQ_CORE_SYNCHRONIZATION_H_ */

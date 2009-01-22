@@ -32,6 +32,33 @@ namespace core{
     class AMQCPP_API ActiveMQConstants{
     public:
 
+        // Flags to indicate Transaction States.
+        enum TransactionState {
+            TRANSACTION_STATE_BEGIN = 0,
+            TRANSACTION_STATE_PREPARE = 1,
+            TRANSACTION_STATE_COMMITONEPHASE = 2,
+            TRANSACTION_STATE_COMMITTWOPHASE = 3,
+            TRANSACTION_STATE_ROLLBACK = 4,
+            TRANSACTION_STATE_RECOVER = 5,
+            TRANSACTION_STATE_FORGET = 6,
+            TRANSACTION_STATE_END = 7
+        };
+
+        // Flags to be applied when sending the Destination Info Command.
+        enum DestinationActions {
+            DESTINATION_ADD_OPERATION = 0,
+            DESTINATION_REMOVE_OPERATION = 1
+        };
+
+        // Represents the Acknowledgement types that are supported for the
+        // Message Ack Command.
+        enum AckType {
+            ACK_TYPE_DELIVERED = 0,  // Message delivered but not consumed
+            ACK_TYPE_POISON    = 1,  // Message could not be processed due to
+                                     // poison pill but discard anyway
+            ACK_TYPE_CONSUMED  = 2   // Message consumed, discard
+        };
+
         /**
          * These values represent the options that can be appended to an
          * Destination name, i.e. /topic/foo?consumer.exclusive=true

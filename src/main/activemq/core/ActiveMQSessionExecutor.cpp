@@ -19,7 +19,7 @@
 #include "ActiveMQSession.h"
 #include "ActiveMQMessage.h"
 #include "ActiveMQConsumer.h"
-#include <activemq/connector/ConsumerInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -94,7 +94,7 @@ vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages(
 {
     vector<ActiveMQMessage*> retVal;
 
-    const connector::ConsumerInfo* consumerInfo = consumer->getConsumerInfo();
+    const commands::ConsumerInfo* consumerInfo = consumer->getConsumerInfo();
 
     synchronized( &mutex ) {
 
@@ -102,9 +102,7 @@ vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages(
         while( iter != messageQueue.end() ) {
             list<DispatchData>::iterator currentIter = iter;
             DispatchData& dispatchData = *iter++;
-            if( consumerInfo == dispatchData.getConsumer() ||
-                consumerInfo->getConsumerId() == dispatchData.getConsumer()->getConsumerId() )
-            {
+            if( consumerInfo->getConsumerId() == dispatchData.getConsumerId() ) {
                 retVal.push_back( dispatchData.getMessage() );
                 messageQueue.erase(currentIter);
             }
@@ -174,7 +172,7 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
         Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
 
         synchronized( &consumers ) {
-            consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
+            consumer = consumers.getValue( data.getConsumerId()->getValue() );
         }
 
         // If the consumer is not available, just delete the message.

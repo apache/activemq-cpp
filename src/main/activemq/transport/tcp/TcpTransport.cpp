@@ -37,22 +37,16 @@ using namespace decaf::lang;
 TcpTransport::TcpTransport( const decaf::net::URI& uri,
                             const decaf::util::Properties& properties,
                             Transport* next, const bool own )
-:   TransportFilter( next, own ),
-    socket( NULL ),
-    dataInputStream( NULL ),
-    dataOutputStream( NULL )
-{
+:   TransportFilter( next, own ) {
+
     this->initialize( uri, properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const decaf::util::Properties& properties,
                             Transport* next, const bool own )
-:   TransportFilter( next, own ),
-    socket( NULL ),
-    dataInputStream( NULL ),
-    dataOutputStream( NULL )
-{
+:   TransportFilter( next, own ) {
+
     if( !properties.hasProperty( "transport.uri" ) ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
@@ -67,21 +61,7 @@ TcpTransport::TcpTransport( const decaf::util::Properties& properties,
 TcpTransport::~TcpTransport() {
 
     try {
-
-        try{
-            close();
-        }
-        AMQ_CATCH_NOTHROW( ActiveMQException )
-        AMQ_CATCH_NOTHROW( Exception )
-        AMQ_CATCHALL_NOTHROW()
-
-        if( socket != NULL ) {
-            delete socket;
-            socket = NULL;
-        }
-
-        delete this->dataInputStream;
-        delete this->dataOutputStream;
+        close();
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCH_NOTHROW( Exception )
@@ -94,7 +74,7 @@ void TcpTransport::close() throw( cms::CMSException ) {
     try {
 
         // Close the socket.
-        if( socket != NULL ) {
+        if( socket.get() != NULL ) {
             socket->close();
         }
 
@@ -115,7 +95,7 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
         // Create the IO device we will be communicating over the
         // wire with.  This may need to change if we add more types
         // of sockets, such as SSL.
-        socket = SocketFactory::createSocket( uri.getAuthority(), properties );
+        socket.reset( SocketFactory::createSocket( uri.getAuthority(), properties ) );
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
@@ -151,12 +131,12 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
         // Now wrap the Buffered Streams with DataInput based streams.  We own
         // the Source streams, all the streams in the chain that we own are
         // destroyed when these are.
-        this->dataInputStream = new DataInputStream( inputStream, true );
-        this->dataOutputStream = new DataOutputStream( outputStream, true );
+        this->dataInputStream.reset( new DataInputStream( inputStream, true ) );
+        this->dataOutputStream.reset( new DataOutputStream( outputStream, true ) );
 
         // Give the IOTransport the streams.
-        ioTransport->setInputStream( dataInputStream );
-        ioTransport->setOutputStream( dataOutputStream );
+        ioTransport->setInputStream( dataInputStream.get() );
+        ioTransport->setOutputStream( dataOutputStream.get() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

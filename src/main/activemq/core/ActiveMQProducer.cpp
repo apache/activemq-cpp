@@ -17,6 +17,7 @@
 #include "ActiveMQProducer.h"
 
 #include <activemq/core/ActiveMQSession.h>
+#include <activemq/core/ActiveMQConnection.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -25,14 +26,14 @@
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
+ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
+                                    const cms::Destination* destination,
                                     ActiveMQSession* session ) {
 
     if( session == NULL || producerInfo == NULL ) {
@@ -43,24 +44,26 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
 
     // Init Producer Data
     this->session = session;
-    this->producerInfo = producerInfo;
+    this->producerInfo.reset( producerInfo );
+    this->destination.reset( destination != NULL ? destination->clone() : NULL );
     this->closed = false;
 
     // Default the Delivery options
     this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
     this->disableTimestamps = false;
+    this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
 
+    // TODO - How to manage resources
     // Listen for our resource to close
-    this->producerInfo->addListener( this );
+    //this->producerInfo->addListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQProducer::~ActiveMQProducer() {
     try {
         close();
-        delete producerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
@@ -73,13 +76,7 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
         if( !closed ) {
 
-            // Close the ProducerInfo
-            if( !producerInfo->isClosed() ) {
-                // We don't want a callback now
-                this->producerInfo->removeListener( this );
-                this->producerInfo->close();
-            }
-
+            this->session->getConnection()->disposeOf( this->producerInfo->getProducerId() );
             closed = true;
         }
     }
@@ -94,13 +91,16 @@ void ActiveMQProducer::send( cms::Message* message )
 
     try {
 
-        if( closed ) {
+        this->checkClosed();
+
+        if( this->destination.get() == NULL ) {
             throw ActiveMQException(
                 __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
+                "ActiveMQProducer::send - "
+                "Producer has no Destination, must call send( dest, msg )" );
         }
 
-        send( producerInfo->getDestination(), message );
+        this->send( this->destination.get(), message );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -113,14 +113,17 @@ void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
                                 throw ( cms::CMSException ) {
     try {
 
-        if( closed ) {
+        this->checkClosed();
+
+        if( this->destination.get() == NULL ) {
             throw ActiveMQException(
                 __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
+                "ActiveMQProducer::send - "
+                "Producer has no Destination, must call send( dest, msg )" );
         }
 
-        send( producerInfo->getDestination(), message, deliveryMode,
-              priority, timeToLive );
+        this->send( this->destination.get(), message, deliveryMode,
+                    priority, timeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -133,14 +136,10 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
     try {
 
-        if( closed ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
-        }
+        this->checkClosed();
 
-        send( destination, message, defaultDeliveryMode,
-              defaultPriority, defaultTimeToLive );
+        this->send( destination, message, defaultDeliveryMode,
+                    defaultPriority, defaultTimeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -155,11 +154,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
     try {
 
-        if( closed ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
-        }
+        checkClosed();
 
         if( destination == NULL ) {
 
@@ -185,7 +180,47 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
         message->setCMSExpiration( expiration );
 
-        session->send( message, this );
+        // Delegate send to the session so that it can choose how to
+        // send the message.
+        this->session->send( message, this, this->memoryUsage.get() );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+// TODO
+////////////////////////////////////////////////////////////////////////////////
+//void ActiveMQProducer::onConnectorResourceClosed(
+//    const ConnectorResource* resource ) throw ( cms::CMSException ) {
+//
+//    try{
+//
+//        checkClosed();
+//
+//        if( resource != producerInfo ) {
+//            throw ActiveMQException(
+//                __FILE__, __LINE__,
+//                "ActiveMQProducer::onConnectorResourceClosed - "
+//                "Unknown object passed to this callback");
+//        }
+//
+//        // If our producer isn't closed already, then lets close
+//        this->close();
+//    }
+//    AMQ_CATCH_RETHROW( ActiveMQException )
+//    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+//    AMQ_CATCHALL_THROW( ActiveMQException )
+//}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
+
+    try{
+
+        if( this->memoryUsage.get() != NULL ) {
+            this->memoryUsage->decreaseUsage( ack.getSize() );
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -193,29 +228,10 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::onConnectorResourceClosed(
-    const ConnectorResource* resource ) throw ( cms::CMSException ) {
-
-    try{
-
-        if( closed ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::onConnectorResourceClosed - "
-                "Producer Already Closed");
-        }
-
-        if( resource != producerInfo ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::onConnectorResourceClosed - "
-                "Unknown object passed to this callback");
-        }
-
-        // If our producer isn't closed already, then lets close
-        this->close();
+void ActiveMQProducer::checkClosed() throw( exceptions::ActiveMQException ) {
+    if( closed ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "ActiveMQProducer - Producer Already Closed" );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -97,40 +97,12 @@ namespace transport{
          * Notify the exception listener
          * @param ex the exception to send
          */
-        void fire( decaf::lang::Exception& ex ){
-
-            if( exceptionListener != NULL ){
-
-                try{
-                    exceptionListener->onTransportException( this, ex );
-                }catch( ... ){}
-            }
-        }
-
+        void fire( decaf::lang::Exception& ex );
         /**
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire( Command* command ){
-
-            try{
-                // Since the listener is responsible for freeing the memory,
-                // if there is no listener - free the command here.  Also if
-                // we have been closed then we don't deliver any messages that
-                // might have snuck in while we where closing.
-                if( listener == NULL || closed == true ){
-                    delete command;
-                    return;
-                }
-
-                listener->onCommand( command );
-
-            }catch( ... ){
-                try{
-                    delete command;
-                } catch( ... ) {}
-            }
-        }
+        void fire( Command* command );
 
     public:
 

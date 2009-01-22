@@ -31,6 +31,7 @@
 #include <activemq/commands/ProducerInfo.h>
 #include <activemq/commands/Response.h>
 #include <activemq/commands/RemoveSubscriptionInfo.h>
+#include <activemq/commands/RemoveInfo.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/ShutdownInfo.h>
 #include <activemq/commands/WireFormatInfo.h>
@@ -56,6 +57,7 @@ Response* OpenWireResponseBuilder::buildResponse(
         typeid( *command ) == typeid( commands::DestinationInfo ) ||
         typeid( *command ) == typeid( commands::ProducerInfo ) ||
         typeid( *command ) == typeid( commands::RemoveSubscriptionInfo ) ||
+        typeid( *command ) == typeid( commands::RemoveInfo ) ||
         typeid( *command ) == typeid( commands::SessionInfo ) ) {
 
         // These Commands just require a response that matches their command IDs

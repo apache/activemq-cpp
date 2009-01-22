@@ -19,12 +19,13 @@
 #define _ACTIVEMQ_UTIL_MEMORYUSAGE_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/util/Usage.h>
 #include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq {
 namespace util {
 
-    class AMQCPP_API MemoryUsage {
+    class AMQCPP_API MemoryUsage : public Usage {
     private:
 
         // The physical limit of memory usage this object allows.
@@ -58,7 +59,7 @@ namespace util {
 
         /**
          * Waits for more space to be returned to this Usage Manager, times out
-         * when the given timespan in milliseconds elapses.
+         * when the given time span in milliseconds elapses.
          * @param timeout The time to wait for more space.
          */
         virtual void waitForSpace( unsigned int timeout );

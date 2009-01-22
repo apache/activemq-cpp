@@ -57,10 +57,9 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 
     // Copy config data
     this->properties.copy( &properties );
-    this->preferedWireFormatInfo = NULL;
 
     // Fill in that DataStreamMarshallers collection
-    dataMarshallers.resize( 256 );
+    this->dataMarshallers.resize( 256 );
 
     // Generate an ID
     this->id = UUID::randomUUID().toString();
@@ -73,7 +72,7 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
     this->sizePrefixDisabled = false;
 
     // Set to Default as lowest common denominator, then we will try
-    // and move up to the prefered when the wireformat is negotiated.
+    // and move up to the preferred when the wireformat is negotiated.
     this->setVersion( DEFAULT_VERSION );
 }
 
@@ -81,7 +80,6 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
 OpenWireFormat::~OpenWireFormat() {
     try {
         this->destroyMarshalers();
-        delete preferedWireFormatInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
@@ -153,8 +151,7 @@ void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
 void OpenWireFormat::setPreferedWireFormatInfo(
     commands::WireFormatInfo* info ) throw ( IllegalStateException ) {
 
-    delete preferedWireFormatInfo;
-    this->preferedWireFormatInfo = info;
+    this->preferedWireFormatInfo.reset( info );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -519,7 +516,7 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
     throw ( IllegalStateException ) {
 
-    if( preferedWireFormatInfo == NULL ) {
+    if( preferedWireFormatInfo.get() == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__,
             "OpenWireFormat::renegotiateWireFormat - "

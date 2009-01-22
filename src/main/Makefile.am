@@ -35,17 +35,14 @@ cc_sources = \
     activemq/cmsutil/CmsTemplate.cpp \
     activemq/core/ActiveMQConsumer.cpp \
     activemq/core/ActiveMQConnection.cpp \
+    activemq/core/ActiveMQConnectionSupport.cpp \
     activemq/core/ActiveMQConnectionMetaData.cpp \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQConstants.cpp \
-    activemq/core/ActiveMQTransaction.cpp \
+    activemq/core/ActiveMQTransactionContext.cpp \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
-    activemq/connector/openwire/OpenWireConnector.cpp \
-    activemq/connector/openwire/OpenWireConnectorFactory.cpp \
-    activemq/connector/ConnectorFactoryMap.cpp \
-    activemq/connector/BaseConnectorResource.cpp \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
@@ -67,11 +64,6 @@ cc_sources = \
     activemq/wireformat/openwire/utils/OpenwireStringSupport.cpp \
     activemq/wireformat/openwire/utils/MessagePropertyInterceptor.cpp \
     activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.cpp \
-    activemq/wireformat/stomp/StompWireFormat.cpp \
-    activemq/wireformat/stomp/StompWireFormatFactory.cpp \
-    activemq/wireformat/stomp/StompResponseBuilder.cpp \
-    activemq/wireformat/stomp/marshal/Marshaler.cpp \
-    activemq/wireformat/stomp/commands/CommandConstants.cpp \
     decaf/internal/DecafRuntime.cpp \
     decaf/internal/AprPool.cpp \
     decaf/internal/util/ByteArrayAdapter.cpp \
@@ -143,22 +135,22 @@ cc_sources = \
     decaf/nio/FloatBuffer.cpp \
     decaf/nio/IntBuffer.cpp \
     decaf/nio/LongBuffer.cpp \
-    decaf/nio/ShortBuffer.cpp \
-    activemq/connector/stomp/StompSessionManager.cpp \
-    activemq/connector/stomp/commands/CommandConstants.cpp \
-    activemq/connector/stomp/StompConnectorFactory.cpp \
-    activemq/connector/stomp/StompConnector.cpp \
-    activemq/connector/stomp/StompSelector.cpp \
-    activemq/connector/stomp/StompConnectionNegotiator.cpp
+    decaf/nio/ShortBuffer.cpp
+
+#    activemq/wireformat/stomp/StompWireFormat.cpp \
+#    activemq/wireformat/stomp/StompWireFormatFactory.cpp \
+#    activemq/wireformat/stomp/StompResponseBuilder.cpp \
+#    activemq/wireformat/stomp/marshal/Marshaler.cpp \
+#    activemq/wireformat/stomp/commands/CommandConstants.cpp
 
 h_sources = \
     activemq/library/ActiveMQCPP.h \
     activemq/core/ActiveMQProducer.h \
     activemq/core/ActiveMQMessage.h \
-    activemq/core/ActiveMQConnectionData.h \
     activemq/core/ActiveMQConnection.h \
+    activemq/core/ActiveMQConnectionSupport.h \
     activemq/core/ActiveMQConnectionMetaData.h \
-    activemq/core/ActiveMQTransaction.h \
+    activemq/core/ActiveMQTransactionContext.h \
     activemq/core/ActiveMQConnectionFactory.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQSession.h \
@@ -167,6 +159,7 @@ h_sources = \
     activemq/core/ActiveMQSessionExecutor.h \
     activemq/core/DispatchData.h \
     activemq/core/Dispatcher.h \
+    activemq/core/Synchronization.h \
     activemq/cmsutil/CachedConsumer.h \
     activemq/cmsutil/CachedProducer.h \
     activemq/cmsutil/CmsAccessor.h \
@@ -183,24 +176,8 @@ h_sources = \
     activemq/io/LoggingInputStream.h \
     activemq/io/LoggingOutputStream.h \
     activemq/exceptions/ActiveMQException.h \
+    activemq/exceptions/BrokerException.h \
     activemq/exceptions/ExceptionDefines.h \
-    activemq/connector/ConsumerMessageListener.h \
-    activemq/connector/ConnectorException.h \
-    activemq/connector/TransactionInfo.h \
-    activemq/connector/SessionInfo.h \
-    activemq/connector/ConnectorResource.h \
-    activemq/connector/ConnectorResourceListener.h \
-    activemq/connector/ConnectorFactory.h \
-    activemq/connector/BaseConnectorResource.h \
-    activemq/connector/openwire/OpenWireConsumerInfo.h \
-    activemq/connector/openwire/OpenWireProducerInfo.h \
-    activemq/connector/openwire/OpenWireSessionInfo.h \
-    activemq/connector/openwire/OpenWireTransactionInfo.h \
-    activemq/connector/ConnectorFactoryMap.h \
-    activemq/connector/Connector.h \
-    activemq/connector/ConnectorFactoryMapRegistrar.h \
-    activemq/connector/ProducerInfo.h \
-    activemq/connector/ConsumerInfo.h \
     activemq/transport/Transport.h \
     activemq/transport/TransportFilter.h \
     activemq/transport/TransportFactory.h \
@@ -227,22 +204,14 @@ h_sources = \
     activemq/util/PrimitiveList.h \
     activemq/util/URISupport.h \
     activemq/util/MemoryUsage.h \
+    activemq/util/Usage.h \
     activemq/wireformat/WireFormat.h \
     activemq/wireformat/WireFormatNegotiator.h \
     activemq/wireformat/WireFormatFactory.h \
     activemq/wireformat/WireFormatRegistry.h \
-    activemq/wireformat/stomp/StompWireFormat.h \
-    activemq/wireformat/stomp/StompWireFormatFactory.h \
-    activemq/wireformat/stomp/StompResponseBuilder.h \
-    activemq/wireformat/stomp/StompFrame.h \
-    activemq/wireformat/stomp/marshal/Marshalable.h \
-    activemq/wireformat/stomp/marshal/MarshalException.h \
-    activemq/wireformat/stomp/marshal/Marshaler.h \
-    activemq/wireformat/stomp/commands/CommandConstants.h \
     activemq/wireformat/openwire/OpenWireFormat.h \
     activemq/wireformat/openwire/OpenWireFormatNegotiator.h \
     activemq/wireformat/openwire/OpenWireResponseBuilder.h \
-    activemq/wireformat/openwire/BrokerException.h \
     activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h \
     activemq/wireformat/openwire/utils/HexTable.h \
     activemq/wireformat/openwire/utils/BooleanStream.h \
@@ -430,39 +399,16 @@ h_sources = \
     decaf/nio/BufferOverflowException.h \
     decaf/nio/BufferUnderflowException.h \
     decaf/nio/InvalidMarkException.h \
-    decaf/nio/ReadOnlyBufferException.h \
-    activemq/connector/stomp/StompSessionInfo.h \
-    activemq/connector/stomp/StompTransactionInfo.h \
-    activemq/connector/stomp/StompSessionManager.h \
-    activemq/connector/stomp/StompQueue.h \
-    activemq/connector/stomp/StompConnectorFactory.h \
-    activemq/connector/stomp/commands/DisconnectCommand.h \
-    activemq/connector/stomp/commands/AbortCommand.h \
-    activemq/connector/stomp/commands/ErrorCommand.h \
-    activemq/connector/stomp/commands/CommandConstants.h \
-    activemq/connector/stomp/commands/UnsubscribeCommand.h \
-    activemq/connector/stomp/commands/AbstractCommand.h \
-    activemq/connector/stomp/commands/StompMessage.h \
-    activemq/connector/stomp/commands/AckCommand.h \
-    activemq/connector/stomp/commands/StompCommand.h \
-    activemq/connector/stomp/commands/BytesMessageCommand.h \
-    activemq/connector/stomp/commands/ReceiptCommand.h \
-    activemq/connector/stomp/commands/SubscribeCommand.h \
-    activemq/connector/stomp/commands/BeginCommand.h \
-    activemq/connector/stomp/commands/TextMessageCommand.h \
-    activemq/connector/stomp/commands/ConnectCommand.h \
-    activemq/connector/stomp/commands/ConnectedCommand.h \
-    activemq/connector/stomp/commands/MessageCommand.h \
-    activemq/connector/stomp/commands/CommitCommand.h \
-    activemq/connector/stomp/StompCommandListener.h \
-    activemq/connector/stomp/StompConnectorException.h \
-    activemq/connector/stomp/StompConnectionNegotiator.h \
-    activemq/connector/stomp/StompProducerInfo.h \
-    activemq/connector/stomp/StompSelector.h \
-    activemq/connector/stomp/StompConsumerInfo.h \
-    activemq/connector/stomp/StompConnector.h \
-    activemq/connector/stomp/StompDestination.h \
-    activemq/connector/stomp/StompTopic.h
+    decaf/nio/ReadOnlyBufferException.h
+
+#    activemq/wireformat/stomp/StompWireFormat.h \
+#    activemq/wireformat/stomp/StompWireFormatFactory.h \
+#    activemq/wireformat/stomp/StompResponseBuilder.h \
+#    activemq/wireformat/stomp/StompFrame.h \
+#    activemq/wireformat/stomp/marshal/Marshalable.h \
+#    activemq/wireformat/stomp/marshal/MarshalException.h \
+#    activemq/wireformat/stomp/marshal/Marshaler.h \
+#    activemq/wireformat/stomp/commands/CommandConstants.h
 
 include activemq/commands/srcmakefile.mk
 include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk

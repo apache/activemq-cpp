@@ -25,8 +25,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/connector/Connector.h>
-#include <activemq/connector/BaseConnectorResource.h>
 #include <cms/Closeable.h>
 #include <vector>
 #include <string>
@@ -35,14 +33,14 @@ namespace activemq{
 namespace commands{
 
     class AMQCPP_API ActiveMQTempDestination : public ActiveMQDestination,
-                                               public connector::BaseConnectorResource {
+                                               public cms::Closeable {
     protected:
 
         /**
          * Connector that we call back on close to allow this resource to
          * be cleaned up correctly at this end and at the Broker End.
          */
-        connector::Connector* connector;
+        // TODO - Add something to ask for a way to send a dispose
 
     public:
 
@@ -98,6 +96,13 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const {
             return ActiveMQDestination::equals( value );
         }
+
+        /**
+         * Closes down this Destination resulting in a call to dispose of the
+         * TempDestination resource at the Broker.
+         * throws cms::CMSException
+         */
+        virtual void close() throw( cms::CMSException );
 
     };
 

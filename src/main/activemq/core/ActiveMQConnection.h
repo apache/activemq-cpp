@@ -19,13 +19,17 @@
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTION_H_
 
 #include <cms/Connection.h>
-#include <cms/ExceptionListener.h>
 #include <activemq/util/Config.h>
-#include <activemq/core/ActiveMQConnectionData.h>
+#include <activemq/core/ActiveMQConnectionSupport.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/Dispatcher.h>
-#include <activemq/connector/ConsumerMessageListener.h>
+#include <activemq/commands/ActiveMQTempDestination.h>
+#include <activemq/commands/BrokerInfo.h>
+#include <activemq/commands/ConnectionInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/LocalTransactionId.h>
+#include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/Map.h>
@@ -38,36 +42,24 @@
 #include <memory>
 
 namespace activemq{
-
-    namespace connector {
-        class ConsumerInfo;
-    }
-
 namespace core{
 
     class ActiveMQSession;
-    class ActiveMQConsumer;
+    class ActiveMQProducer;
 
     /**
      * Concrete connection used for all connectors to the
      * ActiveMQ broker.
      */
-    class AMQCPP_API ActiveMQConnection :
-        public cms::Connection,
-        public connector::ConsumerMessageListener,
-        public cms::ExceptionListener
+    class AMQCPP_API ActiveMQConnection : public cms::Connection,
+                                          public ActiveMQConnectionSupport
     {
     private:
 
         /**
-         * the registered exception listener
+         * Sync object.
          */
-        cms::ExceptionListener* exceptionListener;
-
-        /**
-         * All the data that is used to connect this Connection
-         */
-        ActiveMQConnectionData* connectionData;
+        decaf::util::concurrent::Mutex mutex;
 
         /**
          * The instance of ConnectionMetaData to return to clients.
@@ -91,17 +83,47 @@ namespace core{
         decaf::util::Map< long long, Dispatcher* > dispatchers;
 
         /**
+         * Map of message dispatchers indexed by consumer id.
+         */
+        decaf::util::Map< long long, ActiveMQProducer* > activeProducers;
+
+        /**
          * Maintain the set of all active sessions.
          */
         decaf::util::Set<ActiveMQSession*> activeSessions;
+
+        /**
+         * Connection Information for this connection to the Broker
+         */
+        commands::ConnectionInfo connectionInfo;
+
+        /**
+         * the registered exception listener
+         */
+        cms::ExceptionListener* exceptionListener;
+
+        /**
+         * Command sent from the Broker with its BrokerInfo
+         */
+        std::auto_ptr<commands::BrokerInfo> brokerInfo;
+
+        /**
+         * Command sent from the Broker with its WireFormatInfo
+         */
+        std::auto_ptr<commands::WireFormatInfo> brokerWireFormatInfo;
 
     public:
 
         /**
          * Constructor
-         * @param Pointer to an ActiveMQConnectionData object, owned here
+         *
+         * @param transprot
+         *        The Transport requested for this connection to the Broker.
+         * @param properties
+         *        The Properties that were defined for this connection
          */
-        ActiveMQConnection( ActiveMQConnectionData* connectionData );
+        ActiveMQConnection( transport::Transport* transport,
+                            decaf::util::Properties* properties );
 
         virtual ~ActiveMQConnection();
 
@@ -113,17 +135,29 @@ namespace core{
         virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
 
         /**
+         * Adds an active consumer to the Set of known consumers
+         * @param consumer - The consumer to add to the the known set.
+         */
+        virtual void addProducer( ActiveMQProducer* producer ) throw ( cms::CMSException );
+
+        /**
+         * Removes an active consumer to the Set of known consumers
+         * @param consumer - The consumer to remove from the the known set.
+         */
+        virtual void removeProducer( ActiveMQProducer* producer ) throw ( cms::CMSException );
+
+        /**
          * Adds a dispatcher for a consumer.
          * @param consumer - The consumer for which to register a dispatcher.
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          */
-        virtual void addDispatcher( connector::ConsumerInfo* consumer, Dispatcher* dispatcher );
+        virtual void addDispatcher( commands::ConsumerInfo* consumer, Dispatcher* dispatcher );
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
          */
-        virtual void removeDispatcher( const connector::ConsumerInfo* consumer );
+        virtual void removeDispatcher( const commands::ConsumerInfo* consumer );
 
         /**
          * If supported sends a message pull request to the service provider asking
@@ -133,7 +167,7 @@ namespace core{
          * @param consumer - the ConsumerInfo for the requesting Consumer.
          * @param timeout - the time that the client is willing to wait.
          */
-        virtual void sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
+        virtual void sendPullRequest( const commands::ConsumerInfo* consumer, long long timeout )
             throw ( exceptions::ActiveMQException );
 
         /**
@@ -207,29 +241,6 @@ namespace core{
         virtual std::string getClientID() const;
 
         /**
-         * Retrieves the Connection Data object for this object.
-         * @return pointer to a connection data object.
-         */
-        virtual ActiveMQConnectionData* getConnectionData(){
-            return connectionData;
-        }
-
-        /**
-         * Gets the registered Exception Listener for this connection
-         * @return pointer to an exception listener or NULL
-         */
-        virtual cms::ExceptionListener* getExceptionListener() const{
-            return exceptionListener; };
-
-        /**
-         * Sets the registered Exception Listener for this connection
-         * @param listener pointer to and <code>ExceptionListener</code>
-         */
-        virtual void setExceptionListener( cms::ExceptionListener* listener ){
-            exceptionListener = listener;
-        };
-
-        /**
          * Closes this connection as well as any Sessions
          * created from it (and those Sessions' consumers and
          * producers).
@@ -249,44 +260,113 @@ namespace core{
          */
         virtual void stop() throw ( cms::CMSException );
 
-    public:     // ExceptionListener interface methods
+        /**
+         * Gets the registered Exception Listener for this connection
+         * @return pointer to an exception listener or NULL
+         */
+        virtual cms::ExceptionListener* getExceptionListener() const{
+            return exceptionListener; };
 
         /**
-         * Called when an exception occurs.  Once notified of an exception
-         * the caller should no longer use the resource that generated the
-         * exception.
-         * @param Exception Object that occurred.
+         * Sets the registered Exception Listener for this connection
+         * @param listener pointer to and <code>ExceptionListener</code>
          */
-        virtual void onException( const cms::CMSException& ex );
+        virtual void setExceptionListener( cms::ExceptionListener* listener ){
+            exceptionListener = listener;
+        };
 
-    public:     // ConsumerMessageListener interface methods
+    public: // transport::CommandListener
 
         /**
-         * Called to dispatch a message to a particular consumer.
-         * @param consumer the target consumer of the dispatch.
-         * @param message the message to be dispatched.
-         * @param own If true, it is the responsibility of the callee
-         * to destroy the message object.  Otherwise, the callee must NOT
-         * destroy it.
-         *
+         * Event handler for the receipt of a non-response command from the
+         * transport.
+         * @param command the received command object.
          */
-        virtual void onConsumerMessage( connector::ConsumerInfo* consumer,
-                                        core::ActiveMQMessage* message );
+        virtual void onCommand( transport::Command* command );
+
+    public: // TransportExceptionListener
+
+        /**
+         * Event handler for an exception from a command transport.
+         * @param source The source of the exception
+         * @param ex The exception.
+         */
+        virtual void onTransportException( transport::Transport* source,
+                                           const decaf::lang::Exception& ex );
 
     public:
+
+        /**
+         * Gets the ConnectionInfo for this Object, if the Connection is not open
+         * than this method throws an exception
+         */
+        const commands::ConnectionInfo* getConnectionInfo() const
+            throw( exceptions::ActiveMQException );
+
+        /**
+         * Gets the ConnectionId for this Object, if the Connection is not open
+         * than this method throws an exception
+         */
+        const commands::ConnectionId* getConnectionId() const
+            throw( exceptions::ActiveMQException );
+
+        /**
+         * Sends a oneway message.
+         * @param command The message to send.
+         * @throws ConnectorException if not currently connected, or
+         * if the operation fails for any reason.
+         */
+        void oneway( transport::Command* command )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Sends a synchronous request and returns the response from the broker.
+         * Converts any error responses into an exception.
+         * @param command The request command.
+         * @param timeout The time to wait for a response, default is zero or infinite.
+         * @throws ConnectorException thrown if an error response was received
+         * from the broker, or if any other error occurred.
+         */
+        void syncRequest( transport::Command* command, unsigned int timeout = 0 )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Sends a message to the broker to dispose of the given resource
+         * using an async oneway call.
+         * @param objectId The ID of the resource to be released.
+         * @throw ConnectorException if any problems occur from sending
+         * the message.
+         */
+        void disposeOf( commands::DataStructure* objectId )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Sends a message to the broker to dispose of the given resource
+         * using a timed request.
+         * @param objectId The ID of the resource to be released.
+         * @param timeout The time to wait for a response that the object is disposed.
+         * @throw ConnectorException if any problems occur from sending
+         * the message.
+         */
+        void disposeOf( commands::DataStructure* objectId, unsigned int timeout )
+            throw ( activemq::exceptions::ActiveMQException );
 
         /**
          * Notify the exception listener
          * @param ex the exception to fire
          */
-        void fire( exceptions::ActiveMQException& ex ) {
-            if( exceptionListener != NULL ) {
-                try {
-                    exceptionListener->onException( ex );
-                }
-                catch(...){}
-            }
-        }
+        virtual void fire( const exceptions::ActiveMQException& ex );
+
+    private:
+
+        // Sends the connect message to the broker and waits for the response.
+        void connect() throw ( activemq::exceptions::ActiveMQException );
+
+        // Sends a oneway disconnect message to the broker.
+        void disconnect() throw ( activemq::exceptions::ActiveMQException );
+
+        // Check for Connected State and Throw an exception if not.
+        void enforceConnected() const throw ( activemq::exceptions::ActiveMQException );
 
     };
 

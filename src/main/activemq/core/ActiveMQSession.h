@@ -19,20 +19,28 @@
 
 #include <cms/Session.h>
 #include <cms/ExceptionListener.h>
+
 #include <activemq/util/Config.h>
+#include <activemq/util/Usage.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/connector/SessionInfo.h>
-#include <activemq/connector/ConnectorResourceListener.h>
+#include <activemq/commands/ActiveMQTempDestination.h>
+#include <activemq/commands/SessionInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
+
 #include <decaf/util/Map.h>
 #include <decaf/util/Set.h>
 #include <decaf/util/Queue.h>
 #include <decaf/util/Properties.h>
 
+#include <string>
+#include <memory>
+
 namespace activemq{
 namespace core{
 
-    class ActiveMQTransaction;
+    class ActiveMQTransactionContext;
     class ActiveMQConnection;
     class ActiveMQConsumer;
     class ActiveMQMessage;
@@ -40,22 +48,19 @@ namespace core{
     class ActiveMQConsumer;
     class ActiveMQSessionExecutor;
 
-    class AMQCPP_API ActiveMQSession :
-        public cms::Session,
-        public Dispatcher,
-        public connector::ConnectorResourceListener
-    {
+    class AMQCPP_API ActiveMQSession : public cms::Session,
+                                       public Dispatcher {
     private:
 
         /**
          * SessionInfo for this Session
          */
-        connector::SessionInfo* sessionInfo;
+        std::auto_ptr<commands::SessionInfo> sessionInfo;
 
         /**
          * Transaction Management object
          */
-        ActiveMQTransaction* transaction;
+        std::auto_ptr<ActiveMQTransactionContext> transaction;
 
         /**
          * Connection
@@ -68,25 +73,34 @@ namespace core{
         bool closed;
 
         /**
-         * The set of closable session resources;
-         * This can consist of consumers and producers and sometimes
-         * destination.
-         */
-        decaf::util::Set<cms::Closeable*> closableSessionResources;
-
-        /**
          * Map of consumers.
          */
         decaf::util::Map<long long, ActiveMQConsumer*> consumers;
 
         /**
+         * Map of consumers.
+         */
+        decaf::util::Map<long long, ActiveMQProducer*> producers;
+
+        /**
+         * Map of consumers.
+         */
+        decaf::util::Map<long long, commands::ActiveMQTempDestination*> tempDestinations;
+
+        /**
          * Sends incoming messages to the registered consumers.
          */
-        ActiveMQSessionExecutor* executor;
+        std::auto_ptr<ActiveMQSessionExecutor> executor;
+
+        /**
+         * This Sessions Acknowledgment mode.
+         */
+        cms::Session::AcknowledgeMode ackMode;
 
     public:
 
-        ActiveMQSession( connector::SessionInfo* sessionInfo,
+        ActiveMQSession( commands::SessionInfo* sessionInfo,
+                         cms::Session::AcknowledgeMode ackMode,
                          const decaf::util::Properties& properties,
                          ActiveMQConnection* connection );
 
@@ -119,19 +133,19 @@ namespace core{
         bool isStarted() const;
 
         bool isAutoAcknowledge() const {
-            return sessionInfo->getAckMode() == cms::Session::AUTO_ACKNOWLEDGE;
+            return this->ackMode == cms::Session::AUTO_ACKNOWLEDGE;
         }
         bool isDupsOkAcknowledge() const {
-            return sessionInfo->getAckMode() == cms::Session::DUPS_OK_ACKNOWLEDGE;
+            return this->ackMode == cms::Session::DUPS_OK_ACKNOWLEDGE;
         }
         bool isClientAcknowledge() const {
-            return sessionInfo->getAckMode() == cms::Session::CLIENT_ACKNOWLEDGE;
+            return this->ackMode == cms::Session::CLIENT_ACKNOWLEDGE;
         }
 
         /**
          * Fires the given exception to the exception listener of the connection
          */
-        void fire( exceptions::ActiveMQException& ex );
+        void fire( const exceptions::ActiveMQException& ex );
 
     public:  // Methods from ActiveMQMessageDispatcher
 
@@ -271,7 +285,7 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Creates a BytesMessage and sets the paylod to the passed value
+         * Creates a BytesMessage and sets the payload to the passed value
          * @param an array of bytes to set in the message
          * @param the size of the bytes array, or number of bytes to use
          * @throws CMSException
@@ -304,7 +318,7 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Returns the acknowledgement mode of the session.
+         * Returns the acknowledgment mode of the session.
          * @return the Sessions Acknowledge Mode
          */
         virtual cms::Session::AcknowledgeMode getAcknowledgeMode() const;
@@ -334,12 +348,23 @@ namespace core{
    public:   // ActiveMQSession specific Methods
 
         /**
-         * Sends a message from the Producer specified
-         * @param cms::Message pointer
-         * @param Producer Information
+         * Sends a message from the Producer specified using this session's connection
+         * the message will be sent using the best available means depending on the
+         * configuration of the connection.
+         * <p>
+         * Asynchronous sends will be chosen if at all possible.
+         *
+         * @param message
+         *        The message to send to the broker.
+         * @param prducer
+         *        The sending Producer
+         * @param usage
+         *        Pointer to a Usage tracker which if set will be increased by the size
+         *        of the given message.
+         *
          * @throws CMSException
          */
-        virtual void send( cms::Message* message, ActiveMQProducer* producer )
+        void send( cms::Message* message, ActiveMQProducer* producer, util::Usage* usage )
             throw ( cms::CMSException );
 
         /**
@@ -349,15 +374,15 @@ namespace core{
          * exceptions that occur in the context of another thread.
          * @returns cms::ExceptionListener pointer or NULL
          */
-        virtual cms::ExceptionListener* getExceptionListener();
+        cms::ExceptionListener* getExceptionListener();
 
         /**
          * Gets the Session Information object for this session, if the
          * session is closed than this returns null
          * @return SessionInfo Pointer
          */
-        virtual connector::SessionInfo* getSessionInfo() {
-            return this->sessionInfo;
+        commands::SessionInfo* getSessionInfo() {
+            return this->sessionInfo.get();
         }
 
         /**
@@ -368,40 +393,66 @@ namespace core{
         }
 
         /**
-         * If supported sends a message pull request to the service provider asking
-         * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefectch or is only
-         * capable of delivering messages on a pull basis.
-         * @param consumer - the ConsumerInfo for the requesting Consumer.
-         * @param timeout - the time that the client is willing to wait.
+         * Sends a oneway message.
+         * @param command The message to send.
+         * @throws ConnectorException if not currently connected, or
+         * if the operation fails for any reason.
          */
-        virtual void sendPullRequest( const connector::ConsumerInfo* consumer, long long timeout )
-            throw ( exceptions::ActiveMQException );
-
-    protected:   // ConnectorResourceListener
+        void oneway( transport::Command* command )
+            throw ( activemq::exceptions::ActiveMQException );
 
         /**
-         * When a Connector Resouce is closed it will notify any registered
-         * Listeners of its close so that they can take the appropriate
-         * action.
-         * @param resource - The ConnectorResource that was closed.
+         * Sends a synchronous request and returns the response from the broker.
+         * Converts any error responses into an exception.
+         * @param command The request command.
+         * @param timeout The time to wait for a response, default is zero or infinite.
+         * @throws ConnectorException thrown if an error response was received
+         * from the broker, or if any other error occurred.
          */
-        virtual void onConnectorResourceClosed(
-            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
+        void syncRequest( transport::Command* command, unsigned int timeout = 0 )
+            throw ( activemq::exceptions::ActiveMQException );
 
-    protected:
+   private:
 
-        /**
-         * Given a ConnectorResource pointer, this method will add it to the map
-         * of closeable resources that this connection must close on shutdown
-         * and register itself as a ConnectorResourceListener so that it
-         * can be told when the resouce has been closed by someone else
-         * and remove it from its map of closeable resources.
-         * @param resource - ConnectorResouce to monitor, if NULL no action
-         *                   is taken and no exception is thrown.
-         */
-        virtual void checkConnectorResource(
-            connector::ConnectorResource* resource );
+       // Checks for the closed state and throws if so.
+       void checkClosed() throw( exceptions::ActiveMQException );
+
+       // Performs the work of creating and configuring a valid Consumer Info, this
+       // can be used both by the normal createConsumer call and by a createDurableConsumer
+       // call as well.  Caller owns the returned ConsumerInfo object.
+       commands::ConsumerInfo* createConsumerInfo(
+           const cms::Destination* destination )
+               throw ( activemq::exceptions::ActiveMQException );
+
+       // Using options from the Destination URI override any settings that are
+       // defined for this consumer.
+       void applyDestinationOptions( commands::ConsumerInfo* info );
+
+       // Send the Destination Creation Request to the Broker, alerting it
+       // that we've created a new Temporary Destination.
+       // @param tempDestination - The new Temporary Destination
+       void createTemporaryDestination(
+           commands::ActiveMQTempDestination* tempDestination )
+               throw ( activemq::exceptions::ActiveMQException );
+
+       // Send the Destination Destruction Request to the Broker, alerting
+       // it that we've removed an existing Temporary Destination.
+       // @param tempDestination - The Temporary Destination to remove
+       void destroyTemporaryDestination(
+           commands::ActiveMQTempDestination* tempDestination )
+               throw ( activemq::exceptions::ActiveMQException );
+
+       // Creates a new Temporary Destination name using the connection id
+       // and a rolling count.
+       // @returns a unique Temporary Destination name
+       std::string createTemporaryDestinationName()
+           throw ( activemq::exceptions::ActiveMQException );
+
+       // Create a Transaction Id using the local context to create
+       // the LocalTransactionId Command.
+       // @returns a new TransactionId pointer, caller owns.
+       commands::TransactionId* createLocalTransactionId()
+           throw ( activemq::exceptions::ActiveMQException );
 
     };
 

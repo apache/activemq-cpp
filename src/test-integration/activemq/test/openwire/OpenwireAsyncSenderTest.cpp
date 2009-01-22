@@ -17,7 +17,6 @@
 
 #include "OpenwireAsyncSenderTest.h"
 
-#include <activemq/connector/openwire/OpenWireConnector.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 
@@ -27,8 +26,6 @@ using namespace activemq;
 using namespace activemq::test;
 using namespace activemq::test::openwire;
 using namespace activemq::core;
-using namespace activemq::connector;
-using namespace activemq::connector::openwire;
 using namespace activemq::util;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,12 +49,8 @@ void OpenwireAsyncSenderTest::testOpenWireConnector() {
             dynamic_cast<ActiveMQConnection*>( connection.get() );
         CPPUNIT_ASSERT( amqConnection != NULL );
 
-        OpenWireConnector* connector =
-            dynamic_cast<OpenWireConnector*>( amqConnection->getConnectionData()->getConnector() );
-        CPPUNIT_ASSERT( amqConnection != NULL );
-
-        CPPUNIT_ASSERT( connector->isUseAsyncSend() );
-        CPPUNIT_ASSERT( !connector->isAlwaysSyncSend() );
+        CPPUNIT_ASSERT( amqConnection->isUseAsyncSend() );
+        CPPUNIT_ASSERT( !amqConnection->isAlwaysSyncSend() );
 
         connection->start();
         connection->stop();

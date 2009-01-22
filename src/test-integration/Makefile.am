@@ -28,15 +28,6 @@ cc_sources = \
   activemq/test/TransactionTest.cpp \
   activemq/test/SlowListenerTest.cpp \
   activemq/test/JmsMessageGroupsTest.cpp \
-  activemq/test/stomp/StompAsyncSenderTest.cpp \
-  activemq/test/stomp/StompCmsTemplateTest.cpp \
-  activemq/test/stomp/StompDurableTest.cpp \
-  activemq/test/stomp/StompExpirationTest.cpp \
-  activemq/test/stomp/StompSimpleRollbackTest.cpp \
-  activemq/test/stomp/StompSimpleTest.cpp \
-  activemq/test/stomp/StompTransactionTest.cpp \
-  activemq/test/stomp/StompSlowListenerTest.cpp \
-  activemq/test/stomp/StompJmsMessageGroupsTest.cpp \
   activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
   activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
   activemq/test/openwire/OpenwireDurableTest.cpp \
@@ -50,6 +41,16 @@ cc_sources = \
   TestRegistry.cpp \
   main.cpp
 
+#  activemq/test/stomp/StompAsyncSenderTest.cpp \
+  activemq/test/stomp/StompCmsTemplateTest.cpp \
+  activemq/test/stomp/StompDurableTest.cpp \
+  activemq/test/stomp/StompExpirationTest.cpp \
+  activemq/test/stomp/StompSimpleRollbackTest.cpp \
+  activemq/test/stomp/StompSimpleTest.cpp \
+  activemq/test/stomp/StompTransactionTest.cpp \
+  activemq/test/stomp/StompSlowListenerTest.cpp \
+  activemq/test/stomp/StompJmsMessageGroupsTest.cpp
+  
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test-integration
 

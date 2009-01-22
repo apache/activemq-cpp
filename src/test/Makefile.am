@@ -16,28 +16,6 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-  activemq/connector/ConnectorFactoryMapRegistrarTest.cpp \
-  activemq/connector/ConnectorFactoryMapTest.cpp \
-  activemq/connector/stomp/commands/AbortCommandTest.cpp \
-  activemq/connector/stomp/commands/AckCommandTest.cpp \
-  activemq/connector/stomp/commands/BeginCommandTest.cpp \
-  activemq/connector/stomp/commands/BytesMessageCommandTest.cpp \
-  activemq/connector/stomp/commands/CommandConstantsTest.cpp \
-  activemq/connector/stomp/commands/CommitCommandTest.cpp \
-  activemq/connector/stomp/commands/ConnectCommandTest.cpp \
-  activemq/connector/stomp/commands/ConnectedCommandTest.cpp \
-  activemq/connector/stomp/commands/DisconnectCommandTest.cpp \
-  activemq/connector/stomp/commands/ErrorCommandTest.cpp \
-  activemq/connector/stomp/commands/MessageCommandTest.cpp \
-  activemq/connector/stomp/commands/ReceiptCommandTest.cpp \
-  activemq/connector/stomp/commands/SubscribeCommandTest.cpp \
-  activemq/connector/stomp/commands/TextMessageCommandTest.cpp \
-  activemq/connector/stomp/commands/UnsubscribeCommandTest.cpp \
-  activemq/connector/stomp/marshal/MarshalerTest.cpp \
-  activemq/connector/stomp/StompConnectorTest.cpp \
-  activemq/connector/stomp/StompFrameTest.cpp \
-  activemq/connector/stomp/StompDestinationTest.cpp \
-  activemq/connector/stomp/StompSessionManagerTest.cpp \
   activemq/commands/ActiveMQBytesMessageTest.cpp \
   activemq/commands/ActiveMQMapMessageTest.cpp \
   activemq/commands/ActiveMQMessageTest.cpp \
@@ -134,28 +112,6 @@ cc_sources = \
   main.cpp
 
 h_sources = \
-  activemq/connector/ConnectorFactoryMapRegistrarTest.h \
-  activemq/connector/ConnectorFactoryMapTest.h \
-  activemq/connector/stomp/commands/AbortCommandTest.h \
-  activemq/connector/stomp/commands/AckCommandTest.h \
-  activemq/connector/stomp/commands/BeginCommandTest.h \
-  activemq/connector/stomp/commands/BytesMessageCommandTest.h \
-  activemq/connector/stomp/commands/CommandConstantsTest.h \
-  activemq/connector/stomp/commands/CommitCommandTest.h \
-  activemq/connector/stomp/commands/ConnectCommandTest.h \
-  activemq/connector/stomp/commands/ConnectedCommandTest.h \
-  activemq/connector/stomp/commands/DisconnectCommandTest.h \
-  activemq/connector/stomp/commands/ErrorCommandTest.h \
-  activemq/connector/stomp/commands/MessageCommandTest.h \
-  activemq/connector/stomp/commands/ReceiptCommandTest.h \
-  activemq/connector/stomp/commands/SubscribeCommandTest.h \
-  activemq/connector/stomp/commands/TextMessageCommandTest.h \
-  activemq/connector/stomp/commands/UnsubscribeCommandTest.h \
-  activemq/connector/stomp/marshal/MarshalerTest.h \
-  activemq/connector/stomp/StompConnectorTest.h \
-  activemq/connector/stomp/StompFrameTest.h \
-  activemq/connector/stomp/StompDestinationTest.h \
-  activemq/connector/stomp/StompSessionManagerTest.h \
   activemq/commands/ActiveMQBytesMessageTest.h \
   activemq/commands/ActiveMQMapMessageTest.h \
   activemq/commands/ActiveMQMessageTest.h \

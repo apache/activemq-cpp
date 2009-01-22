@@ -24,25 +24,24 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/connector/ConsumerInfo.h>
-#include <activemq/connector/ConnectorResourceListener.h>
+#include <activemq/commands/ConsumerInfo.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
 
 #include <decaf/util/Queue.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <memory>
 
 namespace activemq{
 namespace core{
 
     class ActiveMQSession;
-    class ActiveMQTransaction;
+    class ActiveMQTransactionContext;
 
     class AMQCPP_API ActiveMQConsumer :
         public cms::MessageConsumer,
         public ActiveMQAckHandler,
-        public Dispatcher,
-        public connector::ConnectorResourceListener
+        public Dispatcher
     {
     private:
 
@@ -54,12 +53,12 @@ namespace core{
         /**
          * The Transaction Context, null if not in a Transacted Session.
          */
-        ActiveMQTransaction* transaction;
+        ActiveMQTransactionContext* transaction;
 
         /**
          * The Consumer info for this Consumer
          */
-        connector::ConsumerInfo* consumerInfo;
+        std::auto_ptr<commands::ConsumerInfo> consumerInfo;
 
         /**
          * The Message Listener for this Consumer
@@ -72,6 +71,11 @@ namespace core{
         decaf::util::Queue<DispatchData> unconsumedMessages;
 
         /**
+         * Queue of consumed messages.
+         */
+        decaf::util::Queue<cms::Message*> dispatchedMessages;
+
+        /**
          * Boolean that indicates if the consumer has been closed
          */
         bool closed;
@@ -81,9 +85,9 @@ namespace core{
         /**
          * Constructor
          */
-        ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
+        ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
                           ActiveMQSession* session,
-                          ActiveMQTransaction* transaction );
+                          ActiveMQTransactionContext* transaction );
 
         virtual ~ActiveMQConsumer();
 
@@ -178,32 +182,9 @@ namespace core{
          * Get the Consumer information for this consumer
          * @return Pointer to a Consumer Info Object
          */
-        virtual connector::ConsumerInfo* getConsumerInfo() {
-            return consumerInfo;
+        virtual commands::ConsumerInfo* getConsumerInfo() {
+            return consumerInfo.get();
         }
-
-        /**
-         * If supported sends a message pull request to the service provider asking
-         * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefectch or is only
-         * capable of delivering messages on a pull basis.  No request is made if
-         * there are already messages in the uncomsumed queue since there's no need
-         * for a server round-trip in that instance.
-         * @param timeout - the time that the client is willing to wait.
-         */
-        virtual void sendPullRequest( long long timeout )
-            throw ( exceptions::ActiveMQException );
-
-    protected:   // ConnectorResourceListener
-
-        /**
-         * When a Connector Resouce is closed it will notify any registered
-         * Listeners of its close so that they can take the appropriate
-         * action.
-         * @param resource - The ConnectorResource that was closed.
-         */
-        virtual void onConnectorResourceClosed(
-            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
 
     protected:
 
@@ -226,7 +207,7 @@ namespace core{
          * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        ActiveMQMessage* dequeue(int timeout) throw ( cms::CMSException );
+        ActiveMQMessage* dequeue( int timeout ) throw ( cms::CMSException );
 
         /**
          * Pre-consume processing
@@ -240,6 +221,23 @@ namespace core{
          * @param messageExpired - flag indicating if the message has expired.
          */
         virtual void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
+
+    private:
+
+        /**
+         * If supported sends a message pull request to the service provider asking
+         * for the delivery of a new message.  This is used in the case where the
+         * service provider has been configured with a zero prefectch or is only
+         * capable of delivering messages on a pull basis.  No request is made if
+         * there are already messages in the uncomsumed queue since there's no need
+         * for a server round-trip in that instance.
+         * @param timeout - the time that the client is willing to wait.
+         */
+        virtual void sendPullRequest( long long timeout )
+            throw ( exceptions::ActiveMQException );
+
+        // Checks for the closed state and throws if so.
+        void checkClosed() throw( exceptions::ActiveMQException );
 
     };
 

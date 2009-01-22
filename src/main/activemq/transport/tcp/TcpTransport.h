@@ -29,6 +29,7 @@
 #include <decaf/io/BufferedOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <memory>
 
 namespace activemq{
 namespace transport{
@@ -46,17 +47,17 @@ namespace tcp{
         /**
          * Socket that this Transport Communicates with
          */
-        decaf::net::Socket* socket;
+        std::auto_ptr<decaf::net::Socket> socket;
 
         /**
          * Input Stream for Reading in Messages
          */
-        decaf::io::DataInputStream* dataInputStream;
+        std::auto_ptr<decaf::io::DataInputStream> dataInputStream;
 
         /**
          * Output Stream for Writing out Messages.
          */
-        decaf::io::DataOutputStream* dataOutputStream;
+        std::auto_ptr<decaf::io::DataOutputStream> dataOutputStream;
 
     public:
 

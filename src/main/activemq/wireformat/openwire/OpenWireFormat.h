@@ -26,6 +26,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <memory>
 
 namespace activemq{
 namespace wireformat{
@@ -64,8 +65,8 @@ namespace marshal {
             throw( decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * Allows an external source to add marshallers to this object for
-         * types that may be marshalled or unmarhsalled.
+         * Allows an external source to add marshalers to this object for
+         * types that may be marshaled or unmarhsaled.
          * @param marshaller - the Marshaller to add to the collection.
          */
         void addMarshaller( marshal::DataStreamMarshaller* marshaller );
@@ -81,7 +82,7 @@ namespace marshal {
             throw ( decaf::io::IOException );
 
         /**
-         * Packet based un-marshaling
+         * Stream based un-marshaling
          * @param dis - the input stream to read the command from.
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
@@ -90,7 +91,7 @@ namespace marshal {
             throw ( decaf::io::IOException );
 
         /**
-         * Utility method for Tight Marshalling the given object to the boolean
+         * Utility method for Tight Marshaling the given object to the boolean
          * stream passed.
          * @param object - The DataStructure to marshal
          * @param bs - the BooleanStream to write to
@@ -103,7 +104,7 @@ namespace marshal {
         /**
          * Utility method that will Tight marshall some internally nested object
          * that implements the DataStructure interface.  Writes the data to the
-         * Data Ouput Stream provided.
+         * Data Output Stream provided.
          * @param o - DataStructure object
          * @param ds - DataOuputStream for writing
          * @param bs - BooleanStream
@@ -142,7 +143,7 @@ namespace marshal {
 
         /**
          * Utility method to loosely Marshal an object that is derived from the
-         * DataStrucutre interface.  The marshalled data is written to the
+         * DataStrucutre interface.  The marshaled data is written to the
          * passed in DataOutputStream.
          * @param o - DataStructure derived Object to Marshal
          * @param dataOut - DataOutputStream to write the data to
@@ -153,7 +154,7 @@ namespace marshal {
                                            throw ( decaf::io::IOException );
 
         /**
-         * Called to renegotiate the settings for the WireFormatInfo, these
+         * Called to re-negotiate the settings for the WireFormatInfo, these
          * determine how the client and broker communicate.
          * @param info - The new Wireformat Info settings
          * @throws IllegalStateException is the params can't be negotiated.
@@ -162,18 +163,18 @@ namespace marshal {
             throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
-         * Configures this object using the provieded WireformatInfo object
+         * Configures this object using the provided WireformatInfo object
          * @param info - a WireFormatInfo object, takes ownership.
          */
         virtual void setPreferedWireFormatInfo( commands::WireFormatInfo* info )
             throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
-         * Gets the Preferend WireFormatInfo object that this class holds
-         * @return pointer to a prefered WireFormatInfo object
+         * Gets the Preferred WireFormatInfo object that this class holds
+         * @return pointer to a preferred WireFormatInfo object
          */
         virtual commands::WireFormatInfo* getPreferedWireFormatInfo() const {
-            return this->preferedWireFormatInfo;
+            return this->preferedWireFormatInfo.get();
         }
 
         /**
@@ -304,10 +305,10 @@ namespace marshal {
         // This object config data
         decaf::util::Properties properties;
 
-        // Prefered WireFormatInfo
-        commands::WireFormatInfo* preferedWireFormatInfo;
+        // Preferred WireFormatInfo
+        std::auto_ptr<commands::WireFormatInfo> preferedWireFormatInfo;
 
-        // Marshallers
+        // Marshalers
         std::vector< marshal::DataStreamMarshaller* > dataMarshallers;
 
         // Uniquely Generated ID, initialize in the Ctor

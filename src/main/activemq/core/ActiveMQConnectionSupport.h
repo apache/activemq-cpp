@@ -18,28 +18,34 @@
 #ifndef _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONSUPPORT_H_
 #define _ACTIVEMQ_CORE_ACTIVEMQCONNECTIONSUPPORT_H_
 
-#include <activemq/util/Config.h>
+#include <cms/ExceptionListener.h>
 
-#include <decaf/io/Closeable.h>
+#include <activemq/util/Config.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/transport/Transport.h>
+#include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/transport/CommandListener.h>
+#include <activemq/util/LongSequenceGenerator.h>
+
 #include <decaf/util/Properties.h>
 #include <decaf/lang/Exception.h>
-
-#include <activemq/transport/Transport.h>
-#include <activemq/util/LongSequenceGenerator.h>
 
 #include <memory>
 
 namespace activemq {
 namespace core {
 
-    class AMQCPP_API ActiveMQConnectionSupport : public decaf::io::Closeable {
+    class AMQCPP_API ActiveMQConnectionSupport :
+        public transport::CommandListener,
+        public transport::TransportExceptionListener
+    {
     private:
 
         // Properties used to configure this connection.
-        decaf::util::Properties properties;
+        std::auto_ptr<decaf::util::Properties> properties;
 
         // Transport we are using
-        transport::Transport* transport;
+        std::auto_ptr<transport::Transport> transport;
 
         /**
          * Boolean indicating that we are to always send message Synchronously.
@@ -129,16 +135,30 @@ namespace core {
          *        The URI configured properties for this connection.
          */
         ActiveMQConnectionSupport( transport::Transport* transport,
-                                  const decaf::util::Properties& properties );
+                                   decaf::util::Properties* properties );
 
         virtual ~ActiveMQConnectionSupport();
+
+        /**
+         * Starts the Transport, this should initiate the connection between
+         * this client and the Transports endpoint.
+         * @throws Exception
+         */
+        virtual void startupTransport() throw( decaf::lang::Exception );
+
+        /**
+         * Closes this object and deallocates the appropriate resources.
+         * The object is generally no longer usable after calling close.
+         * @throws Exception
+         */
+        virtual void shutdownTransport() throw( decaf::lang::Exception );
 
         /**
          * Gets the Properties object that this Config object was initialized with.
          * @returns a const reference to the Connection Config.
          */
         const decaf::util::Properties& getProperties() const {
-            return this->properties;
+            return *( this->properties.get() );
         }
 
         /**
@@ -146,7 +166,7 @@ namespace core {
          * @return the configured transport
          */
         transport::Transport& getTransport() const {
-            return *( this->transport );
+            return *( this->transport.get() );
         }
 
         /**
@@ -331,15 +351,6 @@ namespace core {
         long long getNextTempDestinationId() {
             return this->tempDestinationIds.getNextSequenceId();
         }
-
-    public:  // decaf::io::Closeable
-
-        /**
-         * Closes this object and deallocates the appropriate resources.
-         * The object is generally no longer usable after calling close.
-         * @throws CMSException
-         */
-        virtual void close() throw( decaf::lang::Exception );
 
     };
 

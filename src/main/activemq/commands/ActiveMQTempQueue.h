@@ -70,7 +70,7 @@ namespace commands{
          * Converts the Destination Name into a String
          * @return string name
          */
-        virtual std::string toString(void) const {
+        virtual std::string toString() const {
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQTempQueue" << std::endl;
