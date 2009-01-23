@@ -27,6 +27,7 @@
 #ifdef HAVE_SYS_IOCTL_H
 #define BSD_COMP /* Get FIONREAD on Solaris2. */
 #include <sys/ioctl.h>
+#include <unistd.h>
 #endif
 
 // Pick up FIONREAD on Solaris 2.5.

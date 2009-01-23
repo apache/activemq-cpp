@@ -29,14 +29,14 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
-  : socketHandle( INVALID_SOCKET_HANDLE ),
+  : socketHandle( static_cast< SocketHandle >(INVALID_SOCKET_HANDLE) ),
     inputStream( NULL ),
     outputStream( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket( SocketHandle socketHandle )
- :  socketHandle( INVALID_SOCKET_HANDLE ),
+ :  socketHandle( static_cast< SocketHandle >(INVALID_SOCKET_HANDLE) ),
     inputStream( NULL ),
     outputStream( NULL ) {
 
