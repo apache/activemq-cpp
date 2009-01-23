@@ -20,6 +20,7 @@
 #include "SocketInputStream.h"
 #include "SocketOutputStream.h"
 #include "SocketError.h"
+#include <decaf/net/SocketException.h>
 
 using namespace decaf;
 using namespace decaf::internal;
@@ -29,14 +30,14 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket() throw ( SocketException )
-  : socketHandle( INVALID_SOCKET_HANDLE ),
+  : socketHandle( static_cast< SocketHandle >( INVALID_SOCKET_HANDLE ) ),
     inputStream( NULL ),
     outputStream( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpSocket::TcpSocket( SocketHandle socketHandle )
- :  socketHandle( INVALID_SOCKET_HANDLE ),
+ :  socketHandle( static_cast< SocketHandle >( INVALID_SOCKET_HANDLE ) ),
     inputStream( NULL ),
     outputStream( NULL ) {
 
@@ -101,13 +102,13 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
         checkResult( apr_socket_create(
             &socketHandle, socketAddress->family, SOCK_STREAM, APR_PROTO_TCP, apr_pool.getAprPool() ) );
 
-        // To make blocking-with-timeout sockets, we have to set it to 
-        // 'APR_SO_NONBLOCK==1(on) and timeout>0'. On Unix, we have no 
-        // problem to specify 'APR_SO_NONBLOCK==0(off) and timeout>0'. 
-        // Unfortunatelly, we have a problem on Windows. Setting the 
-        // mode to 'APR_SO_NONBLOCK==0(off) and timeout>0' causes 
-        // blocking-with-system-timeout sockets on Windows. 
-        // 
+        // To make blocking-with-timeout sockets, we have to set it to
+        // 'APR_SO_NONBLOCK==1(on) and timeout>0'. On Unix, we have no
+        // problem to specify 'APR_SO_NONBLOCK==0(off) and timeout>0'.
+        // Unfortunatelly, we have a problem on Windows. Setting the
+        // mode to 'APR_SO_NONBLOCK==0(off) and timeout>0' causes
+        // blocking-with-system-timeout sockets on Windows.
+        //
         // http://dev.ariel-networks.com/apr/apr-tutorial/html/apr-tutorial-13.html
 
         // If we have a connection timeout specified, temporarily set the socket to
@@ -115,7 +116,7 @@ void TcpSocket::connect(const char* host, int port, int timeout) throw ( SocketE
         // to blocking mode right after we connect.
         apr_socket_opt_set( socketHandle, APR_SO_NONBLOCK, (timeout>0)?1:0 );
         apr_socket_timeout_set( socketHandle, timeout );
-	
+
         // Connect to the broker.
         checkResult(apr_socket_connect( socketHandle, socketAddress ));
 

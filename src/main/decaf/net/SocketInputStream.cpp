@@ -17,7 +17,10 @@
 
 #include <decaf/util/Config.h>
 
-#if !defined(HAVE_WINSOCK2_H)
+#include <apr.h>
+#include <apr_portable.h>
+
+#ifndef HAVE_WINSOCK2_H
     #include <sys/select.h>
     #include <sys/socket.h>
 #else
@@ -27,6 +30,7 @@
 #ifdef HAVE_SYS_IOCTL_H
 #define BSD_COMP /* Get FIONREAD on Solaris2. */
 #include <sys/ioctl.h>
+#include <unistd.h>
 #endif
 
 // Pick up FIONREAD on Solaris 2.5.
@@ -43,8 +47,6 @@
 #include <string>
 #include <stdio.h>
 #include <iostream>
-
-#include <apr_portable.h>
 
 using namespace decaf;
 using namespace decaf::net;
