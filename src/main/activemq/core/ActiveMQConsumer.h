@@ -182,8 +182,27 @@ namespace core{
          * Get the Consumer information for this consumer
          * @return Pointer to a Consumer Info Object
          */
-        virtual commands::ConsumerInfo* getConsumerInfo() {
+        commands::ConsumerInfo* getConsumerInfo() {
             return consumerInfo.get();
+        }
+
+        /**
+         * Get the Consumer Id for this consumer
+         * @return Pointer to a Consumer Id Object
+         */
+        commands::ConsumerId* getConsumerId() {
+            if( this->isClosed() ) {
+                return NULL;
+            }
+
+            return consumerInfo->getConsumerId();
+        }
+
+        /**
+         * @returns if this Consumer has been closed.
+         */
+        bool isClosed() const {
+            return this->closed;
         }
 
     protected:
@@ -192,7 +211,7 @@ namespace core{
          * Purges all messages currently in the queue.  This can be as a
          * result of a rollback, or of the consumer being shutdown.
          */
-        virtual void purgeMessages() throw (exceptions::ActiveMQException);
+        void purgeMessages() throw ( exceptions::ActiveMQException );
 
         /**
          * Used by synchronous receive methods to wait for messages to come in.
@@ -213,14 +232,14 @@ namespace core{
          * Pre-consume processing
          * @param message - the message being consumed.
          */
-        virtual void beforeMessageIsConsumed( ActiveMQMessage* message );
+        void beforeMessageIsConsumed( ActiveMQMessage* message );
 
         /**
          * Post-consume processing
          * @param message - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
-        virtual void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
+        void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
 
     private:
 
@@ -233,7 +252,7 @@ namespace core{
          * for a server round-trip in that instance.
          * @param timeout - the time that the client is willing to wait.
          */
-        virtual void sendPullRequest( long long timeout )
+        void sendPullRequest( long long timeout )
             throw ( exceptions::ActiveMQException );
 
         // Checks for the closed state and throws if so.

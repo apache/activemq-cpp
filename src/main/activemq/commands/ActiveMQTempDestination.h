@@ -30,6 +30,9 @@
 #include <string>
 
 namespace activemq{
+namespace core{
+    class ActiveMQConnection;
+}
 namespace commands{
 
     class AMQCPP_API ActiveMQTempDestination : public ActiveMQDestination,
@@ -37,10 +40,10 @@ namespace commands{
     protected:
 
         /**
-         * Connector that we call back on close to allow this resource to
+         * Connection that we call back on close to allow this resource to
          * be cleaned up correctly at this end and at the Broker End.
          */
-        // TODO - Add something to ask for a way to send a dispose
+        core::ActiveMQConnection* connection;
 
     public:
 
@@ -99,10 +102,21 @@ namespace commands{
 
         /**
          * Closes down this Destination resulting in a call to dispose of the
-         * TempDestination resource at the Broker.
+         * TempDestination resource at the Broker.  This should only be called
+         * when the user is certain that they are finished with this destination.
+         * The TempDestination is not closed automatically on shutdown.
          * throws cms::CMSException
          */
         virtual void close() throw( cms::CMSException );
+
+        /**
+         * Sets the Parent Connection that is notified when this destination is
+         * destroyed.
+         * @param connection - The parent connection.
+         */
+        void setConnection( core::ActiveMQConnection* connection ) {
+            this->connection = connection;
+        }
 
     };
 

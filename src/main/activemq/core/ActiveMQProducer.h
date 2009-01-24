@@ -243,11 +243,30 @@ namespace core{
     public:
 
         /**
+         * @returns true if this Producer has been closed.
+         */
+        bool isClosed() const {
+            return this->closed;
+        }
+
+        /**
          * Retries this object ProducerInfo pointer
          * @return ProducerInfo pointer
          */
         virtual commands::ProducerInfo* getProducerInfo(){
             return this->producerInfo.get();
+        }
+
+        /**
+         * Retries this object ProducerId or NULL if closed.
+         * @return ProducerId pointer
+         */
+        virtual commands::ProducerId* getProducerId(){
+            if( this->isClosed() ) {
+                return NULL;
+            }
+
+            return this->producerInfo->getProducerId();
         }
 
         /**

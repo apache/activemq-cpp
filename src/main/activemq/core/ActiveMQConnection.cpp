@@ -373,6 +373,38 @@ void ActiveMQConnection::sendPullRequest(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::destroyDestination( const commands::ActiveMQDestination* destination )
+    throw( decaf::lang::exceptions::NullPointerException,
+           decaf::lang::exceptions::IllegalStateException,
+           decaf::lang::exceptions::UnsupportedOperationException,
+           activemq::exceptions::ActiveMQException ) {
+
+    try{
+
+        if( destination == NULL ) {
+            throw NullPointerException(
+                __FILE__, __LINE__, "Destination passed was NULL" );
+        }
+
+        enforceConnected();
+
+        commands::DestinationInfo command;
+
+        command.setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
+        command.setOperationType( ActiveMQConstants::DESTINATION_REMOVE_OPERATION );
+        command.setDestination( destination->cloneDataStructure() );
+
+        // Send the message to the broker.
+        syncRequest( &command );
+    }
+    AMQ_CATCH_RETHROW( NullPointerException )
+    AMQ_CATCH_RETHROW( IllegalStateException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::destroyDestination( const cms::Destination* destination )
     throw( decaf::lang::exceptions::NullPointerException,
            decaf::lang::exceptions::IllegalStateException,
@@ -391,14 +423,7 @@ void ActiveMQConnection::destroyDestination( const cms::Destination* destination
         const commands::ActiveMQDestination* amqDestination =
             dynamic_cast<const commands::ActiveMQDestination*>( destination );
 
-        commands::DestinationInfo command;
-
-        command.setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
-        command.setOperationType( ActiveMQConstants::DESTINATION_REMOVE_OPERATION );
-        command.setDestination( amqDestination->cloneDataStructure() );
-
-        // Send the message to the broker.
-        syncRequest( &command );
+        this->destroyDestination( amqDestination );
     }
     AMQ_CATCH_RETHROW( NullPointerException )
     AMQ_CATCH_RETHROW( IllegalStateException )

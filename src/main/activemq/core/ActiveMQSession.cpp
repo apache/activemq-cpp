@@ -117,22 +117,33 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Stop the dispatch executor.
         stop();
 
-        // TODO
-        // Get the complete list of closeable session resources.
-        // Get the complete list of closeable session resources.
-//        synchronized( &closableSessionResources ) {
-//
-//            Iterator<cms::Closeable*>* iter = closableSessionResources.iterator();
-//            while( iter->hasNext() ) {
-//                cms::Closeable* resource = iter->next();
-//                try{
-//                    resource->close();
-//                } catch( cms::CMSException& ex ){
-//                    /* Absorb */
-//                }
-//            }
-//            delete iter;
-//        }
+        // Close all Consumers
+        synchronized( &this->consumers ) {
+
+            std::vector<ActiveMQConsumer*> closables = this->consumers.getValues();
+
+            for( std::size_t i = 0; i < closables.size(); ++i ) {
+                try{
+                    closables[i]->close();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
+            }
+        }
+
+        // Close all Producers
+        synchronized( &this->producers ) {
+
+            std::vector<ActiveMQProducer*> closables = this->producers.getValues();
+
+            for( std::size_t i = 0; i < closables.size(); ++i ) {
+                try{
+                    closables[i]->close();
+                } catch( cms::CMSException& ex ){
+                    /* Absorb */
+                }
+            }
+        }
 
         // TODO = Commit it first.
         // Destroy the Transaction
@@ -373,6 +384,9 @@ cms::MessageProducer* ActiveMQSession::createProducer(
             this->producers.setValue(
                 producer->getProducerInfo()->getProducerId()->getValue(), producer.get() );
         }
+
+        // Add to the Connections list
+        this->connection->addProducer( producer.get() );
 
         return producer.release();
     }
@@ -624,86 +638,6 @@ void ActiveMQSession::send(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//void ActiveMQSession::onConnectorResourceClosed(
-//    const ConnectorResource* resource ) throw ( cms::CMSException ) {
-//
-//    try{
-//
-//        if( closed ) {
-//            throw ActiveMQException(
-//                __FILE__, __LINE__,
-//                "ActiveMQSession::onProducerClose - Session Already Closed");
-//        }
-//
-//        const ConsumerInfo* consumer =
-//            dynamic_cast<const ConsumerInfo*>( resource );
-//
-//        if( consumer != NULL ) {
-//
-//            // If the executor thread is currently running, stop it.
-//            bool wasStarted = isStarted();
-//            if( wasStarted ) {
-//                stop();
-//            }
-//
-//            // Remove the dispatcher for the Connection
-//            connection->removeDispatcher( consumer );
-//
-//            // Remove this consumer from the Transaction if we are transacted
-//            if( transaction != NULL ) {
-//                transaction->removeFromTransaction( consumer->getConsumerId() );
-//            }
-//
-//            ActiveMQConsumer* obj = NULL;
-//            synchronized( &consumers ) {
-//
-//                if( consumers.containsKey( consumer->getConsumerId() ) ) {
-//
-//                    // Get the consumer reference
-//                    obj = consumers.getValue( consumer->getConsumerId() );
-//
-//                    // Remove this consumer from the map.
-//                    consumers.remove( consumer->getConsumerId() );
-//                }
-//            }
-//
-//            // Clean up any resources in the executor for this consumer
-//            if( obj != NULL && executor != NULL ) {
-//
-//                // Purge any pending messages for this consumer.
-//                vector<ActiveMQMessage*> messages =
-//                    executor->purgeConsumerMessages(obj);
-//
-//                // Destroy the messages.
-//                for( unsigned int ix=0; ix<messages.size(); ++ix ) {
-//                    delete messages[ix];
-//                }
-//            }
-//
-//            // If the executor thread was previously running, start it back
-//            // up.
-//            if( wasStarted ) {
-//                start();
-//            }
-//        }
-//
-//        // Remove the entry from the session resource map if it's there
-//        const cms::Closeable* closeable =
-//            dynamic_cast<const cms::Closeable*>( resource );
-//
-//        if( closeable != NULL ){
-//            synchronized( &closableSessionResources ) {
-//                closableSessionResources.remove(
-//                    const_cast<cms::Closeable*>( closeable ) );
-//            }
-//        }
-//    }
-//    AMQ_CATCH_RETHROW( ActiveMQException )
-//    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-//    AMQ_CATCHALL_THROW( ActiveMQException )
-//}
-
-////////////////////////////////////////////////////////////////////////////////
 cms::ExceptionListener* ActiveMQSession::getExceptionListener()
 {
     if( connection != NULL ) {
@@ -940,9 +874,8 @@ void ActiveMQSession::createTemporaryDestination(
         // Send the message to the broker.
         this->connection->syncRequest( &command );
 
-        // TODO - Manage Resources
-        // Now that its setup, link it to this Connector
-        // tempDestination->setConnector( this );
+        // Now that its setup, link it to this Connection so it can be closed.
+        tempDestination->setConnection( this->connection );
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
@@ -1033,4 +966,83 @@ void ActiveMQSession::checkClosed() throw( exceptions::ActiveMQException ) {
             __FILE__, __LINE__,
             "ActiveMQSession - Session Already Closed" );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::disposeOf( commands::ConsumerId* id )
+    throw ( activemq::exceptions::ActiveMQException ) {
+
+    try{
+
+        this->checkClosed();
+
+        synchronized( &this->consumers ) {
+
+            if( this->consumers.containsKey( id->getValue() ) ) {
+
+                // If the executor thread is currently running, stop it.
+                bool wasStarted = isStarted();
+                if( wasStarted ) {
+                    stop();
+                }
+
+                ActiveMQConsumer* consumer = this->consumers.getValue( id->getValue() );
+                this->connection->removeDispatcher( consumer->getConsumerInfo() );
+                this->connection->disposeOf( id );
+
+                this->consumers.remove( id->getValue() );
+
+                //TODO
+//              // Remove this consumer from the Transaction if we are transacted
+//              if( transaction != NULL ) {
+//                  transaction->removeFromTransaction( consumer->getConsumerId() );
+//              }
+//
+                // Clean up any resources in the executor for this consumer
+                if( this->executor.get() != NULL ) {
+
+                    // Purge any pending messages for this consumer.
+                    vector<ActiveMQMessage*> messages =
+                        this->executor->purgeConsumerMessages( consumer );
+
+                    // Destroy the messages.
+                    for( unsigned int ix = 0; ix < messages.size(); ++ix ) {
+                        delete messages[ix];
+                    }
+                }
+
+                if( wasStarted ) {
+                    start();
+                }
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::disposeOf( commands::ProducerId* id )
+    throw ( activemq::exceptions::ActiveMQException ) {
+
+    try{
+
+        this->checkClosed();
+
+        synchronized( &this->producers ) {
+
+            if( this->producers.containsKey( id->getValue() ) ) {
+
+                ActiveMQProducer* producer = this->producers.getValue( id->getValue() );
+                this->connection->removeProducer( producer );
+                this->connection->disposeOf( id );
+
+                this->producers.remove( id->getValue() );
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

@@ -55,16 +55,12 @@ ActiveMQConsumer::ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
             "ActiveMQConsumer::ActiveMQConsumer - Init with NULL Session");
     }
 
-    // Init Producer Data
+    // Initialize Producer Data
     this->session = session;
     this->transaction = transaction;
     this->consumerInfo.reset( consumerInfo );
     this->listener = NULL;
     this->closed = false;
-
-    // TODO - How to Detect Close
-    // Listen for our resource to close
-    //this->consumerInfo->addListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,32 +79,17 @@ void ActiveMQConsumer::close()
 
     try{
 
-        if( !closed ) {
+        if( !this->isClosed() ) {
+
+            // Remove this Consumer from the Connections set of Dispatchers and then
+            // remove it from the Broker.
+            this->session->disposeOf( this->getConsumerId() );
+
+            this->closed = true;
 
             // Identifies any errors encountered during shutdown.
             bool haveException = false;
             ActiveMQException error;
-
-            // TODO
-            // Close the ConsumerInfo
-//            if( !consumerInfo->isClosed() ) {
-//                try{
-//                    // We don't want a callback now
-//                    this->consumerInfo->removeListener( this );
-//                    this->consumerInfo->close();
-//                } catch( ActiveMQException& ex ){
-//                    if( !haveException ){
-//                        ex.setMark( __FILE__, __LINE__ );
-//                        error = ex;
-//                        haveException = true;
-//                    }
-//                }
-//            }
-
-            // Remove from Broker.
-            this->session->getConnection()->disposeOf( this->consumerInfo->getConsumerId() );
-
-            closed = true;
 
             // Purge all the pending messages
             try{
@@ -563,7 +544,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::checkClosed() throw( exceptions::ActiveMQException ) {
-    if( closed ) {
+    if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQConsumer - Consumer Already Closed" );

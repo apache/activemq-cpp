@@ -196,6 +196,30 @@ namespace core{
          * @throws ActiveMQException
          *         If any other error occurs during the attempt to destroy the destination.
          */
+        virtual void destroyDestination( const commands::ActiveMQDestination* destination )
+            throw( decaf::lang::exceptions::NullPointerException,
+                   decaf::lang::exceptions::IllegalStateException,
+                   decaf::lang::exceptions::UnsupportedOperationException,
+                   activemq::exceptions::ActiveMQException );
+
+        /**
+         * Requests that the Broker removes the given Destination.  Calling this
+         * method implies that the client is finished with the Destination and that
+         * no other messages will be sent or received for the given Destination.  The
+         * Broker frees all resources it has associated with this Destination.
+         *
+         * @param destination
+         *        The CMS Destination the Broker will be requested to remove.
+         *
+         * @throws NullPointerException
+         *         If the passed Destination is Null
+         * @throws IllegalStateException
+         *         If the connection is closed.
+         * @throws UnsupportedOperationException
+         *         If the wire format in use does not support this operation.
+         * @throws ActiveMQException
+         *         If any other error occurs during the attempt to destroy the destination.
+         */
         virtual void destroyDestination( const cms::Destination* destination )
             throw( decaf::lang::exceptions::NullPointerException,
                    decaf::lang::exceptions::IllegalStateException,

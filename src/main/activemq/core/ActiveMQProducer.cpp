@@ -54,10 +54,6 @@ ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
     this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
-
-    // TODO - How to manage resources
-    // Listen for our resource to close
-    //this->producerInfo->addListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,10 +70,10 @@ void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
     try{
 
-        if( !closed ) {
+        if( !this->isClosed() ) {
 
-            this->session->getConnection()->disposeOf( this->producerInfo->getProducerId() );
-            closed = true;
+            this->session->disposeOf( this->producerInfo->getProducerId() );
+            this->closed = true;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -154,7 +150,7 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
     try {
 
-        checkClosed();
+        this->checkClosed();
 
         if( destination == NULL ) {
 
@@ -188,30 +184,6 @@ void ActiveMQProducer::send( const cms::Destination* destination,
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
-
-// TODO
-////////////////////////////////////////////////////////////////////////////////
-//void ActiveMQProducer::onConnectorResourceClosed(
-//    const ConnectorResource* resource ) throw ( cms::CMSException ) {
-//
-//    try{
-//
-//        checkClosed();
-//
-//        if( resource != producerInfo ) {
-//            throw ActiveMQException(
-//                __FILE__, __LINE__,
-//                "ActiveMQProducer::onConnectorResourceClosed - "
-//                "Unknown object passed to this callback");
-//        }
-//
-//        // If our producer isn't closed already, then lets close
-//        this->close();
-//    }
-//    AMQ_CATCH_RETHROW( ActiveMQException )
-//    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-//    AMQ_CATCHALL_THROW( ActiveMQException )
-//}
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {

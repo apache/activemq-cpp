@@ -17,6 +17,7 @@
 #include <activemq/commands/ActiveMQTempDestination.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/core/ActiveMQConnection.h>
 
 using namespace std;
 using namespace activemq;
@@ -45,7 +46,9 @@ unsigned char ActiveMQTempDestination::getDataStructureType() const {
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTempDestination::close() throw( cms::CMSException ) {
     try {
-        // TODO - Dispose of this Temp Dest.
+        if( this->connection != NULL ) {
+            this->connection->destroyDestination( this );
+        }
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )

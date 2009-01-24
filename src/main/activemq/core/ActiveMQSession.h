@@ -26,6 +26,8 @@
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/SessionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
 
@@ -78,14 +80,9 @@ namespace core{
         decaf::util::Map<long long, ActiveMQConsumer*> consumers;
 
         /**
-         * Map of consumers.
+         * Map of producers.
          */
         decaf::util::Map<long long, ActiveMQProducer*> producers;
-
-        /**
-         * Map of consumers.
-         */
-        decaf::util::Map<long long, commands::ActiveMQTempDestination*> tempDestinations;
 
         /**
          * Sends incoming messages to the registered consumers.
@@ -410,6 +407,22 @@ namespace core{
          * from the broker, or if any other error occurred.
          */
         void syncRequest( transport::Command* command, unsigned int timeout = 0 )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Dispose of a Consumer from this session.  Removes it from the Connection
+         * and clean up any resources associated with it.
+         * @param consumerId - the Id of the Consumer to dispose.
+         */
+        void disposeOf( commands::ConsumerId* id )
+            throw ( activemq::exceptions::ActiveMQException );
+
+        /**
+         * Dispose of a Producer from this session.  Removes it from the Connection
+         * and clean up any resources associated with it.
+         * @param consumerId - the Id of the Producer to dispose.
+         */
+        void disposeOf( commands::ProducerId* id )
             throw ( activemq::exceptions::ActiveMQException );
 
    private:
