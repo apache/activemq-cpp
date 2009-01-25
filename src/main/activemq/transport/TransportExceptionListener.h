@@ -40,9 +40,18 @@ namespace transport{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException(
-            Transport* source,
-            const decaf::lang::Exception& ex ) = 0;
+        virtual void onTransportException( Transport* source,
+                                           const decaf::lang::Exception& ex ) = 0;
+
+        /**
+         * The transport has suffered an interruption from which it hopes to recover
+         */
+        virtual void transportInterrupted() = 0;
+
+        /**
+         * The transport has resumed after an interruption
+         */
+        virtual void transportResumed() = 0;
 
     };
 

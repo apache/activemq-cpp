@@ -352,6 +352,16 @@ namespace core {
             return this->tempDestinationIds.getNextSequenceId();
         }
 
+        /**
+         * The transport has suffered an interruption from which it hopes to recover
+         */
+        virtual void transportInterrupted() {}
+
+        /**
+         * The transport has resumed after an interruption
+         */
+        virtual void transportResumed() {}
+
     };
 
 }}

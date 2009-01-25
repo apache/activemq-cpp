@@ -117,6 +117,16 @@ namespace transport{
                                            const decaf::lang::Exception& ex );
 
         /**
+         * The transport has suffered an interruption from which it hopes to recover
+         */
+        virtual void transportInterrupted() {}
+
+        /**
+         * The transport has resumed after an interruption
+         */
+        virtual void transportResumed() {}
+
+        /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.

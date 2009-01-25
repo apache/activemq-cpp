@@ -20,7 +20,7 @@
 
 #include <activemq/util/Config.h>
 
-#include <activemq/transport/TransportFilter.h>
+#include <activemq/transport/CompositeTransport.h>
 
 namespace activemq {
 namespace transport {
@@ -28,7 +28,7 @@ namespace failover {
 
     class BackupTransport;
 
-    class AMQCPP_API FailoverTransport : public TransportFilter {
+    class AMQCPP_API FailoverTransport : public CompositeTransport {
     public:
 
         FailoverTransport();

@@ -22,9 +22,28 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransport::BackupTransport() {
+BackupTransport::BackupTransport( FailoverTransport* failover ) {
+
+    this->failover = failover;
+    this->transport = NULL;
+    this->disposed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BackupTransport::~BackupTransport() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BackupTransport::onTransportException( transport::Transport* source,
+                                            const decaf::lang::Exception& ex ) {
+
+    this->disposed = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BackupTransport::transportInterrupted() {
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void BackupTransport::transportResumed() {
 }

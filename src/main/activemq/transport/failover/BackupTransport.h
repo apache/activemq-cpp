@@ -21,6 +21,8 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/transport/Transport.h>
+#include <activemq/transport/TransportExceptionListener.h>
+#include <decaf/net/URI.h>
 
 namespace activemq {
 namespace transport {
@@ -28,7 +30,7 @@ namespace failover {
 
     class FailoverTransport;
 
-    class AMQCPP_API BackupTransport {
+    class AMQCPP_API BackupTransport : public TransportExceptionListener {
     private:
 
         // The parent Failover Transport
@@ -37,10 +39,72 @@ namespace failover {
         // The Transport this one is managing.
         Transport* transport;
 
+        // The URI of this Backup
+        URI uri;
+
+        // Indicates that the contained transport is not valid any longer.
+        bool disposed;
+
     public:
 
-        BackupTransport();
+        BackupTransport( FailoverTransport* failover );
         virtual ~BackupTransport();
+
+        /**
+         * Gets the URI assigned to this Backup
+         * @return the assigned URI
+         */
+        URI getURI() const {
+            return this->uri;
+        }
+
+        /**
+         * Sets the URI assigned to this Transport.
+         */
+        void setURI( const URI& uri ) {
+            this->uri = uri;
+        }
+
+        /**
+         * Gets the currently held transport
+         * @returns pointer to the held transport or NULL if not set.
+         */
+        Transport* getTransport() {
+            return transport;
+        }
+
+        /**
+         * Sets the held transport, if not NULL then start to listen for exceptions
+         * from the held transport.
+         *
+         * @param transport
+         *        The transport to hold.
+         */
+        void setTransport( Transport* transport ) {
+            this->transport = transport;
+
+            if( this->transport != NULL ) {
+                this->transport->setTransportExceptionListener( this );
+            }
+        }
+
+        /**
+         * Event handler for an exception from a command transport.
+         * @param source The source of the exception
+         * @param ex The exception.
+         */
+        virtual void onTransportException( transport::Transport* source,
+                                           const decaf::lang::Exception& ex );
+
+        /**
+         * The transport has suffered an interruption from which it hopes to recover
+         */
+        virtual void transportInterrupted();
+
+        /**
+         * The transport has resumed after an interruption
+         */
+        virtual void transportResumed();
 
     };
 
