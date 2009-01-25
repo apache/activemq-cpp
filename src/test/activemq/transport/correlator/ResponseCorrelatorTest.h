@@ -326,6 +326,17 @@ namespace correlator{
                     exCount++;
                 }
             }
+
+            /**
+             * The transport has suffered an interruption from which it hopes to recover
+             */
+            virtual void transportInterrupted() {}
+
+            /**
+             * The transport has resumed after an interruption
+             */
+            virtual void transportResumed() {}
+
         };
 
         class RequestThread : public decaf::lang::Thread{
