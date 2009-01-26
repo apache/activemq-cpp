@@ -45,3 +45,59 @@ FailoverTransport::FailoverTransport( const decaf::net::URI& location,
 ////////////////////////////////////////////////////////////////////////////////
 FailoverTransport::~FailoverTransport() {
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::addURI( const decaf::net::URI& uri ) {
+
+    synchronized( &this->uris ) {
+        this->uris.add( uri );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::removeURI( const decaf::net::URI& uri ) {
+
+    synchronized( &this->uris ) {
+        this->uris.remove( uri );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::oneway( Command* command )
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* FailoverTransport::request( Command* command AMQCPP_UNUSED )
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Response* FailoverTransport::request( Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+    throw( CommandIOException,
+           decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__, "FailoverTransport::request - Not Supported" );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::start() throw( cms::CMSException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::close() throw( cms::CMSException ) {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::reconnect() {
+
+}

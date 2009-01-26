@@ -39,7 +39,7 @@ namespace failover {
         bool connected;
         bool started;
 
-        //decaf::util::Set<decaf::net::URI> uris;
+        decaf::util::Set<decaf::net::URI> uris;
 
         long long initialReconnectDelay;
         long long maxReconnectDelay;
@@ -50,13 +50,14 @@ namespace failover {
         int maxReconnectAttempts;
         int connectFailures;
         long long reconnectDelay;
-        decaf::lang::Exception connectionFailure;
         bool firstConnection;
         bool backup;
-        //List<BackupTransport> backups=new CopyOnWriteArrayList<BackupTransport>();
         int backupPoolSize;
         bool trackMessages;
         int maxCacheSize;
+
+        //List<BackupTransport> backups=new CopyOnWriteArrayList<BackupTransport>();
+        decaf::lang::Exception connectionFailure;
 
     public:
 
@@ -210,6 +211,96 @@ namespace failover {
             }
 
             return NULL;
+        }
+
+    public: // FailoverTransport Property Getters / Setters
+
+        long long getInitialReconnectDelay() const {
+            return this->initialReconnectDelay;
+        }
+
+        void setInitialReconnectDelay( long long value ) {
+            this->initialReconnectDelay = value;
+        }
+
+        long long getMaxReconnectDelay() const {
+            return this->maxReconnectDelay;
+        }
+
+        void setMaxReconnectDelay( long long value ) {
+            this->maxReconnectDelay = value;
+        }
+
+        long long getBackOffMultiplier() const {
+            return this->backOffMultiplier;
+        }
+
+        void setBackOffMultiplier( long long value ) {
+            this->backOffMultiplier = value;
+        }
+
+        bool isUseExponentialBackOff() const {
+            return this->useExponentialBackOff;
+        }
+
+        void setUseExponentialBackOff( bool value ) {
+            this->useExponentialBackOff = value;
+        }
+
+        bool isRandomize() const {
+            return this->randomize;
+        }
+
+        void setRandomize( bool value ) {
+            this->randomize = value;
+        }
+
+        int getMaxReconnectAttempts() const {
+            return this->maxReconnectAttempts;
+        }
+
+        void setMaxReconnectAttempts( int value ) {
+            this->maxReconnectAttempts = value;
+        }
+
+        long long getReconnectDelay() const {
+            return this->reconnectDelay;
+        }
+
+        void setReconnectDelay( long long value ) {
+            this->reconnectDelay = value;
+        }
+
+        bool isBackup() const {
+            return this->backup;
+        }
+
+        void setBackup( bool value ) {
+            this->backup = value;
+        }
+
+        int getBackupPoolSize() const {
+            return this->backupPoolSize;
+        }
+
+        void setBackupPoolSize( int value ) {
+            this->backupPoolSize = value;
+        }
+
+        bool isTrackMessages() const {
+            return this->trackMessages;
+        }
+
+        void setTrackMessages( bool value ) {
+            this->trackMessages = value;
+        }
+
+        int getMaxCacheSize() const {
+            return this->maxCacheSize;
+        }
+
+        void setMaxCacheSize( int value ) {
+            this->maxCacheSize = value;
         }
 
     };
