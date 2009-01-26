@@ -23,8 +23,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/transport/CommandListener.h>
+#include <activemq/transport/TransportListener.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
 #include <decaf/util/Properties.h>
@@ -36,8 +35,7 @@ namespace activemq {
 namespace core {
 
     class AMQCPP_API ActiveMQConnectionSupport :
-        public transport::CommandListener,
-        public transport::TransportExceptionListener
+        public transport::TransportListener
     {
     private:
 

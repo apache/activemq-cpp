@@ -69,8 +69,7 @@ ActiveMQConnection::ActiveMQConnection( transport::Transport* transport,
     this->connectionMetaData.reset( new ActiveMQConnectionMetaData() );
 
     // Register for messages and exceptions from the connector.
-    transport->setCommandListener( this );
-    transport->setTransportExceptionListener( this );
+    transport->setTransportListener( this );
 
     // Now Start the Transport
     transport->start();

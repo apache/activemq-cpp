@@ -26,13 +26,10 @@ TransportFilter::TransportFilter( Transport* next, const bool own ) {
 
     this->next = next;
     this->own = own;
-
-    commandlistener = NULL;
-    exceptionListener = NULL;
+    this->listener = NULL;
 
     // Observe the nested transport for events.
-    next->setCommandListener( this );
-    next->setTransportExceptionListener( this );
+    next->setTransportListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

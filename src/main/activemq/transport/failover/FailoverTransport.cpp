@@ -22,7 +22,24 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport() {
+FailoverTransport::FailoverTransport( const decaf::net::URI& location,
+                                      wireformat::WireFormat* wireformat,
+                                      const decaf::util::Properties& properties ) {
+
+    this->initialReconnectDelay = 10;
+    this->maxReconnectDelay = 1000 * 30;
+    this->backOffMultiplier = 2;
+    this->useExponentialBackOff = true;
+    this->randomize = true;
+    this->initialized = false;
+    this->maxReconnectAttempts = 0;
+    this->connectFailures = 0;
+    this->reconnectDelay = this->initialReconnectDelay;
+    this->firstConnection = true;
+    this->backup = false;
+    this->backupPoolSize = 1;
+    this->trackMessages = false;
+    this->maxCacheSize = 128 * 1024;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

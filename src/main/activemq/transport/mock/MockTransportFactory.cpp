@@ -30,8 +30,8 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* MockTransportFactory::doCreateComposite( const decaf::net::URI& location,
-                                                    wireformat::WireFormat* wireFormat,
+Transport* MockTransportFactory::doCreateComposite( const decaf::net::URI& location AMQCPP_UNUSED,
+                                                    wireformat::WireFormat* wireFormat AMQCPP_UNUSED,
                                                     const decaf::util::Properties& properties )
     throw ( exceptions::ActiveMQException ) {
 

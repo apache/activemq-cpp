@@ -21,8 +21,9 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <decaf/net/URI.h>
+#include <memory>
 
 namespace activemq {
 namespace transport {
@@ -30,7 +31,7 @@ namespace failover {
 
     class FailoverTransport;
 
-    class AMQCPP_API BackupTransport : public TransportExceptionListener {
+    class AMQCPP_API BackupTransport : public DefaultTransportListener {
     private:
 
         // The parent Failover Transport
@@ -40,28 +41,29 @@ namespace failover {
         Transport* transport;
 
         // The URI of this Backup
-        URI uri;
+        decaf::net::URI uri;
 
         // Indicates that the contained transport is not valid any longer.
-        bool disposed;
+        bool closed;
 
     public:
 
         BackupTransport( FailoverTransport* failover );
+
         virtual ~BackupTransport();
 
         /**
          * Gets the URI assigned to this Backup
          * @return the assigned URI
          */
-        URI getURI() const {
+        decaf::net::URI getURI() const {
             return this->uri;
         }
 
         /**
          * Sets the URI assigned to this Transport.
          */
-        void setURI( const URI& uri ) {
+        void setURI( const decaf::net::URI& uri ) {
             this->uri = uri;
         }
 
@@ -84,7 +86,7 @@ namespace failover {
             this->transport = transport;
 
             if( this->transport != NULL ) {
-                this->transport->setTransportExceptionListener( this );
+                this->transport->setTransportListener( this );
             }
         }
 
@@ -97,14 +99,13 @@ namespace failover {
                                            const decaf::lang::Exception& ex );
 
         /**
-         * The transport has suffered an interruption from which it hopes to recover
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
          */
-        virtual void transportInterrupted();
-
-        /**
-         * The transport has resumed after an interruption
-         */
-        virtual void transportResumed();
+        bool isClosed() const {
+            return this->closed;
+        }
 
     };
 

@@ -20,8 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/transport/CommandListener.h>
+#include <activemq/transport/TransportListener.h>
 #include <activemq/transport/Command.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -57,19 +56,14 @@ namespace transport{
     private:
 
         /**
-         * Listener to incoming commands.
-         */
-        CommandListener* listener;
-
-        /**
          * WireFormat instance to use to Encode / Decode.
          */
         wireformat::WireFormat* wireFormat;
 
         /**
-         * Listener of exceptions from this transport.
+         * Listener of this transport.
          */
-        TransportExceptionListener* exceptionListener;
+        TransportListener* listener;
 
         /**
          * The input stream for incoming commands.
@@ -153,14 +147,6 @@ namespace transport{
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * Assigns the command listener for non-response commands.
-         * @param listener the listener.
-         */
-        virtual void setCommandListener( CommandListener* listener ){
-            this->listener = listener;
-        }
-
-        /**
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
@@ -169,11 +155,11 @@ namespace transport{
         }
 
         /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport exceptions.
+         * Sets the observer of asynchronous events from this transport.
+         * @param listener the listener of transport events.
          */
-        virtual void setTransportExceptionListener( TransportExceptionListener* listener ){
-            this->exceptionListener = listener;
+        virtual void setTransportListener( TransportListener* listener ){
+            this->listener = listener;
         }
 
         /**
@@ -232,6 +218,35 @@ namespace transport{
 
             return NULL;
         }
+
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const {
+            return false;
+        }
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const {
+            return !this->closed;
+        }
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const {
+            return this->closed;
+        }
+
     };
 
 }}

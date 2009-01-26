@@ -18,9 +18,8 @@
 #include "IOTransportTest.h"
 
 #include <activemq/transport/IOTransport.h>
-#include <activemq/transport/CommandListener.h>
 #include <activemq/transport/Command.h>
-#include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/transport/TransportListener.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
@@ -55,32 +54,6 @@ public:
         MyCommand* command = new MyCommand;
         command->c = c;
         return command;
-    }
-};
-
-////////////////////////////////////////////////////////////////////////////////
-class MyCommandListener : public CommandListener{
-private:
-
-    decaf::util::concurrent::CountDownLatch latch;
-
-public:
-
-    MyCommandListener() : latch(1) {}
-    MyCommandListener( unsigned int num ) : latch( num ) {}
-
-    virtual ~MyCommandListener(){}
-
-    virtual void await() {
-        latch.await();
-    }
-
-    std::string str;
-    virtual void onCommand( Command* command ){
-        const MyCommand* cmd = dynamic_cast<const MyCommand*>(command);
-        str += cmd->c;
-        delete command;
-        latch.countDown();
     }
 };
 
@@ -178,16 +151,31 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class MyExceptionListener : public TransportExceptionListener{
+class MyTransportListener : public TransportListener{
+private:
+
+    decaf::util::concurrent::CountDownLatch latch;
+
 public:
 
     Transport* transport;
     decaf::util::concurrent::Mutex mutex;
 
-    MyExceptionListener(){
-        transport = NULL;
+    MyTransportListener() : latch(1) { this->transport = NULL; }
+    MyTransportListener( unsigned int num ) : latch( num ) { this->transport = NULL; }
+    virtual ~MyTransportListener(){}
+
+    virtual void await() {
+        latch.await();
     }
-    virtual ~MyExceptionListener(){}
+
+    std::string str;
+    virtual void onCommand( Command* command ){
+        const MyCommand* cmd = dynamic_cast<const MyCommand*>(command);
+        str += cmd->c;
+        delete command;
+        latch.countDown();
+    }
 
     virtual void onTransportException( Transport* source,
                 const decaf::lang::Exception& ex AMQCPP_UNUSED){
@@ -219,12 +207,10 @@ void IOTransportTest::testStartClose(){
     decaf::io::ByteArrayOutputStream os;
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
-    MyCommandListener listener;
+    MyTransportListener listener;
     MyWireFormat wireFormat;
-    MyExceptionListener exListener;
     IOTransport transport( &wireFormat );
-    transport.setCommandListener( &listener );
-    transport.setTransportExceptionListener( &exListener );
+    transport.setTransportListener( &listener );
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
 
@@ -244,14 +230,12 @@ void IOTransportTest::testStressTransportStartClose(){
     decaf::io::DataOutputStream output( &bos );
 
     for( int i = 0; i < 50; ++i ) {
-        MyCommandListener listener;
         MyWireFormat wireFormat;
-        MyExceptionListener exListener;
+        MyTransportListener listener;
 
         IOTransport transport;
-        transport.setCommandListener( &listener );
         transport.setWireFormat( &wireFormat );
-        transport.setTransportExceptionListener( &exListener );
+        transport.setTransportListener( &listener );
         transport.setInputStream( &input );
         transport.setOutputStream( &output );
 
@@ -277,14 +261,12 @@ void IOTransportTest::testRead(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyCommandListener listener(10);
     MyWireFormat wireFormat;
-    MyExceptionListener exListener;
+    MyTransportListener listener(10);
     IOTransport transport;
-    transport.setCommandListener( &listener );
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
-    transport.setTransportExceptionListener( &exListener );
+    transport.setTransportListener( &listener );
     transport.setWireFormat( &wireFormat );
 
     transport.start();
@@ -315,14 +297,12 @@ void IOTransportTest::testWrite(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyCommandListener listener;
     MyWireFormat wireFormat;
-    MyExceptionListener exListener;
+    MyTransportListener listener;
     IOTransport transport;
-    transport.setCommandListener( &listener );
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
-    transport.setTransportExceptionListener( &exListener );
+    transport.setTransportListener( &listener );
     transport.setWireFormat( &wireFormat );
 
     transport.start();
@@ -359,15 +339,13 @@ void IOTransportTest::testException(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyCommandListener listener;
     MyWireFormat wireFormat;
-    MyExceptionListener exListener;
+    MyTransportListener listener;
     IOTransport transport;
-    transport.setCommandListener( &listener );
     wireFormat.throwException = true;
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
-    transport.setTransportExceptionListener( &exListener );
+    transport.setTransportListener( &listener );
     transport.setWireFormat( &wireFormat );
 
     unsigned char buffer[1] = { '1' };
@@ -381,15 +359,15 @@ void IOTransportTest::testException(){
 
     transport.start();
 
-    synchronized(&exListener.mutex)
+    synchronized(&listener.mutex)
     {
-       if(exListener.transport != &transport)
+       if(listener.transport != &transport)
        {
-          exListener.mutex.wait(1000);
+          listener.mutex.wait(1000);
        }
     }
 
-    CPPUNIT_ASSERT( exListener.transport == &transport );
+    CPPUNIT_ASSERT( listener.transport == &transport );
 
     transport.close();
 }

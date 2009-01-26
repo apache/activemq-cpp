@@ -73,6 +73,8 @@ void TcpTransport::close() throw( cms::CMSException ) {
 
     try {
 
+        this->closed = true;
+
         // Close the socket.
         if( socket.get() != NULL ) {
             socket->close();

@@ -194,18 +194,11 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
         return;
     }
 
-    if( commandlistener == NULL ){
+    if( listener == NULL ){
         throw exceptions::ActiveMQException(
             __FILE__, __LINE__,
             "OpenWireFormatNegotiator::start - "
-            "commandListener is invalid" );
-    }
-
-    if( exceptionListener == NULL ){
-        throw exceptions::ActiveMQException(
-            __FILE__, __LINE__,
-            "OpenWireFormatNegotiator::start - "
-            "exceptionListener is invalid" );
+            "TransportListener is invalid" );
     }
 
     if( next == NULL ){

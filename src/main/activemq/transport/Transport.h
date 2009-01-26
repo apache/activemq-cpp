@@ -36,8 +36,7 @@ namespace wireformat{
 namespace transport{
 
     // Forward declarations.
-    class CommandListener;
-    class TransportExceptionListener;
+    class TransportListener;
 
     /**
      * Interface for a transport layer for command objects.  Callers can
@@ -96,23 +95,16 @@ namespace transport{
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
-         * Assigns the command listener for non-response commands.
-         * @param listener the listener.
-         */
-        virtual void setCommandListener( CommandListener* listener ) = 0;
-
-        /**
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( wireformat::WireFormat* wireFormat ) = 0;
 
         /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport exceptions.
+         * Sets the observer of asynchronous events from this transport.
+         * @param listener the listener of transport events.
          */
-        virtual void setTransportExceptionListener(
-            TransportExceptionListener* listener ) = 0;
+        virtual void setTransportListener( TransportListener* listener ) = 0;
 
         /**
          * Narrows down a Chain of Transports to a specific Transport to allow a
@@ -124,6 +116,28 @@ namespace transport{
          * @return the requested Object. or NULL if its not in this chain.
          */
         virtual Transport* narrow( const std::type_info& typeId ) = 0;
+
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const = 0;
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const = 0;
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const = 0;
 
     };
 

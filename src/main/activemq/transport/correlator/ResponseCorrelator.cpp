@@ -229,12 +229,7 @@ void ResponseCorrelator::start() throw( cms::CMSException ) {
             return;
         }
 
-        if( commandlistener == NULL ){
-            throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                "commandListener is invalid" );
-        }
-
-        if( exceptionListener == NULL ){
+        if( listener == NULL ){
             throw exceptions::ActiveMQException( __FILE__, __LINE__,
                 "exceptionListener is invalid" );
         }

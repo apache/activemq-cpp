@@ -33,9 +33,8 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
                               bool own ){
 
     this->responseBuilder = NULL;
-    this->commandListener = NULL;
-    this->outgoingCommandListener = NULL;
-    this->exceptionListener = NULL;
+    this->outgoingListener = NULL;
+    this->listener = NULL;
     this->responseBuilder = responseBuilder;
     this->own = own;
     this->nextCommandId.set( 0 );
@@ -68,8 +67,8 @@ void MockTransport::oneway( Command* command )
         internalListener.onCommand( command );
 
         // Notify external Client of command that we "sent"
-        if( outgoingCommandListener != NULL ){
-            outgoingCommandListener->onCommand( command );
+        if( outgoingListener != NULL ){
+            outgoingListener->onCommand( command );
             return;
         }
     }
@@ -90,8 +89,8 @@ Response* MockTransport::request( Command* command )
         if( responseBuilder != NULL ){
 
             // Notify external Client of command that we "sent"
-            if( outgoingCommandListener != NULL ){
-                outgoingCommandListener->onCommand( command );
+            if( outgoingListener != NULL ){
+                outgoingListener->onCommand( command );
             }
 
             command->setCommandId( this->nextCommandId.incrementAndGet() );

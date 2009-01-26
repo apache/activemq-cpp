@@ -21,8 +21,8 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/CommandListener.h>
-#include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/transport/TransportListener.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/CommandIOException.h>
 
 #include <decaf/lang/Thread.h>
@@ -68,7 +68,7 @@ namespace mock{
              * Given a Command, check if it requires a response and return the
              * appropriate Response that the Broker would send for this Command
              * @param command - The command to build a response for
-             * @return A Reponse object pointer, or NULL if no response.
+             * @return A Response object pointer, or NULL if no response.
              */
             virtual Response* buildResponse( const Command* command ) = 0;
 
@@ -89,10 +89,10 @@ namespace mock{
          * processes all outbound commands and sends responses that are
          * constructed by calling the Protocol provided ResponseBuilder
          * and getting a set of Commands to send back into the MockTransport
-         * as imcoming Commands and Responses.
+         * as incoming Commands and Responses.
          */
         class InternalCommandListener :
-            public CommandListener,
+            public DefaultTransportListener,
             public decaf::lang::Thread {
 
         private:
@@ -176,9 +176,8 @@ namespace mock{
     private:
 
         ResponseBuilder* responseBuilder;
-        CommandListener* commandListener;
-        CommandListener* outgoingCommandListener;
-        TransportExceptionListener* exceptionListener;
+        TransportListener* outgoingListener;
+        TransportListener* listener;
         decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
         bool own;
         InternalCommandListener internalListener;
@@ -216,18 +215,14 @@ namespace mock{
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
-        virtual void setCommandListener( CommandListener* listener ){
-            this->commandListener = listener;
-        }
-
         /**
-         * Sets a Command Listener that gets notified for every command that would
+         * Sets a Listener that gets notified for every command that would
          * have been sent by this transport to the Broker, this allows a client
          * to verify that its messages are making it to the wire.
          * @param listener - The CommandListener to notify for each message
          */
-        virtual void setOutgoingCommandListener( CommandListener* listener ){
-            outgoingCommandListener = listener;
+        virtual void setOutgoingListener( TransportListener* listener ){
+            outgoingListener = listener;
         }
 
         /**
@@ -236,10 +231,8 @@ namespace mock{
          */
         virtual void setWireFormat( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {}
 
-        virtual void setTransportExceptionListener(
-            TransportExceptionListener* listener )
-        {
-            this->exceptionListener = listener;
+        virtual void setTransportListener( TransportListener* listener ) {
+            this->listener = listener;
         }
 
         /**
@@ -248,8 +241,8 @@ namespace mock{
          * @param command - Command to send to the Listener.
          */
         virtual void fireCommand( Command* command ){
-            if( commandListener != NULL ){
-                commandListener->onCommand( command );
+            if( listener != NULL ){
+                listener->onCommand( command );
             }
         }
 
@@ -259,8 +252,8 @@ namespace mock{
          * @param command - Command to send to the Listener.
          */
         virtual void fireException( const exceptions::ActiveMQException& ex ){
-            if( exceptionListener != NULL ){
-                exceptionListener->onTransportException( this, ex );
+            if( listener != NULL ){
+                listener->onTransportException( this, ex );
             }
         }
 
@@ -285,6 +278,33 @@ namespace mock{
             return NULL;
         }
 
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const {
+            return false;
+        }
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const {
+            return true;
+        }
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const {
+            return false;
+        }
     };
 
 }}}

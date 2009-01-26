@@ -45,6 +45,11 @@ namespace tcp{
     private:
 
         /**
+         * has close been called.
+         */
+        bool closed;
+
+        /**
          * Socket that this Transport Communicates with
          */
         std::auto_ptr<decaf::net::Socket> socket;
@@ -90,6 +95,38 @@ namespace tcp{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException );
+
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const {
+            return false;
+        }
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const {
+            if( this->socket.get() != NULL ) {
+                return this->socket->isConnected();
+            }
+
+            return false;
+        }
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const {
+            return this->closed;
+        }
 
     private:
 

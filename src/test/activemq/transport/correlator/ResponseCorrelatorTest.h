@@ -21,11 +21,12 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <activemq/util/Config.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
-#include <activemq/util/Config.h>
 #include <queue>
 
 namespace activemq{
@@ -122,8 +123,7 @@ namespace correlator{
             public Transport,
             public decaf::lang::Runnable{
         public:
-            CommandListener* listener;
-            TransportExceptionListener* exListener;
+            TransportListener* listener;
             decaf::lang::Thread* thread;
             decaf::util::concurrent::Mutex mutex;
             decaf::util::concurrent::Mutex startedMutex;
@@ -134,7 +134,6 @@ namespace correlator{
 
             MyTransport(){
                 listener = NULL;
-                exListener = NULL;
                 thread = NULL;
                 done = false;
             }
@@ -172,18 +171,12 @@ namespace correlator{
                     "stuff" );
             }
 
-            virtual void setCommandListener( CommandListener* listener ){
-                this->listener = listener;
-            }
-
             virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {
 
             }
 
-            virtual void setTransportExceptionListener(
-                TransportExceptionListener* listener )
-            {
-                this->exListener = listener;
+            virtual void setTransportListener( TransportListener* listener ) {
+                this->listener = listener;
             }
 
             virtual void start() throw( cms::CMSException ){
@@ -259,14 +252,14 @@ namespace correlator{
                         }
                     }
                 }catch( exceptions::ActiveMQException& ex ){
-                    if( exListener ){
-                        exListener->onTransportException( this, ex );
+                    if( listener ){
+                        listener->onTransportException( this, ex );
                     }
                 }
                 catch( ... ){
-                    if( exListener ){
+                    if( listener ){
                         exceptions::ActiveMQException ex( __FILE__, __LINE__, "stuff" );
-                        exListener->onTransportException( this, ex );
+                        listener->onTransportException( this, ex );
                     }
                 }
             }
@@ -278,6 +271,35 @@ namespace correlator{
 
                 return NULL;
             }
+
+            /**
+             * Is this Transport fault tolerant, meaning that it will reconnect to
+             * a broker on disconnect.
+             *
+             * @returns true if the Transport is fault tolerant.
+             */
+            virtual bool isFaultTolerant() const {
+                return true;
+            }
+
+            /**
+             * Is the Transport Connected to its Broker.
+             *
+             * @returns true if a connection has been made.
+             */
+            virtual bool isConnected() const {
+                return false;
+            }
+
+            /**
+             * Has the Transport been shutdown and no longer usable.
+             *
+             * @returns true if the Transport
+             */
+            virtual bool isClosed() const {
+                return false;
+            }
+
         };
 
         class MyBrokenTransport : public MyTransport{
@@ -292,11 +314,7 @@ namespace correlator{
             }
         };
 
-        class MyListener
-        :
-            public CommandListener,
-            public TransportExceptionListener{
-
+        class MyListener : public DefaultTransportListener {
         public:
 
             int exCount;
@@ -326,16 +344,6 @@ namespace correlator{
                     exCount++;
                 }
             }
-
-            /**
-             * The transport has suffered an interruption from which it hopes to recover
-             */
-            virtual void transportInterrupted() {}
-
-            /**
-             * The transport has resumed after an interruption
-             */
-            virtual void transportResumed() {}
 
         };
 

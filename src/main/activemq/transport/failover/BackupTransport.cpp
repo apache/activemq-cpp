@@ -17,16 +17,17 @@
 
 #include "BackupTransport.h"
 
+#include <activemq/transport/failover/FailoverTransport.h>
+
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransport::BackupTransport( FailoverTransport* failover ) {
+BackupTransport::BackupTransport( FailoverTransport* failover ) : failover( failover ) {
 
-    this->failover = failover;
     this->transport = NULL;
-    this->disposed = false;
+    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -37,13 +38,9 @@ BackupTransport::~BackupTransport() {
 void BackupTransport::onTransportException( transport::Transport* source,
                                             const decaf::lang::Exception& ex ) {
 
-    this->disposed = true;
-}
+    this->closed = true;
 
-////////////////////////////////////////////////////////////////////////////////
-void BackupTransport::transportInterrupted() {
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void BackupTransport::transportResumed() {
+    if( this->failover != NULL ) {
+        this->failover->reconnect();
+    }
 }

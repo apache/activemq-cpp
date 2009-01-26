@@ -15,46 +15,51 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
-#define _ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_
+#ifndef _ACTIVEMQ_TRANSPORT_DEFAULTTRANSPORTLISTENER_H_
+#define _ACTIVEMQ_TRANSPORT_DEFAULTTRANSPORTLISTENER_H_
 
-#include <decaf/lang/Exception.h>
 #include <activemq/util/Config.h>
+#include <activemq/transport/TransportListener.h>
 
-namespace activemq{
-namespace transport{
+namespace activemq {
+namespace transport {
 
-    // Forward declarations.
-    class Transport;
-
-    /**
-     * A listener of asynchronous exceptions from a command transport object.
-     */
-    class AMQCPP_API TransportExceptionListener{
+    class AMQCPP_API DefaultTransportListener : public TransportListener {
     public:
 
-        virtual ~TransportExceptionListener() {}
+        virtual ~DefaultTransportListener() {}
+
+        /**
+         * Event handler for the receipt of a command.  The transport passes
+         * off all received commands to its listeners, the listener then owns
+         * the Object.  If there is no registered listener the Transport deletes
+         * the command upon receipt.
+         *
+         * @param command the received command object.
+         */
+        virtual void onCommand( Command* command AMQCPP_UNUSED ) {}
 
         /**
          * Event handler for an exception from a command transport.
+         *
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( Transport* source,
-                                           const decaf::lang::Exception& ex ) = 0;
+        virtual void onTransportException( Transport* source AMQCPP_UNUSED,
+                                           const decaf::lang::Exception& ex AMQCPP_UNUSED ) {}
 
         /**
          * The transport has suffered an interruption from which it hopes to recover
          */
-        virtual void transportInterrupted() = 0;
+        virtual void transportInterrupted() {}
 
         /**
          * The transport has resumed after an interruption
          */
-        virtual void transportResumed() = 0;
+        virtual void transportResumed() {}
 
     };
 
 }}
 
-#endif /*_ACTIVEMQ_TRANSPORT_TRANSPORTEXCEPTIONLISTENER_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_DEFAULTTRANSPORTLISTENER_H_*/

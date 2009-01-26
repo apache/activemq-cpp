@@ -38,7 +38,6 @@ LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport" )
 IOTransport::IOTransport(){
 
     this->listener = NULL;
-    this->exceptionListener = NULL;
     this->inputStream = NULL;
     this->outputStream = NULL;
     this->closed = false;
@@ -50,7 +49,6 @@ IOTransport::IOTransport(){
 IOTransport::IOTransport( WireFormat* wireFormat ) {
 
     this->listener = NULL;
-    this->exceptionListener = NULL;
     this->inputStream = NULL;
     this->outputStream = NULL;
     this->closed = false;
@@ -69,10 +67,10 @@ IOTransport::~IOTransport(){
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::fire( decaf::lang::Exception& ex ){
 
-    if( this->exceptionListener != NULL && !this->closed ){
+    if( this->listener != NULL && !this->closed ){
 
         try{
-            this->exceptionListener->onTransportException( this, ex );
+            this->listener->onTransportException( this, ex );
         }catch( ... ){}
     }
 }

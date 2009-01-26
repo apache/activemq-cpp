@@ -29,10 +29,8 @@ void ResponseCorrelatorTest::testBasics(){
         MyListener listener;
         MyTransport transport;
         ResponseCorrelator correlator( &transport, false );
-        correlator.setCommandListener( &listener );
-        correlator.setTransportExceptionListener( &listener );
+        correlator.setTransportListener( &listener );
         CPPUNIT_ASSERT( transport.listener == &correlator );
-        CPPUNIT_ASSERT( transport.exListener == &correlator );
 
         // Give the thread a little time to get up and running.
         synchronized(&transport.startedMutex)
@@ -74,10 +72,8 @@ void ResponseCorrelatorTest::testOneway(){
         MyListener listener;
         MyTransport transport;
         ResponseCorrelator correlator( &transport, false );
-        correlator.setCommandListener( &listener );
-        correlator.setTransportExceptionListener( &listener );
+        correlator.setTransportListener( &listener );
         CPPUNIT_ASSERT( transport.listener == &correlator );
-        CPPUNIT_ASSERT( transport.exListener == &correlator );
 
         // Give the thread a little time to get up and running.
         synchronized(&transport.startedMutex)
@@ -116,10 +112,8 @@ void ResponseCorrelatorTest::testTransportException(){
         MyListener listener;
         MyBrokenTransport transport;
         ResponseCorrelator correlator( &transport, false );
-        correlator.setCommandListener( &listener );
-        correlator.setTransportExceptionListener( &listener );
+        correlator.setTransportListener( &listener );
         CPPUNIT_ASSERT( transport.listener == &correlator );
-        CPPUNIT_ASSERT( transport.exListener == &correlator );
 
         // Give the thread a little time to get up and running.
         synchronized(&transport.startedMutex)
@@ -162,10 +156,8 @@ void ResponseCorrelatorTest::testMultiRequests(){
         MyListener listener;
         MyTransport transport;
         ResponseCorrelator correlator( &transport, false );
-        correlator.setCommandListener( &listener );
-        correlator.setTransportExceptionListener( &listener );
+        correlator.setTransportListener( &listener );
         CPPUNIT_ASSERT( transport.listener == &correlator );
-        CPPUNIT_ASSERT( transport.exListener == &correlator );
 
         // Start the transport.
         correlator.start();

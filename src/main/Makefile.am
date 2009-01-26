@@ -43,6 +43,9 @@ cc_sources = \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
+    activemq/transport/failover/BackupTransport.cpp \
+    activemq/transport/failover/FailoverTransport.cpp \
+    activemq/transport/failover/FailoverTransportFactory.cpp \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
@@ -178,17 +181,20 @@ h_sources = \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
     activemq/exceptions/ExceptionDefines.h \
+    activemq/transport/AbstractTransportFactory.h \
+    activemq/transport/Command.h \
+    activemq/transport/CommandIOException.h \
+    activemq/transport/DefaultTransportListener.h \
+    activemq/transport/IOTransport.h \
+    activemq/transport/Response.h \
     activemq/transport/Transport.h \
+    activemq/transport/TransportListener.h \
     activemq/transport/TransportFilter.h \
     activemq/transport/TransportFactory.h \
-    activemq/transport/AbstractTransportFactory.h \
-    activemq/transport/TransportExceptionListener.h \
     activemq/transport/TransportRegistry.h \
-    activemq/transport/Response.h \
-    activemq/transport/Command.h \
-    activemq/transport/CommandListener.h \
-    activemq/transport/CommandIOException.h \
-    activemq/transport/IOTransport.h \
+    activemq/transport/failover/BackupTransport.h \
+    activemq/transport/failover/FailoverTransport.h \
+    activemq/transport/failover/FailoverTransportFactory.h \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/correlator/FutureResponse.h \

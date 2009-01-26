@@ -26,7 +26,7 @@
 
 #include <activemq/core/ActiveMQMessage.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/CommandListener.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnection.h>
 
@@ -46,7 +46,7 @@ namespace core{
         ActiveMQConnectionTest() {};
         virtual ~ActiveMQConnectionTest() {}
 
-        class MyCommandListener : public transport::CommandListener{
+        class MyCommandListener : public transport::DefaultTransportListener{
         public:
 
             transport::Command* cmd;

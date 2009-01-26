@@ -259,7 +259,7 @@ void ActiveMQConnectionTest::test2WithOpenwire()
             CPPUNIT_ASSERT( false );
         }
 
-        transport->setCommandListener( &cmdListener );
+        transport->setTransportListener( &cmdListener );
 
         ActiveMQConnection connection( transport, properties );
 

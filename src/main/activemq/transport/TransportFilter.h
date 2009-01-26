@@ -21,9 +21,8 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/CommandListener.h>
 #include <activemq/transport/Command.h>
-#include <activemq/transport/TransportExceptionListener.h>
+#include <activemq/transport/TransportListener.h>
 #include <typeinfo>
 
 namespace activemq{
@@ -36,8 +35,7 @@ namespace transport{
      */
     class AMQCPP_API TransportFilter :
         public Transport,
-        public CommandListener,
-        public TransportExceptionListener {
+        public TransportListener {
 
     protected:
 
@@ -53,14 +51,9 @@ namespace transport{
         bool own;
 
         /**
-         * Listener to incoming commands.
+         * Listener of this transport.
          */
-        CommandListener* commandlistener;
-
-        /**
-         * Listener of exceptions from this transport.
-         */
-        TransportExceptionListener* exceptionListener;
+        TransportListener* listener;
 
     protected:
 
@@ -70,9 +63,9 @@ namespace transport{
          */
         void fire( const decaf::lang::Exception& ex ){
 
-            if( exceptionListener != NULL ){
+            if( listener != NULL ){
                 try{
-                    exceptionListener->onTransportException( this, ex );
+                    listener->onTransportException( this, ex );
                 }catch( ... ){}
             }
         }
@@ -83,8 +76,10 @@ namespace transport{
          */
         void fire( Command* command ){
             try{
-                if( commandlistener != NULL ){
-                    commandlistener->onCommand( command );
+                if( listener != NULL ){
+                    listener->onCommand( command );
+                } else {
+                    delete command;
                 }
             }catch( ... ){}
         }
@@ -167,19 +162,11 @@ namespace transport{
         }
 
         /**
-         * Assigns the command listener for non-response commands.
-         * @param listener the listener.
-         */
-        virtual void setCommandListener( CommandListener* listener ){
-            this->commandlistener = listener;
-        }
-
-        /**
          * Sets the observer of asynchronous exceptions from this transport.
          * @param listener the listener of transport exceptions.
          */
-        virtual void setTransportExceptionListener( TransportExceptionListener* listener ){
-            this->exceptionListener = listener;
+        virtual void setTransportListener( TransportListener* listener ){
+            this->listener = listener;
         }
 
         /**
@@ -201,12 +188,7 @@ namespace transport{
          */
         virtual void start() throw( cms::CMSException ) {
 
-            if( commandlistener == NULL ){
-                throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                    "commandListener is invalid" );
-            }
-
-            if( exceptionListener == NULL ){
+            if( listener == NULL ){
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "exceptionListener is invalid" );
             }
@@ -242,6 +224,34 @@ namespace transport{
             }
 
             return NULL;
+        }
+
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const {
+            return next->isFaultTolerant();
+        }
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const {
+            return next->isConnected();
+        }
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const {
+            return next->isClosed();
         }
 
     };
