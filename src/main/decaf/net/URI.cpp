@@ -44,6 +44,12 @@ URI::URI() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+URI::URI( const URI& uri ) throw ( URISyntaxException ) {
+    this->uri = uri.uri;
+    this->uriString = uri.uriString;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 URI::URI( const std::string& uri ) throw ( URISyntaxException) {
 
     this->uriString = uri;

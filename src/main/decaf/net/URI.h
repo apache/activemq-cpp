@@ -51,6 +51,17 @@ namespace net{
     public:
 
         /**
+         * Default Constructor, same as calling a Constructor with all fields empty.
+         */
+        URI();
+
+        /**
+         * Constructs a URI as a copy of another URI
+         * @param uri - uri to copy
+         */
+        URI( const URI& uri ) throw ( URISyntaxException );
+
+        /**
          * Constructs a URI from the given string
          * @param uri - string uri to parse.
          */
@@ -407,13 +418,6 @@ namespace net{
          */
         static URI create( const std::string uri )
             throw ( lang::exceptions::IllegalArgumentException );
-
-    protected:
-
-        /**
-         * Default Constructor
-         */
-        URI();
 
     private:
 
