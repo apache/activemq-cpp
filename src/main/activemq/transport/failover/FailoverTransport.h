@@ -41,6 +41,7 @@ namespace failover {
 
         decaf::util::Set<decaf::net::URI> uris;
 
+        long long timeout;
         long long initialReconnectDelay;
         long long maxReconnectDelay;
         long long backOffMultiplier;
@@ -61,9 +62,7 @@ namespace failover {
 
     public:
 
-        FailoverTransport( const decaf::net::URI& location,
-                           wireformat::WireFormat* wireformat,
-                           const decaf::util::Properties& properties );
+        FailoverTransport();
 
         virtual ~FailoverTransport();
 
@@ -214,6 +213,14 @@ namespace failover {
         }
 
     public: // FailoverTransport Property Getters / Setters
+
+        long long getTimeout() const {
+            return this->timeout;
+        }
+
+        void setTimeout( long long value ) {
+            this->timeout = value;
+        }
 
         long long getInitialReconnectDelay() const {
             return this->initialReconnectDelay;

@@ -22,10 +22,9 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport( const decaf::net::URI& location,
-                                      wireformat::WireFormat* wireformat,
-                                      const decaf::util::Properties& properties ) {
+FailoverTransport::FailoverTransport() {
 
+    this->timeout = -1;
     this->initialReconnectDelay = 10;
     this->maxReconnectDelay = 1000 * 30;
     this->backOffMultiplier = 2;

@@ -19,6 +19,11 @@
 
 #include <activemq/transport/failover/FailoverTransport.h>
 
+#include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
+#include <memory>
+
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
@@ -35,7 +40,30 @@ Transport* FailoverTransportFactory::doCreateComposite( const decaf::net::URI& l
 
     try {
 
-        return new FailoverTransport( location, wireFormat, properties );
+        std::auto_ptr<FailoverTransport> transport( new FailoverTransport() );
+
+        transport->setInitialReconnectDelay(
+            Long::parseLong( properties.getProperty( "initialReconnectDelay", "10" ) ) );
+        transport->setMaxReconnectDelay(
+            Long::parseLong( properties.getProperty( "maxReconnectDelay", "30000" ) ) );
+        transport->setUseExponentialBackOff(
+            Boolean::parseBoolean( properties.getProperty( "useExponentialBackOff", "true" ) ) );
+        transport->setMaxReconnectAttempts(
+            Integer::parseInt( properties.getProperty( "maxReconnectAttempts", "0" ) ) );
+        transport->setRandomize(
+            Boolean::parseBoolean( properties.getProperty( "randomize", "true" ) ) );
+        transport->setBackup(
+            Boolean::parseBoolean( properties.getProperty( "backup", "false" ) ) );
+        transport->setBackupPoolSize(
+            Integer::parseInt( properties.getProperty( "backupPoolSize", "1" ) ) );
+        transport->setTimeout(
+            Long::parseLong( properties.getProperty( "timeout", "-1" ) ) );
+        transport->setTrackMessages(
+            Boolean::parseBoolean( properties.getProperty( "trackMessages", "false" ) ) );
+        transport->setMaxCacheSize(
+            Integer::parseInt( properties.getProperty( "maxCacheSize", "131072" ) ) );
+
+        return transport.release();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
