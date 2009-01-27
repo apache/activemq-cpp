@@ -43,6 +43,13 @@ cc_sources = \
     activemq/core/ActiveMQProducer.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
+    activemq/state/ConnectionState.cpp \
+    activemq/state/ConnectionStateTracker.cpp \
+    activemq/state/ConsumerState.cpp \
+    activemq/state/ProducerState.cpp \
+    activemq/state/SessionState.cpp \
+    activemq/state/TransactionState.cpp \
+    activemq/state/Tracked.cpp \
     activemq/transport/failover/BackupTransport.cpp \
     activemq/transport/failover/FailoverTransport.cpp \
     activemq/transport/failover/FailoverTransportFactory.cpp \
@@ -181,6 +188,15 @@ h_sources = \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
     activemq/exceptions/ExceptionDefines.h \
+    activemq/state/CommandVisitor.h \
+    activemq/state/CommandVisitorAdapter.h \
+    activemq/state/ConnectionState.h \
+    activemq/state/ConnectionStateTracker.h \
+    activemq/state/ConsumerState.h \
+    activemq/state/ProducerState.h \
+    activemq/state/SessionState.h \
+    activemq/state/TransactionState.h \
+    activemq/state/Tracked.h \
     activemq/transport/AbstractTransportFactory.h \
     activemq/transport/Command.h \
     activemq/transport/CommandIOException.h \
