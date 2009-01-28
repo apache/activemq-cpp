@@ -20,6 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportListener.h>
+#include <activemq/commands/Command.h>
 
 namespace activemq {
 namespace transport {
@@ -37,7 +38,7 @@ namespace transport {
          *
          * @param command the received command object.
          */
-        virtual void onCommand( Command* command AMQCPP_UNUSED ) {}
+        virtual void onCommand( commands::Command* command AMQCPP_UNUSED ) {}
 
         /**
          * Event handler for an exception from a command transport.

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/BrokerInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -73,7 +74,7 @@ BrokerInfo* BrokerInfo::cloneDataStructure() const {
 void BrokerInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const BrokerInfo* srcPtr = dynamic_cast<const BrokerInfo*>( src );
 
@@ -145,7 +146,7 @@ std::string BrokerInfo::toString() const {
     stream << " Value of ConnectionId = " << this->getConnectionId() << std::endl;
     stream << " Value of BrokerUploadUrl = " << this->getBrokerUploadUrl() << std::endl;
     stream << " Value of NetworkProperties = " << this->getNetworkProperties() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = BrokerInfo" << std::endl;
 
     return stream.str();
@@ -204,10 +205,17 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
     if( this->getNetworkProperties() != valuePtr->getNetworkProperties() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processBrokerInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

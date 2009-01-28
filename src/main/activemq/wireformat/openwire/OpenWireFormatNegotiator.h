@@ -20,7 +20,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
-#include <activemq/transport/Command.h>
 #include <activemq/wireformat/openwire/OpenWireFormat.h>
 #include <activemq/wireformat/WireFormatNegotiator.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -86,7 +85,7 @@ namespace openwire{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( transport::Command* command )
+        virtual void oneway( commands::Command* command )
             throw( transport::CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -98,7 +97,7 @@ namespace openwire{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual transport::Response* request( transport::Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( transport::CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -111,7 +110,7 @@ namespace openwire{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual transport::Response* request( transport::Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( transport::CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -123,7 +122,7 @@ namespace openwire{
          * the command listener.
          * @param command the received from the nested transport.
          */
-        virtual void onCommand( transport::Command* command );
+        virtual void onCommand( commands::Command* command );
 
         /**
          * Event handler for an exception from a command transport.

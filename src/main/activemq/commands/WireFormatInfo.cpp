@@ -17,6 +17,7 @@
 
 #include <activemq/commands/WireFormatInfo.h>
 
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -66,7 +67,7 @@ DataStructure* WireFormatInfo::cloneDataStructure() const {
 void WireFormatInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseDataStructure::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const WireFormatInfo* srcPtr = dynamic_cast<const WireFormatInfo*>( src );
 
@@ -111,7 +112,7 @@ std::string WireFormatInfo::toString() const {
     stream << " Value of tightEncodingEnabled = " << isTightEncodingEnabled() << std::endl;
     stream << " Value of sizePrefixDisabled = " << isSizePrefixDisabled() << std::endl;
 
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = WireFormatInfo" << std::endl;
 
     return stream.str();
@@ -154,11 +155,18 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
     if( isSizePrefixDisabled() != wireFormatInfo->isSizePrefixDisabled() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
 
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* WireFormatInfo::visit( activemq::state::CommandVisitor* visitor )
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processWireFormat( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

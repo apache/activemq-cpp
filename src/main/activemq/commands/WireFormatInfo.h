@@ -20,7 +20,6 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
-#include <activemq/transport/Command.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -29,7 +28,7 @@
 namespace activemq{
 namespace commands{
 
-    class AMQCPP_API WireFormatInfo : public BaseCommand<transport::Command> {
+    class AMQCPP_API WireFormatInfo : public BaseCommand {
     public:
 
         const static unsigned char ID_WIREFORMATINFO = 1;
@@ -83,6 +82,16 @@ namespace commands{
         virtual bool isMarshalAware() const {
             return true;
         }
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         *
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
         /**
          * Get the current Wireformat Version

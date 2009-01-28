@@ -52,7 +52,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API Message : public BaseCommand<transport::Command> {
+    class AMQCPP_API Message : public BaseCommand {
     protected:
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
@@ -137,6 +137,16 @@ namespace commands{
          * @returns number of bytes this message equates to.
          */
         virtual unsigned int getSize() const;
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
         virtual const ProducerId* getProducerId() const;
         virtual ProducerId* getProducerId();

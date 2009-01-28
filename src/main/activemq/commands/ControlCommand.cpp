@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ControlCommand.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -59,7 +60,7 @@ ControlCommand* ControlCommand::cloneDataStructure() const {
 void ControlCommand::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ControlCommand* srcPtr = dynamic_cast<const ControlCommand*>( src );
 
@@ -85,7 +86,7 @@ std::string ControlCommand::toString() const {
     stream << "Begin Class = ControlCommand" << std::endl;
     stream << " Value of ControlCommand::ID_CONTROLCOMMAND = 14" << std::endl;
     stream << " Value of Command = " << this->getCommand() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ControlCommand" << std::endl;
 
     return stream.str();
@@ -101,10 +102,17 @@ bool ControlCommand::equals( const DataStructure* value ) const {
     if( this->getCommand() != valuePtr->getCommand() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ControlCommand::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processControlCommand( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,7 @@ LoggingTransport::LoggingTransport( Transport* next, bool own )
 {}
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::onCommand( Command* command ) {
+void LoggingTransport::onCommand( commands::Command* command ) {
 
     ostringstream ostream;
     ostream << "*** BEGIN RECEIVED ASYNCHRONOUS COMMAND ***" << endl;
@@ -48,7 +48,7 @@ void LoggingTransport::onCommand( Command* command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LoggingTransport::oneway( Command* command )
+void LoggingTransport::oneway( commands::Command* command )
     throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
@@ -70,13 +70,13 @@ void LoggingTransport::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* LoggingTransport::request( Command* command )
+commands::Response* LoggingTransport::request( commands::Command* command )
     throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
         // Delegate to the base class.
-        Response* response = TransportFilter::request( command );
+        commands::Response* response = TransportFilter::request( command );
 
         ostringstream ostream;
         ostream << "*** SENDING REQUEST COMMAND ***" << endl;
@@ -95,13 +95,13 @@ Response* LoggingTransport::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* LoggingTransport::request( Command* command, unsigned int timeout )
+commands::Response* LoggingTransport::request( commands::Command* command, unsigned int timeout )
     throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
         // Delegate to the base class.
-        Response* response = TransportFilter::request( command, timeout );
+        commands::Response* response = TransportFilter::request( command, timeout );
 
         ostringstream ostream;
         ostream << "*** SENDING REQUEST COMMAND: Timeout = " << timeout << " ***" << endl;

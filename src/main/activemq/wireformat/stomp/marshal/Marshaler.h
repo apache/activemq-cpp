@@ -44,7 +44,7 @@ namespace marshal{
          * @return Newly Marshaled Stomp Message
          * @throws MarshalException
          */
-        virtual transport::Command* marshal( StompFrame* frame )
+        virtual commands::Command* marshal( StompFrame* frame )
             throw ( MarshalException );
 
         /**
@@ -56,7 +56,7 @@ namespace marshal{
          * @throws MarshalException
          */
         virtual const StompFrame& marshal(
-            transport::Command* command )
+            commands::Command* command )
                 throw ( MarshalException );
 
     };

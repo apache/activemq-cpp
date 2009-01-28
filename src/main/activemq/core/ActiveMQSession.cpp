@@ -934,7 +934,7 @@ commands::TransactionId* ActiveMQSession::createLocalTransactionId()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::oneway( transport::Command* command )
+void ActiveMQSession::oneway( commands::Command* command )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -947,7 +947,7 @@ void ActiveMQSession::oneway( transport::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::syncRequest( transport::Command* command, unsigned int timeout )
+void ActiveMQSession::syncRequest( commands::Command* command, unsigned int timeout )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{

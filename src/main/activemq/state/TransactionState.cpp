@@ -21,7 +21,6 @@
 
 using namespace activemq;
 using namespace activemq::state;
-using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::util;
 
@@ -36,7 +35,7 @@ TransactionState::TransactionState( const commands::TransactionId* id ) : dispos
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
 
-    std::auto_ptr< Iterator<Command*> > iter( this->commands.iterator() );
+    std::auto_ptr< Iterator<commands::Command*> > iter( this->commands.iterator() );
 
     while( iter->hasNext() ) {
         delete iter->next();
@@ -54,11 +53,12 @@ std::string TransactionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionState::addCommand( transport::Command* operation ) {
+void TransactionState::addCommand( commands::Command* operation ) {
 
     checkShutdown();
 
-    commands.add( operation->cloneCommand() );
+    commands.add(
+        dynamic_cast<commands::Command*>( operation->cloneDataStructure() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

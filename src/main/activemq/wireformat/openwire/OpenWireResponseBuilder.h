@@ -32,11 +32,11 @@ namespace openwire{
         OpenWireResponseBuilder() {}
         virtual ~OpenWireResponseBuilder() {}
 
-        virtual transport::Response* buildResponse( const transport::Command* command );
+        virtual commands::Response* buildResponse( const commands::Command* command );
 
         virtual void buildIncomingCommands(
-            const transport::Command* command,
-            decaf::util::Queue<transport::Command*>& queue );
+            const commands::Command* command,
+            decaf::util::Queue<commands::Command*>& queue );
 
     };
 

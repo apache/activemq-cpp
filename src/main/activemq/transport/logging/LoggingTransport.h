@@ -49,7 +49,7 @@ namespace logging{
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( Command* command );
+        virtual void onCommand( commands::Command* command );
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
@@ -60,7 +60,7 @@ namespace logging{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
@@ -69,7 +69,7 @@ namespace logging{
          * @param command the command that is sent as a request
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
@@ -79,7 +79,7 @@ namespace logging{
          * @param timeout the time to wait for a response.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 

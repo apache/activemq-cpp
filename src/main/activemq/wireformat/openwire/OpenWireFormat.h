@@ -77,7 +77,7 @@ namespace marshal {
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( transport::Command* command,
+        virtual void marshal( commands::Command* command,
                               decaf::io::DataOutputStream* dataOut )
             throw ( decaf::io::IOException );
 
@@ -87,7 +87,7 @@ namespace marshal {
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual transport::Command* unmarshal( decaf::io::DataInputStream* dis )
+        virtual commands::Command* unmarshal( decaf::io::DataInputStream* dis )
             throw ( decaf::io::IOException );
 
         /**

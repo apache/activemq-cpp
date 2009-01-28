@@ -19,37 +19,42 @@
 #define _ACTIVEMQ_STATE_COMMANDVISITOR_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Response.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
-#include <activemq/commands/ConnectionInfo.h>
-#include <activemq/commands/SessionInfo.h>
-#include <activemq/commands/ProducerInfo.h>
-#include <activemq/commands/ConsumerInfo.h>
-#include <activemq/commands/ConnectionId.h>
-#include <activemq/commands/SessionId.h>
-#include <activemq/commands/ProducerId.h>
-#include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/DestinationInfo.h>
-#include <activemq/commands/RemoveSubscriptionInfo.h>
-#include <activemq/commands/Message.h>
-#include <activemq/commands/MessageAck.h>
-#include <activemq/commands/MessagePull.h>
-#include <activemq/commands/TransactionInfo.h>
-#include <activemq/commands/WireFormatInfo.h>
-#include <activemq/commands/ProducerAck.h>
-#include <activemq/commands/MessageDispatch.h>
-#include <activemq/commands/MessageDispatchNotification.h>
-#include <activemq/commands/ControlCommand.h>
-#include <activemq/commands/ConnectionError.h>
-#include <activemq/commands/ConnectionControl.h>
-#include <activemq/commands/ConsumerControl.h>
-#include <activemq/commands/ShutdownInfo.h>
-#include <activemq/commands/KeepAliveInfo.h>
-#include <activemq/commands/FlushCommand.h>
-#include <activemq/commands/BrokerInfo.h>
-
 namespace activemq {
+namespace commands {
+    class Command;
+    class ConnectionInfo;
+    class SessionInfo;
+    class ProducerInfo;
+    class ConnectionId;
+    class SessionId;
+    class ProducerId;
+    class ConsumerId;
+    class ConsumerInfo;
+    class DestinationInfo;
+    class RemoveSubscriptionInfo;
+    class Message;
+    class MessageAck;
+    class MessagePull;
+    class TransactionInfo;
+    class WireFormatInfo;
+    class ProducerAck;
+    class MessageDispatch;
+    class MessageDispatchNotification;
+    class ControlCommand;
+    class ConnectionError;
+    class ConnectionControl;
+    class ConsumerControl;
+    class ShutdownInfo;
+    class KeepAliveInfo;
+    class FlushCommand;
+    class BrokerError;
+    class BrokerInfo;
+    class RemoveInfo;
+    class Response;
+    class ReplayCommand;
+}
 namespace state {
 
     /**
@@ -65,107 +70,122 @@ namespace state {
 
         virtual ~CommandVisitor() {}
 
-        virtual transport::Response* processAddConnection(
-            commands::ConnectionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processTransactionInfo(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processAddSession(
-            commands::SessionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveInfo(
+            commands::RemoveInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processAddProducer(
-            commands::ProducerInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processConnectionInfo(
+            commands::ConnectionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processAddConsumer(
-            commands::ConsumerInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processSessionInfo(
+            commands::SessionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveConnection(
-            commands::ConnectionId id ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processProducerInfo(
+            commands::ProducerInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveSession(
-            commands::SessionId id ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processConsumerInfo(
+            commands::ConsumerInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveProducer(
-            commands::ProducerId id ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveConnection(
+            commands::ConnectionId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveConsumer(
-            commands::ConsumerId id ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveSession(
+            commands::SessionId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processAddDestination(
-            commands::DestinationInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveProducer(
+            commands::ProducerId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveDestination(
-            commands::DestinationInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveConsumer(
+            commands::ConsumerId* id ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRemoveSubscription(
-            commands::RemoveSubscriptionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processDestinationInfo(
+            commands::DestinationInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processMessage(
-            commands::Message send ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveDestination(
+            commands::DestinationInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processMessageAck(
-            commands::MessageAck ack ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRemoveSubscriptionInfo(
+            commands::RemoveSubscriptionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processMessagePull(
-            commands::MessagePull pull ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processMessage(
+            commands::Message* send ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processBeginTransaction(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processMessageAck(
+            commands::MessageAck* ack ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processPrepareTransaction(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processMessagePull(
+            commands::MessagePull* pull ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processCommitTransactionOnePhase(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processBeginTransaction(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processCommitTransactionTwoPhase(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processPrepareTransaction(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRollbackTransaction(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processCommitTransactionOnePhase(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processWireFormat(
-            commands::WireFormatInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processCommitTransactionTwoPhase(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processKeepAlive(
-            commands::KeepAliveInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRollbackTransaction(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processShutdown(
-            commands::ShutdownInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processWireFormat(
+            commands::WireFormatInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processFlush(
-            commands::FlushCommand command ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processKeepAliveInfo(
+            commands::KeepAliveInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processBrokerInfo(
-            commands::BrokerInfo info) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processShutdownInfo(
+            commands::ShutdownInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processRecoverTransactions(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processFlushCommand(
+            commands::FlushCommand* command ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processForgetTransaction(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processBrokerInfo(
+            commands::BrokerInfo* info) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processEndTransaction(
-            commands::TransactionInfo info ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processRecoverTransactions(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processMessageDispatchNotification(
-            commands::MessageDispatchNotification notification ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processForgetTransaction(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processProducerAck(
-            commands::ProducerAck ack ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processEndTransaction(
+            commands::TransactionInfo* info ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processMessageDispatch(
-            commands::MessageDispatch dispatch ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processMessageDispatchNotification(
+            commands::MessageDispatchNotification* notification ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processControlCommand(
-            commands::ControlCommand command ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processProducerAck(
+            commands::ProducerAck* ack ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processConnectionError(
-            commands::ConnectionError error ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processMessageDispatch(
+            commands::MessageDispatch* dispatch ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processConnectionControl(
-            commands::ConnectionControl control ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processControlCommand(
+            commands::ControlCommand* command ) throw ( exceptions::ActiveMQException ) = 0;
 
-        virtual transport::Response* processConsumerControl(
-            commands::ConsumerControl control ) throw ( exceptions::ActiveMQException ) = 0;
+        virtual commands::Command* processConnectionError(
+            commands::ConnectionError* error ) throw ( exceptions::ActiveMQException ) = 0;
+
+        virtual commands::Command* processConnectionControl(
+            commands::ConnectionControl* control ) throw ( exceptions::ActiveMQException ) = 0;
+
+        virtual commands::Command* processConsumerControl(
+            commands::ConsumerControl* control ) throw ( exceptions::ActiveMQException ) = 0;
+
+        virtual commands::Command* processBrokerError(
+            commands::BrokerError* error ) throw ( exceptions::ActiveMQException ) = 0;
+
+        virtual commands::Command* processReplayCommand(
+            commands::ReplayCommand* replay ) throw ( exceptions::ActiveMQException ) = 0;
+
+        virtual commands::Command* processResponse(
+            commands::Response* response ) throw ( exceptions::ActiveMQException ) = 0;
 
     };
 

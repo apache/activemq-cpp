@@ -16,6 +16,8 @@
  */
 #include <activemq/commands/ActiveMQTempQueue.h>
 
+#include <activemq/exceptions/ActiveMQException.h>
+
 using namespace std;
 using namespace activemq;
 using namespace activemq::commands;

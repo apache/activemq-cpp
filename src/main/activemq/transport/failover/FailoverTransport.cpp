@@ -62,14 +62,14 @@ void FailoverTransport::removeURI( const decaf::net::URI& uri ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::oneway( Command* command )
+void FailoverTransport::oneway( commands::Command* command )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* FailoverTransport::request( Command* command AMQCPP_UNUSED )
+commands::Response* FailoverTransport::request( commands::Command* command AMQCPP_UNUSED )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 
@@ -78,7 +78,8 @@ Response* FailoverTransport::request( Command* command AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* FailoverTransport::request( Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+commands::Response* FailoverTransport::request( commands::Command* command AMQCPP_UNUSED,
+                                                unsigned int timeout AMQCPP_UNUSED )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 

@@ -19,13 +19,13 @@
 #define _ACTIVEMQ_STATE_TRACKED_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Response.h>
+#include <activemq/commands/Response.h>
 #include <decaf/lang/Runnable.h>
 
 namespace activemq {
 namespace state {
 
-    class AMQCPP_API Tracked : public transport::Response {
+    class AMQCPP_API Tracked : public commands::Response {
     private:
 
         decaf::lang::Runnable* runnable;

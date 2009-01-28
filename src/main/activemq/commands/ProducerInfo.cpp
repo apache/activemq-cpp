@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ProducerInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -67,7 +68,7 @@ ProducerInfo* ProducerInfo::cloneDataStructure() const {
 void ProducerInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ProducerInfo* srcPtr = dynamic_cast<const ProducerInfo*>( src );
 
@@ -134,7 +135,7 @@ std::string ProducerInfo::toString() const {
     }
     stream << " Value of DispatchAsync = " << this->isDispatchAsync() << std::endl;
     stream << " Value of WindowSize = " << this->getWindowSize() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ProducerInfo" << std::endl;
 
     return stream.str();
@@ -176,10 +177,17 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
     if( this->getWindowSize() != valuePtr->getWindowSize() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processProducerInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

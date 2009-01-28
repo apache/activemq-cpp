@@ -44,14 +44,14 @@ using namespace activemq::wireformat::stomp::marshal;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-transport::Command* Marshaler::marshal( StompFrame* frame )
+commands::Command* Marshaler::marshal( StompFrame* frame )
     throw ( MarshalException ) {
 
     try {
 
         CommandConstants::CommandId commandId =
             CommandConstants::toCommandId(frame->getCommand().c_str());
-        transport::Command* command = NULL;
+        commands::Command* command = NULL;
 
         if(commandId == CommandConstants::CONNECTED){
             command = new ConnectedCommand( frame );
@@ -90,7 +90,7 @@ transport::Command* Marshaler::marshal( StompFrame* frame )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const StompFrame& Marshaler::marshal( transport::Command* command )
+const StompFrame& Marshaler::marshal( commands::Command* command )
     throw ( MarshalException ) {
 
     try{

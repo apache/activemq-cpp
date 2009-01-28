@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/MessageDispatchNotification.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -65,7 +66,7 @@ MessageDispatchNotification* MessageDispatchNotification::cloneDataStructure() c
 void MessageDispatchNotification::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const MessageDispatchNotification* srcPtr = dynamic_cast<const MessageDispatchNotification*>( src );
 
@@ -124,7 +125,7 @@ std::string MessageDispatchNotification::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = MessageDispatchNotification" << std::endl;
 
     return stream.str();
@@ -161,10 +162,17 @@ bool MessageDispatchNotification::equals( const DataStructure* value ) const {
     } else if( valuePtr->getMessageId() != NULL ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* MessageDispatchNotification::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processMessageDispatchNotification( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

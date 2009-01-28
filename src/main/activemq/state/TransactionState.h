@@ -19,7 +19,7 @@
 #define _ACTIVEMQ_STATE_TRANSACTIONSTATE_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
 #include <activemq/commands/TransactionId.h>
 
 #include <decaf/util/List.h>
@@ -34,7 +34,7 @@ namespace state {
     class AMQCPP_API TransactionState {
     private:
 
-        decaf::util::List<transport::Command*> commands;
+        decaf::util::List<commands::Command*> commands;
         std::auto_ptr<commands::TransactionId> id;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
         bool prepared;
@@ -48,7 +48,7 @@ namespace state {
 
         std::string toString() const;
 
-        void addCommand( transport::Command* operation );
+        void addCommand( commands::Command* operation );
 
         void checkShutdown() const;
 
@@ -56,7 +56,7 @@ namespace state {
             this->disposed.set( true );
         }
 
-        const decaf::util::List<transport::Command*>& getCommands() {
+        const decaf::util::List<commands::Command*>& getCommands() {
             return commands;
         }
 

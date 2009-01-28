@@ -22,11 +22,13 @@
 #include <decaf/lang/Exception.h>
 
 namespace activemq{
+namespace commands{
+    class Command;
+}
 namespace transport{
 
     // Forward declarations.
     class Transport;
-    class Command;
 
     /**
      * A listener of asynchronous exceptions from a command transport object.
@@ -44,7 +46,7 @@ namespace transport{
          *
          * @param command the received command object.
          */
-        virtual void onCommand( Command* command ) = 0;
+        virtual void onCommand( commands::Command* command ) = 0;
 
         /**
          * Event handler for an exception from a command transport.

@@ -41,7 +41,7 @@ namespace commands{
      *         in the activemq-openwire-generator module
      *
      */
-    class AMQCPP_API Response : public BaseCommand<transport::Response> {
+    class AMQCPP_API Response : public BaseCommand {
     protected:
 
         int correlationId;
@@ -90,6 +90,16 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
         virtual int getCorrelationId() const;
         virtual void setCorrelationId( int correlationId );

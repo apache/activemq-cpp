@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
-#include <activemq/transport/Response.h>
+#include <activemq/commands/Response.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -38,7 +38,7 @@ namespace correlator{
     private:
 
         mutable decaf::util::concurrent::CountDownLatch responseLatch;
-        Response* response;
+        commands::Response* response;
 
     public:
 
@@ -52,11 +52,11 @@ namespace correlator{
          * Getters for the response property. Infinite Wait.
          * @return the response object for the request
          */
-        virtual const Response* getResponse() const{
+        virtual const commands::Response* getResponse() const{
             this->responseLatch.await();
             return response;
         }
-        virtual Response* getResponse(){
+        virtual commands::Response* getResponse(){
             this->responseLatch.await();
             return response;
         }
@@ -66,11 +66,11 @@ namespace correlator{
          * @param timeout - time to wait in milliseconds
          * @return the response object for the request
          */
-        virtual const Response* getResponse( unsigned timeout ) const{
+        virtual const commands::Response* getResponse( unsigned timeout ) const{
             this->responseLatch.await( timeout );
             return response;
         }
-        virtual Response* getResponse( unsigned int timeout ){
+        virtual commands::Response* getResponse( unsigned int timeout ){
             this->responseLatch.await( timeout );
             return response;
         }
@@ -79,7 +79,7 @@ namespace correlator{
          * Setter for the response property.
          * @param response the response object for the request.
          */
-        virtual void setResponse( Response* response ){
+        virtual void setResponse( commands::Response* response ){
             this->response = response;
             this->responseLatch.countDown();
         }

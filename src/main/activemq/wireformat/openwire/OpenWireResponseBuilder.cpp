@@ -43,8 +43,8 @@ using namespace activemq::transport;
 using namespace activemq::transport::mock;
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireResponseBuilder::buildResponse(
-    const transport::Command* command ){
+commands::Response* OpenWireResponseBuilder::buildResponse(
+    const commands::Command* command ){
 
     if( typeid( *command ) == typeid( commands::ActiveMQBytesMessage ) ||
         typeid( *command ) == typeid( commands::ActiveMQMapMessage ) ||
@@ -78,7 +78,7 @@ Response* OpenWireResponseBuilder::buildResponse(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireResponseBuilder::buildIncomingCommands(
-    const transport::Command* command, decaf::util::Queue<transport::Command*>& queue ){
+    const commands::Command* command, decaf::util::Queue<commands::Command*>& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {
@@ -89,6 +89,6 @@ void OpenWireResponseBuilder::buildIncomingCommands(
 
         // Return a copy of the callers own requested WireFormatInfo
         // so they get exactly the settings they asked for.
-        queue.push( command->cloneCommand() );
+        queue.push( dynamic_cast<commands::Command*>( command->cloneDataStructure() ) );
     }
 }

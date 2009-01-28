@@ -22,13 +22,14 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/transport/Response.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/exceptions/BrokerException.h>
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/util/Iterator.h>
 #include <decaf/util/UUID.h>
 
+#include <activemq/commands/Command.h>
 #include <activemq/commands/ActiveMQMessage.h>
 #include <activemq/commands/BrokerInfo.h>
 #include <activemq/commands/BrokerError.h>
@@ -432,7 +433,7 @@ void ActiveMQConnection::destroyDestination( const cms::Destination* destination
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::onCommand( transport::Command* command ) {
+void ActiveMQConnection::onCommand( commands::Command* command ) {
 
     try{
 
@@ -556,7 +557,7 @@ void ActiveMQConnection::onTransportException( transport::Transport* source AMQC
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::oneway( transport::Command* command )
+void ActiveMQConnection::oneway( commands::Command* command )
     throw ( ActiveMQException ) {
 
     try {
@@ -570,14 +571,14 @@ void ActiveMQConnection::oneway( transport::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::syncRequest( transport::Command* command, unsigned int timeout )
+void ActiveMQConnection::syncRequest( commands::Command* command, unsigned int timeout )
     throw ( ActiveMQException ) {
 
     try {
 
         enforceConnected();
 
-        std::auto_ptr<transport::Response> response;
+        std::auto_ptr<commands::Response> response;
 
         if( timeout == 0 ) {
             response.reset( this->getTransport().request( command ) );

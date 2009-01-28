@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/DestinationInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -67,7 +68,7 @@ DestinationInfo* DestinationInfo::cloneDataStructure() const {
 void DestinationInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const DestinationInfo* srcPtr = dynamic_cast<const DestinationInfo*>( src );
 
@@ -134,7 +135,7 @@ std::string DestinationInfo::toString() const {
             stream << "   Object is NULL" << std::endl;
         }
     }
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = DestinationInfo" << std::endl;
 
     return stream.str();
@@ -176,10 +177,17 @@ bool DestinationInfo::equals( const DataStructure* value ) const {
             return false;
         }
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processDestinationInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

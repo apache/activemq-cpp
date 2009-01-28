@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ReplayCommand.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -60,7 +61,7 @@ ReplayCommand* ReplayCommand::cloneDataStructure() const {
 void ReplayCommand::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ReplayCommand* srcPtr = dynamic_cast<const ReplayCommand*>( src );
 
@@ -88,7 +89,7 @@ std::string ReplayCommand::toString() const {
     stream << " Value of ReplayCommand::ID_REPLAYCOMMAND = 65" << std::endl;
     stream << " Value of FirstNakNumber = " << this->getFirstNakNumber() << std::endl;
     stream << " Value of LastNakNumber = " << this->getLastNakNumber() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ReplayCommand" << std::endl;
 
     return stream.str();
@@ -107,10 +108,17 @@ bool ReplayCommand::equals( const DataStructure* value ) const {
     if( this->getLastNakNumber() != valuePtr->getLastNakNumber() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processReplayCommand( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

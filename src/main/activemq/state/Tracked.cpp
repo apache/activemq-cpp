@@ -21,7 +21,6 @@
 
 using namespace activemq;
 using namespace activemq::state;
-using namespace activemq::transport;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -15,16 +15,21 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_COMMAND_H_
-#define _ACTIVEMQ_TRANSPORT_COMMAND_H_
+#ifndef _ACTIVEMQ_COMMANDS_COMMAND_H_
+#define _ACTIVEMQ_COMMANDS_COMMAND_H_
 
 #include <string>
 #include <activemq/util/Config.h>
+#include <activemq/commands/BaseDataStructure.h>
+#include <activemq/exceptions/ActiveMQException.h>
 
 namespace activemq{
-namespace transport{
+namespace state{
+    class CommandVisitor;
+}
+namespace commands{
 
-    class AMQCPP_API Command{
+    class AMQCPP_API Command : public BaseDataStructure {
     public:
 
         virtual ~Command() {}
@@ -60,14 +65,17 @@ namespace transport{
         virtual std::string toString() const = 0;
 
         /**
-         * Returns a Cloned copy of this command, the caller is responsible
-         * for deallocating the returned object.
-         * @returns new copy of this command.
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         *
+         * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual Command* cloneCommand() const = 0;
+        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException ) = 0;
 
     };
 
 }}
 
-#endif /*_ACTIVEMQ_TRANSPORT_COMMAND_H_*/
+#endif /*_ACTIVEMQ_COMMANDS_COMMAND_H_*/

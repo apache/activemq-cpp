@@ -22,6 +22,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 #include <activemq/util/Config.h>
+#include <activemq/commands/BaseCommand.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <decaf/lang/Thread.h>
@@ -45,75 +46,24 @@ namespace correlator{
 
     public:
 
-        class MyCommand : public Command{
+        class MyCommand : public commands::BaseCommand{
         private:
 
             unsigned int commandId;
-            bool responseRequired;
 
         public:
 
-            virtual void setCommandId( int id ){
-                commandId = id;
-            }
-            virtual int getCommandId() const{
-                return commandId;
-            }
-
-            virtual void setResponseRequired( const bool required ){
-                responseRequired = required;
-            }
-            virtual bool isResponseRequired() const{
-                return responseRequired;
-            }
-
             virtual std::string toString() const{ return ""; }
 
-            virtual Command* cloneCommand() const{
+            virtual unsigned char getDataStructureType() const { return 1; }
+
+            virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+                throw( exceptions::ActiveMQException ) { return NULL; }
+
+            virtual MyCommand* cloneDataStructure() const{
                 MyCommand* command = new MyCommand;
-                command->commandId = commandId;
-                command->responseRequired = responseRequired;
-                return command;
-            }
-        };
-
-        class MyResponse : public Response{
-        private:
-
-            unsigned int commandId;
-            bool responseRequired;
-            unsigned int corrId;
-
-        public:
-
-            virtual void setCommandId( int id ){
-                commandId = id;
-            }
-            virtual int getCommandId() const{
-                return commandId;
-            }
-
-            virtual void setResponseRequired( const bool required ){
-                responseRequired = required;
-            }
-            virtual bool isResponseRequired() const{
-                return responseRequired;
-            }
-
-            virtual int getCorrelationId() const{
-                return corrId;
-            }
-            virtual void setCorrelationId( int corrId ){
-                this->corrId = corrId;
-            }
-
-            virtual std::string toString() const{ return ""; }
-
-            virtual Command* cloneCommand() const{
-                MyResponse* command = new MyResponse;
-                command->commandId = commandId;
-                command->responseRequired = responseRequired;
-                command->corrId = corrId;
+                command->setCommandId( this->getCommandId() );
+                command->setResponseRequired( this->isResponseRequired() );
                 return command;
             }
         };
@@ -128,7 +78,7 @@ namespace correlator{
             decaf::util::concurrent::Mutex mutex;
             decaf::util::concurrent::Mutex startedMutex;
             bool done;
-            std::queue<Command*> requests;
+            std::queue<commands::Command*> requests;
 
         public:
 
@@ -143,7 +93,7 @@ namespace correlator{
                 close();
             }
 
-            virtual void oneway( Command* command )
+            virtual void oneway( commands::Command* command )
                 throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
             {
                 synchronized( &mutex ){
@@ -152,7 +102,7 @@ namespace correlator{
                 }
             }
 
-            virtual Response* request( Command* command AMQCPP_UNUSED)
+            virtual commands::Response* request( commands::Command* command AMQCPP_UNUSED)
                 throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
             {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
@@ -161,8 +111,8 @@ namespace correlator{
                     "stuff" );
             }
 
-            virtual Response* request( Command* command AMQCPP_UNUSED,
-                                       unsigned int timeout AMQCPP_UNUSED )
+            virtual commands::Response* request( commands::Command* command AMQCPP_UNUSED,
+                                                 unsigned int timeout AMQCPP_UNUSED )
                 throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
             {
                 throw decaf::lang::exceptions::UnsupportedOperationException(
@@ -202,9 +152,9 @@ namespace correlator{
                 }
             }
 
-            virtual Response* createResponse( Command* command ){
+            virtual commands::Response* createResponse( commands::Command* command ){
 
-                MyResponse* resp = new MyResponse();
+                commands::Response* resp = new commands::Response();
                 resp->setCorrelationId( command->getCommandId() );
                 resp->setResponseRequired( false );
                 return resp;
@@ -227,11 +177,11 @@ namespace correlator{
                                 mutex.wait();
                             }else{
 
-                                Command* cmd = requests.front();
+                                commands::Command* cmd = requests.front();
                                 requests.pop();
 
                                 // Only send a response if one is required.
-                                Response* resp = NULL;
+                                commands::Response* resp = NULL;
                                 if( cmd->isResponseRequired() ){
                                     resp = createResponse( cmd );
                                 }
@@ -308,7 +258,7 @@ namespace correlator{
             MyBrokenTransport(){}
             virtual ~MyBrokenTransport(){}
 
-            virtual Response* createResponse( Command* command AMQCPP_UNUSED){
+            virtual commands::Response* createResponse(commands:: Command* command AMQCPP_UNUSED){
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "bad stuff" );
             }
@@ -327,7 +277,7 @@ namespace correlator{
                 exCount = 0;
             }
             virtual ~MyListener(){}
-            virtual void onCommand( Command* command ){
+            virtual void onCommand( commands::Command* command ){
 
                 synchronized( &mutex ){
                     commands.insert( command->getCommandId() );
@@ -352,7 +302,7 @@ namespace correlator{
 
             Transport* transport;
             MyCommand cmd;
-            Response* resp;
+            commands::Response* resp;
         public:
 
             RequestThread(){

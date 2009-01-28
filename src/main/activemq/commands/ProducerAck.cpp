@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ProducerAck.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -61,7 +62,7 @@ ProducerAck* ProducerAck::cloneDataStructure() const {
 void ProducerAck::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ProducerAck* srcPtr = dynamic_cast<const ProducerAck*>( src );
 
@@ -98,7 +99,7 @@ std::string ProducerAck::toString() const {
         stream << "   Object is NULL" << std::endl;
     }
     stream << " Value of Size = " << this->getSize() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ProducerAck" << std::endl;
 
     return stream.str();
@@ -121,10 +122,17 @@ bool ProducerAck::equals( const DataStructure* value ) const {
     if( this->getSize() != valuePtr->getSize() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processProducerAck( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -52,7 +52,7 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::oneway( Command* command )
+void OpenWireFormatNegotiator::oneway( commands::Command* command )
     throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
@@ -81,7 +81,7 @@ void OpenWireFormatNegotiator::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireFormatNegotiator::request( Command* command )
+commands::Response* OpenWireFormatNegotiator::request( commands::Command* command )
     throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
@@ -110,7 +110,7 @@ Response* OpenWireFormatNegotiator::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* OpenWireFormatNegotiator::request( Command* command, unsigned int timeout )
+commands::Response* OpenWireFormatNegotiator::request( commands::Command* command, unsigned int timeout )
     throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
@@ -139,7 +139,7 @@ Response* OpenWireFormatNegotiator::request( Command* command, unsigned int time
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onCommand( Command* command ) {
+void OpenWireFormatNegotiator::onCommand( commands::Command* command ) {
 
     DataStructure* dataStructure =
         dynamic_cast<DataStructure*>( command );

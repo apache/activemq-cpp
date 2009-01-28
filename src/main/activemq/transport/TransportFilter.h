@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
 #include <activemq/transport/TransportListener.h>
 #include <typeinfo>
 
@@ -33,10 +33,8 @@ namespace transport{
      * filters implement the Transport interface and
      * optionally delegate calls to another Transport object.
      */
-    class AMQCPP_API TransportFilter :
-        public Transport,
-        public TransportListener {
-
+    class AMQCPP_API TransportFilter : public Transport,
+                                       public TransportListener {
     protected:
 
         /**
@@ -74,7 +72,7 @@ namespace transport{
          * Notify the command listener.
          * @param command - the command to send to the listener
          */
-        void fire( Command* command ){
+        void fire( commands::Command* command ){
             try{
                 if( listener != NULL ){
                     listener->onCommand( command );
@@ -99,7 +97,7 @@ namespace transport{
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( Command* command ){
+        virtual void onCommand( commands::Command* command ){
             fire( command );
         }
 
@@ -130,7 +128,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             next->oneway( command );
@@ -142,7 +140,7 @@ namespace transport{
          * @throws CommandIOException
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command );
@@ -155,7 +153,7 @@ namespace transport{
          * @throws CommandIOException
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command, timeout );

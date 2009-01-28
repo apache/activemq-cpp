@@ -88,7 +88,7 @@ out.println("     *         if you need to make a change, please see the Java Cl
 out.println("     *         in the activemq-openwire-generator module");
 out.println("     *");
 out.println("     */");
-out.println("    class AMQCPP_API "+className+" : public "+getProperBaseClassName( className, baseClass )+" {" );
+out.println("    class AMQCPP_API "+className+" : public "+ baseClass +" {" );
 out.println("    protected:");
 out.println("");
 
@@ -174,6 +174,21 @@ out.println("         */");
 out.println("        virtual unsigned int getSize() const;");
 out.println("");
 
+        }
+        
+        if( baseClass.equals( "BaseCommand" ) ) {
+        	
+out.println("        /**" );
+out.println("         * Allows a Visitor to visit this command and return a response to the" );
+out.println("         * command based on the command type being visited.  The command will call" );
+out.println("         * the proper processXXX method in the visitor." );
+out.println("         * " );
+out.println("         * @return a Response to the visitor being called or NULL if no response." );
+out.println("         */" );
+out.println("        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )" );
+out.println("            throw( exceptions::ActiveMQException );" );
+out.println("");
+        	
         }
 
         for( Iterator iter = properties.iterator(); iter.hasNext(); ) {

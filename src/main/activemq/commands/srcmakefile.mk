@@ -29,6 +29,7 @@ cc_sources += \
     activemq/commands/ActiveMQTempTopic.cpp \
     activemq/commands/ActiveMQTextMessage.cpp \
     activemq/commands/ActiveMQTopic.cpp \
+    activemq/commands/BrokerError.cpp \
     activemq/commands/BrokerId.cpp \
     activemq/commands/BrokerInfo.cpp \
     activemq/commands/ConnectionControl.cpp \
@@ -98,6 +99,7 @@ h_sources += \
     activemq/commands/BrokerError.h \
     activemq/commands/BrokerId.h \
     activemq/commands/BrokerInfo.h \
+    activemq/commands/Command.h \
     activemq/commands/ConnectionControl.h \
     activemq/commands/ConnectionError.h \
     activemq/commands/ConnectionId.h \

@@ -41,10 +41,6 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
 
     protected String getProperClassName( String className ) {
 
-        if( className.equals( "BaseCommand") ) {
-            return "transport::Command";
-        }
-
         return className;
     }
 

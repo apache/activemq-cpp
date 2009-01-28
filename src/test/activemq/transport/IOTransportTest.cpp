@@ -18,9 +18,9 @@
 #include "IOTransportTest.h"
 
 #include <activemq/transport/IOTransport.h>
-#include <activemq/transport/Command.h>
 #include <activemq/transport/TransportListener.h>
 #include <activemq/wireformat/WireFormat.h>
+#include <activemq/commands/BaseCommand.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -37,20 +37,20 @@ using namespace activemq::transport;
 using namespace activemq::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-class MyCommand : public Command{
+class MyCommand : public commands::BaseCommand{
 public:
     MyCommand(){ c = 0; }
     virtual ~MyCommand(){}
 
     char c;
 
-    virtual void setCommandId( int id AMQCPP_UNUSED){}
-    virtual int getCommandId() const{ return 0; }
+    virtual unsigned char getDataStructureType() const { return 1; }
 
-    virtual void setResponseRequired( const bool required AMQCPP_UNUSED){}
-    virtual bool isResponseRequired() const{ return false; }
+    virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        throw( exceptions::ActiveMQException ) { return NULL; }
+
     virtual std::string toString() const{ return ""; }
-    virtual Command* cloneCommand() const{
+    virtual MyCommand* cloneDataStructure() const{
         MyCommand* command = new MyCommand;
         command->c = c;
         return command;
@@ -75,7 +75,7 @@ public:
     virtual wireformat::WireFormatNegotiator* createNegotiator( transport::Transport* transport )
         throw( decaf::lang::exceptions::UnsupportedOperationException ) { return NULL; }
 
-    virtual Command* unmarshal( decaf::io::DataInputStream* inputStream )
+    virtual commands::Command* unmarshal( decaf::io::DataInputStream* inputStream )
         throw ( CommandIOException ){
 
         try{
@@ -128,7 +128,7 @@ public:
         }
     }
 
-    virtual void marshal( Command* command, decaf::io::DataOutputStream* outputStream )
+    virtual void marshal( commands::Command* command, decaf::io::DataOutputStream* outputStream )
         throw (CommandIOException)
     {
         try{
@@ -170,7 +170,7 @@ public:
     }
 
     std::string str;
-    virtual void onCommand( Command* command ){
+    virtual void onCommand( commands::Command* command ){
         const MyCommand* cmd = dynamic_cast<const MyCommand*>(command);
         str += cmd->c;
         delete command;

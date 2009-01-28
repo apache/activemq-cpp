@@ -42,7 +42,7 @@ void ResponseCorrelatorTest::testBasics(){
 
         // Send one request.
         MyCommand cmd;
-        Response* resp = correlator.request( &cmd );
+        commands::Response* resp = correlator.request( &cmd );
         CPPUNIT_ASSERT( resp != NULL );
         CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
 

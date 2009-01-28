@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/NetworkBridgeFilter.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 

@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <cms/Closeable.h>
 #include <vector>
 #include <string>

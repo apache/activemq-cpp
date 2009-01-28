@@ -23,8 +23,8 @@
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
 #include <activemq/transport/CommandIOException.h>
-#include <activemq/transport/Command.h>
-#include <activemq/transport/Response.h>
+#include <activemq/commands/Command.h>
+#include <activemq/commands/Response.h>
 #include <cms/Startable.h>
 #include <cms/Closeable.h>
 #include <typeinfo>
@@ -63,7 +63,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
@@ -76,7 +76,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
@@ -90,7 +90,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 

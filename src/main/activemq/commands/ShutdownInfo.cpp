@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ShutdownInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -58,7 +59,7 @@ ShutdownInfo* ShutdownInfo::cloneDataStructure() const {
 void ShutdownInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ShutdownInfo* srcPtr = dynamic_cast<const ShutdownInfo*>( src );
 
@@ -82,7 +83,7 @@ std::string ShutdownInfo::toString() const {
 
     stream << "Begin Class = ShutdownInfo" << std::endl;
     stream << " Value of ShutdownInfo::ID_SHUTDOWNINFO = 11" << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ShutdownInfo" << std::endl;
 
     return stream.str();
@@ -95,9 +96,16 @@ bool ShutdownInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ShutdownInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processShutdownInfo( this );
 }
 

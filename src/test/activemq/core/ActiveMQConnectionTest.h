@@ -49,7 +49,7 @@ namespace core{
         class MyCommandListener : public transport::DefaultTransportListener{
         public:
 
-            transport::Command* cmd;
+            commands::Command* cmd;
 
         public:
 
@@ -58,7 +58,7 @@ namespace core{
             }
             virtual ~MyCommandListener(){}
 
-            virtual void onCommand( transport::Command* command ){
+            virtual void onCommand( commands::Command* command ){
                 cmd = command;
             }
         };

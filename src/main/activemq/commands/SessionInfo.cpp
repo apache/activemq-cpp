@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/SessionInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -60,7 +61,7 @@ SessionInfo* SessionInfo::cloneDataStructure() const {
 void SessionInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const SessionInfo* srcPtr = dynamic_cast<const SessionInfo*>( src );
 
@@ -95,7 +96,7 @@ std::string SessionInfo::toString() const {
     } else {
         stream << "   Object is NULL" << std::endl;
     }
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = SessionInfo" << std::endl;
 
     return stream.str();
@@ -115,10 +116,17 @@ bool SessionInfo::equals( const DataStructure* value ) const {
     } else if( valuePtr->getSessionId() != NULL ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processSessionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

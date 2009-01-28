@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ConnectionInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -69,7 +70,7 @@ ConnectionInfo* ConnectionInfo::cloneDataStructure() const {
 void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ConnectionInfo* srcPtr = dynamic_cast<const ConnectionInfo*>( src );
 
@@ -133,7 +134,7 @@ std::string ConnectionInfo::toString() const {
     stream << " Value of BrokerMasterConnector = " << this->isBrokerMasterConnector() << std::endl;
     stream << " Value of Manageable = " << this->isManageable() << std::endl;
     stream << " Value of ClientMaster = " << this->isClientMaster() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ConnectionInfo" << std::endl;
 
     return stream.str();
@@ -180,10 +181,17 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
     if( this->isClientMaster() != valuePtr->isClientMaster() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processConnectionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

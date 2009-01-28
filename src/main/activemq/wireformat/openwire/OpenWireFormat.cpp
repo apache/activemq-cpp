@@ -155,7 +155,7 @@ void OpenWireFormat::setPreferedWireFormatInfo(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::marshal( transport::Command* command,
+void OpenWireFormat::marshal( commands::Command* command,
                               decaf::io::DataOutputStream* dataOut )
     throw ( decaf::io::IOException ) {
 
@@ -226,7 +226,7 @@ void OpenWireFormat::marshal( transport::Command* command,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-transport::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
+commands::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
     throw ( decaf::io::IOException ) {
 
     try {
@@ -246,10 +246,10 @@ transport::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
         }
 
         // Now all unmarshals from this level should result in an object
-        // that is a transport::Command type, if its not then we throw an
+        // that is a commands::Command type, if its not then we throw an
         // exception.
-        transport::Command* command =
-            dynamic_cast< transport::Command* >( data );
+        commands::Command* command =
+            dynamic_cast< commands::Command* >( data );
 
         if( command == NULL ) {
             delete data;

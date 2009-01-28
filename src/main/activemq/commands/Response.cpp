@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/Response.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -59,7 +60,7 @@ Response* Response::cloneDataStructure() const {
 void Response::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Response>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const Response* srcPtr = dynamic_cast<const Response*>( src );
 
@@ -85,7 +86,7 @@ std::string Response::toString() const {
     stream << "Begin Class = Response" << std::endl;
     stream << " Value of Response::ID_RESPONSE = 30" << std::endl;
     stream << " Value of CorrelationId = " << this->getCorrelationId() << std::endl;
-    stream << BaseCommand<transport::Response>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = Response" << std::endl;
 
     return stream.str();
@@ -101,10 +102,17 @@ bool Response::equals( const DataStructure* value ) const {
     if( this->getCorrelationId() != valuePtr->getCorrelationId() ) {
         return false;
     }
-    if( !BaseCommand<transport::Response>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* Response::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processResponse( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

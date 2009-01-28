@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/FlushCommand.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -58,7 +59,7 @@ FlushCommand* FlushCommand::cloneDataStructure() const {
 void FlushCommand::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const FlushCommand* srcPtr = dynamic_cast<const FlushCommand*>( src );
 
@@ -82,7 +83,7 @@ std::string FlushCommand::toString() const {
 
     stream << "Begin Class = FlushCommand" << std::endl;
     stream << " Value of FlushCommand::ID_FLUSHCOMMAND = 15" << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = FlushCommand" << std::endl;
 
     return stream.str();
@@ -95,9 +96,16 @@ bool FlushCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* FlushCommand::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processFlushCommand( this );
 }
 

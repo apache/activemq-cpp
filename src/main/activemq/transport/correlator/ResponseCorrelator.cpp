@@ -44,7 +44,7 @@ ResponseCorrelator::~ResponseCorrelator(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::oneway( Command* command )
+void ResponseCorrelator::oneway( commands::Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -66,7 +66,7 @@ void ResponseCorrelator::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* ResponseCorrelator::request( Command* command )
+commands::Response* ResponseCorrelator::request( commands::Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -84,7 +84,7 @@ Response* ResponseCorrelator::request( Command* command )
 
         // Wait to be notified of the response via the futureResponse
         // object.
-        Response* response = NULL;
+        commands::Response* response = NULL;
 
         // Send the request.
         next->oneway( command );
@@ -124,7 +124,7 @@ Response* ResponseCorrelator::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
+commands::Response* ResponseCorrelator::request( commands::Command* command, unsigned int timeout )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -142,7 +142,7 @@ Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
 
         // Wait to be notified of the response via the futureResponse
         // object.
-        Response* response = NULL;
+        commands::Response* response = NULL;
 
         // Send the request.
         next->oneway( command );
@@ -182,10 +182,10 @@ Response* ResponseCorrelator::request( Command* command, unsigned int timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::onCommand( Command* command ) {
+void ResponseCorrelator::onCommand( commands::Command* command ) {
 
     // Let's see if the incoming command is a response.
-    Response* response = dynamic_cast<Response*>( command );
+    commands::Response* response = dynamic_cast<commands::Response*>( command );
 
     if( response == NULL ){
 

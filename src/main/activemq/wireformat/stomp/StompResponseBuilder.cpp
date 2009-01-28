@@ -33,13 +33,13 @@ using namespace decaf;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
+Response* StompResponseBuilder::buildResponse( const commands::Command* cmd ){
 
     // If this command requires a response we don't know what it is
     // so we throw an exception.
     if( cmd->isResponseRequired() ) {
 
-        throw transport::CommandIOException( __FILE__, __LINE__,
+        throw commands::CommandIOException( __FILE__, __LINE__,
             "StompResponseBuilder - unrecognized command" );
     }
 
@@ -48,7 +48,7 @@ Response* StompResponseBuilder::buildResponse( const transport::Command* cmd ){
 
 ////////////////////////////////////////////////////////////////////////////////
 void StompResponseBuilder::buildIncomingCommands(
-    const transport::Command* command, decaf::util::Queue<transport::Command*>& queue ){
+    const commands::Command* command, decaf::util::Queue<commands::Command*>& queue ){
 
     const connector::stomp::commands::ConnectCommand* connectCommand =
         dynamic_cast<const connector::stomp::commands::ConnectCommand*>( command );

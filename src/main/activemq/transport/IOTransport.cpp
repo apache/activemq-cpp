@@ -76,7 +76,7 @@ void IOTransport::fire( decaf::lang::Exception& ex ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::fire( Command* command ){
+void IOTransport::fire( commands::Command* command ){
 
     try{
         // Since the listener is responsible for freeing the memory,
@@ -98,7 +98,7 @@ void IOTransport::fire( Command* command ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::oneway( Command* command )
+void IOTransport::oneway( commands::Command* command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -225,7 +225,7 @@ void IOTransport::run(){
         while( !closed ){
 
             // Read the next command from the input stream.
-            Command* command = wireFormat->unmarshal( this->inputStream );
+            commands::Command* command = wireFormat->unmarshal( this->inputStream );
 
             // Notify the listener.
             fire( command );
@@ -253,7 +253,7 @@ void IOTransport::run(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* IOTransport::request( Command* command AMQCPP_UNUSED )
+commands::Response* IOTransport::request( commands::Command* command AMQCPP_UNUSED )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
@@ -262,7 +262,7 @@ Response* IOTransport::request( Command* command AMQCPP_UNUSED )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* IOTransport::request( Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+commands::Response* IOTransport::request( commands::Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(

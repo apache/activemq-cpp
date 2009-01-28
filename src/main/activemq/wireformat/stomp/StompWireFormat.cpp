@@ -43,7 +43,7 @@ StompWireFormat::~StompWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void StompWireFormat::marshal( transport::Command* command, decaf::io::DataOutputStream* out )
+void StompWireFormat::marshal( commands::Command* command, decaf::io::DataOutputStream* out )
     throw ( decaf::io::IOException ) {
 
     try{
@@ -102,7 +102,7 @@ void StompWireFormat::marshal( transport::Command* command, decaf::io::DataOutpu
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-transport::Command* StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
+commands::Command* StompWireFormat::unmarshal( decaf::io::DataInputStream* in )
     throw ( decaf::io::IOException ) {
 
     auto_ptr<StompFrame> frame;

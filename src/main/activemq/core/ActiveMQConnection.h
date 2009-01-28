@@ -299,14 +299,14 @@ namespace core{
             exceptionListener = listener;
         };
 
-    public: // transport::CommandListener
+    public: // commands::CommandListener
 
         /**
          * Event handler for the receipt of a non-response command from the
          * transport.
          * @param command the received command object.
          */
-        virtual void onCommand( transport::Command* command );
+        virtual void onCommand( commands::Command* command );
 
     public: // TransportExceptionListener
 
@@ -340,7 +340,7 @@ namespace core{
          * @throws ConnectorException if not currently connected, or
          * if the operation fails for any reason.
          */
-        void oneway( transport::Command* command )
+        void oneway( commands::Command* command )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -351,7 +351,7 @@ namespace core{
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( transport::Command* command, unsigned int timeout = 0 )
+        void syncRequest( commands::Command* command, unsigned int timeout = 0 )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**

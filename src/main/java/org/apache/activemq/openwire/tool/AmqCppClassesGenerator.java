@@ -53,24 +53,6 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         return ".cpp";
     }
 
-    protected String getProperBaseClassName( String className, String baseClass ) {
-
-        if( baseClass == null || className == null ) {
-            return null;
-        }
-
-        // The C++ BaseCommand class is a template, which requires either
-        // transport::Command, or transport::Response.
-        if( className.equals( "Response" ) ) {
-            return "BaseCommand<transport::Response>";
-        } else if( baseClass.equals( "BaseCommand" ) ) {
-            return "BaseCommand<transport::Command>";
-        }
-
-        // No change.
-        return baseClass;
-    }
-
     public String toCppType(JClass type) {
         String name = type.getSimpleName();
         if (name.equals("String")) {
@@ -153,6 +135,7 @@ out.println(" */");
     protected void generateFile(PrintWriter out) throws Exception {
         generateLicence(out);
 out.println("#include <activemq/commands/"+className+".h>");
+out.println("#include <activemq/state/CommandVisitor.h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
 out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
 out.println("");
@@ -236,7 +219,7 @@ out.println("");
 
         if( baseClass != null ) {
 out.println("    // Copy the data of the base class or classes");
-out.println("    "+getProperBaseClassName( className, baseClass )+"::copyDataStructure( src );");
+out.println("    "+ baseClass +"::copyDataStructure( src );");
 out.println("");
         }
 
@@ -364,7 +347,7 @@ out.println("    }");
 }
 
     if( baseClass != null ) {
-out.println("    stream << "+getProperBaseClassName( className, baseClass )+"::toString();");
+out.println("    stream << "+ baseClass +"::toString();");
     }
 
 out.println("    stream << \"End Class = "+className+"\" << std::endl;" );
@@ -441,7 +424,7 @@ out.println("    }");
 }
 
     if( baseClass != null ) {
-out.println("    if( !"+getProperBaseClassName( className, baseClass )+"::equals( value ) ) {");
+out.println("    if( !"+ baseClass +"::equals( value ) ) {");
 out.println("        return false;");
 out.println("    }");
     }
@@ -463,6 +446,16 @@ out.println("    return size;");
 out.println("}");
    }
 
+   if( baseClass.equals( "BaseCommand" ) ) {
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("commands::Command* "+className+"::visit( activemq::state::CommandVisitor* visitor ) ");
+out.println("    throw( exceptions::ActiveMQException ) {");
+out.println("");
+out.println("    return visitor->process"+className+"( this );");
+out.println("}");
+   }
+   
        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
             JProperty property = (JProperty) iter.next();
             String type = toCppType(property.getType());

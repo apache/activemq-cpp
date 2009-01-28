@@ -20,12 +20,14 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/DataStructure.h>
-#include <activemq/wireformat/WireFormat.h>
 
 #include <string>
 #include <sstream>
 
 namespace activemq{
+namespace wireformat{
+    class WireFormat;
+}
 namespace commands{
 
     class AMQCPP_API BaseDataStructure : public DataStructure {

@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
 #include <activemq/exceptions/ActiveMQException.h>
 
 #include <decaf/lang/Runnable.h>
@@ -96,7 +96,7 @@ namespace transport{
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire( Command* command );
+        void fire( commands::Command* command );
 
     public:
 
@@ -124,7 +124,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -133,7 +133,7 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -143,7 +143,7 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**

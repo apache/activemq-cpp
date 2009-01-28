@@ -20,6 +20,7 @@
 
 #include <activemq/util/Config.h>
 
+#include <activemq/commands/Command.h>
 #include <activemq/transport/CompositeTransport.h>
 
 #include <decaf/util/Set.h>
@@ -124,7 +125,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -137,7 +138,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -151,7 +152,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -159,13 +160,13 @@ namespace failover {
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat );
+        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {}
 
         /**
          * Sets the observer of asynchronous events from this transport.
          * @param listener the listener of transport events.
          */
-        virtual void setTransportListener( TransportListener* listener );
+        virtual void setTransportListener( TransportListener* listener ) {}
 
         /**
          * Is this Transport fault tolerant, meaning that it will reconnect to

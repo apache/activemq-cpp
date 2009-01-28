@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/RemoveSubscriptionInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -62,7 +63,7 @@ RemoveSubscriptionInfo* RemoveSubscriptionInfo::cloneDataStructure() const {
 void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const RemoveSubscriptionInfo* srcPtr = dynamic_cast<const RemoveSubscriptionInfo*>( src );
 
@@ -101,7 +102,7 @@ std::string RemoveSubscriptionInfo::toString() const {
     }
     stream << " Value of SubcriptionName = " << this->getSubcriptionName() << std::endl;
     stream << " Value of ClientId = " << this->getClientId() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = RemoveSubscriptionInfo" << std::endl;
 
     return stream.str();
@@ -127,10 +128,17 @@ bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
     if( this->getClientId() != valuePtr->getClientId() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processRemoveSubscriptionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

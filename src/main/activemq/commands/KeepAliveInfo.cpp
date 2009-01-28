@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/KeepAliveInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -58,7 +59,7 @@ KeepAliveInfo* KeepAliveInfo::cloneDataStructure() const {
 void KeepAliveInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const KeepAliveInfo* srcPtr = dynamic_cast<const KeepAliveInfo*>( src );
 
@@ -82,7 +83,7 @@ std::string KeepAliveInfo::toString() const {
 
     stream << "Begin Class = KeepAliveInfo" << std::endl;
     stream << " Value of KeepAliveInfo::ID_KEEPALIVEINFO = 10" << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = KeepAliveInfo" << std::endl;
 
     return stream.str();
@@ -95,9 +96,16 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processKeepAliveInfo( this );
 }
 

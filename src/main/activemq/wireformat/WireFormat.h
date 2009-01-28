@@ -25,7 +25,7 @@
 #include <decaf/io/IOException.h>
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
 #include <activemq/transport/Transport.h>
 
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
@@ -50,7 +50,7 @@ namespace wireformat{
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( transport::Command* command, decaf::io::DataOutputStream* out )
+        virtual void marshal( commands::Command* command, decaf::io::DataOutputStream* out )
             throw ( decaf::io::IOException ) = 0;
 
         /**
@@ -59,7 +59,7 @@ namespace wireformat{
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual transport::Command* unmarshal( decaf::io::DataInputStream* in )
+        virtual commands::Command* unmarshal( decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException ) = 0;
 
         /**

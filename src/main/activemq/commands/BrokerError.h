@@ -32,7 +32,7 @@ namespace commands{
      * This class represents an Exception sent from the Broker.  The Broker
      * sends java Throwables, so we must mimic its structure here.
      */
-    class AMQCPP_API BrokerError : public BaseCommand<transport::Command> {
+    class AMQCPP_API BrokerError : public BaseCommand {
     public:
 
         struct StackTraceElement
@@ -46,11 +46,7 @@ namespace commands{
     public:
 
         BrokerError() {}
-        virtual ~BrokerError() {
-            for( unsigned int i = 0; i < stackTraceElements.size(); ++i ) {
-                delete stackTraceElements[i];
-            }
-        }
+        virtual ~BrokerError();
 
         /**
          * Get the DataStructure Type as defined in CommandTypes.h
@@ -77,34 +73,17 @@ namespace commands{
          * members, overwriting any existing data.
          * @return src - Source Object
          */
-        virtual void copyDataStructure( const DataStructure* src ) {
+        virtual void copyDataStructure( const DataStructure* src );
 
-            const BrokerError* srcErr = dynamic_cast<const BrokerError*>( src );
-
-            if( srcErr == NULL || src == NULL ) {
-                throw decaf::lang::exceptions::NullPointerException(
-                    __FILE__, __LINE__,
-                    "BrokerError::copyCommand - src is NULL or invalid" );
-            }
-
-            this->setMessage( srcErr->getMessage() );
-            this->setExceptionClass( srcErr->getExceptionClass() );
-
-            for( unsigned int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
-                if( srcErr->getStackTraceElements()[i] != NULL ) {
-                    StackTraceElement* element = new StackTraceElement;
-                    *element = *( srcErr->getStackTraceElements()[i] );
-
-                    // store the copy
-                    this->stackTraceElements.push_back( element );
-                }
-            }
-
-            if( srcErr->getCause() ) {
-                this->cause = dynamic_cast<BrokerError*>(
-                    srcErr->getCause()->cloneDataStructure() );
-            }
-        }
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         *
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
         /**
          * Gets the string holding the error message

@@ -19,16 +19,17 @@
 #define _ACTIVEMQ_COMMANDS_BASECOMMAND_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/Command.h>
-#include <activemq/transport/Response.h>
-#include <activemq/commands/BaseDataStructure.h>
+#include <activemq/commands/Command.h>
 
 namespace activemq{
 namespace commands{
 
-    template< typename T >
-    class AMQCPP_API BaseCommand : public T,
-                                   public BaseDataStructure {
+    class AMQCPP_API BaseCommand : public Command {
+    private:
+
+        bool responseRequired;
+        int commandId;
+
     public:
 
         BaseCommand() {
@@ -71,23 +72,14 @@ namespace commands{
         }
 
         /**
-         * Returns a Cloned copy of this command, the caller is responsible
-         * for deallocating the returned object.
-         * @returns new copy of this command.
-         */
-        virtual transport::Command* cloneCommand() const {
-            return dynamic_cast<transport::Command*>( this->cloneDataStructure() );
-        }
-
-        /**
          * Copy the contents of the passed object into this objects
          * members, overwriting any existing data.
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
 
-            const BaseCommand<T>* command =
-                dynamic_cast< const BaseCommand<T>* >( src );
+            const BaseCommand* command =
+                dynamic_cast< const BaseCommand* >( src );
 
             this->setResponseRequired( command->isResponseRequired() );
             this->setCommandId( command->getCommandId() );
@@ -119,11 +111,6 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const {
             return BaseDataStructure::equals( value );
         }
-
-    private:
-
-        bool responseRequired;
-        int commandId;
 
     };
 

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -80,7 +81,7 @@ ConsumerInfo* ConsumerInfo::cloneDataStructure() const {
 void ConsumerInfo::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ConsumerInfo* srcPtr = dynamic_cast<const ConsumerInfo*>( src );
 
@@ -180,7 +181,7 @@ std::string ConsumerInfo::toString() const {
     stream << " Value of NetworkSubscription = " << this->isNetworkSubscription() << std::endl;
     stream << " Value of OptimizedAcknowledge = " << this->isOptimizedAcknowledge() << std::endl;
     stream << " Value of NoRangeAcks = " << this->isNoRangeAcks() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ConsumerInfo" << std::endl;
 
     return stream.str();
@@ -262,10 +263,17 @@ bool ConsumerInfo::equals( const DataStructure* value ) const {
     if( this->isNoRangeAcks() != valuePtr->isNoRangeAcks() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processConsumerInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

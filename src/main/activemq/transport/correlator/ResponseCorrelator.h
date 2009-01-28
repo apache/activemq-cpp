@@ -21,7 +21,8 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <activemq/transport/correlator/FutureResponse.h>
-#include <activemq/transport/Command.h>
+#include <activemq/commands/Command.h>
+#include <activemq/commands/Response.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
@@ -81,7 +82,7 @@ namespace correlator{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -91,7 +92,7 @@ namespace correlator{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -102,7 +103,7 @@ namespace correlator{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -114,7 +115,7 @@ namespace correlator{
          * the command listener.
          * @param command the received from the nested transport.
          */
-        virtual void onCommand( Command* command );
+        virtual void onCommand( commands::Command* command );
 
         /**
          * Starts this transport object and creates the thread for

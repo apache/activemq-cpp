@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <activemq/commands/ConnectionControl.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
@@ -63,7 +64,7 @@ ConnectionControl* ConnectionControl::cloneDataStructure() const {
 void ConnectionControl::copyDataStructure( const DataStructure* src ) {
 
     // Copy the data of the base class or classes
-    BaseCommand<transport::Command>::copyDataStructure( src );
+    BaseCommand::copyDataStructure( src );
 
     const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
 
@@ -97,7 +98,7 @@ std::string ConnectionControl::toString() const {
     stream << " Value of FaultTolerant = " << this->isFaultTolerant() << std::endl;
     stream << " Value of Resume = " << this->isResume() << std::endl;
     stream << " Value of Suspend = " << this->isSuspend() << std::endl;
-    stream << BaseCommand<transport::Command>::toString();
+    stream << BaseCommand::toString();
     stream << "End Class = ConnectionControl" << std::endl;
 
     return stream.str();
@@ -125,10 +126,17 @@ bool ConnectionControl::equals( const DataStructure* value ) const {
     if( this->isSuspend() != valuePtr->isSuspend() ) {
         return false;
     }
-    if( !BaseCommand<transport::Command>::equals( value ) ) {
+    if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+commands::Command* ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processConnectionControl( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

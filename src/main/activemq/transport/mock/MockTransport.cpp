@@ -57,7 +57,7 @@ MockTransport::~MockTransport(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MockTransport::oneway( Command* command )
+void MockTransport::oneway( commands::Command* command )
         throw( CommandIOException,
                decaf::lang::exceptions::UnsupportedOperationException) {
 
@@ -80,7 +80,7 @@ void MockTransport::oneway( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* MockTransport::request( Command* command )
+commands::Response* MockTransport::request( commands::Command* command )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {
@@ -110,7 +110,8 @@ Response* MockTransport::request( Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* MockTransport::request( Command* command, unsigned int timeout AMQCPP_UNUSED )
+commands::Response* MockTransport::request( commands::Command* command,
+                                            unsigned int timeout AMQCPP_UNUSED )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {

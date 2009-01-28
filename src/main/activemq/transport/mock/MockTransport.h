@@ -70,7 +70,7 @@ namespace mock{
              * @param command - The command to build a response for
              * @return A Response object pointer, or NULL if no response.
              */
-            virtual Response* buildResponse( const Command* command ) = 0;
+            virtual commands::Response* buildResponse( const commands::Command* command ) = 0;
 
             /**
              * When called the ResponseBuilder must construct all the
@@ -80,7 +80,8 @@ namespace mock{
              * @param queue - Queue of Command sent back from the broker.
              */
             virtual void buildIncomingCommands(
-                const Command* cmd, decaf::util::Queue<Command*>& queue ) = 0;
+                const commands::Command* cmd,
+                decaf::util::Queue<commands::Command*>& queue ) = 0;
 
         };
 
@@ -101,7 +102,7 @@ namespace mock{
             ResponseBuilder* responseBuilder;
             bool done;
             decaf::util::concurrent::CountDownLatch startedLatch;
-            decaf::util::Queue<Command*> inboundQueue;
+            decaf::util::Queue<commands::Command*> inboundQueue;
 
         public:
 
@@ -134,7 +135,7 @@ namespace mock{
                 this->responseBuilder = responseBuilder;
             }
 
-            virtual void onCommand( Command* command ) {
+            virtual void onCommand( commands::Command* command ) {
                 synchronized( &inboundQueue )
                 {
                     // Create a response now before the caller has a
@@ -203,15 +204,15 @@ namespace mock{
             this->responseBuilder = responseBuilder;
         }
 
-        virtual void oneway( Command* command )
+        virtual void oneway( commands::Command* command )
             throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
 
-        virtual Response* request( Command* command )
+        virtual commands::Response* request( commands::Command* command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
 
-        virtual Response* request( Command* command, unsigned int timeout )
+        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
@@ -240,7 +241,7 @@ namespace mock{
          * CommandListener if there is one.
          * @param command - Command to send to the Listener.
          */
-        virtual void fireCommand( Command* command ){
+        virtual void fireCommand( commands::Command* command ){
             if( listener != NULL ){
                 listener->onCommand( command );
             }
