@@ -136,6 +136,7 @@ out.println(" */");
         generateLicence(out);
 
         boolean comparable = className.endsWith("Id");
+        boolean assignable = className.endsWith("Id");
 
 out.println("#include <activemq/commands/"+className+".h>");
 out.println("#include <activemq/state/CommandVisitor.h>");
@@ -179,6 +180,13 @@ out.println("    this->"+parameterName+" = "+value+";");
         }
 out.println("}");
 out.println("");
+    if( assignable ) {
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println(""+className+"::"+className+"( const "+className+"& other ) {");
+out.println("    this->copyDataStructure( &other );");
+out.println("}");
+out.println("");
+    }
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println(""+className+"::~"+className+"() {");
 out.println("");
@@ -221,6 +229,11 @@ out.println("}");
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("void "+className+"::copyDataStructure( const DataStructure* src ) {");
+out.println("");
+out.println("    // Protect against invalid self assignment.");
+out.println("    if( this == src ) {");
+out.println("        return;");
+out.println("    }");
 out.println("");
 
         if( baseClass != null ) {
@@ -277,18 +290,11 @@ out.println("    }");
     }
 
 out.println("}");
-
-
-// getDataStructureType
-
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("unsigned char "+className+"::getDataStructureType() const {");
 out.println("    return "+className+"::ID_" + className.toUpperCase() + ";");
 out.println("}");
-
-// toString
-
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println("std::string "+className+"::toString() const {");
@@ -584,6 +590,14 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println("bool " + className + "::operator<( const "+className+"& value ) const {");
 out.println("    return this->compareTo( value ) < 0;");
 out.println("}");
+        }
+
+        if( assignable ) {
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println(""+className+"& "+className+"::operator= ( const "+className+"& other ) {");
+out.println("    this->copyDataStructure( &other );");
+out.println("}");
+out.println("");
         }
     }
 
