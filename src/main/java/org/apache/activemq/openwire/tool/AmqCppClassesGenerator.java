@@ -134,10 +134,16 @@ out.println(" */");
 
     protected void generateFile(PrintWriter out) throws Exception {
         generateLicence(out);
+
+        boolean comparable = className.endsWith("Id");
+
 out.println("#include <activemq/commands/"+className+".h>");
 out.println("#include <activemq/state/CommandVisitor.h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
 out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
+        if( comparable ) {
+out.println("#include <apr_strings.h>");
+        }
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
@@ -455,7 +461,7 @@ out.println("");
 out.println("    return visitor->process"+className+"( this );");
 out.println("}");
    }
-   
+
        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
             JProperty property = (JProperty) iter.next();
             String type = toCppType(property.getType());
@@ -509,6 +515,73 @@ out.println("    this->"+parameterName+" = "+parameterName+";");
 out.println("}");
         }
 out.println("");
+
+        if( comparable ) {
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("int " + className + "::compareTo( const "+className+"& value ) const {");
+out.println("");
+out.println("    if( this == &value ) {");
+out.println("        return 0;");
+out.println("    }");
+out.println("");
+
+        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
+            JProperty property = (JProperty) iter.next();
+            String type = toCppType(property.getType());
+            String propertyName = property.getSimpleName();
+            String parameterName = decapitalize(propertyName);
+            String getter = property.getGetter().getSimpleName();
+            String setter = property.getSetter().getSimpleName();
+
+            if( !property.getType().isPrimitiveType() &&
+                !property.getType().getSimpleName().equals("ByteSequence") &&
+                !property.getType().getSimpleName().equals("String") &&
+                !type.startsWith("std::vector") ) {
+
+out.println("    int "+parameterName+"Comp = this->"+parameterName+"->compareTo( *( value."+parameterName+" ) );");
+out.println("    if( "+parameterName+"Comp != 0 ) {");
+out.println("        return "+parameterName+"Comp;");
+out.println("    }");
+out.println("");
+
+            } else if( property.getType().getSimpleName().equals("String") ) {
+
+out.println("    int "+parameterName+"Comp = apr_strnatcasecmp( this->"+parameterName+".c_str(), value."+parameterName+".c_str() );");
+out.println("    if( "+parameterName+"Comp != 0 ) {");
+out.println("        return "+parameterName+"Comp;");
+out.println("    }");
+out.println("");
+            } else {
+
+out.println("    if( this->"+parameterName+" > value."+parameterName+" ) {");
+out.println("        return 1;");
+out.println("    } else if( this->"+parameterName+" < value."+parameterName+" ) {");
+out.println("        return -1;");
+out.println("    }");
+out.println("");
+
+            }
+        }
+
+out.println("    return 0;");
+out.println("}");
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("bool " + className + "::equals( const "+className+"& value ) const {");
+out.println("    return this->equals( &value );");
+out.println("}");
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("bool " + className + "::operator==( const "+className+"& value ) const {");
+out.println("    return this->compareTo( value ) == 0;");
+out.println("}");
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("bool " + className + "::operator<( const "+className+"& value ) const {");
+out.println("    return this->compareTo( value ) < 0;");
+out.println("}");
+        }
     }
 
     public String getTargetDir() {

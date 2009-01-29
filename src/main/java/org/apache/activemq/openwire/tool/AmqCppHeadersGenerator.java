@@ -38,6 +38,8 @@ public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
     protected void generateFile(PrintWriter out) {
         generateLicence(out);
 
+        boolean comparable = className.endsWith( "Id" );
+        
 out.println("");
 out.println("#ifndef _ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_");
 out.println("#define _ACTIVEMQ_COMMANDS_"+className.toUpperCase()+"_H_");
@@ -49,6 +51,10 @@ out.println("#endif");
 out.println("");
 out.println("#include <activemq/util/Config.h>");
 out.println("#include <activemq/commands/"+baseClass+".h>");
+
+		if( comparable ) {
+out.println("#include <decaf/lang/Comparable.h>");			
+		}
 
 List properties = getProperties();
 for (Iterator iter = properties.iterator(); iter.hasNext();) {
@@ -88,7 +94,14 @@ out.println("     *         if you need to make a change, please see the Java Cl
 out.println("     *         in the activemq-openwire-generator module");
 out.println("     *");
 out.println("     */");
-out.println("    class AMQCPP_API "+className+" : public "+ baseClass +" {" );
+out.print("    class AMQCPP_API "+className+" : " );
+
+		if( comparable ) {
+out.println("public "+ baseClass +", public decaf::lang::Comparable<"+className+"> {" );
+		} else {
+out.print("public "+ baseClass +" {" );
+out.println("");
+		}
 out.println("    protected:");
 out.println("");
 
@@ -222,6 +235,17 @@ out.println("        virtual void "+property.getSetter().getSimpleName()+"( "+co
 out.println("");
         }
 
+        if( comparable ) {
+out.println("        virtual int compareTo( const "+className+"& value ) const;");
+out.println("");
+out.println("        virtual bool equals( const "+className+"& value ) const;");
+out.println("");
+out.println("        virtual bool operator==( const "+className+"& value ) const;");
+out.println("");
+out.println("        virtual bool operator<( const "+className+"& value ) const;");
+out.println("");
+        }
+        
 out.println("    };");
 out.println("");
 out.println("}}");
