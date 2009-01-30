@@ -103,7 +103,11 @@ void Mutex::wait( unsigned long millisecs )
 
     // Create this threads wait event
     apr_thread_cond_t* waitEvent = NULL;
-    apr_thread_cond_create( &waitEvent, aprPool.getAprPool() );
+    apr_pool_t *subPool = NULL;
+    apr_pool_create_ex(&subPool, aprPool.getAprPool(), NULL, NULL);
+    
+
+    apr_thread_cond_create( &waitEvent, subPool );
 
     // Store the event in the queue so that a notify can
     // call it and wake up the thread.
@@ -122,6 +126,7 @@ void Mutex::wait( unsigned long millisecs )
     // Destroy our wait event now, the notify method will have removed it
     // from the event queue.
     apr_thread_cond_destroy( waitEvent );
+    apr_pool_destroy( subPool );
 
     // restore the owner
     this->lock_owner = lock_owner;
