@@ -104,9 +104,7 @@ void Mutex::wait( unsigned long millisecs )
     // Create this threads wait event
     apr_thread_cond_t* waitEvent = NULL;
     apr_pool_t *subPool = NULL;
-    apr_pool_create_ex(&subPool, aprPool.getAprPool(), NULL, NULL);
-    
-
+    apr_pool_create_ex( &subPool, aprPool.getAprPool(), NULL, NULL );
     apr_thread_cond_create( &waitEvent, subPool );
 
     // Store the event in the queue so that a notify can
