@@ -356,6 +356,7 @@ h_sources = \
     decaf/util/concurrent/TimeoutException.h \
     decaf/util/concurrent/atomic/AtomicBoolean.h \
     decaf/util/concurrent/atomic/AtomicInteger.h \
+    decaf/util/concurrent/atomic/AtomicReference.h \
     decaf/util/concurrent/locks/Lock.h \
     decaf/util/concurrent/locks/Condition.h \
     decaf/util/concurrent/locks/ReadWriteLock.h \

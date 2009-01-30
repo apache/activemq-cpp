@@ -107,6 +107,7 @@ cc_sources = \
   decaf/util/concurrent/TimeUnitTest.cpp \
   decaf/util/concurrent/atomic/AtomicBooleanTest.cpp \
   decaf/util/concurrent/atomic/AtomicIntegerTest.cpp \
+  decaf/util/concurrent/atomic/AtomicReferenceTest.cpp \
   decaf/nio/BufferTest.cpp \
   testRegistry.cpp \
   main.cpp
@@ -203,6 +204,7 @@ h_sources = \
   decaf/util/concurrent/TimeUnitTest.h \
   decaf/util/concurrent/atomic/AtomicBooleanTest.h \
   decaf/util/concurrent/atomic/AtomicIntegerTest.h \
+  decaf/util/concurrent/atomic/AtomicReferenceTest.h \
   decaf/nio/BufferTest.h  
 
 ## include activemq/wireformat/openwire/marshal/v1/srcmakefile.mk
