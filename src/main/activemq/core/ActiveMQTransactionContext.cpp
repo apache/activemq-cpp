@@ -208,7 +208,7 @@ void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQE
         this->transactionInfo.reset( new commands::TransactionInfo() );
 
         this->transactionInfo->setConnectionId(
-            this->connection->getConnectionId()->cloneDataStructure() );
+            this->connection->getConnectionId().cloneDataStructure() );
         this->transactionInfo->setTransactionId( createLocalTransactionId() );
         this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_BEGIN );
 
@@ -227,7 +227,7 @@ commands::TransactionId* ActiveMQTransactionContext::createLocalTransactionId()
 
         std::auto_ptr<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
 
-        id->setConnectionId( this->connection->getConnectionId()->cloneDataStructure() );
+        id->setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
         id->setValue( this->connection->getNextTransactionId() );
 
         return id.release();

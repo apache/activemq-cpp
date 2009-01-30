@@ -94,17 +94,15 @@ vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages(
 {
     vector<ActiveMQMessage*> retVal;
 
-    const commands::ConsumerInfo* consumerInfo = consumer->getConsumerInfo();
-
     synchronized( &mutex ) {
 
         list<DispatchData>::iterator iter = messageQueue.begin();
         while( iter != messageQueue.end() ) {
             list<DispatchData>::iterator currentIter = iter;
             DispatchData& dispatchData = *iter++;
-            if( consumerInfo->getConsumerId() == dispatchData.getConsumerId() ) {
+            if( consumer->getConsumerId() == dispatchData.getConsumerId() ) {
                 retVal.push_back( dispatchData.getMessage() );
-                messageQueue.erase(currentIter);
+                messageQueue.erase( currentIter );
             }
         }
     }
@@ -169,10 +167,10 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
     try {
 
         ActiveMQConsumer* consumer = NULL;
-        Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
+        Map< commands::ConsumerId, ActiveMQConsumer*>& consumers = session->getConsumers();
 
         synchronized( &consumers ) {
-            consumer = consumers.getValue( data.getConsumerId()->getValue() );
+            consumer = consumers.getValue( data.getConsumerId() );
         }
 
         // If the consumer is not available, just delete the message.

@@ -251,22 +251,20 @@ namespace core{
 
         /**
          * Retries this object ProducerInfo pointer
-         * @return ProducerInfo pointer
+         * @return ProducerInfo Reference
          */
-        virtual commands::ProducerInfo* getProducerInfo(){
-            return this->producerInfo.get();
+        const commands::ProducerInfo& getProducerInfo() const {
+            this->checkClosed();
+            return *( this->producerInfo );
         }
 
         /**
          * Retries this object ProducerId or NULL if closed.
-         * @return ProducerId pointer
+         * @return ProducerId Reference
          */
-        virtual commands::ProducerId* getProducerId(){
-            if( this->isClosed() ) {
-                return NULL;
-            }
-
-            return this->producerInfo->getProducerId();
+        commands::ProducerId& getProducerId() const {
+            this->checkClosed();
+            return *( this->producerInfo->getProducerId() );
         }
 
         /**
@@ -278,7 +276,7 @@ namespace core{
    private:
 
        // Checks for the closed state and throws if so.
-       void checkClosed() throw( exceptions::ActiveMQException );
+       void checkClosed() const throw( exceptions::ActiveMQException );
 
    };
 

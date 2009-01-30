@@ -28,6 +28,7 @@
 #include <activemq/commands/BrokerInfo.h>
 #include <activemq/commands/ConnectionInfo.h>
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/ProducerInfo.h>
 #include <activemq/commands/LocalTransactionId.h>
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
@@ -80,12 +81,12 @@ namespace core{
         /**
          * Map of message dispatchers indexed by consumer id.
          */
-        decaf::util::Map< long long, Dispatcher* > dispatchers;
+        decaf::util::Map< commands::ConsumerId, Dispatcher* > dispatchers;
 
         /**
          * Map of message dispatchers indexed by consumer id.
          */
-        decaf::util::Map< long long, ActiveMQProducer* > activeProducers;
+        decaf::util::Map< commands::ProducerId, ActiveMQProducer* > activeProducers;
 
         /**
          * Maintain the set of all active sessions.
@@ -151,13 +152,13 @@ namespace core{
          * @param consumer - The consumer for which to register a dispatcher.
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          */
-        virtual void addDispatcher( commands::ConsumerInfo* consumer, Dispatcher* dispatcher );
+        virtual void addDispatcher( const commands::ConsumerId& consumer, Dispatcher* dispatcher );
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
          */
-        virtual void removeDispatcher( const commands::ConsumerInfo* consumer );
+        virtual void removeDispatcher( const commands::ConsumerId& consumer );
 
         /**
          * If supported sends a message pull request to the service provider asking
@@ -324,14 +325,14 @@ namespace core{
          * Gets the ConnectionInfo for this Object, if the Connection is not open
          * than this method throws an exception
          */
-        const commands::ConnectionInfo* getConnectionInfo() const
+        const commands::ConnectionInfo& getConnectionInfo() const
             throw( exceptions::ActiveMQException );
 
         /**
          * Gets the ConnectionId for this Object, if the Connection is not open
          * than this method throws an exception
          */
-        const commands::ConnectionId* getConnectionId() const
+        const commands::ConnectionId& getConnectionId() const
             throw( exceptions::ActiveMQException );
 
         /**

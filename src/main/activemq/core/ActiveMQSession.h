@@ -77,12 +77,12 @@ namespace core{
         /**
          * Map of consumers.
          */
-        decaf::util::Map<long long, ActiveMQConsumer*> consumers;
+        decaf::util::Map< commands::ConsumerId, ActiveMQConsumer*> consumers;
 
         /**
          * Map of producers.
          */
-        decaf::util::Map<long long, ActiveMQProducer*> producers;
+        decaf::util::Map< commands::ProducerId, ActiveMQProducer*> producers;
 
         /**
          * Sends incoming messages to the registered consumers.
@@ -103,7 +103,7 @@ namespace core{
 
         virtual ~ActiveMQSession();
 
-        decaf::util::Map<long long, ActiveMQConsumer*>& getConsumers() {
+        decaf::util::Map< commands::ConsumerId, ActiveMQConsumer*>& getConsumers() {
             return consumers;
         }
 
@@ -375,11 +375,22 @@ namespace core{
 
         /**
          * Gets the Session Information object for this session, if the
-         * session is closed than this returns null
-         * @return SessionInfo Pointer
+         * session is closed than this method throws an exception.
+         * @return SessionInfo Reference
          */
-        commands::SessionInfo* getSessionInfo() {
-            return this->sessionInfo.get();
+        const commands::SessionInfo& getSessionInfo() const {
+            this->checkClosed();
+            return *( this->sessionInfo );
+        }
+
+        /**
+         * Gets the Session Id object for this session, if the session
+         * is closed than this method throws an exception.
+         * @return SessionId Reference
+         */
+        const commands::SessionId& getSessionId() const {
+            this->checkClosed();
+            return *( this->sessionInfo->getSessionId() );
         }
 
         /**
@@ -428,7 +439,7 @@ namespace core{
    private:
 
        // Checks for the closed state and throws if so.
-       void checkClosed() throw( exceptions::ActiveMQException );
+       void checkClosed() const throw( exceptions::ActiveMQException );
 
        // Performs the work of creating and configuring a valid Consumer Info, this
        // can be used both by the normal createConsumer call and by a createDurableConsumer

@@ -263,19 +263,15 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         // Register this as a message dispatcher for the consumer since we
         // could start receiving messages from the broker right away once we
         // send the ConsumerInfo command.
-        this->connection->addDispatcher( consumerInfo.get(), this );
+        this->connection->addDispatcher( *( consumerInfo->getConsumerId() ), this );
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( consumerInfo.release(), this, this->transaction.get() ) );
 
-        // Send the message to the broker.
-        this->connection->syncRequest( consumer->getConsumerInfo() );
-
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue(
-                consumer->getConsumerInfo()->getConsumerId()->getValue(), consumer.get() );
+            this->consumers.setValue( consumer->getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -309,19 +305,15 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         // Register this as a message dispatcher for the consumer since we
         // could start receiving messages from the broker right away once we
         // send the ConsumerInfo command.
-        this->connection->addDispatcher( consumerInfo.get(), this );
+        this->connection->addDispatcher( *( consumerInfo->getConsumerId() ), this );
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
             new ActiveMQConsumer( consumerInfo.release(), this, this->transaction.get() ) );
 
-        // Send the message to the broker.
-        this->connection->syncRequest( consumer->getConsumerInfo() );
-
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue(
-                consumer->getConsumerInfo()->getConsumerId()->getValue(), consumer.get() );
+            this->consumers.setValue( consumer->getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -341,8 +333,8 @@ cms::MessageProducer* ActiveMQSession::createProducer(
         this->checkClosed();
 
         std::auto_ptr<commands::ProducerId> producerId( new commands::ProducerId() );
-        producerId->setConnectionId( this->getSessionInfo()->getSessionId()->getConnectionId() );
-        producerId->setSessionId( this->getSessionInfo()->getSessionId()->getValue() );
+        producerId->setConnectionId( this->sessionInfo->getSessionId()->getConnectionId() );
+        producerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
         producerId->setValue( this->connection->getNextProducerId() );
 
         std::auto_ptr<commands::ProducerInfo> producerInfo( new commands::ProducerInfo() );
@@ -376,13 +368,9 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         producer->setSendTimeout( this->connection->getSendTimeout() );
 
-        // Send the message to the broker.
-        this->connection->syncRequest( producer->getProducerInfo() );
-
         synchronized( &this->producers ) {
             // Place the Producer into the Map.
-            this->producers.setValue(
-                producer->getProducerInfo()->getProducerId()->getValue(), producer.get() );
+            this->producers.setValue( producer->getProducerId(), producer.get() );
         }
 
         // Add to the Connections list
@@ -593,12 +581,12 @@ void ActiveMQSession::send(
         // flag.  Not adding a message ID will cause an NPE at the broker.
         commands::MessageId* id = new commands::MessageId();
         id->setProducerId(
-            producer->getProducerInfo()->getProducerId()->cloneDataStructure() );
+            producer->getProducerId().cloneDataStructure() );
         id->setProducerSequenceId( this->connection->getNextProducerSequenceId() );
 
         amqMessage->setMessageId( id );
         amqMessage->setProducerId(
-            producer->getProducerInfo()->getProducerId()->cloneDataStructure() );
+            producer->getProducerId().cloneDataStructure() );
 
         if( this->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
 
@@ -659,9 +647,9 @@ void ActiveMQSession::unsubscribe( const std::string& name )
             new commands::RemoveSubscriptionInfo() );
 
         rsi->setConnectionId(
-            this->connection->getConnectionInfo()->getConnectionId()->cloneDataStructure() );
+            this->connection->getConnectionId().cloneDataStructure() );
         rsi->setSubcriptionName( name );
-        rsi->setClientId( this->connection->getConnectionInfo()->getClientId() );
+        rsi->setClientId( this->connection->getConnectionInfo().getClientId() );
 
         // Send the message to the broker.
         this->connection->syncRequest( rsi.get() );
@@ -716,7 +704,7 @@ void ActiveMQSession::stop() {
 ////////////////////////////////////////////////////////////////////////////////
 bool ActiveMQSession::isStarted() const {
 
-    if( this->executor.get() != NULL ) {
+    if( this->executor.get() == NULL ) {
         return false;
     }
 
@@ -735,7 +723,7 @@ commands::ConsumerInfo* ActiveMQSession::createConsumerInfo(
         std::auto_ptr<commands::ConsumerId> consumerId( new commands::ConsumerId() );
 
         consumerId->setConnectionId(
-            this->connection->getConnectionId()->getValue() );
+            this->connection->getConnectionId().getValue() );
         consumerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
         consumerId->setValue( this->connection->getNextSessionId() );
 
@@ -867,7 +855,7 @@ void ActiveMQSession::createTemporaryDestination(
     try {
 
         commands::DestinationInfo command;
-        command.setConnectionId( this->connection->getConnectionId()->cloneDataStructure() );
+        command.setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
         command.setOperationType( ActiveMQConstants::DESTINATION_ADD_OPERATION );
         command.setDestination( tempDestination->cloneDataStructure() );
 
@@ -891,7 +879,7 @@ void ActiveMQSession::destroyTemporaryDestination(
 
         commands::DestinationInfo command;
 
-        command.setConnectionId( this->connection->getConnectionId()->cloneDataStructure() );
+        command.setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
         command.setOperationType( ActiveMQConstants::DESTINATION_REMOVE_OPERATION );
         command.setDestination( tempDestination->cloneDataStructure() );
 
@@ -908,7 +896,7 @@ std::string ActiveMQSession::createTemporaryDestinationName()
     throw ( activemq::exceptions::ActiveMQException )
 {
     try {
-        return this->connection->getConnectionId()->getValue() + ":" +
+        return this->connection->getConnectionId().getValue() + ":" +
                Long::toString( this->connection->getNextTempDestinationId() );
     }
     AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
@@ -923,7 +911,7 @@ commands::TransactionId* ActiveMQSession::createLocalTransactionId()
     try{
         std::auto_ptr<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
 
-        id->setConnectionId( this->connection->getConnectionId()->cloneDataStructure() );
+        id->setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
         id->setValue( this->connection->getNextTransactionId() );
 
         return id.release();
@@ -960,7 +948,7 @@ void ActiveMQSession::syncRequest( commands::Command* command, unsigned int time
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::checkClosed() throw( exceptions::ActiveMQException ) {
+void ActiveMQSession::checkClosed() const throw( exceptions::ActiveMQException ) {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,
@@ -978,7 +966,7 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
 
         synchronized( &this->consumers ) {
 
-            if( this->consumers.containsKey( id->getValue() ) ) {
+            if( this->consumers.containsKey( *id ) ) {
 
                 // If the executor thread is currently running, stop it.
                 bool wasStarted = isStarted();
@@ -986,11 +974,11 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
                     stop();
                 }
 
-                ActiveMQConsumer* consumer = this->consumers.getValue( id->getValue() );
-                this->connection->removeDispatcher( consumer->getConsumerInfo() );
+                ActiveMQConsumer* consumer = this->consumers.getValue( *id );
+                this->connection->removeDispatcher( consumer->getConsumerId() );
                 this->connection->disposeOf( id );
 
-                this->consumers.remove( id->getValue() );
+                this->consumers.remove( *id );
 
                 //TODO
 //              // Remove this consumer from the Transaction if we are transacted
@@ -1032,13 +1020,13 @@ void ActiveMQSession::disposeOf( commands::ProducerId* id )
 
         synchronized( &this->producers ) {
 
-            if( this->producers.containsKey( id->getValue() ) ) {
+            if( this->producers.containsKey( *id ) ) {
 
-                ActiveMQProducer* producer = this->producers.getValue( id->getValue() );
+                ActiveMQProducer* producer = this->producers.getValue( *id );
                 this->connection->removeProducer( producer );
                 this->connection->disposeOf( id );
 
-                this->producers.remove( id->getValue() );
+                this->producers.remove( *id );
             }
         }
     }

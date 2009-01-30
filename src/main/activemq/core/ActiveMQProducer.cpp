@@ -54,6 +54,8 @@ ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
     this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
+
+    this->session->syncRequest( this->producerInfo.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +202,7 @@ void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::checkClosed() throw( exceptions::ActiveMQException ) {
+void ActiveMQProducer::checkClosed() const throw( exceptions::ActiveMQException ) {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

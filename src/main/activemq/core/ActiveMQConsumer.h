@@ -180,22 +180,20 @@ namespace core{
 
         /**
          * Get the Consumer information for this consumer
-         * @return Pointer to a Consumer Info Object
+         * @return Reference to a Consumer Info Object
          */
-        commands::ConsumerInfo* getConsumerInfo() {
-            return consumerInfo.get();
+        const commands::ConsumerInfo& getConsumerInfo() const {
+            this->checkClosed();
+            return *( this->consumerInfo );
         }
 
         /**
          * Get the Consumer Id for this consumer
-         * @return Pointer to a Consumer Id Object
+         * @return Reference to a Consumer Id Object
          */
-        commands::ConsumerId* getConsumerId() {
-            if( this->isClosed() ) {
-                return NULL;
-            }
-
-            return consumerInfo->getConsumerId();
+        const commands::ConsumerId& getConsumerId() const {
+            this->checkClosed();
+            return *( this->consumerInfo->getConsumerId() );
         }
 
         /**
@@ -256,7 +254,7 @@ namespace core{
             throw ( exceptions::ActiveMQException );
 
         // Checks for the closed state and throws if so.
-        void checkClosed() throw( exceptions::ActiveMQException );
+        void checkClosed() const throw( exceptions::ActiveMQException );
 
     };
 

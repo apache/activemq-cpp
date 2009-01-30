@@ -34,17 +34,16 @@ namespace core {
     class AMQCPP_API DispatchData {
     private:
 
-        commands::ConsumerId* consumerId;
+        commands::ConsumerId consumerId;
         ActiveMQMessage* message;
 
     public:
 
         DispatchData(){
-            consumerId = NULL;
             message = NULL;
         }
 
-        DispatchData( commands::ConsumerId* consumer, ActiveMQMessage* message ) {
+        DispatchData( const commands::ConsumerId& consumer, ActiveMQMessage* message ) {
             this->consumerId = consumer;
             this->message = message;
         }
@@ -59,7 +58,7 @@ namespace core {
             return *this;
         }
 
-        commands::ConsumerId* getConsumerId() {
+        const commands::ConsumerId& getConsumerId() {
             return consumerId;
         }
 

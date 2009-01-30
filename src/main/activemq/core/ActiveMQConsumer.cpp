@@ -61,6 +61,9 @@ ActiveMQConsumer::ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
     this->consumerInfo.reset( consumerInfo );
     this->listener = NULL;
     this->closed = false;
+
+    // Send our info to the Broker.
+    this->session->syncRequest( this->consumerInfo.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +86,7 @@ void ActiveMQConsumer::close()
 
             // Remove this Consumer from the Connections set of Dispatchers and then
             // remove it from the Broker.
-            this->session->disposeOf( this->getConsumerId() );
+            this->session->disposeOf( this->consumerInfo->getConsumerId() );
 
             this->closed = true;
 
@@ -543,7 +546,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::checkClosed() throw( exceptions::ActiveMQException ) {
+void ActiveMQConsumer::checkClosed() const throw( exceptions::ActiveMQException ) {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

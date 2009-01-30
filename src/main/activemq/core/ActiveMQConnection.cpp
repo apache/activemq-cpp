@@ -89,21 +89,21 @@ ActiveMQConnection::~ActiveMQConnection() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::addDispatcher( commands::ConsumerInfo* consumer,
-    Dispatcher* dispatcher ) {
+void ActiveMQConnection::addDispatcher(
+    const commands::ConsumerId& consumer, Dispatcher* dispatcher ) {
 
     // Add the consumer to the map.
     synchronized( &dispatchers ) {
-        dispatchers.setValue( consumer->getConsumerId()->getValue(), dispatcher );
+        dispatchers.setValue( consumer, dispatcher );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeDispatcher( const commands::ConsumerInfo* consumer ) {
+void ActiveMQConnection::removeDispatcher( const commands::ConsumerId& consumer ) {
 
     // Remove the consumer from the map.
     synchronized( &dispatchers ) {
-        dispatchers.remove( consumer->getConsumerId()->getValue() );
+        dispatchers.remove( consumer );
     }
 }
 
@@ -180,8 +180,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 
         // Add this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.setValue(
-                producer->getProducerInfo()->getProducerId()->getValue(), producer );
+            activeProducers.setValue( producer->getProducerId(), producer );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -197,8 +196,7 @@ void ActiveMQConnection::removeProducer( ActiveMQProducer* producer )
 
         // Remove this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.remove(
-                producer->getProducerInfo()->getProducerId()->getValue() );
+            activeProducers.remove( producer->getProducerId() );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -460,7 +458,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             Dispatcher* dispatcher = NULL;
             synchronized( &dispatchers ) {
 
-                dispatcher = dispatchers.getValue( dispatch->getConsumerId()->getValue() );
+                dispatcher = dispatchers.getValue( *( dispatch->getConsumerId() ) );
 
                 // If we have no registered dispatcher, the consumer was probably
                 // just closed.  Just delete the message.
@@ -469,7 +467,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
                 } else {
 
                     // Dispatch the message.
-                    DispatchData data( dispatch->getConsumerId(), message );
+                    DispatchData data( *( dispatch->getConsumerId() ), message );
                     dispatcher->dispatch( data );
                 }
             }
@@ -491,7 +489,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             // Get the consumer info object for this consumer.
             ActiveMQProducer* producer = NULL;
             synchronized( &this->activeProducers ) {
-                producer = this->activeProducers.getValue( producerAck->getProducerId()->getValue() );
+                producer = this->activeProducers.getValue( *( producerAck->getProducerId() ) );
                 if( producer != NULL ){
                     producer->onProducerAck( *producerAck );
                 }
@@ -657,19 +655,19 @@ void ActiveMQConnection::fire( const exceptions::ActiveMQException& ex ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const commands::ConnectionInfo* ActiveMQConnection::getConnectionInfo() const
+const commands::ConnectionInfo& ActiveMQConnection::getConnectionInfo() const
     throw( exceptions::ActiveMQException ) {
 
     enforceConnected();
 
-    return &this->connectionInfo;
+    return this->connectionInfo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const commands::ConnectionId* ActiveMQConnection::getConnectionId() const
+const commands::ConnectionId& ActiveMQConnection::getConnectionId() const
     throw( exceptions::ActiveMQException ) {
 
     enforceConnected();
 
-    return this->connectionInfo.getConnectionId();
+    return *( this->connectionInfo.getConnectionId() );
 }
