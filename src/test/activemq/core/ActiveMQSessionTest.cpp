@@ -75,8 +75,7 @@ void ActiveMQSessionTest::testAutoAcking() {
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1,
-                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
 
     synchronized( &msgListener1.mutex )
     {
@@ -88,8 +87,7 @@ void ActiveMQSessionTest::testAutoAcking() {
 
     CPPUNIT_ASSERT( msgListener1.messages.size() == 1 );
 
-    injectTextMessage( "This is a Test 2" , *topic2,
-                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
 
     synchronized( &msgListener2.mutex )
     {
@@ -165,8 +163,7 @@ void ActiveMQSessionTest::testClientAck()
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1,
-                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
 
     synchronized( &msgListener1.mutex )
     {
@@ -180,8 +177,7 @@ void ActiveMQSessionTest::testClientAck()
 
     msgListener1.messages[0]->acknowledge();
 
-    injectTextMessage( "This is a Test 2" , *topic2,
-                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
 
     synchronized( &msgListener2.mutex )
     {
@@ -259,8 +255,7 @@ void ActiveMQSessionTest::testTransactional()
     consumer1->setMessageListener( &msgListener1 );
     consumer2->setMessageListener( &msgListener2 );
 
-    injectTextMessage( "This is a Test 1" , *topic1,
-                       *( consumer1->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 1" , *topic1, consumer1->getConsumerId() );
 
     synchronized( &msgListener1.mutex )
     {
@@ -274,8 +269,7 @@ void ActiveMQSessionTest::testTransactional()
 
     session->commit();
 
-    injectTextMessage( "This is a Test 2" , *topic2,
-                       *( consumer2->getConsumerInfo()->getConsumerId() ) );
+    injectTextMessage( "This is a Test 2" , *topic2, consumer2->getConsumerId() );
 
     synchronized( &msgListener2.mutex )
     {
@@ -316,8 +310,7 @@ void ActiveMQSessionTest::testTransactional()
 
         stream << "This is test message #" << i << std::ends;
 
-        injectTextMessage( stream.str() , *topic1,
-                           *( consumer1->getConsumerInfo()->getConsumerId() ) );
+        injectTextMessage( stream.str() , *topic1, consumer1->getConsumerId() );
     }
 
     for( unsigned int i = 0; i < msgCount; ++i )
@@ -326,8 +319,7 @@ void ActiveMQSessionTest::testTransactional()
 
         stream << "This is test message #" << i << std::ends;
 
-        injectTextMessage( stream.str() , *topic2,
-                           *( consumer2->getConsumerInfo()->getConsumerId() ) );
+        injectTextMessage( stream.str() , *topic2, consumer2->getConsumerId() );
     }
 
     synchronized( &msgListener1.mutex )
@@ -440,7 +432,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 1" ,
                        *topic1,
-                       *( consumer1->getConsumerInfo()->getConsumerId() ),
+                       consumer1->getConsumerId(),
                        decaf::util::Date::getCurrentTimeMilliseconds(),
                        50 );
 
@@ -456,7 +448,7 @@ void ActiveMQSessionTest::testExpiration()
 
     injectTextMessage( "This is a Test 2" ,
                        *topic2,
-                       *( consumer2->getConsumerInfo()->getConsumerId() ),
+                       consumer2->getConsumerId(),
                        decaf::util::Date::getCurrentTimeMilliseconds() - 100,
                        1 );
 
