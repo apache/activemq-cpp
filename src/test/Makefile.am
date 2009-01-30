@@ -66,18 +66,18 @@ cc_sources = \
   decaf/internal/nio/ShortArrayBufferTest.cpp \
   decaf/internal/net/URIEncoderDecoderTest.cpp \
   decaf/internal/net/URIHelperTest.cpp \
+  decaf/lang/BooleanTest.cpp \
   decaf/lang/ByteTest.cpp \
   decaf/lang/CharacterTest.cpp \
-  decaf/lang/BooleanTest.cpp \
-  decaf/lang/ShortTest.cpp \
+  decaf/lang/DoubleTest.cpp \
+  decaf/lang/ExceptionTest.cpp \
+  decaf/lang/FloatTest.cpp \
   decaf/lang/IntegerTest.cpp \
   decaf/lang/LongTest.cpp \
-  decaf/lang/FloatTest.cpp \
-  decaf/lang/DoubleTest.cpp \
-  decaf/lang/ThreadTest.cpp \
-  decaf/lang/ExceptionTest.cpp \
   decaf/lang/MathTest.cpp \
+  decaf/lang/ShortTest.cpp \
   decaf/lang/SystemTest.cpp \
+  decaf/lang/ThreadTest.cpp \
   decaf/io/FilterInputStreamTest.cpp \
   decaf/io/FilterOutputStreamTest.cpp \
   decaf/io/BufferedInputStreamTest.cpp \

@@ -198,14 +198,14 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ThreadPoolTest );
 //#include <decaf/util/concurrent/TimeUnitTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::TimeUnitTest );
-
-#include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );
-#include <decaf/util/concurrent/atomic/AtomicIntegerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicIntegerTest );
-#include <decaf/util/concurrent/atomic/AtomicReferenceTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicReferenceTest );
-
+//
+//#include <decaf/util/concurrent/atomic/AtomicBooleanTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicBooleanTest );
+//#include <decaf/util/concurrent/atomic/AtomicIntegerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicIntegerTest );
+//#include <decaf/util/concurrent/atomic/AtomicReferenceTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::atomic::AtomicReferenceTest );
+//
 //#include <decaf/util/DateTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 //#include <decaf/util/UUIDTest.h>
