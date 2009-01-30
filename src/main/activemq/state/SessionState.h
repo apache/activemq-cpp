@@ -38,8 +38,8 @@ namespace state {
     private:
 
         std::auto_ptr<commands::SessionInfo> info;
-        decaf::util::Map< commands::ProducerId*, ProducerState* > producers;
-        decaf::util::Map< commands::ConsumerId*, ConsumerState* > consumers;
+        decaf::util::Map< commands::ProducerId, ProducerState* > producers;
+        decaf::util::Map< commands::ConsumerId, ConsumerState* > consumers;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 
     public:
