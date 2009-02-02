@@ -43,6 +43,7 @@ namespace test{
         void testSendReceiveTransactedBatches();
         void testSendRollback();
         void testSendSessionClose();
+        void testWithTTLSet();
 
     };
 
