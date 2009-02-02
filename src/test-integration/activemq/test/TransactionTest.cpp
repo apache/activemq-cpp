@@ -156,3 +156,38 @@ void TransactionTest::testSendSessionClose() {
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void TransactionTest::testWithTTLSet() {
+
+    try{
+        cmsProvider->getProducer()->setDeliveryMode( DeliveryMode::PERSISTENT );
+
+        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+
+        auto_ptr<TextMessage> outbound1(
+            cmsProvider->getSession()->createTextMessage( "First Message" ) );
+
+        const std::size_t NUM_MESSAGES = 50;
+
+        // sends a message
+        for( std::size_t i = 0; i < NUM_MESSAGES; ++i ) {
+            cmsProvider->getProducer()->send( outbound1.get(),
+                                              cms::DeliveryMode::PERSISTENT,
+                                              cmsProvider->getProducer()->getPriority(),
+                                              120*1000 );
+        }
+
+        cmsProvider->getSession()->commit();
+
+        for( std::size_t i = 0; i < NUM_MESSAGES; ++i ) {
+
+            // receives the second message
+            auto_ptr<TextMessage> inbound1(
+                dynamic_cast<TextMessage*>( consumer->receive( 4000 ) ) );
+            CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}

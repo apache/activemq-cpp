@@ -29,6 +29,7 @@ namespace openwire{
         CPPUNIT_TEST_SUITE( OpenwireTransactionTest );
         CPPUNIT_TEST( testSendReceiveTransactedBatches );
         CPPUNIT_TEST( testSendRollback );
+        CPPUNIT_TEST( testWithTTLSet );
 //        CPPUNIT_TEST( testSendSessionClose );
         CPPUNIT_TEST_SUITE_END();
 
