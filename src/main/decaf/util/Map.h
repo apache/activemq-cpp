@@ -32,7 +32,8 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V> class Map : public concurrent::Synchronizable {
+    template <typename K, typename V, typename COMPARE = std::less<K> > class Map :
+        public concurrent::Synchronizable {
     private:
 
         std::map<K,V> valueMap;
@@ -94,7 +95,7 @@ namespace util{
          * @return true if this map contains the value, otherwise false.
          */
         virtual bool containsKey( const K& key ) const {
-            typename std::map<K,V>::const_iterator iter;
+            typename std::map<K,V,COMPARE>::const_iterator iter;
             iter = valueMap.find(key);
             return iter != valueMap.end();
         }
@@ -112,7 +113,7 @@ namespace util{
                 return false;
             }
 
-            typename std::map<K,V>::const_iterator iter = valueMap.begin();
+            typename std::map<K,V,COMPARE>::const_iterator iter = valueMap.begin();
             for( ; iter != valueMap.end(); ++iter ){
                 if( (*iter).second == value ) {
                     return true;
@@ -145,7 +146,7 @@ namespace util{
         virtual V getValue( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) {
 
-            typename std::map<K,V>::const_iterator iter;
+            typename std::map<K,V,COMPARE>::const_iterator iter;
             iter = valueMap.find(key);
             if( iter == valueMap.end() ){
                 throw lang::exceptions::NoSuchElementException( __FILE__,
@@ -180,7 +181,7 @@ namespace util{
         virtual std::vector<K> getKeys() const{
             std::vector<K> keys( valueMap.size() );
 
-            typename std::map<K,V>::const_iterator iter;
+            typename std::map<K,V,COMPARE>::const_iterator iter;
             iter=valueMap.begin();
             for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
                 keys[ix] = iter->first;
@@ -195,7 +196,7 @@ namespace util{
         virtual std::vector<V> getValues() const {
             std::vector<V> values( valueMap.size() );
 
-            typename std::map<K,V>::const_iterator iter;
+            typename std::map<K,V,COMPARE>::const_iterator iter;
             iter=valueMap.begin();
             for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
                 values[ix] = iter->second;
