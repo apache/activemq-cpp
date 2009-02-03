@@ -68,14 +68,14 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::DynamicDestinationResolverTest );
 //#include <activemq/cmsutil/SessionPoolTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::SessionPoolTest );
-
-#include <activemq/core/ActiveMQConnectionFactoryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
-#include <activemq/core/ActiveMQConnectionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
-#include <activemq/core/ActiveMQSessionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
-
+//
+//#include <activemq/core/ActiveMQConnectionFactoryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
+//#include <activemq/core/ActiveMQConnectionTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
+//#include <activemq/core/ActiveMQSessionTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
+//
 //#include <activemq/transport/correlator/ResponseCorrelatorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
 //
@@ -176,6 +176,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
 //#include <decaf/lang/SystemTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
+#include <decaf/lang/PointerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
 //
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );

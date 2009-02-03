@@ -75,6 +75,7 @@ cc_sources = \
   decaf/lang/IntegerTest.cpp \
   decaf/lang/LongTest.cpp \
   decaf/lang/MathTest.cpp \
+  decaf/lang/PointerTest.cpp \
   decaf/lang/ShortTest.cpp \
   decaf/lang/SystemTest.cpp \
   decaf/lang/ThreadTest.cpp \
@@ -164,17 +165,18 @@ h_sources = \
   decaf/internal/net/URIEncoderDecoderTest.h \
   decaf/internal/net/URIHelperTest.h \
   decaf/lang/ByteTest.h \
-  decaf/lang/CharacterTest.h \
   decaf/lang/BooleanTest.h \
-  decaf/lang/ShortTest.h \
+  decaf/lang/CharacterTest.h \
+  decaf/lang/DoubleTest.h \
+  decaf/lang/ExceptionTest.h \
+  decaf/lang/FloatTest.h \
   decaf/lang/IntegerTest.h \
   decaf/lang/LongTest.h \
-  decaf/lang/FloatTest.h \
-  decaf/lang/DoubleTest.h \
-  decaf/lang/ThreadTest.h \
-  decaf/lang/ExceptionTest.h \
   decaf/lang/MathTest.h \
+  decaf/lang/PointerTest.h \
+  decaf/lang/ShortTest.h \
   decaf/lang/SystemTest.h \
+  decaf/lang/ThreadTest.h \
   decaf/io/FilterInputStreamTest.h \
   decaf/io/FilterOutputStreamTest.h \
   decaf/io/BufferedInputStreamTest.h \
