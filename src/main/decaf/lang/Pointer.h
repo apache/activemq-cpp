@@ -26,16 +26,133 @@
 namespace decaf {
 namespace lang {
 
+    template <typename T>
+    class AtomicRefCounter {
+    private:
+
+        decaf::util::concurrent::atomic::AtomicInteger* counter;
+
+    private:
+
+        AtomicRefCounter& operator= ( const AtomicRefCounter& );
+
+    public:
+
+        AtomicRefCounter() :
+            counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
+        AtomicRefCounter( T* value ) :
+            counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
+        AtomicRefCounter( const AtomicRefCounter& other ) : counter( other.counter ) {
+            this->counter->incrementAndGet();
+        }
+
+        template< typename U >
+        AtomicRefCounter( const AtomicRefCounter<U>& other ) {
+            this->counter = reinterpret_cast<const AtomicRefCounter<T>& >( other ).counter;
+            this->counter->incrementAndGet();
+        }
+
+        /**
+         * Swaps this instance's reference counter with the one given, this allows
+         * for copy-and-swap semantics of this object.
+         *
+         * @param the value to swap with this one's
+         */
+        void swap( AtomicRefCounter<T>& other ) {
+            std::swap( this->counter, other.counter );
+        }
+
+        /**
+         * Removes a reference to the counter Atomically and returns if the counter
+         * has reached zero, once the counter hits zero, the internal counter is
+         * destroyed and this instance is now considered to be unreferenced.
+         *
+         * @return true if the count is now zero.
+         */
+        bool release() {
+            if( this->counter->decrementAndGet() == 0 ) {
+                delete this->counter;
+                return true;
+            }
+            return false;
+        }
+    };
+
+    template <typename T>
+    class InvasiveCounter {
+    private:
+
+        T* counter;
+
+    private:
+
+        InvasiveCounter& operator= ( const InvasiveCounter& );
+
+    public:
+
+        InvasiveCounter() : counter( NULL ) {}
+
+        InvasiveCounter( T* value ) : counter( value ) {
+
+            if( value != NULL ) {
+                value->addReference();
+            }
+        }
+
+        InvasiveCounter( const InvasiveCounter& other ) : counter( other.counter ) {
+            this->counter->addReference();
+        }
+
+        template< typename U >
+        InvasiveCounter( const InvasiveCounter<U>& other ) {
+            this->counter = reinterpret_cast< const InvasiveCounter<T>& >( other ).counter;
+            this->counter->addReference();
+        }
+
+        /**
+         * Swaps this instance's reference counter with the one given, this allows
+         * for copy-and-swap semantics of this object.
+         *
+         * @param the value to swap with this one's
+         */
+        void swap( InvasiveCounter<T>& other ) {
+            std::swap( this->counter, other.counter );
+        }
+
+        /**
+         * Removes a reference to the counter and returns if the counter
+         * has reached zero.
+         *
+         * @return true if the count is now zero.
+         */
+        bool release() {
+            if( this->counter != NULL ) {
+                return this->counter->releaseReference();
+            }
+
+            return false;
+        }
+    };
+
     /**
      * Decaf's implementation of a Smart Pointer that is a template on a Type
-     * and is Thread Safe.
+     * and is Thread Safe if the default Reference Counter is used.  This Pointer
+     * type allows for the substitution of different Reference Counter implementations
+     * which provide a means of using invasive reference counting if desired using
+     * a custom implementation of <code>ReferenceCounter</code>.
+     * <p>
+     * The Decaf smart pointer provide comparison operators for comparing Pointer
+     * instances in the same manner as normal pointer, except that it does not provide
+     * an overload of operators ( <, <=, >, >= ).  To allow use of a Pointer in a STL
+     * container that requires it, Pointer provides an implementation of std::less.
+     *
+     * @since 1.0
      */
-    template< typename T >
-    class DECAF_API Pointer {
+    template< typename T, typename REFCOUNTER = AtomicRefCounter<T> >
+    class DECAF_API Pointer : public REFCOUNTER {
     private:
 
         T* value;
-        decaf::util::concurrent::atomic::AtomicInteger* refCount;
 
     public:
 
@@ -51,7 +168,7 @@ namespace lang {
          * Initialized the contained pointer to NULL, using the -> operator
          * results in an exception unless reset to contain a real value.
          */
-        Pointer() : value( NULL ), refCount( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
+        Pointer() : REFCOUNTER(), value( NULL ) {}
 
         /**
          * Explicit Constructor, creates a Pointer that contains value with a
@@ -59,22 +176,25 @@ namespace lang {
          *
          * @param value - instance of the type we are containing here.
          */
-        explicit Pointer( const StoredType& value ) :
-            value( value ), refCount( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {
+        explicit Pointer( const StoredType& value ) : REFCOUNTER( value ), value( value ) {
         }
 
         /**
          * Copy constructor. Copies the value contained in the pointer to the new
          * instance and increments the reference counter.
          */
-        Pointer( const Pointer<T>& value ) throw() : value( value.value ), refCount( value.refCount ) {
-            this->refCount->incrementAndGet();
-        }
+        Pointer( const Pointer& value ) throw() : REFCOUNTER( value ), value( value.value ) {}
+
+        /**
+         * Copy constructor. Copies the value contained in the pointer to the new
+         * instance and increments the reference counter.
+         */
+        template< typename T1, typename R1 >
+        Pointer( const Pointer<T1, R1>& value ) throw() : REFCOUNTER( value ), value( value.get() ) {}
 
         virtual ~Pointer() throw() {
-            if( this->refCount->decrementAndGet() == 0 ) {
+            if( this->release() == true ) {
                 delete this->value;
-                delete this->refCount;
             }
         }
 
@@ -106,16 +226,26 @@ namespace lang {
          * Exception Safe Swap Function
          * @param value - the value to swap with this.
          */
-        void swap( Pointer<T>& value ) throw() {
+        void swap( Pointer& value ) throw() {
             std::swap( this->value, value.value );
-            std::swap( this->refCount, value.refCount );
+            REFCOUNTER::swap( value );
         }
 
         /**
          * Assigns the value of right to this Pointer and increments the reference Count.
          * @param right - Pointer on the right hand side of an operator= call to this.
          */
-        Pointer& operator= ( const Pointer<T>& right ) throw() {
+        Pointer& operator= ( const Pointer& right ) throw() {
+            if( this == &right ) {
+                return *this;
+            }
+
+            Pointer temp( right );
+            temp.swap( *this );
+            return *this;
+        }
+        template< typename T1, typename R1>
+        Pointer& operator= ( const Pointer<T1, R1>& right ) throw() {
             if( this == &right ) {
                 return *this;
             }
@@ -191,17 +321,41 @@ namespace lang {
             return left != right.get();
         }
 
-        template< typename U >
-        bool operator==( const Pointer<U>& right ) const {
+        template< typename T1, typename R1 >
+        bool operator==( const Pointer<T1, R1>& right ) const {
             return this->value == right.get();
         }
 
-        template< typename U >
-        bool operator!=( const Pointer<U>& right ) const {
+        template< typename T1, typename R1 >
+        bool operator!=( const Pointer<T1, R1>& right ) const {
             return !( this->value == right.get() );
         }
 
     };
+
+    ////////////////////////////////////////////////////////////////////////////
+    template< typename T, typename R, typename U >
+    inline bool operator==( const Pointer<T, R>& left, const U* right ) {
+        return left.get() == right;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    template< typename T, typename R, typename U >
+    inline bool operator==( const U* left, const Pointer<T, R>& right ) {
+        return right.get() == left;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    template< typename T, typename R, typename U >
+    inline bool operator!=( const Pointer<T, R>& left, const U* right ) {
+        return !( left.get() == right );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    template< typename T, typename R, typename U >
+    inline bool operator!=( const U* left, const Pointer<T, R>& right ) {
+        return right.get() != left;
+    }
 
 }}
 

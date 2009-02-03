@@ -18,6 +18,8 @@
 #include "PointerTest.h"
 
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/lang/Runnable.h>
 
 #include <map>
 #include <string>
@@ -71,6 +73,11 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+struct X {
+    Pointer<X> next;
+};
+
+////////////////////////////////////////////////////////////////////////////////
 void PointerTest::testBasics() {
 
     TestClassA* thePointer = new TestClassA();
@@ -96,6 +103,11 @@ void PointerTest::testBasics() {
 
     copy.reset( NULL );
     CPPUNIT_ASSERT( copy.get() == NULL );
+
+    Pointer<X> p( new X );
+    p->next = Pointer<X>( new X );
+    p = p->next;
+    CPPUNIT_ASSERT( !p->next );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,10 +217,52 @@ void PointerTest::testComparisons() {
     CPPUNIT_ASSERT( pointer1 != NULL );
     CPPUNIT_ASSERT( !pointer1 == false );
     CPPUNIT_ASSERT( !!pointer1 == true );
+
+    // This won't compile which is correct.
+    //Pointer<TestClassB> pointer5( new TestClassB );
+    //Pointer<TestClassA> pointer6( new TestClassA );
+    //CPPUNIT_ASSERT( pointer5 != pointer6 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+class PointerTestRunnable : public decaf::lang::Runnable {
+private:
+
+    Pointer<TestClassA> mine;
+
+public:
+
+    PointerTestRunnable( const Pointer<TestClassA>& value ) : mine( value ) {}
+
+    void run() {
+
+        for( int i = 0; i < 999; ++i ) {
+            Pointer<TestClassBase> copy = this->mine;
+            CPPUNIT_ASSERT( copy->returnHello() == "Hello" );
+            copy.reset( new TestClassB() );
+            CPPUNIT_ASSERT( copy->returnHello() == "GoodBye" );
+        }
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
 void PointerTest::testThreaded1() {
+    Pointer<TestClassA> pointer( new TestClassA() );
+
+    PointerTestRunnable runnable( pointer );
+    Thread testThread( &runnable );
+
+    testThread.start();
+
+    for( int i = 0; i < 999; ++i ) {
+        Pointer<TestClassBase> copy = pointer;
+        CPPUNIT_ASSERT( copy->returnHello() == "Hello" );
+        Thread::yield();
+        copy.reset( new TestClassB() );
+        CPPUNIT_ASSERT( copy->returnHello() == "GoodBye" );
+    }
+
+    testThread.join();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -264,8 +318,58 @@ void PointerTest::testSTLContainers() {
     testMap.insert( std::make_pair( pointer1, "Bob" ) );
     testMap.insert( std::make_pair( pointer2, "Steve" ) );
     testMap.insert( std::make_pair( pointer3, "Steve" ) );
+
+    // Two and Three should be equivalent (not equal) but in this case
+    // equivalent is what matters.  So pointer2 should be bumped out of the map.
+    CPPUNIT_ASSERT( testMap.size() == 2 );
+
     testMap.insert( std::make_pair( Pointer<TestClassBase>( new TestClassA ), "Fred" ) );
 
     CPPUNIT_ASSERT( testMap.find( pointer1 ) != testMap.end() );
     CPPUNIT_ASSERT( testMap.find( pointer2 ) != testMap.end() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+class SelfCounting {
+private:
+
+    int refCount;
+
+public:
+
+    SelfCounting() : refCount( 0 ) {}
+    SelfCounting( const SelfCounting& other ) : refCount( other.refCount ) {}
+
+    void addReference() { this->refCount++; }
+    bool releaseReference() { return !( --this->refCount ); }
+
+    std::string returnHello() { return "Hello"; }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void PointerTest::testInvasive() {
+
+    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > thePointer( new SelfCounting );
+
+    // Test Null Initialize
+    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > nullPointer;
+    CPPUNIT_ASSERT( nullPointer.get() == NULL );
+
+    // Test Value Constructor
+    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > pointer( thePointer );
+    CPPUNIT_ASSERT( pointer.get() == thePointer );
+
+    // Test Copy Constructor
+    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > ctorCopy( pointer );
+    CPPUNIT_ASSERT( ctorCopy.get() == thePointer );
+
+    // Test Assignment
+    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > copy = pointer;
+    CPPUNIT_ASSERT( copy.get() == thePointer );
+
+    CPPUNIT_ASSERT( ( *pointer ).returnHello() == "Hello" );
+    CPPUNIT_ASSERT( pointer->returnHello() == "Hello" );
+
+    copy.reset( NULL );
+    CPPUNIT_ASSERT( copy.get() == NULL );
 }
