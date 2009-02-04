@@ -19,6 +19,7 @@
 #define _DECAF_UTIL_COMPARATOR_H_
 
 #include <decaf/util/Config.h>
+#include <algorithm>
 
 namespace decaf{
 namespace util{
@@ -35,11 +36,21 @@ namespace util{
      * every e1 and e2 in S.
      */
     template<typename T>
-    class Comparator
-    {
+    class Comparator : public std::binary_function< T, T, bool > {
     public:
 
         virtual ~Comparator() {}
+
+        /**
+         * Implementation of the Binary function interface as a means of allowing
+         * a Comparator to be passed to an STL Map for use as the sorting criteria.
+         *
+         * @param left - the Left hand side operand.
+         * @param right - the Right hand side operand.
+         *
+         * @return true if the vale of left is less than the value of right.
+         */
+        virtual bool operator() ( const T&, const T& ) const = 0;
 
         /**
          * Compares its two arguments for order. Returns a negative integer, zero,
@@ -67,7 +78,7 @@ namespace util{
          * @returns a negative integer, zero, or a positive integer as the first
          * argument is less than, equal to, or greater than the second.
          */
-        virtual int compare( const E& o1, const E& o2 ) = 0;
+        virtual int compare( const T& o1, const T& o2 ) const = 0;
 
     };
 

@@ -21,6 +21,7 @@
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
+#include <decaf/util/Comparator.h>
 #include <memory>
 
 namespace decaf {
@@ -356,6 +357,35 @@ namespace lang {
     inline bool operator!=( const U* left, const Pointer<T, R>& right ) {
         return right.get() != left;
     }
+
+    /**
+     * This implementation of Comparator is designed to allows objects in a Collection
+     * to be sorted or tested for equality based on the value of the Object being Pointed
+     * to and not the value of the contained pointer in the Pointer instance.  This can
+     * be useful in the case where a series of values in a Collection is more efficiently
+     * accessed in the Objects Natural Order and not the underlying pointers location in
+     * memory.
+     * <p>
+     * Also this allows Pointer objects that Point to different instances of the same type
+     * to be compared based on the comparison of the object itself and not just the value of
+     * the pointer.
+     */
+    template< typename T, typename R = AtomicRefCounter<T> >
+    class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
+    public:
+
+        // Allows for operator less on types that implement Comparable or provide
+        // a workable operator <
+        virtual bool operator() ( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {
+            return *left < *right;
+        }
+
+        // Requires that the type in the pointer is an instance of a Comparable.
+        virtual int compare( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {
+            return left->compareTo( *right );
+        }
+
+    };
 
 }}
 

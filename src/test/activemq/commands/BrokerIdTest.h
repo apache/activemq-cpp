@@ -28,6 +28,7 @@ namespace commands{
 
         CPPUNIT_TEST_SUITE( BrokerIdTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( test2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +37,7 @@ namespace commands{
         virtual ~BrokerIdTest() {}
 
         virtual void test();
+        virtual void test2();
 
     };
 

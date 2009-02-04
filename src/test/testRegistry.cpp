@@ -20,8 +20,8 @@
 
 //#include <activemq/commands/BrokerInfoTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
-//#include <activemq/commands/BrokerIdTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
+#include <activemq/commands/BrokerIdTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
 //#include <activemq/commands/ActiveMQTopicTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
 //#include <activemq/commands/ActiveMQTextMessageTest.h>

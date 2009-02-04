@@ -36,7 +36,7 @@ namespace util{
         public concurrent::Synchronizable {
     private:
 
-        std::map<K,V> valueMap;
+        std::map<K,V, COMPARE> valueMap;
         concurrent::Mutex mutex;
 
     public:
