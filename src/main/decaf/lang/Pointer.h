@@ -382,7 +382,7 @@ namespace lang {
 
         // Requires that the type in the pointer is an instance of a Comparable.
         virtual int compare( const Pointer<T,R>& left, const Pointer<T,R>& right ) const {
-            return left->compareTo( *right );
+            return *left < *right ? -1 : *right < *left ? 1 : 0;
         }
 
     };

@@ -327,6 +327,25 @@ void PointerTest::testSTLContainers() {
 
     CPPUNIT_ASSERT( testMap.find( pointer1 ) != testMap.end() );
     CPPUNIT_ASSERT( testMap.find( pointer2 ) != testMap.end() );
+
+    Pointer< int > one( new int );
+    Pointer< int > two( new int );
+    Pointer< int > three( new int );
+
+    *one = 1;
+    *two = 2;
+    *three = 3;
+
+    std::map< Pointer<int>, int, PointerComparator<int> > testMap2;
+
+    CPPUNIT_ASSERT( testMap2.size() == 0 );
+    testMap2.insert( std::make_pair( three, 3 ) );
+    testMap2.insert( std::make_pair( two, 2 ) );
+    testMap2.insert( std::make_pair( one, 1 ) );
+    CPPUNIT_ASSERT( testMap2.size() == 3 );
+
+    CPPUNIT_ASSERT( *( testMap2.begin()->first ) == 1 );
+    CPPUNIT_ASSERT( *( testMap2.rbegin()->first ) == 3 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
