@@ -94,10 +94,13 @@ void PointerTest::testBasics() {
     // Test Null Initialize
     Pointer<TestClassA> nullPointer;
     CPPUNIT_ASSERT( nullPointer.get() == NULL );
+    CPPUNIT_ASSERT( nullPointer == NULL );
+    CPPUNIT_ASSERT_NO_THROW( nullPointer.reset( NULL ) );
 
     // Test Value Constructor
     Pointer<TestClassA> pointer( thePointer );
     CPPUNIT_ASSERT( pointer.get() == thePointer );
+    CPPUNIT_ASSERT( pointer.get() != NULL );
 
     // Test Copy Constructor
     Pointer<TestClassA> ctorCopy( pointer );
@@ -122,6 +125,7 @@ void PointerTest::testBasics() {
         Pointer<ExceptionThrowingClass> ex( new ExceptionThrowingClass() );
         CPPUNIT_FAIL( "Should Have Thrown." );
     } catch(...) {}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -195,10 +199,12 @@ void PointerTest::testAssignment() {
 
     {
         Pointer<TestClassA> copy = ReturnByValue();
+        CPPUNIT_ASSERT( copy.get() != NULL );
     }
 
     {
         Pointer<TestClassA> copy = ReturnByConstReference();
+        CPPUNIT_ASSERT( copy.get() != NULL );
     }
 
     ReturnByConstReference();
