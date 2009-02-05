@@ -73,6 +73,15 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
+class ExceptionThrowingClass {
+public:
+
+    ExceptionThrowingClass() {
+        throw std::bad_alloc();
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
 struct X {
     Pointer<X> next;
 };
@@ -108,6 +117,11 @@ void PointerTest::testBasics() {
     p->next = Pointer<X>( new X );
     p = p->next;
     CPPUNIT_ASSERT( !p->next );
+
+    try{
+        Pointer<ExceptionThrowingClass> ex( new ExceptionThrowingClass() );
+        CPPUNIT_FAIL( "Should Have Thrown." );
+    } catch(...) {}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
