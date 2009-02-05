@@ -90,7 +90,7 @@ WireFormatNegotiator* OpenWireFormat::createNegotiator( transport::Transport* tr
     throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
-        return new OpenWireFormatNegotiator( this, transport, false );
+        return new OpenWireFormatNegotiator( this, transport, true );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( UnsupportedOperationException )
