@@ -42,7 +42,6 @@ IOTransport::IOTransport(){
     this->outputStream = NULL;
     this->closed = false;
     this->thread = NULL;
-    this->wireFormat = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +52,7 @@ IOTransport::IOTransport( WireFormat* wireFormat ) {
     this->outputStream = NULL;
     this->closed = false;
     this->thread = NULL;
-    this->wireFormat = wireFormat;
+    this->wireFormat.reset( wireFormat );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +157,7 @@ void IOTransport::start() throw( cms::CMSException ){
         }
 
         // Make sure all variables that we need have been set.
-        if( inputStream == NULL || outputStream == NULL || wireFormat == NULL ){
+        if( inputStream == NULL || outputStream == NULL || wireFormat.get() == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "IOTransport::start() - "
@@ -210,7 +209,7 @@ void IOTransport::close() throw( cms::CMSException ){
         }
 
         // Clear the WireFormat so we can't use it anymore
-        this->wireFormat = NULL;
+        this->wireFormat.reset( NULL );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

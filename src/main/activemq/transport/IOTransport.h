@@ -29,6 +29,7 @@
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/util/logging/LoggerDefines.h>
+#include <memory>
 
 namespace activemq{
 namespace wireformat{
@@ -58,7 +59,7 @@ namespace transport{
         /**
          * WireFormat instance to use to Encode / Decode.
          */
-        wireformat::WireFormat* wireFormat;
+        std::auto_ptr<wireformat::WireFormat> wireFormat;
 
         /**
          * Listener of this transport.
@@ -151,7 +152,7 @@ namespace transport{
          * @param WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( wireformat::WireFormat* wireFormat ){
-            this->wireFormat = wireFormat;
+            this->wireFormat.reset( wireFormat );
         }
 
         /**
