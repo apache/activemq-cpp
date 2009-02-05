@@ -22,6 +22,7 @@ using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
+using namespace activemq::wireformat;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -29,9 +30,9 @@ using namespace decaf::lang::exceptions;
 MockTransport* MockTransport::instance = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
-                              bool own ){
+MockTransport::MockTransport( WireFormat* wireFormat, ResponseBuilder* responseBuilder, bool own ){
 
+    this->wireFormat = wireFormat;
     this->responseBuilder = NULL;
     this->outgoingListener = NULL;
     this->listener = NULL;
@@ -49,9 +50,11 @@ MockTransport::MockTransport( ResponseBuilder* responseBuilder ,
 MockTransport::~MockTransport(){
     try{
 
-        if( own ){
-            delete responseBuilder;
+        if( this->own ){
+            delete this->responseBuilder;
         }
+
+        delete this->wireFormat;
     }
     AMQ_CATCHALL_NOTHROW()
 }

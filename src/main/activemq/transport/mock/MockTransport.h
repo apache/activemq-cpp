@@ -24,6 +24,7 @@
 #include <activemq/transport/TransportListener.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/CommandIOException.h>
+#include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/lang/Thread.h>
 #include <decaf/util/Queue.h>
@@ -179,6 +180,7 @@ namespace mock{
         ResponseBuilder* responseBuilder;
         TransportListener* outgoingListener;
         TransportListener* listener;
+        wireformat::WireFormat* wireFormat;
         decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
         bool own;
         InternalCommandListener internalListener;
@@ -186,7 +188,7 @@ namespace mock{
 
     public:
 
-        MockTransport( ResponseBuilder* responseBuilder, bool own = false );
+        MockTransport( wireformat::WireFormat* wireFormat, ResponseBuilder* responseBuilder, bool own = true );
 
         virtual ~MockTransport();
 

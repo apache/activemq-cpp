@@ -31,24 +31,24 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 Transport* MockTransportFactory::doCreateComposite( const decaf::net::URI& location AMQCPP_UNUSED,
-                                                    wireformat::WireFormat* wireFormat AMQCPP_UNUSED,
+                                                    wireformat::WireFormat* wireFormat,
                                                     const decaf::util::Properties& properties )
     throw ( exceptions::ActiveMQException ) {
 
     try {
 
-        std::string wireFormat =
+        std::string wireFormatName =
             properties.getProperty( "wireFormat", "stomp" );
 
         MockTransport::ResponseBuilder* builder = NULL;
 
-        if( wireFormat == "stomp" ) {
+        if( wireFormatName == "stomp" ) {
 //            builder = new wireformat::stomp::StompResponseBuilder();
-        } else if( wireFormat == "openwire" ) {
+        } else if( wireFormatName == "openwire" ) {
             builder = new wireformat::openwire::OpenWireResponseBuilder();
         }
 
-        return new MockTransport( builder, true );
+        return new MockTransport( wireFormat, builder, true );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
