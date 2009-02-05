@@ -477,7 +477,6 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             // the appropriate time, which depends on things like
             // the session being transacted etc.
             dispatch->setMessage( NULL );
-            dispatch->setConsumerId( NULL );
 
             delete command;
 
