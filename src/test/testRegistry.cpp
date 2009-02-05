@@ -68,9 +68,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::DynamicDestinationResolverTest );
 //#include <activemq/cmsutil/SessionPoolTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::SessionPoolTest );
-//
-//#include <activemq/core/ActiveMQConnectionFactoryTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
+
+#include <activemq/core/ActiveMQConnectionFactoryTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
 //#include <activemq/core/ActiveMQConnectionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 //#include <activemq/core/ActiveMQSessionTest.h>
