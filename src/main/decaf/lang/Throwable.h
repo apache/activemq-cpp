@@ -32,7 +32,7 @@ namespace lang{
     /**
      * This class represents an error that has occurred.
      */
-    class DECAF_API Throwable : public std::exception {
+    class DECAF_API Throwable : public virtual std::exception {
     public:
 
         Throwable() throw() {}

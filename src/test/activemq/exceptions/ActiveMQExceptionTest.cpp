@@ -49,6 +49,38 @@ void ActiveMQExceptionTest::testMacros() {
 
         CPPUNIT_ASSERT( cause != NULL );
     }
+
+    try{
+        throw ActiveMQException( __FILE__, __LINE__, "TEST" );
+    } catch( std::exception& ex ) {
+        return;
+    }
+
+    CPPUNIT_FAIL( "Should have returned after catching an std exception." );
+
+    try{
+
+        try{
+            try{
+                throw UnsupportedOperationException( __FILE__, __LINE__, "EXCEPTION" );
+                CPPUNIT_FAIL( "Should not get this far." );
+            }
+            AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+        }
+        AMQ_CATCH_RETHROW( ActiveMQException )
+
+    } catch( std::exception& ex ) {
+
+        ActiveMQException* converted = dynamic_cast<ActiveMQException*>( &ex );
+
+        CPPUNIT_ASSERT( converted != NULL );
+        CPPUNIT_ASSERT( converted->getCause() != NULL );
+
+        const UnsupportedOperationException* cause =
+            dynamic_cast<const UnsupportedOperationException*>( converted->getCause() );
+
+        CPPUNIT_ASSERT( cause != NULL );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

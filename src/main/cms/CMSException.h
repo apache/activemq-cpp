@@ -32,7 +32,7 @@ namespace cms{
      * This class represents an error that has occurred in
      * cms.
      */
-    class CMS_API CMSException : public std::exception {
+    class CMS_API CMSException : public virtual std::exception {
 
     public:
 

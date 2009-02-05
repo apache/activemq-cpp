@@ -86,10 +86,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportRegistryTest );
 //#include <activemq/transport/IOTransportTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::IOTransportTest );
-//
-//#include <activemq/exceptions/ActiveMQExceptionTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
-//
+
+#include <activemq/exceptions/ActiveMQExceptionTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
+
 //#include <activemq/util/LongSequenceGeneratorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::LongSequenceGeneratorTest );
 //#include <activemq/util/PrimitiveValueNodeTest.h>
