@@ -157,7 +157,6 @@ namespace lang {
 
     public:
 
-        typedef T* StoredType;    // the type of the object we point to
         typedef T* PointerType;   // type returned by operator->
         typedef T& ReferenceType; // type returned by operator*
 
@@ -177,7 +176,7 @@ namespace lang {
          *
          * @param value - instance of the type we are containing here.
          */
-        explicit Pointer( const StoredType& value ) : REFCOUNTER( value ), value( value ) {
+        explicit Pointer( const PointerType value ) : REFCOUNTER( value ), value( value ) {
         }
 
         /**
