@@ -28,7 +28,7 @@ namespace decaf {
 namespace lang {
 
     template <typename T>
-    class AtomicRefCounter {
+    class DECAF_API AtomicRefCounter {
     private:
 
         decaf::util::concurrent::atomic::AtomicInteger* counter;
@@ -41,7 +41,7 @@ namespace lang {
 
         AtomicRefCounter() :
             counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
-        AtomicRefCounter( T* value ) :
+        AtomicRefCounter( T* value DECAF_UNUSED ) :
             counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
         AtomicRefCounter( const AtomicRefCounter& other ) : counter( other.counter ) {
             this->counter->incrementAndGet();
@@ -80,7 +80,7 @@ namespace lang {
     };
 
     template <typename T>
-    class InvasiveCounter {
+    class DECAF_API InvasiveCounter {
     private:
 
         T* counter;
