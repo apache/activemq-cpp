@@ -144,16 +144,16 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
         else if( isThrowable( property.getType() ) ) {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
-            out.println("            tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
+            out.println("            tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) ) );");
         }
         else if( isCachedProperty(property) ) {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
-            out.println("            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
+            out.println("            tightUnmarshalCachedObject( wireFormat, dataIn, bs ) ) ) );");
         }
         else {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
-            out.println("            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
+            out.println("            tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );");
         }
     }
 
@@ -177,8 +177,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             out.println("            short size = dataIn->readShort();");
             out.println("            info->" + getter + "().reserve( size );");
             out.println("            for( int i = 0; i < size; i++ ) {");
-            out.println("                info->" + getter + "().push_back( dynamic_cast< " + arrayType + "* >(");
-            out.println("                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) );");
+            out.println("                info->" + getter + "().push_back( Pointer<"+arrayType+">( dynamic_cast< " + arrayType + "* >(");
+            out.println("                    tightUnmarshalNestedObject( wireFormat, dataIn, bs ) ) ) );");
             out.println("            }");
             out.println("        }");
             out.println("        else {");
@@ -238,14 +238,14 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 }
             }
             else if (isThrowable(propertyType)) {
-                out.println("        rc += tightMarshalBrokerError1( wireFormat, " + getter + ", bs );");
+                out.println("        rc += tightMarshalBrokerError1( wireFormat, " + getter + ".get(), bs );");
             }
             else {
                 if (isCachedProperty(property)) {
-                    out.println("        rc += tightMarshalCachedObject1( wireFormat, " + getter + ", bs );");
+                    out.println("        rc += tightMarshalCachedObject1( wireFormat, " + getter + ".get(), bs );");
                 }
                 else {
-                    out.println("        rc += tightMarshalNestedObject1( wireFormat, " + getter + ", bs );");
+                    out.println("        rc += tightMarshalNestedObject1( wireFormat, " + getter + ".get(), bs );");
                 }
             }
         }
@@ -305,14 +305,14 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 }
             }
             else if( isThrowable(propertyType) ) {
-                out.println("        tightMarshalBrokerError2( wireFormat, " + getter + ", dataOut, bs );");
+                out.println("        tightMarshalBrokerError2( wireFormat, " + getter + ".get(), dataOut, bs );");
             }
             else {
                 if( isCachedProperty(property) ) {
-                    out.println("        tightMarshalCachedObject2( wireFormat, "+getter+", dataOut, bs );");
+                    out.println("        tightMarshalCachedObject2( wireFormat, "+getter+".get(), dataOut, bs );");
                 }
                 else {
-                    out.println("        tightMarshalNestedObject2( wireFormat, "+getter+", dataOut, bs );");
+                    out.println("        tightMarshalNestedObject2( wireFormat, "+getter+".get(), dataOut, bs );");
                 }
             }
         }
@@ -359,16 +359,16 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             }
         }
         else if (isThrowable(property.getType())) {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >(");
-            out.println("            looseUnmarshalBrokerError( wireFormat, dataIn ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >(");
+            out.println("            looseUnmarshalBrokerError( wireFormat, dataIn ) ) ) );");
         }
         else if (isCachedProperty(property)) {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >( ");
-            out.println("            looseUnmarshalCachedObject( wireFormat, dataIn ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >( ");
+            out.println("            looseUnmarshalCachedObject( wireFormat, dataIn ) ) ) );");
         }
         else {
-            out.println("        info->" + setter + "( dynamic_cast< " + nativeType + "* >( ");
-            out.println("            looseUnmarshalNestedObject( wireFormat, dataIn ) ) );");
+            out.println("        info->" + setter + "( Pointer<"+nativeType+">( dynamic_cast< " + nativeType + "* >( ");
+            out.println("            looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );");
         }
     }
 
@@ -394,8 +394,8 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
             out.println("            short size = dataIn->readShort();");
             out.println("            info->" + getter + "().reserve( size );");
             out.println("            for( int i = 0; i < size; i++ ) {");
-            out.println("                info->" + getter + "().push_back( dynamic_cast<" + arrayType + "* >(");
-            out.println("                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) );");
+            out.println("                info->" + getter + "().push_back( Pointer<"+arrayType+">( dynamic_cast<" + arrayType + "* >(");
+            out.println("                    looseUnmarshalNestedObject( wireFormat, dataIn ) ) ) );");
             out.println("            }");
             out.println("        }");
             out.println("        else {");
@@ -457,14 +457,14 @@ public class AmqCppMarshallingClassesGenerator extends AmqCppMarshallingHeadersG
                 }
             }
             else if( isThrowable( propertyType ) ) {
-                out.println("        looseMarshalBrokerError( wireFormat, " + getter + ", dataOut );");
+                out.println("        looseMarshalBrokerError( wireFormat, " + getter + ".get(), dataOut );");
             }
             else {
                 if( isCachedProperty( property ) ) {
-                    out.println("        looseMarshalCachedObject( wireFormat, "+getter+", dataOut );");
+                    out.println("        looseMarshalCachedObject( wireFormat, "+getter+".get(), dataOut );");
                 }
                 else {
-                    out.println("        looseMarshalNestedObject( wireFormat, "+getter+", dataOut );");
+                    out.println("        looseMarshalNestedObject( wireFormat, "+getter+".get(), dataOut );");
                 }
             }
         }
@@ -479,6 +479,7 @@ out.println("#include <activemq/wireformat/openwire/marshal/v"+getOpenwireVersio
 out.println("");
 out.println("#include <activemq/commands/"+jclass.getSimpleName()+".h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
+out.println("#include <decaf/lang/Pointer.h>");
 out.println("");
 out.println("//");
 out.println("//     NOTE!: This file is autogenerated - do not modify!");
@@ -497,6 +498,7 @@ out.println("using namespace activemq::wireformat::openwire::utils;");
 out.println("using namespace activemq::wireformat::openwire::marshal::v"+getOpenwireVersion()+";");
 out.println("using namespace decaf;");
 out.println("using namespace decaf::io;");
+out.println("using namespace decaf::lang;");
 out.println("");
 
     String typeName = jclass.getSimpleName().toUpperCase();

@@ -22,6 +22,8 @@
 #include <memory>
 #include <activemq/util/Config.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/Message.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace core {
@@ -29,40 +31,30 @@ namespace core {
     class ActiveMQMessage;
 
     /**
-     * Contains information about dispatching to a particular consumer.
+     * Simple POCO that contains the information necessary to route a message
+     * to a specified consumer.
      */
     class AMQCPP_API DispatchData {
     private:
 
-        commands::ConsumerId consumerId;
-        ActiveMQMessage* message;
+        decaf::lang::Pointer<commands::ConsumerId> consumerId;
+        decaf::lang::Pointer<commands::Message> message;
 
     public:
 
-        DispatchData(){
-            message = NULL;
-        }
+        DispatchData() {}
 
-        DispatchData( const commands::ConsumerId& consumer, ActiveMQMessage* message ) {
+        DispatchData( const decaf::lang::Pointer<commands::ConsumerId>& consumer,
+                      const decaf::lang::Pointer<commands::Message>& message ) {
             this->consumerId = consumer;
             this->message = message;
         }
 
-        DispatchData( const DispatchData& d ) {
-            (*this) = d;
-        }
-
-        DispatchData& operator =( const DispatchData& d ) {
-            this->consumerId = d.consumerId;
-            this->message = d.message;
-            return *this;
-        }
-
-        const commands::ConsumerId& getConsumerId() {
+        const decaf::lang::Pointer<commands::ConsumerId>& getConsumerId() {
             return consumerId;
         }
 
-        ActiveMQMessage* getMessage() {
+        const decaf::lang::Pointer<commands::Message>& getMessage() {
             return message;
         }
 

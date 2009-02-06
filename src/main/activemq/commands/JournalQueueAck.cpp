@@ -38,25 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 JournalQueueAck::JournalQueueAck() {
 
-    this->destination = NULL;
-    this->messageAck = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalQueueAck::~JournalQueueAck() {
 
-    delete this->destination;
-    delete this->messageAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalQueueAck* JournalQueueAck::cloneDataStructure() const {
-    JournalQueueAck* journalQueueAck = new JournalQueueAck();
+    std::auto_ptr<JournalQueueAck> journalQueueAck( new JournalQueueAck() );
 
     // Copy the data from the base class or classes
     journalQueueAck->copyDataStructure( this );
 
-    return journalQueueAck;
+    return journalQueueAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,16 +73,8 @@ void JournalQueueAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalQueueAck::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getMessageAck() != NULL ) {
-        this->setMessageAck(
-            dynamic_cast<MessageAck*>(
-                srcPtr->getMessageAck()->cloneDataStructure() ) );
-    }
+    this->setDestination( srcPtr->getDestination() );
+    this->setMessageAck( srcPtr->getMessageAck() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,14 +120,14 @@ bool JournalQueueAck::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
         return false;
     }
     if( this->getMessageAck() != NULL ) {
-        if( !this->getMessageAck()->equals( valuePtr->getMessageAck() ) ) {
+        if( !this->getMessageAck()->equals( valuePtr->getMessageAck().get() ) ) {
             return false;
         }
     } else if( valuePtr->getMessageAck() != NULL ) {
@@ -152,32 +140,32 @@ bool JournalQueueAck::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* JournalQueueAck::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& JournalQueueAck::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* JournalQueueAck::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& JournalQueueAck::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::setDestination( ActiveMQDestination* destination ) {
+void JournalQueueAck::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const MessageAck* JournalQueueAck::getMessageAck() const {
+const decaf::lang::Pointer<MessageAck>& JournalQueueAck::getMessageAck() const {
     return messageAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageAck* JournalQueueAck::getMessageAck() {
+decaf::lang::Pointer<MessageAck>& JournalQueueAck::getMessageAck() {
     return messageAck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalQueueAck::setMessageAck( MessageAck* messageAck ) {
+void JournalQueueAck::setMessageAck( const decaf::lang::Pointer<MessageAck>& messageAck ) {
     this->messageAck = messageAck;
 }
 

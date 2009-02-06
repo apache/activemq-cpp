@@ -38,23 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 DataResponse::DataResponse() {
 
-    this->data = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DataResponse::~DataResponse() {
 
-    delete this->data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DataResponse* DataResponse::cloneDataStructure() const {
-    DataResponse* dataResponse = new DataResponse();
+    std::auto_ptr<DataResponse> dataResponse( new DataResponse() );
 
     // Copy the data from the base class or classes
     dataResponse->copyDataStructure( this );
 
-    return dataResponse;
+    return dataResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +73,7 @@ void DataResponse::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "DataResponse::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getData() != NULL ) {
-        this->setData(
-            dynamic_cast<DataStructure*>(
-                srcPtr->getData()->cloneDataStructure() ) );
-    }
+    this->setData( srcPtr->getData() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ bool DataResponse::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getData() != NULL ) {
-        if( !this->getData()->equals( valuePtr->getData() ) ) {
+        if( !this->getData()->equals( valuePtr->getData().get() ) ) {
             return false;
         }
     } else if( valuePtr->getData() != NULL ) {
@@ -132,17 +126,17 @@ bool DataResponse::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const DataStructure* DataResponse::getData() const {
+const decaf::lang::Pointer<DataStructure>& DataResponse::getData() const {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* DataResponse::getData() {
+decaf::lang::Pointer<DataStructure>& DataResponse::getData() {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataResponse::setData( DataStructure* data ) {
+void DataResponse::setData( const decaf::lang::Pointer<DataStructure>& data ) {
     this->data = data;
 }
 

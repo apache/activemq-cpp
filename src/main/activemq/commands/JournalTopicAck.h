@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/MessageId.h>
 #include <activemq/commands/TransactionId.h>
@@ -47,12 +48,12 @@ namespace commands{
     class AMQCPP_API JournalTopicAck : public BaseDataStructure {
     protected:
 
-        ActiveMQDestination* destination;
-        MessageId* messageId;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
+        decaf::lang::Pointer<MessageId> messageId;
         long long messageSequenceId;
         std::string subscritionName;
         std::string clientId;
-        TransactionId* transactionId;
+        decaf::lang::Pointer<TransactionId> transactionId;
 
     protected:
 
@@ -104,13 +105,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
-        virtual const MessageId* getMessageId() const;
-        virtual MessageId* getMessageId();
-        virtual void setMessageId( MessageId* messageId );
+        virtual const decaf::lang::Pointer<MessageId>& getMessageId() const;
+        virtual decaf::lang::Pointer<MessageId>& getMessageId();
+        virtual void setMessageId( const decaf::lang::Pointer<MessageId>& messageId );
 
         virtual long long getMessageSequenceId() const;
         virtual void setMessageSequenceId( long long messageSequenceId );
@@ -123,9 +124,9 @@ namespace commands{
         virtual std::string& getClientId();
         virtual void setClientId( const std::string& clientId );
 
-        virtual const TransactionId* getTransactionId() const;
-        virtual TransactionId* getTransactionId();
-        virtual void setTransactionId( TransactionId* transactionId );
+        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
+        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
 
     };
 

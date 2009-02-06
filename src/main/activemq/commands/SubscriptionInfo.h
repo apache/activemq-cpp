@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <vector>
@@ -47,10 +48,10 @@ namespace commands{
     protected:
 
         std::string clientId;
-        ActiveMQDestination* destination;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
         std::string selector;
         std::string subcriptionName;
-        ActiveMQDestination* subscribedDestination;
+        decaf::lang::Pointer<ActiveMQDestination> subscribedDestination;
 
     protected:
 
@@ -106,9 +107,9 @@ namespace commands{
         virtual std::string& getClientId();
         virtual void setClientId( const std::string& clientId );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
         virtual const std::string& getSelector() const;
         virtual std::string& getSelector();
@@ -118,9 +119,9 @@ namespace commands{
         virtual std::string& getSubcriptionName();
         virtual void setSubcriptionName( const std::string& subcriptionName );
 
-        virtual const ActiveMQDestination* getSubscribedDestination() const;
-        virtual ActiveMQDestination* getSubscribedDestination();
-        virtual void setSubscribedDestination( ActiveMQDestination* subscribedDestination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getSubscribedDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getSubscribedDestination();
+        virtual void setSubscribedDestination( const decaf::lang::Pointer<ActiveMQDestination>& subscribedDestination );
 
     };
 

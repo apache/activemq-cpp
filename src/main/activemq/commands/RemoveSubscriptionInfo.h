@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API RemoveSubscriptionInfo : public BaseCommand {
     protected:
 
-        ConnectionId* connectionId;
+        decaf::lang::Pointer<ConnectionId> connectionId;
         std::string subcriptionName;
         std::string clientId;
 
@@ -106,12 +107,12 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
         virtual const std::string& getSubcriptionName() const;
         virtual std::string& getSubcriptionName();

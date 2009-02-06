@@ -207,30 +207,17 @@ void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQE
 
         this->transactionInfo.reset( new commands::TransactionInfo() );
 
-        this->transactionInfo->setConnectionId(
-            this->connection->getConnectionId().cloneDataStructure() );
-        this->transactionInfo->setTransactionId( createLocalTransactionId() );
+        // Create the Id
+        decaf::lang::Pointer<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
+        id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
+        id->setValue( this->connection->getNextTransactionId() );
+
+        // Populate the Info Command.
+        this->transactionInfo->setConnectionId( id->getConnectionId() );
+        this->transactionInfo->setTransactionId( id );
         this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_BEGIN );
 
         this->connection->oneway( this->transactionInfo.get() );
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-commands::TransactionId* ActiveMQTransactionContext::createLocalTransactionId()
-    throw( exceptions::ActiveMQException ) {
-
-    try{
-
-        std::auto_ptr<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
-
-        id->setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
-        id->setValue( this->connection->getNextTransactionId() );
-
-        return id.release();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

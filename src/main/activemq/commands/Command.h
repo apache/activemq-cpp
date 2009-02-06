@@ -22,6 +22,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace state{
@@ -71,8 +72,8 @@ namespace commands{
          *
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException ) = 0;
+        virtual decaf::lang::Pointer<commands::Command> visit(
+            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException ) = 0;
 
     };
 

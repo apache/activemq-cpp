@@ -30,6 +30,7 @@
 #include <cms/Queue.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
@@ -54,9 +55,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQQueue* cloneDataStructure() const {
-            ActiveMQQueue* message = new ActiveMQQueue();
+            std::auto_ptr<ActiveMQQueue> message( new ActiveMQQueue() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

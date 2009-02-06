@@ -47,12 +47,12 @@ LastPartialCommand::~LastPartialCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 LastPartialCommand* LastPartialCommand::cloneDataStructure() const {
-    LastPartialCommand* lastPartialCommand = new LastPartialCommand();
+    std::auto_ptr<LastPartialCommand> lastPartialCommand( new LastPartialCommand() );
 
     // Copy the data from the base class or classes
     lastPartialCommand->copyDataStructure( this );
 
-    return lastPartialCommand;
+    return lastPartialCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

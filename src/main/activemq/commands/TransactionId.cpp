@@ -53,12 +53,12 @@ TransactionId::~TransactionId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionId* TransactionId::cloneDataStructure() const {
-    TransactionId* transactionId = new TransactionId();
+    std::auto_ptr<TransactionId> transactionId( new TransactionId() );
 
     // Copy the data from the base class or classes
     transactionId->copyDataStructure( this );
 
-    return transactionId;
+    return transactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

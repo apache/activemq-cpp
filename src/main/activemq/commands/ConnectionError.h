@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerError.h>
 #include <activemq/commands/ConnectionId.h>
 #include <vector>
@@ -46,8 +47,8 @@ namespace commands{
     class AMQCPP_API ConnectionError : public BaseCommand {
     protected:
 
-        BrokerError* exception;
-        ConnectionId* connectionId;
+        decaf::lang::Pointer<BrokerError> exception;
+        decaf::lang::Pointer<ConnectionId> connectionId;
 
     protected:
 
@@ -106,16 +107,16 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const BrokerError* getException() const;
-        virtual BrokerError* getException();
-        virtual void setException( BrokerError* exception );
+        virtual const decaf::lang::Pointer<BrokerError>& getException() const;
+        virtual decaf::lang::Pointer<BrokerError>& getException();
+        virtual void setException( const decaf::lang::Pointer<BrokerError>& exception );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
     };
 

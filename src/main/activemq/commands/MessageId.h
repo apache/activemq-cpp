@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 #include <activemq/commands/ProducerId.h>
 #include <vector>
@@ -46,13 +47,15 @@ namespace commands{
     class AMQCPP_API MessageId : public BaseDataStructure, public decaf::lang::Comparable<MessageId> {
     protected:
 
-        ProducerId* producerId;
+        decaf::lang::Pointer<ProducerId> producerId;
         long long producerSequenceId;
         long long brokerSequenceId;
 
     public:
 
         const static unsigned char ID_MESSAGEID = 110;
+
+        typedef decaf::lang::PointerComparator<MessageId> COMPARATOR;
 
     public:
 
@@ -96,9 +99,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const ProducerId* getProducerId() const;
-        virtual ProducerId* getProducerId();
-        virtual void setProducerId( ProducerId* producerId );
+        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
+        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
 
         virtual long long getProducerSequenceId() const;
         virtual void setProducerSequenceId( long long producerSequenceId );

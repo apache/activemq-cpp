@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BrokerId.h>
@@ -47,11 +48,11 @@ namespace commands{
     class AMQCPP_API DestinationInfo : public BaseCommand {
     protected:
 
-        ConnectionId* connectionId;
-        ActiveMQDestination* destination;
+        decaf::lang::Pointer<ConnectionId> connectionId;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
         unsigned char operationType;
         long long timeout;
-        std::vector<BrokerId*> brokerPath;
+        std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
 
     protected:
 
@@ -110,16 +111,16 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
         virtual unsigned char getOperationType() const;
         virtual void setOperationType( unsigned char operationType );
@@ -127,9 +128,9 @@ namespace commands{
         virtual long long getTimeout() const;
         virtual void setTimeout( long long timeout );
 
-        virtual const std::vector<BrokerId*>& getBrokerPath() const;
-        virtual std::vector<BrokerId*>& getBrokerPath();
-        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
+        virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
+        virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
+        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
 
     };
 

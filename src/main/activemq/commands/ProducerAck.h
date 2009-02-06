@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ProducerId.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API ProducerAck : public BaseCommand {
     protected:
 
-        ProducerId* producerId;
+        decaf::lang::Pointer<ProducerId> producerId;
         int size;
 
     protected:
@@ -105,12 +106,12 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ProducerId* getProducerId() const;
-        virtual ProducerId* getProducerId();
-        virtual void setProducerId( ProducerId* producerId );
+        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
+        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
 
         virtual int getSize() const;
         virtual void setSize( int size );

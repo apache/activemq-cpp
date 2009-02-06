@@ -39,23 +39,21 @@ using namespace decaf::lang::exceptions;
 NetworkBridgeFilter::NetworkBridgeFilter() {
 
     this->networkTTL = 0;
-    this->networkBrokerId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkBridgeFilter::~NetworkBridgeFilter() {
 
-    delete this->networkBrokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkBridgeFilter* NetworkBridgeFilter::cloneDataStructure() const {
-    NetworkBridgeFilter* networkBridgeFilter = new NetworkBridgeFilter();
+    std::auto_ptr<NetworkBridgeFilter> networkBridgeFilter( new NetworkBridgeFilter() );
 
     // Copy the data from the base class or classes
     networkBridgeFilter->copyDataStructure( this );
 
-    return networkBridgeFilter;
+    return networkBridgeFilter.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,11 +75,7 @@ void NetworkBridgeFilter::copyDataStructure( const DataStructure* src ) {
             "NetworkBridgeFilter::copyDataStructure - src is NULL or invalid" );
     }
     this->setNetworkTTL( srcPtr->getNetworkTTL() );
-    if( srcPtr->getNetworkBrokerId() != NULL ) {
-        this->setNetworkBrokerId(
-            dynamic_cast<BrokerId*>(
-                srcPtr->getNetworkBrokerId()->cloneDataStructure() ) );
-    }
+    this->setNetworkBrokerId( srcPtr->getNetworkBrokerId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +119,7 @@ bool NetworkBridgeFilter::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getNetworkBrokerId() != NULL ) {
-        if( !this->getNetworkBrokerId()->equals( valuePtr->getNetworkBrokerId() ) ) {
+        if( !this->getNetworkBrokerId()->equals( valuePtr->getNetworkBrokerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getNetworkBrokerId() != NULL ) {
@@ -148,17 +142,17 @@ void NetworkBridgeFilter::setNetworkTTL( int networkTTL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const BrokerId* NetworkBridgeFilter::getNetworkBrokerId() const {
+const decaf::lang::Pointer<BrokerId>& NetworkBridgeFilter::getNetworkBrokerId() const {
     return networkBrokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId* NetworkBridgeFilter::getNetworkBrokerId() {
+decaf::lang::Pointer<BrokerId>& NetworkBridgeFilter::getNetworkBrokerId() {
     return networkBrokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void NetworkBridgeFilter::setNetworkBrokerId( BrokerId* networkBrokerId ) {
+void NetworkBridgeFilter::setNetworkBrokerId( const decaf::lang::Pointer<BrokerId>& networkBrokerId ) {
     this->networkBrokerId = networkBrokerId;
 }
 

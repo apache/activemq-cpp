@@ -38,29 +38,23 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 MessagePull::MessagePull() {
 
-    this->consumerId = NULL;
-    this->destination = NULL;
     this->timeout = 0;
     this->correlationId = "";
-    this->messageId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessagePull::~MessagePull() {
 
-    delete this->consumerId;
-    delete this->destination;
-    delete this->messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessagePull* MessagePull::cloneDataStructure() const {
-    MessagePull* messagePull = new MessagePull();
+    std::auto_ptr<MessagePull> messagePull( new MessagePull() );
 
     // Copy the data from the base class or classes
     messagePull->copyDataStructure( this );
 
-    return messagePull;
+    return messagePull.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,23 +75,11 @@ void MessagePull::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessagePull::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId(
-            dynamic_cast<ConsumerId*>(
-                srcPtr->getConsumerId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
+    this->setConsumerId( srcPtr->getConsumerId() );
+    this->setDestination( srcPtr->getDestination() );
     this->setTimeout( srcPtr->getTimeout() );
     this->setCorrelationId( srcPtr->getCorrelationId() );
-    if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId(
-            dynamic_cast<MessageId*>(
-                srcPtr->getMessageId()->cloneDataStructure() ) );
-    }
+    this->setMessageId( srcPtr->getMessageId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,14 +133,14 @@ bool MessagePull::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConsumerId() != NULL ) {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
@@ -171,7 +153,7 @@ bool MessagePull::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getMessageId() != NULL ) {
-        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getMessageId() != NULL ) {
@@ -184,39 +166,39 @@ bool MessagePull::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* MessagePull::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> MessagePull::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processMessagePull( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConsumerId* MessagePull::getConsumerId() const {
+const decaf::lang::Pointer<ConsumerId>& MessagePull::getConsumerId() const {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId* MessagePull::getConsumerId() {
+decaf::lang::Pointer<ConsumerId>& MessagePull::getConsumerId() {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePull::setConsumerId( ConsumerId* consumerId ) {
+void MessagePull::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
     this->consumerId = consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* MessagePull::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& MessagePull::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* MessagePull::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& MessagePull::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePull::setDestination( ActiveMQDestination* destination ) {
+void MessagePull::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
@@ -246,17 +228,17 @@ void MessagePull::setCorrelationId( const std::string& correlationId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const MessageId* MessagePull::getMessageId() const {
+const decaf::lang::Pointer<MessageId>& MessagePull::getMessageId() const {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId* MessagePull::getMessageId() {
+decaf::lang::Pointer<MessageId>& MessagePull::getMessageId() {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessagePull::setMessageId( MessageId* messageId ) {
+void MessagePull::setMessageId( const decaf::lang::Pointer<MessageId>& messageId ) {
     this->messageId = messageId;
 }
 

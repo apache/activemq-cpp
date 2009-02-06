@@ -43,19 +43,16 @@ DataArrayResponse::DataArrayResponse() {
 ////////////////////////////////////////////////////////////////////////////////
 DataArrayResponse::~DataArrayResponse() {
 
-    for( size_t idata = 0; idata < data.size(); ++idata ) {
-        delete data[idata];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DataArrayResponse* DataArrayResponse::cloneDataStructure() const {
-    DataArrayResponse* dataArrayResponse = new DataArrayResponse();
+    std::auto_ptr<DataArrayResponse> dataArrayResponse( new DataArrayResponse() );
 
     // Copy the data from the base class or classes
     dataArrayResponse->copyDataStructure( this );
 
-    return dataArrayResponse;
+    return dataArrayResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,15 +73,7 @@ void DataArrayResponse::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "DataArrayResponse::copyDataStructure - src is NULL or invalid" );
     }
-    for( size_t idata = 0; idata < srcPtr->getData().size(); ++idata ) {
-        if( srcPtr->getData()[idata] != NULL ) {
-            this->getData().push_back(
-                dynamic_cast<DataStructure*>(
-                    srcPtr->getData()[idata]->cloneDataStructure() ) );
-        } else {
-            this->getData().push_back( NULL );
-        }
-    }
+    this->setData( srcPtr->getData() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +116,7 @@ bool DataArrayResponse::equals( const DataStructure* value ) const {
     }
     for( size_t idata = 0; idata < this->getData().size(); ++idata ) {
         if( this->getData()[idata] != NULL ) {
-            if( !this->getData()[idata]->equals( valuePtr->getData()[idata] ) ) {
+            if( !this->getData()[idata]->equals( valuePtr->getData()[idata].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getData()[idata] != NULL ) {
@@ -141,17 +130,17 @@ bool DataArrayResponse::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<DataStructure*>& DataArrayResponse::getData() const {
+const std::vector< decaf::lang::Pointer<DataStructure> >& DataArrayResponse::getData() const {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<DataStructure*>& DataArrayResponse::getData() {
+std::vector< decaf::lang::Pointer<DataStructure> >& DataArrayResponse::getData() {
     return data;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataArrayResponse::setData( const std::vector<DataStructure*>& data ) {
+void DataArrayResponse::setData( const std::vector< decaf::lang::Pointer<DataStructure> >& data ) {
     this->data = data;
 }
 

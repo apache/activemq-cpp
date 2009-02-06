@@ -156,7 +156,6 @@ cc_sources = \
 h_sources = \
     activemq/library/ActiveMQCPP.h \
     activemq/core/ActiveMQProducer.h \
-    activemq/core/ActiveMQMessage.h \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQConnectionSupport.h \
     activemq/core/ActiveMQConnectionMetaData.h \

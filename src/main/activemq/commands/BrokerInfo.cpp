@@ -38,7 +38,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo::BrokerInfo() {
 
-    this->brokerId = NULL;
     this->brokerURL = "";
     this->brokerName = "";
     this->slaveBroker = false;
@@ -54,20 +53,16 @@ BrokerInfo::BrokerInfo() {
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo::~BrokerInfo() {
 
-    delete this->brokerId;
-    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < peerBrokerInfos.size(); ++ipeerBrokerInfos ) {
-        delete peerBrokerInfos[ipeerBrokerInfos];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo* BrokerInfo::cloneDataStructure() const {
-    BrokerInfo* brokerInfo = new BrokerInfo();
+    std::auto_ptr<BrokerInfo> brokerInfo( new BrokerInfo() );
 
     // Copy the data from the base class or classes
     brokerInfo->copyDataStructure( this );
 
-    return brokerInfo;
+    return brokerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,21 +83,9 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "BrokerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getBrokerId() != NULL ) {
-        this->setBrokerId(
-            dynamic_cast<BrokerId*>(
-                srcPtr->getBrokerId()->cloneDataStructure() ) );
-    }
+    this->setBrokerId( srcPtr->getBrokerId() );
     this->setBrokerURL( srcPtr->getBrokerURL() );
-    for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < srcPtr->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
-        if( srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
-            this->getPeerBrokerInfos().push_back(
-                dynamic_cast<BrokerInfo*>(
-                    srcPtr->getPeerBrokerInfos()[ipeerBrokerInfos]->cloneDataStructure() ) );
-        } else {
-            this->getPeerBrokerInfos().push_back( NULL );
-        }
-    }
+    this->setPeerBrokerInfos( srcPtr->getPeerBrokerInfos() );
     this->setBrokerName( srcPtr->getBrokerName() );
     this->setSlaveBroker( srcPtr->isSlaveBroker() );
     this->setMasterBroker( srcPtr->isMasterBroker() );
@@ -169,7 +152,7 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getBrokerId() != NULL ) {
-        if( !this->getBrokerId()->equals( valuePtr->getBrokerId() ) ) {
+        if( !this->getBrokerId()->equals( valuePtr->getBrokerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getBrokerId() != NULL ) {
@@ -180,7 +163,7 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
     }
     for( size_t ipeerBrokerInfos = 0; ipeerBrokerInfos < this->getPeerBrokerInfos().size(); ++ipeerBrokerInfos ) {
         if( this->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
-            if( !this->getPeerBrokerInfos()[ipeerBrokerInfos]->equals( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos] ) ) {
+            if( !this->getPeerBrokerInfos()[ipeerBrokerInfos]->equals( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getPeerBrokerInfos()[ipeerBrokerInfos] != NULL ) {
@@ -221,24 +204,24 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processBrokerInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const BrokerId* BrokerInfo::getBrokerId() const {
+const decaf::lang::Pointer<BrokerId>& BrokerInfo::getBrokerId() const {
     return brokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerId* BrokerInfo::getBrokerId() {
+decaf::lang::Pointer<BrokerId>& BrokerInfo::getBrokerId() {
     return brokerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BrokerInfo::setBrokerId( BrokerId* brokerId ) {
+void BrokerInfo::setBrokerId( const decaf::lang::Pointer<BrokerId>& brokerId ) {
     this->brokerId = brokerId;
 }
 
@@ -258,17 +241,17 @@ void BrokerInfo::setBrokerURL( const std::string& brokerURL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerInfo*>& BrokerInfo::getPeerBrokerInfos() const {
+const std::vector< decaf::lang::Pointer<BrokerInfo> >& BrokerInfo::getPeerBrokerInfos() const {
     return peerBrokerInfos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerInfo*>& BrokerInfo::getPeerBrokerInfos() {
+std::vector< decaf::lang::Pointer<BrokerInfo> >& BrokerInfo::getPeerBrokerInfos() {
     return peerBrokerInfos;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BrokerInfo::setPeerBrokerInfos( const std::vector<BrokerInfo*>& peerBrokerInfos ) {
+void BrokerInfo::setPeerBrokerInfos( const std::vector< decaf::lang::Pointer<BrokerInfo> >& peerBrokerInfos ) {
     this->peerBrokerInfos = peerBrokerInfos;
 }
 

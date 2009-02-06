@@ -31,11 +31,14 @@
 #include <activemq/core/ActiveMQProducer.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/Date.h>
+#include <decaf/lang/Pointer.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::commands;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionTest::testAutoAcking() {
@@ -518,14 +521,14 @@ void ActiveMQSessionTest::injectTextMessage( const std::string message,
                                              const long long timeStamp,
                                              const long long timeToLive )
 {
-    ActiveMQTextMessage* msg = new ActiveMQTextMessage();
+    Pointer<ActiveMQTextMessage> msg( new ActiveMQTextMessage() );
 
-    ProducerId* producerId = new ProducerId();
+    Pointer<ProducerId> producerId( new ProducerId() );
     producerId->setConnectionId( id.getConnectionId() );
     producerId->setSessionId( id.getSessionId() );
     producerId->setValue( 1 );
 
-    MessageId* messageId = new MessageId();
+    Pointer<MessageId> messageId( new MessageId() );
     messageId->setProducerId( producerId );
     messageId->setProducerSequenceId( 2 );
 
@@ -552,7 +555,7 @@ void ActiveMQSessionTest::injectTextMessage( const std::string message,
 
     MessageDispatch* dispatch = new MessageDispatch();
     dispatch->setMessage( msg );
-    dispatch->setConsumerId( id.cloneDataStructure() );
+    dispatch->setConsumerId( Pointer<ConsumerId>( id.cloneDataStructure() ) );
 
     dTransport->fireCommand( dispatch );
 }

@@ -24,16 +24,17 @@
 #endif
 
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <cms/TextMessage.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
 
     class AMQCPP_API ActiveMQTextMessage :
-        public ActiveMQMessageBase<cms::TextMessage> {
+        public ActiveMQMessageTemplate<cms::TextMessage> {
     public:
 
         const static unsigned char ID_ACTIVEMQTEXTMESSAGE = 28;
@@ -51,9 +52,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQTextMessage* cloneDataStructure() const {
-            ActiveMQTextMessage* message = new ActiveMQTextMessage();
+            std::auto_ptr<ActiveMQTextMessage> message( new ActiveMQTextMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**
@@ -62,7 +63,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageBase<cms::TextMessage>::copyDataStructure( src );
+            ActiveMQMessageTemplate<cms::TextMessage>::copyDataStructure( src );
         }
 
         /**
@@ -74,7 +75,7 @@ namespace commands{
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQTextMessage" << std::endl;
-            stream << ActiveMQMessageBase<cms::TextMessage>::toString();
+            stream << ActiveMQMessageTemplate<cms::TextMessage>::toString();
             stream << "End Class = ActiveMQTextMessage" << std::endl;
 
             return stream.str();
@@ -87,7 +88,7 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageBase<cms::TextMessage>::equals( value );
+            return ActiveMQMessageTemplate<cms::TextMessage>::equals( value );
         }
 
     public:   // CMS Message
@@ -98,8 +99,7 @@ namespace commands{
          * @return new copy of this message
          */
         virtual cms::TextMessage* clone(void) const {
-            return dynamic_cast<cms::TextMessage*>(
-                this->cloneDataStructure() );
+            return dynamic_cast<cms::TextMessage*>( this->cloneDataStructure() );
         }
 
     public:   // cms::TextMessage

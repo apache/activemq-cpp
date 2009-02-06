@@ -30,6 +30,7 @@
 #include <cms/Topic.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
@@ -54,9 +55,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQTopic* cloneDataStructure() const {
-            ActiveMQTopic* message = new ActiveMQTopic();
+            std::auto_ptr<ActiveMQTopic> message( new ActiveMQTopic() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**
@@ -132,7 +133,7 @@ namespace commands{
         }
 
         /**
-         * Copies the contents of the given Destinastion object to this one.
+         * Copies the contents of the given Destination object to this one.
          * @param source The source Destination object.
          */
         virtual void copy( const cms::Destination& source ) {

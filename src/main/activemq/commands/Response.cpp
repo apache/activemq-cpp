@@ -48,12 +48,12 @@ Response::~Response() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Response* Response::cloneDataStructure() const {
-    Response* response = new Response();
+    std::auto_ptr<Response> response( new Response() );
 
     // Copy the data from the base class or classes
     response->copyDataStructure( this );
 
-    return response;
+    return response.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ bool Response::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* Response::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> Response::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processResponse( this );

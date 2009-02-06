@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/Response.h>
+#include <decaf/lang/Pointer.h>
 #include <vector>
 #include <string>
 

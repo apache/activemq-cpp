@@ -48,12 +48,12 @@ PartialCommand::~PartialCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 PartialCommand* PartialCommand::cloneDataStructure() const {
-    PartialCommand* partialCommand = new PartialCommand();
+    std::auto_ptr<PartialCommand> partialCommand( new PartialCommand() );
 
     // Copy the data from the base class or classes
     partialCommand->copyDataStructure( this );
 
-    return partialCommand;
+    return partialCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

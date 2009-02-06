@@ -38,7 +38,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo::RemoveSubscriptionInfo() {
 
-    this->connectionId = NULL;
     this->subcriptionName = "";
     this->clientId = "";
 }
@@ -46,17 +45,16 @@ RemoveSubscriptionInfo::RemoveSubscriptionInfo() {
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo::~RemoveSubscriptionInfo() {
 
-    delete this->connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo* RemoveSubscriptionInfo::cloneDataStructure() const {
-    RemoveSubscriptionInfo* removeSubscriptionInfo = new RemoveSubscriptionInfo();
+    std::auto_ptr<RemoveSubscriptionInfo> removeSubscriptionInfo( new RemoveSubscriptionInfo() );
 
     // Copy the data from the base class or classes
     removeSubscriptionInfo->copyDataStructure( this );
 
-    return removeSubscriptionInfo;
+    return removeSubscriptionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,11 +75,7 @@ void RemoveSubscriptionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "RemoveSubscriptionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId(
-            dynamic_cast<ConnectionId*>(
-                srcPtr->getConnectionId()->cloneDataStructure() ) );
-    }
+    this->setConnectionId( srcPtr->getConnectionId() );
     this->setSubcriptionName( srcPtr->getSubcriptionName() );
     this->setClientId( srcPtr->getClientId() );
 }
@@ -125,7 +119,7 @@ bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConnectionId() != NULL ) {
@@ -144,24 +138,24 @@ bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processRemoveSubscriptionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId* RemoveSubscriptionInfo::getConnectionId() const {
+const decaf::lang::Pointer<ConnectionId>& RemoveSubscriptionInfo::getConnectionId() const {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId* RemoveSubscriptionInfo::getConnectionId() {
+decaf::lang::Pointer<ConnectionId>& RemoveSubscriptionInfo::getConnectionId() {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveSubscriptionInfo::setConnectionId( ConnectionId* connectionId ) {
+void RemoveSubscriptionInfo::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
     this->connectionId = connectionId;
 }
 

@@ -38,23 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 RemoveInfo::RemoveInfo() {
 
-    this->objectId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveInfo::~RemoveInfo() {
 
-    delete this->objectId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveInfo* RemoveInfo::cloneDataStructure() const {
-    RemoveInfo* removeInfo = new RemoveInfo();
+    std::auto_ptr<RemoveInfo> removeInfo( new RemoveInfo() );
 
     // Copy the data from the base class or classes
     removeInfo->copyDataStructure( this );
 
-    return removeInfo;
+    return removeInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +73,7 @@ void RemoveInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "RemoveInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getObjectId() != NULL ) {
-        this->setObjectId(
-            dynamic_cast<DataStructure*>(
-                srcPtr->getObjectId()->cloneDataStructure() ) );
-    }
+    this->setObjectId( srcPtr->getObjectId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ bool RemoveInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getObjectId() != NULL ) {
-        if( !this->getObjectId()->equals( valuePtr->getObjectId() ) ) {
+        if( !this->getObjectId()->equals( valuePtr->getObjectId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getObjectId() != NULL ) {
@@ -132,24 +126,24 @@ bool RemoveInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* RemoveInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> RemoveInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processRemoveInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const DataStructure* RemoveInfo::getObjectId() const {
+const decaf::lang::Pointer<DataStructure>& RemoveInfo::getObjectId() const {
     return objectId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* RemoveInfo::getObjectId() {
+decaf::lang::Pointer<DataStructure>& RemoveInfo::getObjectId() {
     return objectId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void RemoveInfo::setObjectId( DataStructure* objectId ) {
+void RemoveInfo::setObjectId( const decaf::lang::Pointer<DataStructure>& objectId ) {
     this->objectId = objectId;
 }
 

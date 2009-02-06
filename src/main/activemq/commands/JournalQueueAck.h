@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/MessageAck.h>
 #include <vector>
@@ -46,8 +47,8 @@ namespace commands{
     class AMQCPP_API JournalQueueAck : public BaseDataStructure {
     protected:
 
-        ActiveMQDestination* destination;
-        MessageAck* messageAck;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
+        decaf::lang::Pointer<MessageAck> messageAck;
 
     protected:
 
@@ -99,13 +100,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
-        virtual const MessageAck* getMessageAck() const;
-        virtual MessageAck* getMessageAck();
-        virtual void setMessageAck( MessageAck* messageAck );
+        virtual const decaf::lang::Pointer<MessageAck>& getMessageAck() const;
+        virtual decaf::lang::Pointer<MessageAck>& getMessageAck();
+        virtual void setMessageAck( const decaf::lang::Pointer<MessageAck>& messageAck );
 
     };
 

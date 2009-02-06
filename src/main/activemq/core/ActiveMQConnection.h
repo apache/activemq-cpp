@@ -22,7 +22,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnectionSupport.h>
 #include <activemq/core/ActiveMQConnectionMetaData.h>
-#include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/Dispatcher.h>
 #include <activemq/commands/ActiveMQTempDestination.h>
 #include <activemq/commands/BrokerInfo.h>
@@ -57,6 +56,16 @@ namespace core{
     {
     private:
 
+        typedef decaf::util::Map< decaf::lang::Pointer<commands::ConsumerId>,
+                                  Dispatcher*,
+                                  commands::ConsumerId::COMPARATOR > DispatcherMap;
+
+        typedef decaf::util::Map< decaf::lang::Pointer<commands::ProducerId>,
+                                  ActiveMQProducer*,
+                                  commands::ProducerId::COMPARATOR > ProducerMap;
+
+    private:
+
         /**
          * Sync object.
          */
@@ -81,12 +90,12 @@ namespace core{
         /**
          * Map of message dispatchers indexed by consumer id.
          */
-        decaf::util::Map< commands::ConsumerId, Dispatcher* > dispatchers;
+        DispatcherMap dispatchers;
 
         /**
-         * Map of message dispatchers indexed by consumer id.
+         * Map of message producers indexed by consumer id.
          */
-        decaf::util::Map< commands::ProducerId, ActiveMQProducer* > activeProducers;
+        ProducerMap activeProducers;
 
         /**
          * Maintain the set of all active sessions.
@@ -136,34 +145,38 @@ namespace core{
         virtual void removeSession( ActiveMQSession* session ) throw ( cms::CMSException );
 
         /**
-         * Adds an active consumer to the Set of known consumers
-         * @param consumer - The consumer to add to the the known set.
+         * Adds an active Producer to the Set of known producers.
+         * @param producer - The Producer to add from the the known set.
          */
         virtual void addProducer( ActiveMQProducer* producer ) throw ( cms::CMSException );
 
         /**
-         * Removes an active consumer to the Set of known consumers
-         * @param consumer - The consumer to remove from the the known set.
+         * Removes an active Producer to the Set of known producers.
+         * @param producerId - The ProducerId to remove from the the known set.
          */
-        virtual void removeProducer( ActiveMQProducer* producer ) throw ( cms::CMSException );
+        virtual void removeProducer( const decaf::lang::Pointer<commands::ProducerId>& producerId )
+            throw ( cms::CMSException );
 
         /**
          * Adds a dispatcher for a consumer.
          * @param consumer - The consumer for which to register a dispatcher.
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          */
-        virtual void addDispatcher( const commands::ConsumerId& consumer, Dispatcher* dispatcher );
+        virtual void addDispatcher(
+            const decaf::lang::Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher )
+                throw ( cms::CMSException );
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
          */
-        virtual void removeDispatcher( const commands::ConsumerId& consumer );
+        virtual void removeDispatcher( const decaf::lang::Pointer<commands::ConsumerId>& consumer )
+            throw ( cms::CMSException );
 
         /**
          * If supported sends a message pull request to the service provider asking
          * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefectch or is only
+         * service provider has been configured with a zero prefetch or is only
          * capable of delivering messages on a pull basis.
          * @param consumer - the ConsumerInfo for the requesting Consumer.
          * @param timeout - the time that the client is willing to wait.
@@ -362,7 +375,7 @@ namespace core{
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
-        void disposeOf( commands::DataStructure* objectId )
+        void disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -373,7 +386,7 @@ namespace core{
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
-        void disposeOf( commands::DataStructure* objectId, unsigned int timeout )
+        void disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId, unsigned int timeout )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**

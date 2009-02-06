@@ -24,11 +24,11 @@
 #include <cms/Connection.h>
 #include <cms/ExceptionListener.h>
 
-#include <activemq/core/ActiveMQMessage.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/commands/Message.h>
 
 namespace activemq{
 namespace core{
@@ -82,7 +82,7 @@ namespace core{
         {
         public:
 
-            std::vector<ActiveMQMessage*> messages;
+            std::vector< decaf::lang::Pointer<commands::Message> > messages;
 
         public:
             virtual ~MyDispatcher(){}

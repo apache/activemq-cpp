@@ -25,6 +25,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/ActiveMQMessageBase.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
 
@@ -73,7 +74,7 @@ namespace core{
         /**
          * Queue of consumed messages.
          */
-        decaf::util::Queue<cms::Message*> dispatchedMessages;
+        decaf::util::Queue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
 
         /**
          * Boolean that indicates if the consumer has been closed
@@ -154,7 +155,7 @@ namespace core{
          * @param message the Message to Acknowledge
          * @throw CMSException
          */
-        virtual void acknowledgeMessage( const ActiveMQMessage* message )
+        virtual void acknowledgeMessage( const commands::Message* message )
             throw ( cms::CMSException );
 
     public:  // Dispatcher Methods
@@ -175,7 +176,7 @@ namespace core{
          * @param ackType the Type of ack to send, (connector enum)
          * @throw CMSException
          */
-        virtual void acknowledge( const ActiveMQMessage* message, int ackType )
+        virtual void acknowledge( const commands::Message* message, int ackType )
             throw ( cms::CMSException );
 
         /**
@@ -224,20 +225,23 @@ namespace core{
          * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        ActiveMQMessage* dequeue( int timeout ) throw ( cms::CMSException );
+        decaf::lang::Pointer<commands::Message> dequeue( int timeout )
+            throw ( cms::CMSException );
 
         /**
          * Pre-consume processing
          * @param message - the message being consumed.
          */
-        void beforeMessageIsConsumed( ActiveMQMessage* message );
+        void beforeMessageIsConsumed(
+            decaf::lang::Pointer<commands::Message>& message );
 
         /**
          * Post-consume processing
          * @param message - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
-        void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
+        void afterMessageIsConsumed(
+            decaf::lang::Pointer<commands::Message>& message, bool messageExpired );
 
     private:
 
@@ -246,7 +250,7 @@ namespace core{
          * for the delivery of a new message.  This is used in the case where the
          * service provider has been configured with a zero prefectch or is only
          * capable of delivering messages on a pull basis.  No request is made if
-         * there are already messages in the uncomsumed queue since there's no need
+         * there are already messages in the unconsumed queue since there's no need
          * for a server round-trip in that instance.
          * @param timeout - the time that the client is willing to wait.
          */

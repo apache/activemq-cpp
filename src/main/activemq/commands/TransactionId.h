@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 #include <vector>
 #include <string>
@@ -49,6 +50,8 @@ namespace commands{
     public:
 
         const static unsigned char ID_TRANSACTIONID = 0;
+
+        typedef decaf::lang::PointerComparator<TransactionId> COMPARATOR;
 
     public:
 

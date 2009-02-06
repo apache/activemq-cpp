@@ -54,12 +54,12 @@ XATransactionId::~XATransactionId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId* XATransactionId::cloneDataStructure() const {
-    XATransactionId* xATransactionId = new XATransactionId();
+    std::auto_ptr<XATransactionId> xATransactionId( new XATransactionId() );
 
     // Copy the data from the base class or classes
     xATransactionId->copyDataStructure( this );
 
-    return xATransactionId;
+    return xATransactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
 #include <activemq/commands/BrokerInfo.h>
 #include <vector>
@@ -46,9 +47,9 @@ namespace commands{
     class AMQCPP_API BrokerInfo : public BaseCommand {
     protected:
 
-        BrokerId* brokerId;
+        decaf::lang::Pointer<BrokerId> brokerId;
         std::string brokerURL;
-        std::vector<BrokerInfo*> peerBrokerInfos;
+        std::vector< decaf::lang::Pointer<BrokerInfo> > peerBrokerInfos;
         std::string brokerName;
         bool slaveBroker;
         bool masterBroker;
@@ -116,20 +117,20 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const BrokerId* getBrokerId() const;
-        virtual BrokerId* getBrokerId();
-        virtual void setBrokerId( BrokerId* brokerId );
+        virtual const decaf::lang::Pointer<BrokerId>& getBrokerId() const;
+        virtual decaf::lang::Pointer<BrokerId>& getBrokerId();
+        virtual void setBrokerId( const decaf::lang::Pointer<BrokerId>& brokerId );
 
         virtual const std::string& getBrokerURL() const;
         virtual std::string& getBrokerURL();
         virtual void setBrokerURL( const std::string& brokerURL );
 
-        virtual const std::vector<BrokerInfo*>& getPeerBrokerInfos() const;
-        virtual std::vector<BrokerInfo*>& getPeerBrokerInfos();
-        virtual void setPeerBrokerInfos( const std::vector<BrokerInfo*>& peerBrokerInfos );
+        virtual const std::vector< decaf::lang::Pointer<BrokerInfo> >& getPeerBrokerInfos() const;
+        virtual std::vector< decaf::lang::Pointer<BrokerInfo> >& getPeerBrokerInfos();
+        virtual void setPeerBrokerInfos( const std::vector< decaf::lang::Pointer<BrokerInfo> >& peerBrokerInfos );
 
         virtual const std::string& getBrokerName() const;
         virtual std::string& getBrokerName();

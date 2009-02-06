@@ -21,7 +21,6 @@
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/ActiveMQConsumer.h>
-#include <activemq/core/ActiveMQMessage.h>
 #include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQSessionExecutor.h>
 #include <activemq/util/ActiveMQProperties.h>
@@ -263,7 +262,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         // Register this as a message dispatcher for the consumer since we
         // could start receiving messages from the broker right away once we
         // send the ConsumerInfo command.
-        this->connection->addDispatcher( *( consumerInfo->getConsumerId() ), this );
+        this->connection->addDispatcher( consumerInfo->getConsumerId(), this );
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
@@ -271,7 +270,8 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue( consumer->getConsumerId(), consumer.get() );
+            this->consumers.setValue(
+                consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -305,7 +305,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         // Register this as a message dispatcher for the consumer since we
         // could start receiving messages from the broker right away once we
         // send the ConsumerInfo command.
-        this->connection->addDispatcher( *( consumerInfo->getConsumerId() ), this );
+        this->connection->addDispatcher( consumerInfo->getConsumerId(), this );
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
@@ -313,7 +313,8 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue( consumer->getConsumerId(), consumer.get() );
+            this->consumers.setValue(
+                consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -332,13 +333,13 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         this->checkClosed();
 
-        std::auto_ptr<commands::ProducerId> producerId( new commands::ProducerId() );
+        decaf::lang::Pointer<commands::ProducerId> producerId( new commands::ProducerId() );
         producerId->setConnectionId( this->sessionInfo->getSessionId()->getConnectionId() );
         producerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
         producerId->setValue( this->connection->getNextProducerId() );
 
         std::auto_ptr<commands::ProducerInfo> producerInfo( new commands::ProducerInfo() );
-        producerInfo->setProducerId( producerId.release() );
+        producerInfo->setProducerId( producerId );
         producerInfo->setWindowSize( this->connection->getProducerWindowSize() );
 
         // Producers are allowed to have NULL destinations.  In this case, the
@@ -356,7 +357,9 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
             // Get any options specified in the destination and apply them to the
             // ProducerInfo object.
-            producerInfo->setDestination( amqDestination->cloneDataStructure() );
+            producerInfo->setDestination(
+                decaf::lang::Pointer<commands::ActiveMQDestination>(
+                    amqDestination->cloneDataStructure() ) );
             const ActiveMQProperties& options = amqDestination->getOptions();
             producerInfo->setDispatchAsync( Boolean::parseBoolean(
                 options.getProperty( "producer.dispatchAsync", "false" )) );
@@ -370,7 +373,7 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         synchronized( &this->producers ) {
             // Place the Producer into the Map.
-            this->producers.setValue( producer->getProducerId(), producer.get() );
+            this->producers.setValue( producerId, producer.get() );
         }
 
         // Add to the Connections list
@@ -573,20 +576,18 @@ void ActiveMQSession::send(
         }
 
         // Clear any old data that might be in the message object
-        delete amqMessage->getMessageId();
-        delete amqMessage->getProducerId();
-        delete amqMessage->getTransactionId();
+        amqMessage->getMessageId().reset( NULL );
+        amqMessage->getProducerId().reset( NULL );
+        amqMessage->getTransactionId().reset( NULL );
 
         // Always assign the message ID, regardless of the disable
         // flag.  Not adding a message ID will cause an NPE at the broker.
-        commands::MessageId* id = new commands::MessageId();
-        id->setProducerId(
-            producer->getProducerId().cloneDataStructure() );
+        decaf::lang::Pointer<commands::MessageId> id( new commands::MessageId() );
+        id->setProducerId( producer->getProducerInfo().getProducerId() );
         id->setProducerSequenceId( this->connection->getNextProducerSequenceId() );
 
         amqMessage->setMessageId( id );
-        amqMessage->setProducerId(
-            producer->getProducerId().cloneDataStructure() );
+        amqMessage->setProducerId( producer->getProducerInfo().getProducerId() );
 
         if( this->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
 
@@ -597,8 +598,7 @@ void ActiveMQSession::send(
                     "Transacted Session, has no Transaction Info.");
             }
 
-            amqMessage->setTransactionId(
-                this->transaction->getTransactionId()->cloneDataStructure() );
+            amqMessage->setTransactionId( this->transaction->getTransactionId() );
         }
 
         if( this->connection->getSendTimeout() <= 0 &&
@@ -646,8 +646,7 @@ void ActiveMQSession::unsubscribe( const std::string& name )
         std::auto_ptr<commands::RemoveSubscriptionInfo> rsi(
             new commands::RemoveSubscriptionInfo() );
 
-        rsi->setConnectionId(
-            this->connection->getConnectionId().cloneDataStructure() );
+        rsi->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
         rsi->setSubcriptionName( name );
         rsi->setClientId( this->connection->getConnectionInfo().getClientId() );
 
@@ -720,14 +719,14 @@ commands::ConsumerInfo* ActiveMQSession::createConsumerInfo(
         this->checkClosed();
 
         std::auto_ptr<commands::ConsumerInfo> consumerInfo( new commands::ConsumerInfo() );
-        std::auto_ptr<commands::ConsumerId> consumerId( new commands::ConsumerId() );
+        decaf::lang::Pointer<commands::ConsumerId> consumerId( new commands::ConsumerId() );
 
         consumerId->setConnectionId(
             this->connection->getConnectionId().getValue() );
         consumerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
         consumerId->setValue( this->connection->getNextSessionId() );
 
-        consumerInfo->setConsumerId( consumerId.release() );
+        consumerInfo->setConsumerId( consumerId );
 
         // Cast the destination to an OpenWire destination, so we can
         // get all the goodies.
@@ -739,7 +738,9 @@ commands::ConsumerInfo* ActiveMQSession::createConsumerInfo(
                 "Destination was either NULL or not created by this OpenWireConnector" );
         }
 
-        consumerInfo->setDestination( amqDestination->cloneDataStructure() );
+        consumerInfo->setDestination(
+            decaf::lang::Pointer<commands::ActiveMQDestination>(
+                amqDestination->cloneDataStructure() ) );
 
         return consumerInfo.release();
     }
@@ -751,7 +752,7 @@ commands::ConsumerInfo* ActiveMQSession::createConsumerInfo(
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::applyDestinationOptions( commands::ConsumerInfo* info ) {
 
-    const commands::ActiveMQDestination* amqDestination = info->getDestination();
+    decaf::lang::Pointer<commands::ActiveMQDestination> amqDestination = info->getDestination();
 
     // Get any options specified in the destination and apply them to the
     // ConsumerInfo object.
@@ -855,9 +856,11 @@ void ActiveMQSession::createTemporaryDestination(
     try {
 
         commands::DestinationInfo command;
-        command.setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
+        command.setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
         command.setOperationType( ActiveMQConstants::DESTINATION_ADD_OPERATION );
-        command.setDestination( tempDestination->cloneDataStructure() );
+        command.setDestination(
+            decaf::lang::Pointer<commands::ActiveMQTempDestination>(
+                tempDestination->cloneDataStructure() ) );
 
         // Send the message to the broker.
         this->connection->syncRequest( &command );
@@ -879,9 +882,11 @@ void ActiveMQSession::destroyTemporaryDestination(
 
         commands::DestinationInfo command;
 
-        command.setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
+        command.setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
         command.setOperationType( ActiveMQConstants::DESTINATION_REMOVE_OPERATION );
-        command.setDestination( tempDestination->cloneDataStructure() );
+        command.setDestination(
+            decaf::lang::Pointer<commands::ActiveMQTempDestination>(
+                tempDestination->cloneDataStructure() ) );
 
         // Send the message to the broker.
         this->connection->syncRequest( &command );
@@ -911,7 +916,7 @@ commands::TransactionId* ActiveMQSession::createLocalTransactionId()
     try{
         std::auto_ptr<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
 
-        id->setConnectionId( this->connection->getConnectionId().cloneDataStructure() );
+        id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
         id->setValue( this->connection->getNextTransactionId() );
 
         return id.release();
@@ -957,7 +962,7 @@ void ActiveMQSession::checkClosed() const throw( exceptions::ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::disposeOf( commands::ConsumerId* id )
+void ActiveMQSession::disposeOf( decaf::lang::Pointer<commands::ConsumerId> id )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -966,7 +971,7 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
 
         synchronized( &this->consumers ) {
 
-            if( this->consumers.containsKey( *id ) ) {
+            if( this->consumers.containsKey( id ) ) {
 
                 // If the executor thread is currently running, stop it.
                 bool wasStarted = isStarted();
@@ -974,11 +979,11 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
                     stop();
                 }
 
-                ActiveMQConsumer* consumer = this->consumers.getValue( *id );
-                this->connection->removeDispatcher( consumer->getConsumerId() );
+                // Remove this Id both from the Sessions Map of Consumers and from
+                // the Connection.
+                this->connection->removeDispatcher( id );
                 this->connection->disposeOf( id );
-
-                this->consumers.remove( *id );
+                this->consumers.remove( id );
 
                 //TODO
 //              // Remove this consumer from the Transaction if we are transacted
@@ -990,13 +995,7 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
                 if( this->executor.get() != NULL ) {
 
                     // Purge any pending messages for this consumer.
-                    vector<ActiveMQMessage*> messages =
-                        this->executor->purgeConsumerMessages( consumer );
-
-                    // Destroy the messages.
-                    for( unsigned int ix = 0; ix < messages.size(); ++ix ) {
-                        delete messages[ix];
-                    }
+                    this->executor->purgeConsumerMessages( id );
                 }
 
                 if( wasStarted ) {
@@ -1011,7 +1010,7 @@ void ActiveMQSession::disposeOf( commands::ConsumerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::disposeOf( commands::ProducerId* id )
+void ActiveMQSession::disposeOf( decaf::lang::Pointer<commands::ProducerId> id )
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
@@ -1020,17 +1019,26 @@ void ActiveMQSession::disposeOf( commands::ProducerId* id )
 
         synchronized( &this->producers ) {
 
-            if( this->producers.containsKey( *id ) ) {
+            if( this->producers.containsKey( id ) ) {
 
-                ActiveMQProducer* producer = this->producers.getValue( *id );
-                this->connection->removeProducer( producer );
+                this->connection->removeProducer( id );
                 this->connection->disposeOf( id );
-
-                this->producers.remove( *id );
+                this->producers.remove( id );
             }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQConsumer* ActiveMQSession::getConsumer( const decaf::lang::Pointer<commands::ConsumerId>& id ) {
+
+    synchronized( &this->consumers ) {
+        if( this->consumers.containsKey( id ) ) {
+            return this->consumers.getValue( id );
+        }
+    }
+    return NULL;
 }

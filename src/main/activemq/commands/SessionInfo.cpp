@@ -38,23 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo::SessionInfo() {
 
-    this->sessionId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo::~SessionInfo() {
 
-    delete this->sessionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo* SessionInfo::cloneDataStructure() const {
-    SessionInfo* sessionInfo = new SessionInfo();
+    std::auto_ptr<SessionInfo> sessionInfo( new SessionInfo() );
 
     // Copy the data from the base class or classes
     sessionInfo->copyDataStructure( this );
 
-    return sessionInfo;
+    return sessionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +73,7 @@ void SessionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "SessionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getSessionId() != NULL ) {
-        this->setSessionId(
-            dynamic_cast<SessionId*>(
-                srcPtr->getSessionId()->cloneDataStructure() ) );
-    }
+    this->setSessionId( srcPtr->getSessionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ bool SessionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getSessionId() != NULL ) {
-        if( !this->getSessionId()->equals( valuePtr->getSessionId() ) ) {
+        if( !this->getSessionId()->equals( valuePtr->getSessionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getSessionId() != NULL ) {
@@ -132,24 +126,24 @@ bool SessionInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> SessionInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processSessionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const SessionId* SessionInfo::getSessionId() const {
+const decaf::lang::Pointer<SessionId>& SessionInfo::getSessionId() const {
     return sessionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionId* SessionInfo::getSessionId() {
+decaf::lang::Pointer<SessionId>& SessionInfo::getSessionId() {
     return sessionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void SessionInfo::setSessionId( SessionId* sessionId ) {
+void SessionInfo::setSessionId( const decaf::lang::Pointer<SessionId>& sessionId ) {
     this->sessionId = sessionId;
 }
 

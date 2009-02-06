@@ -49,12 +49,12 @@ DiscoveryEvent::~DiscoveryEvent() {
 
 ////////////////////////////////////////////////////////////////////////////////
 DiscoveryEvent* DiscoveryEvent::cloneDataStructure() const {
-    DiscoveryEvent* discoveryEvent = new DiscoveryEvent();
+    std::auto_ptr<DiscoveryEvent> discoveryEvent( new DiscoveryEvent() );
 
     // Copy the data from the base class or classes
     discoveryEvent->copyDataStructure( this );
 
-    return discoveryEvent;
+    return discoveryEvent.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

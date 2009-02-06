@@ -47,12 +47,12 @@ ShutdownInfo::~ShutdownInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ShutdownInfo* ShutdownInfo::cloneDataStructure() const {
-    ShutdownInfo* shutdownInfo = new ShutdownInfo();
+    std::auto_ptr<ShutdownInfo> shutdownInfo( new ShutdownInfo() );
 
     // Copy the data from the base class or classes
     shutdownInfo->copyDataStructure( this );
 
-    return shutdownInfo;
+    return shutdownInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ bool ShutdownInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ShutdownInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ShutdownInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processShutdownInfo( this );

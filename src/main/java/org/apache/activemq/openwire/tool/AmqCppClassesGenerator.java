@@ -53,6 +53,27 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
         return ".cpp";
     }
 
+    public String toHeaderFileName( JClass type ) {
+        String name = type.getSimpleName();
+
+        if( name.equals( "String" ) ) {
+            return null;
+        } else if( type.isArrayType() ) {
+            JClass arrayClass = type.getArrayComponentType();
+            return toHeaderFileName( arrayClass );
+        } else if( name.equals( "Throwable" ) || name.equals( "Exception" ) ) {
+            return "BrokerError";
+        } else if( name.equals("BaseDataStructure" ) ){
+            return "DataStructure";
+        } else if( name.equals("ByteSequence") ) {
+            return "std::vector<unsigned char>";
+        } else if( !type.isPrimitiveType() ) {
+            return name;
+        } else {
+            return null;
+        }
+    }
+
     public String toCppType(JClass type) {
         String name = type.getSimpleName();
         if (name.equals("String")) {
@@ -65,9 +86,10 @@ public class AmqCppClassesGenerator extends MultiSourceGenerator {
             JClass arrayClass = type.getArrayComponentType();
 
             if( arrayClass.isPrimitiveType() ) {
-                return "std::vector<" + name.substring(0, name.length()-2) + ">";
+                return "std::vector<" + name.substring( 0, name.length()-2 ) + ">";
             } else {
-                return "std::vector<" + name.substring(0, name.length()-2) + "*>";
+                return "std::vector< decaf::lang::Pointer<" +
+                       name.substring( 0, name.length()-2 ) + "> >";
             }
         }
         else if( name.equals( "Throwable" ) || name.equals( "Exception" ) ) {
@@ -174,7 +196,9 @@ out.println("");
             String propertyName = property.getSimpleName();
             String parameterName = decapitalize(propertyName);
 
-            if( !type.startsWith("std::vector") ) {
+            if( property.getType().isPrimitiveType() ||
+                type.startsWith("std::string") ) {
+
 out.println("    this->"+parameterName+" = "+value+";");
             }
         }
@@ -191,25 +215,25 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println(""+className+"::~"+className+"() {");
 out.println("");
 
-    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
-        JProperty property = (JProperty) iter.next();
-        String type = toCppType(property.getType());
-        String propertyName = property.getSimpleName();
-        String parameterName = decapitalize(propertyName);
-
-        if( property.getType().isPrimitiveType() ||
-            property.getType().getSimpleName().equals("String") ) {
-            continue;
-        }
-
-        if( !type.startsWith("std::vector" ) ) {
-out.println("    delete this->" + parameterName + ";");
-        } else if( type.contains( "*" ) ) {
-out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
-out.println("        delete " + parameterName + "[i" + parameterName + "];");
-out.println("    }");
-        }
-    }
+//    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
+//        JProperty property = (JProperty) iter.next();
+//        String type = toCppType(property.getType());
+//        String propertyName = property.getSimpleName();
+//        String parameterName = decapitalize(propertyName);
+//
+//        if( property.getType().isPrimitiveType() ||
+//            property.getType().getSimpleName().equals("String") ) {
+//            continue;
+//        }
+//
+//        if( !type.startsWith("std::vector" ) ) {
+//out.println("    delete this->" + parameterName + ";");
+//        } else if( type.contains( "*" ) ) {
+//out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
+//out.println("        delete " + parameterName + "[i" + parameterName + "];");
+//out.println("    }");
+//        }
+//    }
 out.println("}");
 
 out.println("");
@@ -218,12 +242,12 @@ out.println(className+"* "+className+"::cloneDataStructure() const {");
 
     String newInstance = decapitalize( className );
 
-out.println("    "+className+"* "+newInstance+" = new "+className+"();");
+out.println("    std::auto_ptr<"+className+"> "+newInstance+"( new "+className+"() );");
 out.println("");
 out.println("    // Copy the data from the base class or classes");
 out.println("    "+newInstance+"->copyDataStructure( this );");
 out.println("");
-out.println("    return "+newInstance+";");
+out.println("    return "+newInstance+".release();");
 out.println("}");
 
 out.println("");
@@ -259,35 +283,41 @@ out.println("    }");
         String getter = property.getGetter().getSimpleName();
         String setter = property.getSetter().getSimpleName();
 
-        if( property.getType().isPrimitiveType() ||
-            type.equals("std::string") ||
-            property.getType().getSimpleName().equals("ByteSequence") ){
-    out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
-        } else if( property.getType().isArrayType() &&
-                   !property.getType().getArrayComponentType().isPrimitiveType() ) {
+//        if( property.getType().isPrimitiveType() ||
+//            type.equals("std::string") ||
+//            property.getType().getSimpleName().equals("ByteSequence") ){
 
-            String arrayType = property.getType().getArrayComponentType().getSimpleName();
+out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
 
-    out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
-    out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
-    out.println("            this->"+getter+"().push_back(");
-    out.println("                dynamic_cast<"+arrayType+"*>(");
-    out.println("                    srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");
-    out.println("        } else {");
-    out.println("            this->"+getter+"().push_back( NULL );");
-    out.println("        }");
-    out.println("    }");
-        } else if( property.getType().isArrayType() &&
-                   property.getType().getArrayComponentType().isPrimitiveType() ) {
-    out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
-        } else {
-    out.println("    if( srcPtr->"+getter+"() != NULL ) {");
-    out.println("        this->"+setter+"(");
-    out.println("            dynamic_cast<"+type+"*>(");
-    out.println("                srcPtr->"+getter+"()->cloneDataStructure() ) );");
-    out.println("    }");
+//        } else if( property.getType().isArrayType() &&
+//                   !property.getType().getArrayComponentType().isPrimitiveType() ) {
+//
+//            String arrayType = property.getType().getArrayComponentType().getSimpleName();
+//
+//out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
+//out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
+//out.println("            this->"+getter+"().push_back(");
+//out.println("                dynamic_cast<"+arrayType+"*>(");
+//out.println("                    srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");
+//out.println("        } else {");
+//out.println("            this->"+getter+"().push_back( NULL );");
+//out.println("        }");
+//out.println("    }");
+//
+//        } else if( property.getType().isArrayType() &&
+//                   property.getType().getArrayComponentType().isPrimitiveType() ) {
+//
+//out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
+//
+//        } else {
+//
+//out.println("    if( srcPtr->"+getter+"() != NULL ) {");
+//out.println("        this->"+setter+"(");
+//out.println("            dynamic_cast<"+type+"*>(");
+//out.println("                srcPtr->"+getter+"()->cloneDataStructure() ) );");
+//out.println("    }");
         }
-    }
+//    }
 
 out.println("}");
 out.println("");
@@ -400,8 +430,7 @@ out.println("            return false;" );
 out.println("        }" );
 out.println("    }" );
 
-    } else if( property.getType().isPrimitiveType() ||
-               type.equals("std::string") ){
+    } else if( property.getType().isPrimitiveType() || type.equals("std::string") ){
 
 out.println("    if( this->"+getter+"() != valuePtr->"+getter+"() ) {");
 out.println("        return false;" );
@@ -414,7 +443,7 @@ out.println("    }" );
 
 out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < this->"+getter+"().size(); ++i" + parameterName + " ) {");
 out.println("        if( this->"+getter+"()[i"+parameterName+"] != NULL ) {" );
-out.println("            if( !this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"] ) ) {" );
+out.println("            if( !this->"+getter+"()[i"+parameterName+"]->equals( valuePtr->"+getter+"()[i"+parameterName+"].get() ) ) {" );
 out.println("                return false;");
 out.println("            }");
 out.println("        } else if( valuePtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
@@ -430,7 +459,7 @@ out.println("        }");
 out.println("    }");
     } else {
 out.println("    if( this->"+getter+"() != NULL ) {");
-out.println("        if( !this->"+getter+"()->equals( valuePtr->"+getter+"() ) ) {" );
+out.println("        if( !this->"+getter+"()->equals( valuePtr->"+getter+"().get() ) ) {" );
 out.println("            return false;");
 out.println("        }");
 out.println("    } else if( valuePtr->"+getter+"() != NULL ) {");
@@ -465,7 +494,7 @@ out.println("}");
    if( baseClass.equals( "BaseCommand" ) ) {
 out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
-out.println("commands::Command* "+className+"::visit( activemq::state::CommandVisitor* visitor ) ");
+out.println("decaf::lang::Pointer<commands::Command> "+className+"::visit( activemq::state::CommandVisitor* visitor ) ");
 out.println("    throw( exceptions::ActiveMQException ) {");
 out.println("");
 out.println("    return visitor->process"+className+"( this );");
@@ -486,7 +515,9 @@ out.println("}");
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                type = type + "*";
+                type = "decaf::lang::Pointer<" + type + ">&";
+                constNess = "const ";
+//                type = type + "*";
             } else if( property.getType().getSimpleName().equals("String") ||
                        type.startsWith( "std::vector") ) {
                 type = type + "&";

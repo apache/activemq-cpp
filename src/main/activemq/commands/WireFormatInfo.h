@@ -29,6 +29,22 @@ namespace activemq{
 namespace commands{
 
     class AMQCPP_API WireFormatInfo : public BaseCommand {
+    private:
+
+        std::vector<unsigned char> magic;
+        std::vector<unsigned char> marshalledProperties;
+
+        /**
+         * WireFormatInfo Properties, unmarshaled from the marshaled
+         * properties on use.
+         */
+        util::PrimitiveMap properties;
+
+        /**
+         * OpenWire Protocol Version
+         */
+        int version;
+
     public:
 
         const static unsigned char ID_WIREFORMATINFO = 1;
@@ -41,13 +57,13 @@ namespace commands{
 
         /**
          * Get the unique identifier that this object and its own
-         * Marshaller share.
+         * Marshaler share.
          * @returns new DataStructure type copy.
          */
         virtual unsigned char getDataStructureType() const;
 
         /**
-         * Clone this obbject and return a new instance that the
+         * Clone this object and return a new instance that the
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
@@ -75,9 +91,9 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
-         * Indicates that this command is aware of Marshalling, and needs
-         * to have its Marshalling methods invoked.
-         * @returns boolean indicating desire to be in marshalling stages
+         * Indicates that this command is aware of Marshaling, and needs
+         * to have its Marshaling methods invoked.
+         * @returns boolean indicating desire to be in marshaling stages
          */
         virtual bool isMarshalAware() const {
             return true;
@@ -90,8 +106,8 @@ namespace commands{
          *
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
+        virtual decaf::lang::Pointer<commands::Command> visit(
+            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException );
 
         /**
          * Get the current Wireformat Version
@@ -141,7 +157,7 @@ namespace commands{
 
         /**
          * Sets if the cacheEnabled flag is on
-         * @param cacheEnabled - ture to turn flag is on
+         * @param cacheEnabled - true to turn flag is on
          */
         void setCacheEnabled( bool cacheEnabled );
 
@@ -153,7 +169,7 @@ namespace commands{
 
         /**
          * Sets if the tightEncodingEnabled flag is on
-         * @param tightEncodingEnabled - ture to turn flag is on
+         * @param tightEncodingEnabled - true to turn flag is on
          */
         void setTightEncodingEnabled( bool tightEncodingEnabled );
 
@@ -165,7 +181,7 @@ namespace commands{
 
         /**
          * Sets if the sizePrefixDisabled flag is on
-         * @param sizePrefixDisabled - ture to turn flag is on
+         * @param sizePrefixDisabled - true to turn flag is on
          */
         void setSizePrefixDisabled( bool sizePrefixDisabled );
 
@@ -230,10 +246,10 @@ namespace commands{
     public:
 
         /**
-         * Handles the marshalling of the objects properties into the
+         * Handles the marshaling of the objects properties into the
          * internal byte array before the object is marshalled to the
          * wire
-         * @param wireFormat - the wireformatting controller
+         * @param wireFormat - the wire formatting controller
          */
         virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
             throw ( decaf::io::IOException );
@@ -245,22 +261,6 @@ namespace commands{
          */
         virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
             throw ( decaf::io::IOException );
-
-    private:
-
-        std::vector<unsigned char> magic;
-        std::vector<unsigned char> marshalledProperties;
-
-        /**
-         * WireFormatInfo Properties, unmarshalled from the marshalled
-         * properties on use.
-         */
-        util::PrimitiveMap properties;
-
-        /**
-         * OpenWire Protocal Version
-         */
-        int version;
 
     };
 

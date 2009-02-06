@@ -52,6 +52,7 @@ out.println("#endif");
 out.println("");
 out.println("#include <activemq/util/Config.h>");
 out.println("#include <activemq/commands/"+baseClass+".h>");
+out.println("#include <decaf/lang/Pointer.h>");
 
         if( comparable ) {
 out.println("#include <decaf/lang/Comparable.h>");
@@ -64,18 +65,10 @@ for (Iterator iter = properties.iterator(); iter.hasNext();) {
         !property.getType().getSimpleName().equals("String") &&
         !property.getType().getSimpleName().equals("ByteSequence") )
     {
-        String includeName = toCppType(property.getType());
-        if( property.getType().isArrayType() )
-        {
-            JClass arrayType = property.getType().getArrayComponentType();
-            if( arrayType.isPrimitiveType() )
-                continue;
+        String includeName = toHeaderFileName( property.getType() );
+        if( includeName != null ) {
+            out.println("#include <activemq/commands/"+includeName+".h>");
         }
-        if( includeName.startsWith("std::vector") ) {
-            includeName = includeName.substring(12, includeName.length()-2);
-        }
-
-        out.println("#include <activemq/commands/"+includeName+".h>");
     }
 }
 
@@ -123,7 +116,7 @@ out.println("");
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                type = type + "*";
+                type = "decaf::lang::Pointer<" + type + ">";
             }
 
             out.println("        "+type+" "+name+";");
@@ -144,6 +137,10 @@ out.println("    public:");
 out.println("");
 out.println("        const static unsigned char ID_"+typeName+" = "+getOpenWireOpCode(jclass)+";");
 out.println("");
+        if( comparable ) {
+out.println("        typedef decaf::lang::PointerComparator<"+className+"> COMPARATOR;");
+out.println("");
+        }
 out.println("    public:");
 out.println("");
 out.println("        "+className+"();");
@@ -209,7 +206,7 @@ out.println("         * the proper processXXX method in the visitor." );
 out.println("         * " );
 out.println("         * @return a Response to the visitor being called or NULL if no response." );
 out.println("         */" );
-out.println("        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )" );
+out.println("        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )" );
 out.println("            throw( exceptions::ActiveMQException );" );
 out.println("");
 
@@ -227,7 +224,8 @@ out.println("");
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                    type = type + "*";
+                    type = "decaf::lang::Pointer<" + type + ">&";
+                    constness = "const ";
             } else if( property.getType().getSimpleName().equals("String") ||
                        type.startsWith("std::vector") ) {
 

@@ -38,25 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError::ConnectionError() {
 
-    this->exception = NULL;
-    this->connectionId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError::~ConnectionError() {
 
-    delete this->exception;
-    delete this->connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError* ConnectionError::cloneDataStructure() const {
-    ConnectionError* connectionError = new ConnectionError();
+    std::auto_ptr<ConnectionError> connectionError( new ConnectionError() );
 
     // Copy the data from the base class or classes
     connectionError->copyDataStructure( this );
 
-    return connectionError;
+    return connectionError.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,16 +73,8 @@ void ConnectionError::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionError::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getException() != NULL ) {
-        this->setException(
-            dynamic_cast<BrokerError*>(
-                srcPtr->getException()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId(
-            dynamic_cast<ConnectionId*>(
-                srcPtr->getConnectionId()->cloneDataStructure() ) );
-    }
+    this->setException( srcPtr->getException() );
+    this->setConnectionId( srcPtr->getConnectionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,14 +120,14 @@ bool ConnectionError::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getException() != NULL ) {
-        if( !this->getException()->equals( valuePtr->getException() ) ) {
+        if( !this->getException()->equals( valuePtr->getException().get() ) ) {
             return false;
         }
     } else if( valuePtr->getException() != NULL ) {
         return false;
     }
     if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConnectionId() != NULL ) {
@@ -152,39 +140,39 @@ bool ConnectionError::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ConnectionError::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processConnectionError( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const BrokerError* ConnectionError::getException() const {
+const decaf::lang::Pointer<BrokerError>& ConnectionError::getException() const {
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerError* ConnectionError::getException() {
+decaf::lang::Pointer<BrokerError>& ConnectionError::getException() {
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::setException( BrokerError* exception ) {
+void ConnectionError::setException( const decaf::lang::Pointer<BrokerError>& exception ) {
     this->exception = exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId* ConnectionError::getConnectionId() const {
+const decaf::lang::Pointer<ConnectionId>& ConnectionError::getConnectionId() const {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId* ConnectionError::getConnectionId() {
+decaf::lang::Pointer<ConnectionId>& ConnectionError::getConnectionId() {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionError::setConnectionId( ConnectionId* connectionId ) {
+void ConnectionError::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
     this->connectionId = connectionId;
 }
 

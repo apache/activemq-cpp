@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
 #include <activemq/commands/BrokerId.h>
 #include <vector>
@@ -46,11 +47,11 @@ namespace commands{
     class AMQCPP_API ConnectionInfo : public BaseCommand {
     protected:
 
-        ConnectionId* connectionId;
+        decaf::lang::Pointer<ConnectionId> connectionId;
         std::string clientId;
         std::string password;
         std::string userName;
-        std::vector<BrokerId*> brokerPath;
+        std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
         bool brokerMasterConnector;
         bool manageable;
         bool clientMaster;
@@ -112,12 +113,12 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
@@ -131,9 +132,9 @@ namespace commands{
         virtual std::string& getUserName();
         virtual void setUserName( const std::string& userName );
 
-        virtual const std::vector<BrokerId*>& getBrokerPath() const;
-        virtual std::vector<BrokerId*>& getBrokerPath();
-        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
+        virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
+        virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
+        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
 
         virtual bool isBrokerMasterConnector() const;
         virtual void setBrokerMasterConnector( bool brokerMasterConnector );

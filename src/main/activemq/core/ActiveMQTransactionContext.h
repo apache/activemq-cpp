@@ -124,9 +124,10 @@ namespace core{
          * Transaction, returns NULL if no transaction is running
          * @return TransactionInfo
          */
-        virtual const commands::TransactionId* getTransactionId() const {
+        virtual const decaf::lang::Pointer<commands::TransactionId>& getTransactionId() const {
             if( this->transactionInfo.get() == NULL ) {
-                return NULL;
+                throw decaf::lang::exceptions::InvalidStateException(
+                    __FILE__, __LINE__, "Transaction Not Started." );
             }
 
             return transactionInfo->getTransactionId();
@@ -140,9 +141,6 @@ namespace core{
 
         // Starts a new Transaction.
         void startTransaction() throw( exceptions::ActiveMQException );
-
-        // Creates a new Local Transaction Id.
-        commands::TransactionId* createLocalTransactionId() throw( exceptions::ActiveMQException );
 
     };
 

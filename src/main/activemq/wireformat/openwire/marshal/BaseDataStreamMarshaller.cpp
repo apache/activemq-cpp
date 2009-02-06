@@ -26,6 +26,7 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Long.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/util/Config.h>
 
 using namespace std;
@@ -467,12 +468,12 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
 
             if( wireFormat->isStackTraceEnabled() ) {
                 short length = dataIn->readShort();
-                std::vector< BrokerError::StackTraceElement* > stackTrace;
+                std::vector< Pointer<BrokerError::StackTraceElement> > stackTrace;
 
                 for( int i = 0; i < length; ++i ) {
 
-                    BrokerError::StackTraceElement* element =
-                        new BrokerError::StackTraceElement;
+                    Pointer<BrokerError::StackTraceElement> element(
+                        new BrokerError::StackTraceElement );
 
                     element->ClassName = tightUnmarshalString( dataIn, bs );
                     element->MethodName = tightUnmarshalString( dataIn, bs );
@@ -482,8 +483,8 @@ commands::DataStructure* BaseDataStreamMarshaller::tightUnmarshalBrokerError(
                 }
 
                 answer->setStackTraceElements( stackTrace );
-                answer->setCause( dynamic_cast<BrokerError*>(
-                    tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) );
+                answer->setCause( Pointer<BrokerError>( dynamic_cast<BrokerError*>(
+                    tightUnmarshalBrokerError( wireFormat, dataIn, bs ) ) ) );
             }
 
             return answer;
@@ -526,14 +527,14 @@ int BaseDataStreamMarshaller::tightMarshalBrokerError1(
 
                 for( unsigned int i = 0; i < error->getStackTraceElements().size(); ++i ) {
 
-                    const BrokerError::StackTraceElement* element =
+                    const Pointer<BrokerError::StackTraceElement> element =
                         error->getStackTraceElements()[i];
                     rc += tightMarshalString1( element->ClassName, bs );
                     rc += tightMarshalString1( element->MethodName, bs );
                     rc += tightMarshalString1( element->FileName, bs );
                     rc += 4;
                 }
-                rc += tightMarshalBrokerError1( wireFormat, error->getCause(), bs );
+                rc += tightMarshalBrokerError1( wireFormat, error->getCause().get(), bs );
             }
 
             return rc;
@@ -568,7 +569,7 @@ void BaseDataStreamMarshaller::tightMarshalBrokerError2(
 
                 for( int i = 0; i < length; ++i ) {
 
-                    BrokerError::StackTraceElement* element =
+                    Pointer<BrokerError::StackTraceElement> element =
                         error->getStackTraceElements()[i];
 
                     tightMarshalString2( element->ClassName, dataOut, bs );
@@ -578,7 +579,7 @@ void BaseDataStreamMarshaller::tightMarshalBrokerError2(
                 }
 
                 tightMarshalBrokerError2(
-                    wireFormat, error->getCause(), dataOut, bs );
+                    wireFormat, error->getCause().get(), dataOut, bs );
             }
         }
     }
@@ -605,12 +606,12 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
             if( wireFormat->isStackTraceEnabled() ) {
 
                 short length = dataIn->readShort();
-                std::vector< BrokerError::StackTraceElement* > stackTrace;
+                std::vector< Pointer<BrokerError::StackTraceElement> > stackTrace;
 
                 for( int i = 0; i < length; ++i ) {
 
-                    BrokerError::StackTraceElement* element =
-                        new BrokerError::StackTraceElement;
+                    Pointer<BrokerError::StackTraceElement> element(
+                        new BrokerError::StackTraceElement );
 
                     element->ClassName = looseUnmarshalString( dataIn );
                     element->MethodName = looseUnmarshalString( dataIn );
@@ -620,8 +621,8 @@ commands::DataStructure* BaseDataStreamMarshaller::looseUnmarshalBrokerError(
                     stackTrace.push_back( element );
                 }
                 answer->setStackTraceElements( stackTrace );
-                answer->setCause( dynamic_cast<BrokerError*>(
-                    looseUnmarshalBrokerError( wireFormat, dataIn ) ) );
+                answer->setCause( Pointer<BrokerError>( dynamic_cast<BrokerError*>(
+                    looseUnmarshalBrokerError( wireFormat, dataIn ) ) ) );
             }
 
             return answer;
@@ -661,8 +662,8 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
 
                 for( size_t i = 0; i < length; ++i ) {
 
-                    BrokerError::StackTraceElement* element =
-                        error->getStackTraceElements()[i];
+                    Pointer<BrokerError::StackTraceElement> element(
+                        error->getStackTraceElements()[i] );
 
                     looseMarshalString( element->ClassName, dataOut );
                     looseMarshalString( element->MethodName, dataOut );
@@ -671,7 +672,7 @@ void BaseDataStreamMarshaller::looseMarshalBrokerError(
                     dataOut->writeInt( element->LineNumber );
                 }
 
-                looseMarshalBrokerError( wireFormat, error->getCause(), dataOut );
+                looseMarshalBrokerError( wireFormat, error->getCause().get(), dataOut );
             }
         }
     }
@@ -764,7 +765,7 @@ std::vector<unsigned char> BaseDataStreamMarshaller::looseUnmarshalConstByteArra
 std::string BaseDataStreamMarshaller::toString( const commands::MessageId* id ) {
     if( id == NULL ) return "";
 
-    return toString( id->getProducerId() ) + ":" +
+    return toString( id->getProducerId().get() ) + ":" +
            Long::toString( id->getProducerSequenceId() );
 }
 

@@ -17,7 +17,6 @@
 
 #include "ActiveMQSessionExecutor.h"
 #include "ActiveMQSession.h"
-#include "ActiveMQMessage.h"
 #include "ActiveMQConsumer.h"
 #include <activemq/commands/ConsumerInfo.h>
 
@@ -89,25 +88,20 @@ void ActiveMQSessionExecutor::executeFirst( DispatchData& data ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages(
-    ActiveMQConsumer* consumer )
+void ActiveMQSessionExecutor::purgeConsumerMessages(
+    const decaf::lang::Pointer<commands::ConsumerId>& consumerId )
 {
-    vector<ActiveMQMessage*> retVal;
-
     synchronized( &mutex ) {
 
         list<DispatchData>::iterator iter = messageQueue.begin();
         while( iter != messageQueue.end() ) {
             list<DispatchData>::iterator currentIter = iter;
             DispatchData& dispatchData = *iter++;
-            if( consumer->getConsumerId() == dispatchData.getConsumerId() ) {
-                retVal.push_back( dispatchData.getMessage() );
+            if( consumerId->equals( *( dispatchData.getConsumerId() ) ) ) {
                 messageQueue.erase( currentIter );
             }
         }
     }
-
-    return retVal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,12 +146,7 @@ void ActiveMQSessionExecutor::stop() {
 void ActiveMQSessionExecutor::clear() {
 
     synchronized( &mutex ) {
-
-        list<DispatchData>::iterator iter = messageQueue.begin();
-        while( iter != messageQueue.end() ) {
-            DispatchData data = *iter++;
-            delete data.getMessage();
-        }
+        this->messageQueue.clear();
     }
 }
 
@@ -166,18 +155,11 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
 
     try {
 
-        ActiveMQConsumer* consumer = NULL;
-        Map< commands::ConsumerId, ActiveMQConsumer*>& consumers = session->getConsumers();
-
-        synchronized( &consumers ) {
-            consumer = consumers.getValue( data.getConsumerId() );
-        }
+        ActiveMQConsumer* consumer = session->getConsumer( data.getConsumerId() );
 
         // If the consumer is not available, just delete the message.
         // Otherwise, dispatch the message to the consumer.
-        if( consumer == NULL ) {
-            delete data.getMessage();
-        } else {
+        if( consumer != NULL ) {
             consumer->dispatch( data );
         }
 

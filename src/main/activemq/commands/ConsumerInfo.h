@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BrokerId.h>
@@ -48,9 +49,9 @@ namespace commands{
     class AMQCPP_API ConsumerInfo : public BaseCommand {
     protected:
 
-        ConsumerId* consumerId;
+        decaf::lang::Pointer<ConsumerId> consumerId;
         bool browser;
-        ActiveMQDestination* destination;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
         int prefetchSize;
         int maximumPendingMessageLimit;
         bool dispatchAsync;
@@ -60,8 +61,8 @@ namespace commands{
         bool exclusive;
         bool retroactive;
         unsigned char priority;
-        std::vector<BrokerId*> brokerPath;
-        BooleanExpression* additionalPredicate;
+        std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
+        decaf::lang::Pointer<BooleanExpression> additionalPredicate;
         bool networkSubscription;
         bool optimizedAcknowledge;
         bool noRangeAcks;
@@ -123,19 +124,19 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConsumerId* getConsumerId() const;
-        virtual ConsumerId* getConsumerId();
-        virtual void setConsumerId( ConsumerId* consumerId );
+        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
+        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
 
         virtual bool isBrowser() const;
         virtual void setBrowser( bool browser );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
         virtual int getPrefetchSize() const;
         virtual void setPrefetchSize( int prefetchSize );
@@ -166,13 +167,13 @@ namespace commands{
         virtual unsigned char getPriority() const;
         virtual void setPriority( unsigned char priority );
 
-        virtual const std::vector<BrokerId*>& getBrokerPath() const;
-        virtual std::vector<BrokerId*>& getBrokerPath();
-        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
+        virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
+        virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
+        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
 
-        virtual const BooleanExpression* getAdditionalPredicate() const;
-        virtual BooleanExpression* getAdditionalPredicate();
-        virtual void setAdditionalPredicate( BooleanExpression* additionalPredicate );
+        virtual const decaf::lang::Pointer<BooleanExpression>& getAdditionalPredicate() const;
+        virtual decaf::lang::Pointer<BooleanExpression>& getAdditionalPredicate();
+        virtual void setAdditionalPredicate( const decaf::lang::Pointer<BooleanExpression>& additionalPredicate );
 
         virtual bool isNetworkSubscription() const;
         virtual void setNetworkSubscription( bool networkSubscription );

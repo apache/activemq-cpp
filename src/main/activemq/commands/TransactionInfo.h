@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
 #include <activemq/commands/TransactionId.h>
 #include <vector>
@@ -46,8 +47,8 @@ namespace commands{
     class AMQCPP_API TransactionInfo : public BaseCommand {
     protected:
 
-        ConnectionId* connectionId;
-        TransactionId* transactionId;
+        decaf::lang::Pointer<ConnectionId> connectionId;
+        decaf::lang::Pointer<TransactionId> transactionId;
         unsigned char type;
 
     protected:
@@ -107,16 +108,16 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
-        virtual const TransactionId* getTransactionId() const;
-        virtual TransactionId* getTransactionId();
-        virtual void setTransactionId( TransactionId* transactionId );
+        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
+        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
 
         virtual unsigned char getType() const;
         virtual void setType( unsigned char type );

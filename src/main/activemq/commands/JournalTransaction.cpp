@@ -38,7 +38,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 JournalTransaction::JournalTransaction() {
 
-    this->transactionId = NULL;
     this->type = 0;
     this->wasPrepared = false;
 }
@@ -46,17 +45,16 @@ JournalTransaction::JournalTransaction() {
 ////////////////////////////////////////////////////////////////////////////////
 JournalTransaction::~JournalTransaction() {
 
-    delete this->transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTransaction* JournalTransaction::cloneDataStructure() const {
-    JournalTransaction* journalTransaction = new JournalTransaction();
+    std::auto_ptr<JournalTransaction> journalTransaction( new JournalTransaction() );
 
     // Copy the data from the base class or classes
     journalTransaction->copyDataStructure( this );
 
-    return journalTransaction;
+    return journalTransaction.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,11 +75,7 @@ void JournalTransaction::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalTransaction::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId(
-            dynamic_cast<TransactionId*>(
-                srcPtr->getTransactionId()->cloneDataStructure() ) );
-    }
+    this->setTransactionId( srcPtr->getTransactionId() );
     this->setType( srcPtr->getType() );
     this->setWasPrepared( srcPtr->getWasPrepared() );
 }
@@ -125,7 +119,7 @@ bool JournalTransaction::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getTransactionId() != NULL ) {
@@ -144,17 +138,17 @@ bool JournalTransaction::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const TransactionId* JournalTransaction::getTransactionId() const {
+const decaf::lang::Pointer<TransactionId>& JournalTransaction::getTransactionId() const {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId* JournalTransaction::getTransactionId() {
+decaf::lang::Pointer<TransactionId>& JournalTransaction::getTransactionId() {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTransaction::setTransactionId( TransactionId* transactionId ) {
+void JournalTransaction::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
     this->transactionId = transactionId;
 }
 

@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConsumerId.h>
 #include <vector>
 #include <string>
@@ -46,7 +47,7 @@ namespace commands{
     protected:
 
         bool close;
-        ConsumerId* consumerId;
+        decaf::lang::Pointer<ConsumerId> consumerId;
         int prefetch;
         bool flush;
         bool start;
@@ -109,15 +110,15 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
         virtual bool isClose() const;
         virtual void setClose( bool close );
 
-        virtual const ConsumerId* getConsumerId() const;
-        virtual ConsumerId* getConsumerId();
-        virtual void setConsumerId( ConsumerId* consumerId );
+        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
+        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
 
         virtual int getPrefetch() const;
         virtual void setPrefetch( int prefetch );

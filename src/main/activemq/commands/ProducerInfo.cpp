@@ -38,8 +38,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo::ProducerInfo() {
 
-    this->producerId = NULL;
-    this->destination = NULL;
     this->dispatchAsync = false;
     this->windowSize = 0;
 }
@@ -47,21 +45,16 @@ ProducerInfo::ProducerInfo() {
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo::~ProducerInfo() {
 
-    delete this->producerId;
-    delete this->destination;
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        delete brokerPath[ibrokerPath];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo* ProducerInfo::cloneDataStructure() const {
-    ProducerInfo* producerInfo = new ProducerInfo();
+    std::auto_ptr<ProducerInfo> producerInfo( new ProducerInfo() );
 
     // Copy the data from the base class or classes
     producerInfo->copyDataStructure( this );
 
-    return producerInfo;
+    return producerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,25 +75,9 @@ void ProducerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ProducerInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId(
-            dynamic_cast<ProducerId*>(
-                srcPtr->getProducerId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
-    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back(
-                dynamic_cast<BrokerId*>(
-                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
-        } else {
-            this->getBrokerPath().push_back( NULL );
-        }
-    }
+    this->setProducerId( srcPtr->getProducerId() );
+    this->setDestination( srcPtr->getDestination() );
+    this->setBrokerPath( srcPtr->getBrokerPath() );
     this->setDispatchAsync( srcPtr->isDispatchAsync() );
     this->setWindowSize( srcPtr->getWindowSize() );
 }
@@ -158,14 +135,14 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getProducerId() != NULL ) {
-        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getProducerId() != NULL ) {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
@@ -173,7 +150,7 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
     }
     for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
         if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
@@ -193,54 +170,54 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processProducerInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ProducerId* ProducerInfo::getProducerId() const {
+const decaf::lang::Pointer<ProducerId>& ProducerInfo::getProducerId() const {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId* ProducerInfo::getProducerId() {
+decaf::lang::Pointer<ProducerId>& ProducerInfo::getProducerId() {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerInfo::setProducerId( ProducerId* producerId ) {
+void ProducerInfo::setProducerId( const decaf::lang::Pointer<ProducerId>& producerId ) {
     this->producerId = producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* ProducerInfo::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& ProducerInfo::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* ProducerInfo::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& ProducerInfo::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerInfo::setDestination( ActiveMQDestination* destination ) {
+void ProducerInfo::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*>& ProducerInfo::getBrokerPath() const {
+const std::vector< decaf::lang::Pointer<BrokerId> >& ProducerInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*>& ProducerInfo::getBrokerPath() {
+std::vector< decaf::lang::Pointer<BrokerId> >& ProducerInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerInfo::setBrokerPath( const std::vector<BrokerId*>& brokerPath ) {
+void ProducerInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

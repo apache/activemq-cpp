@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/TransactionId.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 #include <activemq/commands/ConnectionId.h>
 #include <vector>
@@ -47,11 +48,13 @@ namespace commands{
     protected:
 
         long long value;
-        ConnectionId* connectionId;
+        decaf::lang::Pointer<ConnectionId> connectionId;
 
     public:
 
         const static unsigned char ID_LOCALTRANSACTIONID = 111;
+
+        typedef decaf::lang::PointerComparator<LocalTransactionId> COMPARATOR;
 
     public:
 
@@ -98,9 +101,9 @@ namespace commands{
         virtual long long getValue() const;
         virtual void setValue( long long value );
 
-        virtual const ConnectionId* getConnectionId() const;
-        virtual ConnectionId* getConnectionId();
-        virtual void setConnectionId( ConnectionId* connectionId );
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
         virtual int compareTo( const LocalTransactionId& value ) const;
 

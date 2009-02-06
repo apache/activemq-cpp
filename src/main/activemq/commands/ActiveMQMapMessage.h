@@ -24,7 +24,7 @@
 #endif
 
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <cms/MapMessage.h>
@@ -35,11 +35,11 @@ namespace activemq{
 namespace commands{
 
     class AMQCPP_API ActiveMQMapMessage :
-        public ActiveMQMessageBase<cms::MapMessage> {
+        public ActiveMQMessageTemplate<cms::MapMessage> {
 
     private:
 
-        // Map Structure to hold unmarshalled Map Data
+        // Map Structure to hold unmarshaled Map Data
         mutable util::PrimitiveMap* map;
 
     public:
@@ -79,7 +79,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageBase<cms::MapMessage>::copyDataStructure( src );
+            ActiveMQMessageTemplate<cms::MapMessage>::copyDataStructure( src );
 
             const ActiveMQMapMessage* srcMap =
                 dynamic_cast< const ActiveMQMapMessage* >( src );
@@ -105,7 +105,7 @@ namespace commands{
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQMapMessage" << std::endl;
-            stream << ActiveMQMessageBase<cms::MapMessage>::toString();
+            stream << ActiveMQMessageTemplate<cms::MapMessage>::toString();
             stream << "End Class = ActiveMQMapMessage" << std::endl;
 
             return stream.str();
@@ -118,7 +118,7 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageBase<cms::MapMessage>::equals( value );
+            return ActiveMQMessageTemplate<cms::MapMessage>::equals( value );
         }
 
     public:   // CMS Message
@@ -129,8 +129,7 @@ namespace commands{
          * @return new copy of this message
          */
         virtual cms::MapMessage* clone() const {
-            return dynamic_cast<cms::MapMessage*>(
-                this->cloneDataStructure() );
+            return dynamic_cast<cms::MapMessage*>( this->cloneDataStructure() );
         }
 
     public:   // CMS MapMessage
@@ -202,7 +201,7 @@ namespace commands{
          */
         virtual void setBytes( const std::string& name,
                                const std::vector<unsigned char>& value )
-                                throw( cms::CMSException );
+                                   throw( cms::CMSException );
 
         /**
          * Returns the Char value of the Specified name

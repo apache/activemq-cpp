@@ -24,7 +24,7 @@
 #endif
 
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <decaf/io/ByteArrayInputStream.h>
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -32,12 +32,13 @@
 #include <cms/BytesMessage.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
 
     class AMQCPP_API ActiveMQBytesMessage :
-        public ActiveMQMessageBase< cms::BytesMessage > {
+        public ActiveMQMessageTemplate< cms::BytesMessage > {
 
     public:
 
@@ -56,9 +57,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQBytesMessage* cloneDataStructure() const {
-            ActiveMQBytesMessage* message = new ActiveMQBytesMessage();
+            std::auto_ptr<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**
@@ -67,7 +68,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageBase<cms::BytesMessage>::copyDataStructure( src );
+            ActiveMQMessageTemplate<cms::BytesMessage>::copyDataStructure( src );
             this->reset();
         }
 
@@ -80,7 +81,7 @@ namespace commands{
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQBytesMessage" << std::endl;
-            stream << ActiveMQMessageBase<cms::BytesMessage>::toString();
+            stream << ActiveMQMessageTemplate<cms::BytesMessage>::toString();
             stream << "End Class = ActiveMQBytesMessage" << std::endl;
 
             return stream.str();
@@ -93,7 +94,7 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageBase<cms::BytesMessage>::equals( value );
+            return ActiveMQMessageTemplate<cms::BytesMessage>::equals( value );
         }
 
     public:   // CMS Message
@@ -114,7 +115,7 @@ namespace commands{
         virtual void clearBody(){
 
             // Invoke base class's version.
-            ActiveMQMessageBase<cms::BytesMessage>::clearBody();
+            ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
 
             // Set the stream in write only mode.
             readOnly = false;
@@ -130,10 +131,8 @@ namespace commands{
          * @param Number of bytes in Buffer to copy
          * @throws CMSException
          */
-        virtual void setBodyBytes(
-            const unsigned char* buffer,
-            std::size_t numBytes )
-                throw( cms::CMSException );
+        virtual void setBodyBytes( const unsigned char* buffer,
+                                   std::size_t numBytes ) throw( cms::CMSException );
 
         /**
          * Gets the bytes that are contained in this message, user should
@@ -186,7 +185,6 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeByte( unsigned char value ) throw ( cms::CMSException );
-
 
         /**
          * Reads a byte array from the bytes message stream.

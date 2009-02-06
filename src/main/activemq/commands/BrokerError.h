@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/Pointer.h>
 
 #include <string>
 #include <vector>
@@ -43,6 +44,13 @@ namespace commands{
             int LineNumber;
         };
 
+    private:
+
+        std::string message;
+        std::string exceptionClass;
+        std::vector< decaf::lang::Pointer<StackTraceElement> > stackTraceElements;
+        decaf::lang::Pointer<BrokerError> cause;
+
     public:
 
         BrokerError() {}
@@ -57,11 +65,11 @@ namespace commands{
         }
 
         /**
-         * Clone this obbject and return a new instance that the
+         * Clone this object and return a new instance that the
          * caller now owns, this will be an exact copy of this one
          * @returns new copy of this object.
          */
-        virtual DataStructure* cloneDataStructure() const {
+        virtual BrokerError* cloneDataStructure() const {
 
             BrokerError* error = new BrokerError();
             error->copyDataStructure( this );
@@ -82,8 +90,8 @@ namespace commands{
          *
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
+        virtual decaf::lang::Pointer<commands::Command> visit(
+            activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException );
 
         /**
          * Gets the string holding the error message
@@ -121,7 +129,7 @@ namespace commands{
          * Gets the Broker Error that caused this exception
          * @returns Broker Error Pointer
          */
-        virtual BrokerError* getCause() const {
+        virtual const decaf::lang::Pointer<BrokerError>& getCause() const {
             return cause;
         }
 
@@ -129,15 +137,15 @@ namespace commands{
          * Sets the Broker Error that caused this exception
          * @param cause - Broker Error
          */
-        virtual void setCause( BrokerError* cause ) {
+        virtual void setCause( const decaf::lang::Pointer<BrokerError>& cause ) {
             this->cause = cause;
         }
 
         /**
-         * Gets the Stack Trace Elemtns for the Exception
+         * Gets the Stack Trace Elements for the Exception
          * @returns Stack Trace Elements
          */
-        virtual const std::vector<StackTraceElement*>& getStackTraceElements() const {
+        virtual const std::vector< decaf::lang::Pointer<StackTraceElement> >& getStackTraceElements() const {
             return stackTraceElements;
         }
 
@@ -145,16 +153,9 @@ namespace commands{
          * Sets the Stack Trace Elements for this Exception
          * @param stackTraceElements - Stack Trace Elements
          */
-        virtual void setStackTraceElements( const std::vector<StackTraceElement*>& stackTraceElements ) {
+        virtual void setStackTraceElements( const std::vector< decaf::lang::Pointer<StackTraceElement> >& stackTraceElements ) {
             this->stackTraceElements = stackTraceElements;
         }
-
-    private:
-
-        std::string message;
-        std::string exceptionClass;
-        std::vector<StackTraceElement*> stackTraceElements;
-        BrokerError* cause;
 
     };
 

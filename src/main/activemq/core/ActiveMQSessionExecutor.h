@@ -20,6 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/core/Dispatcher.h>
+#include <activemq/commands/ConsumerId.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -77,12 +78,11 @@ namespace core{
         virtual void executeFirst( DispatchData& data );
 
         /**
-         * Removes all messages for the given consumer from the queue and
-         * returns them.
-         * @param consumer the subject consmer
-         * @return all messages that were queued for the consumer.
+         * Removes all messages for the given consumer from the.
+         * @param consumerId - the subject consumer
          */
-        virtual std::vector<ActiveMQMessage*> purgeConsumerMessages( ActiveMQConsumer* consumer );
+        virtual void purgeConsumerMessages(
+            const decaf::lang::Pointer<commands::ConsumerId>& consumerId );
 
         /**
          * Starts the dispatching.
@@ -108,7 +108,7 @@ namespace core{
         }
 
         /**
-         * Removes all queued messgaes and destroys them.
+         * Removes all queued messages and destroys them.
          */
         virtual void clear();
 

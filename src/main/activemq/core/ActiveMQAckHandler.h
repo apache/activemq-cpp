@@ -19,11 +19,10 @@
 
 #include <cms/CMSException.h>
 #include <activemq/util/Config.h>
+#include <activemq/commands/Message.h>
 
 namespace activemq{
 namespace core{
-
-    class ActiveMQMessage;
 
     /**
      * Interface class that is used to give CMS Messages an interface to
@@ -39,8 +38,8 @@ namespace core{
          * @param message Message to Acknowledge
          * @throw CMSException
          */
-        virtual void acknowledgeMessage( const ActiveMQMessage* message )
-            throw ( cms::CMSException ) = 0;
+        virtual void acknowledgeMessage( const commands::Message* message )
+                throw ( cms::CMSException ) = 0;
 
     };
 

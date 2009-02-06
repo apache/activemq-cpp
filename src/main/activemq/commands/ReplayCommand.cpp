@@ -49,12 +49,12 @@ ReplayCommand::~ReplayCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ReplayCommand* ReplayCommand::cloneDataStructure() const {
-    ReplayCommand* replayCommand = new ReplayCommand();
+    std::auto_ptr<ReplayCommand> replayCommand( new ReplayCommand() );
 
     // Copy the data from the base class or classes
     replayCommand->copyDataStructure( this );
 
-    return replayCommand;
+    return replayCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ bool ReplayCommand::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ReplayCommand::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processReplayCommand( this );

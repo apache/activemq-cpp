@@ -18,14 +18,20 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQMESSAGE_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQMESSAGE_H_
 
+// Turn off warning message for ignored exception specification
+#ifdef _MSC_VER
+#pragma warning( disable : 4290 )
+#endif
+
+#include <cms/Message.h>
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/ActiveMQMessageTemplate.h>
 
 namespace activemq{
 namespace commands{
 
     class AMQCPP_API ActiveMQMessage :
-        public ActiveMQMessageBase<cms::Message> {
+        public ActiveMQMessageTemplate<cms::Message> {
 
     public:
 
@@ -44,7 +50,7 @@ namespace commands{
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageBase<cms::Message>::copyDataStructure( src );
+            ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
         }
 
         /**
@@ -67,7 +73,7 @@ namespace commands{
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQMessage" << std::endl;
-            stream << ActiveMQMessageBase<cms::Message>::toString();
+            stream << ActiveMQMessageTemplate<cms::Message>::toString();
             stream << "Begin Class = ActiveMQMessage" << std::endl;
 
             return stream.str();
@@ -80,7 +86,7 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageBase<cms::Message>::equals( value );
+            return ActiveMQMessageTemplate<cms::Message>::equals( value );
         }
 
     public:  // cms::Message
@@ -91,8 +97,7 @@ namespace commands{
          * @return new copy of this message
          */
         virtual cms::Message* clone() const {
-            return dynamic_cast<cms::Message*>(
-                this->cloneDataStructure() );
+            return dynamic_cast<cms::Message*>( this->cloneDataStructure() );
         }
 
     };

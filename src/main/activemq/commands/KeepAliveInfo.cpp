@@ -47,12 +47,12 @@ KeepAliveInfo::~KeepAliveInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 KeepAliveInfo* KeepAliveInfo::cloneDataStructure() const {
-    KeepAliveInfo* keepAliveInfo = new KeepAliveInfo();
+    std::auto_ptr<KeepAliveInfo> keepAliveInfo( new KeepAliveInfo() );
 
     // Copy the data from the base class or classes
     keepAliveInfo->copyDataStructure( this );
 
-    return keepAliveInfo;
+    return keepAliveInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processKeepAliveInfo( this );

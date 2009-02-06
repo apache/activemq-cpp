@@ -38,30 +38,24 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 JournalTopicAck::JournalTopicAck() {
 
-    this->destination = NULL;
-    this->messageId = NULL;
     this->messageSequenceId = 0;
     this->subscritionName = "";
     this->clientId = "";
-    this->transactionId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTopicAck::~JournalTopicAck() {
 
-    delete this->destination;
-    delete this->messageId;
-    delete this->transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTopicAck* JournalTopicAck::cloneDataStructure() const {
-    JournalTopicAck* journalTopicAck = new JournalTopicAck();
+    std::auto_ptr<JournalTopicAck> journalTopicAck( new JournalTopicAck() );
 
     // Copy the data from the base class or classes
     journalTopicAck->copyDataStructure( this );
 
-    return journalTopicAck;
+    return journalTopicAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,24 +76,12 @@ void JournalTopicAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "JournalTopicAck::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId(
-            dynamic_cast<MessageId*>(
-                srcPtr->getMessageId()->cloneDataStructure() ) );
-    }
+    this->setDestination( srcPtr->getDestination() );
+    this->setMessageId( srcPtr->getMessageId() );
     this->setMessageSequenceId( srcPtr->getMessageSequenceId() );
     this->setSubscritionName( srcPtr->getSubscritionName() );
     this->setClientId( srcPtr->getClientId() );
-    if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId(
-            dynamic_cast<TransactionId*>(
-                srcPtr->getTransactionId()->cloneDataStructure() ) );
-    }
+    this->setTransactionId( srcPtr->getTransactionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -154,14 +136,14 @@ bool JournalTopicAck::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
         return false;
     }
     if( this->getMessageId() != NULL ) {
-        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getMessageId() != NULL ) {
@@ -177,7 +159,7 @@ bool JournalTopicAck::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getTransactionId() != NULL ) {
@@ -190,32 +172,32 @@ bool JournalTopicAck::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* JournalTopicAck::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& JournalTopicAck::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* JournalTopicAck::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& JournalTopicAck::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setDestination( ActiveMQDestination* destination ) {
+void JournalTopicAck::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const MessageId* JournalTopicAck::getMessageId() const {
+const decaf::lang::Pointer<MessageId>& JournalTopicAck::getMessageId() const {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId* JournalTopicAck::getMessageId() {
+decaf::lang::Pointer<MessageId>& JournalTopicAck::getMessageId() {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setMessageId( MessageId* messageId ) {
+void JournalTopicAck::setMessageId( const decaf::lang::Pointer<MessageId>& messageId ) {
     this->messageId = messageId;
 }
 
@@ -260,17 +242,17 @@ void JournalTopicAck::setClientId( const std::string& clientId ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const TransactionId* JournalTopicAck::getTransactionId() const {
+const decaf::lang::Pointer<TransactionId>& JournalTopicAck::getTransactionId() const {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId* JournalTopicAck::getTransactionId() {
+decaf::lang::Pointer<TransactionId>& JournalTopicAck::getTransactionId() {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void JournalTopicAck::setTransactionId( TransactionId* transactionId ) {
+void JournalTopicAck::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
     this->transactionId = transactionId;
 }
 

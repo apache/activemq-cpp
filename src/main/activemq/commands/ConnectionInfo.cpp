@@ -38,7 +38,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo::ConnectionInfo() {
 
-    this->connectionId = NULL;
     this->clientId = "";
     this->password = "";
     this->userName = "";
@@ -50,20 +49,16 @@ ConnectionInfo::ConnectionInfo() {
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo::~ConnectionInfo() {
 
-    delete this->connectionId;
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        delete brokerPath[ibrokerPath];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo* ConnectionInfo::cloneDataStructure() const {
-    ConnectionInfo* connectionInfo = new ConnectionInfo();
+    std::auto_ptr<ConnectionInfo> connectionInfo( new ConnectionInfo() );
 
     // Copy the data from the base class or classes
     connectionInfo->copyDataStructure( this );
 
-    return connectionInfo;
+    return connectionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,23 +79,11 @@ void ConnectionInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionInfo::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId(
-            dynamic_cast<ConnectionId*>(
-                srcPtr->getConnectionId()->cloneDataStructure() ) );
-    }
+    this->setConnectionId( srcPtr->getConnectionId() );
     this->setClientId( srcPtr->getClientId() );
     this->setPassword( srcPtr->getPassword() );
     this->setUserName( srcPtr->getUserName() );
-    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back(
-                dynamic_cast<BrokerId*>(
-                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
-        } else {
-            this->getBrokerPath().push_back( NULL );
-        }
-    }
+    this->setBrokerPath( srcPtr->getBrokerPath() );
     this->setBrokerMasterConnector( srcPtr->isBrokerMasterConnector() );
     this->setManageable( srcPtr->isManageable() );
     this->setClientMaster( srcPtr->isClientMaster() );
@@ -157,7 +140,7 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConnectionId() != NULL ) {
@@ -174,7 +157,7 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
     }
     for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
         if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
@@ -197,24 +180,24 @@ bool ConnectionInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processConnectionInfo( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId* ConnectionInfo::getConnectionId() const {
+const decaf::lang::Pointer<ConnectionId>& ConnectionInfo::getConnectionId() const {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId* ConnectionInfo::getConnectionId() {
+decaf::lang::Pointer<ConnectionId>& ConnectionInfo::getConnectionId() {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionInfo::setConnectionId( ConnectionId* connectionId ) {
+void ConnectionInfo::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
     this->connectionId = connectionId;
 }
 
@@ -264,17 +247,17 @@ void ConnectionInfo::setUserName( const std::string& userName ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*>& ConnectionInfo::getBrokerPath() const {
+const std::vector< decaf::lang::Pointer<BrokerId> >& ConnectionInfo::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*>& ConnectionInfo::getBrokerPath() {
+std::vector< decaf::lang::Pointer<BrokerId> >& ConnectionInfo::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConnectionInfo::setBrokerPath( const std::vector<BrokerId*>& brokerPath ) {
+void ConnectionInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 

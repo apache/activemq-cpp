@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/Response.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/DataStructure.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API DataResponse : public Response {
     protected:
 
-        DataStructure* data;
+        decaf::lang::Pointer<DataStructure> data;
 
     protected:
 
@@ -97,9 +98,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const DataStructure* getData() const;
-        virtual DataStructure* getData();
-        virtual void setData( DataStructure* data );
+        virtual const decaf::lang::Pointer<DataStructure>& getData() const;
+        virtual decaf::lang::Pointer<DataStructure>& getData();
+        virtual void setData( const decaf::lang::Pointer<DataStructure>& data );
 
     };
 

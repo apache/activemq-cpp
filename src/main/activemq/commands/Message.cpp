@@ -38,23 +38,14 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 Message::Message() {
 
-    this->producerId = NULL;
-    this->destination = NULL;
-    this->transactionId = NULL;
-    this->originalDestination = NULL;
-    this->messageId = NULL;
-    this->originalTransactionId = NULL;
     this->groupID = "";
     this->groupSequence = 0;
     this->correlationId = "";
     this->persistent = false;
     this->expiration = 0;
     this->priority = 0;
-    this->replyTo = NULL;
     this->timestamp = 0;
     this->type = "";
-    this->dataStructure = NULL;
-    this->targetConsumerId = NULL;
     this->compressed = false;
     this->redeliveryCounter = 0;
     this->arrival = 0;
@@ -68,31 +59,16 @@ Message::Message() {
 ////////////////////////////////////////////////////////////////////////////////
 Message::~Message() {
 
-    delete this->producerId;
-    delete this->destination;
-    delete this->transactionId;
-    delete this->originalDestination;
-    delete this->messageId;
-    delete this->originalTransactionId;
-    delete this->replyTo;
-    delete this->dataStructure;
-    delete this->targetConsumerId;
-    for( size_t ibrokerPath = 0; ibrokerPath < brokerPath.size(); ++ibrokerPath ) {
-        delete brokerPath[ibrokerPath];
-    }
-    for( size_t icluster = 0; icluster < cluster.size(); ++icluster ) {
-        delete cluster[icluster];
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Message* Message::cloneDataStructure() const {
-    Message* message = new Message();
+    std::auto_ptr<Message> message( new Message() );
 
     // Copy the data from the base class or classes
     message->copyDataStructure( this );
 
-    return message;
+    return message.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,85 +89,33 @@ void Message::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "Message::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId(
-            dynamic_cast<ProducerId*>(
-                srcPtr->getProducerId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getTransactionId() != NULL ) {
-        this->setTransactionId(
-            dynamic_cast<TransactionId*>(
-                srcPtr->getTransactionId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getOriginalDestination() != NULL ) {
-        this->setOriginalDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getOriginalDestination()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getMessageId() != NULL ) {
-        this->setMessageId(
-            dynamic_cast<MessageId*>(
-                srcPtr->getMessageId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getOriginalTransactionId() != NULL ) {
-        this->setOriginalTransactionId(
-            dynamic_cast<TransactionId*>(
-                srcPtr->getOriginalTransactionId()->cloneDataStructure() ) );
-    }
+    this->setProducerId( srcPtr->getProducerId() );
+    this->setDestination( srcPtr->getDestination() );
+    this->setTransactionId( srcPtr->getTransactionId() );
+    this->setOriginalDestination( srcPtr->getOriginalDestination() );
+    this->setMessageId( srcPtr->getMessageId() );
+    this->setOriginalTransactionId( srcPtr->getOriginalTransactionId() );
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );
     this->setCorrelationId( srcPtr->getCorrelationId() );
     this->setPersistent( srcPtr->isPersistent() );
     this->setExpiration( srcPtr->getExpiration() );
     this->setPriority( srcPtr->getPriority() );
-    if( srcPtr->getReplyTo() != NULL ) {
-        this->setReplyTo(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getReplyTo()->cloneDataStructure() ) );
-    }
+    this->setReplyTo( srcPtr->getReplyTo() );
     this->setTimestamp( srcPtr->getTimestamp() );
     this->setType( srcPtr->getType() );
     this->setContent( srcPtr->getContent() );
     this->setMarshalledProperties( srcPtr->getMarshalledProperties() );
-    if( srcPtr->getDataStructure() != NULL ) {
-        this->setDataStructure(
-            dynamic_cast<DataStructure*>(
-                srcPtr->getDataStructure()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getTargetConsumerId() != NULL ) {
-        this->setTargetConsumerId(
-            dynamic_cast<ConsumerId*>(
-                srcPtr->getTargetConsumerId()->cloneDataStructure() ) );
-    }
+    this->setDataStructure( srcPtr->getDataStructure() );
+    this->setTargetConsumerId( srcPtr->getTargetConsumerId() );
     this->setCompressed( srcPtr->isCompressed() );
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
-    for( size_t ibrokerPath = 0; ibrokerPath < srcPtr->getBrokerPath().size(); ++ibrokerPath ) {
-        if( srcPtr->getBrokerPath()[ibrokerPath] != NULL ) {
-            this->getBrokerPath().push_back(
-                dynamic_cast<BrokerId*>(
-                    srcPtr->getBrokerPath()[ibrokerPath]->cloneDataStructure() ) );
-        } else {
-            this->getBrokerPath().push_back( NULL );
-        }
-    }
+    this->setBrokerPath( srcPtr->getBrokerPath() );
     this->setArrival( srcPtr->getArrival() );
     this->setUserID( srcPtr->getUserID() );
     this->setRecievedByDFBridge( srcPtr->isRecievedByDFBridge() );
     this->setDroppable( srcPtr->isDroppable() );
-    for( size_t icluster = 0; icluster < srcPtr->getCluster().size(); ++icluster ) {
-        if( srcPtr->getCluster()[icluster] != NULL ) {
-            this->getCluster().push_back(
-                dynamic_cast<BrokerId*>(
-                    srcPtr->getCluster()[icluster]->cloneDataStructure() ) );
-        } else {
-            this->getCluster().push_back( NULL );
-        }
-    }
+    this->setCluster( srcPtr->getCluster() );
     this->setBrokerInTime( srcPtr->getBrokerInTime() );
     this->setBrokerOutTime( srcPtr->getBrokerOutTime() );
 }
@@ -319,42 +243,42 @@ bool Message::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getProducerId() != NULL ) {
-        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getProducerId() != NULL ) {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
         return false;
     }
     if( this->getTransactionId() != NULL ) {
-        if( !this->getTransactionId()->equals( valuePtr->getTransactionId() ) ) {
+        if( !this->getTransactionId()->equals( valuePtr->getTransactionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getTransactionId() != NULL ) {
         return false;
     }
     if( this->getOriginalDestination() != NULL ) {
-        if( !this->getOriginalDestination()->equals( valuePtr->getOriginalDestination() ) ) {
+        if( !this->getOriginalDestination()->equals( valuePtr->getOriginalDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getOriginalDestination() != NULL ) {
         return false;
     }
     if( this->getMessageId() != NULL ) {
-        if( !this->getMessageId()->equals( valuePtr->getMessageId() ) ) {
+        if( !this->getMessageId()->equals( valuePtr->getMessageId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getMessageId() != NULL ) {
         return false;
     }
     if( this->getOriginalTransactionId() != NULL ) {
-        if( !this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId() ) ) {
+        if( !this->getOriginalTransactionId()->equals( valuePtr->getOriginalTransactionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getOriginalTransactionId() != NULL ) {
@@ -379,7 +303,7 @@ bool Message::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getReplyTo() != NULL ) {
-        if( !this->getReplyTo()->equals( valuePtr->getReplyTo() ) ) {
+        if( !this->getReplyTo()->equals( valuePtr->getReplyTo().get() ) ) {
             return false;
         }
     } else if( valuePtr->getReplyTo() != NULL ) {
@@ -402,14 +326,14 @@ bool Message::equals( const DataStructure* value ) const {
         }
     }
     if( this->getDataStructure() != NULL ) {
-        if( !this->getDataStructure()->equals( valuePtr->getDataStructure() ) ) {
+        if( !this->getDataStructure()->equals( valuePtr->getDataStructure().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDataStructure() != NULL ) {
         return false;
     }
     if( this->getTargetConsumerId() != NULL ) {
-        if( !this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId() ) ) {
+        if( !this->getTargetConsumerId()->equals( valuePtr->getTargetConsumerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getTargetConsumerId() != NULL ) {
@@ -423,7 +347,7 @@ bool Message::equals( const DataStructure* value ) const {
     }
     for( size_t ibrokerPath = 0; ibrokerPath < this->getBrokerPath().size(); ++ibrokerPath ) {
         if( this->getBrokerPath()[ibrokerPath] != NULL ) {
-            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath] ) ) {
+            if( !this->getBrokerPath()[ibrokerPath]->equals( valuePtr->getBrokerPath()[ibrokerPath].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getBrokerPath()[ibrokerPath] != NULL ) {
@@ -444,7 +368,7 @@ bool Message::equals( const DataStructure* value ) const {
     }
     for( size_t icluster = 0; icluster < this->getCluster().size(); ++icluster ) {
         if( this->getCluster()[icluster] != NULL ) {
-            if( !this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster] ) ) {
+            if( !this->getCluster()[icluster]->equals( valuePtr->getCluster()[icluster].get() ) ) {
                 return false;
             }
         } else if( valuePtr->getCluster()[icluster] != NULL ) {
@@ -475,99 +399,99 @@ unsigned int Message::getSize() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* Message::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processMessage( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ProducerId* Message::getProducerId() const {
+const decaf::lang::Pointer<ProducerId>& Message::getProducerId() const {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId* Message::getProducerId() {
+decaf::lang::Pointer<ProducerId>& Message::getProducerId() {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setProducerId( ProducerId* producerId ) {
+void Message::setProducerId( const decaf::lang::Pointer<ProducerId>& producerId ) {
     this->producerId = producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* Message::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& Message::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* Message::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& Message::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setDestination( ActiveMQDestination* destination ) {
+void Message::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const TransactionId* Message::getTransactionId() const {
+const decaf::lang::Pointer<TransactionId>& Message::getTransactionId() const {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId* Message::getTransactionId() {
+decaf::lang::Pointer<TransactionId>& Message::getTransactionId() {
     return transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setTransactionId( TransactionId* transactionId ) {
+void Message::setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId ) {
     this->transactionId = transactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* Message::getOriginalDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& Message::getOriginalDestination() const {
     return originalDestination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* Message::getOriginalDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& Message::getOriginalDestination() {
     return originalDestination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setOriginalDestination( ActiveMQDestination* originalDestination ) {
+void Message::setOriginalDestination( const decaf::lang::Pointer<ActiveMQDestination>& originalDestination ) {
     this->originalDestination = originalDestination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const MessageId* Message::getMessageId() const {
+const decaf::lang::Pointer<MessageId>& Message::getMessageId() const {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MessageId* Message::getMessageId() {
+decaf::lang::Pointer<MessageId>& Message::getMessageId() {
     return messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setMessageId( MessageId* messageId ) {
+void Message::setMessageId( const decaf::lang::Pointer<MessageId>& messageId ) {
     this->messageId = messageId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const TransactionId* Message::getOriginalTransactionId() const {
+const decaf::lang::Pointer<TransactionId>& Message::getOriginalTransactionId() const {
     return originalTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionId* Message::getOriginalTransactionId() {
+decaf::lang::Pointer<TransactionId>& Message::getOriginalTransactionId() {
     return originalTransactionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setOriginalTransactionId( TransactionId* originalTransactionId ) {
+void Message::setOriginalTransactionId( const decaf::lang::Pointer<TransactionId>& originalTransactionId ) {
     this->originalTransactionId = originalTransactionId;
 }
 
@@ -642,17 +566,17 @@ void Message::setPriority( unsigned char priority ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* Message::getReplyTo() const {
+const decaf::lang::Pointer<ActiveMQDestination>& Message::getReplyTo() const {
     return replyTo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* Message::getReplyTo() {
+decaf::lang::Pointer<ActiveMQDestination>& Message::getReplyTo() {
     return replyTo;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setReplyTo( ActiveMQDestination* replyTo ) {
+void Message::setReplyTo( const decaf::lang::Pointer<ActiveMQDestination>& replyTo ) {
     this->replyTo = replyTo;
 }
 
@@ -712,32 +636,32 @@ void Message::setMarshalledProperties( const std::vector<unsigned char>& marshal
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const DataStructure* Message::getDataStructure() const {
+const decaf::lang::Pointer<DataStructure>& Message::getDataStructure() const {
     return dataStructure;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-DataStructure* Message::getDataStructure() {
+decaf::lang::Pointer<DataStructure>& Message::getDataStructure() {
     return dataStructure;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setDataStructure( DataStructure* dataStructure ) {
+void Message::setDataStructure( const decaf::lang::Pointer<DataStructure>& dataStructure ) {
     this->dataStructure = dataStructure;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConsumerId* Message::getTargetConsumerId() const {
+const decaf::lang::Pointer<ConsumerId>& Message::getTargetConsumerId() const {
     return targetConsumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId* Message::getTargetConsumerId() {
+decaf::lang::Pointer<ConsumerId>& Message::getTargetConsumerId() {
     return targetConsumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setTargetConsumerId( ConsumerId* targetConsumerId ) {
+void Message::setTargetConsumerId( const decaf::lang::Pointer<ConsumerId>& targetConsumerId ) {
     this->targetConsumerId = targetConsumerId;
 }
 
@@ -762,17 +686,17 @@ void Message::setRedeliveryCounter( int redeliveryCounter ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*>& Message::getBrokerPath() const {
+const std::vector< decaf::lang::Pointer<BrokerId> >& Message::getBrokerPath() const {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*>& Message::getBrokerPath() {
+std::vector< decaf::lang::Pointer<BrokerId> >& Message::getBrokerPath() {
     return brokerPath;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setBrokerPath( const std::vector<BrokerId*>& brokerPath ) {
+void Message::setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath ) {
     this->brokerPath = brokerPath;
 }
 
@@ -822,17 +746,17 @@ void Message::setDroppable( bool droppable ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const std::vector<BrokerId*>& Message::getCluster() const {
+const std::vector< decaf::lang::Pointer<BrokerId> >& Message::getCluster() const {
     return cluster;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<BrokerId*>& Message::getCluster() {
+std::vector< decaf::lang::Pointer<BrokerId> >& Message::getCluster() {
     return cluster;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Message::setCluster( const std::vector<BrokerId*>& cluster ) {
+void Message::setCluster( const std::vector< decaf::lang::Pointer<BrokerId> >& cluster ) {
     this->cluster = cluster;
 }
 

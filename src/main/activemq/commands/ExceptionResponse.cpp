@@ -38,23 +38,21 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ExceptionResponse::ExceptionResponse() {
 
-    this->exception = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ExceptionResponse::~ExceptionResponse() {
 
-    delete this->exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ExceptionResponse* ExceptionResponse::cloneDataStructure() const {
-    ExceptionResponse* exceptionResponse = new ExceptionResponse();
+    std::auto_ptr<ExceptionResponse> exceptionResponse( new ExceptionResponse() );
 
     // Copy the data from the base class or classes
     exceptionResponse->copyDataStructure( this );
 
-    return exceptionResponse;
+    return exceptionResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +73,7 @@ void ExceptionResponse::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ExceptionResponse::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getException() != NULL ) {
-        this->setException(
-            dynamic_cast<BrokerError*>(
-                srcPtr->getException()->cloneDataStructure() ) );
-    }
+    this->setException( srcPtr->getException() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +113,7 @@ bool ExceptionResponse::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getException() != NULL ) {
-        if( !this->getException()->equals( valuePtr->getException() ) ) {
+        if( !this->getException()->equals( valuePtr->getException().get() ) ) {
             return false;
         }
     } else if( valuePtr->getException() != NULL ) {
@@ -132,17 +126,17 @@ bool ExceptionResponse::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const BrokerError* ExceptionResponse::getException() const {
+const decaf::lang::Pointer<BrokerError>& ExceptionResponse::getException() const {
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-BrokerError* ExceptionResponse::getException() {
+decaf::lang::Pointer<BrokerError>& ExceptionResponse::getException() {
     return exception;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ExceptionResponse::setException( BrokerError* exception ) {
+void ExceptionResponse::setException( const decaf::lang::Pointer<BrokerError>& exception ) {
     this->exception = exception;
 }
 

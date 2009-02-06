@@ -31,7 +31,7 @@ using namespace activemq::wireformat::openwire::marshal;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQMapMessage::ActiveMQMapMessage() :
-    ActiveMQMessageBase<cms::MapMessage>() {
+    ActiveMQMessageTemplate<cms::MapMessage>() {
     this->map = NULL;
 }
 
@@ -52,7 +52,7 @@ void ActiveMQMapMessage::beforeMarshal( WireFormat* wireFormat )
     try{
 
         // Let the base class do its thing.
-        ActiveMQMessageBase<cms::MapMessage>::beforeMarshal( wireFormat );
+        ActiveMQMessageTemplate<cms::MapMessage>::beforeMarshal( wireFormat );
 
         if( map != NULL && !map->isEmpty() ) {
             // Marshal as Content.

@@ -50,8 +50,17 @@ namespace core{
     class ActiveMQConsumer;
     class ActiveMQSessionExecutor;
 
-    class AMQCPP_API ActiveMQSession : public cms::Session,
-                                       public Dispatcher {
+    class AMQCPP_API ActiveMQSession : public cms::Session, public Dispatcher {
+    private:
+
+        typedef decaf::util::Map< decaf::lang::Pointer<commands::ConsumerId>,
+                                  ActiveMQConsumer*,
+                                  commands::ConsumerId::COMPARATOR> ConsumersMap;
+
+        typedef decaf::util::Map< decaf::lang::Pointer<commands::ProducerId>,
+                                  ActiveMQProducer*,
+                                  commands::ProducerId::COMPARATOR> ProducersMap;
+
     private:
 
         /**
@@ -77,12 +86,12 @@ namespace core{
         /**
          * Map of consumers.
          */
-        decaf::util::Map< commands::ConsumerId, ActiveMQConsumer*> consumers;
+        ConsumersMap consumers;
 
         /**
          * Map of producers.
          */
-        decaf::util::Map< commands::ProducerId, ActiveMQProducer*> producers;
+        ProducersMap producers;
 
         /**
          * Sends incoming messages to the registered consumers.
@@ -103,9 +112,11 @@ namespace core{
 
         virtual ~ActiveMQSession();
 
-        decaf::util::Map< commands::ConsumerId, ActiveMQConsumer*>& getConsumers() {
-            return consumers;
-        }
+        /**
+         * Looks up a consumer of this Session by a Pointer to its Id.
+         * @param id - a Pointer to a ConsumerId to match in the Map of Consumers.
+         */
+        ActiveMQConsumer* getConsumer( const decaf::lang::Pointer<commands::ConsumerId>& id );
 
         /**
          * Redispatches the given set of unconsumed messages to the consumers.
@@ -425,7 +436,7 @@ namespace core{
          * and clean up any resources associated with it.
          * @param consumerId - the Id of the Consumer to dispose.
          */
-        void disposeOf( commands::ConsumerId* id )
+        void disposeOf( decaf::lang::Pointer<commands::ConsumerId> id )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -433,7 +444,7 @@ namespace core{
          * and clean up any resources associated with it.
          * @param consumerId - the Id of the Producer to dispose.
          */
-        void disposeOf( commands::ProducerId* id )
+        void disposeOf( decaf::lang::Pointer<commands::ProducerId> id )
             throw ( activemq::exceptions::ActiveMQException );
 
    private:

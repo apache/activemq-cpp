@@ -38,24 +38,22 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck::ProducerAck() {
 
-    this->producerId = NULL;
     this->size = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck::~ProducerAck() {
 
-    delete this->producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck* ProducerAck::cloneDataStructure() const {
-    ProducerAck* producerAck = new ProducerAck();
+    std::auto_ptr<ProducerAck> producerAck( new ProducerAck() );
 
     // Copy the data from the base class or classes
     producerAck->copyDataStructure( this );
 
-    return producerAck;
+    return producerAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,11 +74,7 @@ void ProducerAck::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ProducerAck::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId(
-            dynamic_cast<ProducerId*>(
-                srcPtr->getProducerId()->cloneDataStructure() ) );
-    }
+    this->setProducerId( srcPtr->getProducerId() );
     this->setSize( srcPtr->getSize() );
 }
 
@@ -122,7 +116,7 @@ bool ProducerAck::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getProducerId() != NULL ) {
-        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getProducerId() != NULL ) {
@@ -138,24 +132,24 @@ bool ProducerAck::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processProducerAck( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ProducerId* ProducerAck::getProducerId() const {
+const decaf::lang::Pointer<ProducerId>& ProducerAck::getProducerId() const {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId* ProducerAck::getProducerId() {
+decaf::lang::Pointer<ProducerId>& ProducerAck::getProducerId() {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ProducerAck::setProducerId( ProducerId* producerId ) {
+void ProducerAck::setProducerId( const decaf::lang::Pointer<ProducerId>& producerId ) {
     this->producerId = producerId;
 }
 

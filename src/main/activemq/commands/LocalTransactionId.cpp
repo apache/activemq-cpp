@@ -40,7 +40,6 @@ using namespace decaf::lang::exceptions;
 LocalTransactionId::LocalTransactionId() {
 
     this->value = 0;
-    this->connectionId = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,17 +50,16 @@ LocalTransactionId::LocalTransactionId( const LocalTransactionId& other ) {
 ////////////////////////////////////////////////////////////////////////////////
 LocalTransactionId::~LocalTransactionId() {
 
-    delete this->connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 LocalTransactionId* LocalTransactionId::cloneDataStructure() const {
-    LocalTransactionId* localTransactionId = new LocalTransactionId();
+    std::auto_ptr<LocalTransactionId> localTransactionId( new LocalTransactionId() );
 
     // Copy the data from the base class or classes
     localTransactionId->copyDataStructure( this );
 
-    return localTransactionId;
+    return localTransactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,11 +81,7 @@ void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
             "LocalTransactionId::copyDataStructure - src is NULL or invalid" );
     }
     this->setValue( srcPtr->getValue() );
-    if( srcPtr->getConnectionId() != NULL ) {
-        this->setConnectionId(
-            dynamic_cast<ConnectionId*>(
-                srcPtr->getConnectionId()->cloneDataStructure() ) );
-    }
+    this->setConnectionId( srcPtr->getConnectionId() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +125,7 @@ bool LocalTransactionId::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConnectionId() != NULL ) {
-        if( !this->getConnectionId()->equals( valuePtr->getConnectionId() ) ) {
+        if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConnectionId() != NULL ) {
@@ -154,17 +148,17 @@ void LocalTransactionId::setValue( long long value ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConnectionId* LocalTransactionId::getConnectionId() const {
+const decaf::lang::Pointer<ConnectionId>& LocalTransactionId::getConnectionId() const {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionId* LocalTransactionId::getConnectionId() {
+decaf::lang::Pointer<ConnectionId>& LocalTransactionId::getConnectionId() {
     return connectionId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void LocalTransactionId::setConnectionId( ConnectionId* connectionId ) {
+void LocalTransactionId::setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId ) {
     this->connectionId = connectionId;
 }
 

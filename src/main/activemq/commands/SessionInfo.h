@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/SessionId.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API SessionInfo : public BaseCommand {
     protected:
 
-        SessionId* sessionId;
+        decaf::lang::Pointer<SessionId> sessionId;
 
     protected:
 
@@ -104,12 +105,12 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const SessionId* getSessionId() const;
-        virtual SessionId* getSessionId();
-        virtual void setSessionId( SessionId* sessionId );
+        virtual const decaf::lang::Pointer<SessionId>& getSessionId() const;
+        virtual decaf::lang::Pointer<SessionId>& getSessionId();
+        virtual void setSessionId( const decaf::lang::Pointer<SessionId>& sessionId );
 
     };
 

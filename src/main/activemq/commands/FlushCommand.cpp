@@ -47,12 +47,12 @@ FlushCommand::~FlushCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 FlushCommand* FlushCommand::cloneDataStructure() const {
-    FlushCommand* flushCommand = new FlushCommand();
+    std::auto_ptr<FlushCommand> flushCommand( new FlushCommand() );
 
     // Copy the data from the base class or classes
     flushCommand->copyDataStructure( this );
 
-    return flushCommand;
+    return flushCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ bool FlushCommand::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* FlushCommand::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> FlushCommand::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processFlushCommand( this );

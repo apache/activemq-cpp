@@ -48,12 +48,12 @@ IntegerResponse::~IntegerResponse() {
 
 ////////////////////////////////////////////////////////////////////////////////
 IntegerResponse* IntegerResponse::cloneDataStructure() const {
-    IntegerResponse* integerResponse = new IntegerResponse();
+    std::auto_ptr<IntegerResponse> integerResponse( new IntegerResponse() );
 
     // Copy the data from the base class or classes
     integerResponse->copyDataStructure( this );
 
-    return integerResponse;
+    return integerResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

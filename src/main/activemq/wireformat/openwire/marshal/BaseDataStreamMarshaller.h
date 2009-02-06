@@ -513,7 +513,7 @@ namespace marshal{
          */
         template<typename T>
         int tightMarshalObjectArray1( OpenWireFormat* wireFormat,
-                                      std::vector<T*> objects,
+                                      std::vector<T> objects,
                                       utils::BooleanStream* bs )
                                         throw ( decaf::io::IOException )
         {
@@ -525,7 +525,7 @@ namespace marshal{
                     rc += 2;
                     for( std::size_t i = 0; i < objects.size(); ++i ) {
                         rc += tightMarshalNestedObject1(
-                                wireFormat, objects[i], bs );
+                                wireFormat, objects[i].get(), bs );
                     }
                     return rc;
 
@@ -551,7 +551,7 @@ namespace marshal{
          */
         template<typename T>
         void tightMarshalObjectArray2( OpenWireFormat* wireFormat,
-                                       std::vector<T*> objects,
+                                       std::vector<T> objects,
                                        decaf::io::DataOutputStream* dataOut,
                                        utils::BooleanStream* bs )
                                         throw ( decaf::io::IOException ) {
@@ -563,7 +563,7 @@ namespace marshal{
                     dataOut->writeShort( (short)objects.size() );
                     for( std::size_t i = 0; i < objects.size(); ++i ) {
                         tightMarshalNestedObject2(
-                            wireFormat, objects[i], dataOut, bs );
+                            wireFormat, objects[i].get(), dataOut, bs );
                     }
                 }
             }
@@ -583,7 +583,7 @@ namespace marshal{
          */
         template<typename T>
         void looseMarshalObjectArray( OpenWireFormat* wireFormat,
-                                      std::vector<T*> objects,
+                                      std::vector<T> objects,
                                       decaf::io::DataOutputStream* dataOut )
                                         throw ( decaf::io::IOException ) {
 
@@ -595,7 +595,7 @@ namespace marshal{
                     dataOut->writeShort( (short)objects.size() );
                     for( std::size_t i = 0; i < objects.size(); ++i ) {
                         looseMarshalNestedObject(
-                            wireFormat, objects[i], dataOut );
+                            wireFormat, objects[i].get(), dataOut );
                     }
                 }
             }

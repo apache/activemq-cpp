@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/Message.h>
@@ -47,9 +48,9 @@ namespace commands{
     class AMQCPP_API MessageDispatch : public BaseCommand {
     protected:
 
-        ConsumerId* consumerId;
-        ActiveMQDestination* destination;
-        Message* message;
+        decaf::lang::Pointer<ConsumerId> consumerId;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
+        decaf::lang::Pointer<Message> message;
         int redeliveryCounter;
 
     protected:
@@ -109,20 +110,20 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConsumerId* getConsumerId() const;
-        virtual ConsumerId* getConsumerId();
-        virtual void setConsumerId( ConsumerId* consumerId );
+        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
+        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
-        virtual const Message* getMessage() const;
-        virtual Message* getMessage();
-        virtual void setMessage( Message* message );
+        virtual const decaf::lang::Pointer<Message>& getMessage() const;
+        virtual decaf::lang::Pointer<Message>& getMessage();
+        virtual void setMessage( const decaf::lang::Pointer<Message>& message );
 
         virtual int getRedeliveryCounter() const;
         virtual void setRedeliveryCounter( int redeliveryCounter );

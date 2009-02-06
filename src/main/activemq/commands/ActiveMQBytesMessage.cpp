@@ -24,7 +24,7 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQBytesMessage::ActiveMQBytesMessage() :
-    ActiveMQMessageBase< cms::BytesMessage >(),
+    ActiveMQMessageTemplate< cms::BytesMessage >(),
     dataInputStream( &inputStream ),
     dataOutputStream( &outputStream ) {
 
@@ -53,7 +53,7 @@ void ActiveMQBytesMessage::setBodyBytes( const unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const unsigned char* ActiveMQBytesMessage::getBodyBytes(void) const {
+const unsigned char* ActiveMQBytesMessage::getBodyBytes() const {
 
     try{
 
@@ -69,7 +69,7 @@ const unsigned char* ActiveMQBytesMessage::getBodyBytes(void) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::size_t ActiveMQBytesMessage::getBodyLength(void) const {
+std::size_t ActiveMQBytesMessage::getBodyLength() const {
 
     try{
         return getContent().size();
@@ -179,8 +179,8 @@ std::size_t ActiveMQBytesMessage::readBytes( unsigned char*& buffer, std::size_t
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQBytesMessage::writeBytes( const unsigned char* value,
-                         std::size_t offset,
-                         std::size_t length ) throw ( cms::CMSException ) {
+                                       std::size_t offset,
+                                       std::size_t length ) throw ( cms::CMSException ) {
 
     try{
         checkWriteOnly();

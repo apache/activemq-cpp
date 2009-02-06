@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConsumerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/MessageId.h>
@@ -47,10 +48,10 @@ namespace commands{
     class AMQCPP_API MessageDispatchNotification : public BaseCommand {
     protected:
 
-        ConsumerId* consumerId;
-        ActiveMQDestination* destination;
+        decaf::lang::Pointer<ConsumerId> consumerId;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
         long long deliverySequenceId;
-        MessageId* messageId;
+        decaf::lang::Pointer<MessageId> messageId;
 
     protected:
 
@@ -109,23 +110,23 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ConsumerId* getConsumerId() const;
-        virtual ConsumerId* getConsumerId();
-        virtual void setConsumerId( ConsumerId* consumerId );
+        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
+        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
         virtual long long getDeliverySequenceId() const;
         virtual void setDeliverySequenceId( long long deliverySequenceId );
 
-        virtual const MessageId* getMessageId() const;
-        virtual MessageId* getMessageId();
-        virtual void setMessageId( MessageId* messageId );
+        virtual const decaf::lang::Pointer<MessageId>& getMessageId() const;
+        virtual decaf::lang::Pointer<MessageId>& getMessageId();
+        virtual void setMessageId( const decaf::lang::Pointer<MessageId>& messageId );
 
     };
 

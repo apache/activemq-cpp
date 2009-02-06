@@ -56,12 +56,12 @@ ConsumerId::~ConsumerId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerId* ConsumerId::cloneDataStructure() const {
-    ConsumerId* consumerId = new ConsumerId();
+    std::auto_ptr<ConsumerId> consumerId( new ConsumerId() );
 
     // Copy the data from the base class or classes
     consumerId->copyDataStructure( this );
 
-    return consumerId;
+    return consumerId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

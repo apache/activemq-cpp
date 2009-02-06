@@ -48,12 +48,12 @@ ControlCommand::~ControlCommand() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ControlCommand* ControlCommand::cloneDataStructure() const {
-    ControlCommand* controlCommand = new ControlCommand();
+    std::auto_ptr<ControlCommand> controlCommand( new ControlCommand() );
 
     // Copy the data from the base class or classes
     controlCommand->copyDataStructure( this );
 
-    return controlCommand;
+    return controlCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ bool ControlCommand::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ControlCommand::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ControlCommand::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processControlCommand( this );

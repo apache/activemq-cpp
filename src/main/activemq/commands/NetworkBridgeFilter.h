@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
 #include <vector>
 #include <string>
@@ -46,7 +47,7 @@ namespace commands{
     protected:
 
         int networkTTL;
-        BrokerId* networkBrokerId;
+        decaf::lang::Pointer<BrokerId> networkBrokerId;
 
     protected:
 
@@ -101,9 +102,9 @@ namespace commands{
         virtual int getNetworkTTL() const;
         virtual void setNetworkTTL( int networkTTL );
 
-        virtual const BrokerId* getNetworkBrokerId() const;
-        virtual BrokerId* getNetworkBrokerId();
-        virtual void setNetworkBrokerId( BrokerId* networkBrokerId );
+        virtual const decaf::lang::Pointer<BrokerId>& getNetworkBrokerId() const;
+        virtual decaf::lang::Pointer<BrokerId>& getNetworkBrokerId();
+        virtual void setNetworkBrokerId( const decaf::lang::Pointer<BrokerId>& networkBrokerId );
 
     };
 

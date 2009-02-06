@@ -38,28 +38,22 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 MessageDispatch::MessageDispatch() {
 
-    this->consumerId = NULL;
-    this->destination = NULL;
-    this->message = NULL;
     this->redeliveryCounter = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageDispatch::~MessageDispatch() {
 
-    delete this->consumerId;
-    delete this->destination;
-    delete this->message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageDispatch* MessageDispatch::cloneDataStructure() const {
-    MessageDispatch* messageDispatch = new MessageDispatch();
+    std::auto_ptr<MessageDispatch> messageDispatch( new MessageDispatch() );
 
     // Copy the data from the base class or classes
     messageDispatch->copyDataStructure( this );
 
-    return messageDispatch;
+    return messageDispatch.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,21 +74,9 @@ void MessageDispatch::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessageDispatch::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId(
-            dynamic_cast<ConsumerId*>(
-                srcPtr->getConsumerId()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getDestination() != NULL ) {
-        this->setDestination(
-            dynamic_cast<ActiveMQDestination*>(
-                srcPtr->getDestination()->cloneDataStructure() ) );
-    }
-    if( srcPtr->getMessage() != NULL ) {
-        this->setMessage(
-            dynamic_cast<Message*>(
-                srcPtr->getMessage()->cloneDataStructure() ) );
-    }
+    this->setConsumerId( srcPtr->getConsumerId() );
+    this->setDestination( srcPtr->getDestination() );
+    this->setMessage( srcPtr->getMessage() );
     this->setRedeliveryCounter( srcPtr->getRedeliveryCounter() );
 }
 
@@ -148,21 +130,21 @@ bool MessageDispatch::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConsumerId() != NULL ) {
         return false;
     }
     if( this->getDestination() != NULL ) {
-        if( !this->getDestination()->equals( valuePtr->getDestination() ) ) {
+        if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;
         }
     } else if( valuePtr->getDestination() != NULL ) {
         return false;
     }
     if( this->getMessage() != NULL ) {
-        if( !this->getMessage()->equals( valuePtr->getMessage() ) ) {
+        if( !this->getMessage()->equals( valuePtr->getMessage().get() ) ) {
             return false;
         }
     } else if( valuePtr->getMessage() != NULL ) {
@@ -178,54 +160,54 @@ bool MessageDispatch::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* MessageDispatch::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> MessageDispatch::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processMessageDispatch( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConsumerId* MessageDispatch::getConsumerId() const {
+const decaf::lang::Pointer<ConsumerId>& MessageDispatch::getConsumerId() const {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId* MessageDispatch::getConsumerId() {
+decaf::lang::Pointer<ConsumerId>& MessageDispatch::getConsumerId() {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatch::setConsumerId( ConsumerId* consumerId ) {
+void MessageDispatch::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
     this->consumerId = consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ActiveMQDestination* MessageDispatch::getDestination() const {
+const decaf::lang::Pointer<ActiveMQDestination>& MessageDispatch::getDestination() const {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQDestination* MessageDispatch::getDestination() {
+decaf::lang::Pointer<ActiveMQDestination>& MessageDispatch::getDestination() {
     return destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatch::setDestination( ActiveMQDestination* destination ) {
+void MessageDispatch::setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination ) {
     this->destination = destination;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const Message* MessageDispatch::getMessage() const {
+const decaf::lang::Pointer<Message>& MessageDispatch::getMessage() const {
     return message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Message* MessageDispatch::getMessage() {
+decaf::lang::Pointer<Message>& MessageDispatch::getMessage() {
     return message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageDispatch::setMessage( Message* message ) {
+void MessageDispatch::setMessage( const decaf::lang::Pointer<Message>& message ) {
     this->message = message;
 }
 

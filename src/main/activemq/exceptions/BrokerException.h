@@ -60,14 +60,15 @@ namespace exceptions{
             std::ostringstream ostream;
             ostream << "*** BEGIN SERVER-SIDE STACK TRACE ***" << std::endl;
             ostream << "Message: " << error->getMessage() << std::endl;
-            ostream << "Cause: " << error->getCause() << std::endl;
+            ostream << "Cause: " << error->getCause()->toString() << std::endl;
             ostream << "Exception Class " << error->getExceptionClass() << std::endl;
 
-            const std::vector<commands::BrokerError::StackTraceElement*>& trace = error->getStackTraceElements();
-            for( std::size_t ix=0; ix<trace.size(); ++ix ){
-                commands::BrokerError::StackTraceElement* element = trace[ix];
-                ostream << "\t[FILE: " << element->FileName << ", LINE: " << element->LineNumber
-                    << "] occurred in: " << element->ClassName << "." << element->MethodName << std::endl;
+            for( std::size_t ix = 0; ix< error->getStackTraceElements().size(); ++ix ){
+                ostream << "\t[FILE: " << error->getStackTraceElements()[ix]->FileName
+                        << ", LINE: " << error->getStackTraceElements()[ix]->LineNumber
+                        << "] occurred in: " << error->getStackTraceElements()[ix]->ClassName
+                        << "." << error->getStackTraceElements()[ix]->MethodName
+                        << std::endl;
             }
 
             ostream << "*** END SERVER-SIDE STACK TRACE ***";

@@ -39,7 +39,6 @@ using namespace decaf::lang::exceptions;
 ConsumerControl::ConsumerControl() {
 
     this->close = false;
-    this->consumerId = NULL;
     this->prefetch = 0;
     this->flush = false;
     this->start = false;
@@ -49,17 +48,16 @@ ConsumerControl::ConsumerControl() {
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerControl::~ConsumerControl() {
 
-    delete this->consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerControl* ConsumerControl::cloneDataStructure() const {
-    ConsumerControl* consumerControl = new ConsumerControl();
+    std::auto_ptr<ConsumerControl> consumerControl( new ConsumerControl() );
 
     // Copy the data from the base class or classes
     consumerControl->copyDataStructure( this );
 
-    return consumerControl;
+    return consumerControl.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,11 +79,7 @@ void ConsumerControl::copyDataStructure( const DataStructure* src ) {
             "ConsumerControl::copyDataStructure - src is NULL or invalid" );
     }
     this->setClose( srcPtr->isClose() );
-    if( srcPtr->getConsumerId() != NULL ) {
-        this->setConsumerId(
-            dynamic_cast<ConsumerId*>(
-                srcPtr->getConsumerId()->cloneDataStructure() ) );
-    }
+    this->setConsumerId( srcPtr->getConsumerId() );
     this->setPrefetch( srcPtr->getPrefetch() );
     this->setFlush( srcPtr->isFlush() );
     this->setStart( srcPtr->isStart() );
@@ -137,7 +131,7 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getConsumerId() != NULL ) {
-        if( !this->getConsumerId()->equals( valuePtr->getConsumerId() ) ) {
+        if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getConsumerId() != NULL ) {
@@ -162,7 +156,7 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ConsumerControl::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processConsumerControl( this );
@@ -179,17 +173,17 @@ void ConsumerControl::setClose( bool close ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ConsumerId* ConsumerControl::getConsumerId() const {
+const decaf::lang::Pointer<ConsumerId>& ConsumerControl::getConsumerId() const {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerId* ConsumerControl::getConsumerId() {
+decaf::lang::Pointer<ConsumerId>& ConsumerControl::getConsumerId() {
     return consumerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConsumerControl::setConsumerId( ConsumerId* consumerId ) {
+void ConsumerControl::setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId ) {
     this->consumerId = consumerId;
 }
 

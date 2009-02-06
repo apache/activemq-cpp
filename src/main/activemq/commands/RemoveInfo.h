@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/DataStructure.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API RemoveInfo : public BaseCommand {
     protected:
 
-        DataStructure* objectId;
+        decaf::lang::Pointer<DataStructure> objectId;
 
     protected:
 
@@ -104,12 +105,12 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const DataStructure* getObjectId() const;
-        virtual DataStructure* getObjectId();
-        virtual void setObjectId( DataStructure* objectId );
+        virtual const decaf::lang::Pointer<DataStructure>& getObjectId() const;
+        virtual decaf::lang::Pointer<DataStructure>& getObjectId();
+        virtual void setObjectId( const decaf::lang::Pointer<DataStructure>& objectId );
 
     };
 

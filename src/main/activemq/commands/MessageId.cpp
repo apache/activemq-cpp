@@ -39,7 +39,6 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 MessageId::MessageId() {
 
-    this->producerId = NULL;
     this->producerSequenceId = 0;
     this->brokerSequenceId = 0;
 }
@@ -52,17 +51,16 @@ MessageId::MessageId( const MessageId& other ) {
 ////////////////////////////////////////////////////////////////////////////////
 MessageId::~MessageId() {
 
-    delete this->producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageId* MessageId::cloneDataStructure() const {
-    MessageId* messageId = new MessageId();
+    std::auto_ptr<MessageId> messageId( new MessageId() );
 
     // Copy the data from the base class or classes
     messageId->copyDataStructure( this );
 
-    return messageId;
+    return messageId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,11 +81,7 @@ void MessageId::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "MessageId::copyDataStructure - src is NULL or invalid" );
     }
-    if( srcPtr->getProducerId() != NULL ) {
-        this->setProducerId(
-            dynamic_cast<ProducerId*>(
-                srcPtr->getProducerId()->cloneDataStructure() ) );
-    }
+    this->setProducerId( srcPtr->getProducerId() );
     this->setProducerSequenceId( srcPtr->getProducerSequenceId() );
     this->setBrokerSequenceId( srcPtr->getBrokerSequenceId() );
 }
@@ -131,7 +125,7 @@ bool MessageId::equals( const DataStructure* value ) const {
         return false;
     }
     if( this->getProducerId() != NULL ) {
-        if( !this->getProducerId()->equals( valuePtr->getProducerId() ) ) {
+        if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;
         }
     } else if( valuePtr->getProducerId() != NULL ) {
@@ -150,17 +144,17 @@ bool MessageId::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-const ProducerId* MessageId::getProducerId() const {
+const decaf::lang::Pointer<ProducerId>& MessageId::getProducerId() const {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerId* MessageId::getProducerId() {
+decaf::lang::Pointer<ProducerId>& MessageId::getProducerId() {
     return producerId;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MessageId::setProducerId( ProducerId* producerId ) {
+void MessageId::setProducerId( const decaf::lang::Pointer<ProducerId>& producerId ) {
     this->producerId = producerId;
 }
 

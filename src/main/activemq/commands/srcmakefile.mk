@@ -85,6 +85,7 @@ h_sources += \
     activemq/commands/ActiveMQMapMessage.h \
     activemq/commands/ActiveMQMessage.h \
     activemq/commands/ActiveMQMessageBase.h \
+    activemq/commands/ActiveMQMessageTemplate.h \
     activemq/commands/ActiveMQObjectMessage.h \
     activemq/commands/ActiveMQQueue.h \
     activemq/commands/ActiveMQStreamMessage.h \

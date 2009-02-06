@@ -56,12 +56,12 @@ ProducerId::~ProducerId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId* ProducerId::cloneDataStructure() const {
-    ProducerId* producerId = new ProducerId();
+    std::auto_ptr<ProducerId> producerId( new ProducerId() );
 
     // Copy the data from the base class or classes
     producerId->copyDataStructure( this );
 
-    return producerId;
+    return producerId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

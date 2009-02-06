@@ -90,7 +90,8 @@ ActiveMQConnection::~ActiveMQConnection() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConnection::addDispatcher(
-    const commands::ConsumerId& consumer, Dispatcher* dispatcher ) {
+    const decaf::lang::Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher )
+        throw ( cms::CMSException ) {
 
     // Add the consumer to the map.
     synchronized( &dispatchers ) {
@@ -99,7 +100,9 @@ void ActiveMQConnection::addDispatcher(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeDispatcher( const commands::ConsumerId& consumer ) {
+void ActiveMQConnection::removeDispatcher(
+    const decaf::lang::Pointer<commands::ConsumerId>& consumer )
+        throw ( cms::CMSException ) {
 
     // Remove the consumer from the map.
     synchronized( &dispatchers ) {
@@ -127,10 +130,10 @@ cms::Session* ActiveMQConnection::createSession(
 
         // Create and initialize a new SessionInfo object
         std::auto_ptr<commands::SessionInfo> sessionInfo( new commands::SessionInfo() );
-        std::auto_ptr<commands::SessionId> sessionId( new commands::SessionId() );
+        decaf::lang::Pointer<commands::SessionId> sessionId( new commands::SessionId() );
         sessionId->setConnectionId( connectionInfo.getConnectionId()->getValue() );
         sessionId->setValue( this->getNextSessionId() );
-        sessionInfo->setSessionId( sessionId.release() );
+        sessionInfo->setSessionId( sessionId );
 
         // Send the subscription message to the broker.
         syncRequest( sessionInfo.get() );
@@ -180,7 +183,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 
         // Add this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.setValue( producer->getProducerId(), producer );
+            activeProducers.setValue( producer->getProducerInfo().getProducerId(), producer );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -189,14 +192,15 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::removeProducer( ActiveMQProducer* producer )
-    throw ( cms::CMSException ) {
+void ActiveMQConnection::removeProducer(
+    const decaf::lang::Pointer<commands::ProducerId>& producerId )
+        throw ( cms::CMSException ) {
 
     try {
 
         // Remove this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.remove( producer->getProducerId() );
+            activeProducers.remove( producerId );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -317,7 +321,7 @@ void ActiveMQConnection::connect() throw ( activemq::exceptions::ActiveMQExcepti
         }
 
         // Generate a connectionId
-        commands::ConnectionId* connectionId = new commands::ConnectionId();
+        decaf::lang::Pointer<commands::ConnectionId> connectionId( new commands::ConnectionId() );
         connectionId->setValue( UUID::randomUUID().toString() );
         connectionInfo.setConnectionId( connectionId );
 
@@ -358,8 +362,8 @@ void ActiveMQConnection::sendPullRequest(
          if( consumer->getPrefetchSize() == 0 ) {
 
              commands::MessagePull messagePull;
-             messagePull.setConsumerId( consumer->getConsumerId()->cloneDataStructure() );
-             messagePull.setDestination( consumer->getDestination()->cloneDataStructure() );
+             messagePull.setConsumerId( consumer->getConsumerId() );
+             messagePull.setDestination( consumer->getDestination() );
              messagePull.setTimeout( timeout );
 
              this->oneway( &messagePull );
@@ -388,9 +392,11 @@ void ActiveMQConnection::destroyDestination( const commands::ActiveMQDestination
 
         commands::DestinationInfo command;
 
-        command.setConnectionId( connectionInfo.getConnectionId()->cloneDataStructure() );
+        command.setConnectionId( connectionInfo.getConnectionId() );
         command.setOperationType( ActiveMQConstants::DESTINATION_REMOVE_OPERATION );
-        command.setDestination( destination->cloneDataStructure() );
+        command.setDestination(
+            decaf::lang::Pointer<commands::ActiveMQDestination>(
+                destination->cloneDataStructure() ) );
 
         // Send the message to the broker.
         syncRequest( &command );
@@ -435,19 +441,15 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
 
     try{
 
+        std::auto_ptr<commands::Command> commandPtr( command );
+
         if( typeid( *command ) == typeid( commands::MessageDispatch ) ) {
 
             commands::MessageDispatch* dispatch =
                 dynamic_cast<commands::MessageDispatch*>( command );
 
-            // Due to the severe suckiness of C++, in order to cast to
-            // a type that is in a different branch of the inheritance hierarchy
-            // we have to cast to the type at the "crotch" of the branch and then
-            // we can implicitly cast up the other branch.
-            core::ActiveMQMessage* message =
-                dynamic_cast<core::ActiveMQMessage*>( dispatch->getMessage() );
-            if( message == NULL ) {
-                delete command;
+            // Check fo an empty Message, shouldn't ever happen but who knows.
+            if( dispatch->getMessage() == NULL ) {
                 throw ActiveMQException(
                     __FILE__, __LINE__,
                     "ActiveMQConnection::onCommand - "
@@ -458,27 +460,17 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             Dispatcher* dispatcher = NULL;
             synchronized( &dispatchers ) {
 
-                dispatcher = dispatchers.getValue( *( dispatch->getConsumerId() ) );
+                dispatcher = dispatchers.getValue( dispatch->getConsumerId() );
 
                 // If we have no registered dispatcher, the consumer was probably
-                // just closed.  Just delete the message.
-                if( dispatcher == NULL ) {
-                    delete message;
-                } else {
+                // just closed.
+                if( dispatcher != NULL ) {
 
                     // Dispatch the message.
-                    DispatchData data( *( dispatch->getConsumerId() ), message );
+                    DispatchData data( dispatch->getConsumerId(), dispatch->getMessage() );
                     dispatcher->dispatch( data );
                 }
             }
-
-            // Clear the Message as we've passed it onto the
-            // listener, who is responsible for deleting it at
-            // the appropriate time, which depends on things like
-            // the session being transacted etc.
-            dispatch->setMessage( NULL );
-
-            delete command;
 
         } else if( typeid( *command ) == typeid( commands::ProducerAck ) ) {
 
@@ -488,20 +480,18 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             // Get the consumer info object for this consumer.
             ActiveMQProducer* producer = NULL;
             synchronized( &this->activeProducers ) {
-                producer = this->activeProducers.getValue( *( producerAck->getProducerId() ) );
+                producer = this->activeProducers.getValue( producerAck->getProducerId() );
                 if( producer != NULL ){
                     producer->onProducerAck( *producerAck );
                 }
             }
 
-            delete command;
-
         } else if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
             this->brokerWireFormatInfo.reset(
-                dynamic_cast<commands::WireFormatInfo*>( command ) );
+                dynamic_cast<commands::WireFormatInfo*>( commandPtr.release() ) );
         } else if( typeid( *command ) == typeid( commands::BrokerInfo ) ) {
             this->brokerInfo.reset(
-                dynamic_cast<commands::BrokerInfo*>( command ) );
+                dynamic_cast<commands::BrokerInfo*>( commandPtr.release() ) );
         } else if( typeid( *command ) == typeid( commands::KeepAliveInfo ) ) {
 
             if( command->isResponseRequired() ) {
@@ -509,8 +499,6 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
 
                 oneway( command );
             }
-
-            delete command;
 
         } else if( typeid( *command ) == typeid( commands::ShutdownInfo ) ) {
 
@@ -523,11 +511,8 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
                 }
             } catch( ... ) { /* do nothing */ }
 
-            delete command;
-
         } else {
             //LOGDECAF_WARN( logger, "Received an unknown command" );
-            delete command;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -590,8 +575,7 @@ void ActiveMQConnection::syncRequest( commands::Command* command, unsigned int t
 
             // Create an exception to hold the error information.
             commands::BrokerError* brokerError =
-                dynamic_cast<commands::BrokerError*>(
-                        exceptionResponse->getException() );
+                exceptionResponse->getException()->cloneDataStructure();
             BrokerException exception( __FILE__, __LINE__, brokerError );
 
             // Throw the exception.
@@ -606,12 +590,12 @@ void ActiveMQConnection::syncRequest( commands::Command* command, unsigned int t
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disposeOf( commands::DataStructure* objectId )
+void ActiveMQConnection::disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId )
     throw ( ActiveMQException ) {
 
     try{
         commands::RemoveInfo command;
-        command.setObjectId( objectId->cloneDataStructure() );
+        command.setObjectId( objectId );
         oneway( &command );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -620,13 +604,13 @@ void ActiveMQConnection::disposeOf( commands::DataStructure* objectId )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::disposeOf( commands::DataStructure* objectId,
+void ActiveMQConnection::disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId,
                                     unsigned int timeout )
     throw ( ActiveMQException ) {
 
     try{
         commands::RemoveInfo command;
-        command.setObjectId( objectId->cloneDataStructure() );
+        command.setObjectId( objectId );
         this->syncRequest( &command, timeout );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

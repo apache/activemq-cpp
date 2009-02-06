@@ -54,12 +54,12 @@ ConnectionId::~ConnectionId() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionId* ConnectionId::cloneDataStructure() const {
-    ConnectionId* connectionId = new ConnectionId();
+    std::auto_ptr<ConnectionId> connectionId( new ConnectionId() );
 
     // Copy the data from the base class or classes
     connectionId->copyDataStructure( this );
 
-    return connectionId;
+    return connectionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

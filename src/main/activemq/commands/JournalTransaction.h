@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseDataStructure.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/TransactionId.h>
 #include <vector>
 #include <string>
@@ -45,7 +46,7 @@ namespace commands{
     class AMQCPP_API JournalTransaction : public BaseDataStructure {
     protected:
 
-        TransactionId* transactionId;
+        decaf::lang::Pointer<TransactionId> transactionId;
         unsigned char type;
         bool wasPrepared;
 
@@ -99,9 +100,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const TransactionId* getTransactionId() const;
-        virtual TransactionId* getTransactionId();
-        virtual void setTransactionId( TransactionId* transactionId );
+        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
+        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
 
         virtual unsigned char getType() const;
         virtual void setType( unsigned char type );

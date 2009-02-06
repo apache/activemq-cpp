@@ -25,6 +25,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BrokerId.h>
@@ -47,9 +48,9 @@ namespace commands{
     class AMQCPP_API ProducerInfo : public BaseCommand {
     protected:
 
-        ProducerId* producerId;
-        ActiveMQDestination* destination;
-        std::vector<BrokerId*> brokerPath;
+        decaf::lang::Pointer<ProducerId> producerId;
+        decaf::lang::Pointer<ActiveMQDestination> destination;
+        std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
         bool dispatchAsync;
         int windowSize;
 
@@ -110,20 +111,20 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
-        virtual const ProducerId* getProducerId() const;
-        virtual ProducerId* getProducerId();
-        virtual void setProducerId( ProducerId* producerId );
+        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
+        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
 
-        virtual const ActiveMQDestination* getDestination() const;
-        virtual ActiveMQDestination* getDestination();
-        virtual void setDestination( ActiveMQDestination* destination );
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
 
-        virtual const std::vector<BrokerId*>& getBrokerPath() const;
-        virtual std::vector<BrokerId*>& getBrokerPath();
-        virtual void setBrokerPath( const std::vector<BrokerId*>& brokerPath );
+        virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
+        virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
+        virtual void setBrokerPath( const std::vector< decaf::lang::Pointer<BrokerId> >& brokerPath );
 
         virtual bool isDispatchAsync() const;
         virtual void setDispatchAsync( bool dispatchAsync );

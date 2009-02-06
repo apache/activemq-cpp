@@ -44,7 +44,7 @@ namespace commands{
              * @param message Message to Acknowlegde
              * @throw CMSException
              */
-            virtual void acknowledgeMessage( const core::ActiveMQMessage* message )
+            virtual void acknowledgeMessage( const commands::Message* message )
                 throw ( cms::CMSException ) {
 
                 this->wasAcked = true;

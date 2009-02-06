@@ -24,15 +24,16 @@
 #endif
 
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/ActiveMQMessageTemplate.h>
 #include <cms/Message.h>
 #include <string>
+#include <memory>
 
 namespace activemq {
 namespace commands {
 
     class AMQCPP_API ActiveMQBlobMessage :
-        public ActiveMQMessageBase< cms::Message > {
+        public ActiveMQMessageTemplate< cms::Message > {
 
     private:
 
@@ -59,9 +60,9 @@ namespace commands {
          * @returns new copy of this object.
          */
         virtual ActiveMQBlobMessage* cloneDataStructure() const {
-            ActiveMQBlobMessage* message = new ActiveMQBlobMessage();
+            std::auto_ptr<ActiveMQBlobMessage> message( new ActiveMQBlobMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**
@@ -70,7 +71,7 @@ namespace commands {
          * @return src - Source Object
          */
         virtual void copyDataStructure( const DataStructure* src ) {
-            ActiveMQMessageBase<cms::Message>::copyDataStructure( src );
+            ActiveMQMessageTemplate<cms::Message>::copyDataStructure( src );
         }
 
         /**
@@ -82,7 +83,7 @@ namespace commands {
             std::ostringstream stream;
 
             stream << "Begin Class = ActiveMQBlobMessage" << std::endl;
-            stream << ActiveMQMessageBase<cms::Message>::toString();
+            stream << ActiveMQMessageTemplate<cms::Message>::toString();
             stream << "End Class = ActiveMQBlobMessage" << std::endl;
 
             return stream.str();
@@ -95,7 +96,7 @@ namespace commands {
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const {
-            return ActiveMQMessageBase<cms::Message>::equals( value );
+            return ActiveMQMessageTemplate<cms::Message>::equals( value );
         }
 
     public:  // cms::Message

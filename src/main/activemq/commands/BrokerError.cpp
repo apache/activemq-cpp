@@ -27,9 +27,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 BrokerError::~BrokerError() {
-    for( unsigned int i = 0; i < stackTraceElements.size(); ++i ) {
-        delete stackTraceElements[i];
-    }
+    this->stackTraceElements.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,25 +43,12 @@ void BrokerError::copyDataStructure( const DataStructure* src ) {
 
     this->setMessage( srcErr->getMessage() );
     this->setExceptionClass( srcErr->getExceptionClass() );
-
-    for( unsigned int i = 0; i < srcErr->getStackTraceElements().size(); ++i ) {
-        if( srcErr->getStackTraceElements()[i] != NULL ) {
-            StackTraceElement* element = new StackTraceElement;
-            *element = *( srcErr->getStackTraceElements()[i] );
-
-            // store the copy
-            this->stackTraceElements.push_back( element );
-        }
-    }
-
-    if( srcErr->getCause() ) {
-        this->cause = dynamic_cast<BrokerError*>(
-            srcErr->getCause()->cloneDataStructure() );
-    }
+    this->setStackTraceElements( srcErr->getStackTraceElements() );
+    this->setCause( srcErr->getCause() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* BrokerError::visit( activemq::state::CommandVisitor* visitor )
+decaf::lang::Pointer<commands::Command> BrokerError::visit( activemq::state::CommandVisitor* visitor )
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processBrokerError( this );

@@ -28,6 +28,7 @@
 #include <cms/TemporaryQueue.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace commands{
@@ -52,9 +53,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQTempQueue* cloneDataStructure() const {
-            ActiveMQTempQueue* message = new ActiveMQTempQueue();
+            std::auto_ptr<ActiveMQTempQueue> message( new ActiveMQTempQueue() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

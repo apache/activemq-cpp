@@ -52,12 +52,12 @@ ConnectionControl::~ConnectionControl() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionControl* ConnectionControl::cloneDataStructure() const {
-    ConnectionControl* connectionControl = new ConnectionControl();
+    std::auto_ptr<ConnectionControl> connectionControl( new ConnectionControl() );
 
     // Copy the data from the base class or classes
     connectionControl->copyDataStructure( this );
 
-    return connectionControl;
+    return connectionControl.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ bool ConnectionControl::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) 
+decaf::lang::Pointer<commands::Command> ConnectionControl::visit( activemq::state::CommandVisitor* visitor ) 
     throw( exceptions::ActiveMQException ) {
 
     return visitor->processConnectionControl( this );

@@ -46,8 +46,8 @@ public:
 
     virtual unsigned char getDataStructureType() const { return 1; }
 
-    virtual commands::Command* visit( activemq::state::CommandVisitor* visitor )
-        throw( exceptions::ActiveMQException ) { return NULL; }
+    virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        throw( exceptions::ActiveMQException ) { return decaf::lang::Pointer<commands::Command>(); }
 
     virtual std::string toString() const{ return ""; }
     virtual MyCommand* cloneDataStructure() const{
