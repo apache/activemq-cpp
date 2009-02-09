@@ -21,11 +21,13 @@
 
 using namespace activemq;
 using namespace activemq::state;
+using namespace activemq::commands;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-SessionState::SessionState( const commands::SessionInfo* info ) : disposed( false ) {
-
-    this->info.reset( info->cloneDataStructure() );
+SessionState::SessionState( const Pointer<SessionInfo>& info ) :
+    disposed( false ), info( info ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

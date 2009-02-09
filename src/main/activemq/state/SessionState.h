@@ -34,24 +34,34 @@
 namespace activemq {
 namespace state {
 
+    using namespace activemq::commands;
+    using namespace decaf::lang;
+
     class AMQCPP_API SessionState {
     private:
 
-        std::auto_ptr<commands::SessionInfo> info;
-        decaf::util::Map< commands::ProducerId, ProducerState* > producers;
-        decaf::util::Map< commands::ConsumerId, ConsumerState* > consumers;
+        Pointer<SessionInfo> info;
+
+        decaf::util::Map< Pointer<ProducerId>,
+                          Pointer<ProducerState>,
+                          ProducerId::COMPARATOR > producers;
+
+        decaf::util::Map< Pointer<ConsumerId>,
+                          Pointer<ConsumerState>,
+                          ConsumerId::COMPARATOR > consumers;
+
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 
     public:
 
-        SessionState( const commands::SessionInfo* info );
+        SessionState( const Pointer<SessionInfo>& info );
 
         virtual ~SessionState();
 
         std::string toString() const;
 
-        const commands::SessionInfo* getInfo() const {
-            return this->info.get();
+        const Pointer<SessionInfo> getInfo() const {
+            return this->info;
         }
 
 //        void addProducer(commands::ProducerInfo info) {

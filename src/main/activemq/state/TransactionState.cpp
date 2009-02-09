@@ -20,26 +20,21 @@
 #include <decaf/lang/exceptions/IllegalStateException.h>
 
 using namespace activemq;
+using namespace activemq::commands;
 using namespace activemq::state;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransactionState::TransactionState( const commands::TransactionId* id ) : disposed( false ) {
-
-    this->id.reset( id->cloneDataStructure() );
-    this->prepared = false;
-    this->preparedResult = 0;
+TransactionState::TransactionState( const Pointer<TransactionId>& id ) :
+    disposed( false ), id( id ), prepared( false ), preparedResult( 0 ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionState::~TransactionState() {
 
-    std::auto_ptr< Iterator<commands::Command*> > iter( this->commands.iterator() );
-
-    while( iter->hasNext() ) {
-        delete iter->next();
-    }
+    this->commands.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,12 +48,10 @@ std::string TransactionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransactionState::addCommand( commands::Command* operation ) {
+void TransactionState::addCommand( const Pointer<Command>& operation ) {
 
     checkShutdown();
-
-    commands.add(
-        dynamic_cast<commands::Command*>( operation->cloneDataStructure() ) );
+    commands.add( operation );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

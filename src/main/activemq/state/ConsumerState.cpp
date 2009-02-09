@@ -19,11 +19,11 @@
 
 using namespace activemq;
 using namespace activemq::state;
+using namespace activemq::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConsumerState::ConsumerState( const commands::ConsumerInfo* info ) {
-
-    this->info.reset( info->cloneDataStructure() );
+ConsumerState::ConsumerState( const Pointer<ConsumerInfo>& info ) : info( info ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ ConsumerState::~ConsumerState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ConsumerState::toString() const {
 
-    if( this->info.get() != NULL ) {
+    if( this->info != NULL ) {
         return this->info->toString();
     }
 

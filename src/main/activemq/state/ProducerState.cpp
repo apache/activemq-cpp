@@ -19,11 +19,11 @@
 
 using namespace activemq;
 using namespace activemq::state;
+using namespace activemq::commands;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-ProducerState::ProducerState( const commands::ProducerInfo* info ) {
-
-    this->info.reset( info->cloneDataStructure() );
+ProducerState::ProducerState( const Pointer<ProducerInfo>& info ) : info( info ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ ProducerState::~ProducerState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string ProducerState::toString() const {
 
-    if( this->info.get() != NULL ) {
+    if( this->info != NULL ) {
         return this->info->toString();
     }
 

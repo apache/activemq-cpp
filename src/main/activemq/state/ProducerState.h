@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/ProducerInfo.h>
+#include <decaf/lang/Pointer.h>
 
 #include <string>
 #include <memory>
@@ -28,21 +29,24 @@
 namespace activemq {
 namespace state {
 
+    using namespace decaf::lang;
+    using namespace activemq::commands;
+
     class AMQCPP_API ProducerState {
     private:
 
-        std::auto_ptr<commands::ProducerInfo> info;
+        Pointer<ProducerInfo> info;
 
     public:
 
-        ProducerState( const commands::ProducerInfo* info );
+        ProducerState( const Pointer<ProducerInfo>& info );
 
         virtual ~ProducerState();
 
         std::string toString() const;
 
-        const commands::ProducerInfo* getInfo() const {
-            return this->info.get();
+        const Pointer<ProducerInfo>& getInfo() const {
+            return this->info;
         }
 
     };
