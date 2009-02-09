@@ -41,10 +41,12 @@ namespace commands{
     class AMQCPP_API ActiveMQMessageBase : public Message {
     private:
 
+        // Used to allow a client to call Message::acknowledge when in the Client
+        // Ack mode.
         core::ActiveMQAckHandler* ackHandler;
 
-    protected:  // TODO - Ugly Hack, fix this, protected data is a no-no.
-
+        // Message properties, these are Marshaled and Unmarshaled from the Message
+        // Command's marshaledProperties vector.
         activemq::util::PrimitiveMap properties;
 
     public:
@@ -196,6 +198,19 @@ namespace commands{
                 return true;
             }
             return false;
+        }
+
+        /**
+         * Gets a reference to the Message's Properties object, allows the derived
+         * classes to get and set their own specific properties.
+         *
+         * @return a reference to the Primitive Map that holds message properties.
+         */
+        util::PrimitiveMap& getMessageProperties() {
+            return this->properties;
+        }
+        const util::PrimitiveMap& getMessageProperties() const {
+            return this->properties;
         }
 
     };

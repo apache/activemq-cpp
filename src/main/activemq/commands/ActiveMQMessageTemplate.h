@@ -36,7 +36,7 @@ namespace commands {
         ActiveMQMessageTemplate() : ActiveMQMessageBase() {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
-                    this, &this->properties ) );
+                    this, &this->getMessageProperties() ) );
         }
 
         virtual ~ActiveMQMessageTemplate() {}
@@ -69,7 +69,7 @@ namespace commands {
          * header values.
          */
         virtual void clearProperties() {
-            properties.clear();
+            getMessageProperties().clear();
         }
 
         /**
@@ -78,7 +78,7 @@ namespace commands {
          * message.
          */
         virtual std::vector<std::string> getPropertyNames() const {
-            return properties.getKeys();
+            return getMessageProperties().getKeys();
         }
 
         /**
@@ -87,7 +87,7 @@ namespace commands {
          * @return True if the property exists in this message.
          */
         virtual bool propertyExists( const std::string& name ) const {
-            return properties.containsKey( name );
+            return getMessageProperties().containsKey( name );
         }
 
         /**
