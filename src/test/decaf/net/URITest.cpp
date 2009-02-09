@@ -1523,6 +1523,14 @@ void URITest::testRelativize2() {
         URI result( "p1" );
         CPPUNIT_ASSERT( result.equals( one.relativize( two ) ) );
     }
+    {
+        URI uri( "file", "", "/test/location", "" );
+        URI base( "file", "", "/test", "" );
+
+        URI relative = base.relativize( uri );
+        CPPUNIT_ASSERT( string( "location" ) == relative.getSchemeSpecificPart() );
+        CPPUNIT_ASSERT( relative.getScheme() == "" );
+    }
 }
 
 
