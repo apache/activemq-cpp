@@ -111,6 +111,7 @@ bool TransactionId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( !BaseDataStructure::equals( value ) ) {
         return false;
     }

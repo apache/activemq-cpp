@@ -146,6 +146,7 @@ bool MessageAck::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getDestination() != NULL ) {
         if( !this->getDestination()->equals( valuePtr->getDestination().get() ) ) {
             return false;

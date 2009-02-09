@@ -25,7 +25,6 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
 

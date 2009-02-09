@@ -151,6 +151,7 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getBrokerId() != NULL ) {
         if( !this->getBrokerId()->equals( valuePtr->getBrokerId().get() ) ) {
             return false;

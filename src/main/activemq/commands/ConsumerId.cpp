@@ -120,6 +120,7 @@ bool ConsumerId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getConnectionId() != valuePtr->getConnectionId() ) {
         return false;
     }

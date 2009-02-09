@@ -25,22 +25,23 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
+#include <activemq/util/PrimitiveMap.h>
+#include <decaf/util/Date.h>
 #include <decaf/lang/Pointer.h>
+#include <activemq/commands/BrokerId.h>
+#include <activemq/commands/TransactionId.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/MessageId.h>
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/commands/TransactionId.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/commands/MessageId.h>
-#include <activemq/commands/TransactionId.h>
-#include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/DataStructure.h>
-#include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/BrokerId.h>
-#include <activemq/commands/BrokerId.h>
 #include <vector>
 #include <string>
 
 namespace activemq{
+namespace core{
+    class ActiveMQAckHandler;
+}
 namespace commands{
 
     /*
@@ -54,6 +55,16 @@ namespace commands{
      *
      */
     class AMQCPP_API Message : public BaseCommand {
+    private:
+
+        // Used to allow a client to call Message::acknowledge when in the Client
+        // Ack mode.
+        core::ActiveMQAckHandler* ackHandler;
+
+        // Message properties, these are Marshaled and Unmarshaled from the Message
+        // Command's marshaledProperties vector.
+        activemq::util::PrimitiveMap properties;
+
     protected:
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
@@ -139,10 +150,81 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
+         * Handles the marshaling of the objects properties into the
+         * internal byte array before the object is marshaled to the
+         * wire
+         * @param wireFormat - the wireformat controller
+         */
+        virtual void beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Called after unmarshaling is started to cleanup the object being
+         * unmarshaled.
+         * @param wireFormat - the wireformat object to control unmarshaling
+         */
+        virtual void afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+            throw ( decaf::io::IOException );
+
+        /**
+         * Indicates that this command is aware of Marshaling, and needs
+         * to have its Marshaling methods invoked.
+         * @returns boolean indicating desire to be in marshaling stages
+         */
+        virtual bool isMarshalAware() const {
+            return true;
+        }
+
+        /**
+         * Sets the Acknowledgment Handler that this Message will use
+         * when the Acknowledge method is called.
+         * @param handler ActiveMQAckHandler to call
+         */
+        virtual void setAckHandler( core::ActiveMQAckHandler* handler ) {
+            this->ackHandler = handler;
+        }
+
+        /**
+         * Gets the Acknowledgment Handler that this Message will use
+         * when the Acknowledge method is called.
+         * @returns handler ActiveMQAckHandler to call or NULL if not set
+         */
+        virtual core::ActiveMQAckHandler* getAckHandler() const {
+            return this->ackHandler;
+        }
+
+        /**
          * Returns the Size of this message in Bytes.
          * @returns number of bytes this message equates to.
          */
         virtual unsigned int getSize() const;
+
+        /**
+         * Returns if this message has expired, meaning that its
+         * Expiration time has elapsed.
+         * @returns true if message is expired.
+         */
+        virtual bool isExpired() const {
+            long long expireTime = this->getExpiration();
+            long long currentTime = decaf::util::Date::getCurrentTimeMilliseconds();
+            if( expireTime > 0 && currentTime > expireTime ) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Gets a reference to the Message's Properties object, allows the derived
+         * classes to get and set their own specific properties.
+         *
+         * @return a reference to the Primitive Map that holds message properties.
+         */
+        util::PrimitiveMap& getMessageProperties() {
+            return this->properties;
+        }
+        const util::PrimitiveMap& getMessageProperties() const {
+            return this->properties;
+        }
 
         /**
          * Allows a Visitor to visit this command and return a response to the

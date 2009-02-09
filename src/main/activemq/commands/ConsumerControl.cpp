@@ -127,6 +127,7 @@ bool ConsumerControl::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->isClose() != valuePtr->isClose() ) {
         return false;
     }

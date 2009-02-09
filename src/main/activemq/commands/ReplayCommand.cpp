@@ -111,6 +111,7 @@ bool ReplayCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getFirstNakNumber() != valuePtr->getFirstNakNumber() ) {
         return false;
     }

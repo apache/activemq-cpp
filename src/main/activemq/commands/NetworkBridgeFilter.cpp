@@ -115,6 +115,7 @@ bool NetworkBridgeFilter::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getNetworkTTL() != valuePtr->getNetworkTTL() ) {
         return false;
     }

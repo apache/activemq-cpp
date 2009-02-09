@@ -128,6 +128,7 @@ bool SubscriptionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getClientId() != valuePtr->getClientId() ) {
         return false;
     }

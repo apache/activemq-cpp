@@ -18,6 +18,8 @@
 #include <activemq/state/CommandVisitor.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -38,6 +40,7 @@ using namespace decaf::lang::exceptions;
 ////////////////////////////////////////////////////////////////////////////////
 Message::Message() {
 
+    this->ackHandler = NULL;
     this->groupID = "";
     this->groupSequence = 0;
     this->correlationId = "";
@@ -89,6 +92,8 @@ void Message::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "Message::copyDataStructure - src is NULL or invalid" );
     }
+    this->properties.copy( srcPtr->properties );
+    this->setAckHandler( srcPtr->getAckHandler() );
     this->setProducerId( srcPtr->getProducerId() );
     this->setDestination( srcPtr->getDestination() );
     this->setTransactionId( srcPtr->getTransactionId() );
@@ -132,6 +137,8 @@ std::string Message::toString() const {
 
     stream << "Begin Class = Message" << std::endl;
     stream << " Value of Message::ID_MESSAGE = 0" << std::endl;
+    stream << " Value of ackHandler = " << ackHandler << std::endl;
+    stream << " Value of properties = " << this->properties.toString() << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;
@@ -242,6 +249,15 @@ bool Message::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
+    if( ackHandler != valuePtr->getAckHandler() ){
+        return false;
+    }
+
+    if( !properties.equals( valuePtr->properties ) ) {
+        return false;
+    }
+
     if( this->getProducerId() != NULL ) {
         if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;
@@ -779,4 +795,36 @@ long long Message::getBrokerOutTime() const {
 void Message::setBrokerOutTime( long long brokerOutTime ) {
     this->brokerOutTime = brokerOutTime;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+    void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+        throw ( decaf::io::IOException ) {
+
+        try{
+
+            marshalledProperties.clear();
+            if( !properties.isEmpty() )
+            {
+                wireformat::openwire::marshal::PrimitiveMapMarshaller::marshal(
+                    &properties, marshalledProperties );
+            }
+        }
+        AMQ_CATCH_RETHROW( decaf::io::IOException )
+        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
+        AMQ_CATCHALL_THROW( decaf::io::IOException )
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+    void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+        throw ( decaf::io::IOException ) {
+
+        try{
+
+            wireformat::openwire::marshal::PrimitiveMapMarshaller::unmarshal(
+                &properties, marshalledProperties );
+        }
+        AMQ_CATCH_RETHROW( decaf::io::IOException )
+        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
+        AMQ_CATCHALL_THROW( decaf::io::IOException )
+    }
 

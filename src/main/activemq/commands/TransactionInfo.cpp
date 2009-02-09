@@ -122,6 +122,7 @@ bool TransactionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getConnectionId() != NULL ) {
         if( !this->getConnectionId()->equals( valuePtr->getConnectionId().get() ) ) {
             return false;

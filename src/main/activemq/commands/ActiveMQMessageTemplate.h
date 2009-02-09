@@ -18,22 +18,25 @@
 #ifndef _ACTIVEMQ_COMMANDS_ACTIVEMQMESSAGETEMPLATE_H_
 #define _ACTIVEMQ_COMMANDS_ACTIVEMQMESSAGETEMPLATE_H_
 
+#include <cms/DeliveryMode.h>
 #include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQMessageBase.h>
+#include <activemq/commands/Message.h>
+#include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/wireformat/openwire/utils/MessagePropertyInterceptor.h>
+#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 
 namespace activemq {
 namespace commands {
 
     template< typename T >
-    class AMQCPP_API ActiveMQMessageTemplate : public T, public ActiveMQMessageBase {
+    class AMQCPP_API ActiveMQMessageTemplate : public T, public Message {
     private:
 
         std::auto_ptr<wireformat::openwire::utils::MessagePropertyInterceptor> propertiesInterceptor;
 
     public:
 
-        ActiveMQMessageTemplate() : ActiveMQMessageBase() {
+        ActiveMQMessageTemplate() : Message() {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
                     this, &this->getMessageProperties() ) );

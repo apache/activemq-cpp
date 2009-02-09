@@ -129,6 +129,7 @@ bool MessageDispatch::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getConsumerId() != NULL ) {
         if( !this->getConsumerId()->equals( valuePtr->getConsumerId().get() ) ) {
             return false;

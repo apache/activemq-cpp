@@ -27,7 +27,6 @@
 #include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/commands/ActiveMQDestination.h>
 #include <vector>
 #include <string>
 

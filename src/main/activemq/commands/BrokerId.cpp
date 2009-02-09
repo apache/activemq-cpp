@@ -114,6 +114,7 @@ bool BrokerId::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getValue() != valuePtr->getValue() ) {
         return false;
     }

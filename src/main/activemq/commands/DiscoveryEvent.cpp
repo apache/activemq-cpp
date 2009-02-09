@@ -111,6 +111,7 @@ bool DiscoveryEvent::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getServiceName() != valuePtr->getServiceName() ) {
         return false;
     }

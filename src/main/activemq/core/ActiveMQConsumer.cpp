@@ -176,7 +176,7 @@ decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
                 decaf::lang::Pointer<commands::Message> message = data.getMessage();
 
                 // If it's expired, process the message and then go back to waiting.
-                if( dynamic_cast<commands::ActiveMQMessageBase*>( message.get() )->isExpired() ) {
+                if( message->isExpired() ) {
 
                     beforeMessageIsConsumed( message );
                     afterMessageIsConsumed( message, true );
@@ -349,7 +349,7 @@ void ActiveMQConsumer::beforeMessageIsConsumed( decaf::lang::Pointer<commands::M
 
         // Register ourself so that we can handle the Message's
         // acknowledge method.
-        dynamic_cast<commands::ActiveMQMessageBase*>( message.get() )->setAckHandler( this );
+        message->setAckHandler( this );
     }
 
     // If the session is transacted then we hand off the message to it to
@@ -455,7 +455,7 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
         decaf::lang::Pointer<commands::Message> message = data.getMessage();
 
         // Don't dispatch expired messages, ack it and then destroy it
-        if( dynamic_cast<commands::ActiveMQMessageBase*>( message.get() )->isExpired() ) {
+        if( message.get()->isExpired() ) {
             this->acknowledge( message.get(), ActiveMQConstants::ACK_TYPE_CONSUMED );
 
             // stop now, don't queue

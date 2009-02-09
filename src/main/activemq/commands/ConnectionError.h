@@ -26,8 +26,8 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/BrokerError.h>
 #include <activemq/commands/ConnectionId.h>
+#include <activemq/commands/BrokerError.h>
 #include <vector>
 #include <string>
 

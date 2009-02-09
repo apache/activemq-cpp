@@ -164,9 +164,16 @@ out.println("#include <activemq/commands/"+className+".h>");
 out.println("#include <activemq/state/CommandVisitor.h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
 out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
+
+        if( className.equals( "Message" ) ) {
+out.println("#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>");
+out.println("#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>");
+        }
+
         if( comparable ) {
 out.println("#include <apr_strings.h>");
         }
+
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
@@ -187,6 +194,10 @@ out.println(" */");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println(""+className+"::"+className+"() {");
 out.println("");
+
+        if( className.equals( "Message" ) ) {
+out.println("    this->ackHandler = NULL;");
+        }
 
         List properties = getProperties();
         for (Iterator iter = properties.iterator(); iter.hasNext();) {
@@ -214,26 +225,6 @@ out.println("");
 out.println("////////////////////////////////////////////////////////////////////////////////");
 out.println(""+className+"::~"+className+"() {");
 out.println("");
-
-//    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
-//        JProperty property = (JProperty) iter.next();
-//        String type = toCppType(property.getType());
-//        String propertyName = property.getSimpleName();
-//        String parameterName = decapitalize(propertyName);
-//
-//        if( property.getType().isPrimitiveType() ||
-//            property.getType().getSimpleName().equals("String") ) {
-//            continue;
-//        }
-//
-//        if( !type.startsWith("std::vector" ) ) {
-//out.println("    delete this->" + parameterName + ";");
-//        } else if( type.contains( "*" ) ) {
-//out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < " + parameterName + ".size(); ++i" + parameterName + " ) {");
-//out.println("        delete " + parameterName + "[i" + parameterName + "];");
-//out.println("    }");
-//        }
-//    }
 out.println("}");
 
 out.println("");
@@ -274,50 +265,18 @@ out.println("            __FILE__, __LINE__,");
 out.println("            \""+className+"::copyDataStructure - src is NULL or invalid\" );");
 out.println("    }");
 
-    for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
-        JProperty property = (JProperty) iter.next();
-        String type = toCppType(property.getType());
-        String propertyName = property.getSimpleName();
-        String parameterName = decapitalize(propertyName);
-        String constNess = "";
-        String getter = property.getGetter().getSimpleName();
-        String setter = property.getSetter().getSimpleName();
+        if( className.equals( "Message" ) ) {
+out.println("    this->properties.copy( srcPtr->properties );");
+out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
+        }
 
-//        if( property.getType().isPrimitiveType() ||
-//            type.equals("std::string") ||
-//            property.getType().getSimpleName().equals("ByteSequence") ){
+        for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
+             JProperty property = (JProperty) iter.next();
+             String getter = property.getGetter().getSimpleName();
+             String setter = property.getSetter().getSimpleName();
 
 out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
-
-//        } else if( property.getType().isArrayType() &&
-//                   !property.getType().getArrayComponentType().isPrimitiveType() ) {
-//
-//            String arrayType = property.getType().getArrayComponentType().getSimpleName();
-//
-//out.println("    for( size_t i" + parameterName + " = 0; i" + parameterName + " < srcPtr->"+getter+"().size(); ++i" + parameterName + " ) {");
-//out.println("        if( srcPtr->"+getter+"()[i"+parameterName+"] != NULL ) {");
-//out.println("            this->"+getter+"().push_back(");
-//out.println("                dynamic_cast<"+arrayType+"*>(");
-//out.println("                    srcPtr->"+getter+"()[i"+parameterName+"]->cloneDataStructure() ) );");
-//out.println("        } else {");
-//out.println("            this->"+getter+"().push_back( NULL );");
-//out.println("        }");
-//out.println("    }");
-//
-//        } else if( property.getType().isArrayType() &&
-//                   property.getType().getArrayComponentType().isPrimitiveType() ) {
-//
-//out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
-//
-//        } else {
-//
-//out.println("    if( srcPtr->"+getter+"() != NULL ) {");
-//out.println("        this->"+setter+"(");
-//out.println("            dynamic_cast<"+type+"*>(");
-//out.println("                srcPtr->"+getter+"()->cloneDataStructure() ) );");
-//out.println("    }");
-        }
-//    }
+    }
 
 out.println("}");
 out.println("");
@@ -334,6 +293,11 @@ out.println("    ostringstream stream;" );
 out.println("");
 out.println("    stream << \"Begin Class = "+className+"\" << std::endl;" );
 out.println("    stream << \" Value of "+className+"::ID_" + className.toUpperCase() + " = "+getOpenWireOpCode(jclass)+"\" << std::endl;");
+
+        if( className.equals( "Message" ) ) {
+out.println("    stream << \" Value of ackHandler = \" << ackHandler << std::endl;");
+out.println("    stream << \" Value of properties = \" << this->properties.toString() << std::endl;");
+        }
 
 for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
     JProperty property = (JProperty) iter.next();
@@ -412,6 +376,18 @@ out.println("");
 out.println("    if( valuePtr == NULL || value == NULL ) {");
 out.println("        return false;");
 out.println("    }");
+out.println("");
+
+        if( className.equals( "Message" ) ) {
+out.println("    if( ackHandler != valuePtr->getAckHandler() ){");
+out.println("        return false;");
+out.println("    }");
+out.println("");
+out.println("    if( !properties.equals( valuePtr->properties ) ) {");
+out.println("        return false;");
+out.println("    }");
+out.println("");
+        }
 
 for( Iterator iter = properties.iterator(); iter.hasNext(); ) {
     JProperty property = (JProperty) iter.next();
@@ -517,13 +493,11 @@ out.println("}");
 
                 type = "decaf::lang::Pointer<" + type + ">&";
                 constNess = "const ";
-//                type = type + "*";
             } else if( property.getType().getSimpleName().equals("String") ||
                        type.startsWith( "std::vector") ) {
                 type = type + "&";
                 constNess = "const ";
             }
-
 
 out.println("");
 
@@ -628,6 +602,42 @@ out.println("///////////////////////////////////////////////////////////////////
 out.println(""+className+"& "+className+"::operator= ( const "+className+"& other ) {");
 out.println("    this->copyDataStructure( &other );");
 out.println("}");
+out.println("");
+        }
+
+        if( className.equals( "Message" ) ) {
+
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("    void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+out.println("        throw ( decaf::io::IOException ) {");
+out.println("");
+out.println("        try{");
+out.println("");
+out.println("            marshalledProperties.clear();");
+out.println("            if( !properties.isEmpty() )");
+out.println("            {");
+out.println("                wireformat::openwire::marshal::PrimitiveMapMarshaller::marshal(");
+out.println("                    &properties, marshalledProperties );");
+out.println("            }");
+out.println("        }");
+out.println("        AMQ_CATCH_RETHROW( decaf::io::IOException )");
+out.println("        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )");
+out.println("        AMQ_CATCHALL_THROW( decaf::io::IOException )");
+out.println("    }");
+out.println("");
+out.println("////////////////////////////////////////////////////////////////////////////////");
+out.println("    void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )");
+out.println("        throw ( decaf::io::IOException ) {");
+out.println("");
+out.println("        try{");
+out.println("");
+out.println("            wireformat::openwire::marshal::PrimitiveMapMarshaller::unmarshal(");
+out.println("                &properties, marshalledProperties );");
+out.println("        }");
+out.println("        AMQ_CATCH_RETHROW( decaf::io::IOException )");
+out.println("        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )");
+out.println("        AMQ_CATCHALL_THROW( decaf::io::IOException )");
+out.println("    }");
 out.println("");
         }
     }

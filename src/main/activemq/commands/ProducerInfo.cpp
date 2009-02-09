@@ -134,6 +134,7 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getProducerId() != NULL ) {
         if( !this->getProducerId()->equals( valuePtr->getProducerId().get() ) ) {
             return false;

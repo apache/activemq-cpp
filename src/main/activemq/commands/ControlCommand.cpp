@@ -108,6 +108,7 @@ bool ControlCommand::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getCommand() != valuePtr->getCommand() ) {
         return false;
     }

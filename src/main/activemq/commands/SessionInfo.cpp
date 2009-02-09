@@ -112,6 +112,7 @@ bool SessionInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( this->getSessionId() != NULL ) {
         if( !this->getSessionId()->equals( valuePtr->getSessionId().get() ) ) {
             return false;

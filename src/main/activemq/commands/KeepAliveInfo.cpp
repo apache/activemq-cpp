@@ -105,6 +105,7 @@ bool KeepAliveInfo::equals( const DataStructure* value ) const {
     if( valuePtr == NULL || value == NULL ) {
         return false;
     }
+
     if( !BaseCommand::equals( value ) ) {
         return false;
     }

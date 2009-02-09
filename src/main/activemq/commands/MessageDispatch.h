@@ -27,8 +27,8 @@
 #include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/Message.h>
+#include <activemq/commands/ActiveMQDestination.h>
 #include <vector>
 #include <string>
 
