@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConnectionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -59,12 +60,12 @@ ConnectionInfo::~ConnectionInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionInfo* ConnectionInfo::cloneDataStructure() const {
-    ConnectionInfo* connectionInfo = new ConnectionInfo();
+    std::auto_ptr<ConnectionInfo> connectionInfo( new ConnectionInfo() );
 
     // Copy the data from the base class or classes
     connectionInfo->copyDataStructure( this );
 
-    return connectionInfo;
+    return connectionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

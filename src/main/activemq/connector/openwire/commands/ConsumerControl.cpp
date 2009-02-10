@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConsumerControl.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -55,12 +56,12 @@ ConsumerControl::~ConsumerControl()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerControl* ConsumerControl::cloneDataStructure() const {
-    ConsumerControl* consumerControl = new ConsumerControl();
+    std::auto_ptr<ConsumerControl> consumerControl( new ConsumerControl() );
 
     // Copy the data from the base class or classes
     consumerControl->copyDataStructure( this );
 
-    return consumerControl;
+    return consumerControl.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

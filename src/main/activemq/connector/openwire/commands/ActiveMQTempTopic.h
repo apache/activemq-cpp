@@ -28,6 +28,7 @@
 #include <cms/TemporaryTopic.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -54,9 +55,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQTempTopic* cloneDataStructure() const {
-            ActiveMQTempTopic* message = new ActiveMQTempTopic();
+            std::auto_ptr<ActiveMQTempTopic> message( new ActiveMQTempTopic() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

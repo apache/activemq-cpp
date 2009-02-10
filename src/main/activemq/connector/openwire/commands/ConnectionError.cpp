@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConnectionError.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -52,12 +53,12 @@ ConnectionError::~ConnectionError()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError* ConnectionError::cloneDataStructure() const {
-    ConnectionError* connectionError = new ConnectionError();
+    std::auto_ptr<ConnectionError> connectionError( new ConnectionError() );
 
     // Copy the data from the base class or classes
     connectionError->copyDataStructure( this );
 
-    return connectionError;
+    return connectionError.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

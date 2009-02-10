@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/XATransactionId.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ XATransactionId::~XATransactionId()
 
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId* XATransactionId::cloneDataStructure() const {
-    XATransactionId* xATransactionId = new XATransactionId();
+    std::auto_ptr<XATransactionId> xATransactionId( new XATransactionId() );
 
     // Copy the data from the base class or classes
     xATransactionId->copyDataStructure( this );
 
-    return xATransactionId;
+    return xATransactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

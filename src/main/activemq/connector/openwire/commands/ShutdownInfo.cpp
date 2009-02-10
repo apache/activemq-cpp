@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ShutdownInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -48,12 +49,12 @@ ShutdownInfo::~ShutdownInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 ShutdownInfo* ShutdownInfo::cloneDataStructure() const {
-    ShutdownInfo* shutdownInfo = new ShutdownInfo();
+    std::auto_ptr<ShutdownInfo> shutdownInfo( new ShutdownInfo() );
 
     // Copy the data from the base class or classes
     shutdownInfo->copyDataStructure( this );
 
-    return shutdownInfo;
+    return shutdownInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

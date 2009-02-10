@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/NetworkBridgeFilter.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -51,12 +52,12 @@ NetworkBridgeFilter::~NetworkBridgeFilter()
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkBridgeFilter* NetworkBridgeFilter::cloneDataStructure() const {
-    NetworkBridgeFilter* networkBridgeFilter = new NetworkBridgeFilter();
+    std::auto_ptr<NetworkBridgeFilter> networkBridgeFilter( new NetworkBridgeFilter() );
 
     // Copy the data from the base class or classes
     networkBridgeFilter->copyDataStructure( this );
 
-    return networkBridgeFilter;
+    return networkBridgeFilter.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

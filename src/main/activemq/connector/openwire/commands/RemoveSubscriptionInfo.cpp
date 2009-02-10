@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/RemoveSubscriptionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -52,12 +53,12 @@ RemoveSubscriptionInfo::~RemoveSubscriptionInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo* RemoveSubscriptionInfo::cloneDataStructure() const {
-    RemoveSubscriptionInfo* removeSubscriptionInfo = new RemoveSubscriptionInfo();
+    std::auto_ptr<RemoveSubscriptionInfo> removeSubscriptionInfo( new RemoveSubscriptionInfo() );
 
     // Copy the data from the base class or classes
     removeSubscriptionInfo->copyDataStructure( this );
 
-    return removeSubscriptionInfo;
+    return removeSubscriptionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

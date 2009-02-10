@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ProducerInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -57,12 +58,12 @@ ProducerInfo::~ProducerInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo* ProducerInfo::cloneDataStructure() const {
-    ProducerInfo* producerInfo = new ProducerInfo();
+    std::auto_ptr<ProducerInfo> producerInfo( new ProducerInfo() );
 
     // Copy the data from the base class or classes
     producerInfo->copyDataStructure( this );
 
-    return producerInfo;
+    return producerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

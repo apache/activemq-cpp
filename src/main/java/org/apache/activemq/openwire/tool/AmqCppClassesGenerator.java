@@ -155,6 +155,7 @@ out.println(" */");
 out.println("#include <activemq/connector/openwire/commands/"+className+".h>");
 out.println("#include <activemq/exceptions/ActiveMQException.h>");
 out.println("#include <decaf/lang/exceptions/NullPointerException.h>");
+out.println("#include <memory>");
 out.println("");
 out.println("using namespace std;");
 out.println("using namespace activemq;");
@@ -223,12 +224,12 @@ out.println(className+"* "+className+"::cloneDataStructure() const {");
 
     String newInstance = decapitalize( className );
 
-out.println("    "+className+"* "+newInstance+" = new "+className+"();");
+out.println("    std::auto_ptr<"+className+"> "+newInstance+"( new "+className+"() );");
 out.println("");
 out.println("    // Copy the data from the base class or classes");
 out.println("    "+newInstance+"->copyDataStructure( this );");
 out.println("");
-out.println("    return "+newInstance+";");
+out.println("    return "+newInstance+".release();");
 out.println("}");
 
 out.println("");

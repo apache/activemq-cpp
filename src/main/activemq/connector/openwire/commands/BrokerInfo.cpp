@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/BrokerInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -63,12 +64,12 @@ BrokerInfo::~BrokerInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo* BrokerInfo::cloneDataStructure() const {
-    BrokerInfo* brokerInfo = new BrokerInfo();
+    std::auto_ptr<BrokerInfo> brokerInfo( new BrokerInfo() );
 
     // Copy the data from the base class or classes
     brokerInfo->copyDataStructure( this );
 
-    return brokerInfo;
+    return brokerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

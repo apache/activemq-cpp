@@ -32,6 +32,7 @@
 #include <cms/BytesMessage.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -58,9 +59,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQBytesMessage* cloneDataStructure() const {
-            ActiveMQBytesMessage* message = new ActiveMQBytesMessage();
+            std::auto_ptr<ActiveMQBytesMessage> message( new ActiveMQBytesMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

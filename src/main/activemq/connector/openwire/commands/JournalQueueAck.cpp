@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/JournalQueueAck.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -52,12 +53,12 @@ JournalQueueAck::~JournalQueueAck()
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalQueueAck* JournalQueueAck::cloneDataStructure() const {
-    JournalQueueAck* journalQueueAck = new JournalQueueAck();
+    std::auto_ptr<JournalQueueAck> journalQueueAck( new JournalQueueAck() );
 
     // Copy the data from the base class or classes
     journalQueueAck->copyDataStructure( this );
 
-    return journalQueueAck;
+    return journalQueueAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

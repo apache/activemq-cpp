@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/DestinationInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -57,12 +58,12 @@ DestinationInfo::~DestinationInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 DestinationInfo* DestinationInfo::cloneDataStructure() const {
-    DestinationInfo* destinationInfo = new DestinationInfo();
+    std::auto_ptr<DestinationInfo> destinationInfo( new DestinationInfo() );
 
     // Copy the data from the base class or classes
     destinationInfo->copyDataStructure( this );
 
-    return destinationInfo;
+    return destinationInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

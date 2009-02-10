@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/JournalTopicAck.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -57,12 +58,12 @@ JournalTopicAck::~JournalTopicAck()
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTopicAck* JournalTopicAck::cloneDataStructure() const {
-    JournalTopicAck* journalTopicAck = new JournalTopicAck();
+    std::auto_ptr<JournalTopicAck> journalTopicAck( new JournalTopicAck() );
 
     // Copy the data from the base class or classes
     journalTopicAck->copyDataStructure( this );
 
-    return journalTopicAck;
+    return journalTopicAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

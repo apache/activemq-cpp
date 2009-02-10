@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ControlCommand.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ ControlCommand::~ControlCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 ControlCommand* ControlCommand::cloneDataStructure() const {
-    ControlCommand* controlCommand = new ControlCommand();
+    std::auto_ptr<ControlCommand> controlCommand( new ControlCommand() );
 
     // Copy the data from the base class or classes
     controlCommand->copyDataStructure( this );
 
-    return controlCommand;
+    return controlCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

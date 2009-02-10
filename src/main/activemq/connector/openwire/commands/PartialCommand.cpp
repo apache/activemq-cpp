@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/PartialCommand.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ PartialCommand::~PartialCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 PartialCommand* PartialCommand::cloneDataStructure() const {
-    PartialCommand* partialCommand = new PartialCommand();
+    std::auto_ptr<PartialCommand> partialCommand( new PartialCommand() );
 
     // Copy the data from the base class or classes
     partialCommand->copyDataStructure( this );
 
-    return partialCommand;
+    return partialCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

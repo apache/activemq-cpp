@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConnectionId.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ ConnectionId::~ConnectionId()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionId* ConnectionId::cloneDataStructure() const {
-    ConnectionId* connectionId = new ConnectionId();
+    std::auto_ptr<ConnectionId> connectionId( new ConnectionId() );
 
     // Copy the data from the base class or classes
     connectionId->copyDataStructure( this );
 
-    return connectionId;
+    return connectionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

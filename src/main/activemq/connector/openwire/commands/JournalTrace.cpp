@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/JournalTrace.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ JournalTrace::~JournalTrace()
 
 ////////////////////////////////////////////////////////////////////////////////
 JournalTrace* JournalTrace::cloneDataStructure() const {
-    JournalTrace* journalTrace = new JournalTrace();
+    std::auto_ptr<JournalTrace> journalTrace( new JournalTrace() );
 
     // Copy the data from the base class or classes
     journalTrace->copyDataStructure( this );
 
-    return journalTrace;
+    return journalTrace.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

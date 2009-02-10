@@ -20,6 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/connector/openwire/commands/ActiveMQMessageBase.h>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -55,9 +56,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQMessage* cloneDataStructure() const {
-            ActiveMQMessage* message = new ActiveMQMessage();
+            std::auto_ptr<ActiveMQMessage> message( new ActiveMQMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

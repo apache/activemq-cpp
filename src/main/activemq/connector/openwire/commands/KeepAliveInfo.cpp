@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/KeepAliveInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -48,12 +49,12 @@ KeepAliveInfo::~KeepAliveInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 KeepAliveInfo* KeepAliveInfo::cloneDataStructure() const {
-    KeepAliveInfo* keepAliveInfo = new KeepAliveInfo();
+    std::auto_ptr<KeepAliveInfo> keepAliveInfo( new KeepAliveInfo() );
 
     // Copy the data from the base class or classes
     keepAliveInfo->copyDataStructure( this );
 
-    return keepAliveInfo;
+    return keepAliveInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

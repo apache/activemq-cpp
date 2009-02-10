@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/SubscriptionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -55,12 +56,12 @@ SubscriptionInfo::~SubscriptionInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 SubscriptionInfo* SubscriptionInfo::cloneDataStructure() const {
-    SubscriptionInfo* subscriptionInfo = new SubscriptionInfo();
+    std::auto_ptr<SubscriptionInfo> subscriptionInfo( new SubscriptionInfo() );
 
     // Copy the data from the base class or classes
     subscriptionInfo->copyDataStructure( this );
 
-    return subscriptionInfo;
+    return subscriptionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConsumerInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -70,12 +71,12 @@ ConsumerInfo::~ConsumerInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerInfo* ConsumerInfo::cloneDataStructure() const {
-    ConsumerInfo* consumerInfo = new ConsumerInfo();
+    std::auto_ptr<ConsumerInfo> consumerInfo( new ConsumerInfo() );
 
     // Copy the data from the base class or classes
     consumerInfo->copyDataStructure( this );
 
-    return consumerInfo;
+    return consumerInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

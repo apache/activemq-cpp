@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ReplayCommand.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -50,12 +51,12 @@ ReplayCommand::~ReplayCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 ReplayCommand* ReplayCommand::cloneDataStructure() const {
-    ReplayCommand* replayCommand = new ReplayCommand();
+    std::auto_ptr<ReplayCommand> replayCommand( new ReplayCommand() );
 
     // Copy the data from the base class or classes
     replayCommand->copyDataStructure( this );
 
-    return replayCommand;
+    return replayCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

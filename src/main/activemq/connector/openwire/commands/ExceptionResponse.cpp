@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ExceptionResponse.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -50,12 +51,12 @@ ExceptionResponse::~ExceptionResponse()
 
 ////////////////////////////////////////////////////////////////////////////////
 ExceptionResponse* ExceptionResponse::cloneDataStructure() const {
-    ExceptionResponse* exceptionResponse = new ExceptionResponse();
+    std::auto_ptr<ExceptionResponse> exceptionResponse( new ExceptionResponse() );
 
     // Copy the data from the base class or classes
     exceptionResponse->copyDataStructure( this );
 
-    return exceptionResponse;
+    return exceptionResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/MessagePull.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -56,12 +57,12 @@ MessagePull::~MessagePull()
 
 ////////////////////////////////////////////////////////////////////////////////
 MessagePull* MessagePull::cloneDataStructure() const {
-    MessagePull* messagePull = new MessagePull();
+    std::auto_ptr<MessagePull> messagePull( new MessagePull() );
 
     // Copy the data from the base class or classes
     messagePull->copyDataStructure( this );
 
-    return messagePull;
+    return messagePull.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

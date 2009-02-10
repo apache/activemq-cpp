@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/LastPartialCommand.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -48,12 +49,12 @@ LastPartialCommand::~LastPartialCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 LastPartialCommand* LastPartialCommand::cloneDataStructure() const {
-    LastPartialCommand* lastPartialCommand = new LastPartialCommand();
+    std::auto_ptr<LastPartialCommand> lastPartialCommand( new LastPartialCommand() );
 
     // Copy the data from the base class or classes
     lastPartialCommand->copyDataStructure( this );
 
-    return lastPartialCommand;
+    return lastPartialCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/TransactionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -53,12 +54,12 @@ TransactionInfo::~TransactionInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionInfo* TransactionInfo::cloneDataStructure() const {
-    TransactionInfo* transactionInfo = new TransactionInfo();
+    std::auto_ptr<TransactionInfo> transactionInfo( new TransactionInfo() );
 
     // Copy the data from the base class or classes
     transactionInfo->copyDataStructure( this );
 
-    return transactionInfo;
+    return transactionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ConsumerId.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -51,12 +52,12 @@ ConsumerId::~ConsumerId()
 
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerId* ConsumerId::cloneDataStructure() const {
-    ConsumerId* consumerId = new ConsumerId();
+    std::auto_ptr<ConsumerId> consumerId( new ConsumerId() );
 
     // Copy the data from the base class or classes
     consumerId->copyDataStructure( this );
 
-    return consumerId;
+    return consumerId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

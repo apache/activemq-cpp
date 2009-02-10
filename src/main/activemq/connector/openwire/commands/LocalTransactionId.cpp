@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/LocalTransactionId.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -51,12 +52,12 @@ LocalTransactionId::~LocalTransactionId()
 
 ////////////////////////////////////////////////////////////////////////////////
 LocalTransactionId* LocalTransactionId::cloneDataStructure() const {
-    LocalTransactionId* localTransactionId = new LocalTransactionId();
+    std::auto_ptr<LocalTransactionId> localTransactionId( new LocalTransactionId() );
 
     // Copy the data from the base class or classes
     localTransactionId->copyDataStructure( this );
 
-    return localTransactionId;
+    return localTransactionId.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

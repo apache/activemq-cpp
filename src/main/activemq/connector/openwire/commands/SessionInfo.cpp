@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/SessionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -50,12 +51,12 @@ SessionInfo::~SessionInfo()
 
 ////////////////////////////////////////////////////////////////////////////////
 SessionInfo* SessionInfo::cloneDataStructure() const {
-    SessionInfo* sessionInfo = new SessionInfo();
+    std::auto_ptr<SessionInfo> sessionInfo( new SessionInfo() );
 
     // Copy the data from the base class or classes
     sessionInfo->copyDataStructure( this );
 
-    return sessionInfo;
+    return sessionInfo.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

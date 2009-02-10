@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/MessageDispatch.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -55,12 +56,12 @@ MessageDispatch::~MessageDispatch()
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageDispatch* MessageDispatch::cloneDataStructure() const {
-    MessageDispatch* messageDispatch = new MessageDispatch();
+    std::auto_ptr<MessageDispatch> messageDispatch( new MessageDispatch() );
 
     // Copy the data from the base class or classes
     messageDispatch->copyDataStructure( this );
 
-    return messageDispatch;
+    return messageDispatch.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

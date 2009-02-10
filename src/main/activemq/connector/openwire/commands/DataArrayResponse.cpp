@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/DataArrayResponse.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -51,12 +52,12 @@ DataArrayResponse::~DataArrayResponse()
 
 ////////////////////////////////////////////////////////////////////////////////
 DataArrayResponse* DataArrayResponse::cloneDataStructure() const {
-    DataArrayResponse* dataArrayResponse = new DataArrayResponse();
+    std::auto_ptr<DataArrayResponse> dataArrayResponse( new DataArrayResponse() );
 
     // Copy the data from the base class or classes
     dataArrayResponse->copyDataStructure( this );
 
-    return dataArrayResponse;
+    return dataArrayResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

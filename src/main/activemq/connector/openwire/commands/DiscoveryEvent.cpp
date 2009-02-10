@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/DiscoveryEvent.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -50,12 +51,12 @@ DiscoveryEvent::~DiscoveryEvent()
 
 ////////////////////////////////////////////////////////////////////////////////
 DiscoveryEvent* DiscoveryEvent::cloneDataStructure() const {
-    DiscoveryEvent* discoveryEvent = new DiscoveryEvent();
+    std::auto_ptr<DiscoveryEvent> discoveryEvent( new DiscoveryEvent() );
 
     // Copy the data from the base class or classes
     discoveryEvent->copyDataStructure( this );
 
-    return discoveryEvent;
+    return discoveryEvent.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

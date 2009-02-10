@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/MessageAck.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -60,12 +61,12 @@ MessageAck::~MessageAck()
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageAck* MessageAck::cloneDataStructure() const {
-    MessageAck* messageAck = new MessageAck();
+    std::auto_ptr<MessageAck> messageAck( new MessageAck() );
 
     // Copy the data from the base class or classes
     messageAck->copyDataStructure( this );
 
-    return messageAck;
+    return messageAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

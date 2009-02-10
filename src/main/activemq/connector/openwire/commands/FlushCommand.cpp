@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/FlushCommand.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -48,12 +49,12 @@ FlushCommand::~FlushCommand()
 
 ////////////////////////////////////////////////////////////////////////////////
 FlushCommand* FlushCommand::cloneDataStructure() const {
-    FlushCommand* flushCommand = new FlushCommand();
+    std::auto_ptr<FlushCommand> flushCommand( new FlushCommand() );
 
     // Copy the data from the base class or classes
     flushCommand->copyDataStructure( this );
 
-    return flushCommand;
+    return flushCommand.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

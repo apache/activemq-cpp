@@ -28,6 +28,7 @@
 #include <cms/TextMessage.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace activemq{
 namespace connector{
@@ -53,9 +54,9 @@ namespace commands{
          * @returns new copy of this object.
          */
         virtual ActiveMQTextMessage* cloneDataStructure() const {
-            ActiveMQTextMessage* message = new ActiveMQTextMessage();
+            std::auto_ptr<ActiveMQTextMessage> message( new ActiveMQTextMessage() );
             message->copyDataStructure( this );
-            return message;
+            return message.release();
         }
 
         /**

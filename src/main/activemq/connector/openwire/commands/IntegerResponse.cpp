@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/IntegerResponse.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -49,12 +50,12 @@ IntegerResponse::~IntegerResponse()
 
 ////////////////////////////////////////////////////////////////////////////////
 IntegerResponse* IntegerResponse::cloneDataStructure() const {
-    IntegerResponse* integerResponse = new IntegerResponse();
+    std::auto_ptr<IntegerResponse> integerResponse( new IntegerResponse() );
 
     // Copy the data from the base class or classes
     integerResponse->copyDataStructure( this );
 
-    return integerResponse;
+    return integerResponse.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

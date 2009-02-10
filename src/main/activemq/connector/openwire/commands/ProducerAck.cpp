@@ -17,6 +17,7 @@
 #include <activemq/connector/openwire/commands/ProducerAck.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -51,12 +52,12 @@ ProducerAck::~ProducerAck()
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck* ProducerAck::cloneDataStructure() const {
-    ProducerAck* producerAck = new ProducerAck();
+    std::auto_ptr<ProducerAck> producerAck( new ProducerAck() );
 
     // Copy the data from the base class or classes
     producerAck->copyDataStructure( this );
 
-    return producerAck;
+    return producerAck.release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
