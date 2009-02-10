@@ -34,14 +34,14 @@ PooledSession::PooledSession( SessionPool* pool, cms::Session* session ) {
 PooledSession::~PooledSession(){
 
     // Destroy cached producers.
-    std::vector<CachedProducer*> cachedProducers = producerCache.getValues();
+    std::vector<CachedProducer*> cachedProducers = producerCache.values();
     for( std::size_t ix = 0; ix < cachedProducers.size(); ++ix ) {
         delete cachedProducers[ix];
     }
     cachedProducers.clear();
 
     // Destroy cached consumers.
-    std::vector<CachedConsumer*> cachedConsumers = consumerCache.getValues();
+    std::vector<CachedConsumer*> cachedConsumers = consumerCache.values();
     for( std::size_t ix = 0; ix < cachedConsumers.size(); ++ix ) {
         delete cachedConsumers[ix];
     }
@@ -72,7 +72,7 @@ cms::MessageProducer* PooledSession::createCachedProducer(
         // Check the cache - add it if necessary.
         CachedProducer* cachedProducer = NULL;
         try {
-            cachedProducer = producerCache.getValue( key );
+            cachedProducer = producerCache.get( key );
         } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
@@ -86,7 +86,7 @@ cms::MessageProducer* PooledSession::createCachedProducer(
             cachedProducer = new CachedProducer( p );
 
             // Add it to the cache.
-            producerCache.setValue( key, cachedProducer );
+            producerCache.put( key, cachedProducer );
         }
 
         return cachedProducer;
@@ -117,7 +117,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer(
         // Check the cache - add it if necessary.
         CachedConsumer* cachedConsumer = NULL;
         try {
-            cachedConsumer = consumerCache.getValue( key );
+            cachedConsumer = consumerCache.get( key );
         } catch( decaf::lang::exceptions::NoSuchElementException& e ) {
 
             // No producer exists for this destination - start by creating
@@ -131,7 +131,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer(
             cachedConsumer = new CachedConsumer( c );
 
             // Add it to the cache.
-            consumerCache.setValue( key, cachedConsumer );
+            consumerCache.put( key, cachedConsumer );
         }
 
         return cachedConsumer;

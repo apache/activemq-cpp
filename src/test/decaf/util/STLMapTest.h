@@ -15,41 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_UTIL_MAPTEST_H_
-#define _DECAF_UTIL_MAPTEST_H_
+#ifndef _DECAF_UTIL_STLMAPTEST_H_
+#define _DECAF_UTIL_STLMAPTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-namespace decaf{
-namespace util{
+namespace decaf {
+namespace util {
 
-    class MapTest : public CppUnit::TestFixture
+    class STLMapTest : public CppUnit::TestFixture
     {
-        CPPUNIT_TEST_SUITE( MapTest );
-        CPPUNIT_TEST( testContainsKey );
-        CPPUNIT_TEST( testClear );
-        CPPUNIT_TEST( testSize );
-        CPPUNIT_TEST( testValue );
-        CPPUNIT_TEST( testRemove );
-        CPPUNIT_TEST( testContiansValue );
-        CPPUNIT_TEST( testIsEmpty );
+        CPPUNIT_TEST_SUITE( STLMapTest );
+        CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST_SUITE_END();
 
     public:
-        MapTest();
-        virtual ~MapTest();
 
-        void testContainsKey();
-        void testClear();
-        void testSize();
-        void testValue();
-        void testRemove();
-        void testContiansValue();
-        void testIsEmpty();
+        STLMapTest() {}
+        virtual ~STLMapTest() {}
+
+        void testConstructor();
 
     };
 
 }}
 
-#endif /*_DECAF_UTIL_MAPTEST_H_*/
+#endif /* _DECAF_UTIL_STLMAPTEST_H_ */

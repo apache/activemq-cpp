@@ -416,12 +416,12 @@ namespace util{
         void setMap( const decaf::util::Map<std::string, PrimitiveValueNode>& lvalue );
 
         /**
-         * Gets the Primtive Map value of this Node.
+         * Gets the Primitive Map value of this Node.
          * @return value contained at the given index
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        decaf::util::Map<std::string, PrimitiveValueNode> getMap() const
+        const decaf::util::Map<std::string, PrimitiveValueNode>& getMap() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**

@@ -18,7 +18,7 @@
 #include "SystemTest.h"
 
 #include <decaf/lang/System.h>
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -44,7 +44,7 @@ void SystemTest::test_getenv() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_getenv2() {
 
-    Map<std::string, std::string> values = System::getenv();
+    STLMap<std::string, std::string> values = System::getenv();
 
     CPPUNIT_ASSERT( values.size() != 0 );
     CPPUNIT_ASSERT( values.containsKey( "PATH" ) || values.containsKey( "Path" ) );
@@ -54,10 +54,10 @@ void SystemTest::test_getenv2() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_setenv() {
 
-    Map<std::string, std::string> values1 = System::getenv();
+    STLMap<std::string, std::string> values1 = System::getenv();
     CPPUNIT_ASSERT( !values1.containsKey( "PATH_ASDFGHJKL" ) );
     System::setenv( "PATH_ASDFGHJKL", "test" );
-    Map<std::string, std::string> values2 = System::getenv();
+    STLMap<std::string, std::string> values2 = System::getenv();
     CPPUNIT_ASSERT( values2.containsKey( "PATH_ASDFGHJKL" ) );
     System::unsetenv( "PATH_ASDFGHJKL" );
 }
@@ -65,13 +65,13 @@ void SystemTest::test_setenv() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_unsetenv() {
 
-    Map<std::string, std::string> values1 = System::getenv();
+    STLMap<std::string, std::string> values1 = System::getenv();
     CPPUNIT_ASSERT( !values1.containsKey( "PATH_ASDFGHJKL" ) );
     System::setenv( "PATH_ASDFGHJKL", "test" );
-    Map<std::string, std::string> values2 = System::getenv();
+    STLMap<std::string, std::string> values2 = System::getenv();
     CPPUNIT_ASSERT( values2.containsKey( "PATH_ASDFGHJKL" ) );
     System::unsetenv( "PATH_ASDFGHJKL" );
-    Map<std::string, std::string> values3 = System::getenv();
+    STLMap<std::string, std::string> values3 = System::getenv();
     CPPUNIT_ASSERT( !values3.containsKey( "PATH_ASDFGHJKL" ) );
 }
 

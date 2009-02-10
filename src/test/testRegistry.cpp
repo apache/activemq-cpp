@@ -214,8 +214,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
 //#include <decaf/util/ListTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
-//#include <decaf/util/MapTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
+#include <decaf/util/MapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
+#include <decaf/util/STLMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::STLMapTest );
 //#include <decaf/util/QueueTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
 //#include <decaf/util/RandomTest.h>

@@ -81,7 +81,7 @@ namespace commands {
          * message.
          */
         virtual std::vector<std::string> getPropertyNames() const {
-            return getMessageProperties().getKeys();
+            return getMessageProperties().keySet();
         }
 
         /**

@@ -31,7 +31,7 @@ TransportRegistry::TransportRegistry() {
 ////////////////////////////////////////////////////////////////////////////////
 TransportRegistry::~TransportRegistry() {
 
-    std::vector<TransportFactory*> factories = this->registry.getValues();
+    std::vector<TransportFactory*> factories = this->registry.values();
 
     std::vector<TransportFactory*>::iterator iter = factories.begin();
 
@@ -51,7 +51,7 @@ TransportFactory* TransportRegistry::findFactory( const std::string& name ) cons
             "No Matching Factory Registered for format := %s", name.c_str() );
     }
 
-    return this->registry.getValue( name );
+    return this->registry.get( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,20 +69,20 @@ void TransportRegistry::registerFactory( const std::string& name, TransportFacto
             "Supplied TransportFactory pointer was NULL" );
     }
 
-    this->registry.setValue( name, factory );
+    this->registry.put( name, factory );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void TransportRegistry::unregisterFactory( const std::string& name ) {
     if( this->registry.containsKey( name ) ) {
-        delete this->registry.getValue( name );
+        delete this->registry.get( name );
         this->registry.remove( name );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> TransportRegistry::getTransportNames() const {
-    return this->registry.getKeys();
+    return this->registry.keySet();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

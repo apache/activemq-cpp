@@ -95,7 +95,7 @@ void ActiveMQConnection::addDispatcher(
 
     // Add the consumer to the map.
     synchronized( &dispatchers ) {
-        dispatchers.setValue( consumer, dispatcher );
+        dispatchers.put( consumer, dispatcher );
     }
 }
 
@@ -183,7 +183,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
 
         // Add this producer from the set of active consumer.
         synchronized( &activeProducers ) {
-            activeProducers.setValue( producer->getProducerInfo().getProducerId(), producer );
+            activeProducers.put( producer->getProducerInfo().getProducerId(), producer );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -460,7 +460,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             Dispatcher* dispatcher = NULL;
             synchronized( &dispatchers ) {
 
-                dispatcher = dispatchers.getValue( dispatch->getConsumerId() );
+                dispatcher = dispatchers.get( dispatch->getConsumerId() );
 
                 // If we have no registered dispatcher, the consumer was probably
                 // just closed.
@@ -480,7 +480,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
             // Get the consumer info object for this consumer.
             ActiveMQProducer* producer = NULL;
             synchronized( &this->activeProducers ) {
-                producer = this->activeProducers.getValue( producerAck->getProducerId() );
+                producer = this->activeProducers.get( producerAck->getProducerId() );
                 if( producer != NULL ){
                     producer->onProducerAck( *producerAck );
                 }

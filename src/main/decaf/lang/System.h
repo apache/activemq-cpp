@@ -41,7 +41,7 @@ namespace lang{
          * @return A Map of all environment variables.
          * @throw Exception if an error occurs
          */
-        static util::Map<std::string, std::string> getenv()
+        static const util::Map<std::string, std::string>& getenv()
             throw ( lang::Exception );
 
         /**

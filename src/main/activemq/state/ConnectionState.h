@@ -31,7 +31,7 @@
 #include <activemq/state/TransactionState.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 #include <decaf/util/List.h>
 
 #include <string>
@@ -44,8 +44,8 @@ namespace state {
     private:
 
         std::auto_ptr<commands::ConnectionInfo> info;
-        decaf::util::Map< commands::TransactionId, TransactionState* > transactions;
-        decaf::util::Map< commands::SessionId, SessionState* > sessions;
+        decaf::util::STLMap< commands::TransactionId, TransactionState* > transactions;
+        decaf::util::STLMap< commands::SessionId, SessionState* > sessions;
         decaf::util::List< commands::DestinationInfo* > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 

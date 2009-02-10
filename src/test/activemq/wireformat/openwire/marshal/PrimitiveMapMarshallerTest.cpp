@@ -101,9 +101,9 @@ void PrimitiveMapMarshallerTest::testLists() {
     list2.add( 2 );
     list3.add( 3 );
 
-    myMap.setValue( "1", list1 );
-    myMap.setValue( "2", list2 );
-    myMap.setValue( "3", list3 );
+    myMap.put( "1", list1 );
+    myMap.put( "2", list2 );
+    myMap.put( "3", list3 );
 
     std::vector<unsigned char> marshaled;
 
@@ -134,13 +134,13 @@ void PrimitiveMapMarshallerTest::testMaps() {
     PrimitiveMap map2;
     PrimitiveMap map3;
 
-    map1.setValue( "1", 1 );
-    map2.setValue( "2", 2 );
-    map3.setValue( "3", 3 );
+    map1.put( "1", 1 );
+    map2.put( "2", 2 );
+    map3.put( "3", 3 );
 
-    myMap.setValue( "1", map1 );
-    myMap.setValue( "2", map2 );
-    myMap.setValue( "3", map3 );
+    myMap.put( "1", map1 );
+    myMap.put( "2", map2 );
+    myMap.put( "3", map3 );
 
     std::vector<unsigned char> marshaled;
 

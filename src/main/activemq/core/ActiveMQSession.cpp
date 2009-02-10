@@ -119,7 +119,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Close all Consumers
         synchronized( &this->consumers ) {
 
-            std::vector<ActiveMQConsumer*> closables = this->consumers.getValues();
+            std::vector<ActiveMQConsumer*> closables = this->consumers.values();
 
             for( std::size_t i = 0; i < closables.size(); ++i ) {
                 try{
@@ -133,7 +133,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Close all Producers
         synchronized( &this->producers ) {
 
-            std::vector<ActiveMQProducer*> closables = this->producers.getValues();
+            std::vector<ActiveMQProducer*> closables = this->producers.values();
 
             for( std::size_t i = 0; i < closables.size(); ++i ) {
                 try{
@@ -270,8 +270,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue(
-                consumer->getConsumerInfo().getConsumerId(), consumer.get() );
+            this->consumers.put( consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -313,8 +312,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
-            this->consumers.setValue(
-                consumer->getConsumerInfo().getConsumerId(), consumer.get() );
+            this->consumers.put( consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
 
         return consumer.release();
@@ -373,7 +371,7 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         synchronized( &this->producers ) {
             // Place the Producer into the Map.
-            this->producers.setValue( producerId, producer.get() );
+            this->producers.put( producerId, producer.get() );
         }
 
         // Add to the Connections list
@@ -1037,7 +1035,7 @@ ActiveMQConsumer* ActiveMQSession::getConsumer( const decaf::lang::Pointer<comma
 
     synchronized( &this->consumers ) {
         if( this->consumers.containsKey( id ) ) {
-            return this->consumers.getValue( id );
+            return this->consumers.get( id );
         }
     }
     return NULL;

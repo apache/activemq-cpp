@@ -17,6 +17,7 @@
 
 #include "MapBenchmark.h"
 #include <decaf/lang/Integer.h>
+#include <decaf/util/STLMap.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -32,12 +33,12 @@ void MapBenchmark::run() {
     int numRuns = 500;
     std::string test = "test";
     std::string resultStr = "";
-    Map<std::string, std::string> stringCopy;
-    Map<int, int> intCopy;
+    STLMap<std::string, std::string> stringCopy;
+    STLMap<int, int> intCopy;
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringMap.setValue( test + Integer::toString(i), test + Integer::toString(i) );
-        intMap.setValue( 100 + i, 100 + i );
+        stringMap.put( test + Integer::toString(i), test + Integer::toString(i) );
+        intMap.put( 100 + i, 100 + i );
         stringMap.containsKey( test + Integer::toString(i) );
         intMap.containsKey( 100 + i );
         stringMap.containsValue( test + Integer::toString(i) );
@@ -52,18 +53,18 @@ void MapBenchmark::run() {
     }
 
     for( int i = 0; i < numRuns; ++i ) {
-        stringMap.setValue( test + Integer::toString(i), test + Integer::toString(i) );
-        intMap.setValue( 100 + i, 100 + i );
+        stringMap.put( test + Integer::toString(i), test + Integer::toString(i) );
+        intMap.put( 100 + i, 100 + i );
     }
 
     std::vector<std::string> stringVec;
     std::vector<int> intVec;
 
     for( int i = 0; i < numRuns / 2; ++i ) {
-        stringVec = stringMap.getKeys();
-        stringVec = stringMap.getValues();
-        intVec = intMap.getKeys();
-        intVec = intMap.getValues();
+        stringVec = stringMap.keySet();
+        stringVec = stringMap.values();
+        intVec = intMap.keySet();
+        intVec = intMap.values();
     }
 
     for( int i = 0; i < numRuns / 2; ++i ) {

@@ -32,7 +32,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
     try {
 
         // See if we already have a topic with this name.
-        topic = topicMap.getValue( topicName );
+        topic = topicMap.get( topicName );
 
     } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
 
@@ -43,7 +43,7 @@ cms::Topic* DynamicDestinationResolver::SessionResolver::getTopic(
         resourceLifecycleManager->addDestination( topic );
 
         // Add the topic to the map.
-        topicMap.setValue( topicName, topic );
+        topicMap.put( topicName, topic );
     }
     return topic;
 }
@@ -56,7 +56,7 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
     try {
 
         // See if we already have a queue with this name.
-        queue = queueMap.getValue( queueName );
+        queue = queueMap.get( queueName );
 
     } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
 
@@ -67,7 +67,7 @@ cms::Queue* DynamicDestinationResolver::SessionResolver::getQueue(
         resourceLifecycleManager->addDestination( queue );
 
         // Add the queue to the map.
-        queueMap.setValue( queueName, queue );
+        queueMap.put( queueName, queue );
     }
     return queue;
 }
@@ -82,7 +82,7 @@ DynamicDestinationResolver::~DynamicDestinationResolver() {
 void DynamicDestinationResolver::destroy() {
 
     // Destroy the session resolvers.
-    vector<SessionResolver*> r = sessionResolverMap.getValues();
+    vector<SessionResolver*> r = sessionResolverMap.values();
     for( size_t ix=0; ix<r.size(); ++ix ) {
         delete r[ix];
     }
@@ -101,10 +101,10 @@ cms::Destination* DynamicDestinationResolver::resolveDestinationName(
     // Get the resolver for this session.
     SessionResolver* resolver = NULL;
     try {
-        resolver = sessionResolverMap.getValue( session );
+        resolver = sessionResolverMap.get( session );
     } catch ( decaf::lang::exceptions::NoSuchElementException& ex ) {
         resolver = new SessionResolver( session, resourceLifecycleManager );
-        sessionResolverMap.setValue( session, resolver );
+        sessionResolverMap.put( session, resolver );
     }
 
     // Return the appropriate destination.

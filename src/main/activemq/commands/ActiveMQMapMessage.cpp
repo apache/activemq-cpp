@@ -125,7 +125,7 @@ void ActiveMQMapMessage::checkMapIsUnmarshalled() const
 std::vector<std::string> ActiveMQMapMessage::getMapNames(void) const {
 
     try{
-        return getMap().getKeys();
+        return getMap().keySet();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

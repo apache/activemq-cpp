@@ -49,7 +49,7 @@ void ConnectionState::shutdown() {
 
     if( this->disposed.compareAndSet( false, true ) ) {
 
-        std::vector<SessionState*> values = this->sessions.getValues();
+        std::vector<SessionState*> values = this->sessions.values();
         std::vector<SessionState*>::iterator iter = values.begin();
 
         for( ; iter != values.end(); ++iter ) {

@@ -73,7 +73,7 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
 
             for( int i=0; i < size; i++ ) {
                 std::string key = OpenwireStringSupport::readString( dataIn );
-                map->setValue( key, unmarshalPrimitive( dataIn ) );
+                map->put( key, unmarshalPrimitive( dataIn ) );
             }
 
             return map;
@@ -119,13 +119,13 @@ void PrimitiveMapMarshaller::marshalPrimitiveMap(
 
         dataOut.writeInt( (int)map.size() );
 
-        std::vector<std::string> keys = map.getKeys();
+        std::vector<std::string> keys = map.keySet();
         std::vector<std::string>::const_iterator iter = keys.begin();
 
         for(; iter != keys.end(); ++iter ) {
 
             OpenwireStringSupport::writeString( dataOut, &(*iter) );
-            PrimitiveValueNode value = map.getValue( *iter );
+            PrimitiveValueNode value = map.get( *iter );
             marshalPrimitive( dataOut, value );
         }
     }
@@ -255,7 +255,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
         if( size > 0 ) {
             for( int i=0; i < size; i++ ) {
                 std::string key = OpenwireStringSupport::readString( dataIn );
-                map.setValue( key, unmarshalPrimitive( dataIn ) );
+                map.put( key, unmarshalPrimitive( dataIn ) );
             }
         }
     }

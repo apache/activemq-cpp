@@ -298,8 +298,8 @@ void PrimitiveListTest::testListOfMaps() {
     list.add( map2 );
     list.add( map3 );
 
-    CPPUNIT_ASSERT( list.get(0).getMap().getValue("1").getInt() == 1 );
-    CPPUNIT_ASSERT( list.get(1).getMap().getValue("2").getInt() == 2 );
-    CPPUNIT_ASSERT( list.get(2).getMap().getValue("3").getInt() == 3 );
+    CPPUNIT_ASSERT( list.get(0).getMap().get("1").getInt() == 1 );
+    CPPUNIT_ASSERT( list.get(1).getMap().get("2").getInt() == 2 );
+    CPPUNIT_ASSERT( list.get(2).getMap().get("3").getInt() == 3 );
 
 }

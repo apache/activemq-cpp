@@ -31,7 +31,7 @@ WireFormatRegistry::WireFormatRegistry() {
 ////////////////////////////////////////////////////////////////////////////////
 WireFormatRegistry::~WireFormatRegistry() {
 
-    std::vector<WireFormatFactory*> factories = this->registry.getValues();
+    std::vector<WireFormatFactory*> factories = this->registry.values();
 
     std::vector<WireFormatFactory*>::iterator iter = factories.begin();
 
@@ -51,7 +51,7 @@ WireFormatFactory* WireFormatRegistry::findFactory( const std::string& name ) co
             "No Matching Factory Registered for format := %s", name.c_str() );
     }
 
-    return this->registry.getValue( name );
+    return this->registry.get( name );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,20 +69,20 @@ void WireFormatRegistry::registerFactory( const std::string& name, WireFormatFac
             "Supplied WireFormatFactory pointer was NULL" );
     }
 
-    this->registry.setValue( name, factory );
+    this->registry.put( name, factory );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void WireFormatRegistry::unregisterFactory( const std::string& name ) {
     if( this->registry.containsKey( name ) ) {
-        delete this->registry.getValue( name );
+        delete this->registry.get( name );
         this->registry.remove( name );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<std::string> WireFormatRegistry::getWireFormatNames() const {
-    return this->registry.getKeys();
+    return this->registry.keySet();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,7 @@
 
 #include <activemq/util/PrimitiveList.h>
 #include <activemq/util/PrimitiveMap.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
@@ -439,11 +440,11 @@ void PrimitiveValueNode::setMap(
 
     clear();
     valueType = MAP_TYPE;
-    value.mapValue = new decaf::util::Map<std::string, PrimitiveValueNode>( lvalue );
+    value.mapValue = new decaf::util::STLMap<std::string, PrimitiveValueNode>( lvalue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::util::Map<std::string, PrimitiveValueNode> PrimitiveValueNode::getMap() const
+const decaf::util::Map<std::string, PrimitiveValueNode>& PrimitiveValueNode::getMap() const
     throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     if( valueType != MAP_TYPE ){
@@ -454,7 +455,10 @@ decaf::util::Map<std::string, PrimitiveValueNode> PrimitiveValueNode::getMap() c
     }
 
     if( value.mapValue == NULL ){
-        return decaf::util::Map<std::string, PrimitiveValueNode>();
+        throw decaf::lang::exceptions::NullPointerException(
+            __FILE__,
+            __LINE__,
+            "PrimitiveValue is not set but an element was placed in the Map" );
     }
 
     return *value.mapValue;

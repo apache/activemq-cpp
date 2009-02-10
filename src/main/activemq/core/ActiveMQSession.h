@@ -31,7 +31,7 @@
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
 
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 #include <decaf/util/Set.h>
 #include <decaf/util/Queue.h>
 #include <decaf/util/Properties.h>
@@ -53,13 +53,13 @@ namespace core{
     class AMQCPP_API ActiveMQSession : public cms::Session, public Dispatcher {
     private:
 
-        typedef decaf::util::Map< decaf::lang::Pointer<commands::ConsumerId>,
-                                  ActiveMQConsumer*,
-                                  commands::ConsumerId::COMPARATOR> ConsumersMap;
+        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ConsumerId>,
+                                     ActiveMQConsumer*,
+                                     commands::ConsumerId::COMPARATOR> ConsumersMap;
 
-        typedef decaf::util::Map< decaf::lang::Pointer<commands::ProducerId>,
-                                  ActiveMQProducer*,
-                                  commands::ProducerId::COMPARATOR> ProducersMap;
+        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ProducerId>,
+                                     ActiveMQProducer*,
+                                     commands::ProducerId::COMPARATOR> ProducersMap;
 
     private:
 

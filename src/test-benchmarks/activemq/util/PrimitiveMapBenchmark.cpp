@@ -102,8 +102,8 @@ void PrimitiveMapBenchmark::run() {
     }
 
     for( int i = 0; i < numRuns; ++i ){
-        map.getKeys();
-        map.getValues();
+        map.keySet();
+        map.values();
     }
 
     for( int i = 0; i < numRuns; ++i ){

@@ -32,7 +32,7 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 #include <decaf/util/Set.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
@@ -56,13 +56,13 @@ namespace core{
     {
     private:
 
-        typedef decaf::util::Map< decaf::lang::Pointer<commands::ConsumerId>,
-                                  Dispatcher*,
-                                  commands::ConsumerId::COMPARATOR > DispatcherMap;
+        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ConsumerId>,
+                                     Dispatcher*,
+                                     commands::ConsumerId::COMPARATOR > DispatcherMap;
 
-        typedef decaf::util::Map< decaf::lang::Pointer<commands::ProducerId>,
-                                  ActiveMQProducer*,
-                                  commands::ProducerId::COMPARATOR > ProducerMap;
+        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ProducerId>,
+                                     ActiveMQProducer*,
+                                     commands::ProducerId::COMPARATOR > ProducerMap;
 
     private:
 

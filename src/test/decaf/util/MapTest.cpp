@@ -17,6 +17,7 @@
 
 #include "MapTest.h"
 #include <string>
+#include <decaf/util/STLMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -33,10 +34,10 @@ MapTest::~MapTest(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testContainsKey(){
 
-    Map<string, bool> boolMap;
+    STLMap<string, bool> boolMap;
     CPPUNIT_ASSERT(boolMap.containsKey("bob") == false);
 
-    boolMap.setValue( "bob", true );
+    boolMap.put( "bob", true );
 
     CPPUNIT_ASSERT(boolMap.containsKey("bob") == true );
     CPPUNIT_ASSERT(boolMap.containsKey("fred") == false );
@@ -45,9 +46,9 @@ void MapTest::testContainsKey(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testClear(){
 
-    Map<string, bool> boolMap;
-    boolMap.setValue( "bob", true );
-    boolMap.setValue( "fred", true );
+    STLMap<string, bool> boolMap;
+    boolMap.put( "bob", true );
+    boolMap.put( "fred", true );
 
     CPPUNIT_ASSERT(boolMap.size() == 2 );
     boolMap.clear();
@@ -57,9 +58,9 @@ void MapTest::testClear(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testIsEmpty(){
 
-    Map<string, bool> boolMap;
-    boolMap.setValue( "bob", true );
-    boolMap.setValue( "fred", true );
+    STLMap<string, bool> boolMap;
+    boolMap.put( "bob", true );
+    boolMap.put( "fred", true );
 
     CPPUNIT_ASSERT(boolMap.isEmpty() == false );
     boolMap.clear();
@@ -69,29 +70,29 @@ void MapTest::testIsEmpty(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testSize(){
 
-    Map<string, bool> boolMap;
+    STLMap<string, bool> boolMap;
 
     CPPUNIT_ASSERT(boolMap.size() == 0 );
-    boolMap.setValue( "bob", true );
+    boolMap.put( "bob", true );
     CPPUNIT_ASSERT(boolMap.size() == 1 );
-    boolMap.setValue( "fred", true );
+    boolMap.put( "fred", true );
     CPPUNIT_ASSERT(boolMap.size() == 2 );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testValue(){
 
-    Map<string, bool> boolMap;
+    STLMap<string, bool> boolMap;
 
-    boolMap.setValue( "fred", true );
-    CPPUNIT_ASSERT( boolMap.getValue("fred") == true );
+    boolMap.put( "fred", true );
+    CPPUNIT_ASSERT( boolMap.get("fred") == true );
 
-    boolMap.setValue( "bob", false );
-    CPPUNIT_ASSERT( boolMap.getValue("bob") == false );
-    CPPUNIT_ASSERT( boolMap.getValue("fred") == true );
+    boolMap.put( "bob", false );
+    CPPUNIT_ASSERT( boolMap.get("bob") == false );
+    CPPUNIT_ASSERT( boolMap.get("fred") == true );
 
     try{
-        boolMap.getValue( "mike" );
+        boolMap.get( "mike" );
         CPPUNIT_ASSERT(false);
     } catch( decaf::lang::exceptions::NoSuchElementException& e ){
     }
@@ -99,9 +100,9 @@ void MapTest::testValue(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testRemove(){
-    Map<string, bool> boolMap;
+    STLMap<string, bool> boolMap;
 
-    boolMap.setValue( "fred", true );
+    boolMap.put( "fred", true );
     CPPUNIT_ASSERT( boolMap.containsKey("fred") == true );
     boolMap.remove( "fred" );
     CPPUNIT_ASSERT( boolMap.containsKey("fred") == false );
@@ -109,10 +110,10 @@ void MapTest::testRemove(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testContiansValue(){
-    Map<string, bool> boolMap;
+    STLMap<string, bool> boolMap;
 
-    boolMap.setValue( "fred", true );
-    boolMap.setValue( "fred1", false );
+    boolMap.put( "fred", true );
+    boolMap.put( "fred1", false );
     CPPUNIT_ASSERT( boolMap.containsValue(true) == true );
     boolMap.remove( "fred" );
     CPPUNIT_ASSERT( boolMap.containsValue(true) == false );

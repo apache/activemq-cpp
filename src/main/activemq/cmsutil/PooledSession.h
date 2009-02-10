@@ -19,7 +19,7 @@
 #define ACTIVEMQ_CMSUTIL_POOLEDSESSION_H_
 
 #include <cms/Session.h>
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 #include <activemq/cmsutil/CachedProducer.h>
 #include <activemq/cmsutil/CachedConsumer.h>
 #include <activemq/util/Config.h>
@@ -41,9 +41,9 @@ namespace cmsutil {
 
         cms::Session* session;
 
-        decaf::util::Map<std::string, CachedProducer*> producerCache;
+        decaf::util::STLMap<std::string, CachedProducer*> producerCache;
 
-        decaf::util::Map<std::string, CachedConsumer*> consumerCache;
+        decaf::util::STLMap<std::string, CachedConsumer*> consumerCache;
 
     public:
 

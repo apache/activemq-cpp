@@ -18,7 +18,7 @@
 #include "BrokerIdTest.h"
 
 #include <activemq/commands/BrokerId.h>
-#include <decaf/util/Map.h>
+#include <decaf/util/STLMap.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 
@@ -66,15 +66,15 @@ void BrokerIdTest::test() {
     myCommand2.setValue( "B" );
     myCommand3.setValue( "C" );
 
-    Map< BrokerId*, int, BrokerIdComparitor > testMap;
+    STLMap< BrokerId*, int, BrokerIdComparitor > testMap;
 
-    testMap.setValue( &myCommand1, 0 );
-    testMap.setValue( &myCommand3, 0 );
-    testMap.setValue( &myCommand2, 0 );
+    testMap.put( &myCommand1, 0 );
+    testMap.put( &myCommand3, 0 );
+    testMap.put( &myCommand2, 0 );
 
-    CPPUNIT_ASSERT( testMap.getKeys().at( 0 )->getValue() == "A" );
-    CPPUNIT_ASSERT( testMap.getKeys().at( 1 )->getValue() == "B" );
-    CPPUNIT_ASSERT( testMap.getKeys().at( 2 )->getValue() == "C" );
+    CPPUNIT_ASSERT( testMap.keySet().at( 0 )->getValue() == "A" );
+    CPPUNIT_ASSERT( testMap.keySet().at( 1 )->getValue() == "B" );
+    CPPUNIT_ASSERT( testMap.keySet().at( 2 )->getValue() == "C" );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,15 +93,15 @@ void BrokerIdTest::test2() {
     CPPUNIT_ASSERT( myCommand1->compareTo( *myCommand2 ) == 0 );
     CPPUNIT_ASSERT( myCommand1->compareTo( *myCommand3 ) == -1 );
 
-    Map< Pointer<BrokerId>, int, COMPARATOR > testMap;
+    STLMap< Pointer<BrokerId>, int, COMPARATOR > testMap;
 
-    testMap.setValue( myCommand3, 0 );
-    testMap.setValue( myCommand1, 0 );
+    testMap.put( myCommand3, 0 );
+    testMap.put( myCommand1, 0 );
     CPPUNIT_ASSERT( testMap.size() == 2 );
 
-    testMap.setValue( myCommand2, 0 );
+    testMap.put( myCommand2, 0 );
     CPPUNIT_ASSERT( testMap.size() == 2 );
 
-    CPPUNIT_ASSERT( testMap.getKeys().at( 0 )->getValue() == "A" );
-    CPPUNIT_ASSERT( testMap.getKeys().at( 1 )->getValue() == "C" );
+    CPPUNIT_ASSERT( testMap.keySet().at( 0 )->getValue() == "A" );
+    CPPUNIT_ASSERT( testMap.keySet().at( 1 )->getValue() == "C" );
 }

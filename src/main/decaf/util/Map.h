@@ -18,7 +18,6 @@
 #ifndef _DECAF_UTIL_MAP_H_
 #define _DECAF_UTIL_MAP_H_
 
-#include <map>
 #include <vector>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
@@ -32,12 +31,29 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V, typename COMPARE = std::less<K> > class Map :
+    template <typename K, typename V, typename COMPARATOR = std::less<K> > class Map :
         public concurrent::Synchronizable {
-    private:
+    public:
 
-        std::map<K,V, COMPARE> valueMap;
-        concurrent::Mutex mutex;
+        template< typename K1, typename V1>
+        class Entry {
+        private:
+
+            K1 key;
+            V1 value;
+
+        public:
+
+            Entry() {}
+            virtual ~Entry() {}
+
+            const K1& getKey() const;
+
+            const V1& getValue() const;
+
+            void setValue( const V1& value );
+
+        };
 
     public:
 
@@ -46,47 +62,27 @@ namespace util{
          */
         Map() {}
 
-        /**
-         * Copy constructor - copies the content of the given map into this
-         * one.
-         * @param source The source map.
-         */
-        Map( const Map& source ) : concurrent::Synchronizable() {
-            copy( source );
-        }
-
         virtual ~Map() {}
 
         /**
-         * Comparison, equality is dependant on the method of determining
+         * Comparison, equality is dependent on the method of determining
          * if the element are equal.
          * @param source - Map to compare to this one.
          * @returns true if the Map passed is equal in value to this one.
          */
-        virtual bool equals( const Map& source ) const {
-            return this->valueMap == source.valueMap;
-        }
+        virtual bool equals( const Map& source ) const = 0;
 
         /**
          * Copies the content of the source map into this map.  Erases
          * all existing data in this map.
          * @param source The source object to copy from.
          */
-        virtual void copy( const Map& source ) {
-
-            // Erase the content of this object, and copy from the source
-            // all the elements.  We access source's private map since we
-            // are also a Map, this saves us a lot of time.
-            valueMap.clear();
-            valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
-        }
+        virtual void copy( const Map& source ) = 0;
 
         /**
          * Removes all keys and values from this map.
          */
-        virtual void clear() {
-            valueMap.clear();
-        }
+        virtual void clear() = 0;
 
         /**
          * Indicates whether or this map contains a value for the
@@ -94,11 +90,7 @@ namespace util{
          * @param key The key to look up.
          * @return true if this map contains the value, otherwise false.
          */
-        virtual bool containsKey( const K& key ) const {
-            typename std::map<K,V,COMPARE>::const_iterator iter;
-            iter = valueMap.find(key);
-            return iter != valueMap.end();
-        }
+        virtual bool containsKey( const K& key ) const = 0;
 
         /**
          * Indicates whether or this map contains a value for the
@@ -107,165 +99,58 @@ namespace util{
          * @param value The Value to look up.
          * @return true if this map contains the value, otherwise false.
          */
-        virtual bool containsValue( const V& value ) const {
-
-            if( valueMap.empty() ){
-                return false;
-            }
-
-            typename std::map<K,V,COMPARE>::const_iterator iter = valueMap.begin();
-            for( ; iter != valueMap.end(); ++iter ){
-                if( (*iter).second == value ) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        virtual bool containsValue( const V& value ) const = 0;
 
         /**
          * @return if the Map contains any element or not, TRUE or FALSE
          */
-        virtual bool isEmpty() const {
-            return valueMap.empty();
-        }
+        virtual bool isEmpty() const = 0;
 
         /**
          * @return The number of elements (key/value pairs) in this map.
          */
-        virtual std::size_t size() const {
-            return valueMap.size();
-        }
+        virtual std::size_t size() const = 0;
 
         /**
          * Gets the value for the specified key.
          * @param key The search key.
          * @return The value for the given key.
-         * @throws activemq::exceptions::NoSuchElementException
+         * @throws NoSuchElementException
          */
-        virtual V getValue( const K& key ) const
-            throw( lang::exceptions::NoSuchElementException ) {
-
-            typename std::map<K,V,COMPARE>::const_iterator iter;
-            iter = valueMap.find(key);
-            if( iter == valueMap.end() ){
-                throw lang::exceptions::NoSuchElementException( __FILE__,
-                    __LINE__,
-                    "Key does not exist in map" );
-            }
-
-            return iter->second;
-        }
+        virtual V get( const K& key ) const
+            throw( lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Sets the value for the specified key.
          * @param key The target key.
          * @param value The value to be set.
          */
-        virtual void setValue( const K& key, V value ) {
-            valueMap[key] = value;
-        }
+        virtual void put( const K& key, V value ) = 0;
+
+        /**
+         * Stores a copy of the Mappings contained in the other Map in this one.
+         * @param key The target key.
+         * @param value The value to be set.
+         */
+        virtual void putAll( const Map<K,V,COMPARATOR>& other ) = 0;
 
         /**
          * Removes the value (key/value pair) for the specified key from
          * the map.
          * @param key The search key.
          */
-        virtual void remove( const K& key ) {
-            valueMap.erase( key );
-        }
+        virtual void remove( const K& key ) = 0;
 
         /**
          * @return the entire set of keys in this map as a std::vector.
          */
-        virtual std::vector<K> getKeys() const{
-            std::vector<K> keys( valueMap.size() );
-
-            typename std::map<K,V,COMPARE>::const_iterator iter;
-            iter=valueMap.begin();
-            for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-                keys[ix] = iter->first;
-            }
-
-            return keys;
-        }
+        virtual std::vector<K> keySet() const = 0;
 
         /**
          * @return the entire set of values in this map as a std::vector.
          */
-        virtual std::vector<V> getValues() const {
-            std::vector<V> values( valueMap.size() );
+        virtual std::vector<V> values() const = 0;
 
-            typename std::map<K,V,COMPARE>::const_iterator iter;
-            iter=valueMap.begin();
-            for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
-                values[ix] = iter->second;
-            }
-
-            return values;
-        }
-
-    public:     // Methods from Synchronizable
-
-        /**
-         * Locks the object.
-         * @throws ActiveMQException
-         */
-        virtual void lock() throw( lang::Exception ) {
-            mutex.lock();
-        }
-
-        /**
-         * Unlocks the object.
-         * @throws ActiveMQException
-         */
-        virtual void unlock() throw( lang::Exception ) {
-            mutex.unlock();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void wait() throw( lang::Exception ) {
-            mutex.wait();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs the time in millisecsonds to wait, or
-         * WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs )
-            throw( lang::Exception ) {
-            mutex.wait(millisecs);
-        }
-
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notify() throw( lang::Exception ) {
-            mutex.notify();
-        }
-
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
-        virtual void notifyAll() throw( lang::Exception ) {
-            mutex.notifyAll();
-        }
     };
 
 }}
