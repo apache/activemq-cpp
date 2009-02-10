@@ -192,6 +192,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //#include <decaf/net/URLDecoderTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 //
+#include <decaf/util/concurrent/ConcurrentSTLMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentSTLMapTest );
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
 //#include <decaf/util/concurrent/MutexTest.h>

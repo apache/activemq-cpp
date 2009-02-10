@@ -339,6 +339,8 @@ h_sources = \
     decaf/util/concurrent/Callable.h \
     decaf/util/concurrent/CancellationException.h \
     decaf/util/concurrent/Concurrent.h \
+    decaf/util/concurrent/ConcurrentMap.h \
+    decaf/util/concurrent/ConcurrentSTLMap.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Executor.h \
     decaf/util/concurrent/ExecutionException.h \
