@@ -75,6 +75,21 @@ namespace commands{
         virtual decaf::lang::Pointer<commands::Command> visit(
             activemq::state::CommandVisitor* visitor ) throw( exceptions::ActiveMQException ) = 0;
 
+        /*
+         * This section contains a set of short-cut methods for determining if a
+         * Command is of a certain type.  These are the most commonly used Commands
+         * and we save several casts and some ugly code by just adding these here.
+         */
+        virtual bool isResponse() const = 0;
+        virtual bool isMessageDispatch() const = 0;
+        virtual bool isBrokerInfo() const = 0;
+        virtual bool isWireFormatInfo() const = 0;
+        virtual bool isMessage() const = 0;
+        virtual bool isMessageAck() const = 0;
+        virtual bool isProducerAck() const = 0;
+        virtual bool isMessageDispatchNotification() const = 0;
+        virtual bool isShutdownInfo() const = 0;
+
     };
 
 }}

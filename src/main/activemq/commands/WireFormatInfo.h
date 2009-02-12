@@ -243,6 +243,13 @@ namespace commands{
          */
         bool isValid() const;
 
+        /**
+         * @returns answers true to the isWireFormatInfo query
+         */
+        virtual bool isWireFormatInfo() const {
+            return true;
+        }
+
     public:
 
         /**

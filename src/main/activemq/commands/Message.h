@@ -150,6 +150,13 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
+         * @return an answer of true to the isMessage() query.
+         */
+        virtual bool isMessage() const {
+            return true;
+        }
+
+        /**
          * Handles the marshaling of the objects properties into the
          * internal byte array before the object is marshaled to the
          * wire

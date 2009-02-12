@@ -108,6 +108,13 @@ namespace commands{
         virtual bool equals( const DataStructure* value ) const;
 
         /**
+         * @return an answer of true to the isMessageAck() query.
+         */
+        virtual bool isMessageAck() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.

@@ -33,6 +33,40 @@ import org.codehaus.jam.JProperty;
  */
 public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
 
+    private Set<String> commandsWithShortcuts;
+
+    /*
+     * Here we store all Commands that need to have a isXXX method generated
+     * such as isMessage.  We then check in the <code>checkNeedsShortcut</code>
+     * method and if the Command being generated is in this list we create a
+     * method call to override the virtual method in the base Command interface.
+     */
+    {
+        commandsWithShortcuts = new HashSet<String>();
+        commandsWithShortcuts.add( "Response" );
+        commandsWithShortcuts.add( "MessageDispatch" );
+        commandsWithShortcuts.add( "BrokerInfo" );
+        commandsWithShortcuts.add( "WireFormatInfo" );
+        commandsWithShortcuts.add( "Message" );
+        commandsWithShortcuts.add( "MessageAck" );
+        commandsWithShortcuts.add( "ProducerAck" );
+        commandsWithShortcuts.add( "MessageDispatchNotification" );
+        commandsWithShortcuts.add( "ShutdownInfo" );
+    }
+
+    protected void checkNeedsShortcut( String className, PrintWriter out ) {
+
+        if( this.commandsWithShortcuts.contains( className ) ) {
+            out.println("        /**");
+            out.println("         * @return an answer of true to the is"+className+"() query.");
+            out.println("         */");
+            out.println("        virtual bool is"+className+"() const {");
+            out.println("            return true;");
+            out.println("        }");
+            out.println("");
+        }
+    }
+
     protected String getFilePostFix() {
         return ".h";
     }
@@ -214,6 +248,9 @@ out.println("         * @returns true if DataStructure's are Equal." );
 out.println("         */" );
 out.println("        virtual bool equals( const DataStructure* value ) const;" );
 out.println("");
+
+        // Check if a isXXX object shorcut should be generated and add it if so.
+        checkNeedsShortcut( className, out );
 
         if( className.equals( "Message" ) ) {
 

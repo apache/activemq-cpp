@@ -112,6 +112,34 @@ namespace commands{
             return BaseDataStructure::equals( value );
         }
 
+        virtual bool isResponse() const {
+            return false;
+        }
+        virtual bool isMessageDispatch() const  {
+            return false;
+        }
+        virtual bool isBrokerInfo() const  {
+            return false;
+        }
+        virtual bool isWireFormatInfo() const  {
+            return false;
+        }
+        virtual bool isMessage() const  {
+            return false;
+        }
+        virtual bool isMessageAck() const  {
+            return false;
+        }
+        virtual bool isProducerAck() const  {
+            return false;
+        }
+        virtual bool isMessageDispatchNotification() const  {
+            return false;
+        }
+        virtual bool isShutdownInfo() const  {
+            return false;
+        }
+
     };
 
 }}
