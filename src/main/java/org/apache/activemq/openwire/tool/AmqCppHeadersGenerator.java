@@ -46,6 +46,7 @@ public class AmqCppHeadersGenerator extends AmqCppClassesGenerator {
         commandsWithShortcuts.add( "Response" );
         commandsWithShortcuts.add( "MessageDispatch" );
         commandsWithShortcuts.add( "BrokerInfo" );
+        commandsWithShortcuts.add( "KeepAliveInfo" );
         commandsWithShortcuts.add( "WireFormatInfo" );
         commandsWithShortcuts.add( "Message" );
         commandsWithShortcuts.add( "MessageAck" );

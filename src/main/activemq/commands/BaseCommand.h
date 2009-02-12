@@ -139,6 +139,9 @@ namespace commands{
         virtual bool isShutdownInfo() const  {
             return false;
         }
+        virtual bool isKeepAliveInfo() const {
+            return false;
+        }
 
     };
 

@@ -117,18 +117,14 @@
 
   <build>
     <plugins>
-      <!-- Used to generate the openwire commands and marshallers -->
+      <!-- Used to generate the openwire commands and marshalers -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <configuration>
         <tasks>
-          <taskdef name="generate-v1" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <taskdef name="generate-v2" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <taskdef name="generate-v3" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <generate-v1 version="1" source="${activemq-core-dir}" target="${basedir}"/>
-          <generate-v1 version="2" source="${activemq-core-dir}" target="${basedir}"/>
-          <generate-v1 version="3" source="${activemq-core-dir}" target="${basedir}"/>
+          <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
+          <generate maxVersion="3" source="${activemq-core-dir}" target="${basedir}"/>
         </tasks>
         </configuration>
           <dependencies>
