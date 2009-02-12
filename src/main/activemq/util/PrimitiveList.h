@@ -20,7 +20,7 @@
 
 #include <string>
 #include <vector>
-#include <decaf/util/List.h>
+#include <decaf/util/StlList.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <stdio.h>
 #include <activemq/util/PrimitiveValueNode.h>
@@ -31,7 +31,7 @@ namespace util{
     /**
      * List of primitives.
      */
-    class AMQCPP_API PrimitiveList : public decaf::util::List<PrimitiveValueNode> {
+    class AMQCPP_API PrimitiveList : public decaf::util::StlList<PrimitiveValueNode> {
     public:
 
         /**

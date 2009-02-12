@@ -17,246 +17,95 @@
 #ifndef _DECAF_UTIL_QUEUE_H_
 #define _DECAF_UTIL_QUEUE_H_
 
-#include <list>
-#include <vector>
-#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/Config.h>
+#include <decaf/util/Iterator.h>
+#include <decaf/util/Collection.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
 namespace decaf{
 namespace util{
 
     /**
-     * The Queue class accepts messages with an psuh(m) command
-     * where m is the message to be queued.  It destructively
-     * returns the message with pop().  pop() returns messages in
-     * the order they were enqueued.
+     * A kind of collection provides advanced operations than other basic
+     * collections, such as insertion, extraction, and inspection.
      *
-     * Queue is implemented with an instance of the STL queue object.
-     * The interface is essentially the same as that of the STL queue
-     * except that the pop method actually reaturns a reference to the
-     * element popped.  This frees the app from having to call the
-     * <code>front</code> method before calling pop.
+     * Generally, a queue orders its elements by means of first-in-first-out. While
+     * priority queue orders its elements according to a comparator specified or the
+     * elements' natural order. Furthermore, a stack orders its elements
+     * last-in-first out.
      *
-     *  Queue<string> sq;     // make a queue to hold string messages
-     *  sq.push(s);           // enqueues a message m
-     *  string s = sq.pop();  // dequeues a message
+     * Queue does not provide blocking queue methods, which will block until the
+     * operation of the method is allowed. BlockingQueue interface defines such
+     * methods.
      *
-     * = DESIGN CONSIDERATIONS
-     *
-     * The Queue class inherits from the Synchronizable interface and
-     * provides methods for locking and unlocking this queue as well as
-     * waiting on this queue.  In a multi-threaded app this can allow
-     * for multiple threads to be reading from and writing to the same
-     * Queue.
-     *
-     * Clients should consider that in a multiple threaded app it is
-     * possible that items could be placed on the queue faster than
-     * you are taking them off, so protection should be placed in your
-     * polling loop to ensure that you don't get stuck there.
+     * Certain methods in the Queue interface return a special value instead of throwing
+     * an exception if there is no element in the Queue to return, this special value
+     * can be obtained by calling the Queue method <code>getEmptyMarker</code>.
      */
-
-    template <typename T> class Queue : public concurrent::Synchronizable {
+    template <typename E>
+    class DECAF_API Queue : public decaf::util::Collection<E> {
     public:
 
-        Queue() {}
         virtual ~Queue() {}
 
         /**
-         * Empties this queue.
+         * Returns a reference to the Marker value that is returned from methods that
+         * do not throw an exception when there is no element in the Queue to return.
          */
-        void clear() {
-            queue.clear();
-        }
+        virtual const E& getEmptyMarker() const = 0;
 
         /**
-         * Returns a Reference to the element at the head of the queue
-         * @return reference to a queue type object or (safe)
+         * Inserts the specified element into the queue provided that the condition
+         * allows such an operation. The method is generally preferable to the
+         * collection.add(E), since the latter might throw an exception if the
+         * operation fails.
+         *
+         * @param value
+         *        the specified element to insert into the queue.
+         *
+         * @return true if the operation succeeds and false if it fails.
          */
-        T& front() {
-            if( queue.empty() ) {
-                return getSafeValue();
-            }
-
-            return queue.front();
-        }
+        virtual bool offer( const E& value ) = 0;
 
         /**
-         * Returns a Reference to the element at the head of the queue
-         * @return reference to a queue type object or (safe)
+         * Gets and removes the element in the head of the queue, or returns null if
+         * there is no element in the queue.
+         *
+         * @return the element in the head of the queue or null if there is no
+         *         element in the queue.
          */
-        const T& front() const {
-            if( queue.empty() ) {
-                return getSafeValue();
-            }
-
-            return queue.front();
-        }
+        virtual E poll() = 0;
 
         /**
-         * Returns a Reference to the element at the tail of the queue
-         * @return reference to a queue type object or (safe)
+         * Gets and removes the element in the head of the queue. Throws a
+         * NoSuchElementException if there is no element in the queue.
+         *
+         * @return the element in the head of the queue.
+         * @throws NoSuchElementException
+         *         if there is no element in the queue.
          */
-        T& back() {
-            if( queue.empty() ) {
-                return getSafeValue();
-            }
-
-            return queue.back();
-        }
+        virtual E remove() throw ( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
         /**
-         * Returns a Reference to the element at the tail of the queue
-         * @return reference to a queue type object or (safe)
+         * Gets but not removes the element in the head of the queue.
+         *
+         * @return the element in the head of the queue or null if there is no
+         *         element in the queue.
          */
-        const T& back() const {
-            if( queue.empty() ) {
-                return getSafeValue();
-            }
-
-            return queue.back();
-        }
+        virtual const E& peek() const = 0;
 
         /**
-         * Places a new Object at the Tail of the queue
-         * @param t - Queue Object Type reference.
+         * Gets but not removes the element in the head of the queue. Throws a
+         * NoSuchElementException if there is no element in the queue.
+         *
+         * @return the element in the head of the queue.
+         * @throws NoSuchElementException
+         *         if there is no element in the queue.
          */
-        void push( const T &t ) {
-            queue.push_back( t );
-        }
-
-        /**
-         * Places a new Object at the front of the queue
-         * @param t - Queue Object Type reference.
-         */
-        void enqueueFront( const T &t ) {
-            queue.push_front( t );
-        }
-
-        /**
-         * Removes and returns the element that is at the Head of the queue
-         * @return reference to a queue type object or (safe)
-         */
-        T pop() {
-            if( queue.empty() ) {
-                return getSafeValue();
-            }
-
-            // Pop the element into a temp, since we need to remain locked.
-            // this means getting front and then popping.
-            T temp = queue.front();
-            queue.pop_front();
-
-            return temp;
-        }
-
-        /**
-         * Gets the Number of elements currently in the Queue
-         * @return Queue Size
-         */
-        size_t size() const{
-            return queue.size();
-        }
-
-        /**
-         * Checks if this Queue is currently empty
-         * @return boolean indicating queue emptiness
-         */
-        bool empty() const {
-            return queue.empty();
-        }
-
-        /**
-         * @return the all values in this queue as a std::vector.
-         */
-        virtual std::vector<T> toArray() const {
-            std::vector<T> valueArray( queue.begin(), queue.end() );
-            return valueArray;
-        }
-
-        /**
-         * Reverses the order of the contents of this queue and stores them
-         * in the target queue.
-         * @param target - The target queue that will receive the contents of
-         * this queue in reverse order.
-         */
-        void reverse( Queue<T>& target ) const {
-            target.queue.insert( target.queue.end(), queue.rbegin(), queue.rend() );
-        }
-
-        /**
-         * Locks the object.
-         */
-        virtual void lock() throw( lang::Exception ){
-            mutex.lock();
-        }
-
-        /**
-         * Unlocks the object.
-         */
-        virtual void unlock() throw( lang::Exception ){
-            mutex.unlock();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         */
-        virtual void wait() throw( lang::Exception ){
-            mutex.wait();
-        }
-
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs time to wait, or WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
-        virtual void wait( unsigned long millisecs )
-            throw( lang::Exception ) {
-
-            mutex.wait(millisecs);
-        }
-
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
-        virtual void notify() throw( lang::Exception ){
-            mutex.notify();
-        }
-
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         */
-        virtual void notifyAll() throw( lang::Exception ){
-            mutex.notifyAll();
-        }
-
-    public:   // Statics
-
-        /**
-         * Fetch a reference to the safe value this object will return
-         * when there is nothing to fetch from the queue.
-         * @return Reference to this Queues safe object
-         */
-        T& getSafeValue() {
-            static T safe;
-            return safe;
-        }
-
-    private:
-
-        // The real queue
-        std::list<T> queue;
-
-        // Object used for sync
-        util::concurrent::Mutex mutex;
+        virtual const E& element() const
+            throw( decaf::lang::exceptions::NoSuchElementException ) = 0;
 
     };
 

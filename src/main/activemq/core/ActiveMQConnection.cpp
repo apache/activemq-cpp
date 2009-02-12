@@ -443,7 +443,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
 
         std::auto_ptr<commands::Command> commandPtr( command );
 
-        if( typeid( *command ) == typeid( commands::MessageDispatch ) ) {
+        if( command->isMessageDispatch() ) {
 
             commands::MessageDispatch* dispatch =
                 dynamic_cast<commands::MessageDispatch*>( command );
@@ -472,7 +472,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
                 }
             }
 
-        } else if( typeid( *command ) == typeid( commands::ProducerAck ) ) {
+        } else if( command->isProducerAck() ) {
 
             commands::ProducerAck* producerAck =
                 dynamic_cast<commands::ProducerAck*>( command );
@@ -486,13 +486,13 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
                 }
             }
 
-        } else if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
+        } else if( command->isWireFormatInfo() ) {
             this->brokerWireFormatInfo.reset(
                 dynamic_cast<commands::WireFormatInfo*>( commandPtr.release() ) );
-        } else if( typeid( *command ) == typeid( commands::BrokerInfo ) ) {
+        } else if( command->isBrokerInfo() ) {
             this->brokerInfo.reset(
                 dynamic_cast<commands::BrokerInfo*>( commandPtr.release() ) );
-        } else if( typeid( *command ) == typeid( commands::KeepAliveInfo ) ) {
+        } else if( command->isKeepAliveInfo() ) {
 
             if( command->isResponseRequired() ) {
                 command->setResponseRequired( false );
@@ -500,7 +500,7 @@ void ActiveMQConnection::onCommand( commands::Command* command ) {
                 oneway( command );
             }
 
-        } else if( typeid( *command ) == typeid( commands::ShutdownInfo ) ) {
+        } else if( command->isShutdownInfo() ) {
 
             try {
                 if( !this->isClosed() ) {

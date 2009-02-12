@@ -20,6 +20,7 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/transport/mock/MockTransport.h>
+#include <decaf/util/StlQueue.h>
 
 namespace activemq{
 namespace wireformat{
@@ -36,7 +37,7 @@ namespace openwire{
 
         virtual void buildIncomingCommands(
             const commands::Command* command,
-            decaf::util::Queue<commands::Command*>& queue );
+            decaf::util::StlQueue<commands::Command*>& queue );
 
     };
 

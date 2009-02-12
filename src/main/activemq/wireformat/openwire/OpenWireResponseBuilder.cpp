@@ -78,7 +78,7 @@ commands::Response* OpenWireResponseBuilder::buildResponse(
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireResponseBuilder::buildIncomingCommands(
-    const commands::Command* command, decaf::util::Queue<commands::Command*>& queue ){
+    const commands::Command* command, decaf::util::StlQueue<commands::Command*>& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {

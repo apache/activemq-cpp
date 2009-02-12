@@ -31,9 +31,8 @@
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
 
-#include <decaf/util/STLMap.h>
-#include <decaf/util/Set.h>
-#include <decaf/util/Queue.h>
+#include <decaf/util/StlMap.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/util/Properties.h>
 
 #include <string>
@@ -53,11 +52,11 @@ namespace core{
     class AMQCPP_API ActiveMQSession : public cms::Session, public Dispatcher {
     private:
 
-        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ConsumerId>,
+        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ConsumerId>,
                                      ActiveMQConsumer*,
                                      commands::ConsumerId::COMPARATOR> ConsumersMap;
 
-        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ProducerId>,
+        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ProducerId>,
                                      ActiveMQProducer*,
                                      commands::ProducerId::COMPARATOR> ProducersMap;
 
@@ -122,7 +121,7 @@ namespace core{
          * Redispatches the given set of unconsumed messages to the consumers.
          * @param unconsumedMessages - unconsumed messages to be redelivered.
          */
-        void redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages );
+        void redispatch( decaf::util::StlQueue<DispatchData>& unconsumedMessages );
 
         /**
          * Stops asynchronous message delivery.

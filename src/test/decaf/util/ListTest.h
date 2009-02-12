@@ -21,9 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/util/List.h>
-#include <decaf/util/Iterator.h>
-
 namespace decaf{
 namespace util{
 

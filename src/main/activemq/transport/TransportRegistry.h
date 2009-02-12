@@ -24,7 +24,7 @@
 #include <vector>
 #include <activemq/transport/TransportFactory.h>
 
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -42,7 +42,7 @@ namespace transport {
     class AMQCPP_API TransportRegistry {
     private:
 
-        decaf::util::STLMap<std::string, TransportFactory*> registry;
+        decaf::util::StlMap<std::string, TransportFactory*> registry;
 
     private:
 

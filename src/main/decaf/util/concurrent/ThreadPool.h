@@ -22,7 +22,7 @@
 #include <decaf/util/concurrent/PooledThreadListener.h>
 #include <decaf/util/concurrent/TaskListener.h>
 #include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/Queue.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/util/logging/LoggerDefines.h>
 #include <decaf/util/Config.h>
 
@@ -40,16 +40,15 @@ namespace concurrent{
      * is queued then a new batch is allocated.  The user can specify
      * the size of the blocks, otherwise a default value is used.
      * <P>
-     * When the user queues a task they must also queue a listner to
+     * When the user queues a task they must also queue a listener to
      * be notified when the task has completed, this provides the user
      * with a mechanism to know when a task object can be freed.
      * <P>
      * To have the Thread Pool perform a task, the user enqueue's an
-     * object that implements the <code>Runnable</code> insterface and
+     * object that implements the <code>Runnable</code> interface and
      * one of the worker threads will executing it in its thread context.
      */
-    class DECAF_API ThreadPool : public PooledThreadListener
-    {
+    class DECAF_API ThreadPool : public PooledThreadListener {
     public:
 
         // Constants
@@ -65,18 +64,18 @@ namespace concurrent{
         std::vector< PooledThread* > pool;
 
         // Queue of Task that are in need of completion
-        util::Queue<Task> queue;
+        util::StlQueue<Task> queue;
 
-        // Max number of Threads this Pool can contian
+        // Max number of Threads this Pool can contain
         std::size_t maxThreads;
 
         // Max number of tasks that can be allocated at a time
         std::size_t blockSize;
 
-        // boolean flag use to indocate that this object is shutting down.
+        // boolean flag use to indicate that this object is shutting down.
         bool shutdown;
 
-        // Count of threads that are currently free to perfom some work.
+        // Count of threads that are currently free to perform some work.
         std::size_t freeThreads;
 
         // Mutex for locking operations that affect the pool.
@@ -123,7 +122,7 @@ namespace concurrent{
          * Returns the current number of Threads in the Pool, this is
          * how many there are now, not how many are active or the max
          * number that might exist.
-         * @return integer number of threads in existance.
+         * @return integer number of threads in existence.
          */
         virtual std::size_t getPoolSize() const { return pool.size(); }
 
@@ -175,9 +174,9 @@ namespace concurrent{
         /**
          * Returns the current number of available threads in the pool, threads
          * that are performing a user task are considered unavailable.  This value
-         * could change immeadiately after calling as Threads could finish right
+         * could change immediately after calling as Threads could finish right
          * after and be available again.  This is informational only.
-         * @return totoal free threads
+         * @return total free threads
          */
         virtual std::size_t getFreeThreadCount() const {
             return freeThreads;
@@ -208,7 +207,7 @@ namespace concurrent{
          * the callee should assume that the PooledThread is now no longer
          * running.
          * @param thread Pointer to the Pooled Thread that is making this call
-         * @param ex The Exception that occured.
+         * @param ex The Exception that occurred.
          */
         virtual void onTaskException( PooledThread* thread,
                                       lang::Exception& ex );
@@ -226,7 +225,7 @@ namespace concurrent{
     private:
 
         /**
-         * Allocates the requested ammount of Threads, won't exceed
+         * Allocates the requested amount of Threads, won't exceed
          * <code>maxThreads</code>.
          * @param count the number of threads to create
          */

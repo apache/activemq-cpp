@@ -99,11 +99,11 @@ cc_sources = \
   decaf/util/UUIDTest.cpp \
   decaf/util/RandomTest.cpp \
   decaf/util/MapTest.cpp \
-  decaf/util/STLMapTest.cpp \
+  decaf/util/StlMapTest.cpp \
   decaf/util/QueueTest.cpp \
   decaf/util/ListTest.cpp \
   decaf/util/SetTest.cpp \
-  decaf/util/concurrent/ConcurrentSTLMapTest.cpp \
+  decaf/util/concurrent/ConcurrentStlMapTest.cpp \
   decaf/util/concurrent/CountDownLatchTest.cpp \
   decaf/util/concurrent/MutexTest.cpp \
   decaf/util/concurrent/ThreadPoolTest.cpp \
@@ -200,10 +200,10 @@ h_sources = \
   decaf/util/RandomTest.h \
   decaf/util/ListTest.h \
   decaf/util/MapTest.h \
-  decaf/util/STLMapTest.h \
+  decaf/util/StlMapTest.h \
   decaf/util/QueueTest.h \
   decaf/util/SetTest.h \
-  decaf/util/concurrent/ConcurrentSTLMapTest.h \
+  decaf/util/concurrent/ConcurrentStlMapTest.h \
   decaf/util/concurrent/CountDownLatchTest.h \
   decaf/util/concurrent/MutexTest.h \
   decaf/util/concurrent/ThreadPoolTest.h \

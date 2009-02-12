@@ -19,6 +19,7 @@
 #define _DECAF_LANG_ITERABLE_H_
 
 #include <decaf/util/Config.h>
+#include <decaf/util/Iterator.h>
 
 namespace decaf{
 namespace lang{
@@ -27,7 +28,7 @@ namespace lang{
      * Implementing this interface allows an object to be cast to an Iterable
      * type for generic collections API calls.
      */
-    template< typename T >
+    template< typename E >
     class DECAF_API Iterable {
     public:
 
@@ -36,8 +37,8 @@ namespace lang{
         /**
          * @returns an iterator over a set of elements of type T.
          */
-        T iterator() = 0;
-        const T iterator() = 0;
+        virtual decaf::util::Iterator<E>* iterator() = 0;
+        virtual decaf::util::Iterator<E>* iterator() const = 0;
 
     };
 

@@ -22,7 +22,7 @@
 #include <decaf/lang/exceptions/RuntimeException.h>
 #include <decaf/util/Date.h>
 #include <decaf/util/StringTokenizer.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <apr.h>
 #include <apr_errno.h>
 #include <apr_env.h>
@@ -134,7 +134,7 @@ long long System::nanoTime() {
 ////////////////////////////////////////////////////////////////////////////////
 const Map<string, string>& System::getenv() throw ( Exception ) {
 
-    static STLMap<string, string> values;
+    static StlMap<string, string> values;
     values.clear();
 
     StringTokenizer tokenizer( "" );

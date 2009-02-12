@@ -20,7 +20,7 @@
 #include <decaf/lang/Thread.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Date.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/StlSet.h>
 
 #include <activemq/exceptions/ActiveMQException.h>
 
@@ -43,7 +43,7 @@ namespace test{
     public:
 
         unsigned int count;
-        decaf::util::Set<long long> threadIds;
+        decaf::util::StlSet<long long> threadIds;
 
         SlowListener() { count = 0; }
 

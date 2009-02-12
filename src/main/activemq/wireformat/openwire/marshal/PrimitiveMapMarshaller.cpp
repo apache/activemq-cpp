@@ -267,7 +267,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
 ///////////////////////////////////////////////////////////////////////////////
 void PrimitiveMapMarshaller::unmarshalPrimitiveList(
     decaf::io::DataInputStream& dataIn,
-    decaf::util::List<PrimitiveValueNode>& list )
+    decaf::util::StlList<PrimitiveValueNode>& list )
         throw ( decaf::io::IOException ) {
 
     try{

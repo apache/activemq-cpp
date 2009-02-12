@@ -23,7 +23,7 @@
 #include <activemq/commands/TransactionId.h>
 
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/List.h>
+#include <decaf/util/StlList.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 
 #include <string>
@@ -35,7 +35,7 @@ namespace state {
     class AMQCPP_API TransactionState {
     private:
 
-        decaf::util::List< decaf::lang::Pointer<commands::Command> > commands;
+        decaf::util::StlList< decaf::lang::Pointer<commands::Command> > commands;
         decaf::lang::Pointer<commands::TransactionId> id;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
         bool prepared;

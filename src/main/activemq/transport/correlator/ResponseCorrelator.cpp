@@ -185,14 +185,14 @@ commands::Response* ResponseCorrelator::request( commands::Command* command, uns
 void ResponseCorrelator::onCommand( commands::Command* command ) {
 
     // Let's see if the incoming command is a response.
-    commands::Response* response = dynamic_cast<commands::Response*>( command );
-
-    if( response == NULL ){
+    if( !command->isResponse() ){
 
         // It's a non-response - just notify the listener.
         fire( command );
         return;
     }
+
+    commands::Response* response = dynamic_cast<commands::Response*>( command );
 
     // It is a response - let's correlate ...
     synchronized( &mapMutex ){

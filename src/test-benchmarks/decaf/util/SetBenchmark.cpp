@@ -34,8 +34,8 @@ void SetBenchmark::run(){
     int numRuns = 500;
     std::string test = "test";
     std::string resultStr = "";
-    Set<std::string> stringCopy;
-    Set<int> intCopy;
+    StlSet<std::string> stringCopy;
+    StlSet<int> intCopy;
 
     for( int i = 0; i < numRuns; ++i ) {
         stringSet.add( test + Integer::toString(i) );

@@ -21,8 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <decaf/util/Queue.h>
-
 namespace decaf{
 namespace util{
 

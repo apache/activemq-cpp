@@ -15,43 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _DECAF_UTIL_CONCURRENT_CONCURRENTSTLMAPTEST_H_
-#define _DECAF_UTIL_CONCURRENT_CONCURRENTSTLMAPTEST_H_
+#ifndef _DECAF_UTIL_STLMAPTEST_H_
+#define _DECAF_UTIL_STLMAPTEST_H_
 
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
 namespace decaf {
 namespace util {
-namespace concurrent {
 
-    class ConcurrentSTLMapTest : public CppUnit::TestFixture
+    class StlMapTest : public CppUnit::TestFixture
     {
-        CPPUNIT_TEST_SUITE( ConcurrentSTLMapTest );
-        CPPUNIT_TEST( testContainsKey );
-        CPPUNIT_TEST( testClear );
-        CPPUNIT_TEST( testSize );
-        CPPUNIT_TEST( testValue );
-        CPPUNIT_TEST( testRemove );
-        CPPUNIT_TEST( testContiansValue );
-        CPPUNIT_TEST( testIsEmpty );
+        CPPUNIT_TEST_SUITE( StlMapTest );
+        CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        ConcurrentSTLMapTest() {}
-        virtual ~ConcurrentSTLMapTest() {}
+        StlMapTest() {}
+        virtual ~StlMapTest() {}
 
-        void testContainsKey();
-        void testClear();
-        void testSize();
-        void testValue();
-        void testRemove();
-        void testContiansValue();
-        void testIsEmpty();
+        void testConstructor();
 
     };
 
-}}}
+}}
 
-#endif /* _DECAF_UTIL_CONCURRENT_CONCURRENTSTLMAPTEST_H_ */
+#endif /* _DECAF_UTIL_STLMAPTEST_H_ */

@@ -23,7 +23,7 @@
 #include <activemq/commands/Command.h>
 #include <activemq/transport/CompositeTransport.h>
 
-#include <decaf/util/Set.h>
+#include <decaf/util/StlSet.h>
 #include <decaf/util/Properties.h>
 #include <decaf/net/URI.h>
 
@@ -40,7 +40,7 @@ namespace failover {
         bool connected;
         bool started;
 
-        decaf::util::Set<decaf::net::URI> uris;
+        decaf::util::StlSet<decaf::net::URI> uris;
 
         long long timeout;
         long long initialReconnectDelay;

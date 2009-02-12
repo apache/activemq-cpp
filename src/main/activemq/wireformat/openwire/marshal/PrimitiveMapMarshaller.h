@@ -129,7 +129,7 @@ namespace marshal{
          */
         static void unmarshalPrimitiveList(
             decaf::io::DataInputStream& dataIn,
-            decaf::util::List<util::PrimitiveValueNode>& list )
+            decaf::util::StlList<util::PrimitiveValueNode>& list )
                 throw ( decaf::io::IOException );
 
         /**

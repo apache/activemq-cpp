@@ -19,7 +19,7 @@
 
 #include <activemq/cmsutil/DestinationResolver.h>
 #include <cms/Session.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <activemq/util/Config.h>
 
 namespace activemq {
@@ -39,8 +39,8 @@ namespace cmsutil {
 
             ResourceLifecycleManager* resourceLifecycleManager;
             cms::Session* session;
-            decaf::util::STLMap<std::string, cms::Topic*> topicMap;
-            decaf::util::STLMap<std::string, cms::Queue*> queueMap;
+            decaf::util::StlMap<std::string, cms::Topic*> topicMap;
+            decaf::util::StlMap<std::string, cms::Queue*> queueMap;
 
         public:
 
@@ -64,7 +64,7 @@ namespace cmsutil {
         /**
          * Maps a given session to the resolver for that session.
          */
-        decaf::util::STLMap< cms::Session*, SessionResolver*> sessionResolverMap;
+        decaf::util::StlMap< cms::Session*, SessionResolver*> sessionResolverMap;
 
         /**
          * Manages lifecycle of any allocated topics/queues.

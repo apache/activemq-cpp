@@ -18,7 +18,9 @@
 #ifndef _DECAF_UTIL_LISTITERATOR_H_
 #define _DECAF_UTIL_LISTITERATOR_H_
 
-#include <decaf/til/Iterator.h>
+#include <decaf/util/Iterator.h>
+#include <decaf/util/Config.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
 
 namespace decaf{
 namespace util{
@@ -33,7 +35,7 @@ namespace util{
      * returned by a call to next() or previous().
      */
     template< typename E>
-    class ListIterator : public decaf::util::Iterator<E> {
+    class DECAF_API ListIterator : public decaf::util::Iterator<E> {
     public:
 
         virtual ~ListIterator() {}
@@ -75,7 +77,20 @@ namespace util{
          * called, or remove or add have been called after the last call to next
          * or previous.
          */
-        virtual void set( const E& e ) = 0;
+        virtual void set( const E& e )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException,
+                    decaf::lang::exceptions::IllegalArgumentException,
+                    decaf::lang::exceptions::IllegalStateException ) = 0;
+
+        /**
+         * Returns true if this list iterator has more elements when traversing the
+         * list in the reverse direction. (In other words, returns true if previous
+         * would return an element rather than throwing an exception.)
+         *
+         * @return true if the list iterator has more elements when traversing the list
+         *         in the reverse direction.
+         */
+        virtual bool hasPrevious() const = 0;
 
         /**
          * Returns the previous element in the list. This method may be called
@@ -97,7 +112,7 @@ namespace util{
          * subsequent call to next, or list size if list iterator is at end
          * of list.
          */
-        virtual int nextIndex() = 0;
+        virtual int nextIndex() const = 0;
 
         /**
          * Returns the index of the element that would be returned by a
@@ -108,7 +123,7 @@ namespace util{
          * subsequent call to previous, or -1 if list iterator is at beginning
          * of list.
          */
-        virtual int previousIndex() = 0;
+        virtual int previousIndex() const = 0;
 
     };
 

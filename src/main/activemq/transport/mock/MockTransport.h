@@ -27,7 +27,7 @@
 #include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/lang/Thread.h>
-#include <decaf/util/Queue.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
@@ -82,7 +82,7 @@ namespace mock{
              */
             virtual void buildIncomingCommands(
                 const commands::Command* cmd,
-                decaf::util::Queue<commands::Command*>& queue ) = 0;
+                decaf::util::StlQueue<commands::Command*>& queue ) = 0;
 
         };
 
@@ -103,7 +103,7 @@ namespace mock{
             ResponseBuilder* responseBuilder;
             bool done;
             decaf::util::concurrent::CountDownLatch startedLatch;
-            decaf::util::Queue<commands::Command*> inboundQueue;
+            decaf::util::StlQueue<commands::Command*> inboundQueue;
 
         public:
 

@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-#include "STLMapTest.h"
+#include "StlMapTest.h"
 
 #include <string>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -110,7 +110,7 @@ public:
         valueMap[key] = value;
     }
 
-    virtual void putAll( const STLMap<K,V,COMPARATOR>& other DECAF_UNUSED ) {
+    virtual void putAll( const StlMap<K,V,COMPARATOR>& other DECAF_UNUSED ) {
         // TODO
     }
     virtual void putAll( const Map<K,V,COMPARATOR>& other DECAF_UNUSED ) {
@@ -162,9 +162,9 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void STLMapTest::testConstructor() {
+void StlMapTest::testConstructor() {
 
-    STLMap<string, int> map1;
+    StlMap<string, int> map1;
     CPPUNIT_ASSERT( map1.isEmpty() );
     CPPUNIT_ASSERT( map1.size() == 0 );
 
@@ -173,7 +173,7 @@ void STLMapTest::testConstructor() {
         map1.get( "TEST" ),
         decaf::lang::exceptions::NoSuchElementException );
 
-    STLMap<string, int> destMap;
+    StlMap<string, int> destMap;
     STLTestMap<string, int> srcMap;
 
     srcMap.put( "A", 1 );

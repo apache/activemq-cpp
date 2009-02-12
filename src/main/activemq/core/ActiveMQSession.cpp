@@ -665,9 +665,9 @@ void ActiveMQSession::dispatch( DispatchData& message ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::redispatch( decaf::util::Queue<DispatchData>& unconsumedMessages ) {
+void ActiveMQSession::redispatch( decaf::util::StlQueue<DispatchData>& unconsumedMessages ) {
 
-    decaf::util::Queue<DispatchData> reversedList;
+    decaf::util::StlQueue<DispatchData> reversedList;
 
     // Copy the list in reverse order then clear the original list.
     synchronized( &unconsumedMessages ) {

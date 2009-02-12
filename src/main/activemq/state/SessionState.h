@@ -26,7 +26,7 @@
 #include <activemq/state/ProducerState.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 #include <string>
 #include <memory>
@@ -42,11 +42,11 @@ namespace state {
 
         Pointer<SessionInfo> info;
 
-        decaf::util::STLMap< Pointer<ProducerId>,
+        decaf::util::StlMap< Pointer<ProducerId>,
                              Pointer<ProducerState>,
                              ProducerId::COMPARATOR > producers;
 
-        decaf::util::STLMap< Pointer<ConsumerId>,
+        decaf::util::StlMap< Pointer<ConsumerId>,
                              Pointer<ConsumerState>,
                              ConsumerId::COMPARATOR > consumers;
 

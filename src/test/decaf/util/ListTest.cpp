@@ -17,6 +17,10 @@
 
 #include "ListTest.h"
 
+#include <decaf/util/List.h>
+#include <decaf/util/StlList.h>
+#include <decaf/util/Iterator.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
@@ -28,7 +32,7 @@ ListTest::ListTest(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testContains(){
 
-    List<string> list;
+    StlList<string> list;
     CPPUNIT_ASSERT( list.contains( "bob" ) == false);
 
     list.add( "bob" );
@@ -40,7 +44,7 @@ void ListTest::testContains(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testIndexOf(){
 
-    List<string> list;
+    StlList<string> list;
 
     list.add( "bob" );    // 0
     list.add( "fred" );   // 1
@@ -68,7 +72,7 @@ void ListTest::testIndexOf(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testLastIndexOf(){
 
-    List<string> list;
+    StlList<string> list;
 
     list.add( "bob" );    // 0
     list.add( "fred" );   // 1
@@ -99,7 +103,7 @@ void ListTest::testLastIndexOf(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testClear(){
 
-    List<string> list;
+    StlList<string> list;
     list.add( "bob" );
     list.add( "fred" );
 
@@ -111,7 +115,7 @@ void ListTest::testClear(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testIsEmpty(){
 
-    List<string> list;
+    StlList<string> list;
     list.add( "bob" );
     list.add( "fred" );
 
@@ -123,7 +127,7 @@ void ListTest::testIsEmpty(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testSize(){
 
-    List<string> list;
+    StlList<string> list;
 
     CPPUNIT_ASSERT( list.size() == 0 );
     list.add( "bob" );
@@ -134,7 +138,7 @@ void ListTest::testSize(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testGet(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     list.add( "fred" );
@@ -151,7 +155,7 @@ void ListTest::testGet(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testSet(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     list.add( "fred" );
@@ -174,7 +178,7 @@ void ListTest::testSet(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testAdd(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     list.add( "fred" );
@@ -188,7 +192,7 @@ void ListTest::testAdd(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testAdd2(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     list.add( "fred" );
@@ -223,7 +227,7 @@ void ListTest::testAdd2(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testRemove(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     CPPUNIT_ASSERT( list.contains( "fred" ) == true );
@@ -233,7 +237,7 @@ void ListTest::testRemove(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testRemove2(){
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred" );
     list.add( "bob" );
@@ -256,7 +260,7 @@ void ListTest::testRemove2(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testToArray(){
 
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred1" );
     list.add( "fred2" );
@@ -271,7 +275,7 @@ void ListTest::testToArray(){
 ////////////////////////////////////////////////////////////////////////////////
 void ListTest::testIterator(){
 
-    List<string> list;
+    StlList<string> list;
 
     list.add( "fred1" );
     list.add( "fred2" );

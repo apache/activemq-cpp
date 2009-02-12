@@ -17,7 +17,7 @@
 
 #include "MapBenchmark.h"
 #include <decaf/lang/Integer.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 using namespace decaf;
 using namespace decaf::util;
@@ -33,8 +33,8 @@ void MapBenchmark::run() {
     int numRuns = 500;
     std::string test = "test";
     std::string resultStr = "";
-    STLMap<std::string, std::string> stringCopy;
-    STLMap<int, int> intCopy;
+    StlMap<std::string, std::string> stringCopy;
+    StlMap<int, int> intCopy;
 
     for( int i = 0; i < numRuns; ++i ) {
         stringMap.put( test + Integer::toString(i), test + Integer::toString(i) );

@@ -19,7 +19,7 @@
 #define _DECAF_UTIL_SETBENCHMARK_H_
 
 #include <benchmark/BenchmarkBase.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/StlSet.h>
 
 namespace decaf{
 namespace util{
@@ -30,8 +30,8 @@ namespace util{
     {
     private:
 
-        Set<int> intSet;
-        Set<std::string> stringSet;
+        StlSet<int> intSet;
+        StlSet<std::string> stringSet;
 
     public:
 

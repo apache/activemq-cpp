@@ -33,12 +33,12 @@ PrimitiveMap::PrimitiveMap(){
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMap::PrimitiveMap( const decaf::util::Map<std::string, PrimitiveValueNode>& src )
-  : decaf::util::STLMap<std::string, PrimitiveValueNode>( src ) {
+  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 PrimitiveMap::PrimitiveMap( const PrimitiveMap& src )
-  : decaf::util::STLMap<std::string, PrimitiveValueNode>( src ) {
+  : decaf::util::StlMap<std::string, PrimitiveValueNode>( src ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////

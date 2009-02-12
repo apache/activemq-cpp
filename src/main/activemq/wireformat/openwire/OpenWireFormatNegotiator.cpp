@@ -141,13 +141,9 @@ commands::Response* OpenWireFormatNegotiator::request( commands::Command* comman
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::onCommand( commands::Command* command ) {
 
-    DataStructure* dataStructure =
-        dynamic_cast<DataStructure*>( command );
+    if( command->isWireFormatInfo() ) {
 
-    if( dataStructure != NULL &&
-        dataStructure->getDataStructureType() == WireFormatInfo::ID_WIREFORMATINFO ) {
-
-        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( dataStructure );
+        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( command );
 
         try {
 

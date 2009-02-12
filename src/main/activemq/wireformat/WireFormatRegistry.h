@@ -24,7 +24,7 @@
 #include <vector>
 #include <activemq/wireformat/WireFormatFactory.h>
 
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -42,7 +42,7 @@ namespace wireformat {
     class AMQCPP_API WireFormatRegistry {
     private:
 
-        decaf::util::STLMap<std::string, WireFormatFactory*> registry;
+        decaf::util::StlMap<std::string, WireFormatFactory*> registry;
 
     private:
 

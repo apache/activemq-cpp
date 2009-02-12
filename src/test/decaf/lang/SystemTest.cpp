@@ -18,7 +18,7 @@
 #include "SystemTest.h"
 
 #include <decaf/lang/System.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -44,7 +44,7 @@ void SystemTest::test_getenv() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_getenv2() {
 
-    STLMap<std::string, std::string> values = System::getenv();
+    StlMap<std::string, std::string> values = System::getenv();
 
     CPPUNIT_ASSERT( values.size() != 0 );
     CPPUNIT_ASSERT( values.containsKey( "PATH" ) || values.containsKey( "Path" ) );
@@ -54,10 +54,10 @@ void SystemTest::test_getenv2() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_setenv() {
 
-    STLMap<std::string, std::string> values1 = System::getenv();
+    StlMap<std::string, std::string> values1 = System::getenv();
     CPPUNIT_ASSERT( !values1.containsKey( "PATH_ASDFGHJKL" ) );
     System::setenv( "PATH_ASDFGHJKL", "test" );
-    STLMap<std::string, std::string> values2 = System::getenv();
+    StlMap<std::string, std::string> values2 = System::getenv();
     CPPUNIT_ASSERT( values2.containsKey( "PATH_ASDFGHJKL" ) );
     System::unsetenv( "PATH_ASDFGHJKL" );
 }
@@ -65,13 +65,13 @@ void SystemTest::test_setenv() {
 ////////////////////////////////////////////////////////////////////////////////
 void SystemTest::test_unsetenv() {
 
-    STLMap<std::string, std::string> values1 = System::getenv();
+    StlMap<std::string, std::string> values1 = System::getenv();
     CPPUNIT_ASSERT( !values1.containsKey( "PATH_ASDFGHJKL" ) );
     System::setenv( "PATH_ASDFGHJKL", "test" );
-    STLMap<std::string, std::string> values2 = System::getenv();
+    StlMap<std::string, std::string> values2 = System::getenv();
     CPPUNIT_ASSERT( values2.containsKey( "PATH_ASDFGHJKL" ) );
     System::unsetenv( "PATH_ASDFGHJKL" );
-    STLMap<std::string, std::string> values3 = System::getenv();
+    StlMap<std::string, std::string> values3 = System::getenv();
     CPPUNIT_ASSERT( !values3.containsKey( "PATH_ASDFGHJKL" ) );
 }
 

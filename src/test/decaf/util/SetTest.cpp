@@ -17,6 +17,9 @@
 
 #include "SetTest.h"
 
+#include <decaf/util/StlSet.h>
+#include <decaf/util/Iterator.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
@@ -28,7 +31,7 @@ SetTest::SetTest(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testContains(){
 
-    Set<string> set;
+    StlSet<string> set;
     CPPUNIT_ASSERT( set.contains( "bob" ) == false);
 
     set.add( "bob" );
@@ -40,7 +43,7 @@ void SetTest::testContains(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testClear(){
 
-    Set<string> set;
+    StlSet<string> set;
     set.add( "bob" );
     set.add( "fred" );
 
@@ -52,7 +55,7 @@ void SetTest::testClear(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testIsEmpty(){
 
-    Set<string> set;
+    StlSet<string> set;
     set.add( "bob" );
     set.add( "fred" );
 
@@ -64,7 +67,7 @@ void SetTest::testIsEmpty(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testSize(){
 
-    Set<string> set;
+    StlSet<string> set;
 
     CPPUNIT_ASSERT( set.size() == 0 );
     set.add( "bob" );
@@ -75,7 +78,7 @@ void SetTest::testSize(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testAdd(){
-    Set<string> set;
+    StlSet<string> set;
 
     set.add( "fred" );
     set.add( "fred" );
@@ -89,7 +92,7 @@ void SetTest::testAdd(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testRemove(){
-    Set<string> set;
+    StlSet<string> set;
 
     set.add( "fred" );
     CPPUNIT_ASSERT( set.contains( "fred" ) == true );
@@ -100,7 +103,7 @@ void SetTest::testRemove(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testToArray(){
 
-    Set<string> set;
+    StlSet<string> set;
 
     set.add( "fred1" );
     set.add( "fred2" );
@@ -115,7 +118,7 @@ void SetTest::testToArray(){
 ////////////////////////////////////////////////////////////////////////////////
 void SetTest::testIterator(){
 
-    Set<string> set;
+    StlSet<string> set;
 
     set.add( "fred1" );
     set.add( "fred2" );

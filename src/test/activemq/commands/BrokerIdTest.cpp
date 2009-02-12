@@ -18,7 +18,7 @@
 #include "BrokerIdTest.h"
 
 #include <activemq/commands/BrokerId.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 
@@ -66,7 +66,7 @@ void BrokerIdTest::test() {
     myCommand2.setValue( "B" );
     myCommand3.setValue( "C" );
 
-    STLMap< BrokerId*, int, BrokerIdComparitor > testMap;
+    StlMap< BrokerId*, int, BrokerIdComparitor > testMap;
 
     testMap.put( &myCommand1, 0 );
     testMap.put( &myCommand3, 0 );
@@ -93,7 +93,7 @@ void BrokerIdTest::test2() {
     CPPUNIT_ASSERT( myCommand1->compareTo( *myCommand2 ) == 0 );
     CPPUNIT_ASSERT( myCommand1->compareTo( *myCommand3 ) == -1 );
 
-    STLMap< Pointer<BrokerId>, int, COMPARATOR > testMap;
+    StlMap< Pointer<BrokerId>, int, COMPARATOR > testMap;
 
     testMap.put( myCommand3, 0 );
     testMap.put( myCommand1, 0 );

@@ -22,7 +22,7 @@
 #include <vector>
 #include <activemq/util/Config.h>
 #include <decaf/util/Config.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <activemq/util/PrimitiveValueNode.h>
 
@@ -32,7 +32,7 @@ namespace util{
     /**
      * Map of named primitives.
      */
-    class AMQCPP_API PrimitiveMap : public decaf::util::STLMap<std::string, PrimitiveValueNode> {
+    class AMQCPP_API PrimitiveMap : public decaf::util::StlMap<std::string, PrimitiveValueNode> {
     public:
 
         /**

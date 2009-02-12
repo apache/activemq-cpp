@@ -19,19 +19,19 @@
 #define _DECAF_QUEUE_QUEUEBENCHMARK_H_
 
 #include <benchmark/BenchmarkBase.h>
-#include <decaf/util/Queue.h>
+#include <decaf/util/StlQueue.h>
 
 namespace decaf{
 namespace util{
 
     class QueueBenchmark :
         public benchmark::BenchmarkBase<
-            decaf::util::QueueBenchmark, Queue<int> >
+            decaf::util::QueueBenchmark, StlQueue<int> >
     {
     private:
 
-        Queue<std::string> stringQ;
-        Queue<int> intQ;
+        StlQueue<std::string> stringQ;
+        StlQueue<int> intQ;
 
     public:
 

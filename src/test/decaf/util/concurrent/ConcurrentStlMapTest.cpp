@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-#include "ConcurrentSTLMapTest.h"
+#include "ConcurrentStlMapTest.h"
 #include <string>
-#include <decaf/util/concurrent/ConcurrentSTLMap.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -25,9 +25,9 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testContainsKey(){
+void ConcurrentStlMapTest::testContainsKey(){
 
-    ConcurrentSTLMap<string, bool> boolMap;
+    ConcurrentStlMap<string, bool> boolMap;
     CPPUNIT_ASSERT(boolMap.containsKey("bob") == false);
 
     boolMap.put( "bob", true );
@@ -37,9 +37,9 @@ void ConcurrentSTLMapTest::testContainsKey(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testClear(){
+void ConcurrentStlMapTest::testClear(){
 
-    ConcurrentSTLMap<string, bool> boolMap;
+    ConcurrentStlMap<string, bool> boolMap;
     boolMap.put( "bob", true );
     boolMap.put( "fred", true );
 
@@ -49,9 +49,9 @@ void ConcurrentSTLMapTest::testClear(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testIsEmpty(){
+void ConcurrentStlMapTest::testIsEmpty(){
 
-    ConcurrentSTLMap<string, bool> boolMap;
+    ConcurrentStlMap<string, bool> boolMap;
     boolMap.put( "bob", true );
     boolMap.put( "fred", true );
 
@@ -61,9 +61,9 @@ void ConcurrentSTLMapTest::testIsEmpty(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testSize(){
+void ConcurrentStlMapTest::testSize(){
 
-    ConcurrentSTLMap<string, bool> boolMap;
+    ConcurrentStlMap<string, bool> boolMap;
 
     CPPUNIT_ASSERT(boolMap.size() == 0 );
     boolMap.put( "bob", true );
@@ -73,9 +73,9 @@ void ConcurrentSTLMapTest::testSize(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testValue(){
+void ConcurrentStlMapTest::testValue(){
 
-    ConcurrentSTLMap<string, bool> boolMap;
+    ConcurrentStlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     CPPUNIT_ASSERT( boolMap.get("fred") == true );
@@ -92,8 +92,8 @@ void ConcurrentSTLMapTest::testValue(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testRemove(){
-    ConcurrentSTLMap<string, bool> boolMap;
+void ConcurrentStlMapTest::testRemove(){
+    ConcurrentStlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     CPPUNIT_ASSERT( boolMap.containsKey("fred") == true );
@@ -102,8 +102,8 @@ void ConcurrentSTLMapTest::testRemove(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ConcurrentSTLMapTest::testContiansValue(){
-    ConcurrentSTLMap<string, bool> boolMap;
+void ConcurrentStlMapTest::testContiansValue(){
+    ConcurrentStlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     boolMap.put( "fred1", false );

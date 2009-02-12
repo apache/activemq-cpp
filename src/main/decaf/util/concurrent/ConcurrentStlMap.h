@@ -41,7 +41,7 @@ namespace concurrent{
      * Java HashTable.
      */
     template <typename K, typename V, typename COMPARATOR = std::less<K> >
-    class ConcurrentSTLMap : public ConcurrentMap<K, V, COMPARATOR> {
+    class ConcurrentStlMap : public ConcurrentMap<K, V, COMPARATOR> {
     private:
 
         std::map<K,V,COMPARATOR> valueMap;
@@ -52,14 +52,14 @@ namespace concurrent{
         /**
          * Default constructor - does nothing.
          */
-        ConcurrentSTLMap() : ConcurrentMap<K,V,COMPARATOR>() {}
+        ConcurrentStlMap() : ConcurrentMap<K,V,COMPARATOR>() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        ConcurrentSTLMap( const ConcurrentSTLMap& source ) : ConcurrentMap<K,V,COMPARATOR>() {
+        ConcurrentStlMap( const ConcurrentStlMap& source ) : ConcurrentMap<K,V,COMPARATOR>() {
             copy( source );
         }
 
@@ -68,11 +68,11 @@ namespace concurrent{
          * one.
          * @param source The source map.
          */
-        ConcurrentSTLMap( const Map<K,V,COMPARATOR>& source ) : ConcurrentMap<K,V,COMPARATOR>() {
+        ConcurrentStlMap( const Map<K,V,COMPARATOR>& source ) : ConcurrentMap<K,V,COMPARATOR>() {
             copy( source );
         }
 
-        virtual ~ConcurrentSTLMap() {}
+        virtual ~ConcurrentStlMap() {}
 
         /**
          * Comparison, equality is dependent on the method of determining
@@ -80,7 +80,7 @@ namespace concurrent{
          * @param source - Map to compare to this one.
          * @returns true if the Map passed is equal in value to this one.
          */
-        virtual bool equals( const ConcurrentSTLMap& source ) const {
+        virtual bool equals( const ConcurrentStlMap& source ) const {
             synchronized( &mutex ) {
                 return this->valueMap == source.valueMap;
             }
@@ -113,7 +113,7 @@ namespace concurrent{
          * all existing data in this map.
          * @param source The source object to copy from.
          */
-        virtual void copy( const ConcurrentSTLMap& source ) {
+        virtual void copy( const ConcurrentStlMap& source ) {
             synchronized( &mutex ) {
                 this->valueMap.clear();
                 this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
@@ -237,7 +237,7 @@ namespace concurrent{
          * @param key The target key.
          * @param value The value to be set.
          */
-        virtual void putAll( const ConcurrentSTLMap<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other ) {
             synchronized( &mutex ) {
                 this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
             }

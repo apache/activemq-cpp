@@ -202,7 +202,7 @@ namespace util{
 
         /**
          * Gets the internal Primitive Value object from this wrapper.
-         * @return a copy of the contianed PrimitiveValue
+         * @return a copy of the contained PrimitiveValue
          */
         PrimitiveValue getValue() const {
             return this->value;
@@ -404,7 +404,7 @@ namespace util{
          * @throw NoSuchElementException this node cannot be returned as the
          * requested type.
          */
-        decaf::util::List<PrimitiveValueNode> getList() const
+        const decaf::util::List<PrimitiveValueNode>& getList() const
             throw( decaf::lang::exceptions::NoSuchElementException );
 
         /**

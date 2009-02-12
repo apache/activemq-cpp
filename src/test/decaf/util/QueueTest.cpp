@@ -17,6 +17,8 @@
 
 #include "QueueTest.h"
 
+#include <decaf/util/StlQueue.h>
+
 using namespace std;
 using namespace decaf;
 using namespace decaf::util;
@@ -24,7 +26,7 @@ using namespace decaf::util;
 ////////////////////////////////////////////////////////////////////////////////
 void QueueTest::test()
 {
-   Queue<char> q;
+   StlQueue<char> q;
 
    CPPUNIT_ASSERT( q.empty() == true );
    CPPUNIT_ASSERT( q.size() == 0 );

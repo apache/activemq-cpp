@@ -30,7 +30,7 @@
 
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/StlSet.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
 
@@ -66,7 +66,7 @@ namespace core{
         std::auto_ptr<commands::TransactionInfo> transactionInfo;
 
         // List of Registered Synchronizations
-        decaf::util::Set<Synchronization*> synchronizations;
+        decaf::util::StlSet<Synchronization*> synchronizations;
 
         // Lock object to protect the rollback Map
         decaf::util::concurrent::Mutex mutex;

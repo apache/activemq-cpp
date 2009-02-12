@@ -340,7 +340,7 @@ h_sources = \
     decaf/util/concurrent/CancellationException.h \
     decaf/util/concurrent/Concurrent.h \
     decaf/util/concurrent/ConcurrentMap.h \
-    decaf/util/concurrent/ConcurrentSTLMap.h \
+    decaf/util/concurrent/ConcurrentStlMap.h \
     decaf/util/concurrent/CountDownLatch.h \
     decaf/util/concurrent/Executor.h \
     decaf/util/concurrent/ExecutionException.h \
@@ -370,6 +370,9 @@ h_sources = \
     decaf/util/Comparator.h \
     decaf/util/List.h \
     decaf/util/Map.h \
+    decaf/util/StlMap.h \
+    decaf/util/StlList.h \
+    decaf/util/StlSet.h \
     decaf/util/Properties.h \
     decaf/util/Queue.h \
     decaf/util/Set.h \

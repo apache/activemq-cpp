@@ -17,7 +17,7 @@
 
 #include "MapTest.h"
 #include <string>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 using namespace std;
 using namespace decaf;
@@ -34,7 +34,7 @@ MapTest::~MapTest(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testContainsKey(){
 
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
     CPPUNIT_ASSERT(boolMap.containsKey("bob") == false);
 
     boolMap.put( "bob", true );
@@ -46,7 +46,7 @@ void MapTest::testContainsKey(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testClear(){
 
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
     boolMap.put( "bob", true );
     boolMap.put( "fred", true );
 
@@ -58,7 +58,7 @@ void MapTest::testClear(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testIsEmpty(){
 
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
     boolMap.put( "bob", true );
     boolMap.put( "fred", true );
 
@@ -70,7 +70,7 @@ void MapTest::testIsEmpty(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testSize(){
 
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
 
     CPPUNIT_ASSERT(boolMap.size() == 0 );
     boolMap.put( "bob", true );
@@ -82,7 +82,7 @@ void MapTest::testSize(){
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testValue(){
 
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     CPPUNIT_ASSERT( boolMap.get("fred") == true );
@@ -100,7 +100,7 @@ void MapTest::testValue(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testRemove(){
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     CPPUNIT_ASSERT( boolMap.containsKey("fred") == true );
@@ -110,7 +110,7 @@ void MapTest::testRemove(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void MapTest::testContiansValue(){
-    STLMap<string, bool> boolMap;
+    StlMap<string, bool> boolMap;
 
     boolMap.put( "fred", true );
     boolMap.put( "fred1", false );

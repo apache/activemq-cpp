@@ -19,7 +19,7 @@
 #define _DECAF_UTIL_MAPBENCHMARK_H_
 
 #include <benchmark/BenchmarkBase.h>
-#include <decaf/util/STLMap.h>
+#include <decaf/util/StlMap.h>
 
 namespace decaf{
 namespace util{
@@ -30,8 +30,8 @@ namespace util{
     {
     private:
 
-        STLMap< std::string, std::string> stringMap;
-        STLMap<int, int> intMap;
+        StlMap< std::string, std::string> stringMap;
+        StlMap<int, int> intMap;
 
     public:
 

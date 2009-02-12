@@ -32,8 +32,8 @@
 #include <activemq/commands/WireFormatInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/util/Properties.h>
-#include <decaf/util/STLMap.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/StlMap.h>
+#include <decaf/util/StlSet.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -56,11 +56,11 @@ namespace core{
     {
     private:
 
-        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ConsumerId>,
+        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ConsumerId>,
                                      Dispatcher*,
                                      commands::ConsumerId::COMPARATOR > DispatcherMap;
 
-        typedef decaf::util::STLMap< decaf::lang::Pointer<commands::ProducerId>,
+        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ProducerId>,
                                      ActiveMQProducer*,
                                      commands::ProducerId::COMPARATOR > ProducerMap;
 
@@ -100,7 +100,7 @@ namespace core{
         /**
          * Maintain the set of all active sessions.
          */
-        decaf::util::Set<ActiveMQSession*> activeSessions;
+        decaf::util::StlSet<ActiveMQSession*> activeSessions;
 
         /**
          * Connection Information for this connection to the Broker

@@ -33,8 +33,8 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V, typename COMPARATOR = std::less<K> > class STLMap :
-        public Map<K, V, COMPARATOR> {
+    template <typename K, typename V, typename COMPARATOR = std::less<K> >
+    class StlMap : public Map<K, V, COMPARATOR> {
     private:
 
         std::map<K,V,COMPARATOR> valueMap;
@@ -45,14 +45,14 @@ namespace util{
         /**
          * Default constructor - does nothing.
          */
-        STLMap() : Map<K,V,COMPARATOR>() {}
+        StlMap() : Map<K,V,COMPARATOR>() {}
 
         /**
          * Copy constructor - copies the content of the given map into this
          * one.
          * @param source The source map.
          */
-        STLMap( const STLMap& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const StlMap& source ) : Map<K,V,COMPARATOR>() {
             copy( source );
         }
 
@@ -61,11 +61,11 @@ namespace util{
          * one.
          * @param source The source map.
          */
-        STLMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>() {
+        StlMap( const Map<K,V,COMPARATOR>& source ) : Map<K,V,COMPARATOR>() {
             copy( source );
         }
 
-        virtual ~STLMap() {}
+        virtual ~StlMap() {}
 
         /**
          * Comparison, equality is dependent on the method of determining
@@ -73,7 +73,7 @@ namespace util{
          * @param source - Map to compare to this one.
          * @returns true if the Map passed is equal in value to this one.
          */
-        virtual bool equals( const STLMap& source ) const {
+        virtual bool equals( const StlMap& source ) const {
             return this->valueMap == source.valueMap;
         }
 
@@ -99,7 +99,7 @@ namespace util{
          * all existing data in this map.
          * @param source The source object to copy from.
          */
-        virtual void copy( const STLMap& source ) {
+        virtual void copy( const StlMap& source ) {
             this->valueMap.clear();
             this->valueMap.insert( source.valueMap.begin(), source.valueMap.end() );
         }
@@ -198,7 +198,7 @@ namespace util{
          * @param key The target key.
          * @param value The value to be set.
          */
-        virtual void putAll( const STLMap<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const StlMap<K,V,COMPARATOR>& other ) {
             this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
         }
         virtual void putAll( const Map<K,V,COMPARATOR>& other ) {

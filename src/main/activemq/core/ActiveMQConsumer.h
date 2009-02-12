@@ -28,7 +28,7 @@
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
 
-#include <decaf/util/Queue.h>
+#include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <memory>
 
@@ -68,12 +68,12 @@ namespace core{
         /**
          * Queue of unconsumed messages.
          */
-        decaf::util::Queue<DispatchData> unconsumedMessages;
+        decaf::util::StlQueue<DispatchData> unconsumedMessages;
 
         /**
          * Queue of consumed messages.
          */
-        decaf::util::Queue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
+        decaf::util::StlQueue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
 
         /**
          * Boolean that indicates if the consumer has been closed

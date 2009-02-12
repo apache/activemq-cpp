@@ -192,8 +192,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //#include <decaf/net/URLDecoderTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 //
-#include <decaf/util/concurrent/ConcurrentSTLMapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentSTLMapTest );
+#include <decaf/util/concurrent/ConcurrentStlMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest );
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
 //#include <decaf/util/concurrent/MutexTest.h>
@@ -218,8 +218,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentSTLMapTest )
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
 #include <decaf/util/MapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
-#include <decaf/util/STLMapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::STLMapTest );
+#include <decaf/util/StlMapTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
 //#include <decaf/util/QueueTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
 //#include <decaf/util/RandomTest.h>

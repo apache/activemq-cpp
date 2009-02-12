@@ -20,6 +20,8 @@
 #include <activemq/util/PrimitiveList.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/util/StlMap.h>
+#include <decaf/util/StlList.h>
 
 using namespace std;
 using namespace activemq;
@@ -413,11 +415,11 @@ std::vector<unsigned char> PrimitiveValueNode::getByteArray() const throw( decaf
 void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& lvalue ){
     clear();
     valueType = LIST_TYPE;
-    value.listValue = new decaf::util::List<PrimitiveValueNode>( lvalue );
+    value.listValue = new decaf::util::StlList<PrimitiveValueNode>( lvalue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::util::List<PrimitiveValueNode> PrimitiveValueNode::getList() const
+const decaf::util::List<PrimitiveValueNode>& PrimitiveValueNode::getList() const
     throw( decaf::lang::exceptions::NoSuchElementException ) {
 
     if( valueType != LIST_TYPE ){
@@ -428,7 +430,10 @@ decaf::util::List<PrimitiveValueNode> PrimitiveValueNode::getList() const
     }
 
     if( value.listValue == NULL ){
-        return decaf::util::List<PrimitiveValueNode>();
+        throw decaf::lang::exceptions::NullPointerException(
+            __FILE__,
+            __LINE__,
+            "PrimitiveValue is not set but an element was placed in the Map" );
     }
 
     return *value.listValue;
@@ -440,7 +445,7 @@ void PrimitiveValueNode::setMap(
 
     clear();
     valueType = MAP_TYPE;
-    value.mapValue = new decaf::util::STLMap<std::string, PrimitiveValueNode>( lvalue );
+    value.mapValue = new decaf::util::StlMap<std::string, PrimitiveValueNode>( lvalue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

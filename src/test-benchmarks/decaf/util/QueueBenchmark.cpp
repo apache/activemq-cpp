@@ -35,8 +35,8 @@ void QueueBenchmark::run(){
     std::string test = "test";
     std::string resultStr = "";
     int resultInt = 0;
-    Queue<std::string> stringQCopy;
-    Queue<int> intQCopy;
+    StlQueue<std::string> stringQCopy;
+    StlQueue<int> intQCopy;
 
     for( int i = 0; i < numRuns; ++i ) {
         stringQ.push( test );

@@ -19,10 +19,12 @@
 #define _DECAF_UTIL_COLLECTION_H_
 
 #include <decaf/util/Config.h>
-#include <devaf/lang/exceptions/UnsupportedOperationException.h>
-#include <devaf/lang/exceptions/NullPointerException.h>
-#include <devaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/lang/Iterable.h>
 #include <decaf/util/Iterator.h>
+#include <decaf/util/concurrent/Synchronizable.h>
 
 namespace decaf{
 namespace util{
@@ -62,9 +64,9 @@ namespace util{
      *
      * @since 1.0
      */
-    template< typename T >
-    class Collection
-    {
+    template< typename E >
+    class DECAF_API Collection : public lang::Iterable<E>,
+        virtual public util::concurrent::Synchronizable {
     public:
 
         virtual ~Collection() {}
@@ -74,12 +76,20 @@ namespace util{
          * contains more than Integer.MAX_VALUE elements, returns Integer.MAX_VALUE.
          * @returns the number of elements in this collection
          */
-        virtual int size() = 0;
+        virtual std::size_t size() const = 0;
 
         /**
          * @returns true if this collection contains no elements.
          */
-        virtual bool isEmpty() = 0;
+        virtual bool isEmpty() const = 0;
+
+        /**
+         * Compares the passed collection to this one, if they contain the
+         * same elements, i.e. all their elements are equivalent, then it
+         * returns true.
+         * @returns true if the Collections contain the same elements.
+         */
+        virtual bool equals( const Collection<E>& value ) const = 0;
 
         /**
          * Returns true if this collection contains the specified element. More
@@ -87,19 +97,18 @@ namespace util{
          * least one element e such that (o==null ? e==null : o.equals(e)).
          * @param value - value to check for presence in the collection
          * @returns true if there is at least one of the elements in the collection
-         * @thorws NullPointerException
+         * @throw Exception
          */
-        virtual bool contains( const E& value )
-            throw ( lang::exceptions::NullPointerException ) = 0;
+        virtual bool contains( const E& value ) const throw ( lang::Exception ) = 0;
 
         /**
-         * Returns an iterator over the elements in this collection. There are
-         * no guarantees concerning the order in which the elements are
-         * returned (unless this collection is an instance of some class that
-         * provides a guarantee).
-         * @returns an Iterator over the elements in this collection
+         * Returns true if this collection contains all of the elements in
+         * the specified collection.
+         * @param source - Collection to compare to this one.
+         * @throw Exception
          */
-        virtual Iterator<E>* iterator() = 0;
+        virtual bool containsAll( const Collection<E>& source ) const
+            throw ( lang::Exception ) = 0;
 
         /**
          * Returns an array containing all of the elements in this collection. If
@@ -110,7 +119,7 @@ namespace util{
          * This method acts as bridge between array-based and collection-based APIs.
          * @returns an array of the elements in this collection.
          */
-        virtual std::vector<E> toArray() = 0;
+        virtual std::vector<E> toArray() const = 0;
 
         /**
          * Returns true if this collection changed as a result of the call.
@@ -138,12 +147,10 @@ namespace util{
          * @param value - reference to the element to add.
          * @returns true if the element was added
          * @throw UnsupportedOperationException
-         * @throw NullPointerException
          * @throw IllegalArgumentException
          */
         virtual bool add( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::NullPointerException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
@@ -156,20 +163,11 @@ namespace util{
          * @param value - reference to the element to remove.
          * @returns true if the collection was changed
          * @throw UnsupportedOperationException
-         * @throw NullPointerException
+         * @throw IllegalArgumentException
          */
         virtual bool remove( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::NullPointerException ) = 0;
-
-        /**
-         * Returns true if this collection contains all of the elements in
-         * the specified collection.
-         * @param source - Collection to compare to this one.
-         * @thorw Exception
-         */
-        virtual bool containsAll( const Collection<E>& source )
-            throw ( lang::Exception ) = 0;
+                    lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
          * Adds all of the elements in the specified collection to this
@@ -181,12 +179,10 @@ namespace util{
          * @param source - Collection whose elements are added to this one.
          * @return true if this collection changed as a result of the call
          * @throw UnsupportedOperationException
-         * @throw NullPointerException
          * @throw IllegalArgumentException
          */
         virtual bool addAll( const Collection<E>& source )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::NullPointerException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
@@ -197,12 +193,10 @@ namespace util{
          * @param value - The Collection whose elements are to be removed
          * @returns true if the collection changed as a result of this call
          * @throw UnsupportedOperationException
-         * @throw NullPointerException
          * @throw IllegalArgumentException
          */
         virtual bool removeAll( const Collection<E>& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::NullPointerException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
@@ -213,12 +207,10 @@ namespace util{
          * @param value - The Collection whose elements are to be retained
          * @returns true if the collection changed as a result of this call
          * @throw UnsupportedOperationException
-         * @throw NullPointerException
          * @throw IllegalArgumentException
          */
-        virtual bool retainAll( const Collection<E> value )
+        virtual bool retainAll( const Collection<E>& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::NullPointerException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 
         /**
@@ -229,14 +221,6 @@ namespace util{
          */
         virtual void clear()
             throw ( lang::exceptions::UnsupportedOperationException ) = 0;
-
-        /**
-         * Compares the passed collection to this one, if they contain the
-         * same elements, i.e. all their elements are equivalent, then it
-         * returns true.
-         * @returns true if the Collections contain the same elements.
-         */
-        virtual bool equals( const Collection<E>& value ) = 0;
 
     };
 
