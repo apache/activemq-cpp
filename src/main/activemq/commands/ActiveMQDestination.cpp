@@ -122,6 +122,22 @@ std::string ActiveMQDestination::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQDestination::equals( const DataStructure* value ) const {
+
+    if( this == value ) {
+        return true;
+    }
+
+    const ActiveMQDestination* valuePtr = dynamic_cast<const ActiveMQDestination*>( value );
+
+    if( valuePtr == NULL || value == NULL ) {
+        return false;
+    }
+
+    return this->getPhysicalName() == valuePtr->getPhysicalName();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 unsigned char ActiveMQDestination::getDataStructureType() const {
     return ActiveMQDestination::ID_ACTIVEMQDESTINATION;
 }

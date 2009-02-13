@@ -114,6 +114,14 @@ namespace commands{
          */
         virtual void copyDataStructure( const DataStructure* src );
 
+        /**
+         * Compares the DataStructure passed in to this one, and returns if
+         * they are equivalent.  Equivalent here means that they are of the
+         * same type, and that each element of the objects are the same.
+         * @returns true if DataStructure's are Equal.
+         */
+        virtual bool equals( const DataStructure* value ) const;
+
         virtual unsigned char getDataStructureType() const;
 
         /**
