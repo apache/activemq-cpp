@@ -214,17 +214,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest )
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 //#include <decaf/util/UUIDTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
-//#include <decaf/util/ListTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
-#include <decaf/util/MapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::MapTest );
+#include <decaf/util/ListTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
 #include <decaf/util/StlMapTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
-//#include <decaf/util/QueueTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
+#include <decaf/util/QueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
 //#include <decaf/util/RandomTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::RandomTest );
-//#include <decaf/util/SetTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
+#include <decaf/util/SetTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
 //#include <decaf/util/StringTokenizerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StringTokenizerTest );

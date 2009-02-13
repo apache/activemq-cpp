@@ -31,8 +31,9 @@
 #include <activemq/state/TransactionState.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/StlMap.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 #include <decaf/util/StlList.h>
+#include <decaf/lang/Pointer.h>
 
 #include <string>
 #include <memory>
@@ -40,62 +41,68 @@
 namespace activemq {
 namespace state {
 
+    using decaf::lang::Pointer;
+    using decaf::util::concurrent::ConcurrentStlMap;
+    using namespace activemq::commands;
+
     class ConnectionState {
     private:
 
-        std::auto_ptr<commands::ConnectionInfo> info;
-        decaf::util::StlMap< commands::TransactionId, TransactionState* > transactions;
-        decaf::util::StlMap< commands::SessionId, SessionState* > sessions;
-        decaf::util::StlList< commands::DestinationInfo* > tempDestinations;
+        Pointer< ConnectionInfo > info;
+        ConcurrentStlMap< Pointer<TransactionId>,
+                          Pointer<TransactionState>,
+                          TransactionId::COMPARATOR > transactions;
+        ConcurrentStlMap< Pointer<SessionId>,
+                          Pointer<SessionState>,
+                          SessionId::COMPARATOR > sessions;
+        decaf::util::StlList< Pointer<DestinationInfo> > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 
     public:
 
-        ConnectionState( commands::ConnectionInfo* info );
+        ConnectionState( const Pointer<ConnectionInfo>& info );
 
         virtual ~ConnectionState();
 
         std::string toString() const;
 
-        const commands::ConnectionInfo* getInfo() const {
-            return this->info.get();
+        const Pointer<commands::ConnectionInfo>& getInfo() const {
+            return this->info;
         }
 
         void checkShutdown() const;
 
         void shutdown();
 
-//        void reset(ConnectionInfo info) {
-//            this.info = info;
-//            transactions.clear();
-//            sessions.clear();
-//            tempDestinations.clear();
-//            shutdown.set(false);
-//        }
-//
-//        void addTempDestination(DestinationInfo info) {
-//            checkShutdown();
-//            tempDestinations.add(info);
-//        }
-//
-//        void removeTempDestination(ActiveMQDestination destination) {
-//            for (Iterator<DestinationInfo> iter = tempDestinations.iterator(); iter.hasNext();) {
-//                DestinationInfo di = iter.next();
-//                if (di.getDestination().equals(destination)) {
-//                    iter.remove();
-//                }
-//            }
-//        }
-//
-//        void addTransactionState(TransactionId id) {
-//            checkShutdown();
-//            transactions.put(id, new TransactionState(id));
-//        }
-//
-//        TransactionState getTransactionState(TransactionId id) {
-//            return transactions.get(id);
-//        }
-//
+        void reset( const Pointer<ConnectionInfo>& info );
+
+        void addTempDestination( const Pointer<DestinationInfo>& info ) {
+            checkShutdown();
+            tempDestinations.add( info );
+        }
+
+        void removeTempDestination( const Pointer<ActiveMQDestination>& destination ) {
+
+            std::auto_ptr< decaf::util::Iterator< Pointer<DestinationInfo> > > iter(
+                tempDestinations.iterator() );
+
+            while( iter->hasNext() ) {
+                Pointer<DestinationInfo> di = iter->next();
+                if( di->getDestination()->equals( destination.get() ) ) {
+                    iter->remove();
+                }
+            }
+        }
+
+        void addTransactionState( const Pointer<TransactionId>& id ) {
+            checkShutdown();
+            transactions.put( id, Pointer<TransactionState>( new TransactionState( id ) ) );
+        }
+
+        const Pointer<TransactionState>& getTransactionState( const Pointer<TransactionId>& id ) const {
+            return transactions.get( id );
+        }
+
 //        Collection<TransactionState> getTransactionStates() {
 //            return transactions.values();
 //        }
@@ -104,23 +111,20 @@ namespace state {
 //            return transactions.remove(id);
 //        }
 //
-//        void addSession(SessionInfo info) {
-//            checkShutdown();
-//            sessions.put(info.getSessionId(), new SessionState(info));
-//        }
-//
+        void addSession( const Pointer<SessionInfo>& info ) {
+            checkShutdown();
+            sessions.put(
+                info->getSessionId(), Pointer<SessionState>( new SessionState( info ) ) );
+        }
+
 //        SessionState removeSession(SessionId id) {
 //            return sessions.remove(id);
 //        }
-//
-//        SessionState getSessionState(SessionId id) {
-//            return sessions.get(id);
-//        }
-//
-//        ConnectionInfo getInfo() {
-//            return info;
-//        }
-//
+
+        const Pointer<SessionState>& getSessionState( const Pointer<SessionId>& id ) const {
+            return sessions.get( id );
+        }
+
 //        Set<SessionId> getSessionIds() {
 //            return sessions.keySet();
 //        }

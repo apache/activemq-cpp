@@ -28,6 +28,16 @@ namespace util {
     {
         CPPUNIT_TEST_SUITE( StlMapTest );
         CPPUNIT_TEST( testConstructor );
+        CPPUNIT_TEST( testContainsKey );
+        CPPUNIT_TEST( testClear );
+        CPPUNIT_TEST( testCopy );
+        CPPUNIT_TEST( testSize );
+        CPPUNIT_TEST( testGet );
+        CPPUNIT_TEST( testPut );
+        CPPUNIT_TEST( testPutAll );
+        CPPUNIT_TEST( testRemove );
+        CPPUNIT_TEST( testContiansValue );
+        CPPUNIT_TEST( testIsEmpty );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -36,6 +46,16 @@ namespace util {
         virtual ~StlMapTest() {}
 
         void testConstructor();
+        void testContainsKey();
+        void testClear();
+        void testCopy();
+        void testSize();
+        void testGet();
+        void testPut();
+        void testPutAll();
+        void testRemove();
+        void testContiansValue();
+        void testIsEmpty();
 
     };
 

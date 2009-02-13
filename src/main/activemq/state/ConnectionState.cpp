@@ -23,15 +23,13 @@ using namespace activemq;
 using namespace activemq::state;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionState::ConnectionState( commands::ConnectionInfo* info ) : disposed( false ) {
+ConnectionState::ConnectionState( const Pointer<ConnectionInfo>& info ) : disposed( false ) {
 
-    this->info.reset( info->cloneDataStructure() );
+    this->info = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionState::~ConnectionState() {
-
-    // TODO - Free all pointers.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,12 +43,22 @@ std::string ConnectionState::toString() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ConnectionState::reset( const Pointer<ConnectionInfo>& info ) {
+
+    this->info = info;
+    transactions.clear();
+    sessions.clear();
+    tempDestinations.clear();
+    disposed.set( false );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ConnectionState::shutdown() {
 
     if( this->disposed.compareAndSet( false, true ) ) {
 
-        std::vector<SessionState*> values = this->sessions.values();
-        std::vector<SessionState*>::iterator iter = values.begin();
+        std::vector< Pointer<SessionState> > values = this->sessions.values();
+        std::vector< Pointer<SessionState> >::iterator iter = values.begin();
 
         for( ; iter != values.end(); ++iter ) {
             (*iter)->shutdown();

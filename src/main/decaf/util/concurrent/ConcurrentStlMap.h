@@ -75,10 +75,7 @@ namespace concurrent{
         virtual ~ConcurrentStlMap() {}
 
         /**
-         * Comparison, equality is dependent on the method of determining
-         * if the element are equal.
-         * @param source - Map to compare to this one.
-         * @returns true if the Map passed is equal in value to this one.
+         * {@inheritDoc}
          */
         virtual bool equals( const ConcurrentStlMap& source ) const {
             synchronized( &mutex ) {
@@ -109,9 +106,7 @@ namespace concurrent{
         }
 
         /**
-         * Copies the content of the source map into this map.  Erases
-         * all existing data in this map.
-         * @param source The source object to copy from.
+         * {@inheritDoc}
          */
         virtual void copy( const ConcurrentStlMap& source ) {
             synchronized( &mutex ) {
@@ -128,19 +123,16 @@ namespace concurrent{
         }
 
         /**
-         * Removes all keys and values from this map.
+         * {@inheritDoc}
          */
-        virtual void clear() {
+        virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) {
             synchronized( &mutex ) {
                 valueMap.clear();
             }
         }
 
         /**
-         * Indicates whether or this map contains a value for the
-         * given key.
-         * @param key The key to look up.
-         * @return true if this map contains the value, otherwise false.
+         * {@inheritDoc}
          */
         virtual bool containsKey( const K& key ) const {
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
@@ -149,14 +141,12 @@ namespace concurrent{
                 iter = valueMap.find(key);
                 return iter != valueMap.end();
             }
+
+            return false;
         }
 
         /**
-         * Indicates whether or this map contains a value for the
-         * given value, i.e. they are equal, this is done by operator==
-         * so the types must pass equivalence testing in this manner.
-         * @param value The Value to look up.
-         * @return true if this map contains the value, otherwise false.
+         * {@inheritDoc}
          */
         virtual bool containsValue( const V& value ) const {
 
@@ -178,7 +168,7 @@ namespace concurrent{
         }
 
         /**
-         * @return if the Map contains any element or not, TRUE or FALSE
+         * {@inheritDoc}
          */
         virtual bool isEmpty() const {
             synchronized( &mutex ) {
@@ -189,7 +179,7 @@ namespace concurrent{
         }
 
         /**
-         * @return The number of elements (key/value pairs) in this map.
+         * {@inheritDoc}
          */
         virtual std::size_t size() const {
             synchronized( &mutex ) {
@@ -200,49 +190,63 @@ namespace concurrent{
         }
 
         /**
-         * Gets the value for the specified key.
-         * @param key The search key.
-         * @return The value for the given key.
-         * @throws NoSuchElementException
+         * {@inheritDoc}
          */
-        virtual V get( const K& key ) const
+        virtual V& get( const K& key )
+            throw( lang::exceptions::NoSuchElementException ) {
+
+            typename std::map<K,V,COMPARATOR>::iterator iter;
+
+            synchronized( &mutex ) {
+                iter = valueMap.find( key );
+                if( iter != valueMap.end() ){
+                    return iter->second;
+                }
+            }
+
+            throw lang::exceptions::NoSuchElementException(
+                __FILE__, __LINE__, "Key does not exist in map" );
+        }
+        virtual const V& get( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) {
 
             typename std::map<K,V,COMPARATOR>::const_iterator iter;
 
             synchronized( &mutex ) {
-                iter = valueMap.find(key);
-                if( iter == valueMap.end() ){
-                    throw lang::exceptions::NoSuchElementException(
-                        __FILE__, __LINE__, "Key does not exist in map" );
+                iter = valueMap.find( key );
+                if( iter != valueMap.end() ){
+                    return iter->second;
                 }
-
-                return iter->second;
             }
+
+            throw lang::exceptions::NoSuchElementException(
+                __FILE__, __LINE__, "Key does not exist in map" );
         }
 
         /**
-         * Sets the value for the specified key.
-         * @param key The target key.
-         * @param value The value to be set.
+         * {@inheritDoc}
          */
-        virtual void put( const K& key, V value ) {
+        virtual void put( const K& key, const V& value )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+
             synchronized( &mutex ) {
                 valueMap[key] = value;
             }
         }
 
         /**
-         * Stores a copy of the Mappings contained in the other Map in this one.
-         * @param key The target key.
-         * @param value The value to be set.
+         * {@inheritDoc}
          */
-        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const ConcurrentStlMap<K,V,COMPARATOR>& other )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+
             synchronized( &mutex ) {
                 this->valueMap.insert( other.valueMap.begin(), other.valueMap.end() );
             }
         }
-        virtual void putAll( const Map<K,V,COMPARATOR>& other ) {
+        virtual void putAll( const Map<K,V,COMPARATOR>& other )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) {
+
             synchronized( &mutex ) {
                 std::vector<K> keys = other.keySet();
 
@@ -254,39 +258,54 @@ namespace concurrent{
         }
 
         /**
-         * Removes the value (key/value pair) for the specified key from
-         * the map.
-         * @param key The search key.
+         * {@inheritDoc}
          */
-        virtual void remove( const K& key ) {
+        virtual V remove( const K& key )
+            throw ( decaf::lang::exceptions::NoSuchElementException,
+                    decaf::lang::exceptions::UnsupportedOperationException ) {
+
+            V result;
+
             synchronized( &mutex ) {
-                valueMap.erase( key );
+                typename std::map<K,V,COMPARATOR>::iterator iter = valueMap.find( key );
+                if( iter == valueMap.end() ) {
+                    throw decaf::lang::exceptions::NoSuchElementException(
+                        __FILE__, __LINE__, "Key is not present in this Map." );
+                }
+
+                result = iter->second;
+                valueMap.erase( iter );
             }
+
+            return result;
         }
 
+
         /**
-         * @return the entire set of keys in this map as a std::vector.
+         * {@inheritDoc}
          */
         virtual std::vector<K> keySet() const {
+
+            std::vector<K> keys( valueMap.size() );
             synchronized( &mutex ) {
-                std::vector<K> keys( valueMap.size() );
 
                 typename std::map<K,V,COMPARATOR>::const_iterator iter;
                 iter=valueMap.begin();
                 for( int ix=0; iter != valueMap.end(); ++iter, ++ix ){
                     keys[ix] = iter->first;
                 }
-
-                return keys;
             }
+
+            return keys;
         }
 
         /**
-         * @return the entire set of values in this map as a std::vector.
+         * {@inheritDoc}
          */
         virtual std::vector<V> values() const {
+
+            std::vector<V> values( valueMap.size() );
             synchronized( &mutex ) {
-                std::vector<V> values( valueMap.size() );
 
                 typename std::map<K,V,COMPARATOR>::const_iterator iter;
                 iter=valueMap.begin();
@@ -294,8 +313,8 @@ namespace concurrent{
                     values[ix] = iter->second;
                 }
 
-                return values;
             }
+            return values;
         }
 
         /**
@@ -428,66 +447,32 @@ namespace concurrent{
                 __FILE__, __LINE__, "Value to Replace was not in the Map." );
         }
 
-    public:     // Methods from Synchronizable
+    public:
 
-        /**
-         * Locks the object.
-         * @throws ActiveMQException
-         */
         virtual void lock() throw( lang::Exception ) {
             mutex.lock();
         }
 
-        /**
-         * Unlocks the object.
-         * @throws ActiveMQException
-         */
         virtual void unlock() throw( lang::Exception ) {
             mutex.unlock();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
         virtual void wait() throw( lang::Exception ) {
             mutex.wait();
         }
 
-        /**
-         * Waits on a signal from this object, which is generated
-         * by a call to Notify.  Must have this object locked before
-         * calling.  This wait will timeout after the specified time
-         * interval.
-         * @param millisecs the time in milliseconds to wait, or
-         * WAIT_INIFINITE
-         * @throws ActiveMQException
-         */
         virtual void wait( unsigned long millisecs ) throw( lang::Exception ) {
             mutex.wait(millisecs);
         }
 
-        /**
-         * Signals a waiter on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
         virtual void notify() throw( lang::Exception ) {
             mutex.notify();
         }
 
-        /**
-         * Signals the waiters on this object that it can now wake
-         * up and continue.  Must have this object locked before
-         * calling.
-         * @throws ActiveMQException
-         */
         virtual void notifyAll() throw( lang::Exception ) {
             mutex.notifyAll();
         }
+
     };
 
 }}}

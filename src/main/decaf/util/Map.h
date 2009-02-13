@@ -19,6 +19,7 @@
 #define _DECAF_UTIL_MAP_H_
 
 #include <vector>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -81,8 +82,9 @@ namespace util{
 
         /**
          * Removes all keys and values from this map.
+         * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual void clear() = 0;
+        virtual void clear() throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Indicates whether or this map contains a value for the
@@ -112,34 +114,51 @@ namespace util{
         virtual std::size_t size() const = 0;
 
         /**
-         * Gets the value for the specified key.
+         * Gets the value mapped to the specified key in the Map.  If there is no
+         * element in the map whose key is equivalent to the key provided then a
+         * NoSuchElementException is thrown.
+         *
          * @param key The search key.
-         * @return The value for the given key.
+         * @return A reference to the value for the given key.
+         *
          * @throws NoSuchElementException
          */
-        virtual V get( const K& key ) const
+        virtual V& get( const K& key )
+            throw( lang::exceptions::NoSuchElementException ) = 0;
+        virtual const V& get( const K& key ) const
             throw( lang::exceptions::NoSuchElementException ) = 0;
 
         /**
          * Sets the value for the specified key.
          * @param key The target key.
          * @param value The value to be set.
+         *
+         * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual void put( const K& key, V value ) = 0;
+        virtual void put( const K& key, const V& value )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Stores a copy of the Mappings contained in the other Map in this one.
          * @param key The target key.
          * @param value The value to be set.
          */
-        virtual void putAll( const Map<K,V,COMPARATOR>& other ) = 0;
+        virtual void putAll( const Map<K,V,COMPARATOR>& other )
+            throw ( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Removes the value (key/value pair) for the specified key from
-         * the map.
+         * the map, returns a copy of the value that was mapped to the key.
+         *
          * @param key The search key.
+         * @return a copy of the element that was previously mapped to the given key
+         *
+         * @throw NoSuchElementException if this key is not in the Map.
+         * @throw UnsupportedOperationException if this map is unmodifiable.
          */
-        virtual void remove( const K& key ) = 0;
+        virtual V remove( const K& key )
+            throw ( decaf::lang::exceptions::NoSuchElementException,
+                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * @return the entire set of keys in this map as a std::vector.

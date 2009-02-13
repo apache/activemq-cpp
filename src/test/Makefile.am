@@ -98,7 +98,6 @@ cc_sources = \
   decaf/util/DateTest.cpp \
   decaf/util/UUIDTest.cpp \
   decaf/util/RandomTest.cpp \
-  decaf/util/MapTest.cpp \
   decaf/util/StlMapTest.cpp \
   decaf/util/QueueTest.cpp \
   decaf/util/ListTest.cpp \
@@ -199,7 +198,6 @@ h_sources = \
   decaf/util/UUIDTest.h \
   decaf/util/RandomTest.h \
   decaf/util/ListTest.h \
-  decaf/util/MapTest.h \
   decaf/util/StlMapTest.h \
   decaf/util/QueueTest.h \
   decaf/util/SetTest.h \
