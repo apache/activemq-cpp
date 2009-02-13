@@ -23,6 +23,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 /*
@@ -73,9 +74,6 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
         return;
     }
 
-    // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
-
     const BrokerInfo* srcPtr = dynamic_cast<const BrokerInfo*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
@@ -83,6 +81,10 @@ void BrokerInfo::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "BrokerInfo::copyDataStructure - src is NULL or invalid" );
     }
+
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
+
     this->setBrokerId( srcPtr->getBrokerId() );
     this->setBrokerURL( srcPtr->getBrokerURL() );
     this->setPeerBrokerInfos( srcPtr->getPeerBrokerInfos() );

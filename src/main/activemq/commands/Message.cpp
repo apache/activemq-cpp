@@ -25,6 +25,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 /*
@@ -82,9 +83,6 @@ void Message::copyDataStructure( const DataStructure* src ) {
         return;
     }
 
-    // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
-
     const Message* srcPtr = dynamic_cast<const Message*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
@@ -92,13 +90,17 @@ void Message::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "Message::copyDataStructure - src is NULL or invalid" );
     }
+
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
+
     this->properties.copy( srcPtr->properties );
     this->setAckHandler( srcPtr->getAckHandler() );
     this->setProducerId( srcPtr->getProducerId() );
     this->setDestination( srcPtr->getDestination() );
     this->setTransactionId( srcPtr->getTransactionId() );
     this->setOriginalDestination( srcPtr->getOriginalDestination() );
-    this->setMessageId( srcPtr->getMessageId() );
+    this->setMessageId( Pointer<MessageId>( new MessageId( *( srcPtr->getMessageId() ) ) ) );
     this->setOriginalTransactionId( srcPtr->getOriginalTransactionId() );
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );

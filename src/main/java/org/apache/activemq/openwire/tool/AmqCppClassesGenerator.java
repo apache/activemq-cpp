@@ -179,6 +179,7 @@ out.println("using namespace std;");
 out.println("using namespace activemq;");
 out.println("using namespace activemq::exceptions;");
 out.println("using namespace activemq::commands;");
+out.println("using namespace decaf::lang;");
 out.println("using namespace decaf::lang::exceptions;");
 out.println("");
 out.println("/*");
@@ -250,13 +251,6 @@ out.println("    if( this == src ) {");
 out.println("        return;");
 out.println("    }");
 out.println("");
-
-        if( baseClass != null ) {
-out.println("    // Copy the data of the base class or classes");
-out.println("    "+ baseClass +"::copyDataStructure( src );");
-out.println("");
-        }
-
 out.println("    const "+className+"* srcPtr = dynamic_cast<const "+className+"*>( src );");
 out.println("");
 out.println("    if( srcPtr == NULL || src == NULL ) {");
@@ -264,6 +258,13 @@ out.println("        throw decaf::lang::exceptions::NullPointerException(");
 out.println("            __FILE__, __LINE__,");
 out.println("            \""+className+"::copyDataStructure - src is NULL or invalid\" );");
 out.println("    }");
+out.println("");
+
+            if( baseClass != null ) {
+    out.println("    // Copy the data of the base class or classes");
+    out.println("    "+ baseClass +"::copyDataStructure( src );");
+    out.println("");
+            }
 
         if( className.equals( "Message" ) ) {
 out.println("    this->properties.copy( srcPtr->properties );");
@@ -275,7 +276,13 @@ out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
              String getter = property.getGetter().getSimpleName();
              String setter = property.getSetter().getSimpleName();
 
+             if( className.equals( "Message" ) &&
+                 property.getType().getSimpleName().equals( "MessageId" ) ) {
+out.println("    this->"+setter+"( Pointer<MessageId>( new MessageId( *( srcPtr->"+getter+"() ) ) ) );" );
+
+             } else {
 out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
+             }
     }
 
 out.println("}");

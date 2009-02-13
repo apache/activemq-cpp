@@ -23,6 +23,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 /*
@@ -68,9 +69,6 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
         return;
     }
 
-    // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
-
     const ConnectionControl* srcPtr = dynamic_cast<const ConnectionControl*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
@@ -78,6 +76,10 @@ void ConnectionControl::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ConnectionControl::copyDataStructure - src is NULL or invalid" );
     }
+
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
+
     this->setClose( srcPtr->isClose() );
     this->setExit( srcPtr->isExit() );
     this->setFaultTolerant( srcPtr->isFaultTolerant() );

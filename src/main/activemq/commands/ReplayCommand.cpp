@@ -23,6 +23,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 /*
@@ -65,9 +66,6 @@ void ReplayCommand::copyDataStructure( const DataStructure* src ) {
         return;
     }
 
-    // Copy the data of the base class or classes
-    BaseCommand::copyDataStructure( src );
-
     const ReplayCommand* srcPtr = dynamic_cast<const ReplayCommand*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
@@ -75,6 +73,10 @@ void ReplayCommand::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "ReplayCommand::copyDataStructure - src is NULL or invalid" );
     }
+
+    // Copy the data of the base class or classes
+    BaseCommand::copyDataStructure( src );
+
     this->setFirstNakNumber( srcPtr->getFirstNakNumber() );
     this->setLastNakNumber( srcPtr->getLastNakNumber() );
 }

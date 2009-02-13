@@ -24,6 +24,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 /*
@@ -70,9 +71,6 @@ void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
         return;
     }
 
-    // Copy the data of the base class or classes
-    TransactionId::copyDataStructure( src );
-
     const LocalTransactionId* srcPtr = dynamic_cast<const LocalTransactionId*>( src );
 
     if( srcPtr == NULL || src == NULL ) {
@@ -80,6 +78,10 @@ void LocalTransactionId::copyDataStructure( const DataStructure* src ) {
             __FILE__, __LINE__,
             "LocalTransactionId::copyDataStructure - src is NULL or invalid" );
     }
+
+    // Copy the data of the base class or classes
+    TransactionId::copyDataStructure( src );
+
     this->setValue( srcPtr->getValue() );
     this->setConnectionId( srcPtr->getConnectionId() );
 }
