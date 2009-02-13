@@ -23,7 +23,7 @@
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/Collection.h>
+#include <decaf/util/AbstractCollection.h>
 #include <decaf/util/ListIterator.h>
 
 namespace decaf{
@@ -43,7 +43,7 @@ namespace util{
      * to insert them, but we expect this usage to be rare.
      */
     template <typename E>
-    class DECAF_API List : public decaf::util::Collection<E> {
+    class DECAF_API List : public decaf::util::AbstractCollection<E> {
     public:
 
         virtual ~List() {}

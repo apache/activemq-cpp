@@ -35,9 +35,8 @@ namespace decaf{
 namespace util{
 
     /**
-     * Set template that wraps around a std::set to provide a more
-     * user-friendly interface and to provide common functions that do
-     * not exist in std::list.
+     * List class that wraps the STL list object to provide a simpler interface and
+     * additional methods not provided by the STL type.
      */
     template <typename E>
     class DECAF_API StlList : public decaf::util::List<E> {
@@ -57,11 +56,6 @@ namespace util{
 
         public:
 
-            StlListIterator( typename std::list<E>* list ) {
-                this->current = list->begin();
-                this->prev = list->end();
-                this->list = list;
-            }
             StlListIterator( typename std::list<E>* list, std::size_t index ) {
                 this->current = list->begin();
                 std::advance( this->current, index );
@@ -162,11 +156,6 @@ namespace util{
 
         public:
 
-            ConstStlListIterator( const typename std::list<E>* list ) {
-                this->current = list->begin();
-                this->prev = list->end();
-                this->list = list;
-            }
             ConstStlListIterator( const typename std::list<E>* list, std::size_t index ) {
                 this->current = list->begin();
                 std::advance( this->current, index );
@@ -282,41 +271,25 @@ namespace util{
         virtual bool equals( const StlList& source ) const {
             return this->values == source.values;
         }
-        virtual bool equals( const Collection<E>& source ) const {
-            if( this->values.size() != source.size() ) {
-                return false;
-            }
-
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            std::auto_ptr< Iterator<E> > thisIter( this->iterator() );
-
-            while( srcIter->hasNext() ) {
-                if( !( thisIter->next() == srcIter->next() ) ) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         /**
          * {@inheritDoc}
          */
         virtual Iterator<E>* iterator() {
-            return new StlListIterator( &values );
+            return new StlListIterator( &values, 0 );
         }
         virtual Iterator<E>* iterator() const {
-            return new ConstStlListIterator( &values );
+            return new ConstStlListIterator( &values, 0 );
         }
 
         /**
          * {@inheritDoc}
          */
         virtual ListIterator<E>* listIterator() {
-            return new StlListIterator( &values );
+            return new StlListIterator( &values, 0 );
         }
         virtual ListIterator<E>* listIterator() const {
-            return new ConstStlListIterator( &values );
+            return new ConstStlListIterator( &values, 0 );
         }
 
         /**
@@ -352,14 +325,6 @@ namespace util{
             this->values.clear();
             this->values = source.values;
         }
-        virtual void copy( const Collection<E>& source ) {
-            this->values.clear();
-
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                this->add( srcIter->next() );
-            }
-        }
 
         /**
          * {@inheritDoc}
@@ -375,22 +340,6 @@ namespace util{
             typename std::list<E>::const_iterator iter;
             iter = std::find( values.begin(), values.end(), value );
             return iter != values.end();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool containsAll( const Collection<E>& source ) const
-            throw ( lang::Exception ) {
-
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                if( !this->contains( srcIter->next() ) ) {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         /**
@@ -518,16 +467,6 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool addAll( const Collection<E>& source )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            return this->addAll( 0, source );
-        }
-
-        /**
-         * {@inheritDoc}
-         */
         virtual bool addAll( std::size_t index, const Collection<E>& source )
             throw ( decaf::lang::exceptions::UnsupportedOperationException,
                     decaf::lang::exceptions::IndexOutOfBoundsException ) {
@@ -578,56 +517,6 @@ namespace util{
             this->values.erase( iter );
 
             return oldValue;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool removeAll( const Collection<E>& source )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            std::size_t origSize = this->size();
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                this->remove( srcIter->next() );
-            }
-
-            return origSize == this->size();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool retainAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            bool result = false;
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( !collection.contains( iter->next() ) ) {
-                    iter->remove();
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector<E> toArray() const {
-            std::vector<E> valueArray( values.size() );
-
-            typename std::list<E>::const_iterator iter;
-            iter=values.begin();
-            for( int ix=0; iter != values.end(); ++iter, ++ix ){
-                valueArray[ix] = *iter;
-            }
-
-            return valueArray;
         }
 
     public:
