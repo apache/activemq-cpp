@@ -25,7 +25,7 @@
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/Set.h>
+#include <decaf/util/AbstractSet.h>
 
 namespace decaf{
 namespace util{
@@ -36,7 +36,7 @@ namespace util{
      * functions that do not exist in std::set.
      */
     template <typename E>
-    class StlSet : public decaf::util::Set<E> {
+    class StlSet : public decaf::util::AbstractSet<E> {
     private:
 
         std::set<E> values;

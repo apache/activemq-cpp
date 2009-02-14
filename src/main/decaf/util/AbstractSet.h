@@ -40,8 +40,7 @@ namespace util {
      * constraints imposed by the Set interface (for instance, the add method must not
      * permit addition of multiple instances of an object to a set).
      *
-     * Note that this class does not override any of the implementations from the
-     * AbstractCollection class. It merely adds implementations for equals and removeAll.
+     * @since 1.0
      */
     template<typename E >
     class DECAF_API AbstractSet : public decaf::util::Set<E> {

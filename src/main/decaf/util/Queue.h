@@ -53,6 +53,11 @@ namespace util{
         /**
          * Returns a reference to the Marker value that is returned from methods that
          * do not throw an exception when there is no element in the Queue to return.
+         * The empty marker is usually an instance of the contained element initialized
+         * using the default constructor (if its a Class) or the default value for the
+         * primitive type.
+         *
+         * @return a value that indicates that the Queue is empty.
          */
         virtual const E& getEmptyMarker() const = 0;
 
