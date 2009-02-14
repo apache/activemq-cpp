@@ -106,20 +106,20 @@ namespace state {
 //        Collection<TransactionState> getTransactionStates() {
 //            return transactions.values();
 //        }
-//
-//        TransactionState removeTransactionState(TransactionId id) {
-//            return transactions.remove(id);
-//        }
-//
+
+        Pointer<TransactionState> removeTransactionState( const Pointer<TransactionId>& id ) {
+            return transactions.remove( id );
+        }
+
         void addSession( const Pointer<SessionInfo>& info ) {
             checkShutdown();
             sessions.put(
                 info->getSessionId(), Pointer<SessionState>( new SessionState( info ) ) );
         }
 
-//        SessionState removeSession(SessionId id) {
-//            return sessions.remove(id);
-//        }
+        Pointer<SessionState> removeSession( const Pointer<SessionId>& id ) {
+            return sessions.remove( id );
+        }
 
         const Pointer<SessionState>& getSessionState( const Pointer<SessionId>& id ) const {
             return sessions.get( id );

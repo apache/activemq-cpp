@@ -32,24 +32,29 @@
 namespace activemq {
 namespace state {
 
+    using decaf::lang::Pointer;
+    using decaf::util::StlList;
+    using decaf::util::concurrent::atomic::AtomicBoolean;
+    using namespace activemq::commands;
+
     class AMQCPP_API TransactionState {
     private:
 
-        decaf::util::StlList< decaf::lang::Pointer<commands::Command> > commands;
-        decaf::lang::Pointer<commands::TransactionId> id;
-        decaf::util::concurrent::atomic::AtomicBoolean disposed;
+        StlList< Pointer<Command> > commands;
+        Pointer<TransactionId> id;
+        AtomicBoolean disposed;
         bool prepared;
         int preparedResult;
 
     public:
 
-        TransactionState( const decaf::lang::Pointer<commands::TransactionId>& id );
+        TransactionState( const Pointer<TransactionId>& id );
 
         virtual ~TransactionState();
 
         std::string toString() const;
 
-        void addCommand( const decaf::lang::Pointer< commands::Command >& operation );
+        void addCommand( const Pointer<Command>& operation );
 
         void checkShutdown() const;
 
@@ -57,11 +62,11 @@ namespace state {
             this->disposed.set( true );
         }
 
-        const decaf::util::List<decaf::lang::Pointer< commands::Command > >& getCommands() {
+        const decaf::util::List< Pointer<Command> >& getCommands() {
             return commands;
         }
 
-        const decaf::lang::Pointer<commands::TransactionId>& getId() const {
+        const Pointer<TransactionId>& getId() const {
             return id;
         }
 

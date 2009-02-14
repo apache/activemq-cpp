@@ -26,7 +26,7 @@
 #include <activemq/state/ProducerState.h>
 
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
-#include <decaf/util/StlMap.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 
 #include <string>
 #include <memory>
@@ -34,23 +34,25 @@
 namespace activemq {
 namespace state {
 
+    using decaf::lang::Pointer;
+    using decaf::util::concurrent::ConcurrentStlMap;
+    using decaf::util::concurrent::atomic::AtomicBoolean;
     using namespace activemq::commands;
-    using namespace decaf::lang;
 
     class AMQCPP_API SessionState {
     private:
 
         Pointer<SessionInfo> info;
 
-        decaf::util::StlMap< Pointer<ProducerId>,
-                             Pointer<ProducerState>,
-                             ProducerId::COMPARATOR > producers;
+        ConcurrentStlMap< Pointer<ProducerId>,
+                          Pointer<ProducerState>,
+                          ProducerId::COMPARATOR > producers;
 
-        decaf::util::StlMap< Pointer<ConsumerId>,
-                             Pointer<ConsumerState>,
-                             ConsumerId::COMPARATOR > consumers;
+        ConcurrentStlMap< Pointer<ConsumerId>,
+                          Pointer<ConsumerState>,
+                          ConsumerId::COMPARATOR > consumers;
 
-        decaf::util::concurrent::atomic::AtomicBoolean disposed;
+        AtomicBoolean disposed;
 
     public:
 
@@ -64,24 +66,26 @@ namespace state {
             return this->info;
         }
 
-//        void addProducer(commands::ProducerInfo info) {
-//            checkShutdown();
-//            producers.put(info.getProducerId(), new ProducerState(info));
-//        }
-//
-//        ProducerState removeProducer(commands::ProducerId id) {
-//            return producers.remove(id);
-//        }
-//
-//        void addConsumer(commands::ConsumerInfo info) {
-//            checkShutdown();
-//            consumers.put(info.getConsumerId(), new ConsumerState(info));
-//        }
-//
-//        ConsumerState removeConsumer(commands::ConsumerId id) {
-//            return consumers.remove(id);
-//        }
-//
+        void addProducer( const Pointer<ProducerInfo>& info ) {
+            checkShutdown();
+            producers.put( info->getProducerId(),
+                Pointer<ProducerState>( new ProducerState( info ) ) );
+        }
+
+        Pointer<ProducerState> removeProducer( const Pointer<ProducerId>& id) {
+            return producers.remove( id );
+        }
+
+        void addConsumer( const Pointer<ConsumerInfo>& info ) {
+            checkShutdown();
+            consumers.put( info->getConsumerId(),
+                Pointer<ConsumerState>( new ConsumerState( info ) ) );
+        }
+
+        Pointer<ConsumerState> removeConsumer( const Pointer<ConsumerId>& id ) {
+            return consumers.remove( id );
+        }
+
 //        Set<commands::ConsumerId> getConsumerIds() {
 //            return consumers.keySet();
 //        }
@@ -93,18 +97,18 @@ namespace state {
 //        Collection<ProducerState> getProducerStates() {
 //            return producers.values();
 //        }
-//
-//        ProducerState getProducerState(commands::ProducerId producerId) {
-//            return producers.get(producerId);
-//        }
-//
+
+        Pointer<ProducerState> getProducerState( const Pointer<ProducerId>& id ) {
+            return producers.get( id );
+        }
+
 //        Collection<ConsumerState> getConsumerStates() {
 //            return consumers.values();
 //        }
-//
-//        ConsumerState getConsumerState( const commands::ConsumerId& consumerId) {
-//            return consumers.get(consumerId);
-//        }
+
+        Pointer<ConsumerState> getConsumerState( const Pointer<ConsumerId>& id ) {
+            return consumers.get( id );
+        }
 
         void checkShutdown() const;
 
