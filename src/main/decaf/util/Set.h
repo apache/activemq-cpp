@@ -22,7 +22,7 @@
 #include <decaf/util/concurrent/Synchronizable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/Collection.h>
+#include <decaf/util/AbstractCollection.h>
 
 namespace decaf{
 namespace util{
@@ -40,7 +40,7 @@ namespace util{
      * manner that affects equals comparisons while the object is an element in the set.
      */
     template <typename E>
-    class Set : public decaf::util::Collection<E> {
+    class Set : public decaf::util::AbstractCollection<E> {
     public:
 
         virtual ~Set() {}

@@ -26,6 +26,7 @@
 #include <decaf/util/Iterator.h>
 #include <decaf/util/Collection.h>
 #include <decaf/util/concurrent/Synchronizable.h>
+#include <decaf/util/concurrent/Mutex.h>
 #include <memory>
 
 namespace decaf {
@@ -54,7 +55,11 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class AbstractCollection : public decaf::util::Collection<E> {
+    class DECAF_API AbstractCollection : public decaf::util::Collection<E> {
+    protected:
+
+        util::concurrent::Mutex mutex;
+
     public:
 
         virtual ~AbstractCollection() {}
@@ -198,6 +203,32 @@ namespace util {
             }
 
             return valueArray;
+        }
+
+    public:
+
+        virtual void lock() throw( lang::Exception ) {
+            mutex.lock();
+        }
+
+        virtual void unlock() throw( lang::Exception ) {
+            mutex.unlock();
+        }
+
+        virtual void wait() throw( lang::Exception ) {
+            mutex.wait();
+        }
+
+        virtual void wait( unsigned long millisecs ) throw( lang::Exception ) {
+            mutex.wait( millisecs );
+        }
+
+        virtual void notify() throw( lang::Exception  ) {
+            mutex.notify();
+        }
+
+        virtual void notifyAll() throw( lang::Exception  ) {
+            mutex.notifyAll();
         }
 
     };

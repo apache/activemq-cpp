@@ -367,6 +367,10 @@ h_sources = \
     decaf/util/Iterator.h \
     decaf/util/ListIterator.h \
     decaf/util/AbstractCollection.h \
+    decaf/util/AbstractList.h \
+    decaf/util/AbstractSequentialList.h \
+    decaf/util/AbstractSet.h \
+    decaf/util/AbstractMap.h \
     decaf/util/Collection.h \
     decaf/util/Comparator.h \
     decaf/util/List.h \

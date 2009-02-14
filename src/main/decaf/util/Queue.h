@@ -19,7 +19,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/util/Iterator.h>
-#include <decaf/util/Collection.h>
+#include <decaf/util/AbstractCollection.h>
 #include <decaf/lang/Exception.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
@@ -45,7 +45,7 @@ namespace util{
      * can be obtained by calling the Queue method <code>getEmptyMarker</code>.
      */
     template <typename E>
-    class DECAF_API Queue : public decaf::util::Collection<E> {
+    class DECAF_API Queue : public decaf::util::AbstractCollection<E> {
     public:
 
         virtual ~Queue() {}

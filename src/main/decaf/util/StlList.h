@@ -43,7 +43,6 @@ namespace util{
     private:
 
         std::list<E> values;
-        util::concurrent::Mutex mutex;
 
     private:
 
@@ -517,32 +516,6 @@ namespace util{
             this->values.erase( iter );
 
             return oldValue;
-        }
-
-    public:
-
-        virtual void lock() throw( lang::Exception ) {
-            mutex.lock();
-        }
-
-        virtual void unlock() throw( lang::Exception ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( lang::Exception ) {
-            mutex.wait();
-        }
-
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ) {
-            mutex.wait( millisecs );
-        }
-
-        virtual void notify() throw(  lang::Exception  ) {
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw(  lang::Exception  ) {
-            mutex.notifyAll();
         }
 
     };

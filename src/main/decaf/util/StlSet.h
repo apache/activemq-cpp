@@ -40,7 +40,6 @@ namespace util{
     private:
 
         std::set<E> values;
-        util::concurrent::Mutex mutex;
 
     private:
 
@@ -170,22 +169,6 @@ namespace util{
         virtual bool equals( const StlSet& source ) const {
             return this->values == source.values;
         }
-        virtual bool equals( const Collection<E>& source ) const {
-            if( this->values.size() != source.size() ) {
-                return false;
-            }
-
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            std::auto_ptr< Iterator<E> > thisIter( this->iterator() );
-
-            while( srcIter->hasNext() ) {
-                if( !( thisIter->next() == srcIter->next() ) ) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         /**
          * {@inheritDoc}
@@ -193,14 +176,6 @@ namespace util{
         virtual void copy( const StlSet& source ) {
             this->values.clear();
             this->values = source.values;
-        }
-        virtual void copy( const Collection<E>& source ) {
-            this->values.clear();
-
-            std::auto_ptr< Iterator<E> > iter( source.iterator() );
-            while( iter->hasNext() ) {
-                this->values.insert( iter->next() );
-            }
         }
 
         /**
@@ -217,22 +192,6 @@ namespace util{
             typename std::set<E>::const_iterator iter;
             iter = values.find( value );
             return iter != values.end();
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool containsAll( const Collection<E>& source ) const
-            throw ( lang::Exception ) {
-
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                if( !this->contains( srcIter->next() ) ) {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         /**
@@ -262,103 +221,11 @@ namespace util{
         /**
          * {@inheritDoc}
          */
-        virtual bool addAll( const Collection<E>& source )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            bool result = false;
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                result = this->add( srcIter->next() );
-            }
-
-            return result;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
         virtual bool remove( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
                     lang::exceptions::IllegalArgumentException ) {
 
             return values.erase( value ) != 0;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool removeAll( const Collection<E>& source )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            bool result = false;
-            std::auto_ptr< Iterator<E> > srcIter( source.iterator() );
-            while( srcIter->hasNext() ) {
-                result = this->remove( srcIter->next() );
-            }
-
-            return result;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual bool retainAll( const Collection<E>& collection )
-            throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
-
-            bool result = false;
-            std::auto_ptr< Iterator<E> > iter( this->iterator() );
-            while( iter->hasNext() ) {
-                if( !collection.contains( iter->next() ) ) {
-                    iter->remove();
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        virtual std::vector<E> toArray() const {
-            std::vector<E> valueArray( values.size() );
-
-            typename std::set<E>::const_iterator iter;
-            iter=values.begin();
-            for( int ix=0; iter != values.end(); ++iter, ++ix ){
-                valueArray[ix] = *iter;
-            }
-
-            return valueArray;
-        }
-
-    public:
-
-        virtual void lock() throw( lang::Exception ) {
-            mutex.lock();
-        }
-
-        virtual void unlock() throw( lang::Exception ) {
-            mutex.unlock();
-        }
-
-        virtual void wait() throw( lang::Exception ) {
-            mutex.wait();
-        }
-
-        virtual void wait( unsigned long millisecs ) throw( lang::Exception ) {
-            mutex.wait( millisecs );
-        }
-
-        virtual void notify() throw( lang::Exception  ) {
-            mutex.notify();
-        }
-
-        virtual void notifyAll() throw( lang::Exception  ) {
-            mutex.notifyAll();
         }
 
     };
