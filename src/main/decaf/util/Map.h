@@ -36,23 +36,22 @@ namespace util{
         public concurrent::Synchronizable {
     public:
 
-        template< typename K1, typename V1>
         class Entry {
         private:
 
-            K1 key;
-            V1 value;
+            K key;
+            V value;
 
         public:
 
             Entry() {}
             virtual ~Entry() {}
 
-            const K1& getKey() const;
+            const K& getKey() const = 0;
 
-            const V1& getValue() const;
+            const V& getValue() const = 0;
 
-            void setValue( const V1& value );
+            void setValue( const V& value ) = 0;
 
         };
 
@@ -159,6 +158,18 @@ namespace util{
         virtual V remove( const K& key )
             throw ( decaf::lang::exceptions::NoSuchElementException,
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+
+        /**
+         * Returns a Set view of the mappings contained in this map. The set is backed by the
+         * map, so changes to the map are reflected in the set, and vice-versa. If the map is
+         * modified while an iteration over the set is in progress (except through the iterator's
+         * own remove operation, or through the setValue operation on a map entry returned by
+         * the iterator) the results of the iteration are undefined. The set supports element
+         * removal, which removes the corresponding mapping from the map, via the
+         * Iterator.remove, Set.remove, removeAll, retainAll and clear operations. It does not
+         * support the add or addAll operations.
+         */
+
 
         /**
          * @return the entire set of keys in this map as a std::vector.

@@ -117,7 +117,7 @@ namespace util{
                 return ( this->current != this->list->begin() );
             }
 
-            virtual const E& previous() {
+            virtual E previous() {
                 if( this->current == this->list->begin() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -209,7 +209,7 @@ namespace util{
                 return ( this->current != this->list->begin() );
             }
 
-            virtual const E& previous() {
+            virtual E previous() {
                 if( this->current == this->list->begin() ) {
                     throw lang::exceptions::NoSuchElementException(
                         __FILE__, __LINE__,
@@ -437,7 +437,8 @@ namespace util{
          */
         virtual bool add( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) {
 
             values.insert( values.end(), value );
 

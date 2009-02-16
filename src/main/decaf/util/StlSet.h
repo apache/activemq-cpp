@@ -213,7 +213,8 @@ namespace util{
          */
         virtual bool add( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) {
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) {
 
             return values.insert( value ).second;
         }

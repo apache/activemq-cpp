@@ -101,7 +101,7 @@ namespace util{
          * @return the previous element in the list.
          * @throw NoSuchElementException - if the iteration has no previous element.
          */
-        virtual const E& previous() = 0;
+        virtual E previous() = 0;
 
         /**
          * Returns the index of the element that would be returned by a

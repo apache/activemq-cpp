@@ -98,10 +98,13 @@ namespace util{
          * @returns true if the element was added
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
+         * @throw IllegalStateException
+         *        if the element cannot be added at this time due to insertion restrictions
          */
         virtual bool add( const E& value )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) = 0;
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) = 0;
 
         /**
          * Adds all of the elements in the specified collection to this
@@ -110,14 +113,17 @@ namespace util{
          * (This implies that the behavior of this call is undefined if the
          * specified collection is this collection, and this collection is
          * nonempty.)
-         * @param source - Collection whose elements are added to this one.
+         * @param collection - Collection whose elements are added to this one.
          * @return true if this collection changed as a result of the call
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
+         * @throw IllegalStateException
+         *        if the element cannot be added at this time due to insertion restrictions
          */
-        virtual bool addAll( const Collection<E>& source )
+        virtual bool addAll( const Collection<E>& collection )
             throw ( lang::exceptions::UnsupportedOperationException,
-                    lang::exceptions::IllegalArgumentException ) = 0;
+                    lang::exceptions::IllegalArgumentException,
+                    lang::exceptions::IllegalStateException ) = 0;
 
         /**
          * Removes all of the elements from this collection (optional operation).
@@ -141,10 +147,10 @@ namespace util{
         /**
          * Returns true if this collection contains all of the elements in
          * the specified collection.
-         * @param source - Collection to compare to this one.
+         * @param collection - Collection to compare to this one.
          * @throw Exception
          */
-        virtual bool containsAll( const Collection<E>& source ) const
+        virtual bool containsAll( const Collection<E>& collection ) const
             throw ( lang::Exception ) = 0;
 
         /**
@@ -181,12 +187,12 @@ namespace util{
          * the specified collection (optional operation). After this call returns,
          * this collection will contain no elements in common with the specified
          * collection.
-         * @param value - The Collection whose elements are to be removed
+         * @param collection - The Collection whose elements are to be removed
          * @returns true if the collection changed as a result of this call
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool removeAll( const Collection<E>& value )
+        virtual bool removeAll( const Collection<E>& collection )
             throw ( lang::exceptions::UnsupportedOperationException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 
@@ -195,12 +201,12 @@ namespace util{
          * specified collection (optional operation). In other words, removes from
          * this collection all of its elements that are not contained in the
          * specified collection.
-         * @param value - The Collection whose elements are to be retained
+         * @param collection - The Collection whose elements are to be retained
          * @returns true if the collection changed as a result of this call
          * @throw UnsupportedOperationException
          * @throw IllegalArgumentException
          */
-        virtual bool retainAll( const Collection<E>& value )
+        virtual bool retainAll( const Collection<E>& collection )
             throw ( lang::exceptions::UnsupportedOperationException,
                     lang::exceptions::IllegalArgumentException ) = 0;
 

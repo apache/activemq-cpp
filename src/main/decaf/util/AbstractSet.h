@@ -48,6 +48,56 @@ namespace util {
 
         virtual ~AbstractSet() {}
 
+        /**
+         * Removes from this set all of its elements that are contained in the specified
+         * collection (optional operation). If the specified collection is also a set, this
+         * operation effectively modifies this set so that its value is the asymmetric set
+         * difference of the two sets.
+         *
+         * This implementation determines which is the smaller of this set and the specified
+         * collection, by invoking the size method on each. If this set has fewer elements,
+         * then the implementation iterates over this set, checking each element returned by
+         * the iterator in turn to see if it is contained in the specified collection. If it
+         * is so contained, it is removed from this set with the iterator's remove method. If
+         * the specified collection has fewer elements, then the implementation iterates over
+         * the specified collection, removing from this set each element returned by the
+         * iterator, using this set's remove method.
+         *
+         * Note that this implementation will throw an UnsupportedOperationException if the
+         * iterator returned by the iterator method does not implement the remove method.
+         *
+         * @param collection - The Collection whose elements are to be retained
+         * @returns true if the collection changed as a result of this call
+         *
+         * @throw UnsupportedOperationException
+         * @throw IllegalArgumentException
+         */
+        virtual bool removeAll( const Collection<E>& collection )
+            throw ( lang::exceptions::UnsupportedOperationException,
+                    lang::exceptions::IllegalArgumentException ) {
+
+            bool result = false;
+            if( this->size() <= collection.size() ) {
+
+                std::auto_ptr< Iterator<E> > iter( this->iterator() );
+                while( iter->hasNext() ) {
+                    if( collection.contains( iter->next() ) ) {
+                        iter->remove();
+                        result = true;
+                    }
+                }
+
+            } else {
+
+                std::auto_ptr< Iterator<E> > iter( collection.iterator() );
+                while( iter->hasNext() ) {
+                    result = this->remove( iter->next() ) || result;
+                }
+            }
+
+            return result;
+        }
+
     };
 
 }}
