@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/ClassCastException.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/Comparator.h>
 #include <memory>
@@ -135,6 +136,10 @@ namespace lang {
         }
     };
 
+    // Used internally in Pointer.
+    struct STATIC_CAST_TOKEN {};
+    struct DYNAMIC_CAST_TOKEN {};
+
     /**
      * Decaf's implementation of a Smart Pointer that is a template on a Type
      * and is Thread Safe if the default Reference Counter is used.  This Pointer
@@ -157,8 +162,9 @@ namespace lang {
 
     public:
 
-        typedef T* PointerType;   // type returned by operator->
-        typedef T& ReferenceType; // type returned by operator*
+        typedef T* PointerType;          // type returned by operator->
+        typedef T& ReferenceType;        // type returned by operator*
+        typedef REFCOUNTER CounterType;  // Type of the Reference Counter
 
     public:
 
@@ -191,6 +197,38 @@ namespace lang {
          */
         template< typename T1, typename R1 >
         Pointer( const Pointer<T1, R1>& value ) throw() : REFCOUNTER( value ), value( value.get() ) {}
+
+        /**
+         * Static Cast constructor. Copies the value contained in the pointer to the new
+         * instance and increments the reference counter performing a static cast on the
+         * value contained in the source Pointer object.
+         *
+         * @param value - Pointer instance to cast to this type.
+         */
+        template< typename T1, typename R1 >
+        Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) throw() :
+            REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ) {
+        }
+
+        /**
+         * Dynamic Cast constructor. Copies the value contained in the pointer to the new
+         * instance and increments the reference counter performing a dynamic cast on the
+         * value contained in the source Pointer object.  If the cast fails and return NULL
+         * then this method throws a ClassCastException.
+         *
+         * @param value - Pointer instance to cast to this type.
+         * @throw ClassCastException if the dynamic cast returns NULL
+         */
+        template< typename T1, typename R1 >
+        Pointer( const Pointer<T1, R1>& value, const DYNAMIC_CAST_TOKEN& )
+            throw( decaf::lang::exceptions::ClassCastException ) :
+                REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ) {
+
+            if( this->value == NULL ) {
+                throw decaf::lang::exceptions::ClassCastException(
+                    __FILE__, __LINE__, "Failed to cast source pointer to this type." );
+            }
+        }
 
         virtual ~Pointer() throw() {
             if( this->release() == true ) {
@@ -331,6 +369,15 @@ namespace lang {
             return !( this->value == right.get() );
         }
 
+        template< typename T1, typename R1 >
+        Pointer<T1, R1> dynamicCast() const {
+            return Pointer<T1, R1>( *this, DYNAMIC_CAST_TOKEN() );
+        }
+
+        template< typename T1, typename R1 >
+        Pointer<T1, R1> staticCast() const {
+            return Pointer<T1, R1>( *this, STATIC_CAST_TOKEN() );
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////
