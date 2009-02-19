@@ -38,8 +38,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
 //#include <activemq/commands/ActiveMQDestinationTest2.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
-//#include <activemq/commands/ActiveMQBytesMessageTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
+#include <activemq/commands/ActiveMQBytesMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 //
 //#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::BaseDataStreamMarshallerTest );

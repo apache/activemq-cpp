@@ -51,24 +51,24 @@ void ActiveMQBytesMessageTest::test()
     myMessage.writeLong( 0xFFFAAA999LL );
     myMessage.writeString( "This is a test String" );
 
-//    CPPUNIT_ASSERT( myMessage.getBodyLength() != 0 );
-//
-//    // Get ready to read
-//    myMessage.reset();
-//
-//    CPPUNIT_ASSERT( myMessage.readBoolean() == false );
-//    CPPUNIT_ASSERT( myMessage.readByte() == 127 );
-//    CPPUNIT_ASSERT( myMessage.readShort() == 32767 );
-//    CPPUNIT_ASSERT( myMessage.readUnsignedShort() == 65535 );
-//    CPPUNIT_ASSERT( myMessage.readDouble() == 0.5622154 );
-//    CPPUNIT_ASSERT( myMessage.readUTF() == "This is a UTF String" );
-//    CPPUNIT_ASSERT( myMessage.readDouble() == 1.012 );
-//    CPPUNIT_ASSERT( myMessage.readFloat() == 10.000005f );
-//    CPPUNIT_ASSERT( myMessage.readInt() == 15645646 );
-//    CPPUNIT_ASSERT( myMessage.readLong() == 0xFFFAAA999ULL );
-//    CPPUNIT_ASSERT( myMessage.readString() == "This is a test String" );
-//
-//    myMessage.clearBody();
-//
-//    CPPUNIT_ASSERT( myMessage.getBodyLength() == 0 );
+    CPPUNIT_ASSERT( myMessage.getBodyLength() != 0 );
+
+    // Get ready to read
+    myMessage.reset();
+
+    CPPUNIT_ASSERT( myMessage.readBoolean() == false );
+    CPPUNIT_ASSERT( myMessage.readByte() == 127 );
+    CPPUNIT_ASSERT( myMessage.readShort() == 32767 );
+    CPPUNIT_ASSERT( myMessage.readUnsignedShort() == 65535 );
+    CPPUNIT_ASSERT( myMessage.readDouble() == 0.5622154 );
+    CPPUNIT_ASSERT( myMessage.readUTF() == "This is a UTF String" );
+    CPPUNIT_ASSERT( myMessage.readDouble() == 1.012 );
+    CPPUNIT_ASSERT( myMessage.readFloat() == 10.000005f );
+    CPPUNIT_ASSERT( myMessage.readInt() == 15645646 );
+    CPPUNIT_ASSERT( myMessage.readLong() == 0xFFFAAA999ULL );
+    CPPUNIT_ASSERT( myMessage.readString() == "This is a test String" );
+
+    myMessage.clearBody();
+
+    CPPUNIT_ASSERT( myMessage.getBodyLength() == 0 );
 }
