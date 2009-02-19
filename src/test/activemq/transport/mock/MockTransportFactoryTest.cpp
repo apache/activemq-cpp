@@ -38,11 +38,11 @@ void MockTransportFactoryTest::test() {
 
     MockTransportFactory factory;
 
-    auto_ptr<Transport> transport( factory.create( uri ) );
+    Pointer<Transport> transport( factory.create( uri ) );
 
     CPPUNIT_ASSERT( transport.get() != NULL );
 
-    transport.reset( factory.createComposite( uri ) );
+    transport = factory.createComposite( uri );
 
     CPPUNIT_ASSERT( transport.get() != NULL );
 

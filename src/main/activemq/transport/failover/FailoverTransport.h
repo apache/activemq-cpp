@@ -21,17 +21,24 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Command.h>
+#include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
+#include <activemq/transport/failover/BackupTransport.h>
 
 #include <decaf/util/StlSet.h>
+#include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/concurrent/atomic/AtomicReference.h>
 #include <decaf/net/URI.h>
 
 namespace activemq {
 namespace transport {
 namespace failover {
 
-    class BackupTransport;
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
 
     class AMQCPP_API FailoverTransport : public CompositeTransport {
     private:
@@ -39,6 +46,11 @@ namespace failover {
         bool closed;
         bool connected;
         bool started;
+
+        decaf::net::URI connectedTransportURI;
+        decaf::net::URI failedConnectTransportURI;
+        decaf::util::concurrent::atomic::AtomicReference<Transport> connectedTransport;
+        //TaskRunner reconnectTask;
 
         decaf::util::StlSet<decaf::net::URI> uris;
 
@@ -58,8 +70,18 @@ namespace failover {
         bool trackMessages;
         int maxCacheSize;
 
-        //List<BackupTransport> backups=new CopyOnWriteArrayList<BackupTransport>();
+        decaf::util::StlSet< Pointer<BackupTransport> > backups;
         decaf::lang::Exception connectionFailure;
+
+        state::ConnectionStateTracker stateTracker;
+        decaf::util::concurrent::Mutex reconnectMutex;
+        decaf::util::concurrent::Mutex backupMutex;
+        decaf::util::concurrent::Mutex sleepMutex;
+        decaf::util::concurrent::Mutex listenerMutex;
+        decaf::util::StlMap<int, Pointer<Command> > requestMap;
+
+        Pointer<TransportListener> disposedListener;
+        Pointer<TransportListener> myTansportListener;
 
     public:
 
@@ -125,7 +147,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -138,7 +160,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -152,7 +174,7 @@ namespace failover {
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -160,7 +182,7 @@ namespace failover {
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {}
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {}
 
         /**
          * Sets the observer of asynchronous events from this transport.

@@ -23,6 +23,7 @@
 #include <activemq/transport/Transport.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace transport{
@@ -49,7 +50,7 @@ namespace transport{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* create( const decaf::net::URI& location )
+        virtual Pointer<Transport> create( const decaf::net::URI& location )
             throw ( exceptions::ActiveMQException ) = 0;
 
         /**
@@ -58,7 +59,7 @@ namespace transport{
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* createComposite( const decaf::net::URI& location )
+        virtual Pointer<Transport> createComposite( const decaf::net::URI& location )
             throw ( exceptions::ActiveMQException ) = 0;
 
     };

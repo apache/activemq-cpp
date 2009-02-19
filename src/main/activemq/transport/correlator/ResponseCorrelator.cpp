@@ -16,21 +16,22 @@
  */
 
 #include "ResponseCorrelator.h"
+#include <algorithm>
 
+using namespace std;
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::correlator;
 using namespace activemq::exceptions;
+using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ResponseCorrelator::ResponseCorrelator( Transport* next, bool own )
- :  TransportFilter( next, own ) {
+ResponseCorrelator::ResponseCorrelator( const Pointer<Transport>& next )
+ :  TransportFilter( next ), closed( true ) {
 
     nextCommandId.set(1);
-    // Start in the closed state.
-    closed = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,13 +39,10 @@ ResponseCorrelator::~ResponseCorrelator(){
 
     // Close the transport and destroy it.
     close();
-
-    // Don't do anything with the future responses -
-    // they should be cleaned up by each requester.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::oneway( commands::Command* command )
+void ResponseCorrelator::oneway( const Pointer<Command>& command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -66,25 +64,25 @@ void ResponseCorrelator::oneway( commands::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* ResponseCorrelator::request( commands::Command* command )
+Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
+
         command->setCommandId( nextCommandId.getAndIncrement() );
         command->setResponseRequired( true );
 
         // Add a future response object to the map indexed by this
         // command id.
-        // TODO = This might not get deleted if an exception is thrown.
-        FutureResponse* futureResponse = new FutureResponse();
+        Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap[command->getCommandId()] = futureResponse;
+            requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
         }
 
         // Wait to be notified of the response via the futureResponse
         // object.
-        commands::Response* response = NULL;
+        Pointer<commands::Response> response;
 
         // Send the request.
         next->oneway( command );
@@ -98,13 +96,6 @@ commands::Response* ResponseCorrelator::request( commands::Command* command )
             // We've done our waiting - get this thing out
             // of the map.
             requestMap.erase( command->getCommandId() );
-
-            // Destroy the futureResponse.  It is safe to
-            // do this now because the other thread only
-            // accesses the futureResponse within a lock on
-            // the map.
-            delete futureResponse;
-            futureResponse = NULL;
         }
 
         if( response == NULL ){
@@ -124,7 +115,7 @@ commands::Response* ResponseCorrelator::request( commands::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* ResponseCorrelator::request( commands::Command* command, unsigned int timeout )
+Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, unsigned int timeout )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -133,16 +124,15 @@ commands::Response* ResponseCorrelator::request( commands::Command* command, uns
 
         // Add a future response object to the map indexed by this
         // command id.
-        // TODO = This might not get deleted if an exception is thrown.
-        FutureResponse* futureResponse = new FutureResponse();
+        Pointer<FutureResponse> futureResponse( new FutureResponse() );
 
         synchronized( &mapMutex ){
-            requestMap[command->getCommandId()] = futureResponse;
+            requestMap.insert( make_pair( command->getCommandId(), futureResponse ) );
         }
 
         // Wait to be notified of the response via the futureResponse
         // object.
-        commands::Response* response = NULL;
+        Pointer<commands::Response> response;
 
         // Send the request.
         next->oneway( command );
@@ -156,13 +146,6 @@ commands::Response* ResponseCorrelator::request( commands::Command* command, uns
             // We've done our waiting - get this thing out
             // of the map.
             requestMap.erase( command->getCommandId() );
-
-            // Destroy the futureResponse.  It is safe to
-            // do this now because the other thread only
-            // accesses the futureResponse within a lock on
-            // the map.
-            delete futureResponse;
-            futureResponse = NULL;
         }
 
         if( response == NULL ){
@@ -182,7 +165,7 @@ commands::Response* ResponseCorrelator::request( commands::Command* command, uns
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::onCommand( commands::Command* command ) {
+void ResponseCorrelator::onCommand( const Pointer<Command>& command ) {
 
     // Let's see if the incoming command is a response.
     if( !command->isResponse() ){
@@ -192,25 +175,26 @@ void ResponseCorrelator::onCommand( commands::Command* command ) {
         return;
     }
 
-    commands::Response* response = dynamic_cast<commands::Response*>( command );
+    Pointer<Response> response =
+        command.dynamicCast< Response, Pointer<Response>::CounterType >();
 
     // It is a response - let's correlate ...
     synchronized( &mapMutex ){
 
         // Look the future request up based on the correlation id.
-        std::map<unsigned int, FutureResponse*>::iterator iter =
+        std::map< unsigned int, Pointer<FutureResponse> >::iterator iter =
             requestMap.find( response->getCorrelationId() );
         if( iter == requestMap.end() ){
 
             // This is not terrible - just log it.
-            //printf("ResponseCorrelator::onCommand() - received unknown response for request: %d\n",
-            //    response->getCorrelationId() );
+            //printf( "ResponseCorrelator::onCommand() - "
+            //        "received unknown response for request: %d\n",
+            //        response->getCorrelationId() );
             return;
         }
 
         // Get the future response (if it's in the map, it's not NULL).
-        FutureResponse* futureResponse = NULL;
-        futureResponse = iter->second;
+        Pointer<FutureResponse> futureResponse = iter->second;
 
         // Set the response property in the future response.
         futureResponse->setResponse( response );
@@ -257,9 +241,9 @@ void ResponseCorrelator::close() throw( cms::CMSException ){
 
         // Wake-up any outstanding requests.
         synchronized( &mapMutex ){
-            std::map<unsigned int, FutureResponse*>::iterator iter = requestMap.begin();
+            std::map<unsigned int, Pointer<FutureResponse> >::iterator iter = requestMap.begin();
             for( ; iter != requestMap.end(); ++iter ){
-                iter->second->setResponse( NULL );
+                iter->second->setResponse( Pointer<Response>() );
             }
         }
 
@@ -275,16 +259,15 @@ void ResponseCorrelator::close() throw( cms::CMSException ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelator::onTransportException(
-    Transport* source AMQCPP_UNUSED,
-    const decaf::lang::Exception& ex ) {
+void ResponseCorrelator::onTransportException( Transport* source AMQCPP_UNUSED,
+                                               const decaf::lang::Exception& ex ) {
 
     // Trigger each outstanding request to complete so that we don't hang
     // forever waiting for one that has been sent without timeout.
     synchronized( &mapMutex ){
-        std::map<unsigned int, FutureResponse*>::iterator iter = requestMap.begin();
+        std::map< unsigned int, Pointer<FutureResponse> >::iterator iter = requestMap.begin();
         for( ; iter != requestMap.end(); ++iter ){
-            iter->second->setResponse( NULL );
+            iter->second->setResponse( Pointer<Response>() );
         }
     }
 

@@ -30,14 +30,13 @@ using namespace decaf::lang::exceptions;
 MockTransport* MockTransport::instance = NULL;
 
 ////////////////////////////////////////////////////////////////////////////////
-MockTransport::MockTransport( WireFormat* wireFormat, ResponseBuilder* responseBuilder, bool own ){
+MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
+                              const Pointer<ResponseBuilder>& responseBuilder ){
 
     this->wireFormat = wireFormat;
-    this->responseBuilder = NULL;
     this->outgoingListener = NULL;
     this->listener = NULL;
     this->responseBuilder = responseBuilder;
-    this->own = own;
     this->nextCommandId.set( 0 );
     this->instance = this;
 
@@ -47,20 +46,7 @@ MockTransport::MockTransport( WireFormat* wireFormat, ResponseBuilder* responseB
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-MockTransport::~MockTransport(){
-    try{
-
-        if( this->own ){
-            delete this->responseBuilder;
-        }
-
-        delete this->wireFormat;
-    }
-    AMQ_CATCHALL_NOTHROW()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void MockTransport::oneway( commands::Command* command )
+void MockTransport::oneway( const Pointer<Command>& command )
         throw( CommandIOException,
                decaf::lang::exceptions::UnsupportedOperationException) {
 
@@ -83,7 +69,7 @@ void MockTransport::oneway( commands::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* MockTransport::request( commands::Command* command )
+Pointer<Response> MockTransport::request( const Pointer<Command>& command )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {
@@ -113,8 +99,8 @@ commands::Response* MockTransport::request( commands::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* MockTransport::request( commands::Command* command,
-                                            unsigned int timeout AMQCPP_UNUSED )
+Pointer<Response> MockTransport::request( const Pointer<Command>& command,
+                                          unsigned int timeout AMQCPP_UNUSED )
     throw( CommandIOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {

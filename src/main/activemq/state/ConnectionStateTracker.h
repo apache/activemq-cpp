@@ -19,24 +19,191 @@
 #define _ACTIVEMQ_STATE_CONNECTIONSTATETRACKER_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/commands/ConnectionId.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitorAdapter.h>
 #include <activemq/state/ConnectionState.h>
 #include <activemq/state/ConsumerState.h>
 #include <activemq/state/ProducerState.h>
 #include <activemq/state/SessionState.h>
 #include <activemq/state/TransactionState.h>
+#include <activemq/state/Tracked.h>
+#include <activemq/transport/Transport.h>
+
+#include <decaf/util/StlMap.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace state {
 
+    class RemoveTransactionAction;
+    using decaf::lang::Pointer;
+
     class AMQCPP_API ConnectionStateTracker : public CommandVisitorAdapter {
     private:
+
+        static const Pointer<Tracked> TRACKED_RESPONSE_MARKER;
+
+        // TODO - Create a Thread Safe impl of Map.
+        decaf::util::StlMap< Pointer<ConnectionId>,
+                             Pointer<ConnectionState>,
+                             commands::ConnectionId::COMPARATOR > connectionStates;
+
+        bool trackTransactions;
+        bool restoreSessions;
+        bool restoreConsumers;
+        bool restoreProducers;
+        bool restoreTransaction;
+        bool trackMessages;
+        int maxCacheSize;
+        int currentCacheSize;
+
+        friend class RemoveTransactionAction;
 
     public:
 
         ConnectionStateTracker();
 
         virtual ~ConnectionStateTracker();
+
+        Tracked track( const Pointer<Command>& command ) throw( decaf::io::IOException );
+
+        void trackBack( const Pointer<Command>& command );
+
+        void restore( const Pointer<transport::Transport>& transport )
+            throw( decaf::io::IOException );
+
+        virtual Pointer<Command> processAddDestination( DestinationInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRemoveDestination( DestinationInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processAddProducer( ProducerInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRemoveProducer( ProducerId* id )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processAddConsumer( ConsumerInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRemoveConsumer( ConsumerId* id )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processAddSession( SessionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRemoveSession( SessionId* id )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processAddConnection( ConnectionInfo* info)
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRemoveConnection( ConnectionId* id )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processMessage( Message* send )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processMessageAck( MessageAck* ack )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processBeginTransaction( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processPrepareTransaction( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processCommitTransactionOnePhase( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processCommitTransactionTwoPhase( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processRollbackTransaction( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        virtual Pointer<Command> processEndTransaction( TransactionInfo* info )
+            throw ( exceptions::ActiveMQException );
+
+        bool isRestoreConsumers() const {
+            return this->restoreConsumers;
+        }
+
+        void setRestoreConsumers( bool restoreConsumers ) {
+            this->restoreConsumers = restoreConsumers;
+        }
+
+        bool isRestoreProducers() const {
+            return this->restoreProducers;
+        }
+
+        void setRestoreProducers( bool restoreProducers ) {
+            this->restoreProducers = restoreProducers;
+        }
+
+        bool isRestoreSessions() const {
+            return this->restoreSessions;
+        }
+
+        void setRestoreSessions( bool restoreSessions ) {
+            this->restoreSessions = restoreSessions;
+        }
+
+        bool isTrackTransactions() const {
+            return this->trackTransactions;
+        }
+
+        void setTrackTransactions( bool trackTransactions ) {
+            this->trackTransactions = trackTransactions;
+        }
+
+        bool isRestoreTransaction() const {
+            return this->restoreTransaction;
+        }
+
+        void setRestoreTransaction( bool restoreTransaction ) {
+            this->restoreTransaction = restoreTransaction;
+        }
+
+        bool isTrackMessages() const {
+            return this->trackMessages;
+        }
+
+        void setTrackMessages( bool trackMessages ) {
+            this->trackMessages = trackMessages;
+        }
+
+        int getMaxCacheSize() const {
+            return this->maxCacheSize;
+        }
+
+        void setMaxCacheSize( int maxCacheSize ) {
+            this->maxCacheSize = maxCacheSize;
+        }
+
+    private:
+
+        void doRestoreTransactions( const Pointer<transport::Transport>& transport,
+                                    const Pointer<ConnectionState>& connectionState )
+            throw( decaf::io::IOException );
+
+        void doRestoreSessions( const Pointer<transport::Transport>& transport,
+                                const Pointer<ConnectionState>& connectionState )
+            throw( decaf::io::IOException );
+
+        void doRestoreConsumers( const Pointer<transport::Transport>& transport,
+                                 const Pointer<SessionState>& sessionState )
+            throw( decaf::io::IOException );
+
+        void doRestoreProducers( const Pointer<transport::Transport>& transport,
+                                 const Pointer<SessionState>& sessionState )
+            throw( decaf::io::IOException );
+
+        void doRestoreTempDestinations( const Pointer<transport::Transport>& transport,
+                                        const Pointer<ConnectionState>& connectionState )
+            throw( decaf::io::IOException );
 
     };
 

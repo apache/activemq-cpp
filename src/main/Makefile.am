@@ -307,6 +307,7 @@ h_sources = \
     decaf/lang/Boolean.h \
     decaf/lang/exceptions/NoSuchElementException.h \
     decaf/lang/exceptions/RuntimeException.h \
+    decaf/lang/exceptions/ClassCastException.h \
     decaf/lang/exceptions/IndexOutOfBoundsException.h \
     decaf/lang/exceptions/NullPointerException.h \
     decaf/lang/exceptions/IllegalStateException.h \

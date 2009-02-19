@@ -553,7 +553,7 @@ void ActiveMQSessionTest::injectTextMessage( const std::string message,
     // Send the Message
     CPPUNIT_ASSERT( dTransport != NULL );
 
-    MessageDispatch* dispatch = new MessageDispatch();
+    Pointer<MessageDispatch> dispatch( new MessageDispatch() );
     dispatch->setMessage( msg );
     dispatch->setConsumerId( Pointer<ConsumerId>( id.cloneDataStructure() ) );
 

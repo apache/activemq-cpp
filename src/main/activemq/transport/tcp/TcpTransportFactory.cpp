@@ -24,16 +24,19 @@ using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::exceptions;
+using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
-                                                   wireformat::WireFormat* wireFormat,
-                                                   const decaf::util::Properties& properties )
+Pointer<Transport> TcpTransportFactory::doCreateComposite( const decaf::net::URI& location,
+                                                           const Pointer<wireformat::WireFormat>& wireFormat,
+                                                           const decaf::util::Properties& properties )
     throw ( exceptions::ActiveMQException ) {
 
     try {
-        return new TcpTransport( location, properties, new IOTransport( wireFormat ) );
+        return Pointer<Transport>(
+            new TcpTransport( location, properties,
+                              Pointer<Transport>( new IOTransport( wireFormat ) ) ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

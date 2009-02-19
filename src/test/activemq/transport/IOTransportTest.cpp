@@ -72,10 +72,14 @@ public:
 
     virtual bool hasNegotiator() const { return false; }
 
-    virtual wireformat::WireFormatNegotiator* createNegotiator( transport::Transport* transport )
-        throw( decaf::lang::exceptions::UnsupportedOperationException ) { return NULL; }
+    virtual Pointer<Transport> createNegotiator(
+        const Pointer<transport::Transport>& transport )
+            throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
-    virtual commands::Command* unmarshal( decaf::io::DataInputStream* inputStream )
+        return Pointer<wireformat::WireFormatNegotiator>();
+    }
+
+    virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* inputStream )
         throw ( CommandIOException ){
 
         try{
@@ -87,7 +91,7 @@ public:
 
             synchronized( inputStream ){
 
-                MyCommand* command = new MyCommand();
+                Pointer<MyCommand> command( new MyCommand() );
                 try{
 
                     // Throw a little uncertainty into the test.
@@ -97,16 +101,9 @@ public:
                     command->c = inputStream->readByte();
 
                 } catch( decaf::lang::Exception& ex ){
-
-                    // Free the memory.
-                    delete command;
-
                     ex.setMark( __FILE__, __LINE__ );
                     throw CommandIOException();
                 } catch( ... ) {
-                    // Free the memory.
-                    delete command;
-
                     throw CommandIOException( __FILE__, __LINE__, "Catch all" );
                 }
 
@@ -114,7 +111,7 @@ public:
             }
 
             CPPUNIT_ASSERT( false );
-            return NULL;
+            return Pointer<Command>();
 
         }catch( decaf::lang::Exception& ex ){
             CommandIOException cx;
@@ -128,7 +125,8 @@ public:
         }
     }
 
-    virtual void marshal( commands::Command* command, decaf::io::DataOutputStream* outputStream )
+    virtual void marshal( const Pointer<commands::Command>& command,
+                          decaf::io::DataOutputStream* outputStream )
         throw (CommandIOException)
     {
         try{
@@ -136,7 +134,7 @@ public:
             synchronized( outputStream ){
 
                 const MyCommand* m =
-                    dynamic_cast<const MyCommand*>(command);
+                    dynamic_cast<const MyCommand*>(command.get());
                 outputStream->write( m->c );
             }
 
@@ -170,10 +168,9 @@ public:
     }
 
     std::string str;
-    virtual void onCommand( commands::Command* command ){
-        const MyCommand* cmd = dynamic_cast<const MyCommand*>(command);
+    virtual void onCommand( const Pointer<commands::Command>& command ){
+        const MyCommand* cmd = dynamic_cast<const MyCommand*>(command.get());
         str += cmd->c;
-        delete command;
         latch.countDown();
     }
 
@@ -208,8 +205,8 @@ void IOTransportTest::testStartClose(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
     MyTransportListener listener;
-    MyWireFormat wireFormat;
-    IOTransport transport( &wireFormat );
+    Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
+    IOTransport transport( wireFormat );
     transport.setTransportListener( &listener );
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
@@ -230,11 +227,11 @@ void IOTransportTest::testStressTransportStartClose(){
     decaf::io::DataOutputStream output( &bos );
 
     for( int i = 0; i < 50; ++i ) {
-        MyWireFormat wireFormat;
+        Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
         MyTransportListener listener;
 
         IOTransport transport;
-        transport.setWireFormat( &wireFormat );
+        transport.setWireFormat( wireFormat );
         transport.setTransportListener( &listener );
         transport.setInputStream( &input );
         transport.setOutputStream( &output );
@@ -261,13 +258,13 @@ void IOTransportTest::testRead(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyWireFormat wireFormat;
+    Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
     MyTransportListener listener(10);
     IOTransport transport;
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
     transport.setTransportListener( &listener );
-    transport.setWireFormat( &wireFormat );
+    transport.setWireFormat( wireFormat );
 
     transport.start();
 
@@ -297,27 +294,27 @@ void IOTransportTest::testWrite(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyWireFormat wireFormat;
+    Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
     MyTransportListener listener;
     IOTransport transport;
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
     transport.setTransportListener( &listener );
-    transport.setWireFormat( &wireFormat );
+    transport.setWireFormat( wireFormat );
 
     transport.start();
 
-    MyCommand cmd;
-    cmd.c = '1';
-    transport.oneway( &cmd );
-    cmd.c = '2';
-    transport.oneway( &cmd );
-    cmd.c = '3';
-    transport.oneway( &cmd );
-    cmd.c = '4';
-    transport.oneway( &cmd );
-    cmd.c = '5';
-    transport.oneway( &cmd );
+    Pointer<MyCommand> cmd( new MyCommand() );
+    cmd->c = '1';
+    transport.oneway( cmd );
+    cmd->c = '2';
+    transport.oneway( cmd );
+    cmd->c = '3';
+    transport.oneway( cmd );
+    cmd->c = '4';
+    transport.oneway( cmd );
+    cmd->c = '5';
+    transport.oneway( cmd );
 
     const unsigned char* bytes = os.toByteArray();
     std::size_t size = os.size();
@@ -339,14 +336,14 @@ void IOTransportTest::testException(){
     decaf::io::DataInputStream input( &is );
     decaf::io::DataOutputStream output( &os );
 
-    MyWireFormat wireFormat;
+    Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
     MyTransportListener listener;
     IOTransport transport;
-    wireFormat.throwException = true;
+    wireFormat->throwException = true;
     transport.setInputStream( &input );
     transport.setOutputStream( &output );
     transport.setTransportListener( &listener );
-    transport.setWireFormat( &wireFormat );
+    transport.setWireFormat( wireFormat );
 
     unsigned char buffer[1] = { '1' };
     try{

@@ -25,6 +25,8 @@ namespace activemq{
 namespace transport{
 namespace mock{
 
+    using decaf::lang::Pointer;
+
     /**
      * Manufactures MockTransports, which are objects that
      * read from input streams and write to output streams.
@@ -39,14 +41,17 @@ namespace mock{
         /**
          * Creates a slimed down Transport instance which can be used in composite
          * transport instances.
+         *
          * @param location - URI location to connect to.
          * @param wireformat - the assigned WireFormat for the new Transport.
          * @param properties - Properties to apply to the transport.
+         *
+         * @return Pointer to a new Transport instance.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* doCreateComposite( const decaf::net::URI& location,
-                                              wireformat::WireFormat* wireFormat,
-                                              const decaf::util::Properties& properties )
+        virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
+                                                      const Pointer<wireformat::WireFormat>& wireFormat,
+                                                      const decaf::util::Properties& properties )
             throw ( exceptions::ActiveMQException );
 
     };

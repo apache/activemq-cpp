@@ -33,6 +33,10 @@ namespace activemq{
 namespace transport{
 namespace correlator{
 
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
+
     /**
      * This type of transport filter is responsible for correlating
      * asynchronous responses with requests.  Non-response messages
@@ -50,7 +54,7 @@ namespace correlator{
         /**
          * Map of request ids to future response objects.
          */
-        std::map<unsigned int, FutureResponse*> requestMap;
+        std::map<unsigned int, Pointer<FutureResponse> > requestMap;
 
         /**
          * Sync object for accessing the request map.
@@ -67,9 +71,8 @@ namespace correlator{
         /**
          * Constructor.
          * @param next the next transport in the chain
-         * @param own indicates if this transport owns the next
          */
-        ResponseCorrelator( Transport* next, bool own = true );
+        ResponseCorrelator( const Pointer<Transport>& next );
 
         virtual ~ResponseCorrelator();
 
@@ -82,7 +85,7 @@ namespace correlator{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -92,7 +95,7 @@ namespace correlator{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -103,7 +106,7 @@ namespace correlator{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -115,7 +118,7 @@ namespace correlator{
          * the command listener.
          * @param command the received from the nested transport.
          */
-        virtual void onCommand( commands::Command* command );
+        virtual void onCommand( const Pointer<Command>& command );
 
         /**
          * Starts this transport object and creates the thread for

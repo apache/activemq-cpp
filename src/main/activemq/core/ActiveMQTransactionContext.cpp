@@ -28,6 +28,7 @@ using namespace std;
 using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
 using namespace decaf;
@@ -127,7 +128,7 @@ void ActiveMQTransactionContext::commit()
 
         // Commit the current Transaction
         this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE );
-        this->connection->oneway( this->transactionInfo.get() );
+        this->connection->oneway( this->transactionInfo );
 
         // Notify each registered Synchronization that we have committed this Transaction.
         synchronized( &this->synchronizations ) {
@@ -173,7 +174,7 @@ void ActiveMQTransactionContext::rollback()
 
         // Rollback the Transaction
         this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_ROLLBACK );
-        this->connection->oneway( this->transactionInfo.get() );
+        this->connection->oneway( this->transactionInfo );
 
         // Notify each registered Synchronization that we are committing this Transaction.
         synchronized( &this->synchronizations ) {
@@ -205,10 +206,10 @@ void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQE
 
     try{
 
-        this->transactionInfo.reset( new commands::TransactionInfo() );
+        this->transactionInfo.reset( new TransactionInfo() );
 
         // Create the Id
-        decaf::lang::Pointer<commands::LocalTransactionId> id( new commands::LocalTransactionId() );
+        Pointer<LocalTransactionId> id( new LocalTransactionId() );
         id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
         id->setValue( this->connection->getNextTransactionId() );
 
@@ -217,7 +218,7 @@ void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQE
         this->transactionInfo->setTransactionId( id );
         this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_BEGIN );
 
-        this->connection->oneway( this->transactionInfo.get() );
+        this->connection->oneway( this->transactionInfo );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

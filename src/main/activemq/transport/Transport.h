@@ -20,6 +20,7 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
 #include <activemq/transport/CommandIOException.h>
@@ -37,6 +38,10 @@ namespace transport{
 
     // Forward declarations.
     class TransportListener;
+
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
 
     /**
      * Interface for a transport layer for command objects.  Callers can
@@ -63,7 +68,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
@@ -76,7 +81,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
@@ -90,7 +95,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
             throw( CommandIOException,
                     decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
@@ -98,7 +103,7 @@ namespace transport{
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) = 0;
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) = 0;
 
         /**
          * Sets the observer of asynchronous events from this transport.

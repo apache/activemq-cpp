@@ -22,7 +22,9 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
 #include <activemq/commands/Command.h>
+#include <activemq/commands/Response.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/lang/Runnable.h>
 #include <decaf/lang/Thread.h>
@@ -32,10 +34,11 @@
 #include <memory>
 
 namespace activemq{
-namespace wireformat{
-    class WireFormat;
-}
 namespace transport{
+
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
 
     /**
      * Implementation of the Transport interface that performs
@@ -59,7 +62,7 @@ namespace transport{
         /**
          * WireFormat instance to use to Encode / Decode.
          */
-        std::auto_ptr<wireformat::WireFormat> wireFormat;
+        Pointer<wireformat::WireFormat> wireFormat;
 
         /**
          * Listener of this transport.
@@ -93,11 +96,12 @@ namespace transport{
          * @param ex the exception to send
          */
         void fire( decaf::lang::Exception& ex );
+
         /**
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire( commands::Command* command );
+        void fire( const Pointer<Command>& command );
 
     public:
 
@@ -112,7 +116,7 @@ namespace transport{
          * @param wireFormat
          *        Data encoder / decoder to use when reading and writing.
          */
-        IOTransport( wireformat::WireFormat* wireFormat );
+        IOTransport( const Pointer<wireformat::WireFormat>& wireFormat );
 
         virtual ~IOTransport();
 
@@ -125,7 +129,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -134,7 +138,7 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -144,15 +148,15 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat ){
-            this->wireFormat.reset( wireFormat );
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ){
+            this->wireFormat = wireFormat;
         }
 
         /**

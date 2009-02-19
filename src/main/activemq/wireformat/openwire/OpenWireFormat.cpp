@@ -86,11 +86,11 @@ OpenWireFormat::~OpenWireFormat() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormatNegotiator* OpenWireFormat::createNegotiator( transport::Transport* transport )
+Pointer<Transport> OpenWireFormat::createNegotiator( const Pointer<Transport>& transport )
     throw( decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
-        return new OpenWireFormatNegotiator( this, transport, true );
+        return Pointer<Transport>( new OpenWireFormatNegotiator( this, transport ) );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
     AMQ_CATCHALL_THROW( UnsupportedOperationException )
@@ -149,13 +149,13 @@ void OpenWireFormat::addMarshaller( DataStreamMarshaller* marshaller ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormat::setPreferedWireFormatInfo(
-    commands::WireFormatInfo* info ) throw ( IllegalStateException ) {
+    const Pointer<commands::WireFormatInfo>& info ) throw ( IllegalStateException ) {
 
-    this->preferedWireFormatInfo.reset( info );
+    this->preferedWireFormatInfo = info;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::marshal( commands::Command* command,
+void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
                               decaf::io::DataOutputStream* dataOut )
     throw ( decaf::io::IOException ) {
 
@@ -166,7 +166,7 @@ void OpenWireFormat::marshal( commands::Command* command,
         if( command != NULL ) {
 
             DataStructure* dataStructure =
-                dynamic_cast< DataStructure* >( command );
+                dynamic_cast< DataStructure* >( command.get() );
 
             unsigned char type = dataStructure->getDataStructureType();
 
@@ -226,7 +226,7 @@ void OpenWireFormat::marshal( commands::Command* command,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
+Pointer<commands::Command> OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
     throw ( decaf::io::IOException ) {
 
     try {
@@ -236,7 +236,7 @@ commands::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
         }
 
         // Get the unmarshalled DataStructure
-        DataStructure* data = doUnmarshal( dis );
+        Pointer<DataStructure> data( doUnmarshal( dis ) );
 
         if( data == NULL ) {
             throw IOException(
@@ -246,19 +246,10 @@ commands::Command* OpenWireFormat::unmarshal( decaf::io::DataInputStream* dis )
         }
 
         // Now all unmarshals from this level should result in an object
-        // that is a commands::Command type, if its not then we throw an
-        // exception.
-        commands::Command* command =
-            dynamic_cast< commands::Command* >( data );
-
-        if( command == NULL ) {
-            delete data;
-
-            throw IOException(
-                __FILE__, __LINE__,
-                "OpenWireFormat::doUnmarshal - "
-                "Unmarshalled a non Command Type" );
-        }
+        // that is a commands::Command type, if its not then the cast will
+        // throw an ClassCastException.
+        Pointer<Command> command =
+            data.dynamicCast<Command, Pointer<Command>::CounterType>();
 
         return command;
     }
@@ -513,10 +504,10 @@ void OpenWireFormat::looseMarshalNestedObject( commands::DataStructure* o,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
+void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info )
     throw ( IllegalStateException ) {
 
-    if( preferedWireFormatInfo.get() == NULL ) {
+    if( preferedWireFormatInfo == NULL ) {
         throw IllegalStateException(
             __FILE__, __LINE__,
             "OpenWireFormat::renegotiateWireFormat - "
@@ -524,15 +515,15 @@ void OpenWireFormat::renegotiateWireFormat( WireFormatInfo* info )
     }
 
     this->setVersion( Math::min( preferedWireFormatInfo->getVersion(),
-                                 info->getVersion() ) );
-    this->stackTraceEnabled = info->isStackTraceEnabled() &&
+                                 info.getVersion() ) );
+    this->stackTraceEnabled = info.isStackTraceEnabled() &&
                               preferedWireFormatInfo->isStackTraceEnabled();
-    this->tcpNoDelayEnabled = info->isTcpNoDelayEnabled() &&
+    this->tcpNoDelayEnabled = info.isTcpNoDelayEnabled() &&
                               preferedWireFormatInfo->isTcpNoDelayEnabled();
-    this->cacheEnabled = info->isCacheEnabled() &&
+    this->cacheEnabled = info.isCacheEnabled() &&
                          preferedWireFormatInfo->isCacheEnabled();
-    this->tightEncodingEnabled = info->isTightEncodingEnabled() &&
+    this->tightEncodingEnabled = info.isTightEncodingEnabled() &&
                                  preferedWireFormatInfo->isTightEncodingEnabled();
-    this->sizePrefixDisabled = info->isSizePrefixDisabled() &&
+    this->sizePrefixDisabled = info.isSizePrefixDisabled() &&
                                preferedWireFormatInfo->isSizePrefixDisabled();
 }

@@ -21,18 +21,22 @@
 #include <activemq/util/Config.h>
 #include <activemq/commands/Response.h>
 #include <decaf/lang/Runnable.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
 namespace state {
 
+    using decaf::lang::Pointer;
+
     class AMQCPP_API Tracked : public commands::Response {
     private:
 
-        decaf::lang::Runnable* runnable;
+        Pointer<decaf::lang::Runnable> runnable;
 
     public:
 
-        Tracked( decaf::lang::Runnable* runnable );
+        Tracked() {}
+        Tracked( const Pointer<decaf::lang::Runnable>& runnable );
 
         virtual ~Tracked() {}
 

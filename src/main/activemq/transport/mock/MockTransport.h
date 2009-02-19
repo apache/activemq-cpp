@@ -41,6 +41,10 @@ namespace activemq{
 namespace transport{
 namespace mock{
 
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
+
     /**
      * The MockTransport defines a base level Transport class that is intended to
      * be used in place of an a regular protocol Transport suck as TCP.  This
@@ -71,7 +75,7 @@ namespace mock{
              * @param command - The command to build a response for
              * @return A Response object pointer, or NULL if no response.
              */
-            virtual commands::Response* buildResponse( const commands::Command* command ) = 0;
+            virtual Pointer<Response> buildResponse( const Pointer<Command>& command ) = 0;
 
             /**
              * When called the ResponseBuilder must construct all the
@@ -81,8 +85,8 @@ namespace mock{
              * @param queue - Queue of Command sent back from the broker.
              */
             virtual void buildIncomingCommands(
-                const commands::Command* cmd,
-                decaf::util::StlQueue<commands::Command*>& queue ) = 0;
+                const Pointer<Command>& command,
+                decaf::util::StlQueue< Pointer<Command> >& queue ) = 0;
 
         };
 
@@ -100,16 +104,15 @@ namespace mock{
         private:
 
             MockTransport* transport;
-            ResponseBuilder* responseBuilder;
+            Pointer<ResponseBuilder> responseBuilder;
             bool done;
             decaf::util::concurrent::CountDownLatch startedLatch;
-            decaf::util::StlQueue<commands::Command*> inboundQueue;
+            decaf::util::StlQueue< Pointer<Command> > inboundQueue;
 
         public:
 
             InternalCommandListener() : startedLatch(1) {
                 transport = NULL;
-                responseBuilder = NULL;
                 done = false;
 
                 this->start();
@@ -123,20 +126,18 @@ namespace mock{
                 }
                 this->join();
 
-                while( !inboundQueue.empty() ) {
-                    delete inboundQueue.pop();
-                }
+                inboundQueue.clear();
             }
 
             void setTransport( MockTransport* transport ){
                 this->transport = transport;
             }
 
-            void setResponseBuilder( ResponseBuilder* responseBuilder ) {
+            void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ) {
                 this->responseBuilder = responseBuilder;
             }
 
-            virtual void onCommand( commands::Command* command ) {
+            virtual void onCommand( const Pointer<Command>& command ) {
                 synchronized( &inboundQueue )
                 {
                     // Create a response now before the caller has a
@@ -177,20 +178,20 @@ namespace mock{
 
     private:
 
-        ResponseBuilder* responseBuilder;
+        Pointer<ResponseBuilder> responseBuilder;
+        Pointer<wireformat::WireFormat> wireFormat;
         TransportListener* outgoingListener;
         TransportListener* listener;
-        wireformat::WireFormat* wireFormat;
         decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
-        bool own;
         InternalCommandListener internalListener;
         static MockTransport* instance;
 
     public:
 
-        MockTransport( wireformat::WireFormat* wireFormat, ResponseBuilder* responseBuilder, bool own = true );
+        MockTransport( const Pointer<wireformat::WireFormat>& wireFormat,
+                       const Pointer<ResponseBuilder>& responseBuilder );
 
-        virtual ~MockTransport();
+        virtual ~MockTransport() {}
 
         static MockTransport* getInstance() {
             return instance;
@@ -202,19 +203,19 @@ namespace mock{
          * would have been sent Asynchronously be the Broker.
          * @param responseBuilder - The ResponseBuilder to use from now on.
          */
-        void setResponseBuilder( ResponseBuilder* responseBuilder ){
+        void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ){
             this->responseBuilder = responseBuilder;
         }
 
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
 
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
 
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
             throw( CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
@@ -232,7 +233,7 @@ namespace mock{
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat AMQCPP_UNUSED ) {}
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
         virtual void setTransportListener( TransportListener* listener ) {
             this->listener = listener;
@@ -243,7 +244,7 @@ namespace mock{
          * CommandListener if there is one.
          * @param command - Command to send to the Listener.
          */
-        virtual void fireCommand( commands::Command* command ){
+        virtual void fireCommand( const Pointer<Command>& command ){
             if( listener != NULL ){
                 listener->onCommand( command );
             }

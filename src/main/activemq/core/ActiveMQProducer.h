@@ -33,6 +33,8 @@
 namespace activemq{
 namespace core{
 
+    using decaf::lang::Pointer;
+
     class ActiveMQSession;
 
     class AMQCPP_API ActiveMQProducer : public cms::MessageProducer {
@@ -60,7 +62,7 @@ namespace core{
         ActiveMQSession* session;
 
         // This Producers protocol specific info object
-        std::auto_ptr<commands::ProducerInfo> producerInfo;
+        Pointer<commands::ProducerInfo> producerInfo;
 
         // Boolean that indicates if the consumer has been closed
         bool closed;
@@ -84,7 +86,7 @@ namespace core{
          * @param session
          *        The Session which is the parent of this Producer.
          */
-        ActiveMQProducer( commands::ProducerInfo* producerInfo,
+        ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
                           const cms::Destination* destination,
                           ActiveMQSession* session );
 

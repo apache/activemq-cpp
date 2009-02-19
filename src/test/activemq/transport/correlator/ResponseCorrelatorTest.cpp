@@ -17,34 +17,308 @@
 
 #include "ResponseCorrelatorTest.h"
 
+#include <activemq/util/Config.h>
+#include <activemq/commands/BaseCommand.h>
+#include <activemq/transport/DefaultTransportListener.h>
+#include <activemq/transport/correlator/ResponseCorrelator.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <queue>
+
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::correlator;
 
 ////////////////////////////////////////////////////////////////////////////////
-void ResponseCorrelatorTest::testBasics(){
+namespace activemq{
+namespace transport{
+namespace correlator{
+
+    class MyCommand : public commands::BaseCommand{
+    private:
+
+        unsigned int commandId;
+
+    public:
+
+        virtual std::string toString() const{ return ""; }
+
+        virtual unsigned char getDataStructureType() const { return 1; }
+
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException ) { return decaf::lang::Pointer<commands::Command>(); }
+
+        virtual MyCommand* cloneDataStructure() const{
+            MyCommand* command = new MyCommand;
+            command->setCommandId( this->getCommandId() );
+            command->setResponseRequired( this->isResponseRequired() );
+            return command;
+        }
+    };
+
+    class MyTransport : public Transport, public decaf::lang::Runnable{
+    public:
+
+        TransportListener* listener;
+        decaf::lang::Thread* thread;
+        decaf::util::concurrent::Mutex mutex;
+        decaf::util::concurrent::Mutex startedMutex;
+        bool done;
+        std::queue< Pointer<commands::Command> > requests;
+
+    public:
+
+        MyTransport(){
+            listener = NULL;
+            thread = NULL;
+            done = false;
+        }
+
+        virtual ~MyTransport(){
+
+            close();
+        }
+
+        virtual void oneway( const Pointer<Command>& command )
+            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+        {
+            synchronized( &mutex ){
+                requests.push( command );
+                mutex.notifyAll();
+            }
+        }
+
+        virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED )
+            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+        {
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                __FILE__, __LINE__, "stuff" );
+        }
+
+        virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED,
+                                             unsigned int timeout AMQCPP_UNUSED )
+            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+        {
+            throw decaf::lang::exceptions::UnsupportedOperationException(
+                __FILE__, __LINE__, "stuff" );
+        }
+
+        virtual void setWireFormat(
+            const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
+
+        virtual void setTransportListener( TransportListener* listener ) {
+            this->listener = listener;
+        }
+
+        virtual void start() throw( cms::CMSException ){
+            close();
+
+            done = false;
+            thread = new decaf::lang::Thread( this );
+            thread->start();
+        }
+
+        virtual void close() throw( cms::CMSException ){
+
+            done = true;
+
+            if( thread != NULL ){
+                synchronized( &mutex ){
+                    mutex.notifyAll();
+                }
+                thread->join();
+                delete thread;
+                thread = NULL;
+            }
+        }
+
+        virtual Pointer<Response> createResponse( const Pointer<Command>& command ){
+
+            Pointer<Response> resp( new commands::Response() );
+            resp->setCorrelationId( command->getCommandId() );
+            resp->setResponseRequired( false );
+            return resp;
+        }
+
+        virtual void run(){
+
+            try{
+
+                synchronized(&startedMutex)
+                {
+                   startedMutex.notifyAll();
+                }
+
+                synchronized( &mutex ){
+
+                    while( !done ){
+
+                        if( requests.empty() ){
+                            mutex.wait();
+                        }else{
+
+                            Pointer<Command> cmd = requests.front();
+                            requests.pop();
+
+                            // Only send a response if one is required.
+                            Pointer<Response> resp;
+                            if( cmd->isResponseRequired() ){
+                                resp = createResponse( cmd );
+                            }
+
+                            mutex.unlock();
+
+                            // Send both the response and the original
+                            // command back to the correlator.
+                            if( listener != NULL ){
+                                if( resp != NULL ){
+                                    listener->onCommand( resp );
+                                }
+                                listener->onCommand( cmd );
+                            }
+
+                            mutex.lock();
+                        }
+                    }
+                }
+            }catch( exceptions::ActiveMQException& ex ){
+                if( listener ){
+                    listener->onTransportException( this, ex );
+                }
+            }
+            catch( ... ){
+                if( listener ){
+                    exceptions::ActiveMQException ex( __FILE__, __LINE__, "stuff" );
+                    listener->onTransportException( this, ex );
+                }
+            }
+        }
+
+        virtual Transport* narrow( const std::type_info& typeId ) {
+            if( typeid( *this ) == typeId ) {
+                return this;
+            }
+
+            return NULL;
+        }
+
+        virtual bool isFaultTolerant() const {
+            return true;
+        }
+
+        virtual bool isConnected() const {
+            return false;
+        }
+
+        virtual bool isClosed() const {
+            return false;
+        }
+
+    };
+
+    class MyBrokenTransport : public MyTransport{
+    public:
+
+        MyBrokenTransport(){}
+        virtual ~MyBrokenTransport(){}
+
+        virtual commands::Response* createResponse(commands:: Command* command AMQCPP_UNUSED){
+            throw exceptions::ActiveMQException( __FILE__, __LINE__,
+                "bad stuff" );
+        }
+    };
+
+    class MyListener : public DefaultTransportListener {
+    public:
+
+        int exCount;
+        std::set<int> commands;
+        decaf::util::concurrent::Mutex mutex;
+
+    public:
+
+        MyListener(){
+            exCount = 0;
+        }
+        virtual ~MyListener(){}
+        virtual void onCommand( commands::Command* command ){
+
+            synchronized( &mutex ){
+                commands.insert( command->getCommandId() );
+
+                mutex.notify();
+            }
+        }
+
+        virtual void onTransportException(
+            Transport* source AMQCPP_UNUSED,
+            const decaf::lang::Exception& ex AMQCPP_UNUSED)
+        {
+            synchronized( &mutex ){
+                exCount++;
+            }
+        }
+
+    };
+
+    class RequestThread : public decaf::lang::Thread{
+    public:
+
+        Transport* transport;
+        Pointer<MyCommand> cmd;
+        Pointer<Response> resp;
+
+    public:
+
+        RequestThread(){
+            transport = NULL;
+            cmd.reset( new MyCommand() );
+        }
+
+        virtual ~RequestThread(){
+            join();
+        }
+
+        void setTransport( Transport* transport ){
+            this->transport = transport;
+        }
+
+        void run(){
+
+            try{
+                resp = transport->request(cmd);
+            }catch( ... ){
+                CPPUNIT_ASSERT( false );
+            }
+        }
+    };
+
+}}}
+
+////////////////////////////////////////////////////////////////////////////////
+void ResponseCorrelatorTest::testBasics() {
 
     try{
 
         MyListener listener;
-        MyTransport transport;
-        ResponseCorrelator correlator( &transport, false );
+        Pointer<MyTransport> transport( new MyTransport() );
+        ResponseCorrelator correlator( transport );
         correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport.listener == &correlator );
+        CPPUNIT_ASSERT( transport->listener == &correlator );
 
         // Give the thread a little time to get up and running.
-        synchronized(&transport.startedMutex)
-        {
+        synchronized( &(transport->startedMutex) ) {
             // Start the transport.
             correlator.start();
-            transport.startedMutex.wait();
+            transport->startedMutex.wait();
         }
 
         // Send one request.
-        MyCommand cmd;
-        commands::Response* resp = correlator.request( &cmd );
+        Pointer<MyCommand> cmd( new MyCommand );
+        Pointer<Response> resp = correlator.request( cmd );
         CPPUNIT_ASSERT( resp != NULL );
-        CPPUNIT_ASSERT( resp->getCorrelationId() == cmd.getCommandId() );
+        CPPUNIT_ASSERT( resp->getCorrelationId() == cmd->getCommandId() );
 
         // Wait to get the message back asynchronously.
         decaf::lang::Thread::sleep( 100 );
@@ -56,9 +330,6 @@ void ResponseCorrelatorTest::testBasics(){
         CPPUNIT_ASSERT( listener.exCount == 0 );
 
         correlator.close();
-
-        // Destroy the response.
-        delete resp;
     }
     AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
@@ -70,25 +341,25 @@ void ResponseCorrelatorTest::testOneway(){
     try{
 
         MyListener listener;
-        MyTransport transport;
-        ResponseCorrelator correlator( &transport, false );
+        Pointer<MyTransport> transport( new MyTransport() );
+        ResponseCorrelator correlator( transport );
         correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport.listener == &correlator );
+        CPPUNIT_ASSERT( transport->listener == &correlator );
 
         // Give the thread a little time to get up and running.
-        synchronized(&transport.startedMutex)
-        {
+        synchronized( &(transport->startedMutex) ) {
+
             // Start the transport.
             correlator.start();
 
-            transport.startedMutex.wait();
+            transport->startedMutex.wait();
         }
 
         // Send many oneway request (we'll get them back asynchronously).
         const unsigned int numCommands = 1000;
-        MyCommand commands[numCommands];
-        for( unsigned int ix=0; ix<numCommands; ix++ ){
-            correlator.oneway( &commands[ix] );
+        for( unsigned int ix = 0; ix < numCommands; ++ix ) {
+            Pointer<MyCommand> command( new MyCommand() );
+            correlator.oneway( command );
         }
 
         // Give the thread a little time to get all the messages back.
@@ -110,24 +381,23 @@ void ResponseCorrelatorTest::testTransportException(){
     try{
 
         MyListener listener;
-        MyBrokenTransport transport;
-        ResponseCorrelator correlator( &transport, false );
+        Pointer<MyBrokenTransport> transport( new MyBrokenTransport() );
+        ResponseCorrelator correlator( transport );
         correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport.listener == &correlator );
+        CPPUNIT_ASSERT( transport->listener == &correlator );
 
         // Give the thread a little time to get up and running.
-        synchronized(&transport.startedMutex)
-        {
+        synchronized( &(transport->startedMutex) ) {
             // Start the transport.
             correlator.start();
 
-            transport.startedMutex.wait();
+            transport->startedMutex.wait();
         }
 
         // Send one request.
-        MyCommand cmd;
+        Pointer<MyCommand> cmd( new MyCommand );
         try{
-            correlator.request( &cmd, 500 );
+            correlator.request( cmd, 500 );
             CPPUNIT_ASSERT(false);
         }catch( CommandIOException& ex ){
             // Expected.
@@ -154,21 +424,20 @@ void ResponseCorrelatorTest::testMultiRequests(){
     try{
 
         MyListener listener;
-        MyTransport transport;
-        ResponseCorrelator correlator( &transport, false );
+        Pointer<MyTransport> transport( new MyTransport() );
+        ResponseCorrelator correlator( transport );
         correlator.setTransportListener( &listener );
-        CPPUNIT_ASSERT( transport.listener == &correlator );
+        CPPUNIT_ASSERT( transport->listener == &correlator );
 
         // Start the transport.
         correlator.start();
 
         // Make sure the start command got down to the thread.
-        CPPUNIT_ASSERT( transport.thread != NULL );
+        CPPUNIT_ASSERT( transport->thread != NULL );
 
         // Give the thread a little time to get up and running.
-        synchronized(&transport.startedMutex)
-        {
-            transport.startedMutex.wait(500);
+        synchronized( &(transport->startedMutex) ) {
+            transport->startedMutex.wait(500);
         }
 
         // Start all the requester threads.
@@ -184,7 +453,8 @@ void ResponseCorrelatorTest::testMultiRequests(){
         for( unsigned int ix=0; ix<numRequests; ++ix ){
             requesters[ix].join();
             CPPUNIT_ASSERT( requesters[ix].resp != NULL );
-            CPPUNIT_ASSERT( requesters[ix].cmd.getCommandId() == requesters[ix].resp->getCorrelationId() );
+            CPPUNIT_ASSERT( requesters[ix].cmd->getCommandId() ==
+                            requesters[ix].resp->getCorrelationId() );
         }
 
         decaf::lang::Thread::sleep( 60 );
@@ -219,17 +489,17 @@ void ResponseCorrelatorTest::testMultiRequests(){
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelatorTest::testNarrow(){
 
-    MyTransport transport;
-    ResponseCorrelator correlator( &transport, false );
+    Pointer<MyTransport> transport( new MyTransport() );
+    ResponseCorrelator correlator( transport );
 
     Transport* narrowed = correlator.narrow( typeid( transport ) );
-    CPPUNIT_ASSERT( narrowed == &transport );
+    CPPUNIT_ASSERT( narrowed == transport );
 
     narrowed = correlator.narrow( typeid( std::string() ) );
     CPPUNIT_ASSERT( narrowed == NULL );
 
     narrowed = correlator.narrow( typeid( MyTransport ) );
-    CPPUNIT_ASSERT( narrowed == &transport );
+    CPPUNIT_ASSERT( narrowed == transport );
 
     narrowed = correlator.narrow( typeid( transport::correlator::ResponseCorrelator ) );
     CPPUNIT_ASSERT( narrowed == &correlator );

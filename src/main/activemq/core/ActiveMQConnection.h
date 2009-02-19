@@ -44,6 +44,8 @@
 namespace activemq{
 namespace core{
 
+    using decaf::lang::Pointer;
+
     class ActiveMQSession;
     class ActiveMQProducer;
 
@@ -56,11 +58,11 @@ namespace core{
     {
     private:
 
-        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ConsumerId>,
+        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
                                      Dispatcher*,
                                      commands::ConsumerId::COMPARATOR > DispatcherMap;
 
-        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ProducerId>,
+        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
                                      ActiveMQProducer*,
                                      commands::ProducerId::COMPARATOR > ProducerMap;
 
@@ -75,6 +77,11 @@ namespace core{
          * The instance of ConnectionMetaData to return to clients.
          */
         std::auto_ptr<cms::ConnectionMetaData> connectionMetaData;
+
+        /**
+         * Connection Information for this connection to the Broker
+         */
+        Pointer<commands::ConnectionInfo> connectionInfo;
 
         /**
          * Indicates if this Connection is started
@@ -103,11 +110,6 @@ namespace core{
         decaf::util::StlSet<ActiveMQSession*> activeSessions;
 
         /**
-         * Connection Information for this connection to the Broker
-         */
-        commands::ConnectionInfo connectionInfo;
-
-        /**
          * the registered exception listener
          */
         cms::ExceptionListener* exceptionListener;
@@ -115,12 +117,12 @@ namespace core{
         /**
          * Command sent from the Broker with its BrokerInfo
          */
-        std::auto_ptr<commands::BrokerInfo> brokerInfo;
+        Pointer<commands::BrokerInfo> brokerInfo;
 
         /**
          * Command sent from the Broker with its WireFormatInfo
          */
-        std::auto_ptr<commands::WireFormatInfo> brokerWireFormatInfo;
+        Pointer<commands::WireFormatInfo> brokerWireFormatInfo;
 
     public:
 
@@ -132,8 +134,8 @@ namespace core{
          * @param properties
          *        The Properties that were defined for this connection
          */
-        ActiveMQConnection( transport::Transport* transport,
-                            decaf::util::Properties* properties );
+        ActiveMQConnection( const Pointer<transport::Transport>& transport,
+                            const Pointer<decaf::util::Properties>& properties );
 
         virtual ~ActiveMQConnection();
 
@@ -154,7 +156,7 @@ namespace core{
          * Removes an active Producer to the Set of known producers.
          * @param producerId - The ProducerId to remove from the the known set.
          */
-        virtual void removeProducer( const decaf::lang::Pointer<commands::ProducerId>& producerId )
+        virtual void removeProducer( const Pointer<commands::ProducerId>& producerId )
             throw ( cms::CMSException );
 
         /**
@@ -163,14 +165,14 @@ namespace core{
          * @param dispatcher - The dispatcher to handle incoming messages for the consumer.
          */
         virtual void addDispatcher(
-            const decaf::lang::Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher )
+            const Pointer<commands::ConsumerId>& consumer, Dispatcher* dispatcher )
                 throw ( cms::CMSException );
 
         /**
          * Removes the dispatcher for a consumer.
          * @param consumer - The consumer for which to remove the dispatcher.
          */
-        virtual void removeDispatcher( const decaf::lang::Pointer<commands::ConsumerId>& consumer )
+        virtual void removeDispatcher( const Pointer<commands::ConsumerId>& consumer )
             throw ( cms::CMSException );
 
         /**
@@ -320,7 +322,7 @@ namespace core{
          * transport.
          * @param command the received command object.
          */
-        virtual void onCommand( commands::Command* command );
+        virtual void onCommand( const Pointer<commands::Command>& command );
 
     public: // TransportExceptionListener
 
@@ -354,7 +356,7 @@ namespace core{
          * @throws ConnectorException if not currently connected, or
          * if the operation fails for any reason.
          */
-        void oneway( commands::Command* command )
+        void oneway( Pointer<commands::Command> command )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -365,7 +367,7 @@ namespace core{
          * @throws ConnectorException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( commands::Command* command, unsigned int timeout = 0 )
+        void syncRequest( Pointer<commands::Command>, unsigned int timeout = 0 )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -375,7 +377,7 @@ namespace core{
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
-        void disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId )
+        void disposeOf( const Pointer<commands::DataStructure>& objectId )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -386,7 +388,7 @@ namespace core{
          * @throw ConnectorException if any problems occur from sending
          * the message.
          */
-        void disposeOf( const decaf::lang::Pointer<commands::DataStructure>& objectId, unsigned int timeout )
+        void disposeOf( const Pointer<commands::DataStructure>& objectId, unsigned int timeout )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**

@@ -23,10 +23,15 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/commands/Command.h>
 #include <activemq/transport/TransportListener.h>
+#include <decaf/lang/Pointer.h>
 #include <typeinfo>
 
 namespace activemq{
 namespace transport{
+
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
 
     /**
      * A filter on the transport layer.  Transport
@@ -40,13 +45,7 @@ namespace transport{
         /**
          * The transport that this filter wraps around.
          */
-        Transport* next;
-
-        /**
-         * Flag to indicate whether this object controls
-         * the lifetime of the next transport object.
-         */
-        bool own;
+        Pointer<Transport> next;
 
         /**
          * Listener of this transport.
@@ -56,7 +55,7 @@ namespace transport{
     protected:
 
         /**
-         * Notify the excpetion listener
+         * Notify the exception listener
          * @param ex - the exception to send to listeners
          */
         void fire( const decaf::lang::Exception& ex ){
@@ -72,12 +71,10 @@ namespace transport{
          * Notify the command listener.
          * @param command - the command to send to the listener
          */
-        void fire( commands::Command* command ){
+        void fire( const Pointer<Command>& command ){
             try{
                 if( listener != NULL ){
                     listener->onCommand( command );
-                } else {
-                    delete command;
                 }
             }catch( ... ){}
         }
@@ -89,15 +86,15 @@ namespace transport{
          * @param next - the next Transport in the chain
          * @param own - true if this filter owns the next and should delete it
          */
-        TransportFilter( Transport* next, const bool own = true );
+        TransportFilter( const Pointer<Transport>& next );
 
-        virtual ~TransportFilter();
+        virtual ~TransportFilter() {}
 
         /**
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( commands::Command* command ){
+        virtual void onCommand( const Pointer<Command>& command ){
             fire( command );
         }
 
@@ -128,7 +125,7 @@ namespace transport{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             next->oneway( command );
@@ -140,7 +137,7 @@ namespace transport{
          * @throws CommandIOException
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command );
@@ -153,7 +150,7 @@ namespace transport{
          * @throws CommandIOException
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command, timeout );
@@ -171,7 +168,7 @@ namespace transport{
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( wireformat::WireFormat* wireFormat ) {
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
             next->setWireFormat( wireFormat );
         }
 
@@ -203,6 +200,7 @@ namespace transport{
          */
         virtual void close() throw( cms::CMSException ){
             next->close();
+            next.reset( NULL );
         }
 
         /**

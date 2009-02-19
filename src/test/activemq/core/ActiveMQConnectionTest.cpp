@@ -21,6 +21,7 @@
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Thread.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/transport/mock/MockTransport.h>
@@ -30,8 +31,10 @@
 
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 //void ActiveMQConnectionTest::test1WithStomp()
@@ -239,9 +242,8 @@ void ActiveMQConnectionTest::test2WithOpenwire()
         MyCommandListener cmdListener;
         MyDispatcher msgListener;
         std::string connectionId = "testConnectionId";
-        decaf::util::Properties* properties =
-            new decaf::util::Properties();
-        transport::Transport* transport = NULL;
+        Pointer<decaf::util::Properties> properties( new decaf::util::Properties() );
+        Pointer<Transport> transport;
 
         // Default to Stomp
         properties->setProperty( "wireFormat", "openwire" );

@@ -33,8 +33,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionSupport::ActiveMQConnectionSupport( transport::Transport* transport,
-                                                      decaf::util::Properties* properties ) {
+ActiveMQConnectionSupport::ActiveMQConnectionSupport(
+    const Pointer<transport::Transport>& transport,
+    const Pointer<decaf::util::Properties>& properties ) {
 
     if( transport  == NULL ) {
         throw decaf::lang::exceptions::IllegalArgumentException(
@@ -43,8 +44,8 @@ ActiveMQConnectionSupport::ActiveMQConnectionSupport( transport::Transport* tran
             "Required Parameter 'transport' was NULL.");
     }
 
-    this->properties.reset( properties );
-    this->transport.reset( transport );
+    this->properties = properties;
+    this->transport = transport;
 
     // Check the connection options
     this->setAlwaysSyncSend( Boolean::parseBoolean(

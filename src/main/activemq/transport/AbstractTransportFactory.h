@@ -23,10 +23,13 @@
 #include <activemq/transport/TransportFactory.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <decaf/lang/exceptions/NoSuchElementException.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 
 namespace activemq {
 namespace transport {
+
+    using decaf::lang::Pointer;
 
     /**
      * Abstract implementation of the TransportFactory interface, providing
@@ -46,7 +49,7 @@ namespace transport {
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* create( const decaf::net::URI& location )
+        virtual Pointer<Transport> create( const decaf::net::URI& location )
             throw ( exceptions::ActiveMQException );
 
         /**
@@ -55,7 +58,7 @@ namespace transport {
          * @param location - URI location to connect to plus any properties to assign.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* createComposite( const decaf::net::URI& location )
+        virtual Pointer<Transport> createComposite( const decaf::net::URI& location )
             throw ( exceptions::ActiveMQException );
 
     protected:
@@ -70,9 +73,9 @@ namespace transport {
          * @param properties - Properties to apply to the transport.
          * @throws ActiveMQexception if an error occurs
          */
-        virtual Transport* doCreateComposite( const decaf::net::URI& location,
-                                              wireformat::WireFormat* wireFormat,
-                                              const decaf::util::Properties& properties )
+        virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
+                                                      const Pointer<wireformat::WireFormat>& wireFormat,
+                                                      const decaf::util::Properties& properties )
             throw ( exceptions::ActiveMQException ) = 0;
 
         /**
@@ -86,7 +89,7 @@ namespace transport {
          *
          * @throws NoSuchElementException if the configured WireFormat is not found.
          */
-        virtual wireformat::WireFormat* createWireFormat(
+        virtual Pointer<wireformat::WireFormat> createWireFormat(
             const decaf::util::Properties& properties )
                 throw( decaf::lang::exceptions::NoSuchElementException );
 

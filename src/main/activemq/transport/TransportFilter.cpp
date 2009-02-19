@@ -20,28 +20,14 @@
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFilter::TransportFilter( Transport* next, const bool own ) {
-
-    this->next = next;
-    this->own = own;
-    this->listener = NULL;
+TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
+    next( next ), listener( NULL ) {
 
     // Observe the nested transport for events.
     next->setTransportListener( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-TransportFilter::~TransportFilter() {
-
-    try{
-        if( own ){
-            delete next;
-            next = NULL;
-        }
-    }
-    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

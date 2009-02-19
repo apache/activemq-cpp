@@ -37,58 +37,43 @@
 #include <activemq/commands/WireFormatInfo.h>
 
 using namespace activemq;
+using namespace activemq::commands;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
 using namespace activemq::transport;
 using namespace activemq::transport::mock;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* OpenWireResponseBuilder::buildResponse(
-    const commands::Command* command ){
+Pointer<Response> OpenWireResponseBuilder::buildResponse(
+    const Pointer<Command>& command ){
 
-    if( typeid( *command ) == typeid( commands::ActiveMQBytesMessage ) ||
-        typeid( *command ) == typeid( commands::ActiveMQMapMessage ) ||
-        typeid( *command ) == typeid( commands::ActiveMQMessage ) ||
-        typeid( *command ) == typeid( commands::ActiveMQObjectMessage ) ||
-        typeid( *command ) == typeid( commands::ActiveMQStreamMessage ) ||
-        typeid( *command ) == typeid( commands::ActiveMQTextMessage ) ||
-        typeid( *command ) == typeid( commands::ConnectionInfo ) ||
-        typeid( *command ) == typeid( commands::ConsumerInfo ) ||
-        typeid( *command ) == typeid( commands::DestinationInfo ) ||
-        typeid( *command ) == typeid( commands::ProducerInfo ) ||
-        typeid( *command ) == typeid( commands::RemoveSubscriptionInfo ) ||
-        typeid( *command ) == typeid( commands::RemoveInfo ) ||
-        typeid( *command ) == typeid( commands::SessionInfo ) ) {
+    if( command->isResponseRequired() ) {
 
         // These Commands just require a response that matches their command IDs
-        commands::Response* response = new commands::Response();
+        Pointer<Response> response( new commands::Response() );
         response->setCorrelationId( command->getCommandId() );
         return response;
     }
 
-    // If this command requires a response we don't know what it is
-    // so we throw an exception.
-    if( command->isResponseRequired() ) {
-        throw transport::CommandIOException( __FILE__, __LINE__,
-            "OpenWireResponseBuilder - unrecognized command" );
-    }
-
-    return NULL;
+    return Pointer<Response>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireResponseBuilder::buildIncomingCommands(
-    const commands::Command* command, decaf::util::StlQueue<commands::Command*>& queue ){
+    const Pointer<Command>& command, decaf::util::StlQueue< Pointer<Command> >& queue ){
 
     // Delegate this to buildResponse
     if( command->isResponseRequired() ) {
         queue.push( buildResponse( command ) );
     }
 
-    if( typeid( *command ) == typeid( commands::WireFormatInfo ) ) {
+    if( command->isWireFormatInfo() ) {
 
         // Return a copy of the callers own requested WireFormatInfo
         // so they get exactly the settings they asked for.
-        queue.push( dynamic_cast<commands::Command*>( command->cloneDataStructure() ) );
+        queue.push( Pointer<Command>(
+            dynamic_cast<WireFormatInfo*>( command->cloneDataStructure() ) ) );
     }
 }

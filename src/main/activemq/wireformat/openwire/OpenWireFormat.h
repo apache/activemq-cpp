@@ -23,6 +23,7 @@
 #include <activemq/commands/DataStructure.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/wireformat/openwire/utils/BooleanStream.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
@@ -36,7 +37,39 @@ namespace marshal {
     class DataStreamMarshaller;
 }
 
+    using decaf::lang::Pointer;
+
     class AMQCPP_API OpenWireFormat : public wireformat::WireFormat {
+    protected:
+
+        // Declared here to make life easier.
+        static const unsigned char NULL_TYPE;
+
+        // V1 if the default version we start at.
+        static const int DEFAULT_VERSION = 1;
+
+    private:
+
+        // Configuration parameters
+        decaf::util::Properties properties;
+
+        // Preferred WireFormatInfo
+        Pointer<commands::WireFormatInfo> preferedWireFormatInfo;
+
+        // Marshalers
+        std::vector< marshal::DataStreamMarshaller* > dataMarshallers;
+
+        // Uniquely Generated ID, initialize in the Ctor
+        std::string id;
+
+        // WireFormat Data
+        int version;
+        bool stackTraceEnabled;
+        bool tcpNoDelayEnabled;
+        bool cacheEnabled;
+        bool tightEncodingEnabled;
+        bool sizePrefixDisabled;
+
     public:
 
         /**
@@ -61,8 +94,9 @@ namespace marshal {
          * a news instance of the Negotiator.
          * @returns new instance of a WireFormatNegotiator.
          */
-        virtual wireformat::WireFormatNegotiator* createNegotiator( transport::Transport* transport )
-            throw( decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<transport::Transport> createNegotiator(
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Allows an external source to add marshalers to this object for
@@ -77,7 +111,7 @@ namespace marshal {
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( commands::Command* command,
+        virtual void marshal( const Pointer<commands::Command>& command,
                               decaf::io::DataOutputStream* dataOut )
             throw ( decaf::io::IOException );
 
@@ -87,7 +121,7 @@ namespace marshal {
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual commands::Command* unmarshal( decaf::io::DataInputStream* dis )
+        virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* dis )
             throw ( decaf::io::IOException );
 
         /**
@@ -159,22 +193,22 @@ namespace marshal {
          * @param info - The new Wireformat Info settings
          * @throws IllegalStateException is the params can't be negotiated.
          */
-        void renegotiateWireFormat( commands::WireFormatInfo* info )
+        void renegotiateWireFormat( const commands::WireFormatInfo& info )
             throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Configures this object using the provided WireformatInfo object
          * @param info - a WireFormatInfo object, takes ownership.
          */
-        virtual void setPreferedWireFormatInfo( commands::WireFormatInfo* info )
+        virtual void setPreferedWireFormatInfo( const Pointer<commands::WireFormatInfo>& info )
             throw ( decaf::lang::exceptions::IllegalStateException );
 
         /**
          * Gets the Preferred WireFormatInfo object that this class holds
          * @return pointer to a preferred WireFormatInfo object
          */
-        virtual commands::WireFormatInfo* getPreferedWireFormatInfo() const {
-            return this->preferedWireFormatInfo.get();
+        virtual const Pointer<commands::WireFormatInfo>& getPreferedWireFormatInfo() const {
+            return this->preferedWireFormatInfo;
         }
 
         /**
@@ -291,36 +325,6 @@ namespace marshal {
          * marshallers, or on destruction of this object
          */
         void destroyMarshalers();
-
-    protected:
-
-        // Declared here to make life easier.
-        static const unsigned char NULL_TYPE;
-
-        // V1 if the default version we start at.
-        static const int DEFAULT_VERSION = 1;
-
-    private:
-
-        // This object config data
-        decaf::util::Properties properties;
-
-        // Preferred WireFormatInfo
-        std::auto_ptr<commands::WireFormatInfo> preferedWireFormatInfo;
-
-        // Marshalers
-        std::vector< marshal::DataStreamMarshaller* > dataMarshallers;
-
-        // Uniquely Generated ID, initialize in the Ctor
-        std::string id;
-
-        // WireFormat Data
-        int version;
-        bool stackTraceEnabled;
-        bool tcpNoDelayEnabled;
-        bool cacheEnabled;
-        bool tightEncodingEnabled;
-        bool sizePrefixDisabled;
 
     };
 

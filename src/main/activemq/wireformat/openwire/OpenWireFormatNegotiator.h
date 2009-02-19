@@ -26,10 +26,13 @@
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace wireformat{
 namespace openwire{
+
+    using decaf::lang::Pointer;
 
     class AMQCPP_API OpenWireFormatNegotiator : public wireformat::WireFormatNegotiator {
     private:
@@ -64,13 +67,12 @@ namespace openwire{
 
         /**
          * Constructor - Initializes this object around another Transport
-         * @param openWireFormat - The WireFormat object we use to negotiate
+         * @param wireFormat - The WireFormat object we use to negotiate
          * @param next - The next transport in the chain
          * @param own - do we own the Transport pointer.
          */
-        OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
-                                  transport::Transport* next,
-                                  bool own = true );
+        OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
+                                  const Pointer<transport::Transport>& next );
 
         virtual ~OpenWireFormatNegotiator();
 
@@ -85,7 +87,7 @@ namespace openwire{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<commands::Command>& command )
             throw( transport::CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -97,7 +99,7 @@ namespace openwire{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<commands::Response> request( const Pointer<commands::Command>& command )
             throw( transport::CommandIOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
@@ -110,9 +112,10 @@ namespace openwire{
          * @return the response from the server.
          * @throws CommandIOException if an error occurs with the request.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
-            throw( transport::CommandIOException,
-                   decaf::lang::exceptions::UnsupportedOperationException );
+        virtual Pointer<commands::Response> request(
+            const Pointer<commands::Command>& command, unsigned int timeout )
+                throw( transport::CommandIOException,
+                       decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * This is called in the context of the nested transport's
@@ -122,7 +125,7 @@ namespace openwire{
          * the command listener.
          * @param command the received from the nested transport.
          */
-        virtual void onCommand( commands::Command* command );
+        virtual void onCommand( const Pointer<commands::Command>& command );
 
         /**
          * Event handler for an exception from a command transport.

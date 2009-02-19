@@ -28,11 +28,14 @@
 
 #include <decaf/util/Properties.h>
 #include <decaf/lang/Exception.h>
+#include <decaf/lang/Pointer.h>
 
 #include <memory>
 
 namespace activemq {
 namespace core {
+
+    using decaf::lang::Pointer;
 
     class AMQCPP_API ActiveMQConnectionSupport :
         public transport::TransportListener
@@ -40,10 +43,10 @@ namespace core {
     private:
 
         // Properties used to configure this connection.
-        std::auto_ptr<decaf::util::Properties> properties;
+        Pointer<decaf::util::Properties> properties;
 
         // Transport we are using
-        std::auto_ptr<transport::Transport> transport;
+        Pointer<transport::Transport> transport;
 
         /**
          * Boolean indicating that we are to always send message Synchronously.
@@ -132,8 +135,8 @@ namespace core {
          * @param properties
          *        The URI configured properties for this connection.
          */
-        ActiveMQConnectionSupport( transport::Transport* transport,
-                                   decaf::util::Properties* properties );
+        ActiveMQConnectionSupport( const Pointer<transport::Transport>& transport,
+                                   const Pointer<decaf::util::Properties>& properties );
 
         virtual ~ActiveMQConnectionSupport();
 

@@ -39,7 +39,7 @@ using namespace decaf::net;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
+Pointer<Transport> AbstractTransportFactory::create( const decaf::net::URI& location )
     throw ( exceptions::ActiveMQException ) {
 
     try{
@@ -47,18 +47,18 @@ Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
         Properties properties =
             activemq::util::URISupport::parseQuery( location.getQuery() );
 
-        WireFormat* wireFormat = this->createWireFormat( properties );
+        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
 
         // Create the initial Transport, then wrap it in the normal Filters
-        Transport* transport = doCreateComposite( location, wireFormat, properties );
+        Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
 
         // Create the Transport for response correlator
-        transport = new ResponseCorrelator( transport );
+        transport.reset( new ResponseCorrelator( transport ) );
 
         // If command tracing was enabled, wrap the transport with a logging transport.
         if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
             // Create the Transport for response correlator
-            transport = new LoggingTransport( transport );
+            transport.reset( new LoggingTransport( transport ) );
         }
 
         // If there is a negotiator need then we create and wrap here.
@@ -74,17 +74,18 @@ Transport* AbstractTransportFactory::create( const decaf::net::URI& location )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* AbstractTransportFactory::createComposite( const decaf::net::URI& location )
+Pointer<Transport> AbstractTransportFactory::createComposite( const decaf::net::URI& location )
     throw ( exceptions::ActiveMQException ) {
 
     try{
+
         Properties properties =
             activemq::util::URISupport::parseQuery( location.getQuery() );
 
-        WireFormat* wireFormat = this->createWireFormat( properties );
+        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
 
         // Create the initial Transport, then wrap it in the normal Filters
-        Transport* transport = doCreateComposite( location, wireFormat, properties );
+        Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
 
         // If there is a negotiator need then we create and wrap here.
         if( wireFormat->hasNegotiator() ) {
@@ -99,7 +100,7 @@ Transport* AbstractTransportFactory::createComposite( const decaf::net::URI& loc
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormat* AbstractTransportFactory::createWireFormat(
+Pointer<WireFormat> AbstractTransportFactory::createWireFormat(
     const decaf::util::Properties& properties )
         throw( decaf::lang::exceptions::NoSuchElementException ) {
 
@@ -110,7 +111,7 @@ WireFormat* AbstractTransportFactory::createWireFormat(
         WireFormatFactory* factory =
             WireFormatRegistry::getInstance().findFactory( wireFormat );
 
-        return factory->createWireFormat( properties );
+        return Pointer<WireFormat>( factory->createWireFormat( properties ) );
     }
     AMQ_CATCH_RETHROW( NoSuchElementException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, NoSuchElementException )

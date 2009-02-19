@@ -23,6 +23,7 @@
 
 using namespace std;
 using namespace activemq;
+using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
@@ -32,15 +33,14 @@ using namespace decaf::util::concurrent;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* openWireFormat,
-                                                    Transport* next,
-                                                    bool own ) :
-    WireFormatNegotiator( next, own ),
+OpenWireFormatNegotiator::OpenWireFormatNegotiator( OpenWireFormat* wireFormat,
+                                                    const Pointer<Transport>& next ) :
+    WireFormatNegotiator( next ),
     wireInfoSentDownLatch(1),
     readyCountDownLatch(1)
 {
     this->firstTime.set( true );
-    this->openWireFormat = openWireFormat;
+    this->openWireFormat = wireFormat;
     this->closed = true;
 }
 
@@ -52,7 +52,7 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::oneway( commands::Command* command )
+void OpenWireFormatNegotiator::oneway( const Pointer<Command>& command )
     throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
@@ -81,7 +81,7 @@ void OpenWireFormatNegotiator::oneway( commands::Command* command )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* OpenWireFormatNegotiator::request( commands::Command* command )
+Pointer<Response> OpenWireFormatNegotiator::request( const Pointer<Command>& command )
     throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
@@ -110,8 +110,9 @@ commands::Response* OpenWireFormatNegotiator::request( commands::Command* comman
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* OpenWireFormatNegotiator::request( commands::Command* command, unsigned int timeout )
-    throw( CommandIOException, UnsupportedOperationException ) {
+Pointer<Response> OpenWireFormatNegotiator::request(
+    const Pointer<Command>& command, unsigned int timeout )
+        throw( CommandIOException, UnsupportedOperationException ) {
 
     try{
 
@@ -139,11 +140,11 @@ commands::Response* OpenWireFormatNegotiator::request( commands::Command* comman
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenWireFormatNegotiator::onCommand( commands::Command* command ) {
+void OpenWireFormatNegotiator::onCommand( const Pointer<Command>& command ) {
 
     if( command->isWireFormatInfo() ) {
 
-        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( command );
+        WireFormatInfo* info = dynamic_cast<WireFormatInfo*>( command.get() );
 
         try {
 
@@ -156,7 +157,7 @@ void OpenWireFormatNegotiator::onCommand( commands::Command* command ) {
             }
 
             wireInfoSentDownLatch.await( negotiationTimeout );
-            openWireFormat->renegotiateWireFormat( info );
+            openWireFormat->renegotiateWireFormat( *info );
 
             readyCountDownLatch.countDown();
 
@@ -225,7 +226,7 @@ void OpenWireFormatNegotiator::start() throw( cms::CMSException ){
             // the message as it marshaled out to the wire
             Transport* transport = this->next->narrow( typeid( transport::IOTransport ) );
             if( transport == NULL ) {
-                transport = this->next;
+                transport = this->next.get();
             }
 
             // We first send the WireFormat that we'd prefer.

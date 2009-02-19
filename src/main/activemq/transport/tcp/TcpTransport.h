@@ -18,13 +18,14 @@
 #ifndef _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORT_H_
 #define _ACTIVEMQ_TRANSPORT_TCP_TCPTRANSPORT_H_
 
+#include <activemq/io/LoggingInputStream.h>
+#include <activemq/io/LoggingOutputStream.h>
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <decaf/net/Socket.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/Properties.h>
-#include <activemq/io/LoggingInputStream.h>
-#include <activemq/io/LoggingOutputStream.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/io/BufferedInputStream.h>
 #include <decaf/io/BufferedOutputStream.h>
 #include <decaf/io/DataInputStream.h>
@@ -34,6 +35,8 @@
 namespace activemq{
 namespace transport{
 namespace tcp{
+
+    using decaf::lang::Pointer;
 
     /**
      * Implements a TCP/IP based transport filter, this transport
@@ -73,8 +76,7 @@ namespace tcp{
          * @param own indicates if this transport owns the next.
          */
         TcpTransport( const decaf::util::Properties& properties,
-                      Transport* next,
-                      const bool own = true );
+                      const Pointer<Transport>& next );
 
         /**
          * Constructor
@@ -85,8 +87,7 @@ namespace tcp{
          */
         TcpTransport( const decaf::net::URI& uri,
                       const decaf::util::Properties& properties,
-                      Transport* next,
-                      const bool own = true );
+                      const Pointer<Transport>& next );
 
         virtual ~TcpTransport();
 

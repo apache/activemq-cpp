@@ -21,10 +21,13 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/mock/MockTransport.h>
 #include <decaf/util/StlQueue.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace wireformat{
 namespace openwire{
+
+    using decaf::lang::Pointer;
 
     class AMQCPP_API OpenWireResponseBuilder :
         public transport::mock::MockTransport::ResponseBuilder{
@@ -33,11 +36,12 @@ namespace openwire{
         OpenWireResponseBuilder() {}
         virtual ~OpenWireResponseBuilder() {}
 
-        virtual commands::Response* buildResponse( const commands::Command* command );
+        virtual Pointer<commands::Response> buildResponse(
+            const Pointer<commands::Command>& command );
 
         virtual void buildIncomingCommands(
-            const commands::Command* command,
-            decaf::util::StlQueue<commands::Command*>& queue );
+            const Pointer<commands::Command>& command,
+            decaf::util::StlQueue< Pointer<commands::Command> >& queue );
 
     };
 

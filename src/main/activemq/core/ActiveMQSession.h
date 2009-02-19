@@ -41,6 +41,8 @@
 namespace activemq{
 namespace core{
 
+    using decaf::lang::Pointer;
+
     class ActiveMQTransactionContext;
     class ActiveMQConnection;
     class ActiveMQConsumer;
@@ -52,11 +54,11 @@ namespace core{
     class AMQCPP_API ActiveMQSession : public cms::Session, public Dispatcher {
     private:
 
-        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ConsumerId>,
+        typedef decaf::util::StlMap< Pointer<commands::ConsumerId>,
                                      ActiveMQConsumer*,
                                      commands::ConsumerId::COMPARATOR> ConsumersMap;
 
-        typedef decaf::util::StlMap< decaf::lang::Pointer<commands::ProducerId>,
+        typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
                                      ActiveMQProducer*,
                                      commands::ProducerId::COMPARATOR> ProducersMap;
 
@@ -65,7 +67,7 @@ namespace core{
         /**
          * SessionInfo for this Session
          */
-        std::auto_ptr<commands::SessionInfo> sessionInfo;
+        Pointer<commands::SessionInfo> sessionInfo;
 
         /**
          * Transaction Management object
@@ -104,7 +106,7 @@ namespace core{
 
     public:
 
-        ActiveMQSession( commands::SessionInfo* sessionInfo,
+        ActiveMQSession( const Pointer<commands::SessionInfo>& sessionInfo,
                          cms::Session::AcknowledgeMode ackMode,
                          const decaf::util::Properties& properties,
                          ActiveMQConnection* connection );
@@ -162,7 +164,7 @@ namespace core{
          */
         virtual void dispatch( DispatchData& message );
 
-    public:   // Implements Mehtods
+    public:   // Implements Methods
 
         /**
          * Closes this session as well as any active child consumers or
@@ -413,10 +415,10 @@ namespace core{
         /**
          * Sends a oneway message.
          * @param command The message to send.
-         * @throws ConnectorException if not currently connected, or
+         * @throws ActiveMQException if not currently connected, or
          * if the operation fails for any reason.
          */
-        void oneway( commands::Command* command )
+        void oneway( Pointer<commands::Command> command )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -424,10 +426,10 @@ namespace core{
          * Converts any error responses into an exception.
          * @param command The request command.
          * @param timeout The time to wait for a response, default is zero or infinite.
-         * @throws ConnectorException thrown if an error response was received
+         * @throws ActiveMQException thrown if an error response was received
          * from the broker, or if any other error occurred.
          */
-        void syncRequest( commands::Command* command, unsigned int timeout = 0 )
+        void syncRequest( Pointer<commands::Command> command, unsigned int timeout = 0 )
             throw ( activemq::exceptions::ActiveMQException );
 
         /**
@@ -460,7 +462,7 @@ namespace core{
 
        // Using options from the Destination URI override any settings that are
        // defined for this consumer.
-       void applyDestinationOptions( commands::ConsumerInfo* info );
+       void applyDestinationOptions( const Pointer<commands::ConsumerInfo>& info );
 
        // Send the Destination Creation Request to the Broker, alerting it
        // that we've created a new Temporary Destination.

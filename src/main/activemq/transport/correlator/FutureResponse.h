@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_TRANSPORT_CORRELATOR_FUTURERESPONSE_H_
 
 #include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <activemq/commands/Response.h>
@@ -29,6 +30,9 @@ namespace activemq{
 namespace transport{
 namespace correlator{
 
+    using decaf::lang::Pointer;
+    using activemq::commands::Response;
+
     /**
      * A container that holds a response object.  Callers of the getResponse
      * method will block until a response has been receive unless they call
@@ -38,13 +42,11 @@ namespace correlator{
     private:
 
         mutable decaf::util::concurrent::CountDownLatch responseLatch;
-        commands::Response* response;
+        Pointer<Response> response;
 
     public:
 
-        FutureResponse() : responseLatch( 1 ) {
-            response = NULL;
-        }
+        FutureResponse() : responseLatch( 1 ) {}
 
         virtual ~FutureResponse(){}
 
@@ -52,11 +54,11 @@ namespace correlator{
          * Getters for the response property. Infinite Wait.
          * @return the response object for the request
          */
-        virtual const commands::Response* getResponse() const{
+        virtual const Pointer<Response>& getResponse() const {
             this->responseLatch.await();
             return response;
         }
-        virtual commands::Response* getResponse(){
+        virtual Pointer<Response>& getResponse() {
             this->responseLatch.await();
             return response;
         }
@@ -66,11 +68,11 @@ namespace correlator{
          * @param timeout - time to wait in milliseconds
          * @return the response object for the request
          */
-        virtual const commands::Response* getResponse( unsigned timeout ) const{
+        virtual const Pointer<Response>& getResponse( unsigned int timeout ) const {
             this->responseLatch.await( timeout );
             return response;
         }
-        virtual commands::Response* getResponse( unsigned int timeout ){
+        virtual Pointer<Response>& getResponse( unsigned int timeout ) {
             this->responseLatch.await( timeout );
             return response;
         }
@@ -79,7 +81,7 @@ namespace correlator{
          * Setter for the response property.
          * @param response the response object for the request.
          */
-        virtual void setResponse( commands::Response* response ){
+        virtual void setResponse( const Pointer<Response>& response ) {
             this->response = response;
             this->responseLatch.countDown();
         }

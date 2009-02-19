@@ -28,12 +28,15 @@
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
 
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <memory>
 
 namespace activemq{
 namespace core{
+
+    using decaf::lang::Pointer;
 
     class ActiveMQSession;
     class ActiveMQTransactionContext;
@@ -58,7 +61,7 @@ namespace core{
         /**
          * The Consumer info for this Consumer
          */
-        std::auto_ptr<commands::ConsumerInfo> consumerInfo;
+        Pointer<commands::ConsumerInfo> consumerInfo;
 
         /**
          * The Message Listener for this Consumer
@@ -85,7 +88,7 @@ namespace core{
         /**
          * Constructor
          */
-        ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
+        ActiveMQConsumer( const Pointer<commands::ConsumerInfo>& consumerInfo,
                           ActiveMQSession* session,
                           ActiveMQTransactionContext* transaction );
 
@@ -224,7 +227,7 @@ namespace core{
          * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        decaf::lang::Pointer<commands::Message> dequeue( int timeout )
+        Pointer<commands::Message> dequeue( int timeout )
             throw ( cms::CMSException );
 
         /**
@@ -232,7 +235,7 @@ namespace core{
          * @param message - the message being consumed.
          */
         void beforeMessageIsConsumed(
-            decaf::lang::Pointer<commands::Message>& message );
+            const Pointer<commands::Message>& message );
 
         /**
          * Post-consume processing
@@ -240,7 +243,7 @@ namespace core{
          * @param messageExpired - flag indicating if the message has expired.
          */
         void afterMessageIsConsumed(
-            decaf::lang::Pointer<commands::Message>& message, bool messageExpired );
+            const Pointer<commands::Message>& message, bool messageExpired );
 
     private:
 

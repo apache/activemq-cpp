@@ -19,6 +19,7 @@
 #include <decaf/net/URI.h>
 #include <decaf/util/UUID.h>
 #include <decaf/util/Properties.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <activemq/transport/TransportRegistry.h>
@@ -35,6 +36,7 @@ using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::net;
 using namespace decaf::util;
+using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,9 +99,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& clientId )
        throw ( cms::CMSException ) {
 
-    // Declared here so that they can be deleted in the catch block
-    auto_ptr<Properties> properties( new Properties() );
-    auto_ptr<Transport> transport;
+    Pointer<Transport> transport;
+    Pointer<Properties> properties( new Properties() );
     auto_ptr<ActiveMQConnection> connection;
     std::string clientIdLocal = clientId;
 
@@ -128,10 +129,10 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
 
         // Use the TransportBuilder to get our Transport
-        transport.reset(
-            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( uri ) );
+        transport =
+            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( uri );
 
-        if( transport.get() == NULL ){
+        if( transport == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQConnectionFactory::createConnection - "
@@ -139,8 +140,7 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
         }
 
         // Create and Return the new connection object.
-        connection.reset(
-            new ActiveMQConnection( transport.release(), properties.release() ) );
+        connection.reset( new ActiveMQConnection( transport, properties ) );
 
         return connection.release();
     }

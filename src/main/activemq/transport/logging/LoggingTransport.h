@@ -21,10 +21,13 @@
 #include <activemq/util/Config.h>
 #include <activemq/transport/TransportFilter.h>
 #include <decaf/util/logging/LoggerDefines.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace transport{
 namespace logging{
+
+    using decaf::lang::Pointer;
 
     /**
      * A transport filter that logs commands as they are sent/received.
@@ -39,9 +42,8 @@ namespace logging{
         /**
          * Constructor.
          * @param next - the next Transport in the chain
-         * @param own - true if this filter owns the next and should delete it
          */
-        LoggingTransport( Transport* next, bool own = true );
+        LoggingTransport( const Pointer<Transport>& next );
 
         virtual ~LoggingTransport() {}
 
@@ -49,7 +51,7 @@ namespace logging{
          * Event handler for the receipt of a command.
          * @param command - the received command object.
          */
-        virtual void onCommand( commands::Command* command );
+        virtual void onCommand( const Pointer<Command>& command );
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
@@ -60,18 +62,18 @@ namespace logging{
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( commands::Command* command )
+        virtual void oneway( const Pointer<Command>& command )
             throw( CommandIOException,
-                   decaf::lang::exceptions::UnsupportedOperationException);
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
          * @param command the command that is sent as a request
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command )
+        virtual Pointer<Response> request( const Pointer<Command>& command )
             throw( CommandIOException,
-                   decaf::lang::exceptions::UnsupportedOperationException);
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
@@ -79,9 +81,9 @@ namespace logging{
          * @param timeout the time to wait for a response.
          * @throws UnsupportedOperationException.
          */
-        virtual commands::Response* request( commands::Command* command, unsigned int timeout )
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
             throw( CommandIOException,
-                   decaf::lang::exceptions::UnsupportedOperationException);
+                   decaf::lang::exceptions::UnsupportedOperationException );
 
     };
 

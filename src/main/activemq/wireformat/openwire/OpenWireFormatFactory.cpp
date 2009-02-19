@@ -20,6 +20,7 @@
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Pointer.h>
 
 using namespace std;
 using namespace activemq;
@@ -33,13 +34,13 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-WireFormat* OpenWireFormatFactory::createWireFormat(
+Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(
     const decaf::util::Properties& properties )
         throw ( decaf::lang::exceptions::IllegalStateException ) {
 
     try{
 
-        WireFormatInfo* info = new WireFormatInfo();
+        Pointer<WireFormatInfo> info( new WireFormatInfo() );
 
         // Configure the version to use
         info->setVersion( Integer::parseInt(
@@ -63,12 +64,12 @@ WireFormat* OpenWireFormatFactory::createWireFormat(
                                     "false" ) ) );
 
         // Create the Openwire Format Object
-        OpenWireFormat* f = new OpenWireFormat( properties );
+        Pointer<OpenWireFormat> wireFormat( new OpenWireFormat( properties ) );
 
         // give the format object the ownership
-        f->setPreferedWireFormatInfo( info );
+        wireFormat->setPreferedWireFormatInfo( info );
 
-        return f;
+        return wireFormat;
     }
     AMQ_CATCH_RETHROW( IllegalStateException )
     AMQ_CATCHALL_THROW( IllegalStateException )

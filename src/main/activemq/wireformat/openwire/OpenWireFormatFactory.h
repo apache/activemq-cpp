@@ -22,11 +22,14 @@
 #include <activemq/wireformat/WireFormatFactory.h>
 #include <activemq/commands/WireFormatInfo.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/Properties.h>
 
 namespace activemq{
 namespace wireformat{
 namespace openwire{
+
+    using decaf::lang::Pointer;
 
     class AMQCPP_API OpenWireFormatFactory : public wireformat::WireFormatFactory {
     public:
@@ -54,7 +57,7 @@ namespace openwire{
          * properties from which it can obtain any optional settings
          * @param properties - the Properties for this WireFormat
          */
-        virtual wireformat::WireFormat* createWireFormat(
+        virtual Pointer<wireformat::WireFormat> createWireFormat(
             const decaf::util::Properties& properties )
                 throw ( decaf::lang::exceptions::IllegalStateException );
 

@@ -32,7 +32,7 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
+ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
                                     const cms::Destination* destination,
                                     ActiveMQSession* session ) {
 
@@ -44,7 +44,7 @@ ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
 
     // Init Producer Data
     this->session = session;
-    this->producerInfo.reset( producerInfo );
+    this->producerInfo = producerInfo;
     this->destination.reset( destination != NULL ? destination->clone() : NULL );
     this->closed = false;
 
@@ -55,7 +55,7 @@ ActiveMQProducer::ActiveMQProducer( commands::ProducerInfo* producerInfo,
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
 
-    this->session->syncRequest( this->producerInfo.get() );
+    this->session->syncRequest( this->producerInfo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

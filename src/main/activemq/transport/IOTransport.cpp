@@ -27,6 +27,7 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace activemq::commands;
 using namespace activemq::wireformat;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
@@ -45,14 +46,14 @@ IOTransport::IOTransport(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-IOTransport::IOTransport( WireFormat* wireFormat ) {
+IOTransport::IOTransport( const Pointer<WireFormat>& wireFormat ) {
 
     this->listener = NULL;
     this->inputStream = NULL;
     this->outputStream = NULL;
     this->closed = false;
     this->thread = NULL;
-    this->wireFormat.reset( wireFormat );
+    this->wireFormat = wireFormat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ void IOTransport::fire( decaf::lang::Exception& ex ){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::fire( commands::Command* command ){
+void IOTransport::fire( const Pointer<Command>& command ){
 
     try{
         // Since the listener is responsible for freeing the memory,
@@ -83,21 +84,17 @@ void IOTransport::fire( commands::Command* command ){
         // we have been closed then we don't deliver any messages that
         // might have sneaked in while we where closing.
         if( this->listener == NULL || this->closed == true ){
-            delete command;
             return;
         }
 
         this->listener->onCommand( command );
 
-    }catch( ... ){
-        try{
-            delete command;
-        } catch( ... ) {}
     }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::oneway( commands::Command* command )
+void IOTransport::oneway( const Pointer<Command>& command )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
@@ -224,7 +221,7 @@ void IOTransport::run(){
         while( !closed ){
 
             // Read the next command from the input stream.
-            commands::Command* command = wireFormat->unmarshal( this->inputStream );
+            Pointer<Command> command( wireFormat->unmarshal( this->inputStream ) );
 
             // Notify the listener.
             fire( command );
@@ -252,7 +249,7 @@ void IOTransport::run(){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* IOTransport::request( commands::Command* command AMQCPP_UNUSED )
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
@@ -261,7 +258,7 @@ commands::Response* IOTransport::request( commands::Command* command AMQCPP_UNUS
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::Response* IOTransport::request( commands::Command* command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
     throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(

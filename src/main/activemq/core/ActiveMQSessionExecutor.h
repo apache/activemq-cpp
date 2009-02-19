@@ -23,12 +23,16 @@
 #include <activemq/commands/ConsumerId.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/concurrent/Mutex.h>
+#include <decaf/util/StlList.h>
 #include <vector>
 #include <list>
 
 namespace activemq{
 namespace core{
+
+    using decaf::lang::Pointer;
 
     class ActiveMQSession;
     class ActiveMQConsumer;
@@ -43,12 +47,25 @@ namespace core{
     {
     private:
 
+        /** Session that is this executors parent. */
         ActiveMQSession* session;
+
+        /** List used to hold messages waiting to be dispatched. */
         std::list<DispatchData> messageQueue;
-        decaf::lang::Thread* thread;
+
+        /** The Dispatcher Thread */
+        Pointer<decaf::lang::Thread> thread;
+
+        /** Mutex used to lock on access to the Message Queue */
         decaf::util::concurrent::Mutex mutex;
+
+        /** Locks when messages are being dispatched to consumers. */
         decaf::util::concurrent::Mutex dispatchMutex;
+
+        /** Has the Start method been called */
         volatile bool started;
+
+        /** Has the Close method been called */
         volatile bool closed;
 
     public:

@@ -34,9 +34,9 @@
 #include <cms/ExceptionListener.h>
 
 using namespace std;
-using namespace cms;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -44,7 +44,7 @@ using namespace decaf::util;
 using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer::ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
+ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
                                     ActiveMQSession* session,
                                     ActiveMQTransactionContext* transaction ) {
 
@@ -57,12 +57,12 @@ ActiveMQConsumer::ActiveMQConsumer( commands::ConsumerInfo* consumerInfo,
     // Initialize Producer Data
     this->session = session;
     this->transaction = transaction;
-    this->consumerInfo.reset( consumerInfo );
+    this->consumerInfo = consumerInfo;
     this->listener = NULL;
     this->closed = false;
 
     // Send our info to the Broker.
-    this->session->syncRequest( this->consumerInfo.get() );
+    this->session->syncRequest( this->consumerInfo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ std::string ActiveMQConsumer::getMessageSelector() const
 
     try {
         // Fetch the Selector
-        return consumerInfo->getSelector();
+        return this->consumerInfo->getSelector();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -146,7 +146,7 @@ decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
 
             // Calculate the deadline
             long long deadline = 0;
-            if (timeout > 0) {
+            if( timeout > 0 ) {
                 deadline = Date::getCurrentTimeMilliseconds() + timeout;
             }
 
@@ -173,7 +173,7 @@ decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
                 // to the user.
                 DispatchData data = unconsumedMessages.pop();
 
-                decaf::lang::Pointer<commands::Message> message = data.getMessage();
+                Pointer<Message> message = data.getMessage();
 
                 // If it's expired, process the message and then go back to waiting.
                 if( message->isExpired() ) {
@@ -194,7 +194,7 @@ decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
             }
         }
 
-        return decaf::lang::Pointer<commands::Message>();
+        return Pointer<Message>();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -212,24 +212,24 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
         this->sendPullRequest( 0 );
 
         // Wait for the next message.
-        decaf::lang::Pointer<commands::Message> msg = dequeue( -1 );
-        if( msg == NULL ) {
+        Pointer<Message> message = dequeue( -1 );
+        if( message == NULL ) {
             return NULL;
         }
 
         // Message preprocessing
-        beforeMessageIsConsumed( msg );
+        beforeMessageIsConsumed( message );
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
-        cms::Message* clonedMsg =
-            dynamic_cast<cms::Message*>( msg->cloneDataStructure() );
+        cms::Message* clonedMessage =
+            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( msg, false );
+        afterMessageIsConsumed( message, false );
 
         // Return the cloned message.
-        return clonedMsg;
+        return clonedMessage;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -248,24 +248,24 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         this->sendPullRequest( millisecs );
 
         // Wait for the next message.
-        decaf::lang::Pointer<commands::Message> msg = dequeue( millisecs );
-        if( msg == NULL ) {
+        Pointer<Message> message = dequeue( millisecs );
+        if( message == NULL ) {
             return NULL;
         }
 
         // Message preprocessing
-        beforeMessageIsConsumed( msg );
+        beforeMessageIsConsumed( message );
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
-        cms::Message* clonedMsg =
-            dynamic_cast<cms::Message*>( msg->cloneDataStructure() );
+        cms::Message* clonedMessage =
+            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( msg, false );
+        afterMessageIsConsumed( message, false );
 
         // Return the cloned message.
-        return clonedMsg;
+        return clonedMessage;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -284,24 +284,24 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
         this->sendPullRequest( -1 );
 
         // Get the next available message, if there is one.
-        decaf::lang::Pointer<commands::Message> msg = dequeue( 0 );
-        if( msg == NULL ) {
+        Pointer<Message> message = dequeue( 0 );
+        if( message == NULL ) {
             return NULL;
         }
 
         // Message preprocessing
-        beforeMessageIsConsumed( msg );
+        beforeMessageIsConsumed( message );
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
-        cms::Message* clonedMsg =
-            dynamic_cast<cms::Message*>( msg->cloneDataStructure() );
+        cms::Message* clonedMessage =
+            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
-        afterMessageIsConsumed( msg, false );
+        afterMessageIsConsumed( message, false );
 
         // Return the cloned message.
-        return clonedMsg;
+        return clonedMessage;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -340,7 +340,7 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::beforeMessageIsConsumed( decaf::lang::Pointer<commands::Message>& message ) {
+void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message ) {
 
     // If the Session is in ClientAcknowledge mode, then we set the
     // handler in the message to this object and send it out.  Otherwise
@@ -375,7 +375,7 @@ void ActiveMQConsumer::beforeMessageIsConsumed( decaf::lang::Pointer<commands::M
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::afterMessageIsConsumed( decaf::lang::Pointer<commands::Message>& message,
+void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<Message>& message,
                                                bool messageExpired AMQCPP_UNUSED ) {
 
     try{
@@ -419,13 +419,13 @@ void ActiveMQConsumer::acknowledge( const commands::Message* message, int ackTyp
                 "ActiveMQConsumer::acknowledge - Message passed to Ack was NULL.");
         }
 
-        commands::MessageAck ack;
-        ack.setAckType( (int)ackType );
-        ack.setConsumerId( consumerInfo->getConsumerId() );
-        ack.setDestination( message->getDestination() );
-        ack.setFirstMessageId( message->getMessageId() );
-        ack.setLastMessageId( message->getMessageId() );
-        ack.setMessageCount( 1 );
+        Pointer<MessageAck> ack( new MessageAck() );
+        ack->setAckType( (int)ackType );
+        ack->setConsumerId( this->consumerInfo->getConsumerId() );
+        ack->setDestination( message->getDestination() );
+        ack->setFirstMessageId( message->getMessageId() );
+        ack->setLastMessageId( message->getMessageId() );
+        ack->setMessageCount( 1 );
 
         if( this->session->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
 
@@ -437,10 +437,10 @@ void ActiveMQConsumer::acknowledge( const commands::Message* message, int ackTyp
                         "Transacted Session, has no Transaction Info.");
             }
 
-            ack.setTransactionId( this->transaction->getTransactionId() );
+            ack->setTransactionId( this->transaction->getTransactionId() );
         }
 
-        this->session->oneway( &ack );
+        this->session->oneway( ack );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -452,10 +452,10 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
 
     try {
 
-        decaf::lang::Pointer<commands::Message> message = data.getMessage();
+        Pointer<Message> message = data.getMessage();
 
         // Don't dispatch expired messages, ack it and then destroy it
-        if( message.get()->isExpired() ) {
+        if( message->isExpired() ) {
             this->acknowledge( message.get(), ActiveMQConstants::ACK_TYPE_CONSUMED );
 
             // stop now, don't queue
@@ -517,12 +517,12 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
 
         if( this->consumerInfo->getPrefetchSize() == 0 ) {
 
-            commands::MessagePull messagePull;
-            messagePull.setConsumerId( this->consumerInfo->getConsumerId() );
-            messagePull.setDestination( this->consumerInfo->getDestination() );
-            messagePull.setTimeout( timeout );
+            Pointer<MessagePull> messagePull( new MessagePull() );
+            messagePull->setConsumerId( this->consumerInfo->getConsumerId() );
+            messagePull->setDestination( this->consumerInfo->getDestination() );
+            messagePull->setTimeout( timeout );
 
-            this->session->oneway( &messagePull );
+            this->session->oneway( messagePull );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

@@ -33,14 +33,15 @@ using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Transport* FailoverTransportFactory::doCreateComposite( const decaf::net::URI& location,
-                                                        wireformat::WireFormat* wireFormat,
-                                                        const decaf::util::Properties& properties )
-    throw ( exceptions::ActiveMQException ) {
+Pointer<Transport> FailoverTransportFactory::doCreateComposite(
+    const decaf::net::URI& location,
+    const Pointer<wireformat::WireFormat>& wireFormat,
+    const decaf::util::Properties& properties )
+        throw ( exceptions::ActiveMQException ) {
 
     try {
 
-        std::auto_ptr<FailoverTransport> transport( new FailoverTransport() );
+        Pointer<FailoverTransport> transport( new FailoverTransport() );
 
         transport->setInitialReconnectDelay(
             Long::parseLong( properties.getProperty( "initialReconnectDelay", "10" ) ) );
@@ -63,7 +64,7 @@ Transport* FailoverTransportFactory::doCreateComposite( const decaf::net::URI& l
         transport->setMaxCacheSize(
             Integer::parseInt( properties.getProperty( "maxCacheSize", "131072" ) ) );
 
-        return transport.release();
+        return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

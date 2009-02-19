@@ -37,6 +37,8 @@
 namespace activemq{
 namespace core{
 
+    using decaf::lang::Pointer;
+
     class ActiveMQSession;
     class ActiveMQConnection;
 
@@ -63,7 +65,7 @@ namespace core{
         ActiveMQConnection* connection;
 
         // Transaction Info for the current Transaction
-        std::auto_ptr<commands::TransactionInfo> transactionInfo;
+        Pointer<commands::TransactionInfo> transactionInfo;
 
         // List of Registered Synchronizations
         decaf::util::StlSet<Synchronization*> synchronizations;

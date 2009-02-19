@@ -34,7 +34,6 @@ ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
     this->session = session;
     this->closed = false;
     this->started = false;
-    this->thread = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,8 +61,6 @@ void ActiveMQSessionExecutor::close() {
 
     if( thread != NULL ) {
         thread->join();
-        delete thread;
-        thread = NULL;
     }
 }
 
@@ -117,7 +114,7 @@ void ActiveMQSessionExecutor::start() {
 
         // Don't create the thread unless we need to.
         if( thread == NULL ) {
-            thread = new Thread( this );
+            thread.reset( new Thread( this ) );
             thread->start();
         }
 

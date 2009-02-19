@@ -23,6 +23,7 @@
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
 #include <decaf/io/IOException.h>
+#include <decaf/lang/Pointer.h>
 
 #include <activemq/util/Config.h>
 #include <activemq/commands/Command.h>
@@ -32,6 +33,8 @@
 
 namespace activemq{
 namespace wireformat{
+
+    using decaf::lang::Pointer;
 
     /**
      * Provides a mechanism to marshal commands into and out of packets
@@ -50,7 +53,8 @@ namespace wireformat{
          * @param out - the output stream to write the command to.
          * @throws IOException
          */
-        virtual void marshal( commands::Command* command, decaf::io::DataOutputStream* out )
+        virtual void marshal( const Pointer<commands::Command>& command,
+                              decaf::io::DataOutputStream* out )
             throw ( decaf::io::IOException ) = 0;
 
         /**
@@ -59,7 +63,7 @@ namespace wireformat{
          * @returns the newly marshaled Command, caller owns the pointer
          * @throws IOException
          */
-        virtual commands::Command* unmarshal( decaf::io::DataInputStream* in )
+        virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* in )
             throw ( decaf::io::IOException ) = 0;
 
         /**
@@ -84,11 +88,12 @@ namespace wireformat{
         /**
          * If the Transport Provides a Negotiator this method will create and return
          * a news instance of the Negotiator.
-         * @returns new instance of a WireFormatNegotiator.
+         * @returns new instance of a WireFormatNegotiator as a Pointer<Transport>.
          * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
          */
-        virtual WireFormatNegotiator* createNegotiator( transport::Transport* transport )
-            throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+        virtual Pointer<transport::Transport> createNegotiator(
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
     };
 

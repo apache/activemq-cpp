@@ -24,10 +24,9 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransport::BackupTransport( FailoverTransport* failover ) : failover( failover ) {
+BackupTransport::BackupTransport( FailoverTransport* failover ) :
+    failover( failover ), closed( true ) {
 
-    this->transport = NULL;
-    this->closed = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -22,10 +22,11 @@
 using namespace activemq;
 using namespace activemq::state;
 using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-Tracked::Tracked( decaf::lang::Runnable* runnable ) {
-    this->runnable = runnable;
+Tracked::Tracked( const Pointer<Runnable>& runnable ) : runnable( runnable ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@ void Tracked::onResponses() {
 
         if( this->runnable != NULL ) {
             this->runnable->run();
-            this->runnable = NULL;
+            this->runnable.reset( NULL );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

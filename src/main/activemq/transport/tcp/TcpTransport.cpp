@@ -36,16 +36,16 @@ using namespace decaf::lang;
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const decaf::net::URI& uri,
                             const decaf::util::Properties& properties,
-                            Transport* next, const bool own )
-:   TransportFilter( next, own ) {
+                            const Pointer<Transport>& next )
+:   TransportFilter( next ) {
 
     this->initialize( uri, properties );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 TcpTransport::TcpTransport( const decaf::util::Properties& properties,
-                            Transport* next, const bool own )
-:   TransportFilter( next, own ) {
+                            const Pointer<Transport>& next )
+:   TransportFilter( next ) {
 
     if( !properties.hasProperty( "transport.uri" ) ) {
         throw ActiveMQException(
@@ -101,7 +101,7 @@ void TcpTransport::initialize( const decaf::net::URI& uri,
 
         // Cast it to an IO transport so we can wire up the socket
         // input and output streams.
-        IOTransport* ioTransport = dynamic_cast<IOTransport*>( next );
+        IOTransport* ioTransport = dynamic_cast<IOTransport*>( next.get() );
         if( ioTransport == NULL ){
             throw ActiveMQException(
                 __FILE__, __LINE__,

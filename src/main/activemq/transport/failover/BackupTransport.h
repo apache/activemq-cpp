@@ -23,11 +23,14 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <decaf/net/URI.h>
+#include <decaf/lang/Pointer.h>
 #include <memory>
 
 namespace activemq {
 namespace transport {
 namespace failover {
+
+    using decaf::lang::Pointer;
 
     class FailoverTransport;
 
@@ -38,7 +41,7 @@ namespace failover {
         FailoverTransport* failover;
 
         // The Transport this one is managing.
-        Transport* transport;
+        Pointer<Transport> transport;
 
         // The URI of this Backup
         decaf::net::URI uri;
@@ -71,7 +74,7 @@ namespace failover {
          * Gets the currently held transport
          * @returns pointer to the held transport or NULL if not set.
          */
-        Transport* getTransport() {
+        const Pointer<Transport>& getTransport() {
             return transport;
         }
 
@@ -82,7 +85,7 @@ namespace failover {
          * @param transport
          *        The transport to hold.
          */
-        void setTransport( Transport* transport ) {
+        void setTransport( const Pointer<Transport>& transport ) {
             this->transport = transport;
 
             if( this->transport != NULL ) {
