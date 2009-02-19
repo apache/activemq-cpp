@@ -39,6 +39,36 @@ namespace commands{
 
     class AMQCPP_API ActiveMQBytesMessage :
         public ActiveMQMessageTemplate< cms::BytesMessage > {
+    private:
+
+        /**
+         * Flag that indicates what state the stream is in.  If true, the
+         * message may only be read from.  If false, the message may only be
+         * written to.
+         */
+        bool readOnly;
+
+        /**
+         * InputStream that wraps around the command's content when in
+         * read-only mode.
+         */
+        mutable decaf::io::ByteArrayInputStream inputStream;
+
+        /**
+         * OutputStream that wraps around the command's content when in
+         * write-only mode.
+         */
+        decaf::io::ByteArrayOutputStream outputStream;
+
+        /**
+         * DataInputStream wrapper around the input stream.
+         */
+        mutable decaf::io::DataInputStream dataInputStream;
+
+        /**
+         * DataOutputStream wrapper around the output stream.
+         */
+        decaf::io::DataOutputStream dataOutputStream;
 
     public:
 
@@ -406,37 +436,6 @@ namespace commands{
                     "message is in write-only mode and cannot be read from" );
             }
         }
-
-    private:
-
-        /**
-         * Flag that indicates what state the stream is in.  If true, the
-         * message may only be read from.  If false, the message may only be
-         * written to.
-         */
-        bool readOnly;
-
-        /**
-         * InputStream that wraps around the command's content when in
-         * read-only mode.
-         */
-        mutable decaf::io::ByteArrayInputStream inputStream;
-
-        /**
-         * OutputStream that wraps around the command's content when in
-         * write-only mode.
-         */
-        decaf::io::ByteArrayOutputStream outputStream;
-
-        /**
-         * DataInputStream wrapper around the input stream.
-         */
-        mutable decaf::io::DataInputStream dataInputStream;
-
-        /**
-         * DataOutputStream wrapper around the output stream.
-         */
-        decaf::io::DataOutputStream dataOutputStream;
 
     };
 

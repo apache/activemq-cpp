@@ -76,6 +76,36 @@ ConnectionStateTracker::~ConnectionStateTracker() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack )
+    throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        if( trackTransactions && ack != NULL && ack->getTransactionId() != NULL) {
+            // TODO
+            Pointer<ConnectionId> connectionId;// =
+                //ack->getConsumerId()->getParentId().getParentId();
+            if( connectionId != NULL ) {
+                Pointer<ConnectionState> cs = connectionStates.get( connectionId );
+                if( cs != NULL ) {
+                    Pointer<TransactionState> transactionState =
+                        cs->getTransactionState( ack->getTransactionId() );
+                    if( transactionState != NULL ) {
+                        transactionState->addCommand(
+                            Pointer<Command>( ack->cloneDataStructure() ) );
+                    }
+                }
+            }
+            return TRACKED_RESPONSE_MARKER;
+        }
+        return Pointer<Response>();
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInfo* info )
     throw ( exceptions::ActiveMQException ) {
 
