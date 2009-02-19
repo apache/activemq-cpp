@@ -19,17 +19,28 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0">
 
-  <groupId>org.apache.activemq</groupId>
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>4</version>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>activemqcpp-openwire-generator</artifactId>
-  <packaging>jar</packaging>
-  <name>ActiveMQ-CPP Openwire Generator</name>
-  <version>1.0</version>
+
+  <groupId>org.apache.activemq</groupId>
+  <artifactId>activemq-cpp-parent</artifactId>
+  <version>3.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>ActiveMQ-CPP</name>
+  <prerequisites>
+    <maven>2.0.8</maven>
+  </prerequisites>
 
   <organization>
     <name>Apache Software Foundation</name>
     <url>http://www.apache.org/</url>
   </organization>
+
+  <url>http://activemq.apache.org/cms</url>
 
   <licenses>
     <license>
@@ -48,72 +59,33 @@
     </mailingList>
   </mailingLists>
 
-  <repositories>
-    <repository>
-      <id>apache.incubating.releases</id>
-      <name>Apache Incubating Release Distribution Repository</name>
-      <url>http://people.apache.org/repo/m2-incubating-repository</url>
-    </repository>
-    <repository>
-      <id>apache.snapshots</id>
-      <name>Apache Development Snapshot Repository</name>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
+  <properties>
+    <activemq-version>5.2.0</activemq-version>
+    <siteId>activemq-${activemq-version}</siteId>
+    <projectName>Apache ActiveMQ-CPP</projectName>
+    <annogen-version>0.1.0</annogen-version>
+    <ant-version>1.6.2</ant-version>
+    <xstream-version>1.3.1</xstream-version>
+    <activemq-core-dir>${ACTIVEMQ_SRC_HOME}/activemq-core/</activemq-core-dir>
+  </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>apache.incubating.releases</id>
-      <name>Apache Incubating Release Distribution Repository</name>
-      <url>http://people.apache.org/repo/m2-incubating-repository</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>apache.snapshots</id>
-      <name>Apache Development Snapshot Repository</name>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
+  <modules>
+    <module>activemq-cpp-openwire-generator</module>
+  </modules>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk/</url>
+  </scm>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-openwire-generator</artifactId>
-      <version>${activemq-version}</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.activemq</groupId>
       <artifactId>activemq-core</artifactId>
       <version>${activemq-version}</version>
     </dependency>
   </dependencies>
-
-  <profiles>
-    <profile>
-      <id>default-tools.jar</id>
-      <activation>
-        <property>
-          <name>java.vendor</name>
-          <value>Sun Microsystems Inc.</value>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.sun</groupId>
-          <artifactId>tools</artifactId>
-          <version>1.4.2</version>
-           <scope>system</scope>
-           <!-- Only a JDK of 1.5.0 B11 or greater seems to work. -->
-           <systemPath>/opt/local/jdk1.5.0_16/lib/tools.jar</systemPath>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <build>
     <plugins>
@@ -127,28 +99,70 @@
           <generate maxVersion="3" source="${activemq-core-dir}" target="${basedir}"/>
         </tasks>
         </configuration>
-          <dependencies>
-            <dependency>
+        <dependencies>
+          <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemqcpp-openwire-generator</artifactId>
-            <version>1.0</version>
+            <artifactId>activemq-cpp-openwire-generator</artifactId>
+            <version>2.0</version>
           </dependency>
         </dependencies>
       </plugin>
+      <!-- Makefile Generator for the Top ActiveMQ-CPP Library -->
+      <!--
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
+        <groupId>org.apache.activemq.maven</groupId>
+        <artifactId>maven-amqcpp-tooling-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Main-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/activemq</outputDirectory>
+              <template>${basedir}/src/main/activemq/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/main/activemq/*</directory>
+                <includes>
+                  <includes>*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/main/activemq/*</directory>
+                <includes>
+                  <includes>*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>Test-Makefile</id>
+            <configuration>
+              <outputDirectory>${basedir}/src/test/activemq</outputDirectory>
+              <template>${basedir}/src/test/activemq/Makefile.maven</template>
+              <sources>
+                <directory>${basedir}/src/test/activemq</directory>
+                <includes>
+                  <includes>*.cpp</includes>
+                </includes>
+              </sources>
+              <headers>
+                <directory>${basedir}/src/test/activemq</directory>
+                <includes>
+                  <includes>*.h</includes>
+                </includes>
+              </headers>
+            </configuration>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>makefile</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
+      -->
     </plugins>
   </build>
-
-  <properties>
-    <activemq-version>5.2.0</activemq-version>
-    <activemq-core-dir>${ACTIVEMQ_SRC_HOME}/activemq-core/</activemq-core-dir>
-  </properties>
 
 </project>
