@@ -79,25 +79,18 @@
     <url>http://svn.apache.org/viewvc/activemq/activemq-cpp/trunk/</url>
   </scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-core</artifactId>
-      <version>${activemq-version}</version>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <!-- Used to generate the openwire commands and marshalers -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
+        <inherited>false</inherited>
         <configuration>
-        <tasks>
-          <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
-          <generate maxVersion="3" source="${activemq-core-dir}" target="${basedir}"/>
-        </tasks>
+          <tasks>
+            <taskdef name="generate" classname="org.apache.activemq.openwire.tool.AmqCppGeneratorTask"/>
+            <generate maxVersion="3" source="${activemq-core-dir}" target="${basedir}"/>
+          </tasks>
         </configuration>
         <dependencies>
           <dependency>
@@ -107,7 +100,6 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!-- Makefile Generator for the Top ActiveMQ-CPP Library -->
       <!--
       <plugin>
         <groupId>org.apache.activemq.maven</groupId>
@@ -164,5 +156,4 @@
       -->
     </plugins>
   </build>
-
 </project>
