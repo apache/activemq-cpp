@@ -31,6 +31,40 @@ namespace cms{
 
     /**
      * The client's connection to its provider.
+     *
+     * Connections support concurrent use.
+     *
+     * A connection serves several purposes:
+     *  - It encapsulates an open connection with a JMS provider. It typically represents
+     *    an open TCP/IP socket between a client and the service provider software.
+     *  - Its creation is where client authentication takes place.
+     *  - It can specify a unique client identifier.
+     *  - It provides a ConnectionMetaData object.
+     *  - It supports an optional ExceptionListener object.
+     *
+     * Because the creation of a connection involves setting up authentication and communication,
+     * a connection is a relatively heavyweight object. Most clients will do all their messaging
+     * with a single connection. Other more advanced applications may use several connections.
+     * The CMS API does not architect a reason for using multiple connections; however, there
+     * may be operational reasons for doing so.
+     *
+     * A CMS client typically creates a connection, one or more sessions, and a number of message
+     * producers and consumers. When a connection is created, it is in stopped mode. That means
+     * that no messages are being delivered.
+     *
+     * It is typical to leave the connection in stopped mode until setup is complete (that is,
+     * until all message consumers have been created). At that point, the client calls the
+     * connection's start method, and messages begin arriving at the connection's consumers.
+     * This setup convention minimizes any client confusion that may result from asynchronous
+     * message delivery while the client is still in the process of setting itself up.
+     *
+     * A connection can be started immediately, and the setup can be done afterwards. Clients
+     * that do this must be prepared to handle asynchronous message delivery while they are still
+     * in the process of setting up.
+     *
+     * A message producer can send messages while a connection is stopped.
+     *
+     * @since 1.0
      */
     class CMS_API Connection : public Startable,
                                public Stoppable,
@@ -62,7 +96,7 @@ namespace cms{
          */
         virtual const ConnectionMetaData* getMetaData() const throw( CMSException ) = 0;
 
-		/**
+        /**
          * Creates an AUTO_ACKNOWLEDGE Session.
          *
          * @throws CMSException
@@ -74,7 +108,7 @@ namespace cms{
          * specified acknowledgment mode
          *
          * @param ackMode
-         *      the Acknowledgement Mode to use.
+         *        the Acknowledgment Mode to use.
          * @throws CMSException
          */
         virtual Session* createSession( Session::AcknowledgeMode ackMode )
@@ -90,15 +124,15 @@ namespace cms{
         /**
          * Gets the registered Exception Listener for this connection
          *
-         * @return pointer to an exception listnener or NULL
+         * @return pointer to an exception listener or NULL
          */
         virtual ExceptionListener* getExceptionListener() const = 0;
 
         /**
-         * Sets the registed Exception Listener for this connection
+         * Sets the registered Exception Listener for this connection
          *
          * @param listener
-         *      pointer to and <code>ExceptionListener</code>
+         *        pointer to and <code>ExceptionListener</code>
          */
         virtual void setExceptionListener( ExceptionListener* listener ) = 0;
 
