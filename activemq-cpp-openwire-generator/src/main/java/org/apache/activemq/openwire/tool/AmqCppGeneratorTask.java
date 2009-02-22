@@ -18,7 +18,6 @@
 package org.apache.activemq.openwire.tool;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

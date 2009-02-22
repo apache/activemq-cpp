@@ -65,6 +65,12 @@ namespace commands{
         // Command's marshaledProperties vector.
         activemq::util::PrimitiveMap properties;
 
+        // Indicates if the Message Properties are Read Only
+        bool readOnlyProperties;
+
+        // Indicates if the Message Body are Read Only
+        bool readOnlyBody;
+
     protected:
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
@@ -231,6 +237,38 @@ namespace commands{
         }
         const util::PrimitiveMap& getMessageProperties() const {
             return this->properties;
+        }
+
+        /**
+         * Returns if the Message Properties Are Read Only
+         * @return true if Message Properties are Read Only.
+         */
+        bool isReadOnlyProperties() const {
+            return this->readOnlyProperties;
+        }
+
+        /**
+         * Set the Read Only State of the Message Properties.
+         * @param value - true if Properties should be read only.
+         */
+        void setReadOnlyProperties( bool value ) {
+            this->readOnlyProperties = value;
+        }
+
+        /**
+         * Returns if the Message Body is Read Only
+         * @return true if Message Content is Read Only.
+         */
+        bool isReadOnlyBody() const {
+            return this->readOnlyBody;
+        }
+
+        /**
+         * Set the Read Only State of the Message Content.
+         * @param value - true if Content should be read only.
+         */
+        void setReadOnlyBody( bool value ) {
+            this->readOnlyBody = value;
         }
 
         /**

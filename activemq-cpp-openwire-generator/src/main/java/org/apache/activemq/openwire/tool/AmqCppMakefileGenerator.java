@@ -17,7 +17,6 @@
  */
 package org.apache.activemq.openwire.tool;
 
-import java.util.Iterator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;

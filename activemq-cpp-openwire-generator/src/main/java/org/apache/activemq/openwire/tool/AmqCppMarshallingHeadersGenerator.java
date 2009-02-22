@@ -19,7 +19,6 @@ package org.apache.activemq.openwire.tool;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
 import org.codehaus.jam.JClass;
 

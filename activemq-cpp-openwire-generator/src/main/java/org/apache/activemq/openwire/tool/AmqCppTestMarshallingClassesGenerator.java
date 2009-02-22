@@ -17,17 +17,7 @@
  */
 package org.apache.activemq.openwire.tool;
 
-import org.codehaus.jam.JAnnotation;
-import org.codehaus.jam.JAnnotationValue;
-import org.codehaus.jam.JClass;
-import org.codehaus.jam.JProperty;
-
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  *
