@@ -27,7 +27,14 @@ namespace cms
 {
 
     /**
-     * Defines the interface for a factory that creates connection objects
+     * Defines the interface for a factory that creates connection objects, the Connection
+     * objects returned implement the CMS Connection interface and hide the CMS Provider
+     * specific implementation details behind that interface.  A Client creates a new
+     * ConnectionFactory either directly by instantiating the provider specific implementation
+     * of the factory or by using the static method <code>createCMSConnectionFactory</code>
+     * which all providers are required to implement.
+     *
+     * @since 1.0
      */
     class CMS_API ConnectionFactory
     {
@@ -93,10 +100,14 @@ namespace cms
     public:
 
         /**
-         * Static method that is used to create a provider specfic connection
+         * Static method that is used to create a provider specific connection
          * factory.  The provider implements this method in their library and
-         * returns an instance of a ConnectionFactory dervied object.
+         * returns an instance of a ConnectionFactory derived object.  Clients can
+         * use this method to remain abstracted from the specific CMS implementation
+         * being used.
+         *
          * @param brokerURI - the address to use to connect to the broker.
+         *
          * @returns Provider specific ConnectionFactory
          * @throws CMSException if and error occurs.
          */
