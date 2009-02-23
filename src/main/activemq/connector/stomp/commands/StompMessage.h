@@ -68,20 +68,27 @@ namespace commands{
         // Cached Destination
         cms::Destination* replyTo;
 
+        bool readOnlyBody;
+        bool readOnlyProperties;
+
     public:
 
         StompMessage() :
             AbstractCommand< transport::Command >(),
             ackHandler( NULL ),
             dest( NULL ),
-            replyTo( NULL) {
+            replyTo( NULL ),
+            readOnlyBody( false ),
+            readOnlyProperties( false ) {
         }
 
         StompMessage( StompFrame* frame ) :
             AbstractCommand< transport::Command >( frame ),
             ackHandler( NULL ),
             dest( NULL ),
-            replyTo( NULL ) {
+            replyTo( NULL ),
+            readOnlyBody( false ),
+            readOnlyProperties( false ) {
 
             const std::string& destHeader = CommandConstants::toString(
                 CommandConstants::HEADER_DESTINATION );
@@ -113,6 +120,7 @@ namespace commands{
          * headers or properties.
          */
         virtual void clearBody(){
+            this->readOnlyBody = false;
             getFrame().getBody().clear();
         }
 
@@ -122,6 +130,7 @@ namespace commands{
          */
         virtual void clearProperties(){
 
+            this->readOnlyProperties = false;
             decaf::util::Properties& props = getFrame().getProperties();
             std::vector< std::pair< std::string, std::string > > propArray = props.toArray();
             for( unsigned int ix=0; ix<propArray.size(); ++ix ){
@@ -136,7 +145,7 @@ namespace commands{
         }
 
         /**
-         * Retrieves the propery names.
+         * Retrieves the property names.
          * @return The complete set of property names currently in this
          * message.
          */
@@ -255,11 +264,11 @@ namespace commands{
         }
 
         virtual void setBooleanProperty( const std::string& name,
-            bool value ) throw( cms::CMSException ){
+                                         bool value ) throw( cms::CMSException ){
 
             try{
+                checkReadOnlyProperties();
                 testProperty( name );
-
                 std::string strvalue = value? "true" : "false";
                 setPropertyValue( name, strvalue );
             }
@@ -272,6 +281,7 @@ namespace commands{
             unsigned char value ) throw( cms::CMSException ){
 
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<unsigned char>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -280,8 +290,9 @@ namespace commands{
         }
 
         virtual void setDoubleProperty( const std::string& name,
-            double value ) throw( cms::CMSException ){
+                                        double value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<double>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -290,8 +301,9 @@ namespace commands{
         }
 
         virtual void setFloatProperty( const std::string& name,
-            float value ) throw( cms::CMSException ){
+                                       float value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<float>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -300,8 +312,9 @@ namespace commands{
         }
 
         virtual void setIntProperty( const std::string& name,
-            int value ) throw( cms::CMSException ){
+                                     int value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<int>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -310,8 +323,9 @@ namespace commands{
         }
 
         virtual void setLongProperty( const std::string& name,
-            long long value ) throw( cms::CMSException ){
+                                      long long value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<long long>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -320,8 +334,9 @@ namespace commands{
         }
 
         virtual void setShortProperty( const std::string& name,
-            short value ) throw( cms::CMSException ){
+                                       short value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 setStrictPropertyValue<short>( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -330,8 +345,9 @@ namespace commands{
         }
 
         virtual void setStringProperty( const std::string& name,
-            const std::string& value ) throw( cms::CMSException ){
+                                        const std::string& value ) throw( cms::CMSException ){
             try{
+                checkReadOnlyProperties();
                 testProperty( name );
                 setPropertyValue( name, value );
             }
@@ -601,7 +617,7 @@ namespace commands{
     public:    // ActiveMQMessage
 
         /**
-         * Gets the Acknowledgement Handler that this Message will use
+         * Gets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
          * @returns handler ActiveMQAckHandler
          */
@@ -610,7 +626,7 @@ namespace commands{
         }
 
         /**
-         * Sets the Acknowledgement Handler that this Message will use
+         * Sets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler
          */
@@ -653,6 +669,38 @@ namespace commands{
                 return true;
             }
             return false;
+        }
+
+        /**
+         * Returns if the Message Body is Read Only.
+         * @returns true if the Message Body is Read Only.
+         */
+        virtual bool isReadOnlyBody() const {
+             return this->readOnlyBody;
+        }
+
+        /**
+         * Sets the Read Only status of a Message Body
+         * @param value - true if the Message Body is Read Only.
+         */
+        virtual void setReadOnlyBody( bool value ) {
+            this->readOnlyBody = value;
+        }
+
+        /**
+         * Returns if the Message Properties are Read Only.
+         * @returns true if the Message properties are Read Only.
+         */
+        virtual bool isReadOnlyProperties() const {
+            return this->readOnlyProperties;
+       }
+
+        /**
+         * Sets the Read Only status of a Message's Properties
+         * @param value - true if the Message Properties are Read Only.
+         */
+        virtual void setReadOnlyProperties( bool value )  {
+            this->readOnlyProperties = value;
         }
 
     protected:
@@ -768,6 +816,20 @@ namespace commands{
             }
 
             return false;
+        }
+
+        void checkReadOnlyBody() {
+            if( this->isReadOnlyBody() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Body is in Read Only Mode." );
+            }
+        }
+
+        void checkReadOnlyProperties() {
+            if( this->isReadOnlyProperties() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Properties are in Read Only Mode." );
+            }
         }
 
     };

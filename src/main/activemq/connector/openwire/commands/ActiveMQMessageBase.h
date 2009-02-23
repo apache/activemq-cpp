@@ -52,12 +52,16 @@ namespace commands{
         int redeliveryCount;
         util::PrimitiveMap properties;
         std::auto_ptr<utils::MessagePropertyInterceptor> propertiesInterceptor;
+        bool readOnlyBody;
+        bool readOnlyProperties;
 
     public:
 
         ActiveMQMessageBase() {
             this->ackHandler = NULL;
             this->redeliveryCount = 0;
+            this->readOnlyBody = false;
+            this->readOnlyProperties = false;
             this->propertiesInterceptor.reset(
                 new utils::MessagePropertyInterceptor( this, &this->properties ) );
         }
@@ -76,14 +80,16 @@ namespace commands{
             this->properties.copy( message->properties );
             this->setAckHandler( message->getAckHandler() );
             this->setRedeliveryCount( message->getRedeliveryCount() );
+            this->setReadOnlyBody( message->isReadOnlyBody() );
+            this->setReadOnlyProperties( message->isReadOnlyProperties() );
 
             openwire::commands::Message::copyDataStructure( src );
         }
 
         /**
-         * Indicates that this command is aware of Marshalling, and needs
-         * to have its Marshalling methods invoked.
-         * @returns boolean indicating desire to be in marshalling stages
+         * Indicates that this command is aware of Marshaling, and needs
+         * to have its Marshaling methods invoked.
+         * @returns boolean indicating desire to be in marshaling stages
          */
         virtual bool isMarshalAware() const {
             return true;
@@ -233,6 +239,38 @@ namespace commands{
             return false;
         }
 
+        /**
+         * Returns if the Message Body is Read Only.
+         * @returns true if the Message Body is Read Only.
+         */
+        virtual bool isReadOnlyBody() const {
+             return this->readOnlyBody;
+        }
+
+        /**
+         * Sets the Read Only status of a Message Body
+         * @param value - true if the Message Body is Read Only.
+         */
+        virtual void setReadOnlyBody( bool value ) {
+            this->readOnlyBody = value;
+        }
+
+        /**
+         * Returns if the Message Properties are Read Only.
+         * @returns true if the Message properties are Read Only.
+         */
+        virtual bool isReadOnlyProperties() const {
+            return this->readOnlyProperties;
+       }
+
+        /**
+         * Sets the Read Only status of a Message's Properties
+         * @param value - true if the Message Properties are Read Only.
+         */
+        virtual void setReadOnlyProperties( bool value )  {
+            this->readOnlyProperties = value;
+        }
+
     public:   // CMS Message
 
         /**
@@ -253,6 +291,7 @@ namespace commands{
          * headers or properties.
          */
         virtual void clearBody() {
+            this->readOnlyBody = false;
             this->setContent( std::vector<unsigned char>() );
         }
 
@@ -261,7 +300,8 @@ namespace commands{
          * header values.
          */
         virtual void clearProperties() {
-            properties.clear();
+            this->readOnlyProperties = false;
+            this->properties.clear();
         }
 
         /**
@@ -429,6 +469,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setBooleanProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -447,6 +488,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setByteProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -465,6 +507,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setDoubleProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -483,6 +526,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setFloatProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -501,6 +545,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setIntProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -519,6 +564,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setLongProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -537,6 +583,7 @@ namespace commands{
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setShortProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -555,6 +602,7 @@ namespace commands{
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setStringProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -734,6 +782,22 @@ namespace commands{
          */
         virtual void setCMSType( const std::string& type ) {
             this->setType( type );
+        }
+
+    protected:
+
+        void checkReadOnlyBody() {
+            if( this->isReadOnlyBody() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Body is in Read Only Mode." );
+            }
+        }
+
+        void checkReadOnlyProperties() {
+            if( this->isReadOnlyProperties() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Properties are in Read Only Mode." );
+            }
         }
 
     };

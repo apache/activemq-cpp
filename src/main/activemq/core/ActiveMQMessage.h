@@ -28,7 +28,7 @@ namespace core{
     /**
      * Interface for all ActiveMQ Messages that will pass through the core
      * API layer.  This interface defines a method that the API uses to set
-     * an Acknowledgement handler that will be called by the message when
+     * an Acknowledgment handler that will be called by the message when
      * a user calls the <code>acknowledge</code> method of the Message
      * interface.  This is only done when the Session that this message
      * passes through is in Client Acknowledge mode.
@@ -39,7 +39,7 @@ namespace core{
         virtual ~ActiveMQMessage() {}
 
         /**
-         * Sets the Acknowledgement Handler that this Message will use
+         * Sets the Acknowledgment Handler that this Message will use
          * when the Acknowledge method is called.
          * @param handler ActiveMQAckHandler to call
          */
@@ -64,6 +64,30 @@ namespace core{
          * @returns true if message is expired.
          */
         virtual bool isExpired() const = 0;
+
+        /**
+         * Returns if the Message Body is Read Only.
+         * @returns true if the Message Body is Read Only.
+         */
+        virtual bool isReadOnlyBody() const = 0;
+
+        /**
+         * Sets the Read Only status of a Message Body
+         * @param value - true if the Message Body is Read Only.
+         */
+        virtual void setReadOnlyBody( bool value ) = 0;
+
+        /**
+         * Returns if the Message Properties are Read Only.
+         * @returns true if the Message properties are Read Only.
+         */
+        virtual bool isReadOnlyProperties() const = 0;
+
+        /**
+         * Sets the Read Only status of a Message's Properties
+         * @param value - true if the Message Properties are Read Only.
+         */
+        virtual void setReadOnlyProperties( bool value ) = 0;
 
     };
 

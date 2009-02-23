@@ -155,6 +155,18 @@ void SimpleTest::testSyncReceive() {
 
         auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
         CPPUNIT_ASSERT( message.get() != NULL );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw an ActiveMQExceptio",
+            message->setStringProperty( "FOO", "BAR" ),
+            exceptions::ActiveMQException );
+
+        TextMessage* txtMessage2 = dynamic_cast<cms::TextMessage*>( message.get() );
+        CPPUNIT_ASSERT( txtMessage2 != NULL );
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw an ActiveMQExceptio",
+            txtMessage2->setText( "FOO" ),
+            exceptions::ActiveMQException );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

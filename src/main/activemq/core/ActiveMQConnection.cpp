@@ -233,6 +233,9 @@ void ActiveMQConnection::onConsumerMessage( connector::ConsumerInfo* consumer,
                 delete message;
             } else {
 
+                message->setReadOnlyBody( true );
+                message->setReadOnlyProperties( true );
+
                 // Dispatch the message.
                 DispatchData data( consumer, message );
                 dispatcher->dispatch( data );

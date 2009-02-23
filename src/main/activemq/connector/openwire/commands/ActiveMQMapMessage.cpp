@@ -160,6 +160,7 @@ void ActiveMQMapMessage::setBoolean( const std::string& name, bool value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setBool( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -185,6 +186,7 @@ void ActiveMQMapMessage::setByte( const std::string& name,
                                       throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setByte( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -210,6 +212,7 @@ void ActiveMQMapMessage::setBytes( const std::string& name,
                                        throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setByteArray( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -234,6 +237,7 @@ void ActiveMQMapMessage::setChar( const std::string& name, char value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setChar( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -259,6 +263,7 @@ void ActiveMQMapMessage::setDouble( const std::string& name,
                                         throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setDouble( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -283,6 +288,7 @@ void ActiveMQMapMessage::setFloat( const std::string& name, float value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setFloat( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -307,6 +313,7 @@ void ActiveMQMapMessage::setInt( const std::string& name, int value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setInt( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -331,6 +338,7 @@ void ActiveMQMapMessage::setLong( const std::string& name, long long value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setLong( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -355,6 +363,7 @@ void ActiveMQMapMessage::setShort( const std::string& name, short value )
     throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setShort( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -380,6 +389,7 @@ void ActiveMQMapMessage::setString( const std::string& name,
                                         throw( cms::CMSException ) {
 
     try{
+        checkReadOnlyBody();
         getMap().setString( name, value );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

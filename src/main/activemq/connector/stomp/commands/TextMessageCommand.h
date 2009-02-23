@@ -62,6 +62,8 @@ namespace commands{
             TextMessageCommand* command =
                 new TextMessageCommand( getFrame().clone() );
             command->setAckHandler( this->getAckHandler() );
+            command->setReadOnlyBody( this->isReadOnlyBody() );
+            command->setReadOnlyProperties( this->isReadOnlyProperties() );
 
             return command;
         }
@@ -91,6 +93,7 @@ namespace commands{
          */
         virtual void setText( const char* msg ) throw( cms::CMSException ) {
             try{
+                checkReadOnlyBody();
                 setBytes( (unsigned char*)msg, strlen(msg) + 1 );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -104,6 +107,7 @@ namespace commands{
          */
         virtual void setText( const std::string& msg ) throw( cms::CMSException ) {
             try{
+                checkReadOnlyBody();
                 setBytes( (unsigned char*)msg.c_str(), msg.length() + 1 );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )

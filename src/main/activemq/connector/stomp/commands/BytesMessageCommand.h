@@ -43,13 +43,6 @@ namespace commands{
     private:
 
         /**
-         * Flag that indicates what state the stream is in.  If true, the
-         * message may only be read from.  If false, the message may only be
-         * written to.
-         */
-        bool readOnly;
-
-        /**
          * InputStream that wraps around the frame's body when in read-only
          * mode.
          */
@@ -117,9 +110,6 @@ namespace commands{
             // Invoke base class's version.
             StompMessage<cms::BytesMessage>::clearBody();
 
-            // Set the stream in write only mode.
-            readOnly = false;
-
             outputStream.setBuffer( getBytes() );
         }
 
@@ -153,7 +143,7 @@ namespace commands{
          * @throws CMSException
          */
         virtual void reset() throw ( cms::CMSException ){
-            readOnly = true;
+            this->setReadOnlyBody( true );
             inputStream.setBuffer( getBytes() );
         }
 
@@ -167,6 +157,8 @@ namespace commands{
             BytesMessageCommand* command =
                 new BytesMessageCommand( getFrame().clone() );
             command->setAckHandler( this->getAckHandler() );
+            command->setReadOnlyBody( this->isReadOnlyBody() );
+            command->setReadOnlyProperties( this->isReadOnlyProperties() );
 
             return command;
         }
@@ -181,7 +173,7 @@ namespace commands{
                                    std::size_t numBytes )
             throw( cms::CMSException ) {
 
-            checkWriteOnly();
+            checkReadOnlyBody();
             this->setBytes( buffer, numBytes );
         }
 
@@ -216,7 +208,7 @@ namespace commands{
          */
         virtual bool readBoolean() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readBoolean();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -233,7 +225,7 @@ namespace commands{
          */
         virtual void writeBoolean( bool value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeBoolean( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -248,7 +240,7 @@ namespace commands{
          */
         virtual unsigned char readByte() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readByte();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -263,7 +255,7 @@ namespace commands{
          */
         virtual void writeByte( unsigned char value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeByte( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -293,7 +285,7 @@ namespace commands{
         virtual std::size_t readBytes( std::vector<unsigned char>& value ) const
             throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.read( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -310,7 +302,7 @@ namespace commands{
         virtual void writeBytes( const std::vector<unsigned char>& value )
             throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.write( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -347,7 +339,7 @@ namespace commands{
             throw ( cms::CMSException )
         {
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.read( buffer, 0, length );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -367,7 +359,7 @@ namespace commands{
                                  std::size_t offset,
                                  std::size_t length ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.write( value, offset, length );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -382,7 +374,7 @@ namespace commands{
          */
         virtual char readChar() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readChar();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -397,7 +389,7 @@ namespace commands{
          */
         virtual void writeChar( char value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeChar( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -412,7 +404,7 @@ namespace commands{
          */
         virtual float readFloat() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readFloat();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -427,7 +419,7 @@ namespace commands{
          */
         virtual void writeFloat( float value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeFloat( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -442,7 +434,7 @@ namespace commands{
          */
         virtual double readDouble() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readDouble();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -457,7 +449,7 @@ namespace commands{
          */
         virtual void writeDouble( double value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeDouble( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -472,7 +464,7 @@ namespace commands{
          */
         virtual short readShort() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readShort();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -487,7 +479,7 @@ namespace commands{
          */
         virtual void writeShort( short value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeShort( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -502,7 +494,7 @@ namespace commands{
          */
         virtual unsigned short readUnsignedShort() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readUnsignedShort();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -517,7 +509,7 @@ namespace commands{
          */
         virtual void writeUnsignedShort( unsigned short value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeUnsignedShort( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -526,13 +518,13 @@ namespace commands{
         }
 
         /**
-         * Reads a 32 bit signed intger from the Bytes message stream
+         * Reads a 32 bit signed integer from the Bytes message stream
          * @returns int value from stream
          * @throws CMSException
          */
         virtual int readInt() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readInt();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -547,7 +539,7 @@ namespace commands{
          */
         virtual void writeInt( int value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeInt( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -562,7 +554,7 @@ namespace commands{
          */
         virtual long long readLong() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readLong();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -577,7 +569,7 @@ namespace commands{
          */
         virtual void writeLong( long long value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeLong( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -592,7 +584,7 @@ namespace commands{
          */
         virtual std::string readString() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readString();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -607,7 +599,7 @@ namespace commands{
          */
         virtual void writeString( const std::string& value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeChars( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -622,7 +614,7 @@ namespace commands{
          */
         virtual std::string readUTF() const throw ( cms::CMSException ){
             try{
-                checkReadOnly();
+                checkWriteOnlyBody();
                 return dataInputStream.readUTF();
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -637,7 +629,7 @@ namespace commands{
          */
         virtual void writeUTF( const std::string& value ) throw ( cms::CMSException ){
             try{
-                checkWriteOnly();
+                checkReadOnlyBody();
                 dataOutputStream.writeUTF( value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -651,19 +643,8 @@ namespace commands{
          * Throws an exception if not in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnly() const throw ( cms::CMSException ){
-            if( readOnly ){
-                throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
-                    "message is in read-only mode and cannot be written to" );
-            }
-        }
-
-        /**
-         * Throws an exception if not in read-only mode.
-         * @throws CMSException
-         */
-        void checkReadOnly() const throw ( cms::CMSException ){
-            if( !readOnly ){
+        void checkWriteOnlyBody() const throw ( cms::CMSException ){
+            if( !this->isReadOnlyBody() ){
                 throw activemq::exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in write-only mode and cannot be read from" );
             }

@@ -64,7 +64,10 @@ namespace commands{
 
             MessageCommand* command =
                 new MessageCommand( getFrame().clone() );
+
             command->setAckHandler( this->getAckHandler() );
+            command->setReadOnlyBody( this->isReadOnlyBody() );
+            command->setReadOnlyProperties( this->isReadOnlyProperties() );
 
             return command;
         }
