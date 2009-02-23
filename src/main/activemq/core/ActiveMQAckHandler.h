@@ -27,6 +27,8 @@ namespace core{
     /**
      * Interface class that is used to give CMS Messages an interface to
      * Ack themselves with.
+     *
+     * @since 2.0
      */
     class AMQCPP_API ActiveMQAckHandler {
     public:
@@ -39,7 +41,7 @@ namespace core{
          * @throw CMSException
          */
         virtual void acknowledgeMessage( const commands::Message* message )
-                throw ( cms::CMSException ) = 0;
+            throw ( cms::CMSException ) = 0;
 
     };
 

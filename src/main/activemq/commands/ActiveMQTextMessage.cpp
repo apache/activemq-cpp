@@ -67,6 +67,7 @@ void ActiveMQTextMessage::setText( const char* msg ) throw( cms::CMSException ) 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSException ) {
     try{
+        checkReadOnlyBody();
         std::vector<unsigned char>& content = getContent();
         content.clear();
         decaf::io::ByteArrayOutputStream bos( content );

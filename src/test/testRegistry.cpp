@@ -18,26 +18,26 @@
 // All CPP Unit tests are registered in here so we can disable them and
 // enable them easily in one place.
 
-//#include <activemq/commands/BrokerInfoTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
+#include <activemq/commands/BrokerInfoTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
 #include <activemq/commands/BrokerIdTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
-//#include <activemq/commands/ActiveMQTopicTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
-//#include <activemq/commands/ActiveMQTextMessageTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTextMessageTest );
-//#include <activemq/commands/ActiveMQTempTopicTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempTopicTest );
-//#include <activemq/commands/ActiveMQTempQueueTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempQueueTest );
-//#include <activemq/commands/ActiveMQQueueTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQQueueTest );
-//#include <activemq/commands/ActiveMQMessageTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMessageTest );
-//#include <activemq/commands/ActiveMQMapMessageTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
-//#include <activemq/commands/ActiveMQDestinationTest2.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
+#include <activemq/commands/ActiveMQTopicTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
+#include <activemq/commands/ActiveMQTextMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTextMessageTest );
+#include <activemq/commands/ActiveMQTempTopicTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempTopicTest );
+#include <activemq/commands/ActiveMQTempQueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempQueueTest );
+#include <activemq/commands/ActiveMQQueueTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQQueueTest );
+#include <activemq/commands/ActiveMQMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMessageTest );
+#include <activemq/commands/ActiveMQMapMessageTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
+#include <activemq/commands/ActiveMQDestinationTest2.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
 #include <activemq/commands/ActiveMQBytesMessageTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 //

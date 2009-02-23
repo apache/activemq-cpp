@@ -462,8 +462,12 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
                 // just closed.
                 if( dispatcher != NULL ) {
 
+                    Pointer<commands::Message> message = dispatch->getMessage();
+                    message->setReadOnlyBody( true );
+                    message->setReadOnlyProperties( true );
+
                     // Dispatch the message.
-                    DispatchData data( dispatch->getConsumerId(), dispatch->getMessage() );
+                    DispatchData data( dispatch->getConsumerId(), message );
                     dispatcher->dispatch( data );
                 }
             }

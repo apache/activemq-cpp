@@ -65,6 +65,7 @@ namespace commands {
          */
         virtual void clearBody() {
             this->setContent( std::vector<unsigned char>() );
+            this->setReadOnlyBody( false );
         }
 
         /**
@@ -72,7 +73,8 @@ namespace commands {
          * header values.
          */
         virtual void clearProperties() {
-            getMessageProperties().clear();
+            this->getMessageProperties().clear();
+            this->setReadOnlyProperties( false );
         }
 
         /**
@@ -240,6 +242,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setBooleanProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -258,6 +261,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setByteProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -276,6 +280,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setDoubleProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -294,6 +299,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setFloatProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -312,6 +318,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setIntProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -330,6 +337,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setLongProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -348,6 +356,7 @@ namespace commands {
                                         throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setShortProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -366,6 +375,7 @@ namespace commands {
                                             throw( cms::CMSException ) {
 
             try{
+                checkReadOnlyProperties();
                 this->propertiesInterceptor->setStringProperty( name, value );
             }
             AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
@@ -542,6 +552,22 @@ namespace commands {
          */
         virtual void setCMSType( const std::string& type ) {
             this->setType( type );
+        }
+
+    protected:
+
+        void checkReadOnlyBody() {
+            if( this->isReadOnlyBody() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Body is Read-Only." );
+            }
+        }
+
+        void checkReadOnlyProperties() {
+            if( this->isReadOnlyProperties() ) {
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__, "Message Properties are Read-Only." );
+            }
         }
 
     };

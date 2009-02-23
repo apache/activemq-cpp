@@ -42,13 +42,6 @@ namespace commands{
     private:
 
         /**
-         * Flag that indicates what state the stream is in.  If true, the
-         * message may only be read from.  If false, the message may only be
-         * written to.
-         */
-        bool readOnly;
-
-        /**
          * InputStream that wraps around the command's content when in
          * read-only mode.
          */
@@ -146,9 +139,6 @@ namespace commands{
 
             // Invoke base class's version.
             ActiveMQMessageTemplate<cms::BytesMessage>::clearBody();
-
-            // Set the stream in write only mode.
-            readOnly = false;
 
             outputStream.setBuffer( getContent() );
         }
@@ -416,24 +406,13 @@ namespace commands{
     protected:
 
         /**
-         * Throws an exception if not in write-only mode.
+         * Throws an exception if in write-only mode.
          * @throws CMSException.
          */
-        void checkWriteOnly() const throw ( cms::CMSException ){
-            if( readOnly ){
+        void checkWriteOnlyBody() const throw ( cms::CMSException ){
+            if( !this->isReadOnlyBody() ){
                 throw exceptions::ActiveMQException( __FILE__, __LINE__,
                     "message is in read-only mode and cannot be written to" );
-            }
-        }
-
-        /**
-         * Throws an exception if not in read-only mode.
-         * @throws CMSException
-         */
-        void checkReadOnly() const throw ( cms::CMSException ){
-            if( !readOnly ){
-                throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                    "message is in write-only mode and cannot be read from" );
             }
         }
 

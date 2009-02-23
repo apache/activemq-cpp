@@ -194,7 +194,9 @@ out.println(""+className+"::"+className+"() {");
 out.println("");
 
         if( className.equals( "Message" ) ) {
-out.println("    this->ackHandler = NULL;");
+            out.println("    this->ackHandler = NULL;");
+            out.println("    this->readOnlyBody = false;");
+            out.println("    this->readOnlyProperties = false;");
         }
 
         List properties = getProperties();
@@ -275,8 +277,9 @@ out.println("    this->setAckHandler( srcPtr->getAckHandler() );");
 
              if( className.equals( "Message" ) &&
                  property.getType().getSimpleName().equals( "MessageId" ) ) {
-out.println("    this->"+setter+"( Pointer<MessageId>( new MessageId( *( srcPtr->"+getter+"() ) ) ) );" );
-
+out.println("    if( this->getMessageId() != NULL ) {");
+out.println("        this->"+setter+"( Pointer<MessageId>( new MessageId( *( srcPtr->"+getter+"() ) ) ) );" );
+out.println("    }");
              } else {
 out.println("    this->"+setter+"( srcPtr->"+getter+"() );");
              }
@@ -301,6 +304,8 @@ out.println("    stream << \" Value of "+className+"::ID_" + className.toUpperCa
         if( className.equals( "Message" ) ) {
 out.println("    stream << \" Value of ackHandler = \" << ackHandler << std::endl;");
 out.println("    stream << \" Value of properties = \" << this->properties.toString() << std::endl;");
+out.println("    stream << \" Value of readOnlyBody = \" << this->readOnlyBody << std::endl;");
+out.println("    stream << \" Value of readOnlyProperties = \" << this->readOnlyBody << std::endl;");
         }
 
 for( Iterator iter = properties.iterator(); iter.hasNext(); ) {

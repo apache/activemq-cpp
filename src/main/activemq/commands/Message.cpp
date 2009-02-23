@@ -42,6 +42,8 @@ using namespace decaf::lang::exceptions;
 Message::Message() {
 
     this->ackHandler = NULL;
+    this->readOnlyBody = false;
+    this->readOnlyProperties = false;
     this->groupID = "";
     this->groupSequence = 0;
     this->correlationId = "";
@@ -100,7 +102,9 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setDestination( srcPtr->getDestination() );
     this->setTransactionId( srcPtr->getTransactionId() );
     this->setOriginalDestination( srcPtr->getOriginalDestination() );
-    this->setMessageId( Pointer<MessageId>( new MessageId( *( srcPtr->getMessageId() ) ) ) );
+    if( this->getMessageId() != NULL ) {
+        this->setMessageId( Pointer<MessageId>( new MessageId( *( srcPtr->getMessageId() ) ) ) );
+    }
     this->setOriginalTransactionId( srcPtr->getOriginalTransactionId() );
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );
@@ -141,6 +145,8 @@ std::string Message::toString() const {
     stream << " Value of Message::ID_MESSAGE = 0" << std::endl;
     stream << " Value of ackHandler = " << ackHandler << std::endl;
     stream << " Value of properties = " << this->properties.toString() << std::endl;
+    stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
+    stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;

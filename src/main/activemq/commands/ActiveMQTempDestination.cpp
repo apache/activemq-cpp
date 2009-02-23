@@ -26,12 +26,12 @@ using namespace activemq::commands;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination() :
-    ActiveMQDestination() {
+    ActiveMQDestination(), connection( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTempDestination::ActiveMQTempDestination( const std::string& name ) :
-    ActiveMQDestination( name ) {
+    ActiveMQDestination( name ), connection( NULL ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
