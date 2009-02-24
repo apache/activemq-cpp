@@ -36,26 +36,36 @@ namespace cms
 
     /**
      * A Session object is a single-threaded context for producing and consuming
-     * messages.<br>
-     * <br>
-     * A session serves several purposes:<br>
-     * <br>
-     *  - It is a factory for its message producers and consumers.<br>
-     *  - It supplies provider-optimized message factories.<br>
-     *  - It is a factory for TemporaryTopics and TemporaryQueues.<br>
+     * messages.
+     *
+     * A session serves several purposes:
+     *
+     *  - It is a factory for its message producers and consumers.
+     *  - It supplies provider-optimized message factories.
+     *  - It is a factory for TemporaryTopics and TemporaryQueues.
      *  - It provides a way to create Queue or Topic objects for those clients
      *    that need to dynamically manipulate provider-specific destination
-     *    names.<br>
+     *    names.
      *  - It supports a single series of transactions that combine work spanning
-     *    its producers and consumers into atomic units.<br>
+     *    its producers and consumers into atomic units.
      *  - It defines a serial order for the messages it consumes and the messages
-     *    it produces.<br>
-     *  - It retains messages it consumes until they have been acknowledged.<br>
+     *    it produces.
+     *  - It retains messages it consumes until they have been acknowledged.
      *  - It serializes execution of message listeners registered with its message
-     *    consumers.<br>
+     *    consumers.
+     *
+     * A session can create and service multiple message producers and consumers.
+     *
+     * One typical use is to have a thread block on a synchronous MessageConsumer until
+     * a message arrives. The thread may then use one or more of the Session's
+     * MessageProducers.
+     *
+     * If a client desires to have one thread produce messages while others consume
+     * them, the client should use a separate session for its producing thread.
+     *
+     * @since 1.0
      */
-    class CMS_API Session : public Closeable
-    {
+    class CMS_API Session : public Closeable {
     public:
 
         enum AcknowledgeMode
