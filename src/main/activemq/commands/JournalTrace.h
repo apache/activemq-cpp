@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_JOURNALTRACE_H_
 #define _ACTIVEMQ_COMMANDS_JOURNALTRACE_H_
 
@@ -23,29 +24,32 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for JournalTrace
-     *
+     *  Command code for OpenWire format for JournalTrace
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API JournalTrace : public BaseDataStructure {
     protected:
 
         std::string message;
+
+    public:
+
+        const static unsigned char ID_JOURNALTRACE = 53;
 
     protected:
 
@@ -54,11 +58,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_JOURNALTRACE = 53;
-
-    public:
-
         JournalTrace();
+
         virtual ~JournalTrace();
 
         /**

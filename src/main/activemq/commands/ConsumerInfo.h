@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_CONSUMERINFO_H_
 #define _ACTIVEMQ_COMMANDS_CONSUMERINFO_H_
 
@@ -23,27 +24,26 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
-#include <activemq/commands/ConsumerId.h>
+#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BooleanExpression.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/ConsumerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ConsumerInfo
-     *
+     *  Command code for OpenWire format for ConsumerInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ConsumerInfo : public BaseCommand {
@@ -67,6 +67,10 @@ namespace commands{
         bool optimizedAcknowledge;
         bool noRangeAcks;
 
+    public:
+
+        const static unsigned char ID_CONSUMERINFO = 5;
+
     protected:
 
         ConsumerInfo( const ConsumerInfo& other );
@@ -74,11 +78,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_CONSUMERINFO = 5;
-
-    public:
-
         ConsumerInfo();
+
         virtual ~ConsumerInfo();
 
         /**
@@ -116,16 +117,6 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
-
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
 
         virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
         virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
@@ -183,6 +174,16 @@ namespace commands{
 
         virtual bool isNoRangeAcks() const;
         virtual void setNoRangeAcks( bool noRangeAcks );
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

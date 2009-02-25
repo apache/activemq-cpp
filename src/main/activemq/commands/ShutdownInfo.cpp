@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ShutdownInfo.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for ShutdownInfo
- *
+ *  Command code for OpenWire format for ShutdownInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 ShutdownInfo::ShutdownInfo() {
 
@@ -43,7 +44,6 @@ ShutdownInfo::ShutdownInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ShutdownInfo::~ShutdownInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,4 +120,3 @@ decaf::lang::Pointer<commands::Command> ShutdownInfo::visit( activemq::state::Co
 
     return visitor->processShutdownInfo( this );
 }
-

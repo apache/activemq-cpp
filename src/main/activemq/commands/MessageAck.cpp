@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/MessageAck.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for MessageAck
- *
+ *  Command code for OpenWire format for MessageAck
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 MessageAck::MessageAck() {
 
@@ -45,7 +46,6 @@ MessageAck::MessageAck() {
 
 ////////////////////////////////////////////////////////////////////////////////
 MessageAck::~MessageAck() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,13 +197,6 @@ bool MessageAck::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processMessageAck( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<ActiveMQDestination>& MessageAck::getDestination() const {
     return destination;
 }
@@ -298,3 +291,9 @@ void MessageAck::setMessageCount( int messageCount ) {
     this->messageCount = messageCount;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> MessageAck::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processMessageAck( this );
+}

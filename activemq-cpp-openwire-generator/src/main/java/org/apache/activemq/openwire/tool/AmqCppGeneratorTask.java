@@ -19,6 +19,12 @@ package org.apache.activemq.openwire.tool;
 
 import java.io.File;
 
+import org.apache.activemq.openwire.tool.commands.CommandClassGenerator;
+import org.apache.activemq.openwire.tool.makefiles.AmqCppMakefileGenerator;
+import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingClassesGenerator;
+import org.apache.activemq.openwire.tool.marshallers.AmqCppMarshallingHeadersGenerator;
+import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingClassesGenerator;
+import org.apache.activemq.openwire.tool.tests.AmqCppTestMarshallingHeadersGenerator;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -75,14 +81,7 @@ public class AmqCppGeneratorTask extends Task {
             JamService jam = jamServiceFactory.createService(params);
 
             {
-                AmqCppClassesGenerator script = new AmqCppClassesGenerator();
-                script.setJam(jam);
-                script.setTargetDir(target+"/src/main");
-                script.setOpenwireVersion(maxVersion);
-                script.run();
-            }
-            {
-                AmqCppHeadersGenerator script = new AmqCppHeadersGenerator();
+                CommandClassGenerator script = new CommandClassGenerator();
                 script.setJam(jam);
                 script.setTargetDir(target+"/src/main");
                 script.setOpenwireVersion(maxVersion);

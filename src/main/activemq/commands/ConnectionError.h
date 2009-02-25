@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_CONNECTIONERROR_H_
 #define _ACTIVEMQ_COMMANDS_CONNECTIONERROR_H_
 
@@ -23,25 +24,24 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
+#include <activemq/util/Config.h>
+#include <string>
+#include <activemq/commands/BaseCommand.h>
 #include <activemq/commands/BrokerError.h>
 #include <vector>
-#include <string>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ConnectionError
-     *
+     *  Command code for OpenWire format for ConnectionError
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ConnectionError : public BaseCommand {
@@ -50,6 +50,10 @@ namespace commands{
         decaf::lang::Pointer<BrokerError> exception;
         decaf::lang::Pointer<ConnectionId> connectionId;
 
+    public:
+
+        const static unsigned char ID_CONNECTIONERROR = 16;
+
     protected:
 
         ConnectionError( const ConnectionError& other );
@@ -57,11 +61,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_CONNECTIONERROR = 16;
-
-    public:
-
         ConnectionError();
+
         virtual ~ConnectionError();
 
         /**
@@ -100,6 +101,14 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual const decaf::lang::Pointer<BrokerError>& getException() const;
+        virtual decaf::lang::Pointer<BrokerError>& getException();
+        virtual void setException( const decaf::lang::Pointer<BrokerError>& exception );
+
+        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
+        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
+
         /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
@@ -109,14 +118,6 @@ namespace commands{
          */
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
-
-        virtual const decaf::lang::Pointer<BrokerError>& getException() const;
-        virtual decaf::lang::Pointer<BrokerError>& getException();
-        virtual void setException( const decaf::lang::Pointer<BrokerError>& exception );
-
-        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
-        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
 
     };
 

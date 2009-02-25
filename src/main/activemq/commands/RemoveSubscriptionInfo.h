@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_REMOVESUBSCRIPTIONINFO_H_
 #define _ACTIVEMQ_COMMANDS_REMOVESUBSCRIPTIONINFO_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for RemoveSubscriptionInfo
-     *
+     *  Command code for OpenWire format for RemoveSubscriptionInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API RemoveSubscriptionInfo : public BaseCommand {
@@ -50,6 +50,10 @@ namespace commands{
         std::string subcriptionName;
         std::string clientId;
 
+    public:
+
+        const static unsigned char ID_REMOVESUBSCRIPTIONINFO = 9;
+
     protected:
 
         RemoveSubscriptionInfo( const RemoveSubscriptionInfo& other );
@@ -57,11 +61,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_REMOVESUBSCRIPTIONINFO = 9;
-
-    public:
-
         RemoveSubscriptionInfo();
+
         virtual ~RemoveSubscriptionInfo();
 
         /**
@@ -100,16 +101,6 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
-
         virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
         virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
         virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
@@ -121,6 +112,16 @@ namespace commands{
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
         virtual void setClientId( const std::string& clientId );
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

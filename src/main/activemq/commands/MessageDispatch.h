@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_MESSAGEDISPATCH_H_
 #define _ACTIVEMQ_COMMANDS_MESSAGEDISPATCH_H_
 
@@ -23,26 +24,25 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/Message.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/Message.h>
+#include <activemq/commands/ConsumerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for MessageDispatch
-     *
+     *  Command code for OpenWire format for MessageDispatch
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API MessageDispatch : public BaseCommand {
@@ -53,6 +53,10 @@ namespace commands{
         decaf::lang::Pointer<Message> message;
         int redeliveryCounter;
 
+    public:
+
+        const static unsigned char ID_MESSAGEDISPATCH = 21;
+
     protected:
 
         MessageDispatch( const MessageDispatch& other );
@@ -60,11 +64,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_MESSAGEDISPATCH = 21;
-
-    public:
-
         MessageDispatch();
+
         virtual ~MessageDispatch();
 
         /**
@@ -103,6 +104,21 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
+        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
+
+        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
+        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+
+        virtual const decaf::lang::Pointer<Message>& getMessage() const;
+        virtual decaf::lang::Pointer<Message>& getMessage();
+        virtual void setMessage( const decaf::lang::Pointer<Message>& message );
+
+        virtual int getRedeliveryCounter() const;
+        virtual void setRedeliveryCounter( int redeliveryCounter );
+
         /**
          * @return an answer of true to the isMessageDispatch() query.
          */
@@ -119,21 +135,6 @@ namespace commands{
          */
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
-
-        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
-        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
-
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
-
-        virtual const decaf::lang::Pointer<Message>& getMessage() const;
-        virtual decaf::lang::Pointer<Message>& getMessage();
-        virtual void setMessage( const decaf::lang::Pointer<Message>& message );
-
-        virtual int getRedeliveryCounter() const;
-        virtual void setRedeliveryCounter( int redeliveryCounter );
 
     };
 

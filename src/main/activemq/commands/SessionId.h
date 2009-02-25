@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_SESSIONID_H_
 #define _ACTIVEMQ_COMMANDS_SESSIONID_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for SessionId
-     *
+     *  Command code for OpenWire format for SessionId
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API SessionId : public BaseDataStructure, public decaf::lang::Comparable<SessionId> {
@@ -58,7 +58,9 @@ namespace commands{
     public:
 
         SessionId();
+
         SessionId( const SessionId& other );
+
         virtual ~SessionId();
 
         /**
@@ -113,6 +115,7 @@ namespace commands{
         virtual bool operator<( const SessionId& value ) const;
 
         SessionId& operator= ( const SessionId& other );
+
     };
 
 }}

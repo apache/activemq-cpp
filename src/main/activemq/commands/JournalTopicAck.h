@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_JOURNALTOPICACK_H_
 #define _ACTIVEMQ_COMMANDS_JOURNALTOPICACK_H_
 
@@ -23,26 +24,25 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
-#include <decaf/lang/Pointer.h>
-#include <activemq/commands/TransactionId.h>
 #include <activemq/commands/MessageId.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <decaf/lang/Pointer.h>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/TransactionId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for JournalTopicAck
-     *
+     *  Command code for OpenWire format for JournalTopicAck
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API JournalTopicAck : public BaseDataStructure {
@@ -55,6 +55,10 @@ namespace commands{
         std::string clientId;
         decaf::lang::Pointer<TransactionId> transactionId;
 
+    public:
+
+        const static unsigned char ID_JOURNALTOPICACK = 50;
+
     protected:
 
         JournalTopicAck( const JournalTopicAck& other );
@@ -62,11 +66,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_JOURNALTOPICACK = 50;
-
-    public:
-
         JournalTopicAck();
+
         virtual ~JournalTopicAck();
 
         /**

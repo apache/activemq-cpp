@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/KeepAliveInfo.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
+#include <activemq/commands/KeepAliveInfo.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for KeepAliveInfo
- *
+ *  Command code for OpenWire format for KeepAliveInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 KeepAliveInfo::KeepAliveInfo() {
 
@@ -43,7 +44,6 @@ KeepAliveInfo::KeepAliveInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 KeepAliveInfo::~KeepAliveInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,4 +120,3 @@ decaf::lang::Pointer<commands::Command> KeepAliveInfo::visit( activemq::state::C
 
     return visitor->processKeepAliveInfo( this );
 }
-

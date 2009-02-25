@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_REPLAYCOMMAND_H_
 #define _ACTIVEMQ_COMMANDS_REPLAYCOMMAND_H_
 
@@ -23,23 +24,22 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ReplayCommand
-     *
+     *  Command code for OpenWire format for ReplayCommand
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ReplayCommand : public BaseCommand {
@@ -48,6 +48,10 @@ namespace commands{
         int firstNakNumber;
         int lastNakNumber;
 
+    public:
+
+        const static unsigned char ID_REPLAYCOMMAND = 65;
+
     protected:
 
         ReplayCommand( const ReplayCommand& other );
@@ -55,11 +59,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_REPLAYCOMMAND = 65;
-
-    public:
-
         ReplayCommand();
+
         virtual ~ReplayCommand();
 
         /**
@@ -98,6 +99,12 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual int getFirstNakNumber() const;
+        virtual void setFirstNakNumber( int firstNakNumber );
+
+        virtual int getLastNakNumber() const;
+        virtual void setLastNakNumber( int lastNakNumber );
+
         /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
@@ -107,12 +114,6 @@ namespace commands{
          */
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
-
-        virtual int getFirstNakNumber() const;
-        virtual void setFirstNakNumber( int firstNakNumber );
-
-        virtual int getLastNakNumber() const;
-        virtual void setLastNakNumber( int lastNakNumber );
 
     };
 

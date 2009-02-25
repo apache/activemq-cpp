@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_EXCEPTIONRESPONSE_H_
 #define _ACTIVEMQ_COMMANDS_EXCEPTIONRESPONSE_H_
 
@@ -23,30 +24,33 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/Response.h>
 #include <decaf/lang/Pointer.h>
+#include <activemq/commands/Response.h>
+#include <activemq/util/Config.h>
+#include <string>
 #include <activemq/commands/BrokerError.h>
 #include <vector>
-#include <string>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ExceptionResponse
-     *
+     *  Command code for OpenWire format for ExceptionResponse
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ExceptionResponse : public Response {
     protected:
 
         decaf::lang::Pointer<BrokerError> exception;
+
+    public:
+
+        const static unsigned char ID_EXCEPTIONRESPONSE = 31;
 
     protected:
 
@@ -55,11 +59,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_EXCEPTIONRESPONSE = 31;
-
-    public:
-
         ExceptionResponse();
+
         virtual ~ExceptionResponse();
 
         /**

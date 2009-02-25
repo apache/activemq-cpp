@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_LOCALTRANSACTIONID_H_
 #define _ACTIVEMQ_COMMANDS_LOCALTRANSACTIONID_H_
 
@@ -23,25 +24,24 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/TransactionId.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
 #include <activemq/commands/ConnectionId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <vector>
+#include <activemq/commands/TransactionId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for LocalTransactionId
-     *
+     *  Command code for OpenWire format for LocalTransactionId
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API LocalTransactionId : public TransactionId, public decaf::lang::Comparable<LocalTransactionId> {
@@ -59,7 +59,9 @@ namespace commands{
     public:
 
         LocalTransactionId();
+
         LocalTransactionId( const LocalTransactionId& other );
+
         virtual ~LocalTransactionId();
 
         /**
@@ -114,6 +116,7 @@ namespace commands{
         virtual bool operator<( const LocalTransactionId& value ) const;
 
         LocalTransactionId& operator= ( const LocalTransactionId& other );
+
     };
 
 }}

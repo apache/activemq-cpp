@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/RemoveSubscriptionInfo.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for RemoveSubscriptionInfo
- *
+ *  Command code for OpenWire format for RemoveSubscriptionInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo::RemoveSubscriptionInfo() {
 
@@ -45,7 +46,6 @@ RemoveSubscriptionInfo::RemoveSubscriptionInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 RemoveSubscriptionInfo::~RemoveSubscriptionInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,13 +141,6 @@ bool RemoveSubscriptionInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processRemoveSubscriptionInfo( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<ConnectionId>& RemoveSubscriptionInfo::getConnectionId() const {
     return connectionId;
 }
@@ -192,3 +185,9 @@ void RemoveSubscriptionInfo::setClientId( const std::string& clientId ) {
     this->clientId = clientId;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processRemoveSubscriptionInfo( this );
+}

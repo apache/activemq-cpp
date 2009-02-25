@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_PRODUCERINFO_H_
 #define _ACTIVEMQ_COMMANDS_PRODUCERINFO_H_
 
@@ -23,26 +24,25 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
-#include <activemq/commands/ProducerId.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <decaf/lang/Pointer.h>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/ProducerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ProducerInfo
-     *
+     *  Command code for OpenWire format for ProducerInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ProducerInfo : public BaseCommand {
@@ -54,6 +54,10 @@ namespace commands{
         bool dispatchAsync;
         int windowSize;
 
+    public:
+
+        const static unsigned char ID_PRODUCERINFO = 6;
+
     protected:
 
         ProducerInfo( const ProducerInfo& other );
@@ -61,11 +65,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_PRODUCERINFO = 6;
-
-    public:
-
         ProducerInfo();
+
         virtual ~ProducerInfo();
 
         /**
@@ -104,16 +105,6 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
-
         virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
         virtual decaf::lang::Pointer<ProducerId>& getProducerId();
         virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
@@ -131,6 +122,16 @@ namespace commands{
 
         virtual int getWindowSize() const;
         virtual void setWindowSize( int windowSize );
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

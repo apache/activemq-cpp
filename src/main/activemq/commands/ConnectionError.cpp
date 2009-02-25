@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConnectionError.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for ConnectionError
- *
+ *  Command code for OpenWire format for ConnectionError
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError::ConnectionError() {
 
@@ -43,7 +44,6 @@ ConnectionError::ConnectionError() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionError::~ConnectionError() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,13 +143,6 @@ bool ConnectionError::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processConnectionError( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<BrokerError>& ConnectionError::getException() const {
     return exception;
 }
@@ -179,3 +172,9 @@ void ConnectionError::setConnectionId( const decaf::lang::Pointer<ConnectionId>&
     this->connectionId = connectionId;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> ConnectionError::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processConnectionError( this );
+}

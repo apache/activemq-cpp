@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/BrokerInfo.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/BrokerInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for BrokerInfo
- *
+ *  Command code for OpenWire format for BrokerInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo::BrokerInfo() {
 
@@ -53,7 +54,6 @@ BrokerInfo::BrokerInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 BrokerInfo::~BrokerInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -207,13 +207,6 @@ bool BrokerInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processBrokerInfo( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<BrokerId>& BrokerInfo::getBrokerId() const {
     return brokerId;
 }
@@ -363,3 +356,9 @@ void BrokerInfo::setNetworkProperties( const std::string& networkProperties ) {
     this->networkProperties = networkProperties;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> BrokerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processBrokerInfo( this );
+}

@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/DestinationInfo.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/DestinationInfo.h>
 
 using namespace std;
 using namespace activemq;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for DestinationInfo
- *
+ *  Command code for OpenWire format for DestinationInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 DestinationInfo::DestinationInfo() {
 
@@ -45,7 +46,6 @@ DestinationInfo::DestinationInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 DestinationInfo::~DestinationInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,13 +173,6 @@ bool DestinationInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processDestinationInfo( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<ConnectionId>& DestinationInfo::getConnectionId() const {
     return connectionId;
 }
@@ -244,3 +237,9 @@ void DestinationInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<Bro
     this->brokerPath = brokerPath;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processDestinationInfo( this );
+}

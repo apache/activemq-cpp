@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_MESSAGEID_H_
 #define _ACTIVEMQ_COMMANDS_MESSAGEID_H_
 
@@ -23,25 +24,24 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
-#include <activemq/commands/ProducerId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
+#include <activemq/commands/ProducerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for MessageId
-     *
+     *  Command code for OpenWire format for MessageId
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API MessageId : public BaseDataStructure, public decaf::lang::Comparable<MessageId> {
@@ -60,7 +60,9 @@ namespace commands{
     public:
 
         MessageId();
+
         MessageId( const MessageId& other );
+
         virtual ~MessageId();
 
         /**
@@ -118,6 +120,7 @@ namespace commands{
         virtual bool operator<( const MessageId& value ) const;
 
         MessageId& operator= ( const MessageId& other );
+
     };
 
 }}

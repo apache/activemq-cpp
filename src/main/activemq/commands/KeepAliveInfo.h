@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_KEEPALIVEINFO_H_
 #define _ACTIVEMQ_COMMANDS_KEEPALIVEINFO_H_
 
@@ -23,28 +24,31 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for KeepAliveInfo
-     *
+     *  Command code for OpenWire format for KeepAliveInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API KeepAliveInfo : public BaseCommand {
     protected:
 
+
+    public:
+
+        const static unsigned char ID_KEEPALIVEINFO = 10;
 
     protected:
 
@@ -53,11 +57,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_KEEPALIVEINFO = 10;
-
-    public:
-
         KeepAliveInfo();
+
         virtual ~KeepAliveInfo();
 
         /**

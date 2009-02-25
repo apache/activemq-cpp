@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/Message.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
-#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 #include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <activemq/state/CommandVisitor.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/Message.h>
+#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
 
 using namespace std;
 using namespace activemq;
@@ -30,14 +31,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for Message
- *
+ *  Command code for OpenWire format for Message
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 Message::Message() {
 
@@ -64,7 +65,6 @@ Message::Message() {
 
 ////////////////////////////////////////////////////////////////////////////////
 Message::~Message() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,15 +96,11 @@ void Message::copyDataStructure( const DataStructure* src ) {
     // Copy the data of the base class or classes
     BaseCommand::copyDataStructure( src );
 
-    this->properties.copy( srcPtr->properties );
-    this->setAckHandler( srcPtr->getAckHandler() );
     this->setProducerId( srcPtr->getProducerId() );
     this->setDestination( srcPtr->getDestination() );
     this->setTransactionId( srcPtr->getTransactionId() );
     this->setOriginalDestination( srcPtr->getOriginalDestination() );
-    if( this->getMessageId() != NULL ) {
-        this->setMessageId( Pointer<MessageId>( new MessageId( *( srcPtr->getMessageId() ) ) ) );
-    }
+    this->setMessageId( srcPtr->getMessageId() );
     this->setOriginalTransactionId( srcPtr->getOriginalTransactionId() );
     this->setGroupID( srcPtr->getGroupID() );
     this->setGroupSequence( srcPtr->getGroupSequence() );
@@ -129,6 +125,10 @@ void Message::copyDataStructure( const DataStructure* src ) {
     this->setCluster( srcPtr->getCluster() );
     this->setBrokerInTime( srcPtr->getBrokerInTime() );
     this->setBrokerOutTime( srcPtr->getBrokerOutTime() );
+    this->properties.copy( srcPtr->properties );
+    this->setAckHandler( srcPtr->getAckHandler() );
+    this->setReadOnlyBody( srcPtr->isReadOnlyBody() );
+    this->setReadOnlyProperties( srcPtr->isReadOnlyProperties() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,10 +143,6 @@ std::string Message::toString() const {
 
     stream << "Begin Class = Message" << std::endl;
     stream << " Value of Message::ID_MESSAGE = 0" << std::endl;
-    stream << " Value of ackHandler = " << ackHandler << std::endl;
-    stream << " Value of properties = " << this->properties.toString() << std::endl;
-    stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
-    stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
     stream << " Value of ProducerId is Below:" << std::endl;
     if( this->getProducerId() != NULL ) {
         stream << this->getProducerId()->toString() << std::endl;
@@ -239,6 +235,10 @@ std::string Message::toString() const {
     }
     stream << " Value of BrokerInTime = " << this->getBrokerInTime() << std::endl;
     stream << " Value of BrokerOutTime = " << this->getBrokerOutTime() << std::endl;
+    stream << " Value of ackHandler = " << ackHandler << std::endl;
+    stream << " Value of properties = " << this->properties.toString() << std::endl;
+    stream << " Value of readOnlyBody = " << this->readOnlyBody << std::endl;
+    stream << " Value of readOnlyProperties = " << this->readOnlyBody << std::endl;
     stream << BaseCommand::toString();
     stream << "End Class = Message" << std::endl;
 
@@ -255,14 +255,6 @@ bool Message::equals( const DataStructure* value ) const {
     const Message* valuePtr = dynamic_cast<const Message*>( value );
 
     if( valuePtr == NULL || value == NULL ) {
-        return false;
-    }
-
-    if( ackHandler != valuePtr->getAckHandler() ){
-        return false;
-    }
-
-    if( !properties.equals( valuePtr->properties ) ) {
         return false;
     }
 
@@ -405,28 +397,26 @@ bool Message::equals( const DataStructure* value ) const {
     if( this->getBrokerOutTime() != valuePtr->getBrokerOutTime() ) {
         return false;
     }
+    if( ackHandler != valuePtr->getAckHandler() ){
+        return false;
+    }
+
+    if( !properties.equals( valuePtr->properties ) ) {
+        return false;
+    }
+
+    if( readOnlyBody != valuePtr->isReadOnlyBody() ){
+        return false;
+    }
+
+    if( readOnlyProperties != valuePtr->isReadOnlyProperties() ){
+        return false;
+    }
+
     if( !BaseCommand::equals( value ) ) {
         return false;
     }
     return true;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-unsigned int Message::getSize() const {
-
-    unsigned int size = DEFAULT_MESSAGE_SIZE;
-
-    size += (unsigned int)this->getContent().size();
-    size += (unsigned int)this->getMarshalledProperties().size();
-
-    return size;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processMessage( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -805,34 +795,50 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-    void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-        throw ( decaf::io::IOException ) {
+decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
 
-        try{
+    return visitor->processMessage( this );
+}
+////////////////////////////////////////////////////////////////////////////////
+unsigned int Message::getSize() const {
 
-            marshalledProperties.clear();
-            if( !properties.isEmpty() )
-            {
-                wireformat::openwire::marshal::PrimitiveMapMarshaller::marshal(
-                    &properties, marshalledProperties );
-            }
-        }
-        AMQ_CATCH_RETHROW( decaf::io::IOException )
-        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-        AMQ_CATCHALL_THROW( decaf::io::IOException )
-    }
+    unsigned int size = DEFAULT_MESSAGE_SIZE;
+
+    size += (unsigned int)this->getContent().size();
+    size += (unsigned int)this->getMarshalledProperties().size();
+
+    return size;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-    void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
-        throw ( decaf::io::IOException ) {
+void Message::beforeMarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+    throw ( decaf::io::IOException ) {
 
-        try{
+    try{
 
-            wireformat::openwire::marshal::PrimitiveMapMarshaller::unmarshal(
+        marshalledProperties.clear();
+        if( !properties.isEmpty() ) {
+            wireformat::openwire::marshal::PrimitiveMapMarshaller::marshal(
                 &properties, marshalledProperties );
         }
-        AMQ_CATCH_RETHROW( decaf::io::IOException )
-        AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
-        AMQ_CATCHALL_THROW( decaf::io::IOException )
     }
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void Message::afterUnmarshal( wireformat::WireFormat* wireFormat AMQCPP_UNUSED )
+    throw ( decaf::io::IOException ) {
+
+    try{
+
+        wireformat::openwire::marshal::PrimitiveMapMarshaller::unmarshal(
+            &properties, marshalledProperties );
+    }
+    AMQ_CATCH_RETHROW( decaf::io::IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, decaf::io::IOException )
+    AMQ_CATCHALL_THROW( decaf::io::IOException )
+}
 

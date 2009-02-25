@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_MESSAGE_H_
 #define _ACTIVEMQ_COMMANDS_MESSAGE_H_
 
@@ -23,20 +24,20 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
-#include <activemq/util/PrimitiveMap.h>
+#include <activemq/commands/MessageId.h>
+#include <activemq/commands/DataStructure.h>
 #include <decaf/util/Date.h>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ProducerId.h>
+#include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
+#include <string>
+#include <activemq/util/Config.h>
+#include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/MessageId.h>
-#include <activemq/commands/ProducerId.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/commands/DataStructure.h>
-#include <vector>
-#include <string>
 
 namespace activemq{
 namespace core{
@@ -46,12 +47,11 @@ namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for Message
-     *
+     *  Command code for OpenWire format for Message
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API Message : public BaseCommand {
@@ -74,6 +74,8 @@ namespace commands{
     protected:
 
         static const unsigned int DEFAULT_MESSAGE_SIZE = 1024;
+
+    protected:
 
         decaf::lang::Pointer<ProducerId> producerId;
         decaf::lang::Pointer<ActiveMQDestination> destination;
@@ -105,6 +107,10 @@ namespace commands{
         long long brokerInTime;
         long long brokerOutTime;
 
+    public:
+
+        const static unsigned char ID_MESSAGE = 0;
+
     protected:
 
         Message( const Message& other );
@@ -112,11 +118,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_MESSAGE = 0;
-
-    public:
-
         Message();
+
         virtual ~Message();
 
         /**
@@ -154,13 +157,6 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
-
-        /**
-         * @return an answer of true to the isMessage() query.
-         */
-        virtual bool isMessage() const {
-            return true;
-        }
 
         /**
          * Handles the marshaling of the objects properties into the
@@ -271,16 +267,6 @@ namespace commands{
             this->readOnlyBody = value;
         }
 
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
-
         virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
         virtual decaf::lang::Pointer<ProducerId>& getProducerId();
         virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
@@ -384,6 +370,16 @@ namespace commands{
 
         virtual long long getBrokerOutTime() const;
         virtual void setBrokerOutTime( long long brokerOutTime );
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

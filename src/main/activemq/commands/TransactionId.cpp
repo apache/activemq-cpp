@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/TransactionId.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <apr_strings.h>
+#include <activemq/state/CommandVisitor.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/TransactionId.h>
 
 using namespace std;
 using namespace activemq;
@@ -29,14 +30,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for TransactionId
- *
+ *  Command code for OpenWire format for TransactionId
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 TransactionId::TransactionId() {
 
@@ -49,7 +50,6 @@ TransactionId::TransactionId( const TransactionId& other ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 TransactionId::~TransactionId() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +144,7 @@ bool TransactionId::operator==( const TransactionId& value ) const {
 bool TransactionId::operator<( const TransactionId& value ) const {
     return this->compareTo( value ) < 0;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 TransactionId& TransactionId::operator= ( const TransactionId& other ) {
     this->copyDataStructure( &other );

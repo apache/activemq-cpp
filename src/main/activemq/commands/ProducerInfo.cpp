@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ProducerInfo.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for ProducerInfo
- *
+ *  Command code for OpenWire format for ProducerInfo
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo::ProducerInfo() {
 
@@ -45,7 +46,6 @@ ProducerInfo::ProducerInfo() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerInfo::~ProducerInfo() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,13 +173,6 @@ bool ProducerInfo::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processProducerInfo( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<ProducerId>& ProducerInfo::getProducerId() const {
     return producerId;
 }
@@ -244,3 +237,9 @@ void ProducerInfo::setWindowSize( int windowSize ) {
     this->windowSize = windowSize;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> ProducerInfo::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processProducerInfo( this );
+}

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_JOURNALQUEUEACK_H_
 #define _ACTIVEMQ_COMMANDS_JOURNALQUEUEACK_H_
 
@@ -23,25 +24,24 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
 #include <activemq/commands/MessageAck.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for JournalQueueAck
-     *
+     *  Command code for OpenWire format for JournalQueueAck
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API JournalQueueAck : public BaseDataStructure {
@@ -50,6 +50,10 @@ namespace commands{
         decaf::lang::Pointer<ActiveMQDestination> destination;
         decaf::lang::Pointer<MessageAck> messageAck;
 
+    public:
+
+        const static unsigned char ID_JOURNALQUEUEACK = 52;
+
     protected:
 
         JournalQueueAck( const JournalQueueAck& other );
@@ -57,11 +61,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_JOURNALQUEUEACK = 52;
-
-    public:
-
         JournalQueueAck();
+
         virtual ~JournalQueueAck();
 
         /**

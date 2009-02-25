@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_BROKERINFO_H_
 #define _ACTIVEMQ_COMMANDS_BROKERINFO_H_
 
@@ -23,25 +24,24 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/Pointer.h>
 #include <activemq/commands/BrokerId.h>
-#include <activemq/commands/BrokerInfo.h>
-#include <vector>
+#include <decaf/lang/Pointer.h>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/BrokerInfo.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for BrokerInfo
-     *
+     *  Command code for OpenWire format for BrokerInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API BrokerInfo : public BaseCommand {
@@ -60,6 +60,10 @@ namespace commands{
         std::string brokerUploadUrl;
         std::string networkProperties;
 
+    public:
+
+        const static unsigned char ID_BROKERINFO = 2;
+
     protected:
 
         BrokerInfo( const BrokerInfo& other );
@@ -67,11 +71,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_BROKERINFO = 2;
-
-    public:
-
         BrokerInfo();
+
         virtual ~BrokerInfo();
 
         /**
@@ -109,23 +110,6 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
-
-        /**
-         * @return an answer of true to the isBrokerInfo() query.
-         */
-        virtual bool isBrokerInfo() const {
-            return true;
-        }
-
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
 
         virtual const decaf::lang::Pointer<BrokerId>& getBrokerId() const;
         virtual decaf::lang::Pointer<BrokerId>& getBrokerId();
@@ -168,6 +152,23 @@ namespace commands{
         virtual const std::string& getNetworkProperties() const;
         virtual std::string& getNetworkProperties();
         virtual void setNetworkProperties( const std::string& networkProperties );
+
+        /**
+         * @return an answer of true to the isBrokerInfo() query.
+         */
+        virtual bool isBrokerInfo() const {
+            return true;
+        }
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

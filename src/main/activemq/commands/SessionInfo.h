@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_SESSIONINFO_H_
 #define _ACTIVEMQ_COMMANDS_SESSIONINFO_H_
 
@@ -23,30 +24,33 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/SessionId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/SessionId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for SessionInfo
-     *
+     *  Command code for OpenWire format for SessionInfo
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API SessionInfo : public BaseCommand {
     protected:
 
         decaf::lang::Pointer<SessionId> sessionId;
+
+    public:
+
+        const static unsigned char ID_SESSIONINFO = 4;
 
     protected:
 
@@ -55,11 +59,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_SESSIONINFO = 4;
-
-    public:
-
         SessionInfo();
+
         virtual ~SessionInfo();
 
         /**
@@ -98,6 +99,10 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual const decaf::lang::Pointer<SessionId>& getSessionId() const;
+        virtual decaf::lang::Pointer<SessionId>& getSessionId();
+        virtual void setSessionId( const decaf::lang::Pointer<SessionId>& sessionId );
+
         /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
@@ -107,10 +112,6 @@ namespace commands{
          */
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
-
-        virtual const decaf::lang::Pointer<SessionId>& getSessionId() const;
-        virtual decaf::lang::Pointer<SessionId>& getSessionId();
-        virtual void setSessionId( const decaf::lang::Pointer<SessionId>& sessionId );
 
     };
 

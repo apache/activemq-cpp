@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_MESSAGEACK_H_
 #define _ACTIVEMQ_COMMANDS_MESSAGEACK_H_
 
@@ -23,27 +24,26 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
-#include <decaf/lang/Pointer.h>
-#include <activemq/commands/TransactionId.h>
 #include <activemq/commands/MessageId.h>
-#include <activemq/commands/ConsumerId.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <vector>
+#include <decaf/lang/Pointer.h>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/TransactionId.h>
+#include <activemq/commands/ConsumerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for MessageAck
-     *
+     *  Command code for OpenWire format for MessageAck
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API MessageAck : public BaseCommand {
@@ -57,6 +57,10 @@ namespace commands{
         decaf::lang::Pointer<MessageId> lastMessageId;
         int messageCount;
 
+    public:
+
+        const static unsigned char ID_MESSAGEACK = 22;
+
     protected:
 
         MessageAck( const MessageAck& other );
@@ -64,11 +68,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_MESSAGEACK = 22;
-
-    public:
-
         MessageAck();
+
         virtual ~MessageAck();
 
         /**
@@ -107,23 +108,6 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * @return an answer of true to the isMessageAck() query.
-         */
-        virtual bool isMessageAck() const {
-            return true;
-        }
-
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
-
         virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
         virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
         virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
@@ -149,6 +133,23 @@ namespace commands{
 
         virtual int getMessageCount() const;
         virtual void setMessageCount( int messageCount );
+
+        /**
+         * @return an answer of true to the isMessageAck() query.
+         */
+        virtual bool isMessageAck() const {
+            return true;
+        }
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

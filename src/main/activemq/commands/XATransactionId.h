@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_XATRANSACTIONID_H_
 #define _ACTIVEMQ_COMMANDS_XATRANSACTIONID_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/TransactionId.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Comparable.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <vector>
+#include <activemq/commands/TransactionId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for XATransactionId
-     *
+     *  Command code for OpenWire format for XATransactionId
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API XATransactionId : public TransactionId, public decaf::lang::Comparable<XATransactionId> {
@@ -59,7 +59,9 @@ namespace commands{
     public:
 
         XATransactionId();
+
         XATransactionId( const XATransactionId& other );
+
         virtual ~XATransactionId();
 
         /**
@@ -118,6 +120,7 @@ namespace commands{
         virtual bool operator<( const XATransactionId& value ) const;
 
         XATransactionId& operator= ( const XATransactionId& other );
+
     };
 
 }}

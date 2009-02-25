@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.activemq.openwire.tool;
+package org.apache.activemq.openwire.tool.marshallers;
 
 import org.codehaus.jam.JAnnotation;
 import org.codehaus.jam.JAnnotationValue;

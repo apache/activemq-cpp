@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <activemq/commands/ProducerId.h>
-#include <activemq/state/CommandVisitor.h>
+
 #include <activemq/exceptions/ActiveMQException.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <apr_strings.h>
+#include <activemq/state/CommandVisitor.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/ProducerId.h>
 
 using namespace std;
 using namespace activemq;
@@ -29,14 +30,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for ProducerId
- *
+ *  Command code for OpenWire format for ProducerId
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId::ProducerId() {
 
@@ -52,7 +53,6 @@ ProducerId::ProducerId( const ProducerId& other ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId::~ProducerId() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +214,7 @@ bool ProducerId::operator==( const ProducerId& value ) const {
 bool ProducerId::operator<( const ProducerId& value ) const {
     return this->compareTo( value ) < 0;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 ProducerId& ProducerId::operator= ( const ProducerId& other ) {
     this->copyDataStructure( &other );

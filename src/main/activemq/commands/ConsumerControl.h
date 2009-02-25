@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_CONSUMERCONTROL_H_
 #define _ACTIVEMQ_COMMANDS_CONSUMERCONTROL_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/ConsumerId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ConsumerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ConsumerControl
-     *
+     *  Command code for OpenWire format for ConsumerControl
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ConsumerControl : public BaseCommand {
@@ -53,6 +53,10 @@ namespace commands{
         bool start;
         bool stop;
 
+    public:
+
+        const static unsigned char ID_CONSUMERCONTROL = 17;
+
     protected:
 
         ConsumerControl( const ConsumerControl& other );
@@ -60,11 +64,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_CONSUMERCONTROL = 17;
-
-    public:
-
         ConsumerControl();
+
         virtual ~ConsumerControl();
 
         /**
@@ -103,16 +104,6 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        /**
-         * Allows a Visitor to visit this command and return a response to the
-         * command based on the command type being visited.  The command will call
-         * the proper processXXX method in the visitor.
-         * 
-         * @return a Response to the visitor being called or NULL if no response.
-         */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
-            throw( exceptions::ActiveMQException );
-
         virtual bool isClose() const;
         virtual void setClose( bool close );
 
@@ -131,6 +122,16 @@ namespace commands{
 
         virtual bool isStop() const;
         virtual void setStop( bool stop );
+
+        /**
+         * Allows a Visitor to visit this command and return a response to the
+         * command based on the command type being visited.  The command will call
+         * the proper processXXX method in the visitor.
+         * 
+         * @return a Response to the visitor being called or NULL if no response.
+         */
+        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+            throw( exceptions::ActiveMQException );
 
     };
 

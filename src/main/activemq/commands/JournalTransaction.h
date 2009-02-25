@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_JOURNALTRANSACTION_H_
 #define _ACTIVEMQ_COMMANDS_JOURNALTRANSACTION_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseDataStructure.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/TransactionId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseDataStructure.h>
+#include <vector>
+#include <activemq/commands/TransactionId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for JournalTransaction
-     *
+     *  Command code for OpenWire format for JournalTransaction
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API JournalTransaction : public BaseDataStructure {
@@ -50,6 +50,10 @@ namespace commands{
         unsigned char type;
         bool wasPrepared;
 
+    public:
+
+        const static unsigned char ID_JOURNALTRANSACTION = 54;
+
     protected:
 
         JournalTransaction( const JournalTransaction& other );
@@ -57,11 +61,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_JOURNALTRANSACTION = 54;
-
-    public:
-
         JournalTransaction();
+
         virtual ~JournalTransaction();
 
         /**

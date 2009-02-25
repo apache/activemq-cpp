@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ProducerAck.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -28,14 +29,14 @@ using namespace decaf::lang::exceptions;
 
 /*
  *
- *  Command and marshaling code for OpenWire format for ProducerAck
- *
+ *  Command code for OpenWire format for ProducerAck
  *
  *  NOTE!: This file is auto generated - do not modify!
  *         if you need to make a change, please see the Java Classes in the
- *         activemq-core module
+ *         activemq-cpp-openwire-generator module
  *
  */
+
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck::ProducerAck() {
 
@@ -44,7 +45,6 @@ ProducerAck::ProducerAck() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ProducerAck::~ProducerAck() {
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,13 +135,6 @@ bool ProducerAck::equals( const DataStructure* value ) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Command> ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
-
-    return visitor->processProducerAck( this );
-}
-
-////////////////////////////////////////////////////////////////////////////////
 const decaf::lang::Pointer<ProducerId>& ProducerAck::getProducerId() const {
     return producerId;
 }
@@ -166,3 +159,9 @@ void ProducerAck::setSize( int size ) {
     this->size = size;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+decaf::lang::Pointer<commands::Command> ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
+    throw( exceptions::ActiveMQException ) {
+
+    return visitor->processProducerAck( this );
+}

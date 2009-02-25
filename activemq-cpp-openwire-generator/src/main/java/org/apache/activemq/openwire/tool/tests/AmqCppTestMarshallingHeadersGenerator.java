@@ -14,11 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.activemq.openwire.tool;
+package org.apache.activemq.openwire.tool.tests;
 
 import java.io.File;
 import java.io.PrintWriter;
 
+import org.apache.activemq.openwire.tool.JavaMarshallingGenerator;
 import org.codehaus.jam.JClass;
 
 /**

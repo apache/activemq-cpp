@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+
 #ifndef _ACTIVEMQ_COMMANDS_PRODUCERACK_H_
 #define _ACTIVEMQ_COMMANDS_PRODUCERACK_H_
 
@@ -23,24 +24,23 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/util/Config.h>
-#include <activemq/commands/BaseCommand.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/ProducerId.h>
-#include <vector>
+#include <activemq/util/Config.h>
 #include <string>
+#include <activemq/commands/BaseCommand.h>
+#include <vector>
+#include <activemq/commands/ProducerId.h>
 
 namespace activemq{
 namespace commands{
 
     /*
      *
-     *  Command and marshaling code for OpenWire format for ProducerAck
-     *
+     *  Command code for OpenWire format for ProducerAck
      *
      *  NOTE!: This file is auto generated - do not modify!
      *         if you need to make a change, please see the Java Classes
-     *         in the activemq-openwire-generator module
+     *         in the activemq-cpp-openwire-generator module
      *
      */
     class AMQCPP_API ProducerAck : public BaseCommand {
@@ -49,6 +49,10 @@ namespace commands{
         decaf::lang::Pointer<ProducerId> producerId;
         int size;
 
+    public:
+
+        const static unsigned char ID_PRODUCERACK = 19;
+
     protected:
 
         ProducerAck( const ProducerAck& other );
@@ -56,11 +60,8 @@ namespace commands{
 
     public:
 
-        const static unsigned char ID_PRODUCERACK = 19;
-
-    public:
-
         ProducerAck();
+
         virtual ~ProducerAck();
 
         /**
@@ -99,6 +100,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
+        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
+        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
+
+        virtual int getSize() const;
+        virtual void setSize( int size );
+
         /**
          * @return an answer of true to the isProducerAck() query.
          */
@@ -115,13 +123,6 @@ namespace commands{
          */
         virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
-
-        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
-        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
-
-        virtual int getSize() const;
-        virtual void setSize( int size );
 
     };
 
