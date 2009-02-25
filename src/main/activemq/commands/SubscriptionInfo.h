@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_SUBSCRIPTIONINFO_H_
 #define _ACTIVEMQ_COMMANDS_SUBSCRIPTIONINFO_H_
 
@@ -24,17 +23,17 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <decaf/lang/Pointer.h>
-#include <activemq/util/Config.h>
-#include <string>
-#include <activemq/commands/BaseDataStructure.h>
-#include <vector>
 #include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/BaseDataStructure.h>
+#include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
+#include <string>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

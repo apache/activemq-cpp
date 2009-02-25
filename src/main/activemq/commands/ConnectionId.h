@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_CONNECTIONID_H_
 #define _ACTIVEMQ_COMMANDS_CONNECTIONID_H_
 
@@ -24,17 +23,21 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <decaf/lang/Pointer.h>
-#include <decaf/lang/Comparable.h>
-#include <activemq/util/Config.h>
-#include <string>
 #include <activemq/commands/BaseDataStructure.h>
+#include <activemq/util/Config.h>
+#include <decaf/lang/Comparable.h>
+#include <decaf/lang/Pointer.h>
+#include <string>
 #include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    class SessionId;
+    class ProducerId;
+    class ConsumerId;
+
+    using decaf::lang::Pointer;
 
     /*
      *
@@ -61,6 +64,12 @@ namespace commands{
         ConnectionId();
 
         ConnectionId( const ConnectionId& other );
+
+        ConnectionId( const SessionId* sessionId );
+
+        ConnectionId( const ProducerId* producerId );
+
+        ConnectionId( const ConsumerId* consumerId );
 
         virtual ~ConnectionId();
 

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_EXCEPTIONRESPONSE_H_
 #define _ACTIVEMQ_COMMANDS_EXCEPTIONRESPONSE_H_
 
@@ -24,17 +23,17 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <decaf/lang/Pointer.h>
+#include <activemq/commands/BrokerError.h>
 #include <activemq/commands/Response.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
 #include <string>
-#include <activemq/commands/BrokerError.h>
 #include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

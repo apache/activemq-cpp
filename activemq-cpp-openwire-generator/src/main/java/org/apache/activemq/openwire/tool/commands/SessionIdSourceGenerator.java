@@ -17,14 +17,48 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
+import java.util.Set;
 
 public class SessionIdSourceGenerator extends CommandSourceGenerator {
+
+    protected void populateIncludeFilesSet() {
+        Set<String> includes = getIncludeFiles();
+        includes.add("<activemq/commands/ProducerId.h>");
+        includes.add("<activemq/commands/ConsumerId.h>");
+        includes.add("<activemq/commands/ConnectionId.h>");
+
+        super.populateIncludeFilesSet();
+    }
+
+    protected void generateAdditionalConstructors( PrintWriter out ) {
+
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("SessionId::SessionId( const ConnectionId* connectionId, long long sessionId ) {");
+        out.println("    this->connectionId = connectionId->getValue();");
+        out.println("    this->value = sessionId;");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("SessionId::SessionId( const ProducerId* producerId ) {");
+        out.println("    this->connectionId = producerId->getConnectionId();");
+        out.println("    this->value = producerId->getSessionId();");
+        out.println("}");
+        out.println("");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("SessionId::SessionId( const ConsumerId* consumerId ) {");
+        out.println("    this->connectionId = consumerId->getConnectionId();");
+        out.println("    this->value = consumerId->getSessionId();");
+        out.println("}");
+        out.println("");
+
+        super.generateAdditionalConstructors(out);
+    }
 
     protected void generateAdditionalMethods( PrintWriter out ) {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("const Pointer<ConnectionId>& SessionId::getParentId() const {");
         out.println("    if( this->parentId == NULL ) {");
-        out.println("        this->parentId.reset( new ConnectionId( *this ) );");
+        out.println("        this->parentId.reset( new ConnectionId( this ) );");
         out.println("    }");
         out.println("    return this->parentId;");
         out.println("}");

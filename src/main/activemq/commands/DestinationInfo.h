@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_DESTINATIONINFO_H_
 #define _ACTIVEMQ_COMMANDS_DESTINATIONINFO_H_
 
@@ -24,19 +23,19 @@
 #pragma warning( disable : 4290 )
 #endif
 
+#include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/BaseCommand.h>
 #include <activemq/commands/BrokerId.h>
-#include <decaf/lang/Pointer.h>
 #include <activemq/commands/ConnectionId.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
 #include <string>
-#include <activemq/commands/BaseCommand.h>
 #include <vector>
-#include <activemq/commands/ActiveMQDestination.h>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

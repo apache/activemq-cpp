@@ -43,7 +43,7 @@ public class ConsumerIdHeaderGenerator extends CommandHeaderGenerator {
 
         out.println("    private:");
         out.println("");
-        out.println("        Pointer<SessionId> parentId;");
+        out.println("        mutable Pointer<SessionId> parentId;");
         out.println("");
 
         super.generateProperties(out);

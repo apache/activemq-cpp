@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
+#include <activemq/commands/SessionInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
-#include <activemq/commands/SessionInfo.h>
 
 using namespace std;
 using namespace activemq;

@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
-#include <activemq/state/CommandVisitor.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/commands/Message.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
 #include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/PrimitiveMapMarshaller.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;

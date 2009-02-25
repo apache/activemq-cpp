@@ -15,11 +15,14 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
-#include <apr_strings.h>
-#include <activemq/state/CommandVisitor.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/commands/ConnectionId.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/ProducerId.h>
 #include <activemq/commands/SessionId.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
+#include <apr_strings.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
@@ -48,6 +51,24 @@ SessionId::SessionId() {
 ////////////////////////////////////////////////////////////////////////////////
 SessionId::SessionId( const SessionId& other ) {
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+SessionId::SessionId( const ConnectionId* connectionId, long long sessionId ) {
+    this->connectionId = connectionId->getValue();
+    this->value = sessionId;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+SessionId::SessionId( const ProducerId* producerId ) {
+    this->connectionId = producerId->getConnectionId();
+    this->value = producerId->getSessionId();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+SessionId::SessionId( const ConsumerId* consumerId ) {
+    this->connectionId = consumerId->getConnectionId();
+    this->value = consumerId->getSessionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,5 +217,13 @@ bool SessionId::operator<( const SessionId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 SessionId& SessionId::operator= ( const SessionId& other ) {
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const Pointer<ConnectionId>& SessionId::getParentId() const {
+    if( this->parentId == NULL ) {
+        this->parentId.reset( new ConnectionId( this ) );
+    }
+    return this->parentId;
 }
 

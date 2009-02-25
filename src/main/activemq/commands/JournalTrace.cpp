@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
+#include <activemq/commands/JournalTrace.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
-#include <activemq/commands/JournalTrace.h>
 
 using namespace std;
 using namespace activemq;

@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_LOCALTRANSACTIONID_H_
 #define _ACTIVEMQ_COMMANDS_LOCALTRANSACTIONID_H_
 
@@ -24,18 +23,18 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <decaf/lang/Pointer.h>
-#include <decaf/lang/Comparable.h>
 #include <activemq/commands/ConnectionId.h>
+#include <activemq/commands/TransactionId.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Comparable.h>
+#include <decaf/lang/Pointer.h>
 #include <string>
 #include <vector>
-#include <activemq/commands/TransactionId.h>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

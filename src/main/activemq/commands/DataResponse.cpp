@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
+#include <activemq/commands/DataResponse.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
-#include <activemq/commands/DataResponse.h>
 
 using namespace std;
 using namespace activemq;

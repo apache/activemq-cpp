@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
-#include <apr_strings.h>
-#include <activemq/state/CommandVisitor.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/commands/LocalTransactionId.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
+#include <apr_strings.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;

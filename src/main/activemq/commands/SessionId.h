@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_SESSIONID_H_
 #define _ACTIVEMQ_COMMANDS_SESSIONID_H_
 
@@ -24,17 +23,21 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <decaf/lang/Pointer.h>
-#include <decaf/lang/Comparable.h>
-#include <activemq/util/Config.h>
-#include <string>
 #include <activemq/commands/BaseDataStructure.h>
+#include <activemq/commands/ConnectionId.h>
+#include <activemq/util/Config.h>
+#include <decaf/lang/Comparable.h>
+#include <decaf/lang/Pointer.h>
+#include <string>
 #include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    class ProducerId;
+    class ConsumerId;
+
+    using decaf::lang::Pointer;
 
     /*
      *
@@ -46,6 +49,10 @@ namespace commands{
      *
      */
     class AMQCPP_API SessionId : public BaseDataStructure, public decaf::lang::Comparable<SessionId> {
+    private:
+
+        mutable Pointer<ConnectionId> parentId;
+
     protected:
 
         std::string connectionId;
@@ -62,6 +69,12 @@ namespace commands{
         SessionId();
 
         SessionId( const SessionId& other );
+
+        SessionId( const ConnectionId* connectionId, long long sessionId );
+
+        SessionId( const ProducerId* producerId );
+
+        SessionId( const ConsumerId* consumerId );
 
         virtual ~SessionId();
 
@@ -100,6 +113,8 @@ namespace commands{
          * @returns true if DataStructure's are Equal.
          */
         virtual bool equals( const DataStructure* value ) const;
+
+        const Pointer<ConnectionId>& getParentId() const;
 
         virtual const std::string& getConnectionId() const;
         virtual std::string& getConnectionId();

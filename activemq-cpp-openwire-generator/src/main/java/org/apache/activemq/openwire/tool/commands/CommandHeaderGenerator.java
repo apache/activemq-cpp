@@ -17,9 +17,6 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.codehaus.jam.JProperty;
@@ -31,7 +28,6 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         // Start with the license.
         generateLicence(out);
 
-        out.println("");
         out.println("#ifndef _ACTIVEMQ_COMMANDS_"+getClassName().toUpperCase()+"_H_");
         out.println("#define _ACTIVEMQ_COMMANDS_"+getClassName().toUpperCase()+"_H_");
         out.println("");
@@ -50,8 +46,9 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
 
         out.println("");
         generateNamespaceWrapper( out );
+        generateForwardDeclarations( out );
 
-        out.println("     using decaf::lang::Pointer;");
+        out.println("    using decaf::lang::Pointer;");
         out.println("");
         out.println("    /*");
         out.println("     *");
@@ -206,6 +203,9 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         out.println("namespace activemq{");
         out.println("namespace commands{");
         out.println("");
+    }
+
+    protected void generateForwardDeclarations( PrintWriter out ) {
     }
 
     protected void generateClassDefinition( PrintWriter out ) {

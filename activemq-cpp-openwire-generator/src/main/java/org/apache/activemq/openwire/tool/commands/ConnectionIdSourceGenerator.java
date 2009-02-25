@@ -19,48 +19,34 @@ package org.apache.activemq.openwire.tool.commands;
 import java.io.PrintWriter;
 import java.util.Set;
 
-public class SessionIdHeaderGenerator extends CommandHeaderGenerator {
+public class ConnectionIdSourceGenerator extends CommandSourceGenerator {
 
     protected void populateIncludeFilesSet() {
         Set<String> includes = getIncludeFiles();
-        includes.add("<activemq/commands/ConnectionId.h>");
+        includes.add("<activemq/commands/SessionId.h>");
+        includes.add("<activemq/commands/ProducerId.h>");
+        includes.add("<activemq/commands/ConsumerId.h>");
 
         super.populateIncludeFilesSet();
     }
 
-    protected void generateForwardDeclarations( PrintWriter out ) {
-        out.println("    class ProducerId;");
-        out.println("    class ConsumerId;");
-        out.println("");
-    }
-
     protected void generateAdditionalConstructors( PrintWriter out ) {
-
-        out.println("        "+getClassName()+"( const ConnectionId* connectionId, long long sessionId );");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("ConnectionId::ConnectionId( const SessionId* sessionId ) {");
+        out.println("    this->value = sessionId->getConnectionId();");
+        out.println("}");
         out.println("");
-        out.println("        "+getClassName()+"( const ProducerId* producerId );");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("ConnectionId::ConnectionId( const ProducerId* producerId ) {");
+        out.println("    this->value = producerId->getConnectionId();");
+        out.println("}");
         out.println("");
-        out.println("        "+getClassName()+"( const ConsumerId* consumerId );");
+        out.println("////////////////////////////////////////////////////////////////////////////////");
+        out.println("ConnectionId::ConnectionId( const ConsumerId* consumerId ) {");
+        out.println("    this->value = consumerId->getConnectionId();");
+        out.println("}");
         out.println("");
 
         super.generateAdditionalConstructors(out);
     }
-
-    protected void generateProperties( PrintWriter out ) {
-
-        out.println("    private:");
-        out.println("");
-        out.println("        mutable Pointer<ConnectionId> parentId;");
-        out.println("");
-
-        super.generateProperties(out);
-    }
-
-    protected void generateAdditonalMembers( PrintWriter out ) {
-        out.println("        const Pointer<ConnectionId>& getParentId() const;");
-        out.println("");
-
-        super.generateAdditonalMembers( out );
-    }
-
 }

@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
+#include <activemq/commands/KeepAliveInfo.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
-#include <activemq/commands/KeepAliveInfo.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;

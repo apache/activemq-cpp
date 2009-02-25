@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ShutdownInfo.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 

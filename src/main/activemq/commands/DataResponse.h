@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_DATARESPONSE_H_
 #define _ACTIVEMQ_COMMANDS_DATARESPONSE_H_
 
@@ -25,16 +24,16 @@
 #endif
 
 #include <activemq/commands/DataStructure.h>
-#include <decaf/lang/Pointer.h>
 #include <activemq/commands/Response.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
 #include <string>
 #include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

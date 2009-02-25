@@ -29,10 +29,10 @@ public class ProducerIdHeaderGenerator extends CommandHeaderGenerator {
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const SessionId& sessionId, long long consumerIdd ) {");
+        out.println("        "+getClassName()+"( const SessionId& sessionId, long long consumerId ) {");
         out.println("            this->connectionId = sessionId.getConnectionId();");
         out.println("            this->sessionId = sessionId.getValue();");
-        out.println("            this->value = consumerIdd;");
+        out.println("            this->value = consumerId;");
         out.println("        }");
         out.println("");
 
@@ -43,7 +43,7 @@ public class ProducerIdHeaderGenerator extends CommandHeaderGenerator {
 
         out.println("    private:");
         out.println("");
-        out.println("        Pointer<SessionId> parentId;");
+        out.println("        mutable Pointer<SessionId> parentId;");
         out.println("");
 
         super.generateProperties(out);

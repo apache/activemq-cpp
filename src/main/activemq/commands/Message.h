@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_MESSAGE_H_
 #define _ACTIVEMQ_COMMANDS_MESSAGE_H_
 
@@ -24,20 +23,20 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/commands/MessageId.h>
-#include <activemq/commands/DataStructure.h>
-#include <decaf/util/Date.h>
+#include <activemq/commands/ActiveMQDestination.h>
 #include <activemq/commands/BaseCommand.h>
-#include <vector>
+#include <activemq/commands/BrokerId.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/DataStructure.h>
+#include <activemq/commands/MessageId.h>
 #include <activemq/commands/ProducerId.h>
+#include <activemq/commands/TransactionId.h>
+#include <activemq/util/Config.h>
 #include <activemq/util/PrimitiveMap.h>
 #include <decaf/lang/Pointer.h>
-#include <activemq/commands/BrokerId.h>
+#include <decaf/util/Date.h>
 #include <string>
-#include <activemq/util/Config.h>
-#include <activemq/commands/ActiveMQDestination.h>
-#include <activemq/commands/TransactionId.h>
-#include <activemq/commands/ConsumerId.h>
+#include <vector>
 
 namespace activemq{
 namespace core{
@@ -45,7 +44,7 @@ namespace core{
 }
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

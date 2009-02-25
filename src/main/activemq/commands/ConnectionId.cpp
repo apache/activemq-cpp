@@ -15,10 +15,13 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
-#include <apr_strings.h>
 #include <activemq/commands/ConnectionId.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/ProducerId.h>
+#include <activemq/commands/SessionId.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/state/CommandVisitor.h>
+#include <apr_strings.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
@@ -47,6 +50,21 @@ ConnectionId::ConnectionId() {
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionId::ConnectionId( const ConnectionId& other ) {
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConnectionId::ConnectionId( const SessionId* sessionId ) {
+    this->value = sessionId->getConnectionId();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConnectionId::ConnectionId( const ProducerId* producerId ) {
+    this->value = producerId->getConnectionId();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ConnectionId::ConnectionId( const ConsumerId* consumerId ) {
+    this->value = consumerId->getConnectionId();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

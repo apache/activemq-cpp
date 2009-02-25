@@ -24,7 +24,7 @@ public class ConsumerIdSourceGenerator extends CommandSourceGenerator {
         out.println("////////////////////////////////////////////////////////////////////////////////");
         out.println("const Pointer<SessionId>& ConsumerId::getParentId() const {");
         out.println("    if( this->parentId == NULL ) {");
-        out.println("        this->parentId.reset( new SessionId( *this ) );");
+        out.println("        this->parentId.reset( new SessionId( this ) );");
         out.println("    }");
         out.println("    return this->parentId;");
         out.println("}");

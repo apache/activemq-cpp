@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-#include <activemq/exceptions/ActiveMQException.h>
-#include <apr_strings.h>
-#include <activemq/state/CommandVisitor.h>
-#include <decaf/lang/exceptions/NullPointerException.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/state/CommandVisitor.h>
+#include <apr_strings.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace std;
 using namespace activemq;
@@ -218,5 +218,13 @@ bool ConsumerId::operator<( const ConsumerId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 ConsumerId& ConsumerId::operator= ( const ConsumerId& other ) {
     this->copyDataStructure( &other );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+const Pointer<SessionId>& ConsumerId::getParentId() const {
+    if( this->parentId == NULL ) {
+        this->parentId.reset( new SessionId( this ) );
+    }
+    return this->parentId;
 }
 

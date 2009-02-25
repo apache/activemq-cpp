@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _ACTIVEMQ_COMMANDS_CONSUMERINFO_H_
 #define _ACTIVEMQ_COMMANDS_CONSUMERINFO_H_
 
@@ -24,20 +23,20 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/commands/BrokerId.h>
-#include <decaf/lang/Pointer.h>
-#include <activemq/commands/BooleanExpression.h>
-#include <activemq/util/Config.h>
-#include <string>
-#include <activemq/commands/BaseCommand.h>
-#include <vector>
 #include <activemq/commands/ActiveMQDestination.h>
+#include <activemq/commands/BaseCommand.h>
+#include <activemq/commands/BooleanExpression.h>
+#include <activemq/commands/BrokerId.h>
 #include <activemq/commands/ConsumerId.h>
+#include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
+#include <string>
+#include <vector>
 
 namespace activemq{
 namespace commands{
 
-     using decaf::lang::Pointer;
+    using decaf::lang::Pointer;
 
     /*
      *

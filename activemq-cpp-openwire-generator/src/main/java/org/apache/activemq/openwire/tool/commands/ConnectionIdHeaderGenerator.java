@@ -17,29 +17,22 @@
 package org.apache.activemq.openwire.tool.commands;
 
 import java.io.PrintWriter;
-import java.util.Set;
 
 public class ConnectionIdHeaderGenerator extends CommandHeaderGenerator {
 
-    protected void populateIncludeFilesSet() {
-        Set<String> includes = getIncludeFiles();
-        includes.add("<activemq/commands/SessionId.h>");
-        includes.add("<activemq/commands/ProducerId.h>");
-        includes.add("<activemq/commands/ConsumerId.h>");
-
-        super.populateIncludeFilesSet();
+    protected void generateForwardDeclarations( PrintWriter out ) {
+        out.println("    class SessionId;");
+        out.println("    class ProducerId;");
+        out.println("    class ConsumerId;");
+        out.println("");
     }
 
     protected void generateAdditionalConstructors( PrintWriter out ) {
-        out.println("        "+getClassName()+"( const SessionId& sessionId ) {");
-        out.println("            this->value = sessionId.getConnectionId();");
-        out.println("        }");
-        out.println("        "+getClassName()+"( const ProducerId& producerId ) {");
-        out.println("            this->value = producerId.getConnectionId();");
-        out.println("        }");
-        out.println("        "+getClassName()+"( const ConsumerId& consumerId ) {");
-        out.println("            this->value = consumerId.getConnectionId();");
-        out.println("        }");
+        out.println("        "+getClassName()+"( const SessionId* sessionId );");
+        out.println("");
+        out.println("        "+getClassName()+"( const ProducerId* producerId );");
+        out.println("");
+        out.println("        "+getClassName()+"( const ConsumerId* consumerId );");
         out.println("");
 
         super.generateAdditionalConstructors(out);
