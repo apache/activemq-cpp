@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for JournalTransaction
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API JournalTransaction : public BaseDataStructure {
     protected:
 
-        decaf::lang::Pointer<TransactionId> transactionId;
+        Pointer<TransactionId> transactionId;
         unsigned char type;
         bool wasPrepared;
 
@@ -101,9 +103,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
-        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
+        virtual const Pointer<TransactionId>& getTransactionId() const;
+        virtual Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
 
         virtual unsigned char getType() const;
         virtual void setType( unsigned char type );

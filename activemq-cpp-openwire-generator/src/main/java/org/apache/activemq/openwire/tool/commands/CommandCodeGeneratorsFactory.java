@@ -61,6 +61,14 @@ public class CommandCodeGeneratorsFactory {
         CommandHeaderGenerator generator = null;
         if( className.equals("Message") ) {
             generator = new MessageHeaderGenerator();
+//        } else if( className.equals("ConnectionId") ) {
+//            generator = new ConnectionIdHeaderGenerator();
+//        } else if( className.equals("ConsumerId") ) {
+//            generator = new ConsumerIdHeaderGenerator();
+//        } else if( className.equals("ProducerId") ) {
+//            generator = new ProducerIdHeaderGenerator();
+//        } else if( className.equals("SessionId") ) {
+//            generator = new SessionIdHeaderGenerator();
         } else {
             generator = new CommandHeaderGenerator();
         }
@@ -90,6 +98,12 @@ public class CommandCodeGeneratorsFactory {
         CommandSourceGenerator generator = null;
         if( className.equals("Message") ) {
             generator = new MessageSourceGenerator();
+//        } else if( className.equals("ConsumerId") ) {
+//            generator = new ConsumerIdSourceGenerator();
+//        } else if( className.equals("ProducerId") ) {
+//            generator = new ProducerIdSourceGenerator();
+//        } else if( className.equals("SessionId") ) {
+//            generator = new SessionIdSourceGenerator();
         } else {
             generator = new CommandSourceGenerator();
         }

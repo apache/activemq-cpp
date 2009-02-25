@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for DataResponse
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API DataResponse : public Response {
     protected:
 
-        decaf::lang::Pointer<DataStructure> data;
+        Pointer<DataStructure> data;
 
     public:
 
@@ -99,9 +101,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<DataStructure>& getData() const;
-        virtual decaf::lang::Pointer<DataStructure>& getData();
-        virtual void setData( const decaf::lang::Pointer<DataStructure>& data );
+        virtual const Pointer<DataStructure>& getData() const;
+        virtual Pointer<DataStructure>& getData();
+        virtual void setData( const Pointer<DataStructure>& data );
 
     };
 

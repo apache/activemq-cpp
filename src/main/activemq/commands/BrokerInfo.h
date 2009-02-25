@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for BrokerInfo
@@ -47,7 +49,7 @@ namespace commands{
     class AMQCPP_API BrokerInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<BrokerId> brokerId;
+        Pointer<BrokerId> brokerId;
         std::string brokerURL;
         std::vector< decaf::lang::Pointer<BrokerInfo> > peerBrokerInfos;
         std::string brokerName;
@@ -111,9 +113,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<BrokerId>& getBrokerId() const;
-        virtual decaf::lang::Pointer<BrokerId>& getBrokerId();
-        virtual void setBrokerId( const decaf::lang::Pointer<BrokerId>& brokerId );
+        virtual const Pointer<BrokerId>& getBrokerId() const;
+        virtual Pointer<BrokerId>& getBrokerId();
+        virtual void setBrokerId( const Pointer<BrokerId>& brokerId );
 
         virtual const std::string& getBrokerURL() const;
         virtual std::string& getBrokerURL();
@@ -167,7 +169,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

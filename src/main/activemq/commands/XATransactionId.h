@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for XATransactionId

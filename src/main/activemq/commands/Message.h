@@ -45,6 +45,8 @@ namespace core{
 }
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for Message
@@ -77,25 +79,25 @@ namespace commands{
 
     protected:
 
-        decaf::lang::Pointer<ProducerId> producerId;
-        decaf::lang::Pointer<ActiveMQDestination> destination;
-        decaf::lang::Pointer<TransactionId> transactionId;
-        decaf::lang::Pointer<ActiveMQDestination> originalDestination;
-        decaf::lang::Pointer<MessageId> messageId;
-        decaf::lang::Pointer<TransactionId> originalTransactionId;
+        Pointer<ProducerId> producerId;
+        Pointer<ActiveMQDestination> destination;
+        Pointer<TransactionId> transactionId;
+        Pointer<ActiveMQDestination> originalDestination;
+        Pointer<MessageId> messageId;
+        Pointer<TransactionId> originalTransactionId;
         std::string groupID;
         int groupSequence;
         std::string correlationId;
         bool persistent;
         long long expiration;
         unsigned char priority;
-        decaf::lang::Pointer<ActiveMQDestination> replyTo;
+        Pointer<ActiveMQDestination> replyTo;
         long long timestamp;
         std::string type;
         std::vector<unsigned char> content;
         std::vector<unsigned char> marshalledProperties;
-        decaf::lang::Pointer<DataStructure> dataStructure;
-        decaf::lang::Pointer<ConsumerId> targetConsumerId;
+        Pointer<DataStructure> dataStructure;
+        Pointer<ConsumerId> targetConsumerId;
         bool compressed;
         int redeliveryCounter;
         std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
@@ -267,29 +269,29 @@ namespace commands{
             this->readOnlyBody = value;
         }
 
-        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
-        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
+        virtual const Pointer<ProducerId>& getProducerId() const;
+        virtual Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const Pointer<ProducerId>& producerId );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
-        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
-        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
+        virtual const Pointer<TransactionId>& getTransactionId() const;
+        virtual Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getOriginalDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getOriginalDestination();
-        virtual void setOriginalDestination( const decaf::lang::Pointer<ActiveMQDestination>& originalDestination );
+        virtual const Pointer<ActiveMQDestination>& getOriginalDestination() const;
+        virtual Pointer<ActiveMQDestination>& getOriginalDestination();
+        virtual void setOriginalDestination( const Pointer<ActiveMQDestination>& originalDestination );
 
-        virtual const decaf::lang::Pointer<MessageId>& getMessageId() const;
-        virtual decaf::lang::Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const decaf::lang::Pointer<MessageId>& messageId );
+        virtual const Pointer<MessageId>& getMessageId() const;
+        virtual Pointer<MessageId>& getMessageId();
+        virtual void setMessageId( const Pointer<MessageId>& messageId );
 
-        virtual const decaf::lang::Pointer<TransactionId>& getOriginalTransactionId() const;
-        virtual decaf::lang::Pointer<TransactionId>& getOriginalTransactionId();
-        virtual void setOriginalTransactionId( const decaf::lang::Pointer<TransactionId>& originalTransactionId );
+        virtual const Pointer<TransactionId>& getOriginalTransactionId() const;
+        virtual Pointer<TransactionId>& getOriginalTransactionId();
+        virtual void setOriginalTransactionId( const Pointer<TransactionId>& originalTransactionId );
 
         virtual const std::string& getGroupID() const;
         virtual std::string& getGroupID();
@@ -311,9 +313,9 @@ namespace commands{
         virtual unsigned char getPriority() const;
         virtual void setPriority( unsigned char priority );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getReplyTo() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getReplyTo();
-        virtual void setReplyTo( const decaf::lang::Pointer<ActiveMQDestination>& replyTo );
+        virtual const Pointer<ActiveMQDestination>& getReplyTo() const;
+        virtual Pointer<ActiveMQDestination>& getReplyTo();
+        virtual void setReplyTo( const Pointer<ActiveMQDestination>& replyTo );
 
         virtual long long getTimestamp() const;
         virtual void setTimestamp( long long timestamp );
@@ -330,13 +332,13 @@ namespace commands{
         virtual std::vector<unsigned char>& getMarshalledProperties();
         virtual void setMarshalledProperties( const std::vector<unsigned char>& marshalledProperties );
 
-        virtual const decaf::lang::Pointer<DataStructure>& getDataStructure() const;
-        virtual decaf::lang::Pointer<DataStructure>& getDataStructure();
-        virtual void setDataStructure( const decaf::lang::Pointer<DataStructure>& dataStructure );
+        virtual const Pointer<DataStructure>& getDataStructure() const;
+        virtual Pointer<DataStructure>& getDataStructure();
+        virtual void setDataStructure( const Pointer<DataStructure>& dataStructure );
 
-        virtual const decaf::lang::Pointer<ConsumerId>& getTargetConsumerId() const;
-        virtual decaf::lang::Pointer<ConsumerId>& getTargetConsumerId();
-        virtual void setTargetConsumerId( const decaf::lang::Pointer<ConsumerId>& targetConsumerId );
+        virtual const Pointer<ConsumerId>& getTargetConsumerId() const;
+        virtual Pointer<ConsumerId>& getTargetConsumerId();
+        virtual void setTargetConsumerId( const Pointer<ConsumerId>& targetConsumerId );
 
         virtual bool isCompressed() const;
         virtual void setCompressed( bool compressed );
@@ -378,7 +380,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for ConnectionError
@@ -47,8 +49,8 @@ namespace commands{
     class AMQCPP_API ConnectionError : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<BrokerError> exception;
-        decaf::lang::Pointer<ConnectionId> connectionId;
+        Pointer<BrokerError> exception;
+        Pointer<ConnectionId> connectionId;
 
     public:
 
@@ -101,13 +103,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<BrokerError>& getException() const;
-        virtual decaf::lang::Pointer<BrokerError>& getException();
-        virtual void setException( const decaf::lang::Pointer<BrokerError>& exception );
+        virtual const Pointer<BrokerError>& getException() const;
+        virtual Pointer<BrokerError>& getException();
+        virtual void setException( const Pointer<BrokerError>& exception );
 
-        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
-        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
+        virtual const Pointer<ConnectionId>& getConnectionId() const;
+        virtual Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
         /**
          * Allows a Visitor to visit this command and return a response to the
@@ -116,7 +118,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

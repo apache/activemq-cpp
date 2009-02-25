@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for JournalQueueAck
@@ -47,8 +49,8 @@ namespace commands{
     class AMQCPP_API JournalQueueAck : public BaseDataStructure {
     protected:
 
-        decaf::lang::Pointer<ActiveMQDestination> destination;
-        decaf::lang::Pointer<MessageAck> messageAck;
+        Pointer<ActiveMQDestination> destination;
+        Pointer<MessageAck> messageAck;
 
     public:
 
@@ -101,13 +103,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
-        virtual const decaf::lang::Pointer<MessageAck>& getMessageAck() const;
-        virtual decaf::lang::Pointer<MessageAck>& getMessageAck();
-        virtual void setMessageAck( const decaf::lang::Pointer<MessageAck>& messageAck );
+        virtual const Pointer<MessageAck>& getMessageAck() const;
+        virtual Pointer<MessageAck>& getMessageAck();
+        virtual void setMessageAck( const Pointer<MessageAck>& messageAck );
 
     };
 

@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for ConnectionInfo
@@ -47,7 +49,7 @@ namespace commands{
     class AMQCPP_API ConnectionInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ConnectionId> connectionId;
+        Pointer<ConnectionId> connectionId;
         std::string clientId;
         std::string password;
         std::string userName;
@@ -107,9 +109,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
-        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
+        virtual const Pointer<ConnectionId>& getConnectionId() const;
+        virtual Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
         virtual const std::string& getClientId() const;
         virtual std::string& getClientId();
@@ -143,7 +145,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

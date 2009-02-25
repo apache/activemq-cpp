@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for RemoveInfo
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API RemoveInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<DataStructure> objectId;
+        Pointer<DataStructure> objectId;
 
     public:
 
@@ -99,9 +101,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<DataStructure>& getObjectId() const;
-        virtual decaf::lang::Pointer<DataStructure>& getObjectId();
-        virtual void setObjectId( const decaf::lang::Pointer<DataStructure>& objectId );
+        virtual const Pointer<DataStructure>& getObjectId() const;
+        virtual Pointer<DataStructure>& getObjectId();
+        virtual void setObjectId( const Pointer<DataStructure>& objectId );
 
         /**
          * Allows a Visitor to visit this command and return a response to the
@@ -110,7 +112,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for LocalTransactionId
@@ -48,7 +50,7 @@ namespace commands{
     protected:
 
         long long value;
-        decaf::lang::Pointer<ConnectionId> connectionId;
+        Pointer<ConnectionId> connectionId;
 
     public:
 
@@ -103,9 +105,9 @@ namespace commands{
         virtual long long getValue() const;
         virtual void setValue( long long value );
 
-        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
-        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
+        virtual const Pointer<ConnectionId>& getConnectionId() const;
+        virtual Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
         virtual int compareTo( const LocalTransactionId& value ) const;
 

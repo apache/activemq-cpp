@@ -36,6 +36,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for MessageDispatchNotification
@@ -48,10 +50,10 @@ namespace commands{
     class AMQCPP_API MessageDispatchNotification : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ConsumerId> consumerId;
-        decaf::lang::Pointer<ActiveMQDestination> destination;
+        Pointer<ConsumerId> consumerId;
+        Pointer<ActiveMQDestination> destination;
         long long deliverySequenceId;
-        decaf::lang::Pointer<MessageId> messageId;
+        Pointer<MessageId> messageId;
 
     public:
 
@@ -104,20 +106,20 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
-        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
+        virtual const Pointer<ConsumerId>& getConsumerId() const;
+        virtual Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
         virtual long long getDeliverySequenceId() const;
         virtual void setDeliverySequenceId( long long deliverySequenceId );
 
-        virtual const decaf::lang::Pointer<MessageId>& getMessageId() const;
-        virtual decaf::lang::Pointer<MessageId>& getMessageId();
-        virtual void setMessageId( const decaf::lang::Pointer<MessageId>& messageId );
+        virtual const Pointer<MessageId>& getMessageId() const;
+        virtual Pointer<MessageId>& getMessageId();
+        virtual void setMessageId( const Pointer<MessageId>& messageId );
 
         /**
          * @return an answer of true to the isMessageDispatchNotification() query.
@@ -133,7 +135,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

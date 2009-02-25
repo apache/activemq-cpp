@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for SubscriptionInfo
@@ -47,10 +49,10 @@ namespace commands{
     protected:
 
         std::string clientId;
-        decaf::lang::Pointer<ActiveMQDestination> destination;
+        Pointer<ActiveMQDestination> destination;
         std::string selector;
         std::string subcriptionName;
-        decaf::lang::Pointer<ActiveMQDestination> subscribedDestination;
+        Pointer<ActiveMQDestination> subscribedDestination;
 
     public:
 
@@ -107,9 +109,9 @@ namespace commands{
         virtual std::string& getClientId();
         virtual void setClientId( const std::string& clientId );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
         virtual const std::string& getSelector() const;
         virtual std::string& getSelector();
@@ -119,9 +121,9 @@ namespace commands{
         virtual std::string& getSubcriptionName();
         virtual void setSubcriptionName( const std::string& subcriptionName );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getSubscribedDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getSubscribedDestination();
-        virtual void setSubscribedDestination( const decaf::lang::Pointer<ActiveMQDestination>& subscribedDestination );
+        virtual const Pointer<ActiveMQDestination>& getSubscribedDestination() const;
+        virtual Pointer<ActiveMQDestination>& getSubscribedDestination();
+        virtual void setSubscribedDestination( const Pointer<ActiveMQDestination>& subscribedDestination );
 
     };
 

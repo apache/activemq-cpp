@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for NetworkBridgeFilter
@@ -47,7 +49,7 @@ namespace commands{
     protected:
 
         int networkTTL;
-        decaf::lang::Pointer<BrokerId> networkBrokerId;
+        Pointer<BrokerId> networkBrokerId;
 
     public:
 
@@ -103,9 +105,9 @@ namespace commands{
         virtual int getNetworkTTL() const;
         virtual void setNetworkTTL( int networkTTL );
 
-        virtual const decaf::lang::Pointer<BrokerId>& getNetworkBrokerId() const;
-        virtual decaf::lang::Pointer<BrokerId>& getNetworkBrokerId();
-        virtual void setNetworkBrokerId( const decaf::lang::Pointer<BrokerId>& networkBrokerId );
+        virtual const Pointer<BrokerId>& getNetworkBrokerId() const;
+        virtual Pointer<BrokerId>& getNetworkBrokerId();
+        virtual void setNetworkBrokerId( const Pointer<BrokerId>& networkBrokerId );
 
     };
 

@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for TransactionInfo
@@ -47,8 +49,8 @@ namespace commands{
     class AMQCPP_API TransactionInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ConnectionId> connectionId;
-        decaf::lang::Pointer<TransactionId> transactionId;
+        Pointer<ConnectionId> connectionId;
+        Pointer<TransactionId> transactionId;
         unsigned char type;
 
     public:
@@ -102,13 +104,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ConnectionId>& getConnectionId() const;
-        virtual decaf::lang::Pointer<ConnectionId>& getConnectionId();
-        virtual void setConnectionId( const decaf::lang::Pointer<ConnectionId>& connectionId );
+        virtual const Pointer<ConnectionId>& getConnectionId() const;
+        virtual Pointer<ConnectionId>& getConnectionId();
+        virtual void setConnectionId( const Pointer<ConnectionId>& connectionId );
 
-        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
-        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
+        virtual const Pointer<TransactionId>& getTransactionId() const;
+        virtual Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
 
         virtual unsigned char getType() const;
         virtual void setType( unsigned char type );
@@ -120,7 +122,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

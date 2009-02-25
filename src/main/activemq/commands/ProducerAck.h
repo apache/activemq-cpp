@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for ProducerAck
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API ProducerAck : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ProducerId> producerId;
+        Pointer<ProducerId> producerId;
         int size;
 
     public:
@@ -100,9 +102,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
-        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
+        virtual const Pointer<ProducerId>& getProducerId() const;
+        virtual Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const Pointer<ProducerId>& producerId );
 
         virtual int getSize() const;
         virtual void setSize( int size );
@@ -121,7 +123,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

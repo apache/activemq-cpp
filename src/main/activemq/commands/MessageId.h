@@ -35,6 +35,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for MessageId
@@ -47,7 +49,7 @@ namespace commands{
     class AMQCPP_API MessageId : public BaseDataStructure, public decaf::lang::Comparable<MessageId> {
     protected:
 
-        decaf::lang::Pointer<ProducerId> producerId;
+        Pointer<ProducerId> producerId;
         long long producerSequenceId;
         long long brokerSequenceId;
 
@@ -101,9 +103,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
-        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
+        virtual const Pointer<ProducerId>& getProducerId() const;
+        virtual Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const Pointer<ProducerId>& producerId );
 
         virtual long long getProducerSequenceId() const;
         virtual void setProducerSequenceId( long long producerSequenceId );

@@ -36,6 +36,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for ProducerInfo
@@ -48,8 +50,8 @@ namespace commands{
     class AMQCPP_API ProducerInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ProducerId> producerId;
-        decaf::lang::Pointer<ActiveMQDestination> destination;
+        Pointer<ProducerId> producerId;
+        Pointer<ActiveMQDestination> destination;
         std::vector< decaf::lang::Pointer<BrokerId> > brokerPath;
         bool dispatchAsync;
         int windowSize;
@@ -105,13 +107,13 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ProducerId>& getProducerId() const;
-        virtual decaf::lang::Pointer<ProducerId>& getProducerId();
-        virtual void setProducerId( const decaf::lang::Pointer<ProducerId>& producerId );
+        virtual const Pointer<ProducerId>& getProducerId() const;
+        virtual Pointer<ProducerId>& getProducerId();
+        virtual void setProducerId( const Pointer<ProducerId>& producerId );
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
         virtual const std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath() const;
         virtual std::vector< decaf::lang::Pointer<BrokerId> >& getBrokerPath();
@@ -130,7 +132,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

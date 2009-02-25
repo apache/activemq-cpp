@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for SessionInfo
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API SessionInfo : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<SessionId> sessionId;
+        Pointer<SessionId> sessionId;
 
     public:
 
@@ -99,9 +101,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<SessionId>& getSessionId() const;
-        virtual decaf::lang::Pointer<SessionId>& getSessionId();
-        virtual void setSessionId( const decaf::lang::Pointer<SessionId>& sessionId );
+        virtual const Pointer<SessionId>& getSessionId() const;
+        virtual Pointer<SessionId>& getSessionId();
+        virtual void setSessionId( const Pointer<SessionId>& sessionId );
 
         /**
          * Allows a Visitor to visit this command and return a response to the
@@ -110,7 +112,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };

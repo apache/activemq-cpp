@@ -51,6 +51,8 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         out.println("");
         generateNamespaceWrapper( out );
 
+        out.println("     using decaf::lang::Pointer;");
+        out.println("");
         out.println("    /*");
         out.println("     *");
         out.println("     *  Command code for OpenWire format for "+getClassName() );
@@ -160,7 +162,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
             out.println("         * " );
             out.println("         * @return a Response to the visitor being called or NULL if no response." );
             out.println("         */" );
-            out.println("        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )" );
+            out.println("        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )" );
             out.println("            throw( exceptions::ActiveMQException );" );
             out.println("");
         }
@@ -230,7 +232,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                type = "decaf::lang::Pointer<" + type + ">";
+                type = "Pointer<" + type + ">";
             }
 
             out.println("        "+type+" "+name+";");
@@ -267,7 +269,7 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
                 !property.getType().getSimpleName().equals("String") &&
                 !type.startsWith("std::vector") ) {
 
-                    type = "decaf::lang::Pointer<" + type + ">&";
+                    type = "Pointer<" + type + ">&";
                     constness = "const ";
             } else if( property.getType().getSimpleName().equals("String") ||
                        type.startsWith("std::vector") ) {

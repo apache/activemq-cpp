@@ -34,6 +34,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for ExceptionResponse
@@ -46,7 +48,7 @@ namespace commands{
     class AMQCPP_API ExceptionResponse : public Response {
     protected:
 
-        decaf::lang::Pointer<BrokerError> exception;
+        Pointer<BrokerError> exception;
 
     public:
 
@@ -99,9 +101,9 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<BrokerError>& getException() const;
-        virtual decaf::lang::Pointer<BrokerError>& getException();
-        virtual void setException( const decaf::lang::Pointer<BrokerError>& exception );
+        virtual const Pointer<BrokerError>& getException() const;
+        virtual Pointer<BrokerError>& getException();
+        virtual void setException( const Pointer<BrokerError>& exception );
 
     };
 

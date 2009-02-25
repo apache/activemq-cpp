@@ -37,6 +37,8 @@
 namespace activemq{
 namespace commands{
 
+     using decaf::lang::Pointer;
+
     /*
      *
      *  Command code for OpenWire format for MessageAck
@@ -49,12 +51,12 @@ namespace commands{
     class AMQCPP_API MessageAck : public BaseCommand {
     protected:
 
-        decaf::lang::Pointer<ActiveMQDestination> destination;
-        decaf::lang::Pointer<TransactionId> transactionId;
-        decaf::lang::Pointer<ConsumerId> consumerId;
+        Pointer<ActiveMQDestination> destination;
+        Pointer<TransactionId> transactionId;
+        Pointer<ConsumerId> consumerId;
         unsigned char ackType;
-        decaf::lang::Pointer<MessageId> firstMessageId;
-        decaf::lang::Pointer<MessageId> lastMessageId;
+        Pointer<MessageId> firstMessageId;
+        Pointer<MessageId> lastMessageId;
         int messageCount;
 
     public:
@@ -108,28 +110,28 @@ namespace commands{
          */
         virtual bool equals( const DataStructure* value ) const;
 
-        virtual const decaf::lang::Pointer<ActiveMQDestination>& getDestination() const;
-        virtual decaf::lang::Pointer<ActiveMQDestination>& getDestination();
-        virtual void setDestination( const decaf::lang::Pointer<ActiveMQDestination>& destination );
+        virtual const Pointer<ActiveMQDestination>& getDestination() const;
+        virtual Pointer<ActiveMQDestination>& getDestination();
+        virtual void setDestination( const Pointer<ActiveMQDestination>& destination );
 
-        virtual const decaf::lang::Pointer<TransactionId>& getTransactionId() const;
-        virtual decaf::lang::Pointer<TransactionId>& getTransactionId();
-        virtual void setTransactionId( const decaf::lang::Pointer<TransactionId>& transactionId );
+        virtual const Pointer<TransactionId>& getTransactionId() const;
+        virtual Pointer<TransactionId>& getTransactionId();
+        virtual void setTransactionId( const Pointer<TransactionId>& transactionId );
 
-        virtual const decaf::lang::Pointer<ConsumerId>& getConsumerId() const;
-        virtual decaf::lang::Pointer<ConsumerId>& getConsumerId();
-        virtual void setConsumerId( const decaf::lang::Pointer<ConsumerId>& consumerId );
+        virtual const Pointer<ConsumerId>& getConsumerId() const;
+        virtual Pointer<ConsumerId>& getConsumerId();
+        virtual void setConsumerId( const Pointer<ConsumerId>& consumerId );
 
         virtual unsigned char getAckType() const;
         virtual void setAckType( unsigned char ackType );
 
-        virtual const decaf::lang::Pointer<MessageId>& getFirstMessageId() const;
-        virtual decaf::lang::Pointer<MessageId>& getFirstMessageId();
-        virtual void setFirstMessageId( const decaf::lang::Pointer<MessageId>& firstMessageId );
+        virtual const Pointer<MessageId>& getFirstMessageId() const;
+        virtual Pointer<MessageId>& getFirstMessageId();
+        virtual void setFirstMessageId( const Pointer<MessageId>& firstMessageId );
 
-        virtual const decaf::lang::Pointer<MessageId>& getLastMessageId() const;
-        virtual decaf::lang::Pointer<MessageId>& getLastMessageId();
-        virtual void setLastMessageId( const decaf::lang::Pointer<MessageId>& lastMessageId );
+        virtual const Pointer<MessageId>& getLastMessageId() const;
+        virtual Pointer<MessageId>& getLastMessageId();
+        virtual void setLastMessageId( const Pointer<MessageId>& lastMessageId );
 
         virtual int getMessageCount() const;
         virtual void setMessageCount( int messageCount );
@@ -148,7 +150,7 @@ namespace commands{
          * 
          * @return a Response to the visitor being called or NULL if no response.
          */
-        virtual decaf::lang::Pointer<commands::Command> visit( activemq::state::CommandVisitor* visitor )
+        virtual Pointer<Command> visit( activemq::state::CommandVisitor* visitor )
             throw( exceptions::ActiveMQException );
 
     };
