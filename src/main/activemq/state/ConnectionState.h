@@ -42,7 +42,7 @@ namespace activemq {
 namespace state {
 
     using decaf::lang::Pointer;
-    using decaf::util::concurrent::ConcurrentStlMap;
+    using namespace decaf::util;
     using namespace activemq::commands;
 
     class ConnectionState {
@@ -55,7 +55,7 @@ namespace state {
         ConcurrentStlMap< Pointer<SessionId>,
                           Pointer<SessionState>,
                           SessionId::COMPARATOR > sessions;
-        decaf::util::StlList< Pointer<DestinationInfo> > tempDestinations;
+        StlList< Pointer<DestinationInfo> > tempDestinations;
         decaf::util::concurrent::atomic::AtomicBoolean disposed;
 
     public:
@@ -103,9 +103,9 @@ namespace state {
             return transactions.get( id );
         }
 
-//        Collection<TransactionState> getTransactionStates() {
-//            return transactions.values();
-//        }
+        std::vector< Pointer<TransactionState> > getTransactionStates() const {
+            return transactions.values();
+        }
 
         Pointer<TransactionState> removeTransactionState( const Pointer<TransactionId>& id ) {
             return transactions.remove( id );
@@ -128,14 +128,14 @@ namespace state {
 //        Set<SessionId> getSessionIds() {
 //            return sessions.keySet();
 //        }
-//
-//        List<DestinationInfo> getTempDesinations() {
-//            return tempDestinations;
-//        }
-//
-//        Collection<SessionState> getSessionStates() {
-//            return sessions.values();
-//        }
+
+        const StlList< Pointer<DestinationInfo> >& getTempDesinations() const {
+            return tempDestinations;
+        }
+
+        std::vector< Pointer<SessionState> > getSessionStates() const {
+            return sessions.values();
+        }
 
     };
 

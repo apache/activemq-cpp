@@ -45,9 +45,15 @@ namespace state {
         static const Pointer<Tracked> TRACKED_RESPONSE_MARKER;
 
         // TODO - Create a Thread Safe impl of Map.
-        decaf::util::StlMap< Pointer<ConnectionId>,
-                             Pointer<ConnectionState>,
-                             commands::ConnectionId::COMPARATOR > connectionStates;
+        decaf::util::StlMap< Pointer<ConnectionId>, Pointer<ConnectionState>,
+                             ConnectionId::COMPARATOR > connectionStates;
+
+        // TODO - The Map doesn't have a way to automatically remove the eldest Entry
+        //        Either we need to implement something similar to LinkedHashMap or find
+        //        some other way of tracking the eldest entry into the map and removing it
+        //        if the cache size is exceeded.
+        decaf::util::StlMap< Pointer<MessageId>, Pointer<Message>,
+                             MessageId::COMPARATOR > messageCache;
 
         bool trackTransactions;
         bool restoreSessions;
@@ -66,7 +72,7 @@ namespace state {
 
         virtual ~ConnectionStateTracker();
 
-        Tracked track( const Pointer<Command>& command ) throw( decaf::io::IOException );
+        Pointer<Tracked> track( const Pointer<Command>& command ) throw( decaf::io::IOException );
 
         void trackBack( const Pointer<Command>& command );
 
@@ -103,7 +109,7 @@ namespace state {
         virtual Pointer<Command> processRemoveConnection( ConnectionId* id )
             throw ( exceptions::ActiveMQException );
 
-        virtual Pointer<Command> processMessage( Message* send )
+        virtual Pointer<Command> processMessage( Message* message )
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processMessageAck( MessageAck* ack )

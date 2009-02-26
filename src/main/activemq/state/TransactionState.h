@@ -62,7 +62,7 @@ namespace state {
             this->disposed.set( true );
         }
 
-        const decaf::util::List< Pointer<Command> >& getCommands() {
+        const StlList< Pointer<Command> >& getCommands() const {
             return commands;
         }
 

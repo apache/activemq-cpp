@@ -93,18 +93,18 @@ namespace state {
 //        Set<commands::ProducerId> getProducerIds() {
 //            return producers.keySet();
 //        }
-//
-//        Collection<ProducerState> getProducerStates() {
-//            return producers.values();
-//        }
+
+        std::vector< Pointer<ProducerState> > getProducerStates() const {
+            return producers.values();
+        }
 
         Pointer<ProducerState> getProducerState( const Pointer<ProducerId>& id ) {
             return producers.get( id );
         }
 
-//        Collection<ConsumerState> getConsumerStates() {
-//            return consumers.values();
-//        }
+        std::vector< Pointer<ConsumerState> > getConsumerStates() const {
+            return consumers.values();
+        }
 
         Pointer<ConsumerState> getConsumerState( const Pointer<ConsumerId>& id ) {
             return consumers.get( id );
