@@ -88,6 +88,7 @@ namespace commands{
         virtual bool isMessageDispatchNotification() const = 0;
         virtual bool isProducerAck() const = 0;
         virtual bool isResponse() const = 0;
+        virtual bool isRemoveInfo() const = 0;
         virtual bool isShutdownInfo() const = 0;
         virtual bool isWireFormatInfo() const = 0;
 

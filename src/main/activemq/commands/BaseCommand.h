@@ -112,16 +112,7 @@ namespace commands{
             return BaseDataStructure::equals( value );
         }
 
-        virtual bool isResponse() const {
-            return false;
-        }
-        virtual bool isMessageDispatch() const  {
-            return false;
-        }
         virtual bool isBrokerInfo() const  {
-            return false;
-        }
-        virtual bool isWireFormatInfo() const  {
             return false;
         }
         virtual bool isMessage() const  {
@@ -130,16 +121,28 @@ namespace commands{
         virtual bool isMessageAck() const  {
             return false;
         }
-        virtual bool isProducerAck() const  {
+        virtual bool isKeepAliveInfo() const {
+            return false;
+        }
+        virtual bool isMessageDispatch() const  {
             return false;
         }
         virtual bool isMessageDispatchNotification() const  {
             return false;
         }
+        virtual bool isProducerAck() const  {
+            return false;
+        }
+        virtual bool isResponse() const {
+            return false;
+        }
+        virtual bool isRemoveInfo() const {
+            return false;
+        }
         virtual bool isShutdownInfo() const  {
             return false;
         }
-        virtual bool isKeepAliveInfo() const {
+        virtual bool isWireFormatInfo() const  {
             return false;
         }
 

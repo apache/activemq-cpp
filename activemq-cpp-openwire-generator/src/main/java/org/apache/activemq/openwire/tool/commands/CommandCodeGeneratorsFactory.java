@@ -38,6 +38,7 @@ public class CommandCodeGeneratorsFactory {
     {
         commandsWithShortcuts = new HashSet<String>();
         commandsWithShortcuts.add( "Response" );
+        commandsWithShortcuts.add( "RemoveInfo" );
         commandsWithShortcuts.add( "MessageDispatch" );
         commandsWithShortcuts.add( "BrokerInfo" );
         commandsWithShortcuts.add( "KeepAliveInfo" );

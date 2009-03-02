@@ -105,6 +105,13 @@ namespace commands{
         virtual void setObjectId( const Pointer<DataStructure>& objectId );
 
         /**
+         * @return an answer of true to the isRemoveInfo() query.
+         */
+        virtual bool isRemoveInfo() const {
+            return true;
+        }
+
+        /**
          * Allows a Visitor to visit this command and return a response to the
          * command based on the command type being visited.  The command will call
          * the proper processXXX method in the visitor.
