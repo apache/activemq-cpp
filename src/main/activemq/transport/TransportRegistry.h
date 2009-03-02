@@ -109,6 +109,8 @@ namespace transport {
          */
         std::vector<std::string> getTransportNames() const;
 
+    public:  // Static methods
+
         /**
          * Gets the single instance of the TransportRegistry
          * @return reference to the single instance of this Registry

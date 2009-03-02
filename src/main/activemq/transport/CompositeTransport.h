@@ -20,9 +20,13 @@
 
 #include <activemq/transport/Transport.h>
 #include <decaf/net/URI.h>
+#include <decaf/util/List.h>
 
 namespace activemq {
 namespace transport {
+
+    using decaf::util::List;
+    using decaf::net::URI;
 
     /**
      * A Composite Transport is a Transport implementation that is composed of several
@@ -44,7 +48,7 @@ namespace transport {
          * @param uri
          *        The new URI to add to the set this composite maintains.
          */
-        virtual void addURI( const decaf::net::URI& uri ) = 0;
+        virtual void addURI( const List<URI>& uris ) = 0;
 
         /**
          * Remove a URI from the set of URI's that represents the set of Transports
@@ -55,7 +59,7 @@ namespace transport {
          * @param uri
          *        The new URI to remove to the set this composite maintains.
          */
-        virtual void removeURI( const decaf::net::URI& uri ) = 0;
+        virtual void removeURI( const List<URI>& uris ) = 0;
 
     };
 

@@ -24,35 +24,38 @@
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
 #include <activemq/transport/failover/BackupTransport.h>
+#include <activemq/transport/failover/ReconnectTask.h>
+#include <activemq/transport/failover/FailoverTransportListener.h>
 
-#include <decaf/util/StlSet.h>
+#include <decaf/util/StlList.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/util/concurrent/atomic/AtomicReference.h>
 #include <decaf/net/URI.h>
+#include <decaf/io/IOException.h>
 
 namespace activemq {
 namespace transport {
 namespace failover {
 
-    using decaf::lang::Pointer;
+    using namespace decaf::lang;
+    using decaf::net::URI;
+    using namespace decaf::util;
     using activemq::commands::Command;
     using activemq::commands::Response;
 
     class AMQCPP_API FailoverTransport : public CompositeTransport {
     private:
 
+        friend class FailoverTransportListener;
+        friend class ReconnectTask;
+
         bool closed;
         bool connected;
         bool started;
 
-        decaf::net::URI connectedTransportURI;
-        decaf::net::URI failedConnectTransportURI;
-        decaf::util::concurrent::atomic::AtomicReference<Transport> connectedTransport;
-        //TaskRunner reconnectTask;
-
-        decaf::util::StlSet<decaf::net::URI> uris;
+        decaf::util::StlList<URI> uris;
 
         long long timeout;
         long long initialReconnectDelay;
@@ -70,8 +73,7 @@ namespace failover {
         bool trackMessages;
         int maxCacheSize;
 
-        decaf::util::StlSet< Pointer<BackupTransport> > backups;
-        decaf::lang::Exception connectionFailure;
+        decaf::util::StlList< Pointer<BackupTransport> > backups;
 
         state::ConnectionStateTracker stateTracker;
         decaf::util::concurrent::Mutex reconnectMutex;
@@ -80,8 +82,14 @@ namespace failover {
         decaf::util::concurrent::Mutex listenerMutex;
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
+        Pointer<URI> connectedTransportURI;
+        Pointer<URI> failedConnectTransportURI;
+        Pointer<Transport> connectedTransport;
+        Pointer<Exception> connectionFailure;
+        Pointer<ReconnectTask> reconnectTask;
         Pointer<TransportListener> disposedListener;
-        Pointer<TransportListener> myTansportListener;
+        Pointer<TransportListener> myTransportListener;
+        TransportListener* transportListener;
 
     public:
 
@@ -95,16 +103,23 @@ namespace failover {
          */
         void reconnect();
 
+        /**
+         * Adds a New URI to the List of URIs this transport can Connect to.
+         * @param uri
+         *        A String version of a URI to add to the URIs to failover to.
+         */
+        void add( const std::string& uri );
+
     public: // CompositeTransport methods
 
         /**
          * Add a URI to the list of URI's that will represent the set of Transports
          * that this Transport is a composite of.
          *
-         * @param uri
-         *        The new URI to add to the set this composite maintains.
+         * @param uris
+         *        The new URIs to add to the set this composite maintains.
          */
-        virtual void addURI( const decaf::net::URI& uri );
+        virtual void addURI( const List<URI>& uris );
 
         /**
          * Remove a URI from the set of URI's that represents the set of Transports
@@ -112,10 +127,10 @@ namespace failover {
          * has created a connected Transport should result in that Transport being
          * disposed of.
          *
-         * @param uri
-         *        The new URI to remove to the set this composite maintains.
+         * @param uris
+         *        The new URIs to remove to the set this composite maintains.
          */
-        virtual void removeURI( const decaf::net::URI& uri );
+        virtual void removeURI( const List<URI>& uris );
 
     public: // Transport Members
 
@@ -188,7 +203,7 @@ namespace failover {
          * Sets the observer of asynchronous events from this transport.
          * @param listener the listener of transport events.
          */
-        virtual void setTransportListener( TransportListener* listener ) {}
+        virtual void setTransportListener( TransportListener* listener );
 
         /**
          * Is this Transport fault tolerant, meaning that it will reconnect to
@@ -234,6 +249,19 @@ namespace failover {
 
             return NULL;
         }
+
+        /**
+         * @return the remote address for this connection
+         */
+        virtual std::string getRemoteAddress() const;
+
+        /**
+         * reconnect to another location
+         * @param uri
+         * @throws IOException on failure of if not supported
+         */
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException ) {}
 
     public: // FailoverTransport Property Getters / Setters
 
@@ -332,6 +360,64 @@ namespace failover {
         void setMaxCacheSize( int value ) {
             this->maxCacheSize = value;
         }
+
+    protected:
+
+        /**
+         * Given a Transport restore the state of the Client's connection to the Broker
+         * using the data accumulated in the State Tracker.
+         *
+         * @param transport
+         *        The new Transport connected to the Broker.
+         *
+         * @throw IOException if an errors occurs while restoring the old state.
+         */
+        void restoreTransport( const Pointer<Transport>& transport )
+            throw( decaf::io::IOException );
+
+        /**
+         * Called when this class' TransportListener is notified of a Failure.
+         * @param error - The CMS Exception that was thrown.
+         * @throw Exception if an error occurs.
+         */
+        void handleTransportFailure( const decaf::lang::Exception& error )
+            throw( decaf::lang::Exception );
+
+    private:
+
+        /**
+         * Returns a set of URIs that this Transport is to connect to, applying a
+         * random swapping from the class stored list of URIs if the randomize flag
+         * is enabled, otherwise just return the original list.
+         *
+         * @returns a Set of URI object that this Transport iterates over to connect.
+         */
+        decaf::util::StlList<URI> getConnectList() const;
+
+        /**
+         * @return Returns true if the command is one sent when a connection
+         * is being closed.
+         */
+        bool isShutdownCommand( const Pointer<Command>& command ) const;
+
+        /**
+         * Performs the actual Reconnect operation.
+         */
+        bool doReconnect();
+
+        /**
+         * Builds a set of Backup Transports for fast Failover.
+         */
+        bool buildBackups();
+
+        /**
+         * Looks up the correct Factory and create a new Composite version of the
+         * Transport requested.
+         *
+         * @param uri - The URI to connect to
+         */
+        Pointer<Transport> createTransport( const URI& location ) const
+            throw ( decaf::io::IOException );
 
     };
 

@@ -156,11 +156,11 @@ private:
 
 public:
 
-    Transport* transport;
     decaf::util::concurrent::Mutex mutex;
+    bool caughtOne;
 
-    MyTransportListener() : latch(1) { this->transport = NULL; }
-    MyTransportListener( unsigned int num ) : latch( num ) { this->transport = NULL; }
+    MyTransportListener() : latch(1), caughtOne( false ) {}
+    MyTransportListener( unsigned int num ) : latch( num ), caughtOne( false ) {}
     virtual ~MyTransportListener(){}
 
     virtual void await() {
@@ -174,10 +174,9 @@ public:
         latch.countDown();
     }
 
-    virtual void onTransportException( Transport* source,
-                const decaf::lang::Exception& ex AMQCPP_UNUSED){
-        transport = source;
+    virtual void onException( const decaf::lang::Exception& ex AMQCPP_UNUSED){
 
+        this->caughtOne = true;
         synchronized( &mutex )
         {
            mutex.notify();
@@ -356,15 +355,11 @@ void IOTransportTest::testException(){
 
     transport.start();
 
-    synchronized(&listener.mutex)
-    {
-       if(listener.transport != &transport)
-       {
-          listener.mutex.wait(1000);
-       }
+    synchronized(&listener.mutex) {
+        if( !listener.caughtOne ) {
+            listener.mutex.wait(1000);
+         }
     }
-
-    CPPUNIT_ASSERT( listener.transport == &transport );
 
     transport.close();
 }

@@ -51,7 +51,9 @@ cc_sources = \
     activemq/state/TransactionState.cpp \
     activemq/state/Tracked.cpp \
     activemq/transport/failover/BackupTransport.cpp \
+    activemq/transport/failover/ReconnectTask.cpp \
     activemq/transport/failover/FailoverTransport.cpp \
+    activemq/transport/failover/FailoverTransportListener.cpp \
     activemq/transport/failover/FailoverTransportFactory.cpp \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/TransportRegistry.cpp \
@@ -206,8 +208,10 @@ h_sources = \
     activemq/transport/TransportFactory.h \
     activemq/transport/TransportRegistry.h \
     activemq/transport/failover/BackupTransport.h \
+    activemq/transport/failover/ReconnectTask.h \
     activemq/transport/failover/FailoverTransport.h \
     activemq/transport/failover/FailoverTransportFactory.h \
+    activemq/transport/failover/FailoverTransportListener.h \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
     activemq/transport/correlator/FutureResponse.h \

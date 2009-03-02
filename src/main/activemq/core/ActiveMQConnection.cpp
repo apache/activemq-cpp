@@ -521,8 +521,7 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::onTransportException( transport::Transport* source AMQCPP_UNUSED,
-                                               const decaf::lang::Exception& ex ) {
+void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
 
     try {
 

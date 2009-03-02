@@ -70,7 +70,7 @@ void IOTransport::fire( decaf::lang::Exception& ex ){
     if( this->listener != NULL && !this->closed ){
 
         try{
-            this->listener->onTransportException( this, ex );
+            this->listener->onException( ex );
         }catch( ... ){}
     }
 }

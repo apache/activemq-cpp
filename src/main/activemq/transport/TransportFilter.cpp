@@ -16,11 +16,12 @@
  */
 
 #include "TransportFilter.h"
-#include <activemq/util/Config.h>
+#include <decaf/io/IOException.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace decaf::lang;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
 TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
@@ -31,8 +32,19 @@ TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::onTransportException( Transport* source AMQCPP_UNUSED,
-                                            const decaf::lang::Exception& ex ) {
+void TransportFilter::onException( const decaf::lang::Exception& ex ) {
 
     fire( ex );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::reconnect( const decaf::net::URI& uri )
+    throw( decaf::io::IOException ) {
+
+    try{
+        next->reconnect( uri );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

@@ -62,7 +62,7 @@ namespace transport{
 
             if( listener != NULL ){
                 try{
-                    listener->onTransportException( this, ex );
+                    listener->onException( ex );
                 }catch( ... ){}
             }
         }
@@ -103,8 +103,7 @@ namespace transport{
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( Transport* source,
-                                           const decaf::lang::Exception& ex );
+        virtual void onException( const decaf::lang::Exception& ex );
 
         /**
          * The transport has suffered an interruption from which it hopes to recover
@@ -249,6 +248,21 @@ namespace transport{
         virtual bool isClosed() const {
             return next->isClosed();
         }
+
+        /**
+         * @return the remote address for this connection
+         */
+        virtual std::string getRemoteAddress() const {
+            return next->getRemoteAddress();
+        }
+
+        /**
+         * reconnect to another location
+         * @param uri
+         * @throws IOException on failure of if not supported
+         */
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException );
 
     };
 

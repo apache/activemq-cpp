@@ -257,7 +257,7 @@ namespace mock{
          */
         virtual void fireException( const exceptions::ActiveMQException& ex ){
             if( listener != NULL ){
-                listener->onTransportException( this, ex );
+                listener->onException( ex );
             }
         }
 
@@ -309,6 +309,22 @@ namespace mock{
         virtual bool isClosed() const {
             return false;
         }
+
+        /**
+         * @return the remote address for this connection
+         */
+        virtual std::string getRemoteAddress() const {
+            return "";
+        }
+
+        /**
+         * reconnect to another location
+         * @param uri
+         * @throws IOException on failure of if not supported
+         */
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException ) {}
+
     };
 
 }}}

@@ -20,6 +20,7 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/net/URI.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
@@ -143,6 +144,19 @@ namespace transport{
          * @returns true if the Transport
          */
         virtual bool isClosed() const = 0;
+
+        /**
+         * @return the remote address for this connection
+         */
+        virtual std::string getRemoteAddress() const = 0;
+
+        /**
+         * reconnect to another location
+         * @param uri
+         * @throws IOException on failure of if not supported
+         */
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException ) = 0;
 
     };
 

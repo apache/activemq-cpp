@@ -59,14 +59,14 @@ namespace failover {
          * Gets the URI assigned to this Backup
          * @return the assigned URI
          */
-        decaf::net::URI getURI() const {
+        decaf::net::URI getUri() const {
             return this->uri;
         }
 
         /**
          * Sets the URI assigned to this Transport.
          */
-        void setURI( const decaf::net::URI& uri ) {
+        void setUri( const decaf::net::URI& uri ) {
             this->uri = uri;
         }
 
@@ -108,6 +108,14 @@ namespace failover {
          */
         bool isClosed() const {
             return this->closed;
+        }
+
+        /**
+         * Sets the closed flag on this Transport.
+         * @param value - true for closed.
+         */
+        void setClosed( bool value ) {
+            this->closed = value;
         }
 
     };

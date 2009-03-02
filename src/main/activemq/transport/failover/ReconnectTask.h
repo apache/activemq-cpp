@@ -15,39 +15,54 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_STATE_TRACKED_H_
-#define _ACTIVEMQ_STATE_TRACKED_H_
+#ifndef _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
+#define _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/commands/Response.h>
+
+#include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
-#include <decaf/lang/Pointer.h>
+#include <decaf/util/concurrent/Mutex.h>
 
 namespace activemq {
-namespace state {
+namespace transport {
+namespace failover {
 
-    using decaf::lang::Pointer;
+    class FailoverTransport;
 
-    class AMQCPP_API Tracked : public commands::Response {
+    class AMQCPP_API ReconnectTask : public decaf::lang::Thread {
     private:
 
-        Pointer<decaf::lang::Runnable> runnable;
+        decaf::util::concurrent::Mutex mutex;
+
+        bool threadTerminated;
+        bool pending;
+        bool shutDown;
+
+        FailoverTransport* parent;
 
     public:
 
-        Tracked() {}
-        Tracked( const Pointer<decaf::lang::Runnable>& runnable );
+        ReconnectTask( FailoverTransport* parent );
 
-        virtual ~Tracked() {}
+        virtual ~ReconnectTask();
 
-        void onResponse();
+        void shutdown( unsigned int timeout );
 
-        bool isWaitingForResponse() const {
-            return runnable != NULL;
+        void shutdown() {
+            this->shutdown( 0 );
         }
+
+        void wakeup();
+
+    protected:
+
+        bool iterate();
+
+        virtual void run();
 
     };
 
-}}
+}}}
 
-#endif /*_ACTIVEMQ_STATE_TRACKED_H_*/
+#endif /* _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_ */

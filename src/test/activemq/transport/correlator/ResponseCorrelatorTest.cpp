@@ -184,13 +184,13 @@ namespace correlator{
                 }
             }catch( exceptions::ActiveMQException& ex ){
                 if( listener ){
-                    listener->onTransportException( this, ex );
+                    listener->onException( ex );
                 }
             }
             catch( ... ){
                 if( listener ){
                     exceptions::ActiveMQException ex( __FILE__, __LINE__, "stuff" );
-                    listener->onTransportException( this, ex );
+                    listener->onException( ex );
                 }
             }
         }
@@ -214,6 +214,13 @@ namespace correlator{
         virtual bool isClosed() const {
             return false;
         }
+
+        virtual std::string getRemoteAddress() const {
+            return "";
+        }
+
+        virtual void reconnect( const decaf::net::URI& uri )
+            throw( decaf::io::IOException ) {}
 
     };
 
@@ -251,8 +258,7 @@ namespace correlator{
             }
         }
 
-        virtual void onTransportException(
-            Transport* source AMQCPP_UNUSED,
+        virtual void onException(
             const decaf::lang::Exception& ex AMQCPP_UNUSED)
         {
             synchronized( &mutex ){
