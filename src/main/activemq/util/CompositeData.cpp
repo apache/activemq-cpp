@@ -18,6 +18,7 @@
 #include "CompositeData.h"
 
 #include <sstream>
+#include <memory>
 #include <activemq/util/URISupport.h>
 
 using namespace std;
@@ -25,6 +26,7 @@ using namespace activemq;
 using namespace activemq::util;
 using namespace decaf;
 using namespace decaf::net;
+using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 CompositeData::CompositeData() {
@@ -48,11 +50,15 @@ URI CompositeData::toURI() const throw( decaf::net::URISyntaxException ) {
     } else {
         sb << "(";
 
-        for( std::size_t i = 0; i < components.size(); i++ ) {
-            if( i != 0 ) {
+        bool firstTime = true;
+        std::auto_ptr< Iterator<URI> > iter( components.iterator() );
+
+        while( iter->hasNext() ) {
+            if( firstTime == true ) {
                 sb << ",";
+                firstTime = false;
             }
-            sb << components[i].toString();
+            sb << iter->next().toString();
         }
 
         sb << ")";

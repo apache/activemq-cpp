@@ -106,8 +106,7 @@ Properties URISupport::parseQuery( std::string query )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void URISupport::parseQuery( std::string query,
-                             Properties* properties )
+void URISupport::parseQuery( std::string query, Properties* properties )
     throw ( IllegalArgumentException ) {
 
     try {
@@ -236,4 +235,142 @@ std::string URISupport::createQueryString( const Properties& options )
     AMQ_CATCH_RETHROW( URISyntaxException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
     AMQ_CATCHALL_THROW( URISyntaxException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool URISupport::checkParenthesis( const std::string& str ) {
+
+    bool result = true;
+    if( str != "" ) {
+        int open = 0;
+        int closed = 0;
+
+        std::string::const_iterator iter = str.begin();
+
+        for( ; iter != str.end(); ++iter ) {
+            if( *iter == '(' ) {
+                open++;
+            } else if( *iter == ')' ){
+                closed++;
+            }
+        }
+
+        result = open == closed;
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+CompositeData URISupport::parseComposite( const URI& uri )
+    throw( decaf::net::URISyntaxException ) {
+
+    CompositeData result;
+    result.setScheme( uri.getScheme() );
+    string ssp = stripPrefix( uri.getSchemeSpecificPart(), "//" );
+    parseComposite( uri, result, ssp );
+    result.setFragment( uri.getFragment() );
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::string& ssp )
+    throw( decaf::net::URISyntaxException ) {
+
+    std::string componentString;
+    std::string params;
+
+    if( !checkParenthesis( ssp ) ) {
+        throw URISyntaxException(
+            __FILE__, __LINE__,
+            "%s, Not a matching number of '(' and ')' parenthesis",
+            uri.toString() );
+    }
+
+    int p;
+    int intialParen = ssp.find( "(" );
+    if( intialParen == 0 ) {
+        rc.setHost( ssp.substr( 0, intialParen ) );
+        p = rc.getHost().find( "/" );
+        if( p >= 0 ) {
+            rc.setPath( rc.getHost().substr( p ) );
+            rc.setHost( rc.getHost().substr( 0, p ) );
+        }
+
+        p = ssp.rfind( ")" );
+        componentString = ssp.substr( intialParen + 1, p - (intialParen + 1) );
+        params = ssp.substr( p + 1 );
+
+    } else {
+        componentString = ssp;
+        params = "";
+    }
+
+    StlList<std::string> components = splitComponents( componentString );
+    std::auto_ptr< Iterator<std::string> > iter( components.iterator() );
+    while( iter->hasNext() ) {
+        rc.getComponents().add( URI( iter->next() ) );
+    }
+
+    p = params.find( "?" );
+    if( p >= 0 ) {
+        if( p > 0 ) {
+            rc.setPath( stripPrefix( params.substr( 0, p ), "/" ) );
+        }
+
+        rc.setParameters( parseQuery( params.substr( p + 1 ) ) );
+    } else {
+        if( params.length() > 0 ) {
+            rc.setPath( stripPrefix( params, "/" ) );
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+StlList<std::string> URISupport::splitComponents( const std::string& str ) {
+
+    StlList<std::string> components;
+
+    int last = 0;
+    int depth = 0;
+
+    std::string::const_iterator iter = str.begin();
+
+    for( std::size_t i = 0; iter != str.end(); ++iter, ++i ) {
+
+        switch( *iter ) {
+        case '(':
+            depth++;
+            break;
+        case ')':
+            depth--;
+            break;
+        case ',':
+            if( depth == 0 ) {
+                std::string s = str.substr( last, i );
+                components.add( s );
+                last = i + 1;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    std::string s = str.substr( last );
+    if( s.length() != 0 ) {
+        components.add( s );
+    }
+
+    return components;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string URISupport::stripPrefix( const std::string& value, const std::string& prefix ) {
+
+    if( value.find( prefix ) == 0 ) {
+        return value.substr( prefix.length() );
+    }
+
+    return value;
 }

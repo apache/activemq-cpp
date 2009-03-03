@@ -29,6 +29,7 @@ namespace util{
        CPPUNIT_TEST_SUITE( URISupportTest );
        CPPUNIT_TEST( test );
        CPPUNIT_TEST( testURIParseEnv );
+       CPPUNIT_TEST( testParseComposite );
        CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,6 +39,7 @@ namespace util{
 
         void test();
         void testURIParseEnv();
+        void testParseComposite();
 
     };
 

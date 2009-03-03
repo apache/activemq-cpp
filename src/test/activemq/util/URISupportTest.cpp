@@ -120,3 +120,35 @@ void URISupportTest::testURIParseEnv() {
         URISupport::parseURL( test, map ),
         decaf::lang::exceptions::IllegalArgumentException );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void URISupportTest::testParseComposite() {
+
+    CompositeData data = URISupport::parseComposite(
+        URI("broker:()/localhost?persistent=false" ) );
+    CPPUNIT_ASSERT( 0 == data.getComponents().size() );
+
+    data = URISupport::parseComposite( URI( "test:(path)/path" ) );
+    CPPUNIT_ASSERT( data.getPath() == "path" );
+
+    data = URISupport::parseComposite( URI( "test:path" ) );
+    CPPUNIT_ASSERT( data.getPath() == "" );
+
+    data = URISupport::parseComposite( URI( "test:part1" ) );
+    CPPUNIT_ASSERT( 1 == data.getComponents().size() );
+
+    data = URISupport::parseComposite(
+        URI( "test:(part1://host,part2://(sub1://part,sube2:part))" ) );
+    CPPUNIT_ASSERT( 2 == data.getComponents().size() );
+
+    data = URISupport::parseComposite(
+        URI( "broker://(tcp://localhost:61616?wireformat=openwire)?name=foo" ) );
+
+    CPPUNIT_ASSERT( data.getScheme() == "broker" );
+    CPPUNIT_ASSERT( data.getParameters().hasProperty( "name" ) );
+    CPPUNIT_ASSERT( string( data.getParameters().getProperty( "name" ) ) == "foo" );
+    CPPUNIT_ASSERT( data.getComponents().size() == 1 );
+    CPPUNIT_ASSERT( data.getComponents().get(0).toString() ==
+                    "tcp://localhost:61616?wireformat=openwire" );
+
+}
