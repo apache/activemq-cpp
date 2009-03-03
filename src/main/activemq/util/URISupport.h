@@ -19,6 +19,7 @@
 #define _ACTIVEMQ_UTIL_URISUPPORT_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/util/CompositeData.h>
 #include <decaf/util/Properties.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 
@@ -59,6 +60,21 @@ namespace util{
         static void parseQuery( std::string query,
                                 decaf::util::Properties* properties )
             throw ( decaf::lang::exceptions::IllegalArgumentException );
+
+        /**
+         * Given a properties object create a string that can be appended to a URI
+         * as a valid Query string.
+         *
+         * @param options
+         *        Properties object containing key / value query values.
+         *
+         * @return a valid URI query string.
+         *
+         * @throw URISyntaxException if the string in the Properties object
+         *        can't be encoded into a valid URI Query string.
+         */
+        static std::string createQueryString( const Properties& options )
+            throw( decaf::net::URISyntaxException );
 
     private:
 

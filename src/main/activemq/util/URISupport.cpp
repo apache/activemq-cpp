@@ -22,11 +22,15 @@
 #include <decaf/util/StringTokenizer.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/lang/System.h>
+#include <decaf/net/URLEncoder.h>
+#include <decaf/net/URISyntaxException.h>
+#include <sstream>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::util;
 using namespace decaf::util;
+using namespace decaf::net;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -197,4 +201,39 @@ std::string URISupport::replaceEnvValues( const std::string& value )
     AMQ_CATCH_RETHROW( IllegalArgumentException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IllegalArgumentException )
     AMQ_CATCHALL_THROW( IllegalArgumentException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string URISupport::createQueryString( const Properties& options )
+    throw( URISyntaxException ) {
+
+    try {
+
+        if( options.isEmpty() ) {
+
+            ostringstream rc;
+            bool first = true;
+            std::vector< std::pair< std::string, std::string > > values = options.toArray();
+            std::vector< std::pair< std::string, std::string > >::const_iterator iter = values.begin();
+
+            for( ; iter != values.end(); ++iter ) {
+                if( first ) {
+                    first = false;
+                } else {
+                    rc << "&";
+                }
+
+                rc << URLEncoder::encode( iter->first ) << "="
+                   << URLEncoder::encode( iter->second );
+            }
+
+            return rc.str();
+
+        } else {
+            return "";
+        }
+    }
+    AMQ_CATCH_RETHROW( URISyntaxException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, URISyntaxException )
+    AMQ_CATCHALL_THROW( URISyntaxException )
 }

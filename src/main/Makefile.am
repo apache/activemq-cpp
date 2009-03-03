@@ -26,6 +26,7 @@ cc_sources = \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/URISupport.cpp \
     activemq/util/MemoryUsage.cpp \
+    activemq/util/CompositeData.cpp \
     activemq/cmsutil/DynamicDestinationResolver.cpp \
     activemq/cmsutil/ResourceLifecycleManager.cpp \
     activemq/cmsutil/CmsAccessor.cpp \
@@ -228,6 +229,7 @@ h_sources = \
     activemq/util/URISupport.h \
     activemq/util/MemoryUsage.h \
     activemq/util/Usage.h \
+    activemq/util/CompositeData.h \    
     activemq/wireformat/WireFormat.h \
     activemq/wireformat/WireFormatNegotiator.h \
     activemq/wireformat/WireFormatFactory.h \
