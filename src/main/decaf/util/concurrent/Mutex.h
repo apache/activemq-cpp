@@ -56,6 +56,11 @@ namespace concurrent{
         volatile unsigned long lock_owner;
         volatile unsigned long lock_count;
 
+    private:
+
+        Mutex( const Mutex& src );
+        Mutex& operator= ( const Mutex& src );
+
     public:
 
         /**

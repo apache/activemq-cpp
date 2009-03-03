@@ -65,6 +65,24 @@ namespace util {
         virtual ~AbstractCollection() {}
 
         /**
+         * Assignment Operator, copy element from the source collection to this
+         * collection after clearing any element stored in this collection.
+         *
+         * @param collection - the collection to copy
+         * @return a reference to this collection
+         */
+        AbstractCollection<E>& operator= ( const AbstractCollection<E>& collection ) {
+            this->clear();
+
+            std::auto_ptr< Iterator<E> > iter( collection.iterator() );
+            while( iter->hasNext() ) {
+                this->add( iter->next() );
+            }
+
+            return *this;
+        }
+
+        /**
          * Ensures that this collection contains the specified element (optional operation).
          * Returns true if this collection changed as a result of the call. (Returns false if
          * this collection does not permit duplicates and already contains the specified element.)
