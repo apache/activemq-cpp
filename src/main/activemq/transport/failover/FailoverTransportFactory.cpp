@@ -18,6 +18,8 @@
 #include "FailoverTransportFactory.h"
 
 #include <activemq/transport/failover/FailoverTransport.h>
+#include <activemq/util/CompositeData.h>
+#include <activemq/util/URISupport.h>
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
@@ -25,6 +27,7 @@
 #include <memory>
 
 using namespace activemq;
+using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
 using namespace activemq::exceptions;
@@ -41,6 +44,7 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(
 
     try {
 
+        CompositeData data = URISupport::parseComposite( location );
         Pointer<FailoverTransport> transport( new FailoverTransport() );
 
         transport->setInitialReconnectDelay(
@@ -63,6 +67,8 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(
             Boolean::parseBoolean( properties.getProperty( "trackMessages", "false" ) ) );
         transport->setMaxCacheSize(
             Integer::parseInt( properties.getProperty( "maxCacheSize", "131072" ) ) );
+
+        transport->addURI( data.getComponents() );
 
         return transport;
     }
