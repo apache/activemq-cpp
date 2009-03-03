@@ -38,6 +38,11 @@ namespace internal{
          */
         mutable apr_pool_t* aprPool;
 
+    protected:
+
+        AprPool( const AprPool& source );
+        AprPool& operator= ( const AprPool& source );
+
     public:
 
         AprPool();
