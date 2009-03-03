@@ -415,7 +415,8 @@ std::vector<unsigned char> PrimitiveValueNode::getByteArray() const throw( decaf
 void PrimitiveValueNode::setList( const decaf::util::List<PrimitiveValueNode>& lvalue ){
     clear();
     valueType = LIST_TYPE;
-    value.listValue = new decaf::util::StlList<PrimitiveValueNode>( lvalue );
+    value.listValue = new decaf::util::StlList<PrimitiveValueNode>();
+    value.listValue->copy( lvalue );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
