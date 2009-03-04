@@ -230,7 +230,7 @@ namespace correlator{
         MyBrokenTransport(){}
         virtual ~MyBrokenTransport(){}
 
-        virtual commands::Response* createResponse(commands:: Command* command AMQCPP_UNUSED){
+        virtual Pointer<Response> createResponse( const Pointer<Command>& command ){
             throw exceptions::ActiveMQException( __FILE__, __LINE__,
                 "bad stuff" );
         }
@@ -249,7 +249,7 @@ namespace correlator{
             exCount = 0;
         }
         virtual ~MyListener(){}
-        virtual void onCommand( commands::Command* command ){
+        virtual void onCommand( const Pointer<Command>& command ){
 
             synchronized( &mutex ){
                 commands.insert( command->getCommandId() );
@@ -498,7 +498,7 @@ void ResponseCorrelatorTest::testNarrow(){
     Pointer<MyTransport> transport( new MyTransport() );
     ResponseCorrelator correlator( transport );
 
-    Transport* narrowed = correlator.narrow( typeid( transport ) );
+    Transport* narrowed = correlator.narrow( typeid( *transport ) );
     CPPUNIT_ASSERT( narrowed == transport );
 
     narrowed = correlator.narrow( typeid( std::string() ) );
