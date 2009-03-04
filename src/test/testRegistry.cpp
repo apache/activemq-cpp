@@ -76,9 +76,9 @@
 //#include <activemq/core/ActiveMQSessionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 
-//#include <activemq/transport/failover/FailoverTransportTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
-//
+#include <activemq/transport/failover/FailoverTransportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
+
 //#include <activemq/transport/correlator/ResponseCorrelatorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
 //
@@ -179,9 +179,9 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::ThreadTest );
 //#include <decaf/lang/SystemTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
-#include <decaf/lang/PointerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
-
+//#include <decaf/lang/PointerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
+//
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
 //#include <decaf/net/SocketTest.h>
