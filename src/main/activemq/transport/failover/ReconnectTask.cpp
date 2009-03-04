@@ -41,7 +41,7 @@ ReconnectTask::ReconnectTask( FailoverTransport* parent ) : parent( parent ) {
     this->pending = false;
     this->shutDown = false;
 
-    this->start();
+    //this->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,6 @@ bool ReconnectTask::iterate() {
 
     bool result = false;
     bool buildBackup = true;
-    bool doReconnect = !parent->closed;
 
     synchronized( &( parent->backupMutex ) ) {
         if( parent->connectedTransport == NULL && !parent->closed ) {

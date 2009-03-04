@@ -40,8 +40,9 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport() {
+FailoverTransport::FailoverTransport( const Pointer<wireformat::WireFormat>& wireFormat ) {
 
+    this->wireFormat = wireFormat;
     this->timeout = -1;
     this->initialReconnectDelay = 10;
     this->maxReconnectDelay = 1000 * 30;
@@ -58,6 +59,7 @@ FailoverTransport::FailoverTransport() {
     this->trackMessages = false;
     this->maxCacheSize = 128 * 1024;
 
+    this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
 }
@@ -131,6 +133,23 @@ void FailoverTransport::removeURI( const List<URI>& uris ) {
     }
 
     reconnect();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransport::reconnect( const decaf::net::URI& uri )
+    throw( decaf::io::IOException ) {
+
+    try {
+
+        if( !uris.contains( uri ) ) {
+            uris.add( uri );
+        }
+
+        reconnect();
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -424,7 +443,7 @@ void FailoverTransport::restoreTransport( const Pointer<Transport>& transport )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error )
+void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& error AMQCPP_UNUSED )
     throw( decaf::lang::Exception ) {
 
     Pointer<Transport> transport;

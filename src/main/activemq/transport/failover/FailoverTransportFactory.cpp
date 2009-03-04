@@ -45,7 +45,7 @@ Pointer<Transport> FailoverTransportFactory::doCreateComposite(
     try {
 
         CompositeData data = URISupport::parseComposite( location );
-        Pointer<FailoverTransport> transport( new FailoverTransport() );
+        Pointer<FailoverTransport> transport( new FailoverTransport( wireFormat ) );
 
         transport->setInitialReconnectDelay(
             Long::parseLong( properties.getProperty( "initialReconnectDelay", "10" ) ) );

@@ -26,6 +26,7 @@
 #include <activemq/transport/failover/BackupTransport.h>
 #include <activemq/transport/failover/ReconnectTask.h>
 #include <activemq/transport/failover/FailoverTransportListener.h>
+#include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/util/StlList.h>
 #include <decaf/util/StlMap.h>
@@ -82,6 +83,7 @@ namespace failover {
         decaf::util::concurrent::Mutex listenerMutex;
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
+        Pointer<wireformat::WireFormat> wireFormat;
         Pointer<URI> connectedTransportURI;
         Pointer<URI> failedConnectTransportURI;
         Pointer<Transport> connectedTransport;
@@ -93,7 +95,7 @@ namespace failover {
 
     public:
 
-        FailoverTransport();
+        FailoverTransport( const Pointer<wireformat::WireFormat>& wireFormat );
 
         virtual ~FailoverTransport();
 
@@ -197,7 +199,9 @@ namespace failover {
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {}
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
+            this->wireFormat = wireFormat;
+        }
 
         /**
          * Sets the observer of asynchronous events from this transport.
@@ -261,7 +265,7 @@ namespace failover {
          * @throws IOException on failure of if not supported
          */
         virtual void reconnect( const decaf::net::URI& uri )
-            throw( decaf::io::IOException ) {}
+            throw( decaf::io::IOException );
 
     public: // FailoverTransport Property Getters / Setters
 

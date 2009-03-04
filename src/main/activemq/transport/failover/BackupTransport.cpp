@@ -34,8 +34,7 @@ BackupTransport::~BackupTransport() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BackupTransport::onTransportException( transport::Transport* source,
-                                            const decaf::lang::Exception& ex ) {
+void BackupTransport::onException( const decaf::lang::Exception& ex AMQCPP_UNUSED ) {
 
     this->closed = true;
 

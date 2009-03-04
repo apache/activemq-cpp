@@ -98,8 +98,7 @@ namespace failover {
          * @param source The source of the exception
          * @param ex The exception.
          */
-        virtual void onTransportException( transport::Transport* source,
-                                           const decaf::lang::Exception& ex );
+        virtual void onException( const decaf::lang::Exception& ex );
 
         /**
          * Has the Transport been shutdown and no longer usable.
