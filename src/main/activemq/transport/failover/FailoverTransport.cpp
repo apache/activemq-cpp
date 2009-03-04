@@ -59,6 +59,10 @@ FailoverTransport::FailoverTransport( const Pointer<wireformat::WireFormat>& wir
     this->trackMessages = false;
     this->maxCacheSize = 128 * 1024;
 
+    this->started = false;
+    this->closed = false;
+    this->connected = false;
+
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
@@ -351,7 +355,7 @@ void FailoverTransport::start() throw( cms::CMSException ) {
             stateTracker.setMaxCacheSize( this->getMaxCacheSize() );
             stateTracker.setTrackMessages( this->isTrackMessages() );
 
-            if( connectedTransport.get() != NULL ) {
+            if( connectedTransport != NULL ) {
                 stateTracker.restore( connectedTransport );
             } else {
                 reconnect();
