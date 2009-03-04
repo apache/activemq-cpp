@@ -225,9 +225,10 @@ void IOTransportTest::testStressTransportStartClose(){
     decaf::io::DataInputStream input( &bis );
     decaf::io::DataOutputStream output( &bos );
 
+    Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
+    MyTransportListener listener;
+
     for( int i = 0; i < 50; ++i ) {
-        Pointer<MyWireFormat> wireFormat( new MyWireFormat() );
-        MyTransportListener listener;
 
         IOTransport transport;
         transport.setWireFormat( wireFormat );

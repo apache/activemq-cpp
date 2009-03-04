@@ -41,11 +41,12 @@ void FailoverTransportTest::testTransportCreate() {
 
     std::string uri = "failover://(mock://localhost:61616)?randomize=false";
 
+    DefaultTransportListener listener;
     FailoverTransportFactory factory;
 
     Pointer<Transport> transport( factory.create( uri ) );
-
     CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
 
     FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
         transport->narrow( typeid( FailoverTransport ) ) );
@@ -53,6 +54,7 @@ void FailoverTransportTest::testTransportCreate() {
     CPPUNIT_ASSERT( failover != NULL );
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
+//    transport->start();
     transport->close();
 }
 
