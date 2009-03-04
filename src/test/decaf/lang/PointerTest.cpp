@@ -125,7 +125,6 @@ void PointerTest::testBasics() {
         Pointer<ExceptionThrowingClass> ex( new ExceptionThrowingClass() );
         CPPUNIT_FAIL( "Should Have Thrown." );
     } catch(...) {}
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

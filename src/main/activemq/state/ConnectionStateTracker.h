@@ -42,7 +42,8 @@ namespace state {
     class AMQCPP_API ConnectionStateTracker : public CommandVisitorAdapter {
     private:
 
-        static const Pointer<Tracked> TRACKED_RESPONSE_MARKER;
+        /** Creates a unique marker for this state tracker */
+        const Pointer<Tracked> TRACKED_RESPONSE_MARKER;
 
         // TODO - Create a Thread Safe impl of Map.
         decaf::util::StlMap< Pointer<ConnectionId>, Pointer<ConnectionState>,

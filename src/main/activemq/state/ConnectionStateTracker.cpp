@@ -30,7 +30,6 @@ using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-const Pointer<Tracked> ConnectionStateTracker::TRACKED_RESPONSE_MARKER( new Tracked() );
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace activemq {
@@ -60,7 +59,7 @@ namespace state {
 }}
 
 ////////////////////////////////////////////////////////////////////////////////
-ConnectionStateTracker::ConnectionStateTracker() {
+ConnectionStateTracker::ConnectionStateTracker() : TRACKED_RESPONSE_MARKER( new Tracked() ) {
 
     this->trackTransactions = false;
     this->restoreSessions = true;

@@ -46,4 +46,6 @@ void MockTransportFactoryTest::test() {
 
     CPPUNIT_ASSERT( transport.get() != NULL );
 
+    transport.reset( NULL );
+
 }

@@ -41,8 +41,7 @@ namespace failover {
     class AMQCPP_API FailoverTransportFactory : public AbstractTransportFactory {
     public:
 
-        FailoverTransportFactory();
-        virtual ~FailoverTransportFactory();
+        virtual ~FailoverTransportFactory() {}
 
         /**
          * Creates a slimed down Transport instance which can be used in composite

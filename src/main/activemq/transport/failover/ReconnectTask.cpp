@@ -104,3 +104,44 @@ bool ReconnectTask::iterate() {
 
     return result;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void ReconnectTask::run() {
+
+    try {
+
+        while( true ) {
+
+            synchronized( &mutex ) {
+                pending = false;
+                if( shutDown ) {
+                    return;
+                }
+            }
+
+            if( !this->iterate() ) {
+
+                // wait to be notified.
+                synchronized( &mutex ) {
+                    if( shutDown ) {
+                        return;
+                    }
+                    while( !pending ) {
+                        mutex.wait();
+                    }
+                }
+            }
+
+        }
+    }
+    AMQ_CATCH_NOTHROW( Exception )
+    AMQ_CATCHALL_NOTHROW()
+
+    // Make sure we notify any waiting threads that thread
+    // has terminated.
+    synchronized( &mutex ) {
+        threadTerminated = true;
+        mutex.notifyAll();
+    }
+
+}

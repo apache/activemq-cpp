@@ -40,6 +40,7 @@ cc_sources = \
   activemq/transport/IOTransportTest.cpp \
   activemq/transport/correlator/ResponseCorrelatorTest.cpp \
   activemq/transport/mock/MockTransportFactoryTest.cpp \
+  activemq/transport/failover/FailoverTransportTest.cpp \
   activemq/util/PrimitiveValueNodeTest.cpp \
   activemq/util/PrimitiveListTest.cpp \
   activemq/util/PrimitiveMapTest.cpp \
@@ -139,6 +140,7 @@ h_sources = \
   activemq/transport/IOTransportTest.h \
   activemq/transport/correlator/ResponseCorrelatorTest.h \
   activemq/transport/mock/MockTransportFactoryTest.h \
+  activemq/transport/failover/FailoverTransportTest.h \
   activemq/util/PrimitiveValueNodeTest.h \
   activemq/util/PrimitiveListTest.h \
   activemq/util/PrimitiveMapTest.h \

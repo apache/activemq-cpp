@@ -18,28 +18,28 @@
 // All CPP Unit tests are registered in here so we can disable them and
 // enable them easily in one place.
 
-#include <activemq/commands/BrokerInfoTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
-#include <activemq/commands/BrokerIdTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
-#include <activemq/commands/ActiveMQTopicTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
-#include <activemq/commands/ActiveMQTextMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTextMessageTest );
-#include <activemq/commands/ActiveMQTempTopicTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempTopicTest );
-#include <activemq/commands/ActiveMQTempQueueTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempQueueTest );
-#include <activemq/commands/ActiveMQQueueTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQQueueTest );
-#include <activemq/commands/ActiveMQMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMessageTest );
-#include <activemq/commands/ActiveMQMapMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
-#include <activemq/commands/ActiveMQDestinationTest2.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
-#include <activemq/commands/ActiveMQBytesMessageTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
+//#include <activemq/commands/BrokerInfoTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerInfoTest );
+//#include <activemq/commands/BrokerIdTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::BrokerIdTest );
+//#include <activemq/commands/ActiveMQTopicTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTopicTest );
+//#include <activemq/commands/ActiveMQTextMessageTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTextMessageTest );
+//#include <activemq/commands/ActiveMQTempTopicTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempTopicTest );
+//#include <activemq/commands/ActiveMQTempQueueTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQTempQueueTest );
+//#include <activemq/commands/ActiveMQQueueTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQQueueTest );
+//#include <activemq/commands/ActiveMQMessageTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMessageTest );
+//#include <activemq/commands/ActiveMQMapMessageTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQMapMessageTest );
+//#include <activemq/commands/ActiveMQDestinationTest2.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQDestinationTest );
+//#include <activemq/commands/ActiveMQBytesMessageTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 //
 //#include <activemq/wireformat/openwire/marshal/BaseDataStreamMarshallerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::openwire::marshal::BaseDataStreamMarshallerTest );
@@ -68,14 +68,17 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::commands::ActiveMQBytesMessageTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::DynamicDestinationResolverTest );
 //#include <activemq/cmsutil/SessionPoolTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::cmsutil::SessionPoolTest );
+//
+//#include <activemq/core/ActiveMQConnectionFactoryTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
+//#include <activemq/core/ActiveMQConnectionTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
+//#include <activemq/core/ActiveMQSessionTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 
-#include <activemq/core/ActiveMQConnectionFactoryTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest );
-#include <activemq/core/ActiveMQConnectionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
-#include <activemq/core/ActiveMQSessionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
-
+//#include <activemq/transport/failover/FailoverTransportTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
+//
 //#include <activemq/transport/correlator/ResponseCorrelatorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
 //
@@ -86,10 +89,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::TransportRegistryTest );
 //#include <activemq/transport/IOTransportTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::IOTransportTest );
-
-#include <activemq/exceptions/ActiveMQExceptionTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
-
+//
+//#include <activemq/exceptions/ActiveMQExceptionTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
+//
 //#include <activemq/util/LongSequenceGeneratorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::LongSequenceGeneratorTest );
 //#include <activemq/util/PrimitiveValueNodeTest.h>
@@ -178,13 +181,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::SystemTest );
 #include <decaf/lang/PointerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( decaf::lang::PointerTest );
-//
+
 //#include <decaf/net/SocketFactoryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketFactoryTest );
 //#include <decaf/net/SocketTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::SocketTest );
-#include <decaf/net/URITest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
+//#include <decaf/net/URITest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //#include <decaf/net/URISyntaxExceptionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URISyntaxExceptionTest );
 //#include <decaf/net/URLEncoderTest.h>
@@ -192,8 +195,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URITest );
 //#include <decaf/net/URLDecoderTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::net::URLDecoderTest );
 //
-#include <decaf/util/concurrent/ConcurrentStlMapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest );
+//#include <decaf/util/concurrent/ConcurrentStlMapTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest );
 //#include <decaf/util/concurrent/CountDownLatchTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::CountDownLatchTest );
 //#include <decaf/util/concurrent/MutexTest.h>
@@ -214,15 +217,15 @@ CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::concurrent::ConcurrentStlMapTest )
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::DateTest );
 //#include <decaf/util/UUIDTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::UUIDTest );
-#include <decaf/util/ListTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
-#include <decaf/util/StlMapTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
-#include <decaf/util/QueueTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
+//#include <decaf/util/ListTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::ListTest );
+//#include <decaf/util/StlMapTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StlMapTest );
+//#include <decaf/util/QueueTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::QueueTest );
 //#include <decaf/util/RandomTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::RandomTest );
-#include <decaf/util/SetTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
+//#include <decaf/util/SetTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::SetTest );
 //#include <decaf/util/StringTokenizerTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( decaf::util::StringTokenizerTest );
