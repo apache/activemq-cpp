@@ -41,7 +41,7 @@ ReconnectTask::ReconnectTask( FailoverTransport* parent ) : parent( parent ) {
     this->pending = false;
     this->shutDown = false;
 
-    //this->start();
+    this->start();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

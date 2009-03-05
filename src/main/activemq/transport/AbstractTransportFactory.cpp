@@ -87,11 +87,6 @@ Pointer<Transport> AbstractTransportFactory::createComposite( const decaf::net::
         // Create the initial Transport, then wrap it in the normal Filters
         Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
 
-        // If there is a negotiator need then we create and wrap here.
-        if( wireFormat->hasNegotiator() ) {
-            transport = wireFormat->createNegotiator( transport );
-        }
-
         return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )

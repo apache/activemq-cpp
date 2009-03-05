@@ -39,7 +39,7 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
     try {
 
         std::string wireFormatName =
-            properties.getProperty( "wireFormat", "stomp" );
+            properties.getProperty( "wireFormat", "openwire" );
 
         Pointer<MockTransport::ResponseBuilder> builder;
 
