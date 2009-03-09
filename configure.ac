@@ -145,8 +145,7 @@ case "${host_os}" in
     else
        # Assuming Sun Compiler and adding in optimization
        # because autoconf can't seem to figure it out.
-       PLAT_CXXFLAGS="-mt -w -O5"
-       PLAT_LIBS+="-library=stlport4"
+       PLAT_CXXFLAGS="-mt -w -O5 -library=stlport4"
     fi
     ;;
 
