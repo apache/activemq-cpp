@@ -80,7 +80,13 @@ Pointer<Tracked> ConnectionStateTracker::track( const Pointer<Command>& command 
     throw( decaf::io::IOException ) {
 
     try{
-        return command->visit( this ).dynamicCast<Tracked, Pointer<Tracked>::CounterType>();
+
+        Pointer<Command> result = command->visit( this );
+        if( result == NULL ) {
+            return Pointer<Tracked>();
+        } else {
+            return result.dynamicCast<Tracked, Pointer<Tracked>::CounterType >();
+        }
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
