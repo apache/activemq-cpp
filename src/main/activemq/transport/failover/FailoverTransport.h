@@ -68,7 +68,6 @@ namespace failover {
         int maxReconnectAttempts;
         int connectFailures;
         long long reconnectDelay;
-        bool firstConnection;
         bool backup;
         int backupPoolSize;
         bool trackMessages;

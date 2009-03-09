@@ -53,7 +53,6 @@ FailoverTransport::FailoverTransport( const Pointer<wireformat::WireFormat>& wir
     this->maxReconnectAttempts = 0;
     this->connectFailures = 0;
     this->reconnectDelay = this->initialReconnectDelay;
-    this->firstConnection = true;
     this->backup = false;
     this->backupPoolSize = 1;
     this->trackMessages = false;
@@ -400,7 +399,7 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         sleepMutex.notifyAll();
     }
 
-    reconnectTask->shutdown();
+    reconnectTask->shutdown( 500 );
 
     if( transportToStop != NULL ) {
         transportToStop->close();
@@ -564,10 +563,6 @@ bool FailoverTransport::doReconnect() {
 
                         if( transportListener != NULL ) {
                             transportListener->transportResumed();
-                        }
-
-                        if( firstConnection ) {
-                            firstConnection = false;
                         }
 
                         connected = true;
