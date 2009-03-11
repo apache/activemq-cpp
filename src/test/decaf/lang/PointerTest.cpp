@@ -411,3 +411,21 @@ void PointerTest::testInvasive() {
     copy.reset( NULL );
     CPPUNIT_ASSERT( copy.get() == NULL );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+TestClassBase* methodReturnRawPointer() {
+
+    return new TestClassA;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<TestClassBase> methodReturnPointer() {
+
+    return Pointer<TestClassBase>( methodReturnRawPointer() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PointerTest::testReturnByValue() {
+
+    Pointer<TestClassBase> result = methodReturnPointer();
+}

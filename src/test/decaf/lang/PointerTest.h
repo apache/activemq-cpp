@@ -35,6 +35,7 @@ namespace lang {
         CPPUNIT_TEST( testOperators );
         CPPUNIT_TEST( testSTLContainers );
         CPPUNIT_TEST( testInvasive );
+        CPPUNIT_TEST( testReturnByValue );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -50,6 +51,7 @@ namespace lang {
         void testOperators();
         void testSTLContainers();
         void testInvasive();
+        void testReturnByValue();
 
     };
 
