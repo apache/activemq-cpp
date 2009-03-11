@@ -65,6 +65,7 @@ FailoverTransport::FailoverTransport( const Pointer<wireformat::WireFormat>& wir
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
+    this->taskRunner.reset( new TaskRunner( reconnectTask.get() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -399,7 +400,7 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         sleepMutex.notifyAll();
     }
 
-    reconnectTask->shutdown( 500 );
+    taskRunner->shutdown( 500 );
 
     if( transportToStop != NULL ) {
         transportToStop->close();
@@ -411,7 +412,7 @@ void FailoverTransport::reconnect() {
 
     synchronized( &reconnectMutex  ) {
         if( started ) {
-            reconnectTask->wakeup();
+            taskRunner->wakeup();
         }
     }
 }
@@ -467,7 +468,7 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
             connectedTransportURI.reset( NULL );
             connected = false;
             if( reconnectOk ) {
-                reconnectTask->wakeup();
+                taskRunner->wakeup();
             }
         }
 

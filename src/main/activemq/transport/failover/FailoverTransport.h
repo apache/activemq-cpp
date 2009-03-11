@@ -21,6 +21,7 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Command.h>
+#include <activemq/util/TaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
 #include <activemq/transport/failover/BackupTransport.h>
@@ -43,6 +44,7 @@ namespace failover {
     using namespace decaf::lang;
     using decaf::net::URI;
     using namespace decaf::util;
+    using namespace activemq::util;
     using activemq::commands::Command;
     using activemq::commands::Response;
 
@@ -88,6 +90,7 @@ namespace failover {
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
         Pointer<ReconnectTask> reconnectTask;
+        Pointer<TaskRunner> taskRunner;
         Pointer<TransportListener> disposedListener;
         Pointer<TransportListener> myTransportListener;
         TransportListener* transportListener;

@@ -105,6 +105,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTranspor
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 //#include <activemq/util/MemoryUsageTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MemoryUsageTest );
+//#include <activemq/util/TaskRunnerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::TaskRunnerTest );
 //
 //#include <activemq/wireformat/WireFormatRegistryTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::WireFormatRegistryTest );

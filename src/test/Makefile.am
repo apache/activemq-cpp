@@ -47,6 +47,7 @@ cc_sources = \
   activemq/util/URISupportTest.cpp \
   activemq/util/MemoryUsageTest.cpp \
   activemq/util/LongSequenceGeneratorTest.cpp \
+  activemq/util/TaskRunnerTest.cpp \
   activemq/wireformat/WireFormatRegistryTest.cpp \
   activemq/wireformat/openwire/OpenWireFormatTest.cpp \
   activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.cpp \
@@ -147,6 +148,7 @@ h_sources = \
   activemq/util/URISupportTest.h \
   activemq/util/MemoryUsageTest.h \
   activemq/util/LongSequenceGeneratorTest.h \
+  activemq/util/TaskRunnerTest.h \
   activemq/wireformat/WireFormatRegistryTest.h \
   activemq/wireformat/openwire/OpenWireFormatTest.h \
   activemq/wireformat/openwire/marshal/PrimitiveMapMarshallerTest.h \

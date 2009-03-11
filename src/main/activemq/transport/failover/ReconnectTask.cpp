@@ -36,48 +36,6 @@ ReconnectTask::ReconnectTask( FailoverTransport* parent ) : parent( parent ) {
         throw NullPointerException(
             __FILE__, __LINE__, "Parent FailoverTransport passed was null" );
     }
-
-    this->threadTerminated = false;
-    this->pending = false;
-    this->shutDown = false;
-
-    this->start();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-ReconnectTask::~ReconnectTask() {
-    try{
-        this->shutdown();
-    }
-    AMQ_CATCHALL_NOTHROW()
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ReconnectTask::shutdown( unsigned int timeout ) {
-
-    synchronized( &mutex ) {
-        shutDown = true;
-        pending = true;
-        mutex.notifyAll();
-
-        // Wait till the thread stops ( no need to wait if shutdown
-        // is called from thread that is shutting down)
-        if( !threadTerminated ) {
-            mutex.wait( timeout );
-        }
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ReconnectTask::wakeup() {
-
-    synchronized( &mutex ) {
-        if( shutDown) {
-            return;
-        }
-        pending = true;
-        mutex.notifyAll();
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,49 +56,8 @@ bool ReconnectTask::iterate() {
     } else {
         // build backups on the next iteration
         result = true;
-        this->wakeup();
+        parent->taskRunner->wakeup();
     }
 
     return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ReconnectTask::run() {
-
-    try {
-
-        while( true ) {
-
-            synchronized( &mutex ) {
-                pending = false;
-                if( shutDown ) {
-                    return;
-                }
-            }
-
-            if( !this->iterate() ) {
-
-                // wait to be notified.
-                synchronized( &mutex ) {
-                    if( shutDown ) {
-                        return;
-                    }
-                    while( !pending ) {
-                        mutex.wait();
-                    }
-                }
-            }
-
-        }
-    }
-    AMQ_CATCH_NOTHROW( Exception )
-    AMQ_CATCHALL_NOTHROW()
-
-    // Make sure we notify any waiting threads that thread
-    // has terminated.
-    synchronized( &mutex ) {
-        threadTerminated = true;
-        mutex.notifyAll();
-    }
-
 }

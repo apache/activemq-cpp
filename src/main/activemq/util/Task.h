@@ -15,33 +15,34 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
-#define _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
-
-#include <activemq/util/Config.h>
-
-#include <activemq/util/Task.h>
+#ifndef _ACTIVEMQ_UTIL_TASK_H_
+#define _ACTIVEMQ_UTIL_TASK_H_
 
 namespace activemq {
-namespace transport {
-namespace failover {
+namespace util {
 
-    class FailoverTransport;
-
-    class AMQCPP_API ReconnectTask : public activemq::util::Task {
-    private:
-
-        FailoverTransport* parent;
-
+    /**
+     * Represents a unit of work that requires one or more iterations to complete.
+     *
+     * @since 3.0
+     */
+    class Task {
     public:
 
-        ReconnectTask( FailoverTransport* parent );
-        virtual ~ReconnectTask() {}
+        virtual ~Task() {}
 
-        bool iterate();
+        /**
+         * Perform one iteration of work, returns true if the task needs
+         * to run again to complete or false to indicate that the task is now
+         * complete.
+         *
+         * @return true if the task should be run again or false if the task
+         *         has completed and the runner should wait for a wakeup call.
+         */
+        virtual bool iterate() = 0;
 
     };
 
-}}}
+}}
 
-#endif /* _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_ */
+#endif /* _ACTIVEMQ_UTIL_TASK_H_ */

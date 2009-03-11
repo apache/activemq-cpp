@@ -54,7 +54,7 @@ void FailoverTransportTest::testTransportCreate() {
     CPPUNIT_ASSERT( failover != NULL );
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
-//    transport->start();
+    transport->start();
     transport->close();
 }
 
