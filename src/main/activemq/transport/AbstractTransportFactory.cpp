@@ -85,9 +85,7 @@ Pointer<Transport> AbstractTransportFactory::createComposite( const decaf::net::
         Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
 
         // Create the initial Transport, then wrap it in the normal Filters
-        Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
-
-        return transport;
+        return doCreateComposite( location, wireFormat, properties );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -106,7 +104,7 @@ Pointer<WireFormat> AbstractTransportFactory::createWireFormat(
         WireFormatFactory* factory =
             WireFormatRegistry::getInstance().findFactory( wireFormat );
 
-        return Pointer<WireFormat>( factory->createWireFormat( properties ) );
+        return factory->createWireFormat( properties );
     }
     AMQ_CATCH_RETHROW( NoSuchElementException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, NoSuchElementException )
