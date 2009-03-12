@@ -198,8 +198,10 @@ namespace transport{
          * @throws CMSException if errors occur.
          */
         virtual void close() throw( cms::CMSException ){
-            next->close();
-            next.reset( NULL );
+            if( next != NULL ) {
+                next->close();
+                next.reset( NULL );
+            }
         }
 
         /**
