@@ -176,7 +176,7 @@ void ResponseCorrelator::onCommand( const Pointer<Command>& command ) {
     }
 
     Pointer<Response> response =
-        command.dynamicCast< Response, Pointer<Response>::CounterType >();
+        command.dynamicCast< Response >();
 
     // It is a response - let's correlate ...
     synchronized( &mapMutex ){

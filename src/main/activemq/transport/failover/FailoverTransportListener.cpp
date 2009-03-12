@@ -55,7 +55,7 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
     if( command->isResponse() ) {
 
         Pointer<Response> response =
-            command.dynamicCast<Response, Pointer<Response>::CounterType >();
+            command.dynamicCast<Response>();
         Pointer<Command> object;
 
         synchronized( &( parent->requestMap ) ) {
@@ -64,8 +64,7 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
 
         if( object != NULL ) {
             try{
-                Pointer<Tracked> tracked =
-                    object.dynamicCast<Tracked, Pointer<Tracked>::CounterType >();
+                Pointer<Tracked> tracked = object.dynamicCast<Tracked>();
                 tracked->onResponse();
             }
             AMQ_CATCH_NOTHROW( ClassCastException )
@@ -74,8 +73,7 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
 
     if( !parent->initialized && command->isBrokerInfo() ) {
 
-        Pointer<BrokerInfo> info =
-            command.dynamicCast<BrokerInfo, Pointer<BrokerInfo>::CounterType >();
+        Pointer<BrokerInfo> info = command.dynamicCast<BrokerInfo>();
         std::vector< Pointer<BrokerInfo> >& peers = info->getPeerBrokerInfos();
         for( std::size_t i = 0; i < peers.size(); ++i ) {
             std::string brokerString = peers[i]->getBrokerURL();

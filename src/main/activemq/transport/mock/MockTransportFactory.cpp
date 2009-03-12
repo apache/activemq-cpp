@@ -16,18 +16,74 @@
  */
 
 #include <activemq/transport/mock/MockTransportFactory.h>
+#include <activemq/transport/correlator/ResponseCorrelator.h>
+#include <activemq/transport/logging/LoggingTransport.h>
 //#include <activemq/wireformat/stomp/StompResponseBuilder.h>
 #include <activemq/wireformat/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
+#include <activemq/util/URISupport.h>
 
 using namespace activemq;
+using namespace activemq::util;
+using namespace activemq::wireformat;
 using namespace activemq::transport;
 using namespace activemq::transport::mock;
+using namespace activemq::transport::correlator;
+using namespace activemq::transport::logging;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location )
+    throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        Properties properties =
+            activemq::util::URISupport::parseQuery( location.getQuery() );
+
+        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        Pointer<Transport> transport( doCreateComposite( location, wireFormat, properties ) );
+
+        // Create the Transport for response correlator
+        transport.reset( new ResponseCorrelator( transport ) );
+
+        // If command tracing was enabled, wrap the transport with a logging transport.
+        if( properties.getProperty( "transport.commandTracingEnabled", "false" ) == "true" ) {
+            // Create the Transport for response correlator
+            transport.reset( new LoggingTransport( transport ) );
+        }
+
+        return transport;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> MockTransportFactory::createComposite( const decaf::net::URI& location )
+    throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        Properties properties =
+            activemq::util::URISupport::parseQuery( location.getQuery() );
+
+        Pointer<WireFormat> wireFormat = this->createWireFormat( properties );
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        return doCreateComposite( location, wireFormat, properties );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> MockTransportFactory::doCreateComposite(

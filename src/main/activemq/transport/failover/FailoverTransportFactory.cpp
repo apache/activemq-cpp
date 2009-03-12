@@ -18,6 +18,7 @@
 #include "FailoverTransportFactory.h"
 
 #include <activemq/transport/failover/FailoverTransport.h>
+#include <activemq/transport/correlator/ResponseCorrelator.h>
 #include <activemq/util/CompositeData.h>
 #include <activemq/util/URISupport.h>
 
@@ -30,22 +31,61 @@ using namespace activemq;
 using namespace activemq::util;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
+using namespace activemq::transport::correlator;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> FailoverTransportFactory::create( const decaf::net::URI& location )
+    throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        Properties properties =
+            activemq::util::URISupport::parseQuery( location.getQuery() );
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        Pointer<Transport> transport( doCreateComposite( location, properties ) );
+
+        // Create the Transport for response correlator
+        transport.reset( new ResponseCorrelator( transport ) );
+
+        return transport;
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Transport> FailoverTransportFactory::createComposite( const decaf::net::URI& location )
+    throw ( exceptions::ActiveMQException ) {
+
+    try{
+
+        Properties properties =
+            activemq::util::URISupport::parseQuery( location.getQuery() );
+
+        // Create the initial Transport, then wrap it in the normal Filters
+        return doCreateComposite( location, properties );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> FailoverTransportFactory::doCreateComposite(
     const decaf::net::URI& location,
-    const Pointer<wireformat::WireFormat>& wireFormat,
     const decaf::util::Properties& properties )
         throw ( exceptions::ActiveMQException ) {
 
     try {
 
         CompositeData data = URISupport::parseComposite( location );
-        Pointer<FailoverTransport> transport( new FailoverTransport( wireFormat ) );
+        Pointer<FailoverTransport> transport( new FailoverTransport() );
 
         transport->setInitialReconnectDelay(
             Long::parseLong( properties.getProperty( "initialReconnectDelay", "10" ) ) );

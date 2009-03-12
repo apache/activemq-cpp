@@ -84,7 +84,6 @@ namespace failover {
         decaf::util::concurrent::Mutex listenerMutex;
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
-        Pointer<wireformat::WireFormat> wireFormat;
         Pointer<URI> connectedTransportURI;
         Pointer<URI> failedConnectTransportURI;
         Pointer<Transport> connectedTransport;
@@ -97,8 +96,7 @@ namespace failover {
 
     public:
 
-        FailoverTransport( const Pointer<wireformat::WireFormat>& wireFormat );
-
+        FailoverTransport();
         virtual ~FailoverTransport();
 
         /**
@@ -202,7 +200,6 @@ namespace failover {
          * @param WireFormat the object used to encode / decode commands.
          */
         virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ) {
-            this->wireFormat = wireFormat;
         }
 
         /**

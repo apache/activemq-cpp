@@ -20,6 +20,7 @@
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
+#include <decaf/lang/exceptions/ClassCastException.h>
 
 #include <map>
 #include <string>
@@ -27,6 +28,7 @@
 using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 class TestClassBase {
@@ -367,50 +369,50 @@ void PointerTest::testSTLContainers() {
     CPPUNIT_ASSERT( *( testMap2.rbegin()->first ) == 3 );
 }
 
-////////////////////////////////////////////////////////////////////////////////
-class SelfCounting {
-private:
-
-    int refCount;
-
-public:
-
-    SelfCounting() : refCount( 0 ) {}
-    SelfCounting( const SelfCounting& other ) : refCount( other.refCount ) {}
-
-    void addReference() { this->refCount++; }
-    bool releaseReference() { return !( --this->refCount ); }
-
-    std::string returnHello() { return "Hello"; }
-};
-
-////////////////////////////////////////////////////////////////////////////////
-void PointerTest::testInvasive() {
-
-    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > thePointer( new SelfCounting );
-
-    // Test Null Initialize
-    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > nullPointer;
-    CPPUNIT_ASSERT( nullPointer.get() == NULL );
-
-    // Test Value Constructor
-    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > pointer( thePointer );
-    CPPUNIT_ASSERT( pointer.get() == thePointer );
-
-    // Test Copy Constructor
-    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > ctorCopy( pointer );
-    CPPUNIT_ASSERT( ctorCopy.get() == thePointer );
-
-    // Test Assignment
-    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > copy = pointer;
-    CPPUNIT_ASSERT( copy.get() == thePointer );
-
-    CPPUNIT_ASSERT( ( *pointer ).returnHello() == "Hello" );
-    CPPUNIT_ASSERT( pointer->returnHello() == "Hello" );
-
-    copy.reset( NULL );
-    CPPUNIT_ASSERT( copy.get() == NULL );
-}
+//////////////////////////////////////////////////////////////////////////////////
+//class SelfCounting {
+//private:
+//
+//    int refCount;
+//
+//public:
+//
+//    SelfCounting() : refCount( 0 ) {}
+//    SelfCounting( const SelfCounting& other ) : refCount( other.refCount ) {}
+//
+//    void addReference() { this->refCount++; }
+//    bool releaseReference() { return !( --this->refCount ); }
+//
+//    std::string returnHello() { return "Hello"; }
+//};
+//
+//////////////////////////////////////////////////////////////////////////////////
+//void PointerTest::testInvasive() {
+//
+//    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > thePointer( new SelfCounting );
+//
+//    // Test Null Initialize
+//    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > nullPointer;
+//    CPPUNIT_ASSERT( nullPointer.get() == NULL );
+//
+//    // Test Value Constructor
+//    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > pointer( thePointer );
+//    CPPUNIT_ASSERT( pointer.get() == thePointer );
+//
+//    // Test Copy Constructor
+//    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > ctorCopy( pointer );
+//    CPPUNIT_ASSERT( ctorCopy.get() == thePointer );
+//
+//    // Test Assignment
+//    Pointer< SelfCounting, InvasiveCounter<SelfCounting> > copy = pointer;
+//    CPPUNIT_ASSERT( copy.get() == thePointer );
+//
+//    CPPUNIT_ASSERT( ( *pointer ).returnHello() == "Hello" );
+//    CPPUNIT_ASSERT( pointer->returnHello() == "Hello" );
+//
+//    copy.reset( NULL );
+//    CPPUNIT_ASSERT( copy.get() == NULL );
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 TestClassBase* methodReturnRawPointer() {
@@ -428,4 +430,34 @@ Pointer<TestClassBase> methodReturnPointer() {
 void PointerTest::testReturnByValue() {
 
     Pointer<TestClassBase> result = methodReturnPointer();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void PointerTest::testDynamicCast() {
+
+    Pointer<TestClassBase> pointer1( new TestClassA );
+    Pointer<TestClassBase> pointer2( new TestClassB );
+
+    Pointer<TestClassA> ptrTestClassA;
+    CPPUNIT_ASSERT_NO_THROW(
+        ptrTestClassA = pointer1.dynamicCast<TestClassA>() );
+    CPPUNIT_ASSERT( ptrTestClassA != NULL );
+
+    Pointer<TestClassB> ptrTestClassB;
+    CPPUNIT_ASSERT_NO_THROW(
+        ptrTestClassB = pointer2.dynamicCast<TestClassB>() );
+    CPPUNIT_ASSERT( ptrTestClassB != NULL );
+
+    Pointer<TestClassA> ptrTestClassA2;
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw a ClassCastException",
+        ptrTestClassA2 = pointer2.dynamicCast<TestClassA>(),
+        ClassCastException );
+
+    Pointer<TestClassBase> nullPointer;
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw a ClassCastException",
+        ptrTestClassA2 = nullPointer.dynamicCast<TestClassA>(),
+        ClassCastException );
+
 }

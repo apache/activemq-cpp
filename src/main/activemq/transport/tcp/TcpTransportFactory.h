@@ -36,6 +36,24 @@ namespace tcp{
 
         virtual ~TcpTransportFactory() {}
 
+        /**
+         * Creates a fully configured Transport instance which could be a chain
+         * of filters and transports.
+         * @param location - URI location to connect to plus any properties to assign.
+         * @throws ActiveMQexception if an error occurs
+         */
+        virtual Pointer<Transport> create( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException );
+
+        /**
+         * Creates a slimed down Transport instance which can be used in composite
+         * transport instances.
+         * @param location - URI location to connect to plus any properties to assign.
+         * @throws ActiveMQexception if an error occurs
+         */
+        virtual Pointer<Transport> createComposite( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException );
+
     protected:
 
         /**

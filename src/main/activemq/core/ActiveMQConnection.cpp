@@ -488,10 +488,10 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
         } else if( command->isWireFormatInfo() ) {
             this->brokerWireFormatInfo =
-                command.dynamicCast<WireFormatInfo, Pointer<WireFormatInfo>::CounterType>();
+                command.dynamicCast<WireFormatInfo>();
         } else if( command->isBrokerInfo() ) {
             this->brokerInfo =
-                command.dynamicCast<BrokerInfo, Pointer<BrokerInfo>::CounterType>();
+                command.dynamicCast<BrokerInfo>();
         } else if( command->isKeepAliveInfo() ) {
 
             if( command->isResponseRequired() ) {

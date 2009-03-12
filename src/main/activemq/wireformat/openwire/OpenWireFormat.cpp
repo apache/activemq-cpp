@@ -248,8 +248,7 @@ Pointer<commands::Command> OpenWireFormat::unmarshal( decaf::io::DataInputStream
         // Now all unmarshals from this level should result in an object
         // that is a commands::Command type, if its not then the cast will
         // throw an ClassCastException.
-        Pointer<Command> command =
-            data.dynamicCast<Command, Pointer<Command>::CounterType>();
+        Pointer<Command> command = data.dynamicCast<Command>();
 
         return command;
     }

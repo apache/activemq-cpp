@@ -85,7 +85,7 @@ Pointer<Tracked> ConnectionStateTracker::track( const Pointer<Command>& command 
         if( result == NULL ) {
             return Pointer<Tracked>();
         } else {
-            return result.dynamicCast<Tracked, Pointer<Tracked>::CounterType >();
+            return result.dynamicCast<Tracked>();
         }
     }
     AMQ_CATCH_RETHROW( IOException )
@@ -99,7 +99,7 @@ void ConnectionStateTracker::trackBack( const Pointer<Command>& command ) {
     try{
         if( trackMessages && command != NULL && command->isMessage() ) {
             Pointer<Message> message =
-                command.dynamicCast<Message, Pointer<Message>::CounterType>();
+                command.dynamicCast<Message>();
             if( message->getTransactionId() == NULL ) {
                 currentCacheSize = currentCacheSize + message->getSize();
             }

@@ -28,7 +28,6 @@
 namespace decaf {
 namespace lang {
 
-    template <typename T>
     class DECAF_API AtomicRefCounter {
     private:
 
@@ -42,15 +41,7 @@ namespace lang {
 
         AtomicRefCounter() :
             counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
-        AtomicRefCounter( T* value DECAF_UNUSED ) :
-            counter( new decaf::util::concurrent::atomic::AtomicInteger( 1 ) ) {}
         AtomicRefCounter( const AtomicRefCounter& other ) : counter( other.counter ) {
-            this->counter->incrementAndGet();
-        }
-
-        template< typename U >
-        AtomicRefCounter( const AtomicRefCounter<U>& other ) {
-            this->counter = reinterpret_cast<const AtomicRefCounter<T>& >( other ).counter;
             this->counter->incrementAndGet();
         }
 
@@ -60,7 +51,7 @@ namespace lang {
          *
          * @param the value to swap with this one's
          */
-        void swap( AtomicRefCounter<T>& other ) {
+        void swap( AtomicRefCounter& other ) {
             std::swap( this->counter, other.counter );
         }
 
@@ -76,62 +67,6 @@ namespace lang {
                 delete this->counter;
                 return true;
             }
-            return false;
-        }
-    };
-
-    template <typename T>
-    class DECAF_API InvasiveCounter {
-    private:
-
-        T* counter;
-
-    private:
-
-        InvasiveCounter& operator= ( const InvasiveCounter& );
-
-    public:
-
-        InvasiveCounter() : counter( NULL ) {}
-
-        InvasiveCounter( T* value ) : counter( value ) {
-
-            if( value != NULL ) {
-                value->addReference();
-            }
-        }
-
-        InvasiveCounter( const InvasiveCounter& other ) : counter( other.counter ) {
-            this->counter->addReference();
-        }
-
-        template< typename U >
-        InvasiveCounter( const InvasiveCounter<U>& other ) {
-            this->counter = reinterpret_cast< const InvasiveCounter<T>& >( other ).counter;
-            this->counter->addReference();
-        }
-
-        /**
-         * Swaps this instance's reference counter with the one given, this allows
-         * for copy-and-swap semantics of this object.
-         *
-         * @param the value to swap with this one's
-         */
-        void swap( InvasiveCounter<T>& other ) {
-            std::swap( this->counter, other.counter );
-        }
-
-        /**
-         * Removes a reference to the counter and returns if the counter
-         * has reached zero.
-         *
-         * @return true if the count is now zero.
-         */
-        bool release() {
-            if( this->counter != NULL ) {
-                return this->counter->releaseReference();
-            }
-
             return false;
         }
     };
@@ -154,7 +89,7 @@ namespace lang {
      *
      * @since 1.0
      */
-    template< typename T, typename REFCOUNTER = AtomicRefCounter<T> >
+    template< typename T, typename REFCOUNTER = AtomicRefCounter >
     class DECAF_API Pointer : public REFCOUNTER {
     private:
 
@@ -182,7 +117,7 @@ namespace lang {
          *
          * @param value - instance of the type we are containing here.
          */
-        explicit Pointer( const PointerType value ) : REFCOUNTER( value ), value( value ) {
+        explicit Pointer( const PointerType value ) : REFCOUNTER(), value( value ) {
         }
 
         /**
@@ -369,14 +304,14 @@ namespace lang {
             return !( this->value == right.get() );
         }
 
-        template< typename T1, typename R1 >
-        Pointer<T1, R1> dynamicCast() const {
-            return Pointer<T1, R1>( *this, DYNAMIC_CAST_TOKEN() );
+        template< typename T1 >
+        Pointer<T1, CounterType> dynamicCast() const {
+            return Pointer<T1, CounterType>( *this, DYNAMIC_CAST_TOKEN() );
         }
 
-        template< typename T1, typename R1 >
-        Pointer<T1, R1> staticCast() const {
-            return Pointer<T1, R1>( *this, STATIC_CAST_TOKEN() );
+        template< typename T1 >
+        Pointer<T1, CounterType> staticCast() const {
+            return Pointer<T1, CounterType>( *this, STATIC_CAST_TOKEN() );
         }
     };
 
@@ -416,7 +351,7 @@ namespace lang {
      * to be compared based on the comparison of the object itself and not just the value of
      * the pointer.
      */
-    template< typename T, typename R = AtomicRefCounter<T> >
+    template< typename T, typename R = AtomicRefCounter >
     class PointerComparator : public decaf::util::Comparator< Pointer<T,R> > {
     public:
 

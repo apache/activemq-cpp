@@ -44,18 +44,36 @@ namespace failover {
         virtual ~FailoverTransportFactory() {}
 
         /**
+         * Creates a fully configured Transport instance which could be a chain
+         * of filters and transports.
+         * @param location - URI location to connect to plus any properties to assign.
+         * @throws ActiveMQexception if an error occurs
+         */
+        virtual Pointer<Transport> create( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException );
+
+        /**
+         * Creates a slimed down Transport instance which can be used in composite
+         * transport instances.
+         * @param location - URI location to connect to plus any properties to assign.
+         * @throws ActiveMQexception if an error occurs
+         */
+        virtual Pointer<Transport> createComposite( const decaf::net::URI& location )
+            throw ( exceptions::ActiveMQException );
+
+    protected:
+
+        /**
          * Creates a slimed down Transport instance which can be used in composite
          * transport instances.
          *
          * @param location - URI location to connect to.
-         * @param wireformat - the assigned WireFormat for the new Transport.
          * @param properties - Properties to apply to the transport.
          *
          * @return Pointer to a new FailoverTransport instance.
          * @throws ActiveMQexception if an error occurs
          */
         virtual Pointer<Transport> doCreateComposite( const decaf::net::URI& location,
-                                                      const Pointer<wireformat::WireFormat>& wireFormat,
                                                       const decaf::util::Properties& properties )
             throw ( exceptions::ActiveMQException );
 

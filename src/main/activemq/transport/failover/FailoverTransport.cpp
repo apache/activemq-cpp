@@ -40,9 +40,8 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-FailoverTransport::FailoverTransport( const Pointer<wireformat::WireFormat>& wireFormat ) {
+FailoverTransport::FailoverTransport() {
 
-    this->wireFormat = wireFormat;
     this->timeout = -1;
     this->initialReconnectDelay = 10;
     this->maxReconnectDelay = 1000 * 30;
@@ -87,8 +86,7 @@ bool FailoverTransport::isShutdownCommand( const Pointer<Command>& command ) con
         }
 
         try{
-            Pointer<RemoveInfo> remove =
-                command.dynamicCast<RemoveInfo, Pointer<RemoveInfo>::CounterType >();
+            Pointer<RemoveInfo> remove = command.dynamicCast<RemoveInfo>();
 
             return true;
         } AMQ_CATCHALL_NOTHROW()
@@ -590,8 +588,7 @@ bool FailoverTransport::doReconnect() {
 
                 Pointer<IOException> ioException;
                 try{
-                    ioException = connectionFailure.dynamicCast<
-                        IOException, Pointer<IOException>::CounterType >();
+                    ioException = connectionFailure.dynamicCast<IOException>();
                 }
                 AMQ_CATCH_NOTHROW( ClassCastException )
 
