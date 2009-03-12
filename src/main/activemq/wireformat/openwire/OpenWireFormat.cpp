@@ -161,6 +161,11 @@ void OpenWireFormat::marshal( const Pointer<commands::Command>& command,
 
     try {
 
+        if( dataOut == NULL ) {
+            throw decaf::io::IOException(
+                __FILE__, __LINE__, "DataOutputStream passed is NULL" );
+        }
+
         int size = 1;
 
         if( command != NULL ) {
@@ -230,6 +235,11 @@ Pointer<commands::Command> OpenWireFormat::unmarshal( decaf::io::DataInputStream
     throw ( decaf::io::IOException ) {
 
     try {
+
+        if( dis == NULL ) {
+            throw decaf::io::IOException(
+                __FILE__, __LINE__, "DataInputStream passed is NULL" );
+        }
 
         if( !sizePrefixDisabled ) {
             dis->readInt();
