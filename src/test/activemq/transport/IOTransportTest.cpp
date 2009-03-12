@@ -21,6 +21,7 @@
 #include <activemq/transport/TransportListener.h>
 #include <activemq/wireformat/WireFormat.h>
 #include <activemq/commands/BaseCommand.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/CountDownLatch.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -35,6 +36,7 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 class MyCommand : public commands::BaseCommand{
@@ -85,6 +87,11 @@ public:
         try{
             if( throwException ){
                 throw CommandIOException();
+            }
+
+            if( inputStream == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "InputStream passed is Null" );
             }
 
             decaf::util::Random randGen;
