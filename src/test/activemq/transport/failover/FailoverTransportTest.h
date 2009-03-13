@@ -33,6 +33,8 @@ namespace failover {
         CPPUNIT_TEST( testTransportCreateWithBackups );
         CPPUNIT_TEST( testTransportCreateFailOnCreate );
         CPPUNIT_TEST( testFailingBackupCreation );
+        CPPUNIT_TEST( testSendOnewayMessage );
+        CPPUNIT_TEST( testSendOnewayMessageFail );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -55,6 +57,13 @@ namespace failover {
         // Tests that a Transport with a Connected Primary Transport but failing backup
         // transports won't segfault and can be started, and stopped without error.
         void testFailingBackupCreation();
+
+        // Test that messages sent via the Oneway method are received.
+        void testSendOnewayMessage();
+
+        // Test that messages sent via the Oneway method are received after the first
+        // transport faults on the send and transport 2 is created.
+        void testSendOnewayMessageFail();
 
     };
 

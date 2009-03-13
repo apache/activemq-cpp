@@ -266,6 +266,10 @@ namespace failover {
                 return this;
             }
 
+            if( this->connectedTransport != NULL ) {
+                return this->connectedTransport->narrow( typeId );
+            }
+
             return NULL;
         }
 

@@ -43,6 +43,7 @@ public class CommandCodeGeneratorsFactory {
         commandsWithShortcuts.add( "BrokerInfo" );
         commandsWithShortcuts.add( "KeepAliveInfo" );
         commandsWithShortcuts.add( "WireFormatInfo" );
+        commandsWithShortcuts.add( "Message" );
         commandsWithShortcuts.add( "MessageAck" );
         commandsWithShortcuts.add( "ProducerAck" );
         commandsWithShortcuts.add( "MessageDispatchNotification" );
