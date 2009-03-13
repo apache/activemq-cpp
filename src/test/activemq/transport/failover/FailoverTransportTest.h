@@ -32,6 +32,7 @@ namespace failover {
         CPPUNIT_TEST( testTransportCreate );
         CPPUNIT_TEST( testTransportCreateWithBackups );
         CPPUNIT_TEST( testTransportCreateFailOnCreate );
+        CPPUNIT_TEST( testFailingBackupCreation );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -39,9 +40,21 @@ namespace failover {
         FailoverTransportTest();
         virtual ~FailoverTransportTest();
 
+        // Tests that a Failover Transport can be created, started and stopped.
         void testTransportCreate();
+
+        // Tests that a Failover Transport can be created with backups enabled and
+        // be created, started and stopped.
         void testTransportCreateWithBackups();
+
+        // Tests that a Transport will try and reconnect to a Transport that fails
+        // at its creation time and will retry until the max reconnect amount has been
+        // reached at which point it calls its listeners onException method.
         void testTransportCreateFailOnCreate();
+
+        // Tests that a Transport with a Connected Primary Transport but failing backup
+        // transports won't segfault and can be started, and stopped without error.
+        void testFailingBackupCreation();
 
     };
 
