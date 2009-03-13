@@ -40,6 +40,14 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
     this->nextCommandId.set( 0 );
     this->instance = this;
 
+    // Script Properties.
+    this->failOnSendMessage = false;
+    this->numSentMessageBeforeFail = 0;
+    this->numSentMessages = 0;
+    this->failOnReceiveMessage = false;
+    this->numReceivedMessageBeforeFail = 0;
+    this->numReceivedMessages = 0;
+
     // Configure the Internal Listener this is the Fake Broker.
     this->internalListener.setTransport( this );
     this->internalListener.setResponseBuilder( responseBuilder );
@@ -51,6 +59,15 @@ void MockTransport::oneway( const Pointer<Command>& command )
                decaf::lang::exceptions::UnsupportedOperationException) {
 
     try{
+
+        if( command->isMessage() && this->failOnSendMessage ) {
+            this->numSentMessages++;
+
+            if( this->numSentMessages > this->numSentMessageBeforeFail ) {
+                throw CommandIOException(
+                    __FILE__, __LINE__, "Failed to Send Message.");
+            }
+        }
 
         // Process and send any new Commands back.
         internalListener.onCommand( command );
@@ -76,6 +93,15 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command )
     try{
 
         if( responseBuilder != NULL ){
+
+            if( command->isMessage() && this->failOnSendMessage ) {
+                this->numSentMessages++;
+
+                if( this->numSentMessages > this->numSentMessageBeforeFail ) {
+                    throw CommandIOException(
+                        __FILE__, __LINE__, "Failed to Send Message.");
+                }
+            }
 
             // Notify external Client of command that we "sent"
             if( outgoingListener != NULL ){

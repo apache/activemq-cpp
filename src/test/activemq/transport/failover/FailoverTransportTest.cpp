@@ -21,11 +21,13 @@
 #include <activemq/transport/failover/FailoverTransport.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <decaf/lang/Pointer.h>
+#include <decaf/lang/Thread.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
 using namespace decaf::util;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,3 +60,27 @@ void FailoverTransportTest::testTransportCreate() {
     transport->close();
 }
 
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testTransportCreateWithBackups() {
+
+    std::string uri = "failover://(mock://localhost:61616,mock://localhost:61618)?randomize=false&backup=true";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+    CPPUNIT_ASSERT( failover->isBackup() == true );
+
+    Thread::sleep( 1000 );
+
+    transport->start();
+    transport->close();
+}

@@ -19,7 +19,7 @@
 #define ACTIVEMQ_WIREFORMAT_OPENWIRE_OPENWIRERESPONSEBUILDER_H_
 
 #include <activemq/util/Config.h>
-#include <activemq/transport/mock/MockTransport.h>
+#include <activemq/transport/mock/ResponseBuilder.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/lang/Pointer.h>
 
@@ -30,7 +30,7 @@ namespace openwire{
     using decaf::lang::Pointer;
 
     class AMQCPP_API OpenWireResponseBuilder :
-        public transport::mock::MockTransport::ResponseBuilder{
+        public transport::mock::ResponseBuilder{
     public:
 
         OpenWireResponseBuilder() {}

@@ -24,9 +24,12 @@
 #include <activemq/transport/TransportListener.h>
 #include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/CommandIOException.h>
+#include <activemq/transport/mock/ResponseBuilder.h>
+#include <activemq/transport/mock/InternalCommandListener.h>
 #include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/lang/Thread.h>
+#include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Concurrent.h>
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
@@ -58,124 +61,6 @@ namespace mock{
      * messages that might result from a message sent to the Broker.
      */
     class AMQCPP_API MockTransport : public Transport{
-    public:
-
-        /**
-         * Interface for all Protocols to implement that defines the behavior
-         * of the Broker in response to messages of that protocol.
-         */
-        class AMQCPP_API ResponseBuilder {
-        public:
-
-            virtual ~ResponseBuilder() {}
-
-            /**
-             * Given a Command, check if it requires a response and return the
-             * appropriate Response that the Broker would send for this Command
-             * @param command - The command to build a response for
-             * @return A Response object pointer, or NULL if no response.
-             */
-            virtual Pointer<Response> buildResponse( const Pointer<Command>& command ) = 0;
-
-            /**
-             * When called the ResponseBuilder must construct all the
-             * Responses or Asynchronous commands that would be sent to
-             * this client by the Broker upon receipt of the passed command.
-             * @param command - The Command being sent to the Broker.
-             * @param queue - Queue of Command sent back from the broker.
-             */
-            virtual void buildIncomingCommands(
-                const Pointer<Command>& command,
-                decaf::util::StlQueue< Pointer<Command> >& queue ) = 0;
-
-        };
-
-        /**
-         * Listens for Commands sent from the MockTransport.  This class
-         * processes all outbound commands and sends responses that are
-         * constructed by calling the Protocol provided ResponseBuilder
-         * and getting a set of Commands to send back into the MockTransport
-         * as incoming Commands and Responses.
-         */
-        class InternalCommandListener :
-            public DefaultTransportListener,
-            public decaf::lang::Thread {
-
-        private:
-
-            MockTransport* transport;
-            Pointer<ResponseBuilder> responseBuilder;
-            bool done;
-            decaf::util::concurrent::CountDownLatch startedLatch;
-            decaf::util::StlQueue< Pointer<Command> > inboundQueue;
-
-        public:
-
-            InternalCommandListener() : startedLatch(1) {
-                transport = NULL;
-                done = false;
-
-                this->start();
-                startedLatch.await();
-            }
-
-            virtual ~InternalCommandListener() {
-                done = true;
-                synchronized( &inboundQueue ) {
-                    inboundQueue.notifyAll();
-                }
-                this->join();
-
-                inboundQueue.clear();
-            }
-
-            void setTransport( MockTransport* transport ){
-                this->transport = transport;
-            }
-
-            void setResponseBuilder( const Pointer<ResponseBuilder>& responseBuilder ) {
-                this->responseBuilder = responseBuilder;
-            }
-
-            virtual void onCommand( const Pointer<Command>& command ) {
-                synchronized( &inboundQueue )
-                {
-                    // Create a response now before the caller has a
-                    // chance to destroy the command.
-                    responseBuilder->buildIncomingCommands( command, inboundQueue );
-
-                    // Wake up the thread, messages are dispatched from there.
-                    inboundQueue.notifyAll();
-                }
-            }
-
-            void run() {
-                try {
-
-                    synchronized( &inboundQueue ) {
-
-                        while( !done ) {
-                            startedLatch.countDown();
-
-                            while( inboundQueue.empty() && !done ){
-                                inboundQueue.wait();
-                            }
-
-                            if( done || transport == NULL ) {
-                                continue;
-                            }
-
-                            // If we created a response then send it.
-                            while( !inboundQueue.empty() ) {
-                                transport->fireCommand( inboundQueue.pop() );
-                            }
-                        }
-                    }
-                }
-                AMQ_CATCHALL_NOTHROW()
-            }
-        };
-
     private:
 
         Pointer<ResponseBuilder> responseBuilder;
@@ -185,6 +70,13 @@ namespace mock{
         decaf::util::concurrent::atomic::AtomicInteger nextCommandId;
         InternalCommandListener internalListener;
         static MockTransport* instance;
+
+        bool failOnSendMessage;
+        int numSentMessageBeforeFail;
+        int numSentMessages;
+        bool failOnReceiveMessage;
+        int numReceivedMessageBeforeFail;
+        int numReceivedMessages;
 
     public:
 
@@ -322,8 +214,58 @@ namespace mock{
          * @param uri
          * @throws IOException on failure of if not supported
          */
-        virtual void reconnect( const decaf::net::URI& uri )
+        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED )
             throw( decaf::io::IOException ) {}
+
+    public:  // Property Getters and Setters
+
+        bool isFailOnSendMessage() const {
+            return this->failOnSendMessage;
+        }
+
+        void setFailOnSendMessage( bool value ) {
+            this->failOnSendMessage = value;
+        }
+
+        int getNumSentMessageBeforeFail() const {
+            return this->numSentMessageBeforeFail;
+        }
+
+        void setNumSentMessageBeforeFail( int value ) {
+            this->numSentMessageBeforeFail = value;
+        }
+
+        int getNumSentMessages() const {
+            return this->numSentMessages;
+        }
+
+        void setNumSentMessages( int value ) {
+            this->numSentMessages = value;
+        }
+
+        bool isFailOnReceiveMessage() const {
+            return this->failOnReceiveMessage;
+        }
+
+        void setFailOnReceiveMessage( bool value ) {
+            this->failOnReceiveMessage = value;
+        }
+
+        int getNumReceivedMessageBeforeFail() const {
+            return this->numReceivedMessageBeforeFail;
+        }
+
+        void setNumReceivedMessageBeforeFail( int value ) {
+            this->numReceivedMessageBeforeFail = value;
+        }
+
+        int getNumReceivedMessages() const {
+            return this->numReceivedMessages;
+        }
+
+        void setNumReceivedMessages( int value ) {
+            this->numReceivedMessages = value;
+        }
 
     };
 

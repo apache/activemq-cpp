@@ -30,6 +30,7 @@ namespace failover {
 
         CPPUNIT_TEST_SUITE( FailoverTransportTest );
         CPPUNIT_TEST( testTransportCreate );
+        CPPUNIT_TEST( testTransportCreateWithBackups );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,6 +39,7 @@ namespace failover {
         virtual ~FailoverTransportTest();
 
         void testTransportCreate();
+        void testTransportCreateWithBackups();
 
     };
 

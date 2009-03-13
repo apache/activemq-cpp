@@ -237,6 +237,22 @@ namespace failover {
         }
 
         /**
+         * Returns true if the Transport has been initialized by a BrokerInfo command.
+         * @return true if the Transport has been initialized by a BrokerInfo command.
+         */
+        bool isInitialized() const {
+            return this->initialized;
+        }
+
+        /**
+         * Sets the initialized state of this Transport to true.
+         * @param value - true if this Transport has been initialized.
+         */
+        void setInitialized( bool value ) {
+            this->initialized = value;
+        }
+
+        /**
          * Narrows down a Chain of Transports to a specific Transport to allow a
          * higher level transport to skip intermediate Transports in certain
          * circumstances.

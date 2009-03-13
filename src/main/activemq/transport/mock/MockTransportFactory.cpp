@@ -22,7 +22,11 @@
 #include <activemq/wireformat/openwire/OpenWireResponseBuilder.h>
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/mock/MockTransport.h>
+#include <activemq/transport/mock/ResponseBuilder.h>
 #include <activemq/util/URISupport.h>
+
+#include <decaf/lang/Boolean.h>
+#include <decaf/io/IOException.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -34,6 +38,7 @@ using namespace activemq::transport::logging;
 using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::util;
+using namespace decaf::io;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +102,12 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
         std::string wireFormatName =
             properties.getProperty( "wireFormat", "openwire" );
 
-        Pointer<MockTransport::ResponseBuilder> builder;
+        if( properties.getProperty( "failOnCreate", "false" ) == "true" ) {
+            throw IOException(
+                __FILE__, __LINE__, "Failed to Create MockTransport." );
+        }
+
+        Pointer<ResponseBuilder> builder;
 
         if( wireFormatName == "stomp" ) {
 //            builder.reset( new wireformat::stomp::StompResponseBuilder() );
@@ -105,7 +115,11 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
             builder.reset( new wireformat::openwire::OpenWireResponseBuilder() );
         }
 
-        return Pointer<Transport>( new MockTransport( wireFormat, builder ) );
+        Pointer<Transport> transport( new MockTransport( wireFormat, builder ) );
+
+
+
+        return transport;
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )

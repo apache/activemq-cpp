@@ -62,6 +62,7 @@ cc_sources = \
     activemq/transport/AbstractTransportFactory.cpp \
     activemq/transport/IOTransport.cpp \
     activemq/transport/mock/MockTransport.cpp \
+    activemq/transport/mock/InternalCommandListener.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/correlator/ResponseCorrelator.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
@@ -216,6 +217,8 @@ h_sources = \
     activemq/transport/failover/FailoverTransportListener.h \
     activemq/transport/mock/MockTransport.h \
     activemq/transport/mock/MockTransportFactory.h \
+    activemq/transport/mock/InternalCommandListener.h \
+    activemq/transport/mock/ResponseBuilder.h \
     activemq/transport/correlator/FutureResponse.h \
     activemq/transport/correlator/ResponseCorrelator.h \
     activemq/transport/tcp/TcpTransport.h \
