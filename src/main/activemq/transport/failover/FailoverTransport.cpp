@@ -203,7 +203,7 @@ std::string FailoverTransport::getRemoteAddress() const {
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::oneway( const Pointer<Command>& command )
-    throw( CommandIOException,
+    throw( IOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     Pointer<Exception> error;
@@ -321,7 +321,7 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
-    throw( CommandIOException,
+    throw( IOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
@@ -331,7 +331,7 @@ Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AM
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> FailoverTransport::request( const Pointer<Command>& command AMQCPP_UNUSED,
                                                 unsigned int timeout AMQCPP_UNUSED )
-    throw( CommandIOException,
+    throw( IOException,
            decaf::lang::exceptions::UnsupportedOperationException ) {
 
     throw decaf::lang::exceptions::UnsupportedOperationException(

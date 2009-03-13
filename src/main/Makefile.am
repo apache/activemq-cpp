@@ -202,7 +202,6 @@ h_sources = \
     activemq/state/TransactionState.h \
     activemq/state/Tracked.h \
     activemq/transport/AbstractTransportFactory.h \
-    activemq/transport/CommandIOException.h \
     activemq/transport/DefaultTransportListener.h \
     activemq/transport/IOTransport.h \
     activemq/transport/Transport.h \

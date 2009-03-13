@@ -31,6 +31,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::failover;
 using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::util;
 
@@ -106,7 +107,7 @@ public:
 void FailoverTransportTest::testTransportCreateFailOnCreate() {
 
     std::string uri =
-        "failover://(mock://localhost:61616?failOnCreate=true)?maxReconnectAttempts=2";
+        "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
 
     FailToConnectListener listener;
     FailoverTransportFactory factory;
@@ -119,11 +120,44 @@ void FailoverTransportTest::testTransportCreateFailOnCreate() {
         transport->narrow( typeid( FailoverTransport ) ) );
 
     CPPUNIT_ASSERT( failover != NULL );
-    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 2 );
+    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 3 );
 
     transport->start();
 
     Thread::sleep( 2000 );
+
+    CPPUNIT_ASSERT( listener.caughtException == true );
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testTransportCreateFailOnCreateSendMessage() {
+
+    std::string uri =
+        "failover://(mock://localhost:61616?failOnCreate=true)?useExponentialBackOff=false&maxReconnectAttempts=3&initialReconnectDelay=100";
+
+    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+
+    FailToConnectListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 3 );
+
+    transport->start();
+
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should Throw a IOException",
+        transport->oneway( message ),
+        IOException );
 
     CPPUNIT_ASSERT( listener.caughtException == true );
 
@@ -211,6 +245,46 @@ void FailoverTransportTest::testSendOnewayMessage() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testSendRequestMessage() {
+
+    std::string uri = "failover://(mock://localhost:61616)?randomize=false";
+
+    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+
+    MessageCountingListener messageCounter;
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+
+    transport->start();
+
+    MockTransport* mock = NULL;
+    while( mock == NULL ) {
+        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    }
+    mock->setOutgoingListener( &messageCounter );
+
+    transport->request( message );
+    transport->request( message );
+    transport->request( message );
+    transport->request( message );
+    Thread::sleep( 1000 );
+
+    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void FailoverTransportTest::testSendOnewayMessageFail() {
 
     std::string uri =
@@ -245,6 +319,48 @@ void FailoverTransportTest::testSendOnewayMessageFail() {
     transport->oneway( message );
     transport->oneway( message );
     transport->oneway( message );
+    Thread::sleep( 1000 );
+
+    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testSendRequestMessageFail() {
+
+    std::string uri =
+        "failover://(mock://localhost:61616?failOnSendMessage=true,"
+                    "mock://localhost:61618)?randomize=false";
+
+    Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
+
+    MessageCountingListener messageCounter;
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+
+    transport->start();
+
+    MockTransport* mock = NULL;
+    while( mock == NULL ) {
+        mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
+    }
+    mock->setOutgoingListener( &messageCounter );
+
+    transport->request( message );
+    transport->request( message );
+    transport->request( message );
+    transport->request( message );
     Thread::sleep( 1000 );
 
     CPPUNIT_ASSERT( messageCounter.numMessages = 4 );

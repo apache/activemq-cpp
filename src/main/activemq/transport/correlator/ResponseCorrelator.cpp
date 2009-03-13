@@ -24,6 +24,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::correlator;
 using namespace activemq::exceptions;
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -43,29 +44,29 @@ ResponseCorrelator::~ResponseCorrelator(){
 
 ////////////////////////////////////////////////////////////////////////////////
 void ResponseCorrelator::oneway( const Pointer<Command>& command )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( nextCommandId.getAndIncrement() );
         command->setResponseRequired( false );
 
         if( closed || next == NULL ){
-            throw CommandIOException( __FILE__, __LINE__,
+            throw IOException( __FILE__, __LINE__,
                 "transport already closed" );
         }
 
         next->oneway( command );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
@@ -100,7 +101,7 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
 
         if( response == NULL ){
 
-            throw CommandIOException( __FILE__, __LINE__,
+            throw IOException( __FILE__, __LINE__,
                 "No valid response received for command: %s, check broker.",
                 command->toString().c_str() );
         }
@@ -108,15 +109,15 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command )
         return response;
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, unsigned int timeout )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
         command->setCommandId( nextCommandId.getAndIncrement() );
@@ -150,7 +151,7 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
 
         if( response == NULL ){
 
-            throw CommandIOException( __FILE__, __LINE__,
+            throw IOException( __FILE__, __LINE__,
                 "No valid response received for command: %s, check broker.",
                 command->toString().c_str() );
         }
@@ -158,10 +159,10 @@ Pointer<Response> ResponseCorrelator::request( const Pointer<Command>& command, 
         return response;
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////

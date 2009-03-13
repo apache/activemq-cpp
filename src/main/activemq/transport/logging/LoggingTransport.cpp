@@ -22,6 +22,7 @@ using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
 using namespace activemq::transport::logging;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -49,7 +50,7 @@ void LoggingTransport::onCommand( const Pointer<Command>& command ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 void LoggingTransport::oneway( const Pointer<Command>& command )
-    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
+    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
@@ -63,15 +64,15 @@ void LoggingTransport::oneway( const Pointer<Command>& command )
         // Delegate to the base class.
         TransportFilter::oneway( command );
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
-    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
+    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
@@ -88,15 +89,15 @@ Pointer<Response> LoggingTransport::request( const Pointer<Command>& command )
 
         return response;
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, unsigned int timeout )
-    throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException) {
+    throw(IOException, decaf::lang::exceptions::UnsupportedOperationException) {
 
     try {
 
@@ -113,8 +114,8 @@ Pointer<Response> LoggingTransport::request( const Pointer<Command>& command, un
 
         return response;
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

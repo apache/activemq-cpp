@@ -29,6 +29,8 @@ using namespace activemq::transport;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
 using namespace activemq::wireformat;
+using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::util::concurrent;
 
@@ -95,32 +97,32 @@ void IOTransport::fire( const Pointer<Command>& command ){
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::oneway( const Pointer<Command>& command )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     try{
 
         if( closed ){
-            throw CommandIOException( __FILE__, __LINE__,
+            throw IOException( __FILE__, __LINE__,
                 "IOTransport::oneway() - transport is closed!" );
         }
 
         // Make sure the thread has been started.
         if( thread == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "IOTransport::oneway() - transport is not started" );
         }
 
         // Make sure the command object is valid.
         if( command == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "IOTransport::oneway() - attempting to write NULL command" );
         }
 
         // Make sure we have an output stream to write to.
         if( outputStream == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "IOTransport::oneway() - invalid output stream" );
         }
@@ -131,9 +133,9 @@ void IOTransport::oneway( const Pointer<Command>& command )
             this->outputStream->flush();
         }
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +252,7 @@ void IOTransport::run(){
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,
@@ -259,7 +261,7 @@ Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_U
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
-    throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
     throw decaf::lang::exceptions::UnsupportedOperationException(
         __FILE__, __LINE__,

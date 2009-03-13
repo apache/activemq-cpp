@@ -30,6 +30,7 @@ using namespace activemq::wireformat::openwire;
 using namespace activemq::transport;
 using namespace activemq::commands;
 using namespace decaf::util::concurrent;
+using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,18 +54,18 @@ OpenWireFormatNegotiator::~OpenWireFormatNegotiator()
 
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireFormatNegotiator::oneway( const Pointer<Command>& command )
-    throw( CommandIOException, UnsupportedOperationException ) {
+    throw( IOException, UnsupportedOperationException ) {
 
     try{
 
         if( closed || next == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "OpenWireFormatNegotiator::oneway - transport already closed" );
         }
 
         if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw CommandIOException(
+            throw IOException(
                 __FILE__,
                 __LINE__,
                 "OpenWireFormatNegotiator::oneway"
@@ -75,25 +76,25 @@ void OpenWireFormatNegotiator::oneway( const Pointer<Command>& command )
         next->oneway( command );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> OpenWireFormatNegotiator::request( const Pointer<Command>& command )
-    throw( CommandIOException, UnsupportedOperationException ) {
+    throw( IOException, UnsupportedOperationException ) {
 
     try{
 
         if( closed || next == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "OpenWireFormatNegotiator::request - transport already closed" );
         }
 
         if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw CommandIOException(
+            throw IOException(
                 __FILE__,
                 __LINE__,
                 "OpenWireFormatNegotiator::request"
@@ -104,26 +105,26 @@ Pointer<Response> OpenWireFormatNegotiator::request( const Pointer<Command>& com
         return next->request( command );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> OpenWireFormatNegotiator::request(
     const Pointer<Command>& command, unsigned int timeout )
-        throw( CommandIOException, UnsupportedOperationException ) {
+        throw( IOException, UnsupportedOperationException ) {
 
     try{
 
         if( closed || next == NULL ){
-            throw CommandIOException(
+            throw IOException(
                 __FILE__, __LINE__,
                 "OpenWireFormatNegotiator::request - transport already closed" );
         }
 
         if( !readyCountDownLatch.await( negotiationTimeout ) ) {
-            throw CommandIOException(
+            throw IOException(
                 __FILE__,
                 __LINE__,
                 "OpenWireFormatNegotiator::request"
@@ -134,9 +135,9 @@ Pointer<Response> OpenWireFormatNegotiator::request(
         return next->request( command, timeout );
     }
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_RETHROW( CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +150,7 @@ void OpenWireFormatNegotiator::onCommand( const Pointer<Command>& command ) {
         try {
 
             if( !info->isValid() ) {
-                throw CommandIOException(
+                throw IOException(
                     __FILE__,
                     __LINE__,
                     "OpenWireFormatNegotiator::onCommand"

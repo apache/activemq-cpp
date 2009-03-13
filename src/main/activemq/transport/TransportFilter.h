@@ -119,13 +119,13 @@ namespace transport{
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual void oneway( const Pointer<Command>& command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             next->oneway( command );
         }
@@ -133,11 +133,11 @@ namespace transport{
         /**
          * Not supported by this class - throws an exception.
          * @param command the command that is sent as a request
-         * @throws CommandIOException
+         * @throws IOException
          * @throws UnsupportedOperationException.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command );
         }
@@ -146,11 +146,11 @@ namespace transport{
          * Not supported by this class - throws an exception.
          * @param command - The command that is sent as a request
          * @param timeout - The the time to wait for a response.
-         * @throws CommandIOException
+         * @throws IOException
          * @throws UnsupportedOperationException.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException ){
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
             return next->request( command, timeout );
         }

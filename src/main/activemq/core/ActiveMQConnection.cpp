@@ -56,6 +56,7 @@ using namespace activemq::core;
 using namespace activemq::commands;
 using namespace activemq::exceptions;
 using namespace decaf;
+using namespace decaf::io;
 using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
@@ -545,7 +546,7 @@ void ActiveMQConnection::oneway( Pointer<Command> command )
         enforceConnected();
         this->getTransport().oneway( command );
     }
-    AMQ_CATCH_EXCEPTION_CONVERT( transport::CommandIOException, ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
@@ -582,7 +583,7 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( transport::CommandIOException, ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( IOException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( UnsupportedOperationException, ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )

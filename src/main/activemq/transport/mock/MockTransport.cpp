@@ -23,6 +23,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -55,7 +56,7 @@ MockTransport::MockTransport( const Pointer<WireFormat>& wireFormat,
 
 ////////////////////////////////////////////////////////////////////////////////
 void MockTransport::oneway( const Pointer<Command>& command )
-        throw( CommandIOException,
+        throw( IOException,
                decaf::lang::exceptions::UnsupportedOperationException) {
 
     try{
@@ -64,7 +65,7 @@ void MockTransport::oneway( const Pointer<Command>& command )
             this->numSentMessages++;
 
             if( this->numSentMessages > this->numSentMessageBeforeFail ) {
-                throw CommandIOException(
+                throw IOException(
                     __FILE__, __LINE__, "Failed to Send Message.");
             }
         }
@@ -78,16 +79,16 @@ void MockTransport::oneway( const Pointer<Command>& command )
             return;
         }
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> MockTransport::request( const Pointer<Command>& command )
-    throw( CommandIOException,
+    throw( IOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {
     try{
@@ -98,7 +99,7 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command )
                 this->numSentMessages++;
 
                 if( this->numSentMessages > this->numSentMessageBeforeFail ) {
-                    throw CommandIOException(
+                    throw IOException(
                         __FILE__, __LINE__, "Failed to Send Message.");
                 }
             }
@@ -113,29 +114,29 @@ Pointer<Response> MockTransport::request( const Pointer<Command>& command )
             return responseBuilder->buildResponse( command );
         }
 
-        throw CommandIOException(
+        throw IOException(
             __FILE__, __LINE__,
             "MockTransport::request - no response builder available" );
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Response> MockTransport::request( const Pointer<Command>& command,
                                           unsigned int timeout AMQCPP_UNUSED )
-    throw( CommandIOException,
+    throw( IOException,
            decaf::lang::exceptions::UnsupportedOperationException)
 {
     try{
         return this->request( command );
     }
-    AMQ_CATCH_RETHROW( CommandIOException )
+    AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_RETHROW( UnsupportedOperationException )
-    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, CommandIOException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, CommandIOException )
-    AMQ_CATCHALL_THROW( CommandIOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( ActiveMQException, IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

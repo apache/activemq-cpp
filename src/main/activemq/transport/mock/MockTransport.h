@@ -23,7 +23,6 @@
 #include <activemq/transport/Transport.h>
 #include <activemq/transport/TransportListener.h>
 #include <activemq/transport/DefaultTransportListener.h>
-#include <activemq/transport/CommandIOException.h>
 #include <activemq/transport/mock/ResponseBuilder.h>
 #include <activemq/transport/mock/InternalCommandListener.h>
 #include <activemq/wireformat/WireFormat.h>
@@ -100,15 +99,15 @@ namespace mock{
         }
 
         virtual void oneway( const Pointer<Command>& command )
-            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException);
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException);
 
         virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
 
         virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException);
 
         /**

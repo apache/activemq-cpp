@@ -82,13 +82,13 @@ namespace openwire{
          * First waits for the WireFormatInfo exchange to happen so that we
          * know how to encode outbound data.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual void oneway( const Pointer<commands::Command>& command )
-            throw( transport::CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -97,10 +97,10 @@ namespace openwire{
          * know how to encode outbound data.
          * @param command The request to send.
          * @return the response from the server.
-         * @throws CommandIOException if an error occurs with the request.
+         * @throws IOException if an error occurs with the request.
          */
         virtual Pointer<commands::Response> request( const Pointer<commands::Command>& command )
-            throw( transport::CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -110,11 +110,11 @@ namespace openwire{
          * @param command The request to send.
          * @param timeout The time to wait for the response.
          * @return the response from the server.
-         * @throws CommandIOException if an error occurs with the request.
+         * @throws IOException if an error occurs with the request.
          */
         virtual Pointer<commands::Response> request(
             const Pointer<commands::Command>& command, unsigned int timeout )
-                throw( transport::CommandIOException,
+                throw( decaf::io::IOException,
                        decaf::lang::exceptions::UnsupportedOperationException );
 
         /**

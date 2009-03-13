@@ -20,11 +20,11 @@
 
 #include <decaf/io/InputStream.h>
 #include <decaf/io/OutputStream.h>
+#include <decaf/io/IOException.h>
 #include <decaf/net/URI.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <activemq/util/Config.h>
-#include <activemq/transport/CommandIOException.h>
 #include <activemq/commands/Command.h>
 #include <activemq/commands/Response.h>
 #include <cms/Startable.h>
@@ -64,41 +64,41 @@ namespace transport{
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual void oneway( const Pointer<Command>& command )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends the given command to the broker and then waits for the response.
          * @param command the command to be sent.
          * @return the response from the broker.
-         * @throws CommandIOException if an exception occurs during the read of the
+         * @throws IOException if an exception occurs during the read of the
          * command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( CommandIOException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sends the given command to the broker and then waits for the response.
          * @param command - The command to be sent.
          * @param timeout - The time to wait for this response.
          * @return the response from the broker.
-         * @throws CommandIOException if an exception occurs during the read of the
+         * @throws IOException if an exception occurs during the read of the
          * command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual Pointer<Response> request( const Pointer<Command>&, unsigned int timeout )
-            throw( CommandIOException,
-                    decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+            throw( decaf::io::IOException,
+                   decaf::lang::exceptions::UnsupportedOperationException ) = 0;
 
         /**
          * Sets the WireFormat instance to use.

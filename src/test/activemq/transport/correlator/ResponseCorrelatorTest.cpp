@@ -29,6 +29,7 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::correlator;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace activemq{
@@ -81,7 +82,7 @@ namespace correlator{
         }
 
         virtual void oneway( const Pointer<Command>& command )
-            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             synchronized( &mutex ){
                 requests.push( command );
@@ -90,7 +91,7 @@ namespace correlator{
         }
 
         virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED )
-            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
@@ -98,7 +99,7 @@ namespace correlator{
 
         virtual Pointer<Response> request( const Pointer<Command>& command AMQCPP_UNUSED,
                                              unsigned int timeout AMQCPP_UNUSED )
-            throw(CommandIOException, decaf::lang::exceptions::UnsupportedOperationException)
+            throw(IOException, decaf::lang::exceptions::UnsupportedOperationException)
         {
             throw decaf::lang::exceptions::UnsupportedOperationException(
                 __FILE__, __LINE__, "stuff" );
@@ -405,7 +406,7 @@ void ResponseCorrelatorTest::testTransportException(){
         try{
             correlator.request( cmd, 500 );
             CPPUNIT_ASSERT(false);
-        }catch( CommandIOException& ex ){
+        }catch( IOException& ex ){
             // Expected.
         }
 

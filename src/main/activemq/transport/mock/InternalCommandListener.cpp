@@ -24,6 +24,7 @@ using namespace activemq::transport;
 using namespace activemq::transport::mock;
 using namespace activemq::exceptions;
 using namespace activemq::wireformat;
+using namespace decaf::io;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -87,7 +88,7 @@ void InternalCommandListener::run() {
 
                         if( transport->getNumReceivedMessages() > transport->getNumReceivedMessageBeforeFail() ) {
                             transport->fireException(
-                                CommandIOException( __FILE__, __LINE__, "Failed to Send Message.") );;
+                                IOException( __FILE__, __LINE__, "Failed to Send Message.") );;
                         }
                     }
 

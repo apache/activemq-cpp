@@ -36,6 +36,7 @@
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::exceptions;
+using namespace decaf::io;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,11 +83,11 @@ public:
     }
 
     virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* inputStream )
-        throw ( CommandIOException ){
+        throw ( IOException ){
 
         try{
             if( throwException ){
-                throw CommandIOException();
+                throw IOException();
             }
 
             if( inputStream == NULL ) {
@@ -109,9 +110,9 @@ public:
 
                 } catch( decaf::lang::Exception& ex ){
                     ex.setMark( __FILE__, __LINE__ );
-                    throw CommandIOException();
+                    throw IOException();
                 } catch( ... ) {
-                    throw CommandIOException( __FILE__, __LINE__, "Catch all" );
+                    throw IOException( __FILE__, __LINE__, "Catch all" );
                 }
 
                 return command;
@@ -121,12 +122,12 @@ public:
             return Pointer<Command>();
 
         }catch( decaf::lang::Exception& ex ){
-            CommandIOException cx;
+            IOException cx;
             cx.setMark( __FILE__, __LINE__ );
             throw cx;
         }
         catch( ... ){
-            CommandIOException cx;
+            IOException cx;
             cx.setMark( __FILE__, __LINE__ );
             throw cx;
         }
@@ -134,7 +135,7 @@ public:
 
     virtual void marshal( const Pointer<commands::Command>& command,
                           decaf::io::DataOutputStream* outputStream )
-        throw (CommandIOException)
+        throw (IOException)
     {
         try{
 
@@ -147,10 +148,10 @@ public:
 
         }catch( decaf::lang::Exception& ex ){
             ex.setMark( __FILE__, __LINE__ );
-            throw CommandIOException( ex );
+            throw IOException( ex );
         }
         catch(...){
-            throw CommandIOException( __FILE__, __LINE__, "writeCommand");
+            throw IOException( __FILE__, __LINE__, "writeCommand");
         }
     }
 };

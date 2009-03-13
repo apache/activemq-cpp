@@ -32,9 +32,12 @@ namespace failover {
         CPPUNIT_TEST( testTransportCreate );
         CPPUNIT_TEST( testTransportCreateWithBackups );
         CPPUNIT_TEST( testTransportCreateFailOnCreate );
+        CPPUNIT_TEST( testTransportCreateFailOnCreateSendMessage );
         CPPUNIT_TEST( testFailingBackupCreation );
         CPPUNIT_TEST( testSendOnewayMessage );
+        CPPUNIT_TEST( testSendRequestMessage );
         CPPUNIT_TEST( testSendOnewayMessageFail );
+        CPPUNIT_TEST( testSendRequestMessageFail );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -54,16 +57,23 @@ namespace failover {
         // reached at which point it calls its listeners onException method.
         void testTransportCreateFailOnCreate();
 
+        // Same as above but attempt to send a Message which should result in an Exception
+        // being thrown from the oneway method when the max connection attempts have been
+        // made.
+        void testTransportCreateFailOnCreateSendMessage();
+
         // Tests that a Transport with a Connected Primary Transport but failing backup
         // transports won't segfault and can be started, and stopped without error.
         void testFailingBackupCreation();
 
-        // Test that messages sent via the Oneway method are received.
+        // Test that messages sent via the Oneway or Request methods are received.
         void testSendOnewayMessage();
+        void testSendRequestMessage();
 
-        // Test that messages sent via the Oneway method are received after the first
-        // transport faults on the send and transport 2 is created.
+        // Test that messages sent via the Oneway or Request methods are received after
+        // the first transport faults on the send and transport 2 is created.
         void testSendOnewayMessageFail();
+        void testSendRequestMessageFail();
 
     };
 

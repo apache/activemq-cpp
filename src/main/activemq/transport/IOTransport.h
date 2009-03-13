@@ -124,13 +124,13 @@ namespace transport{
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual void oneway( const Pointer<Command>& command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
@@ -139,7 +139,7 @@ namespace transport{
          * @throws UnsupportedOperationException.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
@@ -149,7 +149,7 @@ namespace transport{
          * @throws UnsupportedOperationException.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( CommandIOException, decaf::lang::exceptions::UnsupportedOperationException );
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sets the WireFormat instance to use.
@@ -264,7 +264,7 @@ namespace transport{
          * @param uri
          * @throws IOException on failure of if not supported
          */
-        virtual void reconnect( const decaf::net::URI& uri )
+        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED )
             throw( decaf::io::IOException ) {}
 
     };

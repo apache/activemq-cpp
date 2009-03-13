@@ -80,23 +80,23 @@ namespace correlator{
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
         virtual void oneway( const Pointer<Command>& command )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Sends the given request to the server and waits for the response.
          * @param command The request to send.
          * @return the response from the server.
-         * @throws CommandIOException if an error occurs with the request.
+         * @throws IOException if an error occurs with the request.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
@@ -104,10 +104,10 @@ namespace correlator{
          * @param command The request to send.
          * @param timeout The time to wait for a response.
          * @return the response from the server.
-         * @throws CommandIOException if an error occurs with the request.
+         * @throws IOException if an error occurs with the request.
          */
         virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
-            throw( CommandIOException,
+            throw( decaf::io::IOException,
                    decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
