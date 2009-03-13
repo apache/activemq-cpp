@@ -31,6 +31,7 @@ namespace failover {
         CPPUNIT_TEST_SUITE( FailoverTransportTest );
         CPPUNIT_TEST( testTransportCreate );
         CPPUNIT_TEST( testTransportCreateWithBackups );
+        CPPUNIT_TEST( testTransportCreateFailOnCreate );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -40,6 +41,7 @@ namespace failover {
 
         void testTransportCreate();
         void testTransportCreateWithBackups();
+        void testTransportCreateFailOnCreate();
 
     };
 

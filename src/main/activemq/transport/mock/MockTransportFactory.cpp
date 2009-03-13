@@ -26,6 +26,7 @@
 #include <activemq/util/URISupport.h>
 
 #include <decaf/lang/Boolean.h>
+#include <decaf/lang/Integer.h>
 #include <decaf/io/IOException.h>
 
 using namespace activemq;
@@ -115,9 +116,16 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
             builder.reset( new wireformat::openwire::OpenWireResponseBuilder() );
         }
 
-        Pointer<Transport> transport( new MockTransport( wireFormat, builder ) );
+        Pointer<MockTransport> transport( new MockTransport( wireFormat, builder ) );
 
-
+        transport->setFailOnSendMessage(
+            Boolean::parseBoolean( properties.getProperty( "failOnSendMessage", "false" ) ) );
+        transport->setNumSentMessageBeforeFail(
+            Integer::parseInt( properties.getProperty( "numSentMessageBeforeFail", "0" ) ) );
+        transport->setFailOnReceiveMessage(
+            Boolean::parseBoolean( properties.getProperty( "failOnReceiveMessage", "false" ) ) );
+        transport->setNumReceivedMessageBeforeFail(
+            Integer::parseInt( properties.getProperty( "numReceivedMessageBeforeFail", "0" ) ) );
 
         return transport;
     }

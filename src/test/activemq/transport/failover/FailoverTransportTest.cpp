@@ -84,3 +84,44 @@ void FailoverTransportTest::testTransportCreateWithBackups() {
     transport->start();
     transport->close();
 }
+
+////////////////////////////////////////////////////////////////////////////////
+class FailToConnectListener : public DefaultTransportListener {
+public:
+
+    bool caughtException;
+
+    FailToConnectListener() : caughtException( false ) {}
+
+    virtual void onException( const decaf::lang::Exception& ex AMQCPP_UNUSED ) {
+        caughtException = true;
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testTransportCreateFailOnCreate() {
+
+    std::string uri =
+        "failover://(mock://localhost:61616?failOnCreate=true)?maxReconnectAttempts=2";
+
+    FailToConnectListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->getMaxReconnectAttempts() == 2 );
+
+    transport->start();
+
+    Thread::sleep( 2000 );
+
+    CPPUNIT_ASSERT( listener.caughtException == true );
+
+    transport->close();
+}
