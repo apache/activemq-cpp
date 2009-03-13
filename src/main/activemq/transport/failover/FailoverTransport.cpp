@@ -61,6 +61,7 @@ FailoverTransport::FailoverTransport() {
     this->closed = false;
     this->connected = false;
 
+    this->transportListener = NULL;
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
