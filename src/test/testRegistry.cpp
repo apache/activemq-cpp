@@ -76,6 +76,13 @@
 //#include <activemq/core/ActiveMQSessionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
 //
+#include <activemq/state/ConsumerStateTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConsumerStateTest );
+#include <activemq/state/ProducerStateTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ProducerStateTest );
+#include <activemq/state/TransactionStateTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::TransactionStateTest );
+
 #include <activemq/transport/failover/FailoverTransportTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
 //

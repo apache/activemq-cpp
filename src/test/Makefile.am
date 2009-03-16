@@ -36,6 +36,9 @@ cc_sources = \
   activemq/cmsutil/SessionPoolTest.cpp \
   activemq/cmsutil/CmsTemplateTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
+  activemq/state/ConsumerStateTest.cpp \
+  activemq/state/TransactionStateTest.cpp \
+  activemq/state/ProducerStateTest.cpp \
   activemq/transport/TransportRegistryTest.cpp \
   activemq/transport/IOTransportTest.cpp \
   activemq/transport/correlator/ResponseCorrelatorTest.cpp \
@@ -137,6 +140,9 @@ h_sources = \
   activemq/cmsutil/SessionPoolTest.h \
   activemq/cmsutil/CmsTemplateTest.h \
   activemq/exceptions/ActiveMQExceptionTest.h \
+  activemq/state/ConsumerStateTest.h \
+  activemq/state/ProducerStateTest.h \
+  activemq/state/TransactionStateTest.h \
   activemq/transport/TransportRegistryTest.h \
   activemq/transport/IOTransportTest.h \
   activemq/transport/correlator/ResponseCorrelatorTest.h \
