@@ -26,12 +26,14 @@
 
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/tcp/TcpTransportFactory.h>
+#include <activemq/transport/failover/FailoverTransportFactory.h>
 
 using namespace activemq;
 using namespace activemq::library;
 using namespace activemq::transport;
 using namespace activemq::transport::tcp;
 using namespace activemq::transport::mock;
+using namespace activemq::transport::failover;
 using namespace activemq::wireformat;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,5 +77,7 @@ void ActiveMQCPP::registerTransports() {
         "tcp", new TcpTransportFactory() );
     TransportRegistry::getInstance().registerFactory(
         "mock", new MockTransportFactory() );
+    TransportRegistry::getInstance().registerFactory(
+        "failover", new FailoverTransportFactory() );
 
 }
