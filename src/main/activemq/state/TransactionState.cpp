@@ -40,7 +40,7 @@ TransactionState::~TransactionState() {
 ////////////////////////////////////////////////////////////////////////////////
 std::string TransactionState::toString() const {
 
-    if( this->id.get() == NULL ) {
+    if( this->id != NULL ) {
         return this->id->toString();
     }
 
