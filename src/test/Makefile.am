@@ -36,6 +36,8 @@ cc_sources = \
   activemq/cmsutil/SessionPoolTest.cpp \
   activemq/cmsutil/CmsTemplateTest.cpp \
   activemq/exceptions/ActiveMQExceptionTest.cpp \
+  activemq/state/ConnectionStateTest.cpp \
+  activemq/state/ConnectionStateTrackerTest.cpp \
   activemq/state/ConsumerStateTest.cpp \
   activemq/state/ProducerStateTest.cpp \
   activemq/state/SessionStateTest.cpp \
@@ -141,6 +143,8 @@ h_sources = \
   activemq/cmsutil/SessionPoolTest.h \
   activemq/cmsutil/CmsTemplateTest.h \
   activemq/exceptions/ActiveMQExceptionTest.h \
+  activemq/state/ConnectionStateTest.h \
+  activemq/state/ConnectionStateTrackerTest.h \
   activemq/state/ConsumerStateTest.h \
   activemq/state/ProducerStateTest.h \
   activemq/state/SessionStateTest.h \

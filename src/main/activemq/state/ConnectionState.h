@@ -125,10 +125,6 @@ namespace state {
             return sessions.get( id );
         }
 
-//        Set<SessionId> getSessionIds() {
-//            return sessions.keySet();
-//        }
-
         const StlList< Pointer<DestinationInfo> >& getTempDesinations() const {
             return tempDestinations;
         }

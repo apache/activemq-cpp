@@ -30,7 +30,7 @@
 #include <activemq/state/Tracked.h>
 #include <activemq/transport/Transport.h>
 
-#include <decaf/util/StlMap.h>
+#include <decaf/util/concurrent/ConcurrentStlMap.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
@@ -38,6 +38,7 @@ namespace state {
 
     class RemoveTransactionAction;
     using decaf::lang::Pointer;
+    using decaf::util::concurrent::ConcurrentStlMap;
 
     class AMQCPP_API ConnectionStateTracker : public CommandVisitorAdapter {
     private:
@@ -45,16 +46,16 @@ namespace state {
         /** Creates a unique marker for this state tracker */
         const Pointer<Tracked> TRACKED_RESPONSE_MARKER;
 
-        // TODO - Create a Thread Safe impl of Map.
-        decaf::util::StlMap< Pointer<ConnectionId>, Pointer<ConnectionState>,
-                             ConnectionId::COMPARATOR > connectionStates;
+        /** Map holding the ConnectionStates, indexed by the ConnectionId */
+        ConcurrentStlMap< Pointer<ConnectionId>, Pointer<ConnectionState>,
+                          ConnectionId::COMPARATOR > connectionStates;
 
         // TODO - The Map doesn't have a way to automatically remove the eldest Entry
         //        Either we need to implement something similar to LinkedHashMap or find
         //        some other way of tracking the eldest entry into the map and removing it
         //        if the cache size is exceeded.
-        decaf::util::StlMap< Pointer<MessageId>, Pointer<Message>,
-                             MessageId::COMPARATOR > messageCache;
+        ConcurrentStlMap< Pointer<MessageId>, Pointer<Message>,
+                          MessageId::COMPARATOR > messageCache;
 
         bool trackTransactions;
         bool restoreSessions;
