@@ -209,6 +209,7 @@ void FailoverTransportTest::testSendOnewayMessage() {
 
     std::string uri = "failover://(mock://localhost:61616)?randomize=false";
 
+    const int numMessages = 1000;
     Pointer<ActiveMQMessage> message( new ActiveMQMessage() );
 
     MessageCountingListener messageCounter;
@@ -233,13 +234,13 @@ void FailoverTransportTest::testSendOnewayMessage() {
     }
     mock->setOutgoingListener( &messageCounter );
 
-    transport->oneway( message );
-    transport->oneway( message );
-    transport->oneway( message );
-    transport->oneway( message );
-    Thread::sleep( 1000 );
+    for( int i = 0; i < numMessages; ++i ) {
+        transport->oneway( message );
+    }
 
-    CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
+    Thread::sleep( 2000 );
+
+    CPPUNIT_ASSERT( messageCounter.numMessages = numMessages );
 
     transport->close();
 }
