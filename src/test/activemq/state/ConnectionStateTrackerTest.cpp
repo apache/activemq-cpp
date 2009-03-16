@@ -33,6 +33,40 @@ using namespace decaf::lang;
 ////////////////////////////////////////////////////////////////////////////////
 void ConnectionStateTrackerTest::test() {
 
+    Pointer<ConnectionId> conn_id( new ConnectionId );
+    conn_id->setValue( "CONNECTION" );
+    Pointer<ConnectionInfo> conn_info( new ConnectionInfo );
+    conn_info->setConnectionId( conn_id );
+
+    Pointer<SessionId> session_id( new SessionId );
+    session_id->setConnectionId( "CONNECTION" );
+    session_id->setValue( 12345 );
+    Pointer<SessionInfo> session_info( new SessionInfo );
+    session_info->setSessionId( session_id );
+
+    Pointer<ConsumerId> consumer_id( new ConsumerId );
+    consumer_id->setConnectionId( "CONNECTION" );
+    consumer_id->setSessionId( 12345 );
+    consumer_id->setValue( 42 );
+    Pointer<ConsumerInfo> consumer_info( new ConsumerInfo );
+    consumer_info->setConsumerId( consumer_id );
+
+    Pointer<ProducerId> producer_id( new ProducerId );
+    producer_id->setConnectionId( "CONNECTION" );
+    producer_id->setSessionId( 12345 );
+    producer_id->setValue( 42 );
+    Pointer<ProducerInfo> producer_info( new ProducerInfo );
+    producer_info->setProducerId( producer_id );
+
     ConnectionStateTracker tracker;
+    tracker.processAddConnection( conn_info.get() );
+    tracker.processAddSession( session_info.get() );
+    tracker.processAddConsumer( consumer_info.get() );
+    tracker.processAddProducer( producer_info.get() );
+
+    tracker.processRemoveProducer( producer_id.get() );
+    tracker.processRemoveConsumer( consumer_id.get() );
+    tracker.processRemoveSession( session_id.get() );
+    tracker.processRemoveConnection( conn_id.get() );
 
 }
