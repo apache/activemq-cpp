@@ -80,6 +80,8 @@
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConsumerStateTest );
 #include <activemq/state/ProducerStateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ProducerStateTest );
+#include <activemq/state/SessionStateTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::SessionStateTest );
 #include <activemq/state/TransactionStateTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::TransactionStateTest );
 

@@ -86,14 +86,6 @@ namespace state {
             return consumers.remove( id );
         }
 
-//        Set<commands::ConsumerId> getConsumerIds() {
-//            return consumers.keySet();
-//        }
-//
-//        Set<commands::ProducerId> getProducerIds() {
-//            return producers.keySet();
-//        }
-
         std::vector< Pointer<ProducerState> > getProducerStates() const {
             return producers.values();
         }

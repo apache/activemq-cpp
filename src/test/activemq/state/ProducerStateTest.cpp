@@ -29,7 +29,13 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 void ProducerStateTest::test() {
+    Pointer<ProducerId> id( new ProducerId );
+    id->setConnectionId( "CONNECTION" );
+    id->setSessionId( 42 );
+    id->setValue( 4096 );
+
     Pointer<ProducerInfo> info( new ProducerInfo() );
+    info->setProducerId( id );
     ProducerState state( info );
 
     CPPUNIT_ASSERT( state.toString() != "NULL" );

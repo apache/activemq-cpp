@@ -15,30 +15,29 @@
  * limitations under the License.
  */
 
-#include "ConsumerStateTest.h"
+#ifndef _ACTIVEMQ_STATE_SESSIONSTATETEST_H_
+#define _ACTIVEMQ_STATE_SESSIONSTATETEST_H_
 
-#include <activemq/state/ConsumerState.h>
-#include <activemq/commands/ConsumerInfo.h>
-#include <decaf/lang/Pointer.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
-using namespace std;
-using namespace activemq;
-using namespace activemq::state;
-using namespace activemq::commands;
-using namespace decaf::lang;
+namespace activemq {
+namespace state {
 
-////////////////////////////////////////////////////////////////////////////////
-void ConsumerStateTest::test() {
+    class SessionStateTest : public CppUnit::TestFixture {
 
-    Pointer<ConsumerId> id( new ConsumerId );
-    id->setConnectionId( "CONNECTION" );
-    id->setSessionId( 4096 );
-    id->setValue( 42 );
+        CPPUNIT_TEST_SUITE( SessionStateTest );
+        CPPUNIT_TEST( test );
+        CPPUNIT_TEST_SUITE_END();
 
-    Pointer<ConsumerInfo> info( new ConsumerInfo() );
-    info->setConsumerId( id );
-    ConsumerState state( info );
+    public:
 
-    CPPUNIT_ASSERT( state.toString() != "NULL" );
-    CPPUNIT_ASSERT( info == state.getInfo() );
-}
+        SessionStateTest() {}
+        virtual ~SessionStateTest() {}
+
+        void test();
+    };
+
+}}
+
+#endif /*_ACTIVEMQ_STATE_SESSIONSTATETEST_H_ */
