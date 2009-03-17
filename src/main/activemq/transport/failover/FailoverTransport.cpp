@@ -261,17 +261,22 @@ void FailoverTransport::oneway( const Pointer<Command>& command )
                         break;
                     }
 
-                    // If it was a request and it was not being tracked by
-                    // the state tracker,
-                    // then hold it in the requestMap so that we can replay
+                    // If it was a request and it was not being tracked by the state
+                    // tracker, then hold it in the requestMap so that we can replay
                     // it later.
-                    Pointer<Tracked> tracked = stateTracker.track( command );
-                    synchronized( &requestMap ) {
-                        if( tracked != NULL && tracked->isWaitingForResponse() ) {
-                            requestMap.put( command->getCommandId(), tracked );
-                        } else if( tracked == NULL && command->isResponseRequired() ) {
-                            requestMap.put( command->getCommandId(), command );
+                    Pointer<Tracked> tracked;
+                    try{
+                        tracked = stateTracker.track( command );
+                        synchronized( &requestMap ) {
+                            if( tracked != NULL && tracked->isWaitingForResponse() ) {
+                                requestMap.put( command->getCommandId(), tracked );
+                            } else if( tracked == NULL && command->isResponseRequired() ) {
+                                requestMap.put( command->getCommandId(), command );
+                            }
                         }
+                    } catch( Exception& ex ) {
+                        error.reset( ex.clone() );
+                        break;
                     }
 
                     // Send the message.

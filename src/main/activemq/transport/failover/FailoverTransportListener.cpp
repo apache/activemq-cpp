@@ -59,7 +59,11 @@ void FailoverTransportListener::onCommand( const Pointer<Command>& command ) {
         Pointer<Command> object;
 
         synchronized( &( parent->requestMap ) ) {
-            object = parent->requestMap.remove( response->getCorrelationId() );
+            try{
+                object = parent->requestMap.remove( response->getCorrelationId() );
+            } catch( NoSuchElementException& ex ) {
+                // Not tracking this request in our map, not an error.
+            }
         }
 
         if( object != NULL ) {
