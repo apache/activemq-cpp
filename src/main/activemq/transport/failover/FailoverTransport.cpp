@@ -82,15 +82,9 @@ bool FailoverTransport::isShutdownCommand( const Pointer<Command>& command ) con
 
     if( command != NULL ) {
 
-        if( command->isShutdownInfo() ) {
+        if( command->isShutdownInfo() || command->isRemoveInfo() ) {
             return true;
         }
-
-        try{
-            Pointer<RemoveInfo> remove = command.dynamicCast<RemoveInfo>();
-
-            return true;
-        } AMQ_CATCHALL_NOTHROW()
     }
 
     return false;
@@ -386,6 +380,7 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         }
 
         backups.clear();
+        requestMap.clear();
 
         if( connectedTransport != NULL ) {
             transportToStop = connectedTransport;

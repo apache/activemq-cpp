@@ -142,7 +142,7 @@ namespace lang {
          */
         template< typename T1, typename R1 >
         Pointer( const Pointer<T1, R1>& value, const STATIC_CAST_TOKEN& ) throw() :
-            REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ) {
+            REFCOUNTER( value ), value( static_cast<T*>( value.get() ) ) {
         }
 
         /**
@@ -160,6 +160,9 @@ namespace lang {
                 REFCOUNTER( value ), value( dynamic_cast<T*>( value.get() ) ) {
 
             if( this->value == NULL ) {
+                // Remove the reference we took in the Reference Counter's ctor since we
+                // didn't actually create one as the dynamic cast failed..
+                this->release();
                 throw decaf::lang::exceptions::ClassCastException(
                     __FILE__, __LINE__, "Failed to cast source pointer to this type." );
             }
