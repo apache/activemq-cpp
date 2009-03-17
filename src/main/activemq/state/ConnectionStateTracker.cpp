@@ -269,7 +269,7 @@ void ConnectionStateTracker::doRestoreTempDestinations( const Pointer<transport:
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processAddDestination( DestinationInfo* info )
+Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo* info )
     throw ( exceptions::ActiveMQException ) {
 
     try{
@@ -305,7 +305,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationIn
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processAddProducer( ProducerInfo* info )
+Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info )
     throw ( exceptions::ActiveMQException ) {
 
     try{
@@ -362,7 +362,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processAddConsumer( ConsumerInfo* info )
+Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info )
     throw ( exceptions::ActiveMQException ) {
 
     try{
@@ -418,7 +418,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processAddSession( SessionInfo* info)
+Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info)
     throw ( exceptions::ActiveMQException ) {
 
     try{
@@ -462,7 +462,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Pointer<Command> ConnectionStateTracker::processAddConnection( ConnectionInfo* info )
+Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* info )
     throw ( exceptions::ActiveMQException ) {
 
     try{

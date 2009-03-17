@@ -22,9 +22,20 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <activemq/util/Config.h>
 
+#include <activemq/commands/ConnectionInfo.h>
+#include <activemq/commands/SessionInfo.h>
+#include <activemq/commands/ProducerInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
+
+#include <activemq/transport/Transport.h>
+#include <decaf/lang/Pointer.h>
+
 namespace activemq {
 namespace transport {
 namespace failover {
+
+    using decaf::lang::Pointer;
+    using namespace activemq::commands;
 
     class FailoverTransportTest : public CppUnit::TestFixture {
 
@@ -38,6 +49,7 @@ namespace failover {
         CPPUNIT_TEST( testSendRequestMessage );
         CPPUNIT_TEST( testSendOnewayMessageFail );
         CPPUNIT_TEST( testSendRequestMessageFail );
+        CPPUNIT_TEST( testWithOpewireCommands );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -74,6 +86,25 @@ namespace failover {
         // the first transport faults on the send and transport 2 is created.
         void testSendOnewayMessageFail();
         void testSendRequestMessageFail();
+
+        // Test the transport using a realistic set of commands being sen through which
+        // simulates creation of a Connection, Session, Topics, Producers and Consumers
+        // and then removing them all as a normal shutdown would.
+        void testWithOpewireCommands();
+
+    private:
+
+        Pointer<ConnectionInfo> createConnection();
+        Pointer<SessionInfo> createSession( const Pointer<ConnectionInfo>& parent );
+        Pointer<ConsumerInfo> createConsumer( const Pointer<SessionInfo>& parent );
+        Pointer<ProducerInfo> createProducer( const Pointer<SessionInfo>& parent );
+
+        void disposeOf( const Pointer<SessionInfo>& session,
+                        Pointer<Transport>& transport );
+        void disposeOf( const Pointer<ConsumerInfo>& consumer,
+                        Pointer<Transport>& transport );
+        void disposeOf( const Pointer<ProducerInfo>& producer,
+                        Pointer<Transport>& transport );
 
     };
 

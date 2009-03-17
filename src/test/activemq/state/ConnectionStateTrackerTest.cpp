@@ -59,10 +59,10 @@ void ConnectionStateTrackerTest::test() {
     producer_info->setProducerId( producer_id );
 
     ConnectionStateTracker tracker;
-    tracker.processAddConnection( conn_info.get() );
-    tracker.processAddSession( session_info.get() );
-    tracker.processAddConsumer( consumer_info.get() );
-    tracker.processAddProducer( producer_info.get() );
+    tracker.processConnectionInfo( conn_info.get() );
+    tracker.processSessionInfo( session_info.get() );
+    tracker.processConsumerInfo( consumer_info.get() );
+    tracker.processProducerInfo( producer_info.get() );
 
     tracker.processRemoveProducer( producer_id.get() );
     tracker.processRemoveConsumer( consumer_id.get() );

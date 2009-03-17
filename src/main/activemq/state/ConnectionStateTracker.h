@@ -81,31 +81,31 @@ namespace state {
         void restore( const Pointer<transport::Transport>& transport )
             throw( decaf::io::IOException );
 
-        virtual Pointer<Command> processAddDestination( DestinationInfo* info )
+        virtual Pointer<Command> processDestinationInfo( DestinationInfo* info )
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processRemoveDestination( DestinationInfo* info )
             throw ( exceptions::ActiveMQException );
 
-        virtual Pointer<Command> processAddProducer( ProducerInfo* info )
+        virtual Pointer<Command> processProducerInfo( ProducerInfo* info )
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processRemoveProducer( ProducerId* id )
             throw ( exceptions::ActiveMQException );
 
-        virtual Pointer<Command> processAddConsumer( ConsumerInfo* info )
+        virtual Pointer<Command> processConsumerInfo( ConsumerInfo* info )
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processRemoveConsumer( ConsumerId* id )
             throw ( exceptions::ActiveMQException );
 
-        virtual Pointer<Command> processAddSession( SessionInfo* info )
+        virtual Pointer<Command> processSessionInfo( SessionInfo* info )
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processRemoveSession( SessionId* id )
             throw ( exceptions::ActiveMQException );
 
-        virtual Pointer<Command> processAddConnection( ConnectionInfo* info)
+        virtual Pointer<Command> processConnectionInfo( ConnectionInfo* info)
             throw ( exceptions::ActiveMQException );
 
         virtual Pointer<Command> processRemoveConnection( ConnectionId* id )

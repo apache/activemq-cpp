@@ -24,6 +24,7 @@
 #include <activemq/commands/ActiveMQMessage.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/lang/Thread.h>
+#include <decaf/util/UUID.h>
 
 using namespace activemq;
 using namespace activemq::commands;
@@ -367,4 +368,146 @@ void FailoverTransportTest::testSendRequestMessageFail() {
     CPPUNIT_ASSERT( messageCounter.numMessages = 4 );
 
     transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::testWithOpewireCommands() {
+
+    std::string uri = "failover://(mock://localhost:61616)?randomize=false";
+
+    DefaultTransportListener listener;
+    FailoverTransportFactory factory;
+
+    Pointer<Transport> transport( factory.create( uri ) );
+    CPPUNIT_ASSERT( transport != NULL );
+    transport->setTransportListener( &listener );
+
+    FailoverTransport* failover = dynamic_cast<FailoverTransport*>(
+        transport->narrow( typeid( FailoverTransport ) ) );
+
+    CPPUNIT_ASSERT( failover != NULL );
+    CPPUNIT_ASSERT( failover->isRandomize() == false );
+
+    transport->start();
+
+    Pointer<ConnectionInfo> connection = createConnection();
+    transport->request( connection );
+    Pointer<SessionInfo> session1 = createSession( connection );
+    transport->request( session1 );
+    Pointer<SessionInfo> session2 = createSession( connection );
+    transport->request( session2 );
+    Pointer<ConsumerInfo> consumer1 = createConsumer( session1 );
+    transport->request( consumer1 );
+    Pointer<ConsumerInfo> consumer2 = createConsumer( session1 );
+    transport->request( consumer2 );
+    Pointer<ConsumerInfo> consumer3 = createConsumer( session2 );
+    transport->request( consumer3 );
+
+    Pointer<ProducerInfo> producer1 = createProducer( session2 );
+    transport->request( producer1 );
+
+    // Remove the Producers
+    this->disposeOf( producer1, transport );
+
+    // Remove the Consumers
+    this->disposeOf( consumer1, transport );
+    this->disposeOf( consumer2, transport );
+    this->disposeOf( consumer3, transport );
+
+    // Remove the Session instances.
+    this->disposeOf( session1, transport );
+    this->disposeOf( session2, transport );
+
+    // Indicate that we are done.
+    Pointer<ShutdownInfo> shutdown( new ShutdownInfo() );
+    transport->oneway( shutdown );
+
+    transport->close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ConnectionInfo> FailoverTransportTest::createConnection() {
+
+    Pointer<ConnectionId> id( new ConnectionId() );
+    id->setValue( UUID::randomUUID().toString() );
+
+    Pointer<ConnectionInfo> info( new ConnectionInfo() );
+    info->setClientId( UUID::randomUUID().toString() );
+    info->setConnectionId( id );
+
+    return info;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<SessionInfo> FailoverTransportTest::createSession( const Pointer<ConnectionInfo>& parent ) {
+
+    static int idx = 1;
+
+    Pointer<SessionId> id( new SessionId() );
+    id->setConnectionId( parent->getConnectionId()->getValue() );
+    id->setValue( idx++ );
+
+    Pointer<SessionInfo> info( new SessionInfo() );
+    info->setSessionId( id );
+
+    return info;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ConsumerInfo> FailoverTransportTest::createConsumer( const Pointer<SessionInfo>& parent ) {
+
+    static int idx = 1;
+
+    Pointer<ConsumerId> id( new ConsumerId() );
+    id->setConnectionId( parent->getSessionId()->getConnectionId() );
+    id->setSessionId( parent->getSessionId()->getValue() );
+    id->setValue( idx++ );
+
+    Pointer<ConsumerInfo> info( new ConsumerInfo() );
+    info->setConsumerId( id );
+
+    return info;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<ProducerInfo> FailoverTransportTest::createProducer( const Pointer<SessionInfo>& parent ) {
+
+    static int idx = 1;
+
+    Pointer<ProducerId> id( new ProducerId() );
+    id->setConnectionId( parent->getSessionId()->getConnectionId() );
+    id->setSessionId( parent->getSessionId()->getValue() );
+    id->setValue( idx++ );
+
+    Pointer<ProducerInfo> info( new ProducerInfo() );
+    info->setProducerId( id );
+
+    return info;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::disposeOf( const Pointer<SessionInfo>& session,
+                                       Pointer<Transport>& transport ) {
+
+    Pointer<RemoveInfo> command( new RemoveInfo() );
+    command->setObjectId( session->getSessionId() );
+    transport->oneway( command );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::disposeOf( const Pointer<ConsumerInfo>& consumer,
+                                       Pointer<Transport>& transport ) {
+
+    Pointer<RemoveInfo> command( new RemoveInfo() );
+    command->setObjectId( consumer->getConsumerId() );
+    transport->oneway( command );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void FailoverTransportTest::disposeOf( const Pointer<ProducerInfo>& producer,
+                                       Pointer<Transport>& transport ) {
+
+    Pointer<RemoveInfo> command( new RemoveInfo() );
+    command->setObjectId( producer->getProducerId() );
+    transport->oneway( command );
 }

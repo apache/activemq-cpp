@@ -75,22 +75,22 @@
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 //#include <activemq/core/ActiveMQSessionTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
-
-#include <activemq/state/ConnectionStateTrackerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTrackerTest );
-#include <activemq/state/ConnectionStateTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTest );
-#include <activemq/state/ConsumerStateTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConsumerStateTest );
-#include <activemq/state/ProducerStateTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ProducerStateTest );
-#include <activemq/state/SessionStateTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::SessionStateTest );
-#include <activemq/state/TransactionStateTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::TransactionStateTest );
-
-//#include <activemq/transport/failover/FailoverTransportTest.h>
-//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
+//
+//#include <activemq/state/ConnectionStateTrackerTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTrackerTest );
+//#include <activemq/state/ConnectionStateTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTest );
+//#include <activemq/state/ConsumerStateTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConsumerStateTest );
+//#include <activemq/state/ProducerStateTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ProducerStateTest );
+//#include <activemq/state/SessionStateTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::SessionStateTest );
+//#include <activemq/state/TransactionStateTest.h>
+//CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::TransactionStateTest );
+//
+#include <activemq/transport/failover/FailoverTransportTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::failover::FailoverTransportTest );
 //
 //#include <activemq/transport/correlator/ResponseCorrelatorTest.h>
 //CPPUNIT_TEST_SUITE_REGISTRATION( activemq::transport::correlator::ResponseCorrelatorTest );
