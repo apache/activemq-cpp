@@ -457,7 +457,11 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
         if( this->disposedListener != NULL ) {
             transport->setTransportListener( disposedListener.get() );
         }
-        transport->close();
+
+        try{
+            transport->close();
+        }
+        AMQ_CATCHALL_NOTHROW()
 
         synchronized( &reconnectMutex ) {
             bool reconnectOk = started;
