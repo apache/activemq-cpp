@@ -63,7 +63,7 @@
           <version>1.5</version>
            <scope>system</scope>
            <!-- Only a JDK of 1.5.0 B11 or greater seems to work. -->
-           <systemPath>/opt/local/jdk1.5.0_16/lib/tools.jar</systemPath>
+           <systemPath>/opt/local/jdk1.5/lib/tools.jar</systemPath>
         </dependency>
       </dependencies>
     </profile>
