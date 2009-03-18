@@ -371,6 +371,12 @@ cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
                 "ActiveMQSession::createQueue - Session Already Closed" );
         }
 
+        if( queueName == "" ) {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "ActiveMQSession::createQueue - Destination name cannot be empty.");
+        }
+
         cms::Queue* queue = connection->getConnectionData()->
             getConnector()->createQueue( queueName, sessionInfo );
 
@@ -395,6 +401,12 @@ cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
             throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQSession::createTopic - Session Already Closed");
+        }
+
+        if( topicName == "" ) {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "ActiveMQSession::createTopic - Destination name cannot be empty.");
         }
 
         cms::Topic* topic = connection->getConnectionData()->
