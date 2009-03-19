@@ -134,7 +134,7 @@ void AtomicReferenceTest::testGetAndSet() {
 void AtomicReferenceTest::testToString() {
     int value;
     AtomicReference<int> ai;
-    CPPUNIT_ASSERT( ai.toString() == Integer::toString( 0 ) );
+    CPPUNIT_ASSERT( ai.toString() == Long::toString( 0 ) );
     ai.set( &value );
-    CPPUNIT_ASSERT( ai.toString() == Integer::toString( (long long)&value ) );
+    CPPUNIT_ASSERT( ai.toString() == Long::toString( (long long)&value ) );
 }
