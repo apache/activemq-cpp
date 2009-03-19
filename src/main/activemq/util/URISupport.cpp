@@ -331,7 +331,7 @@ StlList<std::string> URISupport::splitComponents( const std::string& str ) {
 
     StlList<std::string> components;
 
-    int last = 0;
+	std::size_t last = 0;
     int depth = 0;
 
     std::string::const_iterator iter = str.begin();
