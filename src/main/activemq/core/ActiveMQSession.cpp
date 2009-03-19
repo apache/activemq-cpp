@@ -969,7 +969,7 @@ void ActiveMQSession::syncRequest( Pointer<Command> command, unsigned int timeou
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::checkClosed() const throw( exceptions::ActiveMQException ) {
+void ActiveMQSession::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

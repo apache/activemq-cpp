@@ -202,7 +202,7 @@ void ActiveMQTransactionContext::rollback()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::startTransaction() throw( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -227,7 +227,7 @@ void ActiveMQTransactionContext::startTransaction() throw( exceptions::ActiveMQE
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQTransactionContext::clearSynchronizations()
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
 
     try{

@@ -202,7 +202,7 @@ void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::checkClosed() const throw( exceptions::ActiveMQException ) {
+void ActiveMQProducer::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
     if( closed ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

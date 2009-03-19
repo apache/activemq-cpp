@@ -44,7 +44,7 @@ using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -74,7 +74,7 @@ Pointer<Transport> MockTransportFactory::create( const decaf::net::URI& location
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Transport> MockTransportFactory::createComposite( const decaf::net::URI& location )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -96,7 +96,7 @@ Pointer<Transport> MockTransportFactory::doCreateComposite(
     const decaf::net::URI& location AMQCPP_UNUSED,
     const Pointer<wireformat::WireFormat>& wireFormat,
     const decaf::util::Properties& properties )
-        throw ( exceptions::ActiveMQException ) {
+        throw ( activemq::exceptions::ActiveMQException ) {
 
     try {
 

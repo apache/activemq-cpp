@@ -270,7 +270,7 @@ void ConnectionStateTracker::doRestoreTempDestinations( const Pointer<transport:
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         if( info != NULL ) {
@@ -288,7 +288,7 @@ Pointer<Command> ConnectionStateTracker::processDestinationInfo( DestinationInfo
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         if( info != NULL ) {
@@ -306,7 +306,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveDestination( DestinationIn
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -335,7 +335,7 @@ Pointer<Command> ConnectionStateTracker::processProducerInfo( ProducerInfo* info
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -363,7 +363,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveProducer( ProducerId* id )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -392,7 +392,7 @@ Pointer<Command> ConnectionStateTracker::processConsumerInfo( ConsumerInfo* info
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         if( id != NULL ) {
@@ -419,7 +419,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveConsumer( ConsumerId* id )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info)
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -441,7 +441,7 @@ Pointer<Command> ConnectionStateTracker::processSessionInfo( SessionInfo* info)
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id)
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -463,7 +463,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveSession( SessionId* id)
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -481,7 +481,7 @@ Pointer<Command> ConnectionStateTracker::processConnectionInfo( ConnectionInfo* 
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRemoveConnection( ConnectionId* id )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -498,7 +498,7 @@ Pointer<Command> ConnectionStateTracker::processRemoveConnection( ConnectionId* 
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
         if( message != NULL ) {
@@ -531,7 +531,7 @@ Pointer<Command> ConnectionStateTracker::processMessage( Message* message )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -560,7 +560,7 @@ Pointer<Command> ConnectionStateTracker::processMessageAck( MessageAck* ack )
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -590,7 +590,7 @@ Pointer<Command> ConnectionStateTracker::processBeginTransaction( TransactionInf
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processPrepareTransaction( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -620,7 +620,7 @@ Pointer<Command> ConnectionStateTracker::processPrepareTransaction( TransactionI
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -651,7 +651,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionOnePhase( Trans
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -682,7 +682,7 @@ Pointer<Command> ConnectionStateTracker::processCommitTransactionTwoPhase( Trans
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processRollbackTransaction( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 
@@ -713,7 +713,7 @@ Pointer<Command> ConnectionStateTracker::processRollbackTransaction( Transaction
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<Command> ConnectionStateTracker::processEndTransaction( TransactionInfo* info )
-    throw ( exceptions::ActiveMQException ) {
+    throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
 

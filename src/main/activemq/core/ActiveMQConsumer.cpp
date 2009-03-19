@@ -531,7 +531,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::checkClosed() const throw( exceptions::ActiveMQException ) {
+void ActiveMQConsumer::checkClosed() const throw( ActiveMQException ) {
     if( this->isClosed() ) {
         throw ActiveMQException(
             __FILE__, __LINE__,

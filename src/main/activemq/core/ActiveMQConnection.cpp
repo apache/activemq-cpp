@@ -628,7 +628,7 @@ void ActiveMQConnection::enforceConnected() const throw ( ActiveMQException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConnection::fire( const exceptions::ActiveMQException& ex ) {
+void ActiveMQConnection::fire( const ActiveMQException& ex ) {
     if( exceptionListener != NULL ) {
         try {
             exceptionListener->onException( ex );
