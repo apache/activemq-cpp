@@ -55,7 +55,7 @@ void ActiveMQBlobMessageMarshaller::tightUnmarshal( OpenWireFormat* wireFormat, 
 
     try {
 
-        ActiveMQMessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
+        MessageMarshaller::tightUnmarshal( wireFormat, dataStructure, dataIn, bs );
 
         ActiveMQBlobMessage* info =
             dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
@@ -76,7 +76,7 @@ int ActiveMQBlobMessageMarshaller::tightMarshal1( OpenWireFormat* wireFormat, Da
         ActiveMQBlobMessage* info =
             dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
 
-        int rc = ActiveMQMessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
+        int rc = MessageMarshaller::tightMarshal1( wireFormat, dataStructure, bs );
         rc += tightMarshalString1( info->getRemoteBlobUrl(), bs );
         rc += tightMarshalString1( info->getMimeType(), bs );
         bs->writeBoolean( info->isDeletedByBroker() );
@@ -93,7 +93,7 @@ void ActiveMQBlobMessageMarshaller::tightMarshal2( OpenWireFormat* wireFormat, D
 
     try {
 
-        ActiveMQMessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
+        MessageMarshaller::tightMarshal2( wireFormat, dataStructure, dataOut, bs );
 
         ActiveMQBlobMessage* info =
             dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
@@ -111,7 +111,7 @@ void ActiveMQBlobMessageMarshaller::looseUnmarshal( OpenWireFormat* wireFormat, 
 
     try {
 
-        ActiveMQMessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
+        MessageMarshaller::looseUnmarshal( wireFormat, dataStructure, dataIn );
         ActiveMQBlobMessage* info =
             dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
         info->setRemoteBlobUrl( looseUnmarshalString( dataIn ) );
@@ -130,7 +130,7 @@ void ActiveMQBlobMessageMarshaller::looseMarshal( OpenWireFormat* wireFormat, Da
 
         ActiveMQBlobMessage* info =
             dynamic_cast<ActiveMQBlobMessage*>( dataStructure );
-        ActiveMQMessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
+        MessageMarshaller::looseMarshal( wireFormat, dataStructure, dataOut );
 
         looseMarshalString( info->getRemoteBlobUrl(), dataOut );
         looseMarshalString( info->getMimeType(), dataOut );

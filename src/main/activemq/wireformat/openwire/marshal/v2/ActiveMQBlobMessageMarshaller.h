@@ -23,7 +23,7 @@
 #pragma warning( disable : 4290 )
 #endif
 
-#include <activemq/wireformat/openwire/marshal/v2/ActiveMQMessageMarshaller.h>
+#include <activemq/wireformat/openwire/marshal/v2/MessageMarshaller.h>
 
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
@@ -46,7 +46,7 @@ namespace v2{
      *         if you need to make a change, please see the Java Classes
      *         in the activemq-openwire-generator module
      */
-    class AMQCPP_API ActiveMQBlobMessageMarshaller : public ActiveMQMessageMarshaller {
+    class AMQCPP_API ActiveMQBlobMessageMarshaller : public MessageMarshaller {
     public:
 
         ActiveMQBlobMessageMarshaller() {}
