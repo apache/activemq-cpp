@@ -164,7 +164,7 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> WireFormatInfo::visit( activemq::state::CommandVisitor* visitor )
-    throw( exceptions::ActiveMQException ) {
+	throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processWireFormat( this );
 }
