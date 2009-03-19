@@ -56,6 +56,8 @@ public class AmqCppMarshallingHeadersGenerator extends JavaMarshallingGenerator 
             answer = "MessageMarshaller";
         } else if( answer.equals("ActiveMQStreamMessage") ) {
             answer = "MessageMarshaller";
+        } else if( answer.equals("ActiveMQBlobMessage") ) {
+            answer = "MessageMarshaller";
         }
 
         // We didn't map it, so let the base class handle it.
