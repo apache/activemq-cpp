@@ -130,10 +130,10 @@ namespace util{
 
             virtual int nextIndex() const {
                 if( this->current == this->list->end() ) {
-                    return this->list->size();
+                    return (int)this->list->size();
                 }
 
-                return std::distance( this->list->begin(), this->current );
+                return (int)std::distance( this->list->begin(), this->current );
             }
 
             virtual int previousIndex() const {
@@ -141,7 +141,7 @@ namespace util{
                     return -1;
                 }
 
-                return std::distance( this->list->begin(), this->current ) - 1;
+                return (int)std::distance( this->list->begin(), this->current ) - 1;
             }
 
         };
@@ -222,10 +222,10 @@ namespace util{
 
             virtual int nextIndex() const {
                 if( this->current == this->list->end() ) {
-                    return this->list->size();
+                    return (int)this->list->size();
                 }
 
-                return std::distance( this->list->begin(), this->current );
+                return (int)std::distance( this->list->begin(), this->current );
             }
 
             virtual int previousIndex() const {
@@ -233,7 +233,7 @@ namespace util{
                     return -1;
                 }
 
-                return std::distance( this->list->begin(), this->current ) - 1;
+                return (int)std::distance( this->list->begin(), this->current ) - 1;
             }
         };
 

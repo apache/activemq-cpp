@@ -69,7 +69,7 @@ void StandardOutputStream::write( const unsigned char* buffer,
             "StandardOutputStream::write - offset passed is greater than length" );
     }
 
-    for( int i = 0; i < len; ++i ) {
+	for( std::size_t i = 0; i < len; ++i ) {
         std::cout << buffer[i+offset];
     }
 }

@@ -24,6 +24,7 @@
 #include <decaf/util/concurrent/atomic/AtomicInteger.h>
 #include <decaf/util/Comparator.h>
 #include <memory>
+#include <algorithm>
 
 namespace decaf {
 namespace lang {

@@ -20,6 +20,7 @@
 
 #include <decaf/util/Config.h>
 #include <algorithm>
+#include <functional>
 
 namespace decaf{
 namespace util{

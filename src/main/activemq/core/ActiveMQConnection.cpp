@@ -639,7 +639,7 @@ void ActiveMQConnection::fire( const exceptions::ActiveMQException& ex ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const
-    throw( exceptions::ActiveMQException ) {
+    throw( ActiveMQException ) {
 
     enforceConnected();
 
@@ -648,7 +648,7 @@ const ConnectionInfo& ActiveMQConnection::getConnectionInfo() const
 
 ////////////////////////////////////////////////////////////////////////////////
 const ConnectionId& ActiveMQConnection::getConnectionId() const
-    throw( exceptions::ActiveMQException ) {
+    throw( ActiveMQException ) {
 
     enforceConnected();
 

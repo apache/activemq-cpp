@@ -287,8 +287,8 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
             uri.toString() );
     }
 
-    int p;
-    int intialParen = ssp.find( "(" );
+	std::size_t p;
+	std::size_t intialParen = ssp.find( "(" );
     if( intialParen == 0 ) {
         rc.setHost( ssp.substr( 0, intialParen ) );
         p = rc.getHost().find( "/" );
