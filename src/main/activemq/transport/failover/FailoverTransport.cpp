@@ -165,7 +165,7 @@ StlList<URI> FailoverTransport::getConnectList() const {
         rand.setSeed( decaf::lang::System::currentTimeMillis() );
 
         for( std::size_t i = 0; i < result.size(); i++ ) {
-            int p = rand.nextInt( result.size() );
+            int p = rand.nextInt( (int)result.size() );
             URI temp = result.get( p );
             result.set( p, result.get( i ) );
             result.set( i, temp );
@@ -612,7 +612,7 @@ bool FailoverTransport::doReconnect() {
     if( !closed ) {
 
         synchronized( &sleepMutex ) {
-            sleepMutex.wait( reconnectDelay );
+            sleepMutex.wait( (unsigned int)reconnectDelay );
         }
 
         if( useExponentialBackOff ) {

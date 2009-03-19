@@ -17,6 +17,10 @@
 #ifndef _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
 #define _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4250 )
+#endif
+
 #include <activemq/util/Config.h>
 #include <cms/CMSException.h>
 #include <decaf/lang/Exception.h>
