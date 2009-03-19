@@ -796,7 +796,7 @@ void Message::setBrokerOutTime( long long brokerOutTime ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> Message::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessage( this );
 }

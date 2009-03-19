@@ -239,7 +239,7 @@ void DestinationInfo::setBrokerPath( const std::vector< decaf::lang::Pointer<Bro
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> DestinationInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processDestinationInfo( this );
 }

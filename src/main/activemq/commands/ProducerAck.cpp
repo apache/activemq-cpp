@@ -161,7 +161,7 @@ void ProducerAck::setSize( int size ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> ProducerAck::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processProducerAck( this );
 }

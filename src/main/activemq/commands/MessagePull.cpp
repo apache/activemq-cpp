@@ -240,7 +240,7 @@ void MessagePull::setMessageId( const decaf::lang::Pointer<MessageId>& messageId
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> MessagePull::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessagePull( this );
 }

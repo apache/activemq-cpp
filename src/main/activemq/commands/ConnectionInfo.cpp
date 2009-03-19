@@ -289,7 +289,7 @@ void ConnectionInfo::setClientMaster( bool clientMaster ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> ConnectionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConnectionInfo( this );
 }

@@ -219,7 +219,7 @@ void MessageDispatch::setRedeliveryCounter( int redeliveryCounter ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> MessageDispatch::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessageDispatch( this );
 }

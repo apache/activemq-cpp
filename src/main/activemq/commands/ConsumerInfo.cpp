@@ -454,7 +454,7 @@ void ConsumerInfo::setNoRangeAcks( bool noRangeAcks ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> ConsumerInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processConsumerInfo( this );
 }

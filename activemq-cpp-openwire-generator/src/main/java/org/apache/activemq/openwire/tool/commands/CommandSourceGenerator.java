@@ -184,7 +184,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
         if( getBaseClassName().equals( "BaseCommand" ) ) {
             out.println("////////////////////////////////////////////////////////////////////////////////");
             out.println("decaf::lang::Pointer<commands::Command> "+getClassName()+"::visit( activemq::state::CommandVisitor* visitor ) ");
-            out.println("    throw( exceptions::ActiveMQException ) {");
+            out.println("    throw( activemq::exceptions::ActiveMQException ) {");
             out.println("");
             out.println("    return visitor->process"+getClassName()+"( this );");
             out.println("}");

@@ -145,7 +145,7 @@ void RemoveInfo::setObjectId( const decaf::lang::Pointer<DataStructure>& objectI
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> RemoveInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processRemoveInfo( this );
 }

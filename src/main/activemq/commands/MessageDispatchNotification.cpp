@@ -219,7 +219,7 @@ void MessageDispatchNotification::setMessageId( const decaf::lang::Pointer<Messa
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> MessageDispatchNotification::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processMessageDispatchNotification( this );
 }

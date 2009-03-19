@@ -187,7 +187,7 @@ void RemoveSubscriptionInfo::setClientId( const std::string& clientId ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> RemoveSubscriptionInfo::visit( activemq::state::CommandVisitor* visitor ) 
-    throw( exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processRemoveSubscriptionInfo( this );
 }
