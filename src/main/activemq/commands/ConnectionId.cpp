@@ -192,5 +192,6 @@ bool ConnectionId::operator<( const ConnectionId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 ConnectionId& ConnectionId::operator= ( const ConnectionId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 

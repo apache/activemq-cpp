@@ -148,5 +148,6 @@ bool TransactionId::operator<( const TransactionId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 TransactionId& TransactionId::operator= ( const TransactionId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 

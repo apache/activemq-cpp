@@ -230,5 +230,6 @@ bool XATransactionId::operator<( const XATransactionId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 XATransactionId& XATransactionId::operator= ( const XATransactionId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 

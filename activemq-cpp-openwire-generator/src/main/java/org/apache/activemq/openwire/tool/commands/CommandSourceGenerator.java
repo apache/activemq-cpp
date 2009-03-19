@@ -177,6 +177,7 @@ public class CommandSourceGenerator extends CommandCodeGenerator {
             out.println("////////////////////////////////////////////////////////////////////////////////");
             out.println(""+getClassName()+"& "+getClassName()+"::operator= ( const "+getClassName()+"& other ) {");
             out.println("    this->copyDataStructure( &other );");
+            out.println("    return *this;");
             out.println("}");
             out.println("");
         }

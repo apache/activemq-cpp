@@ -226,5 +226,6 @@ bool MessageId::operator<( const MessageId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 MessageId& MessageId::operator= ( const MessageId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 

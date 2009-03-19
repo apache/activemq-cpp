@@ -174,5 +174,6 @@ bool BrokerId::operator<( const BrokerId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 BrokerId& BrokerId::operator= ( const BrokerId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 

@@ -204,5 +204,6 @@ bool LocalTransactionId::operator<( const LocalTransactionId& value ) const {
 ////////////////////////////////////////////////////////////////////////////////
 LocalTransactionId& LocalTransactionId::operator= ( const LocalTransactionId& other ) {
     this->copyDataStructure( &other );
+    return *this;
 }
 
