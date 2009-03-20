@@ -100,27 +100,35 @@
           </dependency>
         </dependencies>
       </plugin>
-      <!--
       <plugin>
         <groupId>org.apache.activemq.maven</groupId>
         <artifactId>maven-amqcpp-tooling-plugin</artifactId>
+        <inherited>false</inherited>
         <executions>
           <execution>
-            <id>Main-Makefile</id>
+            <id>Test-Makefile</id>
             <configuration>
-              <outputDirectory>${basedir}/src/main/activemq</outputDirectory>
-              <template>${basedir}/src/main/activemq/Makefile.maven</template>
+              <outputDirectory>${basedir}/src/test/</outputDirectory>
+              <template>${basedir}/src/test/Makefile.maven</template>
               <sources>
-                <directory>${basedir}/src/main/activemq/*</directory>
+                <directory>${basedir}/src/test/</directory>
                 <includes>
-                  <includes>*.cpp</includes>
+                  <includes>**\*.cpp</includes>
                 </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.cpp</exclude>
+                </excludes>
               </sources>
               <headers>
-                <directory>${basedir}/src/main/activemq/*</directory>
+                <directory>${basedir}/src/test/</directory>
                 <includes>
-                  <includes>*.h</includes>
+                  <includes>**\*.h</includes>
                 </includes>
+                <excludes>
+                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+                  <exclude>**/activemq/wireformat/openwire/marshal/v*/**\*.h</exclude>
+                </excludes>
               </headers>
             </configuration>
             <phase>generate-resources</phase>
@@ -129,21 +137,31 @@
             </goals>
           </execution>
           <execution>
-            <id>Test-Makefile</id>
+            <id>Main-Makefile</id>
             <configuration>
-              <outputDirectory>${basedir}/src/test/activemq</outputDirectory>
-              <template>${basedir}/src/test/activemq/Makefile.maven</template>
+              <outputDirectory>${basedir}/src/main/</outputDirectory>
+              <template>${basedir}/src/main/Makefile.maven</template>
               <sources>
-                <directory>${basedir}/src/test/activemq</directory>
+                <directory>${basedir}/src/main/</directory>
                 <includes>
-                  <includes>*.cpp</includes>
+                  <includes>**\*.cpp</includes>
                 </includes>
+                <excludes>
+                  <exclude>**/decaf/security/**\*.cpp</exclude>
+                  <exclude>**/decaf/security_provider/**\*.cpp</exclude>
+                  <exclude>**/activemq/wireformat/stomp/**\*.cpp</exclude>
+                </excludes>
               </sources>
               <headers>
-                <directory>${basedir}/src/test/activemq</directory>
+                <directory>${basedir}/src/main/</directory>
                 <includes>
-                  <includes>*.h</includes>
+                  <includes>**\*.h</includes>
                 </includes>
+                <excludes>
+                  <exclude>**/decaf/security/**\*.h</exclude>
+                  <exclude>**/decaf/security_provider/**\*.h</exclude>
+                  <exclude>**/activemq/wireformat/stomp/**\*.h</exclude>
+                </excludes>
               </headers>
             </configuration>
             <phase>generate-resources</phase>
@@ -153,7 +171,6 @@
           </execution>
         </executions>
       </plugin>
-      -->
     </plugins>
   </build>
 </project>
