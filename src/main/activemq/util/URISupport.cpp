@@ -313,7 +313,7 @@ void URISupport::parseComposite( const URI& uri, CompositeData& rc, const std::s
     }
 
     p = params.find( "?" );
-    if( p >= 0 ) {
+    if( p != string::npos ) {
         if( p > 0 ) {
             rc.setPath( stripPrefix( params.substr( 0, p ), "/" ) );
         }
@@ -331,7 +331,7 @@ StlList<std::string> URISupport::splitComponents( const std::string& str ) {
 
     StlList<std::string> components;
 
-	std::size_t last = 0;
+    std::size_t last = 0;
     int depth = 0;
 
     std::string::const_iterator iter = str.begin();
