@@ -17,7 +17,7 @@
 
 cc_sources = \
     ${source}
-    
+
 h_sources = \
     ${headers}
 
