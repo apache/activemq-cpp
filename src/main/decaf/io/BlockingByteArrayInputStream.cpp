@@ -126,17 +126,16 @@ int BlockingByteArrayInputStream::read( unsigned char* buffer,
         std::size_t ix = 0;
 
         for( ; ix < bufferSize && !closing; ++ix ) {
-            
-			if( pos == this->buffer.end() ) {
+
+            if( pos == this->buffer.end() ) {
                 // Wait for more data to come in.
                 wait();
             }
 
             if( !closing && pos != this->buffer.end() ){
                 buffer[ix + offset] = *(pos);
+                ++pos;
             }
-
-			++pos;
         }
 
         if( closing ){
@@ -166,5 +165,3 @@ std::size_t BlockingByteArrayInputStream::skip( std::size_t num )
 
     return ix;
 }
-
-
