@@ -1,4 +1,27 @@
 =========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.5                               ==
+=========================================================================
+
+This is a minor release which mainly resolves a few small bugs that have
+been identified since the 2.2.4 release.  Also a few more fixes to improve
+compatibility with the Sun compiler has been added.  One big improvement
+in this release is that the Message's are now delivered with the read-only
+state consistently set correctly.
+
+Bug
+
+    * [AMQCPP-223] - Message delivered async do not have their read only properties set properly.
+    * [AMQCPP-224] - Configure accept wrong versions of apr-util
+    * [AMQCPP-225] - configure.ac does not work correctly on Solaris with SunStudio Compiler
+    * [AMQCPP-227] - Mutex class allows for double free in APR pools under certain circumstances
+    * [AMQCPP-230] - BlockByteArrayInputStream read method is not thread safe
+
+Improvement
+
+    * [AMQCPP-229] - Session createTopic and createQueue don't provide clear error when an empty
+                     Destination is given
+
+=========================================================================
 ==  Release Notes for ActiveMQ CPP 2.2.4                               ==
 =========================================================================
 
