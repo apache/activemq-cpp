@@ -60,7 +60,9 @@ namespace exceptions{
             std::ostringstream ostream;
             ostream << "*** BEGIN SERVER-SIDE STACK TRACE ***" << std::endl;
             ostream << "Message: " << error->getMessage() << std::endl;
-            ostream << "Cause: " << error->getCause()->toString() << std::endl;
+            if( error->getCause() != NULL ) {
+                ostream << "Cause: " << error->getCause()->toString() << std::endl;
+            }
             ostream << "Exception Class " << error->getExceptionClass() << std::endl;
 
             for( std::size_t ix = 0; ix< error->getStackTraceElements().size(); ++ix ){
