@@ -54,8 +54,8 @@ namespace commands{
 
     protected:
 
-        ControlCommand( const ControlCommand& other );
-        ControlCommand& operator= ( const ControlCommand& other );
+        ControlCommand( const ControlCommand& other AMQCPP_UNUSED ) {};
+        ControlCommand& operator= ( const ControlCommand& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

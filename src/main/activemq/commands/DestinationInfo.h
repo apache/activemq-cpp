@@ -61,8 +61,8 @@ namespace commands{
 
     protected:
 
-        DestinationInfo( const DestinationInfo& other );
-        DestinationInfo& operator= ( const DestinationInfo& other );
+        DestinationInfo( const DestinationInfo& other AMQCPP_UNUSED ) {};
+        DestinationInfo& operator= ( const DestinationInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

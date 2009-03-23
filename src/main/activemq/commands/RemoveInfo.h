@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        RemoveInfo( const RemoveInfo& other );
-        RemoveInfo& operator= ( const RemoveInfo& other );
+        RemoveInfo( const RemoveInfo& other AMQCPP_UNUSED ) {};
+        RemoveInfo& operator= ( const RemoveInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

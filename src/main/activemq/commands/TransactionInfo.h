@@ -58,8 +58,8 @@ namespace commands{
 
     protected:
 
-        TransactionInfo( const TransactionInfo& other );
-        TransactionInfo& operator= ( const TransactionInfo& other );
+        TransactionInfo( const TransactionInfo& other AMQCPP_UNUSED ) {};
+        TransactionInfo& operator= ( const TransactionInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

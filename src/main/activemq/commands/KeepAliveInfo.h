@@ -53,8 +53,8 @@ namespace commands{
 
     protected:
 
-        KeepAliveInfo( const KeepAliveInfo& other );
-        KeepAliveInfo& operator= ( const KeepAliveInfo& other );
+        KeepAliveInfo( const KeepAliveInfo& other AMQCPP_UNUSED ) {};
+        KeepAliveInfo& operator= ( const KeepAliveInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

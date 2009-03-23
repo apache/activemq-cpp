@@ -57,8 +57,8 @@ namespace commands{
 
     protected:
 
-        RemoveSubscriptionInfo( const RemoveSubscriptionInfo& other );
-        RemoveSubscriptionInfo& operator= ( const RemoveSubscriptionInfo& other );
+        RemoveSubscriptionInfo( const RemoveSubscriptionInfo& other AMQCPP_UNUSED ) {};
+        RemoveSubscriptionInfo& operator= ( const RemoveSubscriptionInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

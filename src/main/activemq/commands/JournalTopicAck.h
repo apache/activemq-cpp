@@ -62,8 +62,8 @@ namespace commands{
 
     protected:
 
-        JournalTopicAck( const JournalTopicAck& other );
-        JournalTopicAck& operator= ( const JournalTopicAck& other );
+        JournalTopicAck( const JournalTopicAck& other AMQCPP_UNUSED ) {};
+        JournalTopicAck& operator= ( const JournalTopicAck& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

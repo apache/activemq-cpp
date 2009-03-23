@@ -54,8 +54,8 @@ namespace commands{
 
     protected:
 
-        IntegerResponse( const IntegerResponse& other );
-        IntegerResponse& operator= ( const IntegerResponse& other );
+        IntegerResponse( const IntegerResponse& other AMQCPP_UNUSED ) {};
+        IntegerResponse& operator= ( const IntegerResponse& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

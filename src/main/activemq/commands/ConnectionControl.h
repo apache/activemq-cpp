@@ -58,8 +58,8 @@ namespace commands{
 
     protected:
 
-        ConnectionControl( const ConnectionControl& other );
-        ConnectionControl& operator= ( const ConnectionControl& other );
+        ConnectionControl( const ConnectionControl& other AMQCPP_UNUSED ) {};
+        ConnectionControl& operator= ( const ConnectionControl& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

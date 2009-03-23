@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        ExceptionResponse( const ExceptionResponse& other );
-        ExceptionResponse& operator= ( const ExceptionResponse& other );
+        ExceptionResponse( const ExceptionResponse& other AMQCPP_UNUSED ) {};
+        ExceptionResponse& operator= ( const ExceptionResponse& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

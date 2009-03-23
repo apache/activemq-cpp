@@ -74,8 +74,8 @@ namespace commands{
 
     protected:
 
-        ConsumerInfo( const ConsumerInfo& other );
-        ConsumerInfo& operator= ( const ConsumerInfo& other );
+        ConsumerInfo( const ConsumerInfo& other AMQCPP_UNUSED ) {};
+        ConsumerInfo& operator= ( const ConsumerInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

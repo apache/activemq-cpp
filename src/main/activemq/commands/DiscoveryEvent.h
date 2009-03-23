@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        DiscoveryEvent( const DiscoveryEvent& other );
-        DiscoveryEvent& operator= ( const DiscoveryEvent& other );
+        DiscoveryEvent( const DiscoveryEvent& other AMQCPP_UNUSED ) {};
+        DiscoveryEvent& operator= ( const DiscoveryEvent& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

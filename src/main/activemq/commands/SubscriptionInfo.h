@@ -59,8 +59,8 @@ namespace commands{
 
     protected:
 
-        SubscriptionInfo( const SubscriptionInfo& other );
-        SubscriptionInfo& operator= ( const SubscriptionInfo& other );
+        SubscriptionInfo( const SubscriptionInfo& other AMQCPP_UNUSED ) {};
+        SubscriptionInfo& operator= ( const SubscriptionInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

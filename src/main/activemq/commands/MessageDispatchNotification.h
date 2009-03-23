@@ -60,8 +60,8 @@ namespace commands{
 
     protected:
 
-        MessageDispatchNotification( const MessageDispatchNotification& other );
-        MessageDispatchNotification& operator= ( const MessageDispatchNotification& other );
+        MessageDispatchNotification( const MessageDispatchNotification& other AMQCPP_UNUSED ) {};
+        MessageDispatchNotification& operator= ( const MessageDispatchNotification& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

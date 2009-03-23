@@ -57,8 +57,8 @@ namespace commands{
 
     protected:
 
-        JournalTransaction( const JournalTransaction& other );
-        JournalTransaction& operator= ( const JournalTransaction& other );
+        JournalTransaction( const JournalTransaction& other AMQCPP_UNUSED ) {};
+        JournalTransaction& operator= ( const JournalTransaction& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

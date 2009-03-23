@@ -53,8 +53,8 @@ namespace commands{
 
     protected:
 
-        ShutdownInfo( const ShutdownInfo& other );
-        ShutdownInfo& operator= ( const ShutdownInfo& other );
+        ShutdownInfo( const ShutdownInfo& other AMQCPP_UNUSED ) {};
+        ShutdownInfo& operator= ( const ShutdownInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

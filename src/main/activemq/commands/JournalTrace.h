@@ -54,8 +54,8 @@ namespace commands{
 
     protected:
 
-        JournalTrace( const JournalTrace& other );
-        JournalTrace& operator= ( const JournalTrace& other );
+        JournalTrace( const JournalTrace& other AMQCPP_UNUSED ) {};
+        JournalTrace& operator= ( const JournalTrace& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 

@@ -67,8 +67,8 @@ namespace commands{
 
     protected:
 
-        BrokerInfo( const BrokerInfo& other );
-        BrokerInfo& operator= ( const BrokerInfo& other );
+        BrokerInfo( const BrokerInfo& other AMQCPP_UNUSED ) {};
+        BrokerInfo& operator= ( const BrokerInfo& other AMQCPP_UNUSED ) { return *this; };
 
     public:
 
