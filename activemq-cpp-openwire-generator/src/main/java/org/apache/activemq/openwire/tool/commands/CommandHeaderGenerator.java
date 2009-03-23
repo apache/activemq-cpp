@@ -66,8 +66,8 @@ public class CommandHeaderGenerator extends CommandCodeGenerator {
         if( !isAssignable() ) {
             out.println("    protected:");
             out.println("");
-            out.println("        "+getClassName()+"( const "+getClassName()+"& other );");
-            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& other );");
+            out.println("        "+getClassName()+"( const "+getClassName()+"& other AMQCPP_UNUSED ) {};");
+            out.println("        "+getClassName()+"& operator= ( const "+getClassName()+"& other AMQCPP_UNUSED ) { return *this; };");
             out.println("");
         }
 
