@@ -18,6 +18,8 @@
 #ifndef _ACTIVEMQ_UTIL_TASK_H_
 #define _ACTIVEMQ_UTIL_TASK_H_
 
+#include <activemq/util/Config.h>
+
 namespace activemq {
 namespace util {
 
@@ -26,7 +28,7 @@ namespace util {
      *
      * @since 3.0
      */
-    class Task {
+    class AMQCPP_API Task {
     public:
 
         virtual ~Task() {}

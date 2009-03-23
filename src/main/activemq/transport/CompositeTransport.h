@@ -18,6 +18,7 @@
 #ifndef _ACTIVEMQ_TRANSPORT_COMPOSITETRANSPORT_H_
 #define _ACTIVEMQ_TRANSPORT_COMPOSITETRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
 #include <decaf/net/URI.h>
 #include <decaf/util/List.h>
@@ -36,7 +37,7 @@ namespace transport {
      *
      * @since 3.0
      */
-    class CompositeTransport: public activemq::transport::Transport {
+    class AMQCPP_API CompositeTransport: public activemq::transport::Transport {
     public:
 
         virtual ~CompositeTransport() {}
