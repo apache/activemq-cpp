@@ -44,7 +44,6 @@ IOTransport::IOTransport(){
     this->inputStream = NULL;
     this->outputStream = NULL;
     this->closed = false;
-    this->thread = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +53,6 @@ IOTransport::IOTransport( const Pointer<WireFormat>& wireFormat ) {
     this->inputStream = NULL;
     this->outputStream = NULL;
     this->closed = false;
-    this->thread = NULL;
     this->wireFormat = wireFormat;
 }
 
@@ -164,7 +162,7 @@ void IOTransport::start() throw( cms::CMSException ){
         }
 
         // Start the polling thread.
-        thread = new Thread( this );
+        thread.reset( new Thread( this ) );
         thread->start();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -197,8 +195,7 @@ void IOTransport::close() throw( cms::CMSException ){
         // Wait for the thread to die.
         if( thread != NULL ){
             thread->join();
-            delete thread;
-            thread = NULL;
+            thread.reset( NULL );
         }
 
         // Close the output stream.

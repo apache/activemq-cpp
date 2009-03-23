@@ -82,7 +82,7 @@ namespace transport{
         /**
          * The polling thread.
          */
-        decaf::lang::Thread* thread;
+        Pointer<decaf::lang::Thread> thread;
 
         /**
          * Flag marking this transport as closed.
