@@ -22,6 +22,7 @@
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/transport/TransportRegistry.h>
 #include <activemq/threads/DedicatedTaskRunner.h>
+#include <activemq/threads/CompositeTaskRunner.h>
 #include <decaf/util/Random.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Integer.h>
@@ -66,7 +67,11 @@ FailoverTransport::FailoverTransport() {
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
+    this->closeTask.reset( new CloseTransportsTask() );
     this->taskRunner.reset( new DedicatedTaskRunner( reconnectTask.get() ) );
+    this->compositeTaskRunner.reset( new CompositeTaskRunner() );
+
+    this->compositeTaskRunner->addTask( this->closeTask.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -400,7 +405,8 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         sleepMutex.notifyAll();
     }
 
-    taskRunner->shutdown( 500 );
+    taskRunner->shutdown( 1000 );
+    compositeTaskRunner->shutdown( 1000 );
 
     if( transportToStop != NULL ) {
         transportToStop->close();
@@ -459,10 +465,9 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
             transport->setTransportListener( disposedListener.get() );
         }
 
-        try{
-            transport->close();
-        }
-        AMQ_CATCHALL_NOTHROW()
+        // Hand off to the close task so it gets done in a different thread.
+        closeTask->add( transport );
+        compositeTaskRunner->wakeup();
 
         synchronized( &reconnectMutex ) {
             bool reconnectOk = started;

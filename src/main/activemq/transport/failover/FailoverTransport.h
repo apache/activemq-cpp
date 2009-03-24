@@ -22,10 +22,12 @@
 
 #include <activemq/commands/Command.h>
 #include <activemq/threads/TaskRunner.h>
+#include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
 #include <activemq/transport/failover/BackupTransport.h>
 #include <activemq/transport/failover/ReconnectTask.h>
+#include <activemq/transport/failover/CloseTransportsTask.h>
 #include <activemq/transport/failover/FailoverTransportListener.h>
 #include <activemq/wireformat/WireFormat.h>
 
@@ -89,7 +91,9 @@ namespace failover {
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
         Pointer<ReconnectTask> reconnectTask;
+        Pointer<CloseTransportsTask> closeTask;
         Pointer<TaskRunner> taskRunner;
+        Pointer<CompositeTaskRunner> compositeTaskRunner;
         Pointer<TransportListener> disposedListener;
         Pointer<TransportListener> myTransportListener;
         TransportListener* transportListener;
