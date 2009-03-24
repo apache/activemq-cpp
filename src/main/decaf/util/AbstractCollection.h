@@ -58,7 +58,7 @@ namespace util {
     class DECAF_API AbstractCollection : public decaf::util::Collection<E> {
     protected:
 
-        util::concurrent::Mutex mutex;
+        mutable util::concurrent::Mutex mutex;
 
     public:
 

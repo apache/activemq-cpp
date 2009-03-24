@@ -38,7 +38,7 @@ namespace util{
     private:
 
         std::map<K,V,COMPARATOR> valueMap;
-        concurrent::Mutex mutex;
+        mutable concurrent::Mutex mutex;
 
     public:
 

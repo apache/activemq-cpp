@@ -256,7 +256,7 @@ namespace util{
         std::list<T> queue;
 
         // Object used for sync
-        util::concurrent::Mutex mutex;
+        mutable util::concurrent::Mutex mutex;
 
     };
 
