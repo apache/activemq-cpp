@@ -96,6 +96,7 @@ cc_sources = \
     activemq/transport/tcp/TcpTransport.cpp \
     activemq/transport/failover/FailoverTransportListener.cpp \
     activemq/transport/failover/FailoverTransportFactory.cpp \
+    activemq/transport/failover/CloseTransportsTask.cpp \
     activemq/transport/failover/BackupTransport.cpp \
     activemq/transport/failover/ReconnectTask.cpp \
     activemq/transport/failover/FailoverTransport.cpp \
@@ -618,6 +619,7 @@ h_sources = \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/failover/FailoverTransportListener.h \
     activemq/transport/failover/FailoverTransportFactory.h \
+    activemq/transport/failover/CloseTransportsTask.h \
     activemq/transport/failover/BackupTransport.h \
     activemq/transport/failover/ReconnectTask.h \
     activemq/transport/failover/FailoverTransport.h \
