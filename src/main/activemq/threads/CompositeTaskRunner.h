@@ -15,24 +15,36 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_UTIL_TASKRUNNER_H_
-#define _ACTIVEMQ_UTIL_TASKRUNNER_H_
+#ifndef _ACTIVEMQ_THREADS_COMPOSITETASKRUNNER_H_
+#define _ACTIVEMQ_THREADS_COMPOSITETASKRUNNER_H_
 
-#include <activemq/util/Task.h>
-
+#include <activemq/util/Config.h>
+#include <activemq/threads/TaskRunner.h>
+#include <activemq/threads/CompositeTask.h>
+#include <decaf/util/StlSet.h>
+#include <decaf/util/StlList.h>
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/Runnable.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Pointer.h>
 
 namespace activemq {
-namespace util {
+namespace threads {
 
     using decaf::lang::Pointer;
 
-    class TaskRunner : public decaf::lang::Runnable {
+    /**
+     * A Task Runner that can contain one or more CompositeTasks that are each checked
+     * for pending work and run if any is present in the order that the tasks were added.
+     *
+     * @since 3.0
+     */
+    class AMQCPP_API CompositeTaskRunner : public activemq::threads::TaskRunner,
+                                           public activemq::threads::Task,
+                                           public decaf::lang::Runnable {
     private:
 
+        decaf::util::StlList<CompositeTask*> tasks;
         decaf::util::concurrent::Mutex mutex;
 
         Pointer<decaf::lang::Thread> thread;
@@ -41,12 +53,23 @@ namespace util {
         bool pending;
         bool shutDown;
 
-        Task* task;
-
     public:
 
-        TaskRunner( Task* task );
-        virtual ~TaskRunner();
+        CompositeTaskRunner();
+
+        virtual ~CompositeTaskRunner();
+
+        /**
+         * Adds a new CompositeTask to the Set of Tasks that this class manages.
+         * @param task - Pointer to a CompositeTask instance.
+         */
+        void addTask( CompositeTask* task );
+
+        /**
+         * Removes a CompositeTask that was added previously
+         * @param task - Pointer to a CompositeTask instance.
+         */
+        void removeTask( CompositeTask* task );
 
         /**
          * Shutdown after a timeout, does not guarantee that the task's iterate
@@ -54,26 +77,28 @@ namespace util {
          *
          * @param timeout - Time in Milliseconds to wait for the task to stop.
          */
-        void shutdown( unsigned int timeout );
+        virtual void shutdown( unsigned int timeout );
 
         /**
          * Shutdown once the task has finished and the TaskRunner's thread has exited.
          */
-        void shutdown();
+        virtual void shutdown();
 
         /**
          * Signal the TaskRunner to wakeup and execute another iteration cycle on
          * the task, the Task instance will be run until its iterate method has
          * returned false indicating it is done.
          */
-        void wakeup();
+        virtual void wakeup();
 
     protected:
 
         virtual void run();
 
+        virtual bool iterate();
+
     };
 
 }}
 
-#endif /*_ACTIVEMQ_UTIL_TASKRUNNER_H_*/
+#endif /* _ACTIVEMQ_THREADS_COMPOSITETASKRUNNER_H_ */

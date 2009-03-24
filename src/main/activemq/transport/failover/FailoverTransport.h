@@ -21,7 +21,7 @@
 #include <activemq/util/Config.h>
 
 #include <activemq/commands/Command.h>
-#include <activemq/util/TaskRunner.h>
+#include <activemq/threads/TaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
 #include <activemq/transport/failover/BackupTransport.h>
@@ -44,7 +44,7 @@ namespace failover {
     using namespace decaf::lang;
     using decaf::net::URI;
     using namespace decaf::util;
-    using namespace activemq::util;
+    using namespace activemq::threads;
     using activemq::commands::Command;
     using activemq::commands::Response;
 

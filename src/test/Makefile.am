@@ -95,7 +95,6 @@ cc_sources = \
     activemq/cmsutil/CmsTemplateTest.cpp \
     activemq/util/PrimitiveValueNodeTest.cpp \
     activemq/util/LongSequenceGeneratorTest.cpp \
-    activemq/util/TaskRunnerTest.cpp \
     activemq/util/PrimitiveMapTest.cpp \
     activemq/util/MemoryUsageTest.cpp \
     activemq/util/URISupportTest.cpp \
@@ -107,6 +106,8 @@ cc_sources = \
     activemq/state/SessionStateTest.cpp \
     activemq/state/ConnectionStateTest.cpp \
     activemq/exceptions/ActiveMQExceptionTest.cpp \
+    activemq/threads/DedicatedTaskRunnerTest.cpp \
+    activemq/threads/CompositeTaskRunnerTest.cpp \
     activemq/core/ActiveMQSessionTest.cpp \
     activemq/core/ActiveMQConnectionFactoryTest.cpp \
     activemq/core/ActiveMQConnectionTest.cpp \
@@ -208,7 +209,6 @@ h_sources = \
     activemq/cmsutil/CmsAccessorTest.h \
     activemq/cmsutil/DummyMessageCreator.h \
     activemq/util/PrimitiveValueNodeTest.h \
-    activemq/util/TaskRunnerTest.h \
     activemq/util/PrimitiveMapTest.h \
     activemq/util/PrimitiveListTest.h \
     activemq/util/URISupportTest.h \
@@ -221,6 +221,8 @@ h_sources = \
     activemq/state/ConsumerStateTest.h \
     activemq/state/SessionStateTest.h \
     activemq/exceptions/ActiveMQExceptionTest.h \
+    activemq/threads/CompositeTaskRunnerTest.h \
+    activemq/threads/DedicatedTaskRunnerTest.h \
     activemq/core/ActiveMQConnectionFactoryTest.h \
     activemq/core/ActiveMQConnectionTest.h \
     activemq/core/ActiveMQSessionTest.h \

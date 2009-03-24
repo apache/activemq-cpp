@@ -15,33 +15,30 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
-#define _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_
+#ifndef _ACTIVEMQ_THREADS_DEDICATEDTASKRUNNERTEST_H_
+#define _ACTIVEMQ_THREADS_DEDICATEDTASKRUNNERTEST_H_
 
-#include <activemq/util/Config.h>
-
-#include <activemq/threads/Task.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace activemq {
-namespace transport {
-namespace failover {
+namespace threads {
 
-    class FailoverTransport;
+    class DedicatedTaskRunnerTest : public CppUnit::TestFixture {
 
-    class AMQCPP_API ReconnectTask : public activemq::threads::Task {
-    private:
-
-        FailoverTransport* parent;
+        CPPUNIT_TEST_SUITE( DedicatedTaskRunnerTest );
+        CPPUNIT_TEST( testSimple );
+        CPPUNIT_TEST_SUITE_END();
 
     public:
 
-        ReconnectTask( FailoverTransport* parent );
-        virtual ~ReconnectTask() {}
+        DedicatedTaskRunnerTest() {}
+        virtual ~DedicatedTaskRunnerTest() {}
 
-        bool iterate();
+        void testSimple();
 
     };
 
-}}}
+}}
 
-#endif /* _ACTIVEMQ_TRANSPORT_FAILOVER_RECONNECTTASK_H_ */
+#endif /* _ACTIVEMQ_THREADS_DEDICATEDTASKRUNNERTEST_H_ */

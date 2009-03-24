@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-#include "TaskRunnerTest.h"
+#include "DedicatedTaskRunnerTest.h"
 
 #include <memory>
 
-#include <activemq/util/Task.h>
-#include <activemq/util/TaskRunner.h>
+#include <activemq/threads/Task.h>
+#include <activemq/threads/DedicatedTaskRunner.h>
 
 #include <decaf/lang/Thread.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 
 using namespace activemq;
-using namespace activemq::util;
+using namespace activemq::threads;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
@@ -71,16 +71,16 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-void TaskRunnerTest::testSimple() {
+void DedicatedTaskRunnerTest::testSimple() {
 
     CPPUNIT_ASSERT_THROW_MESSAGE(
         "Should throw a NullPointerException",
-        std::auto_ptr<TaskRunner>( new TaskRunner( NULL ) ),
+        std::auto_ptr<TaskRunner>( new DedicatedTaskRunner( NULL ) ),
         NullPointerException );
 
     SimpleCountingTask simpleTask;
     CPPUNIT_ASSERT( simpleTask.getCount() == 0 );
-    TaskRunner simpleTaskRunner( &simpleTask );
+    DedicatedTaskRunner simpleTaskRunner( &simpleTask );
 
     simpleTaskRunner.wakeup();
     Thread::sleep( 250 );
@@ -91,11 +91,11 @@ void TaskRunnerTest::testSimple() {
 
     InfiniteCountingTask infiniteTask;
     CPPUNIT_ASSERT( infiniteTask.getCount() == 0 );
-    TaskRunner infiniteTaskRunner( &infiniteTask );
+    DedicatedTaskRunner infiniteTaskRunner( &infiniteTask );
     Thread::sleep( 500 );
     CPPUNIT_ASSERT( infiniteTask.getCount() != 0 );
     infiniteTaskRunner.shutdown();
-    int count = infiniteTask.getCount();
+    unsigned int count = infiniteTask.getCount();
     Thread::sleep( 250 );
     CPPUNIT_ASSERT( infiniteTask.getCount() == count );
 

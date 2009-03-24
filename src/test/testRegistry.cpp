@@ -118,8 +118,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::PrimitiveMapTest );
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::URISupportTest );
 #include <activemq/util/MemoryUsageTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::MemoryUsageTest );
-#include <activemq/util/TaskRunnerTest.h>
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::util::TaskRunnerTest );
+
+#include <activemq/threads/DedicatedTaskRunnerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::threads::DedicatedTaskRunnerTest );
+#include <activemq/threads/CompositeTaskRunnerTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::threads::CompositeTaskRunnerTest );
 
 #include <activemq/wireformat/WireFormatRegistryTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::wireformat::WireFormatRegistryTest );

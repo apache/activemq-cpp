@@ -15,30 +15,36 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_UTIL_TASKRUNNERTEST_H_
-#define _ACTIVEMQ_UTIL_TASKRUNNERTEST_H_
+#ifndef _ACTIVEMQ_THREADS_TASK_H_
+#define _ACTIVEMQ_THREADS_TASK_H_
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
+#include <activemq/util/Config.h>
 
 namespace activemq {
-namespace util {
+namespace threads {
 
-    class TaskRunnerTest : public CppUnit::TestFixture {
-
-        CPPUNIT_TEST_SUITE( TaskRunnerTest );
-        CPPUNIT_TEST( testSimple );
-        CPPUNIT_TEST_SUITE_END();
-
+    /**
+     * Represents a unit of work that requires one or more iterations to complete.
+     *
+     * @since 3.0
+     */
+    class AMQCPP_API Task {
     public:
 
-        TaskRunnerTest() {}
-        virtual ~TaskRunnerTest() {}
+        virtual ~Task() {}
 
-        void testSimple();
+        /**
+         * Perform one iteration of work, returns true if the task needs
+         * to run again to complete or false to indicate that the task is now
+         * complete.
+         *
+         * @return true if the task should be run again or false if the task
+         *         has completed and the runner should wait for a wakeup call.
+         */
+        virtual bool iterate() = 0;
 
     };
 
 }}
 
-#endif /* _ACTIVEMQ_UTIL_TASKRUNNERTEST_H_ */
+#endif /* _ACTIVEMQ_THREADS_TASK_H_ */

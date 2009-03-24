@@ -314,7 +314,6 @@ cc_sources = \
     activemq/util/PrimitiveValueNode.cpp \
     activemq/util/CompositeData.cpp \
     activemq/util/MemoryUsage.cpp \
-    activemq/util/TaskRunner.cpp \
     activemq/util/LongSequenceGenerator.cpp \
     activemq/util/PrimitiveList.cpp \
     activemq/state/ConnectionStateTracker.cpp \
@@ -325,6 +324,8 @@ cc_sources = \
     activemq/state/ConnectionState.cpp \
     activemq/state/ProducerState.cpp \
     activemq/exceptions/ActiveMQException.cpp \
+    activemq/threads/DedicatedTaskRunner.cpp \
+    activemq/threads/CompositeTaskRunner.cpp \
     activemq/core/ActiveMQSessionExecutor.cpp \
     activemq/core/ActiveMQConstants.cpp \
     activemq/core/ActiveMQConnectionMetaData.cpp \
@@ -847,9 +848,7 @@ h_sources = \
     activemq/util/CompositeData.h \
     activemq/util/Usage.h \
     activemq/util/LongSequenceGenerator.h \
-    activemq/util/TaskRunner.h \
     activemq/util/Config.h \
-    activemq/util/Task.h \
     activemq/util/PrimitiveList.h \
     activemq/util/PrimitiveMap.h \
     activemq/state/CommandVisitor.h \
@@ -864,6 +863,11 @@ h_sources = \
     activemq/exceptions/ExceptionDefines.h \
     activemq/exceptions/ActiveMQException.h \
     activemq/exceptions/BrokerException.h \
+    activemq/threads/CompositeTaskRunner.h \
+    activemq/threads/DedicatedTaskRunner.h \
+    activemq/threads/CompositeTask.h \
+    activemq/threads/TaskRunner.h \
+    activemq/threads/Task.h \
     activemq/core/ActiveMQConsumer.h \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQConstants.h \

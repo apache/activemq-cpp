@@ -21,6 +21,7 @@
 #include <activemq/commands/ShutdownInfo.h>
 #include <activemq/commands/RemoveInfo.h>
 #include <activemq/transport/TransportRegistry.h>
+#include <activemq/threads/DedicatedTaskRunner.h>
 #include <decaf/util/Random.h>
 #include <decaf/lang/System.h>
 #include <decaf/lang/Integer.h>
@@ -65,7 +66,7 @@ FailoverTransport::FailoverTransport() {
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
     this->reconnectTask.reset( new ReconnectTask( this ) );
-    this->taskRunner.reset( new TaskRunner( reconnectTask.get() ) );
+    this->taskRunner.reset( new DedicatedTaskRunner( reconnectTask.get() ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

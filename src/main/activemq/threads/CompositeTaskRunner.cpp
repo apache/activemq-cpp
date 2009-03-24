@@ -15,24 +15,23 @@
  * limitations under the License.
  */
 
-#include "TaskRunner.h"
+#include "CompositeTaskRunner.h"
+
+#include <memory>
 
 #include <activemq/exceptions/ActiveMQException.h>
 
+using namespace std;
 using namespace activemq;
-using namespace activemq::util;
+using namespace activemq::threads;
 using namespace activemq::exceptions;
 using namespace decaf;
+using namespace decaf::util;
 using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-TaskRunner::TaskRunner( Task* task ) : task( task ) {
-
-    if( this->task == NULL ) {
-        throw NullPointerException(
-            __FILE__, __LINE__, "Task passed was null" );
-    }
+CompositeTaskRunner::CompositeTaskRunner() {
 
     this->threadTerminated = false;
     this->pending = false;
@@ -43,7 +42,7 @@ TaskRunner::TaskRunner( Task* task ) : task( task ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TaskRunner::~TaskRunner() {
+CompositeTaskRunner::~CompositeTaskRunner() {
     try{
         this->shutdown();
     }
@@ -51,7 +50,7 @@ TaskRunner::~TaskRunner() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TaskRunner::shutdown( unsigned int timeout ) {
+void CompositeTaskRunner::shutdown( unsigned int timeout ) {
 
     synchronized( &mutex ) {
         shutDown = true;
@@ -67,7 +66,7 @@ void TaskRunner::shutdown( unsigned int timeout ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TaskRunner::shutdown() {
+void CompositeTaskRunner::shutdown() {
 
     synchronized( &mutex ) {
         shutDown = true;
@@ -82,7 +81,7 @@ void TaskRunner::shutdown() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TaskRunner::wakeup() {
+void CompositeTaskRunner::wakeup() {
 
     synchronized( &mutex ) {
         if( shutDown) {
@@ -94,7 +93,7 @@ void TaskRunner::wakeup() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void TaskRunner::run() {
+void CompositeTaskRunner::run() {
 
     try {
 
@@ -107,7 +106,7 @@ void TaskRunner::run() {
                 }
             }
 
-            if( !this->task->iterate() ) {
+            if( !this->iterate() ) {
 
                 // wait to be notified.
                 synchronized( &mutex ) {
@@ -131,4 +130,52 @@ void TaskRunner::run() {
         threadTerminated = true;
         mutex.notifyAll();
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CompositeTaskRunner::addTask( CompositeTask* task ) {
+
+    if( task != NULL ) {
+
+        synchronized( &tasks ) {
+            this->tasks.add( task );
+            this->wakeup();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void CompositeTaskRunner::removeTask( CompositeTask* task ) {
+
+    if( task != NULL ) {
+
+        synchronized( &tasks ) {
+            this->tasks.remove( task );
+            this->wakeup();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool CompositeTaskRunner::iterate() {
+
+    synchronized( &tasks ) {
+
+        auto_ptr< Iterator<CompositeTask*> > iter( tasks.iterator() );
+
+        while( iter->hasNext() ) {
+
+            CompositeTask* task = iter->next();
+
+            if( task->isPending() ) {
+                task->iterate();
+
+                // Always return true, so that we check again for
+                // any of the other tasks that might now be pending.
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

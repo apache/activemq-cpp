@@ -15,36 +15,39 @@
  * limitations under the License.
  */
 
-#ifndef _ACTIVEMQ_UTIL_TASK_H_
-#define _ACTIVEMQ_UTIL_TASK_H_
+#ifndef _ACTIVEMQ_THREADS_COMPOSITETASK_H_
+#define _ACTIVEMQ_THREADS_COMPOSITETASK_H_
 
 #include <activemq/util/Config.h>
+#include <activemq/threads/Task.h>
 
 namespace activemq {
-namespace util {
+namespace threads {
 
     /**
-     * Represents a unit of work that requires one or more iterations to complete.
+     * Represents a single task that can be part of a set of Tasks that are contained
+     * in a <code>CompositeTaskRunner</code>.
      *
      * @since 3.0
      */
-    class AMQCPP_API Task {
+    class AMQCPP_API CompositeTask : public activemq::threads::Task {
     public:
 
-        virtual ~Task() {}
+        virtual ~CompositeTask() {}
 
         /**
-         * Perform one iteration of work, returns true if the task needs
-         * to run again to complete or false to indicate that the task is now
-         * complete.
+         * Indicates whether this task has any pending work that needs to be
+         * done, if not then it is skipped and the next Task in the
+         * CompositeTaskRunner's list of tasks is checked, if none of the tasks
+         * have any pending work to do, then the runner can go to sleep until it
+         * awakened by a call to <code>wakeup</code>.
          *
-         * @return true if the task should be run again or false if the task
-         *         has completed and the runner should wait for a wakeup call.
+         * @since 3.0
          */
-        virtual bool iterate() = 0;
+        virtual bool isPending() const = 0;
 
     };
 
 }}
 
-#endif /* _ACTIVEMQ_UTIL_TASK_H_ */
+#endif /* _ACTIVEMQ_THREADS_COMPOSITETASK_H_ */
