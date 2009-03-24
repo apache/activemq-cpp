@@ -513,14 +513,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\test\activemq\util\TaskRunnerTest.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\test\activemq\util\TaskRunnerTest.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\test\activemq\util\URISupportTest.cpp"
 					>
 				</File>
@@ -6198,6 +6190,26 @@
 				</File>
 				<File
 					RelativePath="..\src\test\activemq\commands\BrokerInfoTest.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="threads"
+				>
+				<File
+					RelativePath="..\src\test\activemq\threads\CompositeTaskRunnerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\threads\CompositeTaskRunnerTest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\threads\DedicatedTaskRunnerTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\test\activemq\threads\DedicatedTaskRunnerTest.h"
 					>
 				</File>
 			</Filter>

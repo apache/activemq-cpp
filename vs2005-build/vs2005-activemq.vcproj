@@ -489,18 +489,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\src\main\activemq\util\Task.h"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\TaskRunner.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\src\main\activemq\util\TaskRunner.h"
-					>
-				</File>
-				<File
 					RelativePath="..\src\main\activemq\util\URISupport.cpp"
 					>
 				</File>
@@ -1313,6 +1301,14 @@
 					</File>
 					<File
 						RelativePath="..\src\main\activemq\transport\failover\BackupTransport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\failover\CloseTransportsTask.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\failover\CloseTransportsTask.h"
 						>
 					</File>
 					<File
@@ -7598,6 +7594,38 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\state\TransactionState.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="threads"
+				>
+				<File
+					RelativePath="..\src\main\activemq\threads\CompositeTask.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\CompositeTaskRunner.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\CompositeTaskRunner.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\DedicatedTaskRunner.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\DedicatedTaskRunner.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\Task.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\threads\TaskRunner.h"
 					>
 				</File>
 			</Filter>
