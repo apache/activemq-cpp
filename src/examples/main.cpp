@@ -118,7 +118,6 @@ public:
                 // Tell the producer to send the message
                 printf( "Sent message #%d from thread %s\n", ix+1, threadIdStr.c_str() );
                 producer->send( message );
-				Thread::sleep( 20 );
 
                 delete message;
             }
@@ -357,14 +356,14 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //    tcp://127.0.0.1:61613?wireFormat=stomp     use stomp instead
     //
     std::string brokerURI =
-		"failover://(tcp://127.0.0.1:61616"
+        "tcp://127.0.0.1:61616"
         "?wireFormat=openwire"
 //        "&connection.alwaysSyncSend=true"
 //        "&connection.useAsyncSend=true"
 //        "&transport.commandTracingEnabled=true"
 //        "&transport.tcpTracingEnabled=true"
 //        "&wireFormat.tightEncodingEnabled=true"
-		")";
+        "";
 
     //============================================================
     // set to true to use topics instead of queues
@@ -373,7 +372,7 @@ int main(int argc AMQCPP_UNUSED, char* argv[] AMQCPP_UNUSED) {
     //============================================================
     bool useTopics = true;
     bool sessionTransacted = false;
-    int numMessages = 20000;
+    int numMessages = 2000;
 
     long long startTime = Date::getCurrentTimeMilliseconds();
 
