@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq", "vs2005-activemq.vcproj", "{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}"
@@ -14,6 +14,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq-integration
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq-unittests", "vs2005-activemq-unittests.vcproj", "{C215A965-3E75-431F-A1A6-EDC3EF2D682B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26} = {60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vs2005-activemq-producer", "vc2005-activemq-producer.vcproj", "{3E3BD5DA-225D-4607-8D64-1549945212C4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26} = {60E51A46-2E46-47A4-9BD8-C9D6A7EFCD26}
 	EndProjectSection
@@ -58,6 +63,14 @@ Global
 		{C215A965-3E75-431F-A1A6-EDC3EF2D682B}.Release|Win32.Build.0 = Release|Win32
 		{C215A965-3E75-431F-A1A6-EDC3EF2D682B}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
 		{C215A965-3E75-431F-A1A6-EDC3EF2D682B}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.Debug|Win32.Build.0 = Debug|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.DebugDLL|Win32.ActiveCfg = DebugDLL|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.DebugDLL|Win32.Build.0 = DebugDLL|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.Release|Win32.ActiveCfg = Release|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.Release|Win32.Build.0 = Release|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.ReleaseDLL|Win32.ActiveCfg = ReleaseDLL|Win32
+		{3E3BD5DA-225D-4607-8D64-1549945212C4}.ReleaseDLL|Win32.Build.0 = ReleaseDLL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
