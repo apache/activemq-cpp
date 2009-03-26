@@ -40,10 +40,10 @@ namespace utils{
          * Static method used for reading a string that uses the Openwire format
          * from a DataInputStream, this can throw an IOException for the same
          * reason as a DataInputStream.readUTF might, as well as if the string
-         * that is received doesn't conform to the supported charactor encoding.
+         * that is received doesn't conform to the supported character encoding.
          * @param dataIn - DataInputStream to read from
          * @returns A string that has been read
-         * @throws IOException on Errror.
+         * @throws IOException on Error.
          */
         static std::string readString( decaf::io::DataInputStream& dataIn )
             throw ( decaf::io::IOException );
@@ -55,7 +55,7 @@ namespace utils{
          * @param dataOut - DataOutputStream to write to
          * @param str - A pointer to a string that should be written, NULL needs
          *              to be an option here as its written as -1.
-         * @throws IOException on Errror.
+         * @throws IOException on Error.
          */
         static void writeString( decaf::io::DataOutputStream& dataOut,
                                  const std::string* str )
