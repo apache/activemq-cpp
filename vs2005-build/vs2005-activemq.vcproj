@@ -1304,6 +1304,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\src\main\activemq\transport\failover\BackupTransportPool.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\src\main\activemq\transport\failover\BackupTransportPool.h"
+						>
+					</File>
+					<File
 						RelativePath="..\src\main\activemq\transport\failover\CloseTransportsTask.cpp"
 						>
 					</File>
@@ -1336,11 +1344,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\activemq\transport\failover\ReconnectTask.cpp"
+						RelativePath="..\src\main\activemq\transport\failover\URIPool.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\src\main\activemq\transport\failover\ReconnectTask.h"
+						RelativePath="..\src\main\activemq\transport\failover\URIPool.h"
 						>
 					</File>
 				</Filter>
