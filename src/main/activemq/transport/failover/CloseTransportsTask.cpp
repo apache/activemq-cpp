@@ -38,9 +38,14 @@ void CloseTransportsTask::add( const Pointer<Transport>& transport ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 bool CloseTransportsTask::isPending() const {
-    synchronized( &transports ) {
-        return !transports.empty();
+    
+	bool result = false;
+	
+	synchronized( &transports ) {
+        result = !transports.empty();
     }
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
