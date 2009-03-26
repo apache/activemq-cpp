@@ -25,10 +25,10 @@
 #include <activemq/threads/CompositeTaskRunner.h>
 #include <activemq/state/ConnectionStateTracker.h>
 #include <activemq/transport/CompositeTransport.h>
-#include <activemq/transport/failover/BackupTransport.h>
-#include <activemq/transport/failover/ReconnectTask.h>
+#include <activemq/transport/failover/BackupTransportPool.h>
 #include <activemq/transport/failover/CloseTransportsTask.h>
 #include <activemq/transport/failover/FailoverTransportListener.h>
+#include <activemq/transport/failover/URIPool.h>
 #include <activemq/wireformat/WireFormat.h>
 
 #include <decaf/util/StlList.h>
@@ -50,50 +50,42 @@ namespace failover {
     using activemq::commands::Command;
     using activemq::commands::Response;
 
-    class AMQCPP_API FailoverTransport : public CompositeTransport {
+    class AMQCPP_API FailoverTransport : public CompositeTransport,
+                                         public activemq::threads::CompositeTask {
     private:
 
         friend class FailoverTransportListener;
-        friend class ReconnectTask;
 
         bool closed;
         bool connected;
         bool started;
-
-        decaf::util::StlList<URI> uris;
 
         long long timeout;
         long long initialReconnectDelay;
         long long maxReconnectDelay;
         long long backOffMultiplier;
         bool useExponentialBackOff;
-        bool randomize;
         bool initialized;
         int maxReconnectAttempts;
         int connectFailures;
         long long reconnectDelay;
-        bool backup;
-        int backupPoolSize;
         bool trackMessages;
         int maxCacheSize;
 
-        decaf::util::StlList< Pointer<BackupTransport> > backups;
+        mutable decaf::util::concurrent::Mutex reconnectMutex;
+        mutable decaf::util::concurrent::Mutex sleepMutex;
+        mutable decaf::util::concurrent::Mutex listenerMutex;
 
         state::ConnectionStateTracker stateTracker;
-        decaf::util::concurrent::Mutex reconnectMutex;
-        decaf::util::concurrent::Mutex backupMutex;
-        decaf::util::concurrent::Mutex sleepMutex;
-        decaf::util::concurrent::Mutex listenerMutex;
         decaf::util::StlMap<int, Pointer<Command> > requestMap;
 
+        Pointer<URIPool> uris;
         Pointer<URI> connectedTransportURI;
-        Pointer<URI> failedConnectTransportURI;
         Pointer<Transport> connectedTransport;
         Pointer<Exception> connectionFailure;
-        Pointer<ReconnectTask> reconnectTask;
+        Pointer<BackupTransportPool> backups;
         Pointer<CloseTransportsTask> closeTask;
-        Pointer<TaskRunner> taskRunner;
-        Pointer<CompositeTaskRunner> compositeTaskRunner;
+        Pointer<CompositeTaskRunner> taskRunner;
         Pointer<TransportListener> disposedListener;
         Pointer<TransportListener> myTransportListener;
         TransportListener* transportListener;
@@ -203,8 +195,7 @@ namespace failover {
          * Sets the WireFormat instance to use.
          * @param WireFormat the object used to encode / decode commands.
          */
-        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {
-        }
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat AMQCPP_UNUSED ) {}
 
         /**
          * Sets the observer of asynchronous events from this transport.
@@ -283,6 +274,21 @@ namespace failover {
         virtual std::string getRemoteAddress() const;
 
         /**
+         * @returns true if there is a need for the iterate method to be called by this
+         *          classes task runner.
+         */
+        virtual bool isPending() const;
+
+        /**
+         * Performs the actual Reconnect operation for the FailoverTransport, when a
+         * connection is made this method returns false to indicate it doesn't need to
+         * run again, otherwise it returns true to indicate its still trying to connect.
+         *
+         * @return false to indicate a connection, true to indicate it needs to try again.
+         */
+        virtual bool iterate();
+
+        /**
          * reconnect to another location
          * @param uri
          * @throws IOException on failure of if not supported
@@ -333,11 +339,11 @@ namespace failover {
         }
 
         bool isRandomize() const {
-            return this->randomize;
+            return this->uris->isRandomize();
         }
 
         void setRandomize( bool value ) {
-            this->randomize = value;
+            this->uris->setRandomize( value );
         }
 
         int getMaxReconnectAttempts() const {
@@ -357,19 +363,19 @@ namespace failover {
         }
 
         bool isBackup() const {
-            return this->backup;
+            return this->backups->isEnabled();
         }
 
         void setBackup( bool value ) {
-            this->backup = value;
+            this->backups->setEnabled( value );
         }
 
         int getBackupPoolSize() const {
-            return this->backupPoolSize;
+            return this->backups->getBackupPoolSize();
         }
 
         void setBackupPoolSize( int value ) {
-            this->backupPoolSize = value;
+            this->backups->setBackupPoolSize( value );
         }
 
         bool isTrackMessages() const {
@@ -413,29 +419,10 @@ namespace failover {
     private:
 
         /**
-         * Returns a set of URIs that this Transport is to connect to, applying a
-         * random swapping from the class stored list of URIs if the randomize flag
-         * is enabled, otherwise just return the original list.
-         *
-         * @returns a Set of URI object that this Transport iterates over to connect.
-         */
-        decaf::util::StlList<URI> getConnectList() const;
-
-        /**
          * @return Returns true if the command is one sent when a connection
          * is being closed.
          */
         bool isShutdownCommand( const Pointer<Command>& command ) const;
-
-        /**
-         * Performs the actual Reconnect operation.
-         */
-        bool doReconnect();
-
-        /**
-         * Builds a set of Backup Transports for fast Failover.
-         */
-        bool buildBackups();
 
         /**
          * Looks up the correct Factory and create a new Composite version of the

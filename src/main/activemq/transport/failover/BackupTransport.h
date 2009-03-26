@@ -32,13 +32,13 @@ namespace failover {
 
     using decaf::lang::Pointer;
 
-    class FailoverTransport;
+    class BackupTransportPool;
 
     class AMQCPP_API BackupTransport : public DefaultTransportListener {
     private:
 
-        // The parent Failover Transport
-        FailoverTransport* failover;
+        // The parent of this Backup
+        BackupTransportPool* parent;
 
         // The Transport this one is managing.
         Pointer<Transport> transport;
@@ -51,7 +51,7 @@ namespace failover {
 
     public:
 
-        BackupTransport( FailoverTransport* failover );
+        BackupTransport( BackupTransportPool* failover );
 
         virtual ~BackupTransport();
 

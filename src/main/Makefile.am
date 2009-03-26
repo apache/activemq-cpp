@@ -94,11 +94,12 @@ cc_sources = \
     activemq/transport/TransportFilter.cpp \
     activemq/transport/tcp/TcpTransportFactory.cpp \
     activemq/transport/tcp/TcpTransport.cpp \
+    activemq/transport/failover/BackupTransportPool.cpp \
     activemq/transport/failover/FailoverTransportListener.cpp \
+    activemq/transport/failover/URIPool.cpp \
     activemq/transport/failover/FailoverTransportFactory.cpp \
     activemq/transport/failover/CloseTransportsTask.cpp \
     activemq/transport/failover/BackupTransport.cpp \
-    activemq/transport/failover/ReconnectTask.cpp \
     activemq/transport/failover/FailoverTransport.cpp \
     activemq/transport/TransportRegistry.cpp \
     activemq/transport/AbstractTransportFactory.cpp \
@@ -618,10 +619,11 @@ h_sources = \
     activemq/transport/tcp/TcpTransportFactory.h \
     activemq/transport/tcp/TcpTransport.h \
     activemq/transport/failover/FailoverTransportListener.h \
+    activemq/transport/failover/URIPool.h \
     activemq/transport/failover/FailoverTransportFactory.h \
     activemq/transport/failover/CloseTransportsTask.h \
+    activemq/transport/failover/BackupTransportPool.h \
     activemq/transport/failover/BackupTransport.h \
-    activemq/transport/failover/ReconnectTask.h \
     activemq/transport/failover/FailoverTransport.h \
     activemq/transport/correlator/ResponseCorrelator.h \
     activemq/transport/correlator/FutureResponse.h \

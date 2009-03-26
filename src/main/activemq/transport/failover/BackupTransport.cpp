@@ -17,15 +17,15 @@
 
 #include "BackupTransport.h"
 
-#include <activemq/transport/failover/FailoverTransport.h>
+#include <activemq/transport/failover/BackupTransportPool.h>
 
 using namespace activemq;
 using namespace activemq::transport;
 using namespace activemq::transport::failover;
 
 ////////////////////////////////////////////////////////////////////////////////
-BackupTransport::BackupTransport( FailoverTransport* failover ) :
-    failover( failover ), closed( true ) {
+BackupTransport::BackupTransport( BackupTransportPool* parent ) :
+    parent( parent ), closed( true ) {
 
 }
 
@@ -38,7 +38,7 @@ void BackupTransport::onException( const decaf::lang::Exception& ex AMQCPP_UNUSE
 
     this->closed = true;
 
-    if( this->failover != NULL ) {
-        this->failover->reconnect();
+    if( this->parent != NULL ) {
+        this->parent->onBackupTransportFailure( this );
     }
 }

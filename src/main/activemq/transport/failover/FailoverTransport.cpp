@@ -49,13 +49,10 @@ FailoverTransport::FailoverTransport() {
     this->maxReconnectDelay = 1000 * 30;
     this->backOffMultiplier = 2;
     this->useExponentialBackOff = true;
-    this->randomize = true;
     this->initialized = false;
     this->maxReconnectAttempts = 0;
     this->connectFailures = 0;
     this->reconnectDelay = this->initialReconnectDelay;
-    this->backup = false;
-    this->backupPoolSize = 1;
     this->trackMessages = false;
     this->maxCacheSize = 128 * 1024;
 
@@ -64,14 +61,15 @@ FailoverTransport::FailoverTransport() {
     this->connected = false;
 
     this->transportListener = NULL;
+    this->uris.reset( new URIPool() );
     this->stateTracker.setTrackTransactions( true );
     this->myTransportListener.reset( new FailoverTransportListener( this ) );
-    this->reconnectTask.reset( new ReconnectTask( this ) );
     this->closeTask.reset( new CloseTransportsTask() );
-    this->taskRunner.reset( new DedicatedTaskRunner( reconnectTask.get() ) );
-    this->compositeTaskRunner.reset( new CompositeTaskRunner() );
+    this->taskRunner.reset( new CompositeTaskRunner() );
+    this->backups.reset( new BackupTransportPool( taskRunner, closeTask, uris ) );
 
-    this->compositeTaskRunner->addTask( this->closeTask.get() );
+    this->taskRunner->addTask( this );
+    this->taskRunner->addTask( this->closeTask.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,10 +98,7 @@ bool FailoverTransport::isShutdownCommand( const Pointer<Command>& command ) con
 void FailoverTransport::add( const std::string& uri ) {
 
     try {
-        URI newUri( uri );
-        if( !uris.contains( newUri ) ) {
-            uris.add( newUri );
-        }
+        uris->addURI( URI( uri ) );
 
         reconnect();
     }
@@ -113,12 +108,10 @@ void FailoverTransport::add( const std::string& uri ) {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::addURI( const List<URI>& uris ) {
 
-    synchronized( &this->uris ) {
-        std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
+    std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
-        while( iter->hasNext() ) {
-            this->uris.add( iter->next() );
-        }
+    while( iter->hasNext() ) {
+        this->uris->addURI( iter->next() );
     }
 
     reconnect();
@@ -127,12 +120,10 @@ void FailoverTransport::addURI( const List<URI>& uris ) {
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::removeURI( const List<URI>& uris ) {
 
-    synchronized( &this->uris ) {
-        std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
+    std::auto_ptr< Iterator<URI> > iter( uris.iterator() );
 
-        while( iter->hasNext() ) {
-            this->uris.remove( iter->next() );
-        }
+    while( iter->hasNext() ) {
+        this->uris->removeURI( iter->next() );
     }
 
     reconnect();
@@ -144,45 +135,13 @@ void FailoverTransport::reconnect( const decaf::net::URI& uri )
 
     try {
 
-        if( !uris.contains( uri ) ) {
-            uris.add( uri );
-        }
+        this->uris->addURI( uri );
 
         reconnect();
     }
     AMQ_CATCH_RETHROW( IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
     AMQ_CATCHALL_THROW( IOException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
-StlList<URI> FailoverTransport::getConnectList() const {
-
-    StlList<URI> result( uris );
-    bool removed = false;
-
-    if( failedConnectTransportURI != NULL ) {
-        removed = result.remove( *failedConnectTransportURI );
-    }
-
-    if( randomize ) {
-        // Randomly, reorder the list by random swapping
-        Random rand;
-        rand.setSeed( decaf::lang::System::currentTimeMillis() );
-
-        for( std::size_t i = 0; i < result.size(); i++ ) {
-            int p = rand.nextInt( (int)result.size() );
-            URI temp = result.get( p );
-            result.set( p, result.get( i ) );
-            result.set( i, temp );
-        }
-    }
-
-    if( removed ) {
-        result.add( *failedConnectTransportURI );
-    }
-
-    return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -195,16 +154,17 @@ void FailoverTransport::setTransportListener( TransportListener* listener ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string FailoverTransport::getRemoteAddress() const {
-    if( connectedTransport != NULL ) {
-        return connectedTransport->getRemoteAddress();
+    synchronized( &reconnectMutex ) {
+        if( connectedTransport != NULL ) {
+            return connectedTransport->getRemoteAddress();
+        }
     }
     return "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void FailoverTransport::oneway( const Pointer<Command>& command )
-    throw( IOException,
-           decaf::lang::exceptions::UnsupportedOperationException ) {
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
 
     Pointer<Exception> error;
 
@@ -385,17 +345,11 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         closed = true;
         connected = false;
 
-        std::auto_ptr< Iterator< Pointer<BackupTransport> > > iter( backups.iterator() );
-        while( iter->hasNext() ) {
-            iter->next()->setClosed( true );
-        }
-
-        backups.clear();
+        backups->setEnabled( false );
         requestMap.clear();
 
         if( connectedTransport != NULL ) {
-            transportToStop = connectedTransport;
-            connectedTransport.reset( NULL );
+            transportToStop.swap( connectedTransport );
         }
 
         reconnectMutex.notifyAll();
@@ -405,8 +359,7 @@ void FailoverTransport::close() throw( cms::CMSException ) {
         sleepMutex.notifyAll();
     }
 
-    taskRunner->shutdown( 1000 );
-    compositeTaskRunner->shutdown( 1000 );
+    taskRunner->shutdown( 2000 );
 
     if( transportToStop != NULL ) {
         transportToStop->close();
@@ -457,7 +410,9 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
     throw( decaf::lang::Exception ) {
 
     Pointer<Transport> transport;
-    connectedTransport.swap( transport );
+    synchronized( &reconnectMutex ) {
+        connectedTransport.swap( transport );
+    }
 
     if( transport != NULL ) {
 
@@ -467,16 +422,16 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 
         // Hand off to the close task so it gets done in a different thread.
         closeTask->add( transport );
-        compositeTaskRunner->wakeup();
+        taskRunner->wakeup();
 
         synchronized( &reconnectMutex ) {
-            bool reconnectOk = started;
 
             initialized = false;
-            failedConnectTransportURI = connectedTransportURI;
+            uris->addURI( *connectedTransportURI );
             connectedTransportURI.reset( NULL );
             connected = false;
-            if( reconnectOk ) {
+
+            if( started ) {
                 taskRunner->wakeup();
             }
         }
@@ -488,7 +443,20 @@ void FailoverTransport::handleTransportFailure( const decaf::lang::Exception& er
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool FailoverTransport::doReconnect() {
+bool FailoverTransport::isPending() const {
+    bool result = false;
+
+    synchronized( &reconnectMutex ) {
+        if( this->connectedTransport == NULL && !closed && started ) {
+            result = true;
+        }
+    }
+
+    return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool FailoverTransport::iterate() {
 
     Pointer<Exception> failure;
 
@@ -501,86 +469,88 @@ bool FailoverTransport::doReconnect() {
         if( connectedTransport != NULL || closed || connectionFailure != NULL ) {
             return false;
         } else {
-            StlList<URI> connectList = getConnectList();
-            if( connectList.isEmpty() ) {
-                failure.reset( new IOException(
-                    __FILE__, __LINE__, "No uris available to connect to." ) );
-            } else {
 
-                if( !useExponentialBackOff ) {
-                    reconnectDelay = initialReconnectDelay;
-                }
+            StlList<URI> failures;
+            Pointer<Transport> transport;
+            URI uri;
 
-                synchronized( &backupMutex ) {
+            if( !useExponentialBackOff ) {
+                reconnectDelay = initialReconnectDelay;
+            }
 
-                    if( backup && !backups.isEmpty() ) {
+            if( backups->isEnabled() ) {
 
-                        Pointer<BackupTransport> backup = backups.remove( 0 );
-                        Pointer<Transport> transport = backup->getTransport();
-                        URI uri = backup->getUri();
-                        transport->setTransportListener( myTransportListener.get() );
+                Pointer<BackupTransport> backupTransport = backups->getBackup();
 
-                        try {
+                if( backupTransport != NULL ) {
 
-                            if( started ) {
-                                restoreTransport( transport );
-                            }
+                    transport = backupTransport->getTransport();
+                    uri = backupTransport->getUri();
+                    transport->setTransportListener( myTransportListener.get() );
 
-                            reconnectDelay = initialReconnectDelay;
-                            failedConnectTransportURI.reset( NULL );
-                            connectedTransportURI.reset( new URI( uri ) );
-                            connectedTransport = transport;
-                            reconnectMutex.notifyAll();
-                            connectFailures = 0;
-
-                            return false;
-                        }
-                        AMQ_CATCH_NOTHROW( Exception )
-                        AMQ_CATCHALL_NOTHROW()
-                    }
-                }
-
-                std::auto_ptr< Iterator<URI> > iter( connectList.iterator() );
-
-                while( iter->hasNext() && connectedTransport == NULL && !closed ) {
-
-                    URI uri = iter->next();
                     try {
-
-                        Pointer<Transport> transport = createTransport( uri );
-                        transport->setTransportListener( myTransportListener.get() );
-                        transport->start();
 
                         if( started ) {
                             restoreTransport( transport );
                         }
 
-                        reconnectDelay = initialReconnectDelay;
-                        connectedTransportURI.reset( new URI( uri ) );
-                        connectedTransport = transport;
-                        reconnectMutex.notifyAll();
-                        connectFailures = 0;
-
-                        // Make sure on initial startup, that the transportListener
-                        // has been initialized for this instance.
-                        synchronized( &listenerMutex ) {
-                            if( transportListener == NULL ) {
-                                // if it isn't set after 2secs - it
-                                // probably never will be
-                                listenerMutex.wait( 2000 );
-                            }
-                        }
-
-                        if( transportListener != NULL ) {
-                            transportListener->transportResumed();
-                        }
-
-                        connected = true;
-                        return false;
                     } catch( Exception& e ) {
-                        failure.reset( e.clone() );
+                        transport.reset( NULL );
+                        this->uris->addURI( uri );
                     }
                 }
+            }
+
+            while( transport == NULL && !closed ) {
+
+                try{
+                    uri = uris->getURI();
+                } catch( NoSuchElementException& ex ) {
+                    break;
+                }
+
+                try {
+
+                    transport = createTransport( uri );
+                    transport->setTransportListener( myTransportListener.get() );
+                    transport->start();
+
+                    if( started ) {
+                        restoreTransport( transport );
+                    }
+
+                } catch( Exception& e ) {
+                    transport.reset( NULL );
+                    failures.add( uri );
+                    failure.reset( e.clone() );
+                }
+            }
+
+            // Return the failures to the pool, we will try again on the next iteration.
+            this->uris->addURIs( failures );
+
+            if( transport != NULL ) {
+                reconnectDelay = initialReconnectDelay;
+                connectedTransportURI.reset( new URI( uri ) );
+                connectedTransport = transport;
+                reconnectMutex.notifyAll();
+                connectFailures = 0;
+                connected = true;
+
+                // Make sure on initial startup, that the transportListener
+                // has been initialized for this instance.
+                synchronized( &listenerMutex ) {
+                    if( transportListener == NULL ) {
+                        // if it isn't set after 2secs - it probably never will be
+                        listenerMutex.wait( 2000 );
+                    }
+                }
+
+                if( transportListener != NULL ) {
+                    transportListener->transportResumed();
+                }
+
+                return false;
             }
         }
 
@@ -631,55 +601,6 @@ bool FailoverTransport::doReconnect() {
     }
 
     return !closed;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bool FailoverTransport::buildBackups() {
-
-    synchronized( &backupMutex ) {
-
-        if( !closed && backup && (int)backups.size() < backupPoolSize ) {
-
-            StlList<URI> connectList = getConnectList();
-
-            //removed closed backups
-            StlList< Pointer<BackupTransport> > disposedList;
-            std::auto_ptr< Iterator<Pointer<BackupTransport> > > iter( backups.iterator() );
-            while( iter->hasNext() ) {
-                Pointer<BackupTransport> backup = iter->next();
-                if( backup->isClosed() ) {
-                    disposedList.add( backup );
-                }
-            }
-
-            backups.removeAll( disposedList );
-            disposedList.clear();
-
-            std::auto_ptr< Iterator<URI> > uriIter( connectList.iterator() );
-
-            while( uriIter->hasNext() && (int)backups.size() < backupPoolSize ) {
-                URI uri = uriIter->next();
-                if( connectedTransportURI != NULL && !connectedTransportURI->equals( uri ) ) {
-                    try {
-                        Pointer<BackupTransport> backup( new BackupTransport( this ) );
-                        backup->setUri( uri );
-
-                        if( !backups.contains( backup ) ) {
-                            Pointer<Transport> transport = createTransport( uri );
-                            transport->setTransportListener( backup.get() );
-                            transport->start();
-                            backup->setTransport( transport );
-                            backups.add( backup );
-                        }
-                    }
-                    AMQ_CATCH_NOTHROW( Exception )
-                    AMQ_CATCHALL_NOTHROW()
-                }
-            }
-        }
-    }
-
-    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

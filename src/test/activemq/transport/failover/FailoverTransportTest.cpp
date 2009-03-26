@@ -63,6 +63,10 @@ void FailoverTransportTest::testTransportCreate() {
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
     transport->start();
+
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     transport->close();
 }
 
@@ -85,9 +89,11 @@ void FailoverTransportTest::testTransportCreateWithBackups() {
     CPPUNIT_ASSERT( failover->isRandomize() == false );
     CPPUNIT_ASSERT( failover->isBackup() == true );
 
-    Thread::sleep( 1000 );
-
     transport->start();
+
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     transport->close();
 }
 
@@ -125,9 +131,10 @@ void FailoverTransportTest::testTransportCreateFailOnCreate() {
 
     transport->start();
 
-    Thread::sleep( 2000 );
+    Thread::sleep( 1000 );
 
     CPPUNIT_ASSERT( listener.caughtException == true );
+    CPPUNIT_ASSERT( failover->isConnected() == false );
 
     transport->close();
 }
@@ -186,9 +193,11 @@ void FailoverTransportTest::testFailingBackupCreation() {
     CPPUNIT_ASSERT( failover->isRandomize() == false );
     CPPUNIT_ASSERT( failover->isBackup() == true );
 
-    Thread::sleep( 2000 );
-
     transport->start();
+
+    Thread::sleep( 2000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     transport->close();
 }
 
@@ -229,6 +238,9 @@ void FailoverTransportTest::testSendOnewayMessage() {
 
     transport->start();
 
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     MockTransport* mock = NULL;
     while( mock == NULL ) {
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
@@ -268,6 +280,9 @@ void FailoverTransportTest::testSendRequestMessage() {
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
     transport->start();
+
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
 
     MockTransport* mock = NULL;
     while( mock == NULL ) {
@@ -311,6 +326,9 @@ void FailoverTransportTest::testSendOnewayMessageFail() {
 
     transport->start();
 
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     MockTransport* mock = NULL;
     while( mock == NULL ) {
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
@@ -353,6 +371,9 @@ void FailoverTransportTest::testSendRequestMessageFail() {
 
     transport->start();
 
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
+
     MockTransport* mock = NULL;
     while( mock == NULL ) {
         mock = dynamic_cast<MockTransport*>( transport->narrow( typeid( MockTransport ) ) );
@@ -389,6 +410,9 @@ void FailoverTransportTest::testWithOpewireCommands() {
     CPPUNIT_ASSERT( failover->isRandomize() == false );
 
     transport->start();
+
+    Thread::sleep( 1000 );
+    CPPUNIT_ASSERT( failover->isConnected() == true );
 
     Pointer<ConnectionInfo> connection = createConnection();
     transport->request( connection );
