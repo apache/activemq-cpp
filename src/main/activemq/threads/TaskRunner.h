@@ -18,12 +18,13 @@
 #ifndef _ACTIVEMQ_THREADS_TASKRUNNER_H_
 #define _ACTIVEMQ_THREADS_TASKRUNNER_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/threads/Task.h>
 
 namespace activemq {
 namespace threads {
 
-    class TaskRunner {
+    class AMQCPP_API TaskRunner {
     public:
 
         virtual ~TaskRunner() {}
