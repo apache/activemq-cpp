@@ -47,22 +47,23 @@ URIPool::~URIPool() {
 URI URIPool::getURI() throw ( decaf::lang::exceptions::NoSuchElementException ) {
 
     synchronized( &uriPool ) {
-        if( uriPool.isEmpty() ) {
-            throw NoSuchElementException(
-                __FILE__, __LINE__, "URI Pool is currently empty." );
-        }
+        if( !uriPool.isEmpty() ) {
 
-        int index = 0;  // Take the first one in the list unless random is on.
+			int index = 0;  // Take the first one in the list unless random is on.
 
-        if( isRandomize() ) {
+			if( isRandomize() ) {
 
-            Random rand;
-            rand.setSeed( decaf::lang::System::currentTimeMillis() );
-            index = rand.nextInt( (int)uriPool.size() );
-        }
+				Random rand;
+				rand.setSeed( decaf::lang::System::currentTimeMillis() );
+				index = rand.nextInt( (int)uriPool.size() );
+			}
 
-        return uriPool.remove( index );
+			return uriPool.remove( index );
+		}
     }
+
+    throw NoSuchElementException(
+        __FILE__, __LINE__, "URI Pool is currently empty." );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
