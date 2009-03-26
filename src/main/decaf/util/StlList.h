@@ -259,7 +259,7 @@ namespace util{
          * @param source The source set.
          */
         StlList( const Collection<E>& source ) : List<E>() {
-			List::copy( source );
+            List<E>::copy( source );
         }
 
         virtual ~StlList() {}
