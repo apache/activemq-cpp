@@ -344,3 +344,50 @@ void SimpleTest::testQuickCreateAndDestroy() {
         CPPUNIT_ASSERT( false );
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void SimpleTest::testBytesMessageSendRecv() {
+
+    try {
+
+        // Create CMS Object for Comms
+        cms::Session* session( cmsProvider->getSession() );
+        cms::MessageConsumer* consumer = cmsProvider->getConsumer();
+        cms::MessageProducer* producer = cmsProvider->getProducer();
+        producer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
+
+        auto_ptr<cms::BytesMessage> bytesMessage( session->createBytesMessage() );
+
+        bytesMessage->writeBoolean( true );
+        bytesMessage->writeByte( 127 );
+        bytesMessage->writeDouble( 123456.789 );
+        bytesMessage->writeInt( 65537 );
+        bytesMessage->writeString( "TEST-STRING" );
+
+        // Send some text messages
+        producer->send( bytesMessage.get() );
+
+        auto_ptr<cms::Message> message( consumer->receive( 2000 ) );
+        CPPUNIT_ASSERT( message.get() != NULL );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw an ActiveMQExceptio",
+            message->setStringProperty( "FOO", "BAR" ),
+            exceptions::ActiveMQException );
+
+        BytesMessage* bytesMessage2 = dynamic_cast<cms::BytesMessage*>( message.get() );
+        CPPUNIT_ASSERT( bytesMessage2 != NULL );
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw an ActiveMQExceptio",
+            bytesMessage2->writeBoolean( false ),
+            exceptions::ActiveMQException );
+
+        CPPUNIT_ASSERT( bytesMessage2->readBoolean() == true );
+        CPPUNIT_ASSERT( bytesMessage2->readByte() == 127 );
+        CPPUNIT_ASSERT( bytesMessage2->readDouble() == 123456.789 );
+        CPPUNIT_ASSERT( bytesMessage2->readInt() == 65537 );
+        CPPUNIT_ASSERT( bytesMessage2->readString() == "TEST-STRING" );
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}

@@ -35,6 +35,7 @@ namespace openwire{
         CPPUNIT_TEST( testMultipleConnections );
         CPPUNIT_TEST( testMultipleSessions );
         CPPUNIT_TEST( testReceiveAlreadyInQueue );
+        CPPUNIT_TEST( testBytesMessageSendRecv );
         CPPUNIT_TEST( testQuickCreateAndDestroy );
         CPPUNIT_TEST( testWithZeroConsumerPrefetch );
         CPPUNIT_TEST( testMapMessageSendToQueue );
