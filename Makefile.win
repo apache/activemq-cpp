@@ -1,0 +1,133 @@
+# Makefile.win for Win32 ActiveMQ-CPP
+#
+# Targets are:
+#
+#     build    - compile everything
+#     check    - run APR regression tests
+#     install  - compile everything
+#     clean    - mop up everything
+#
+# You can override the build mechansim, choose only one;
+#
+#     USEMAK=1 - compile from exported make files
+#     USESLN=1 - compile from converted .sln / .vcproj VC7+ files
+#
+# Define ARCH to your desired preference (your PATH must point
+# to the correct compiler tools!)  Choose only one;
+#
+#     ARCH="Win32"
+#     ARCH="x64"
+#
+# Set CONFIG to your desired build type.
+#
+#     CONFIG="ReleaseDLL"
+#     CONFIG="DebugDLL"
+#     CONFIG="Release"
+#     CONFIG="Debug"
+#
+# Set VERBOCITY to indicate how much information is logged about the build.
+#
+#     VERBOCITY=quiet
+#     VERBOCITY=minimal
+#     VERBOCITY=normal
+#     VERBOCITY=detailed
+#     VERBOCITY=diagnostic
+#
+# For example;
+#
+#   nmake -f Makefile.win PREFIX=C:\ActiveMQ-CPP build check install clean
+#
+
+!IF EXIST(".\vs2005-build\vs2005-activemq-cpp.sln") && ([msbuild /help > NUL 2>&1] == 0) \
+    && !defined(USEMAK)
+USESLN=1
+USEMAK=0
+!ELSEIF EXIST("activemq-cpp.mak")
+USESLN=0
+USEMAK=1
+!ENDIF
+
+PREFIX=..\ActiveMQ-CPP
+CONFIG=Release
+VERBOCITY=Normal
+
+!IF [$(COMSPEC) /c cl /nologo /? \
+	| $(SystemRoot)\System32\find.exe "x64" >NUL ] == 0
+ARCH=x64
+!ELSE
+ARCH=Win32
+!ENDIF
+
+!IF "$(CONFIG)" == "Debug" || "$(CONFIG)" == "DebugDLL"
+POSTFIX="d"
+!ENDIF
+
+!MESSAGE ARCH          = $(ARCH)
+!MESSAGE CONFIG        = $(CONFIG)
+!MESSAGE VERBOCITY     = $(VERBOCITY)
+!MESSAGE PREFIX        = $(PREFIX)  (install path)
+
+rebuild: clean build
+
+all: build check
+
+!IF $(USEMAK) == 1
+
+clean:
+	$(MAKE) $(MAKEOPT) -f Makefile.win ARCH="$(ARCH)" \
+		CTARGET=CLEAN build
+
+build:
+	$(MAKE) $(MAKEOPT) -f activemq-cpp.mak         CFG="activemq - $(ARCH)" RECURSE=0 $(CTARGET)
+	$(MAKE) $(MAKEOPT) -f libactivemq-cpp.mak      CFG="libactivemq - $(ARCH)" RECURSE=0 $(CTARGET)
+
+!ELSEIF $(USESLN) == 1
+
+clean:
+	cd vs2005-build
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH) /verbosity:$(VERBOCITY)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-example:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-integration-tests:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-unittests:Clean /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	cd ..
+
+build:
+	cd vs2005-build
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq /p:Configuration=$(CONFIG);Platform=$(ARCH) /verbosity:$(VERBOCITY)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-example /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-integration-tests /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	-msbuild vs2005-activemq-cpp.sln /t:vs2005-activemq-unittests /p:Configuration=$(CONFIG);Platform=$(ARCH)
+	cd ..
+
+!ENDIF
+
+
+checkamq:
+	cd vs2005-build\$(CONFIG)
+	.\vs2005-activemq-unittests.exe
+	cd ..\..\
+
+check: checkamq
+
+install:
+	echo Y >.y
+	echo A >.A
+	@if NOT EXIST "$(PREFIX)\."		mkdir "$(PREFIX)"
+	@if NOT EXIST "$(PREFIX)\bin\."		mkdir "$(PREFIX)\bin"
+	@if NOT EXIST "$(PREFIX)\include\."	mkdir "$(PREFIX)\include"
+	@if NOT EXIST "$(PREFIX)\lib\."		mkdir "$(PREFIX)\lib"
+	copy RELEASE_NOTES.txt "$(PREFIX)\RELEASE_NOTES.txt" <.y
+	copy LICENSE.txt "$(PREFIX)\LICENSE.txt" <.y
+	copy NOTICE.txt  "$(PREFIX)\NOTICE.txt"  <.y
+	xcopy src\main\*.h		"$(PREFIX)\include\" /s /d < .a
+!IF "$(CONFIG)" == "Debug" || "$(CONFIG)" == "Release"
+	copy .\vs2005-build\$(CONFIG)\libactivemq-cpp$(POSTFIX).lib		"$(PREFIX)\lib\" <.y
+!ELSE
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).lib		"$(PREFIX)\lib\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).exp		"$(PREFIX)\lib\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).dll		"$(PREFIX)\bin\" <.y
+	copy .\vs2005-build\$(CONFIG)\activemq-cpp$(POSTFIX).pdb		"$(PREFIX)\bin\" <.y
+!ENDIF
+	del .y
+	del .a
+

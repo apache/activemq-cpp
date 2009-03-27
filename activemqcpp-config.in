@@ -1,0 +1,124 @@
+#!/bin/sh
+# ---------------------------------------------------------------------------
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ---------------------------------------------------------------------------
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir="@bindir@"
+libdir="@libdir@"
+datadir="@datadir@"
+installbuilddir="@installbuilddir@"
+includedir="@includedir@"
+datarootdir="@datadir@"
+
+usage()
+{
+    cat <<EOF
+Usage: activemqcpp-config [OPTION] ...
+
+Generic options
+  --version	output ActiveMQ-CPP version information.
+  --help	display this help and exit.
+
+Compilation support options
+  --cflags	  print pre-processor and compiler flags
+  --includes  print the include directories for ActiveMQ-CPP Headers.
+  --libs	  print library linking information
+
+Install directories ActiveMQ-CPP was configured to
+  --prefix[=DIR]
+  --exec-prefix[=DIR]
+
+EOF
+    exit $1
+}
+
+if test $# -eq 0; then
+    usage 1 1>&2
+fi
+
+while test $# -gt 0; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+    --prefix=*)
+      prefix=$optarg
+      if test $exec_prefix_set = no ; then
+        exec_prefix=$optarg
+      fi
+      ;;
+    --prefix)
+      echo_prefix=yes
+      ;;
+    --exec-prefix=*)
+      exec_prefix=$optarg
+      exec_prefix_set=yes
+      ;;
+    --exec-prefix)
+      echo_exec_prefix=yes
+      ;;
+    --version)
+      echo @ACTIVEMQ_VERSION@
+      ;;
+    --help)
+      usage 0
+      ;;
+    --cflags)
+      echo_cflags=yes
+      ;;
+    --includes)
+      echo_includes=yes
+      ;;
+    --libs)
+      echo_libs=yes
+      ;;
+    *)
+      usage 1 1>&2
+      ;;
+  esac
+  shift
+done
+
+if test "$echo_prefix" = "yes"; then
+    echo $prefix
+fi
+
+if test "$echo_exec_prefix" = "yes"; then
+    echo $exec_prefix
+fi
+
+if test "$echo_cflags" = "yes"; then
+    echo -I$includedir/@ACTIVEMQ_LIBRARY_NAME@-@ACTIVEMQ_API_VERSION@
+fi
+
+if test "$echo_includes" = "yes"; then
+    echo -I$includedir/@ACTIVEMQ_LIBRARY_NAME@-@ACTIVEMQ_API_VERSION@
+fi
+
+if test "$echo_libs" = "yes"; then
+    if test @libdir@ != /usr/lib ; then
+          my_linker_flags="-L@libdir@"
+    fi
+    echo ${my_linker_flags} -lactivemq-cpp
+fi
+
+
+
+

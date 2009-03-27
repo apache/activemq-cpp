@@ -1,0 +1,402 @@
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.3                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2.2 release.  This version adds support for responding to KeepAlive 
+requests from the broker, and it now properly sets JMSX properties on both
+stomp and openwire commands.  Users can now delete destinations using the 
+deleteDestination function in ActiveMQConnection.
+
+Bug
+
+    * [AMQCPP-158] - libtool release and version-info arguments need to be set correctly
+    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling pointer during exception in ActiveMQConnectionFactory::createConnection()
+    * [AMQCPP-193] - If activeMQ blocks due to reaching memory limit during a transaction, the last message sent is posted to the queue after the rollback occurs and persists
+    * [AMQCPP-210] - ActiveMQ-CPP on Mac OS X and iPhone OS link error
+    * [AMQCPP-213] - JMSXGroupID works with Stomp, not OpenWire.
+
+Improvement
+
+    * [AMQCPP-183] - Add a note about using LIBTOOLIZE environment variable when building on MacOS X
+    * [AMQCPP-208] - Update Openwire Command and Marshaler generator
+    * [AMQCPP-211] - Add support for responding to the KeepAliveInfo message from the Broker to Openwire
+
+New Feature
+
+    * [AMQCPP-169] - Add a new Broker managment interface in ActiveMQ Core.
+
+Task
+
+    * [AMQCPP-212] - Add more examples to the CPP Client
+
+Wish
+
+    * [AMQCPP-176] - Work around Visual Studio .NET 2003 covariant return issues
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.2                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2.1 release.  Also in this release the there have been several memory leak
+fixes and threading issues resolved.  The connection URI options have
+changed to reflect improved asynchronous message send capabilities as well,
+see the wiki for the new configuration option documentation.  This version
+of the library now requires APR 1.3 or higher to compile.
+
+Sub-task
+
+    * [AMQCPP-202] - Occasional Deadlocks when Integration tests are run in a
+                     long loop on CentOS and REHL.
+    * [AMQCPP-203] - Segmentation Fault in Integration tests occurs occasionally.
+
+Bug
+
+    * [AMQCPP-197] - include file activemq/exceptions/ExceptionDefines.h missing
+    * [AMQCPP-198] - File activemq/exceptions/ActiveMQException.h isn't installed
+                     during make install
+    * [AMQCPP-199] - Segmentation fault at decaf/net/SocketInputStream.cpp (line 108)
+    * [AMQCPP-200] - activemq-cpp-2.2.1 test fails for
+                     decaf::io::ByteArrayInputStreamTest::testConstructor (segmentation fault)
+
+Improvement
+
+    * [AMQCPP-196] - Make the openwire connecter handle sending messages sync or async
+                     based on rules and settings
+    * [AMQCPP-206] - Fix warnings generated when compiling the library on Windows.
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2.1                               ==
+=========================================================================
+
+This is a minor release that contains bugfixes that were found since the
+2.2 release.
+
+Sub-task
+
+    * [AMQCPP-189] - the message producer core dump during sending lots of messages
+
+Bug
+
+    * [AMQCPP-165] - Core Dump on reconnect/open queue
+    * [AMQCPP-184] - TransportFilter::fire() crashes after accessing a dangling
+                     pointer during exception in ActiveMQConnectionFactory::createConnection()
+    * [AMQCPP-185] - Some CmsTemplate headers missing from headers section in Makefile.am
+    * [AMQCPP-188] - ActiveMQ message consumer waiting for receive to complete is not closing...
+    * [AMQCPP-190] - setStringProperty() max length
+    * [AMQCPP-191] - autogen.sh fails to create configure : doxygen-related
+    * [AMQCPP-194] - Potential Deadlock in OpenwireConnector on exception from transport
+    * [AMQCPP-195] - Message stuck in queue when using transactional sessions
+
+Improvement
+
+    * [AMQCPP-179] - Add support for the openwire 3.0 commands
+    * [AMQCPP-192] - Add getCause to the CMS and Decaf exception interfaces
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.2                                 ==
+=========================================================================
+
+This release has seen a large restructuring of the codebase to separate
+out to platform code into a new package called decaf.  We are now making
+use of the APR and APR-Util libraries for platform independence.  Also
+many new tests and bug fixes have made their way into this release.
+
+Sub-task
+
+    * [AMQCPP-164] - Math functions don't all exist on the windows platform
+
+Bug
+
+    * [AMQCPP-136] - Some IO Stream classes don't honor the stream interface contract
+    * [AMQCPP-155] - Problem changing from "AUTO_ACKNOWLEDGE" to "SESSION_TRANSACTED"
+    * [AMQCPP-157] - Interoperability issues between C++ and .NET
+    * [AMQCPP-158] - libtool release and version-info arguments need to be set correctly
+    * [AMQCPP-159] - autogen.sh fails to create configure
+    * [AMQCPP-161] - CMS does not support prefetchSize=0 correctly
+    * [AMQCPP-163] - Durable Subscriber test fails consistantly on linux and windows
+    * [AMQCPP-165] - Core Dump on reconnect/open queue
+    * [AMQCPP-166] - MapMessage does not send mapped fields
+    * [AMQCPP-167] - Client has memory leaks when used in an MFC application
+    * [AMQCPP-170] - SEGV in activemq::connector::openwire::OpenWireConnector::createProducer
+    * [AMQCPP-173] - C++ Client has memory leaks
+    * [AMQCPP-174] - Deadlock on transacted session
+    * [AMQCPP-178] - Core dump in ActiveMQException::buildMessage
+    * [AMQCPP-181] - Failed unit tests in 2.2 RC1
+    * [AMQCPP-182] - Compile with GCC 4.3.0 fails
+
+Improvement
+
+    * [AMQCPP-103] - Pull out generic libraries from activemq-cpp namespace
+    * [AMQCPP-138] - Streams classes do not honor their Interface Contracts
+    * [AMQCPP-151] - Add a static create method to CMS ConnectionFactory
+    * [AMQCPP-168] - Create a connection can block for up to 4 mins under Linux when TCP socket connect() times out
+    * [AMQCPP-172] - Add support for MAP_TYPE and LIST_TYPE to the PrimitiveMap implementation
+    * [AMQCPP-177] - Defines for static linking with APR on Windows
+
+New Feature
+
+    * [AMQCPP-148] - Add support for embedding environment variables in connection URI
+    * [AMQCPP-152] - Create a CmsTemplate class
+
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.3                               ==
+=========================================================================
+
+This release adds support for building the library and tests, etc on the
+Solaris platform using the Sun Compiler in Sun Studio 11.
+
+Improvement
+
+    * [AMQCPP-154] - Improve build compatibility (Solaris)
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.2                               ==
+=========================================================================
+
+This release adds support for building the library and tests, etc on the
+Solaris platform using the Sun Compiler in Sun Studio 11.
+
+Improvement
+
+    * [AMQCPP-154] - Improve build compatibility (Solaris)
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.1.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version includes several bugfixes, as well as some new examples.  Also
+a lot of work has been done on performance and memory leaks and stability.
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0
+
+Bug
+
+    * [AMQCPP-111] - Unable to ./configure under Suse Linux 64 bit
+    * [AMQCPP-137] - Exception in ResponseCorrelator::onCommand()
+    * [AMQCPP-141] - ActiveMQTextMessage::getText() causes an index out of bounds assertion failure if trying to read a 0 length text message
+    * [AMQCPP-142] - BufferedOutputStream flush called after BufferedOutputStream close resulting in unhandled exceptions
+    * [AMQCPP-144] - Decaf library build fails on OS X
+    * [AMQCPP-145] - Compiler error concerning TRANSACTION_ROLLBACK
+    * [AMQCPP-149] - Client crash when receiving message with empty string property from java
+    * [AMQCPP-150] - ActiveMQ-CPP consumer client hanging after receiving 32767 messages.
+
+Improvement
+
+    * [AMQCPP-99] - Incorporate APR for generation of GUIDs
+    * [AMQCPP-124] - Provide a ConnectionMetaData interface in CMS
+    * [AMQCPP-139] - Improvements for the Openwire Commands Generated Code
+    * [AMQCPP-143] - declara BytesMessage::readXXX() methods as 'const'
+    * [AMQCPP-146] - Refactor sequence id generation in the connectors
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version includes several bugfixes, as well as some new features.  Also
+a lot of work has been done on performance and memory leaks.  One new feature that
+has been highly anticipated is that we now build both shared and static libraries.
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-104] - Enabling async send prevents program from terminating properly on Windows
+    * [AMQCPP-119] - getClientID segfaults is called after connection has been closed
+    * [AMQCPP-120] - Possible memory leak in StompConnector
+    * [AMQCPP-121] - Possible memory leak in activemq::transport::IOTransport::run
+    * [AMQCPP-122] - Crash on Windows when rapidly creating and destroying connections
+    * [AMQCPP-126] - closing ressources after an IOException crashes the app
+    * [AMQCPP-128] - Transacted session crashes or loses messages
+    * [AMQCPP-131] - StompConnector doesn't rethrow UnsupportedOperationException
+    * [AMQCPP-132] - Unsubscribe of durable subscription fails
+    * [AMQCPP-133] - Receive of plain Message with Openwire returns null
+    * [AMQCPP-134] - Compiler warnings have returned for tests on gcc
+
+Improvement
+
+    * [AMQCPP-65] - Refactor transport creation
+    * [AMQCPP-66] - Refactor the Async send to happen in an Async Transport instead of in ActiveMQSession
+    * [AMQCPP-108] - Make stomp connector more generic
+    * [AMQCPP-110] - Create activemqcpp-openwire-generator build in our pom.xml, move code to src/main/java
+    * [AMQCPP-116] - quick improvements to CMS example code
+    * [AMQCPP-118] - Provide a way to allocate and free with the same allocator
+    * [AMQCPP-123] - Link error when trying to link another shared library against AMQCPP on 64-bit Linux
+    * [AMQCPP-127] - ResponseCorrelator doesn't have a way to set max timeot from the properties uri.
+    * [AMQCPP-130] - Enhance the DummyTransport and rename it to MockTransport
+
+New Feature
+
+    * [AMQCPP-125] - Decaf: Random
+
+Task
+
+    * [AMQCPP-106] - reorganize subversion
+    * [AMQCPP-115] - Change build to create dynamic libraries
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.0.1                               ==
+=========================================================================
+
+== Overview ==
+
+This version is a bug fix release for issues that were found in the 2.0 release
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-105] - Openwire ActiveMQMessage sets Persistant flag incorrectly
+    * [AMQCPP-107] - SocketInputStream::read() doesn't check for EINTR error
+    * [AMQCPP-109] - Exception when acknowledging null messages, originating from the receipt of an ObjectMessage
+    * [AMQCPP-112] - Openwire Experiation Integration tests fail when fixed to actually use Openwire
+
+Improvement
+
+    * [AMQCPP-101] - Add the Ability to set the TcpNoDelay flag of a TCP Socket
+    * [AMQCPP-102] - Create a Tag for CMS
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 2.0                                 ==
+=========================================================================
+
+== Overview ==
+
+This version is a major release containing new features and bug fixes.
+
+    * Full OpenWire v2 support!
+    * You can switch between openwire and stomp via the connection URL
+    * Temporary destinations when using OpenWire
+    * Added support for asynchronous send
+    * Fixed client acknowledge
+    * Resolved some memory leaks
+    * Sessions are now single threaded
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-38] - Async error on broker when running integration tests
+    * [AMQCPP-44] - Reason for socket errors not reported correctly on Windows
+    * [AMQCPP-46] - ActiveMQConnection doesn't propagate exception listener to underlying connector
+    * [AMQCPP-51] - Autoconf is not properly setting CXXFLAGS on Linux
+    * [AMQCPP-52] - Valgrind reports memory leaks when running PrimitiveMapTest
+    * [AMQCPP-53] - Declaration of extern int errno after including errno.h doesn't compile
+    * [AMQCPP-54] - Build broken due to autoconf problem?
+    * [AMQCPP-55] - Need close() to propagate to child resources
+    * [AMQCPP-56] - GCC warnings and possible SocketFactory bug on 64-bit Linux
+    * [AMQCPP-58] - Possible memory leak when reestablishing connection
+    * [AMQCPP-59] - Exception is thrown when destroying consumer after connection failure
+    * [AMQCPP-60] - message information is lost from stomp message to jms
+    * [AMQCPP-61] - CMSException::what returns c_str of temporary std::string
+    * [AMQCPP-62] - Broken CLIENT_ACKNOWLEDGE
+    * [AMQCPP-64] - Inconsistency in topic names when creating topics
+    * [AMQCPP-75] - setCMSReplyTo with null destination segfaults when using Openwire wire format
+    * [AMQCPP-76] - Integer property not propagated when using Openwire
+    * [AMQCPP-77] - Inconsistency when getting string property between Stomp and Openwire
+    * [AMQCPP-78] - session tries to destroy already destroyed temporary queue
+    * [AMQCPP-80] - sending with explicit message id hangs
+    * [AMQCPP-81] - openwire consumer never receives messages already in queue
+    * [AMQCPP-83] - Integration tests fail for openwire
+    * [AMQCPP-85] - activemq/util/Character.h not being installed by automake
+    * [AMQCPP-86] - Valgrind reports memory leaks in unit tests
+    * [AMQCPP-87] - ActiveMQConnectionFactory creates only one unique clientId
+    * [AMQCPP-90] - Openwire Session doesn't run its MessageListeners from a single thread
+    * [AMQCPP-91] - A few more Openwire memory leaks
+    * [AMQCPP-92] - memory leak in openwire session info
+
+Improvement
+
+    * [AMQCPP-40] - A few stray unix and sun defines
+    * [AMQCPP-47] - MapMessage getters should be const
+    * [AMQCPP-48] - Fix compilation with Visual Studio .NET 2003
+    * [AMQCPP-49] - Add -W -Wall compile options
+    * [AMQCPP-50] - Derive cms::CMSException from std::exception
+    * [AMQCPP-57] - Typo in names of delivery modes
+    * [AMQCPP-79] - allow createProducer to accept null destination
+    * [AMQCPP-89] - Case of cms::Message getter and setter names are not consistent with case of JMS Message getter and setter names
+    * [AMQCPP-94] - StompConnector should use Long::toString instead of Integer::toString
+
+New Feature
+
+    * [AMQCPP-30] - Add support to activemq-cpp to support the openwire protocol
+    * [AMQCPP-63] - asynchronous send
+
+Task
+
+    * [AMQCPP-82] - Make openwire the default protocol
+    * [AMQCPP-84] - add unit/integration tests
+    * [AMQCPP-88] - Remove setCMSMessageId from CMS API
+    * [AMQCPP-95] - Perform Memory Leak testing on 2.0 codebase
+
+
+=========================================================================
+==  Release Notes for ActiveMQ CPP 1.1                                 ==
+=========================================================================
+
+== Overview ==
+
+This version fixes several bugs and adds a few new features.
+
+    * Updated interface for cms::BytesMessage - more JMS-like.
+    * Updated the MessageProducer interface to add multiple versions of the send method
+    * Fixed several memory leaks
+    * Now run on linux, win32, OS X, and Solaris
+    * Persistence is fixed
+    * Fixed deadlocks when closing a connection
+    * Fixed message expiration
+
+NOTE: Compatable with ActiveMQ Broker version >= 4.0.2
+
+== Issues Resolved ==
+
+Bug
+
+    * [AMQCPP-3] - Receiving a BytesMessage sent from Java using CMS listener causes exception thrown in class BufferedInputStream
+    * [AMQCPP-14] - CMSExpiration not handled properly in ActiveMQProducer
+    * [AMQCPP-18] - ActiveMQConnection.close() causes app to crash
+    * [AMQCPP-20] - Deadlock when in stomp connector close
+    * [AMQCPP-22] - Use common name for ActiveMQ C++ library on Windows and Linux
+    * [AMQCPP-23] - active-cpp persistent problem
+    * [AMQCPP-25] - Bus error on Solaris OS from DataInput and DataOutput streams
+    * [AMQCPP-26] - Memory leaks reported by Rational Purify when running unit tests
+    * [AMQCPP-27] - Issues reported by Valgrind when running unit tests
+    * [AMQCPP-28] - Purify and Valgrind warnings when running integration tests
+    * [AMQCPP-29] - Projects in MSVC build building on top of one another
+    * [AMQCPP-35] - Stomp content-length header not being set on BytesMessage
+    * [AMQCPP-39] - Some AMQCPP includes not installed when doing make install on Linux
+    * [AMQCPP-41] - Byte swap on float and double truncates values
+    * [AMQCPP-43] - Crash when getting string property that doesn't exist
+
+Improvement
+
+    * [AMQCPP-16] - CMS API needs updates to more closely follow JMS API
+    * [AMQCPP-33] - Integration tests crash if broker isn't running
+    * [AMQCPP-36] - Cleanup whitespace and member function definitions in header files
+    * [AMQCPP-42] - A few more strict aliasing warnings
+
+New Feature
+
+    * [AMQCPP-15] - Add other versions of send method to CMS MessageProducer
+    * [AMQCPP-37] - readUTF and writeUTF for BytesMessage
+
+Task
+
+    * [AMQCPP-45] - Update configure.ac with release version
+
+Wish
+
+    * [AMQCPP-31] - Consider giving the unix #define a more unique name
+    * [AMQCPP-32] - Stomp messages don't preserve property types: please document this behaviour
