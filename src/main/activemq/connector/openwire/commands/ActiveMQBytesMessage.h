@@ -120,9 +120,6 @@ namespace commands{
             // Invoke base class's version.
             ActiveMQMessageBase<cms::BytesMessage>::clearBody();
 
-            // Set the stream in write only mode.
-            readOnly = false;
-
             outputStream.setBuffer( getContent() );
         }
 
@@ -190,7 +187,6 @@ namespace commands{
          * @throws CMSException
          */
         virtual void writeByte( unsigned char value ) throw ( cms::CMSException );
-
 
         /**
          * Reads a byte array from the bytes message stream.
@@ -402,13 +398,6 @@ namespace commands{
         }
 
     private:
-
-        /**
-         * Flag that indicates what state the stream is in.  If true, the
-         * message may only be read from.  If false, the message may only be
-         * written to.
-         */
-        bool readOnly;
 
         /**
          * InputStream that wraps around the command's content when in

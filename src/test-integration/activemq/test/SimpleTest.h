@@ -39,6 +39,7 @@ namespace test{
         virtual void testMultipleSessions();
         virtual void testReceiveAlreadyInQueue();
         virtual void testQuickCreateAndDestroy();
+        virtual void testBytesMessageSendRecv();
 
 
     };
