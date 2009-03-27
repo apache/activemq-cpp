@@ -45,7 +45,7 @@ CMSProvider::CMSProvider( const std::string& brokerURL,
     this->durable = false;
     this->subscription = UUID::randomUUID().toString();
 
-    this->initialize( brokerURL );
+    this->initialize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
