@@ -17,16 +17,16 @@
 
 #include "ActiveMQSessionExecutor.h"
 #include "ActiveMQSession.h"
-#include "ActiveMQMessage.h"
 #include "ActiveMQConsumer.h"
-#include <activemq/connector/ConsumerInfo.h>
+#include <activemq/commands/ConsumerInfo.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::concurrent;
 using namespace activemq::exceptions;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
@@ -34,7 +34,6 @@ ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
     this->session = session;
     this->closed = false;
     this->started = false;
-    this->thread = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +43,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
         // Terminate the thread.
         close();
-        
+
         // Empty the message queue and destroy any remaining messages.
         clear();
     }
@@ -53,7 +52,7 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::close() {
-    
+
     synchronized( &mutex ) {
 
         closed = true;
@@ -62,8 +61,6 @@ void ActiveMQSessionExecutor::close() {
 
     if( thread != NULL ) {
         thread->join();
-        delete thread;
-        thread = NULL;
     }
 }
 
@@ -88,45 +85,36 @@ void ActiveMQSessionExecutor::executeFirst( DispatchData& data ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-vector<ActiveMQMessage*> ActiveMQSessionExecutor::purgeConsumerMessages( 
-    ActiveMQConsumer* consumer )
+void ActiveMQSessionExecutor::purgeConsumerMessages(
+    const decaf::lang::Pointer<commands::ConsumerId>& consumerId )
 {
-    vector<ActiveMQMessage*> retVal;
-    
-    const connector::ConsumerInfo* consumerInfo = consumer->getConsumerInfo();
-    
     synchronized( &mutex ) {
-        
+
         list<DispatchData>::iterator iter = messageQueue.begin();
         while( iter != messageQueue.end() ) {
             list<DispatchData>::iterator currentIter = iter;
             DispatchData& dispatchData = *iter++;
-            if( consumerInfo == dispatchData.getConsumer() ||
-                consumerInfo->getConsumerId() == dispatchData.getConsumer()->getConsumerId() ) 
-            {
-                retVal.push_back( dispatchData.getMessage() );
-                messageQueue.erase(currentIter);
+            if( consumerId->equals( *( dispatchData.getConsumerId() ) ) ) {
+                messageQueue.erase( currentIter );
             }
         }
     }
-    
-    return retVal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::start() {
-    
+
     synchronized( &mutex ) {
-        
-        if( closed || started ) { 
+
+        if( closed || started ) {
             return;
         }
-    
+
         started = true;
 
         // Don't create the thread unless we need to.
         if( thread == NULL ) {
-            thread = new Thread( this );
+            thread.reset( new Thread( this ) );
             thread->start();
         }
 
@@ -136,22 +124,18 @@ void ActiveMQSessionExecutor::start() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::stop() {
-    
-    synchronized( &mutex ) {
-        
+
+    // We lock here to make sure that we wait until the thread
+    // is done with an internal dispatch operation, otherwise
+    // we might return before that and cause the caller to be
+    // in an inconsistent state.
+    synchronized( &dispatchMutex ) {
+
         if( closed || !started ) {
             return;
         }
 
-        // Set the state to stopped.
-        started = false;
-        
-        // Wakeup the thread so that it can acknowledge the stop request.
-        mutex.notifyAll();
-        
-        // Wait for the thread to notify us that it has acknowledged
-        // the stop request.
-        mutex.wait();
+        synchronized( &mutex ) { started = false; }
     }
 }
 
@@ -159,12 +143,7 @@ void ActiveMQSessionExecutor::stop() {
 void ActiveMQSessionExecutor::clear() {
 
     synchronized( &mutex ) {
-
-        list<DispatchData>::iterator iter = messageQueue.begin();
-        while( iter != messageQueue.end() ) {
-            DispatchData data = *iter++;
-            delete data.getMessage();
-        }
+        this->messageQueue.clear();
     }
 }
 
@@ -173,18 +152,11 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
 
     try {
 
-        ActiveMQConsumer* consumer = NULL;
-        util::Map<long long, ActiveMQConsumer*>& consumers = session->getConsumers();
-
-        synchronized(&consumers) {
-            consumer = consumers.getValue( data.getConsumer()->getConsumerId() );
-        }
+        ActiveMQConsumer* consumer = session->getConsumer( data.getConsumerId() );
 
         // If the consumer is not available, just delete the message.
         // Otherwise, dispatch the message to the consumer.
-        if( consumer == NULL ) {
-            delete data.getMessage();
-        } else {
+        if( consumer != NULL ) {
             consumer->dispatch( data );
         }
 
@@ -211,22 +183,17 @@ void ActiveMQSessionExecutor::run() {
             dispatchAll();
 
             synchronized( &mutex ) {
-                
+
                 // If we're closing down, exit the thread.
                 if( closed ) {
                     return;
                 }
-                
-                // When told to stop, the calling thread will wait for a
-                // responding notification, indicating that we have acknowledged
-                // the stop command.
-                if( !started ) {
-                    mutex.notifyAll();
-                }
 
-                if( messageQueue.empty() || !started ) {
+                // When stopped we hit this case and wait otherwise
+                // if there are messages we
+                if( ( messageQueue.empty() || !started ) && !closed ) {
 
-                    // Wait for more data or to be woken up.
+                    // Wait for more data or to be woke up.
                     mutex.wait();
                 }
             }
@@ -246,32 +213,32 @@ void ActiveMQSessionExecutor::run() {
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::dispatchAll() {
-    
-    // Take out all of the dispatch data currently in the array.
-    list<DispatchData> dataList;
-    synchronized( &mutex ) {
-        
-        // When told to stop, the calling thread will wait for a
-        // responding notification, indicating that we have acknowledged
-        // the stop command.
-        if( !started ) {
-            mutex.notifyAll();
-        }
-                
-        if( !started || closed ) {
-            return;
+
+    // Dispatch all currently available messages.  This lock allows the
+    // main thread to wait while we finish with a dispatch cycle, the
+    // stop method for instance should try and lock this mutex so that
+    // it knows that we've had a chance to read the started flag and
+    // detect that we are stopped, otherwise stop might return while
+    // we are still dispatching messages.
+    synchronized( &dispatchMutex ) {
+
+        // Take out all of the dispatch data currently in the array.
+        list<DispatchData> dataList;
+        synchronized( &mutex ) {
+
+            // If stopped or closed we don't want to start dispatching.
+            if( !started || closed ) {
+                return;
+            }
+
+            dataList = messageQueue;
+            messageQueue.clear();
         }
 
-        dataList = messageQueue;
-        messageQueue.clear();
-    }
-    
-    // Dispatch all currently available messages.
-    list<DispatchData>::iterator iter = dataList.begin();
-    while( iter != dataList.end() ) {
-        DispatchData& data = *iter++;
-        dispatch( data );
+        list<DispatchData>::iterator iter = dataList.begin();
+        while( iter != dataList.end() ) {
+            DispatchData& data = *iter++;
+            dispatch( data );
+        }
     }
 }
-
-

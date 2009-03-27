@@ -24,13 +24,11 @@
 #include <cms/Connection.h>
 #include <cms/ExceptionListener.h>
 
-#include <activemq/core/ActiveMQMessage.h>
-#include <activemq/connector/ConsumerMessageListener.h>
-#include <activemq/connector/ConsumerInfo.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/CommandListener.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/util/Config.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/commands/Message.h>
 
 namespace activemq{
 namespace core{
@@ -38,7 +36,9 @@ namespace core{
     class ActiveMQConnectionTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( ActiveMQConnectionTest );
-        CPPUNIT_TEST( test );
+//        CPPUNIT_TEST( test1WithStomp );
+//        CPPUNIT_TEST( test2WithStomp );
+        CPPUNIT_TEST( test2WithOpenwire );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -46,10 +46,10 @@ namespace core{
         ActiveMQConnectionTest() {};
         virtual ~ActiveMQConnectionTest() {}
 
-        class MyCommandListener : public transport::CommandListener{
+        class MyCommandListener : public transport::DefaultTransportListener{
         public:
 
-            transport::Command* cmd;
+            commands::Command* cmd;
 
         public:
 
@@ -58,26 +58,8 @@ namespace core{
             }
             virtual ~MyCommandListener(){}
 
-            virtual void onCommand( transport::Command* command ){
+            virtual void onCommand( commands::Command* command ){
                 cmd = command;
-            }
-        };
-
-        class MyMessageListener :
-            public connector::ConsumerMessageListener
-        {
-        public:
-
-            std::vector<connector::ConsumerInfo*> consumers;
-
-        public:
-            virtual ~MyMessageListener(){}
-
-            virtual void onConsumerMessage(
-                connector::ConsumerInfo* consumer,
-                core::ActiveMQMessage* msg AMQCPP_UNUSED )
-            {
-                consumers.push_back( consumer );
             }
         };
 
@@ -100,7 +82,7 @@ namespace core{
         {
         public:
 
-            std::vector<ActiveMQMessage*> messages;
+            std::vector< decaf::lang::Pointer<commands::Message> > messages;
 
         public:
             virtual ~MyDispatcher(){}
@@ -112,7 +94,9 @@ namespace core{
             }
         };
 
-        void test();
+//        void test1WithStomp();
+//        void test2WithStomp();
+        void test2WithOpenwire();
 
     };
 

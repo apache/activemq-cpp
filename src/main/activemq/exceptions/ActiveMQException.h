@@ -14,10 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H
-#define ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H
+#ifndef _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
+#define _ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4250 )
+#endif
+
+#include <activemq/util/Config.h>
 #include <cms/CMSException.h>
+#include <decaf/lang/Exception.h>
 #include <activemq/exceptions/ExceptionDefines.h>
 #include <stdarg.h>
 #include <sstream>
@@ -28,20 +34,8 @@ namespace exceptions{
     /*
      * Base class for all exceptions.
      */
-    class ActiveMQException : public cms::CMSException
-    {
-    private:
-
-        /**
-         * The cause of this exception.
-         */
-        std::string message;
-
-        /**
-         * The stack trace.
-         */
-        std::vector< std::pair< std::string, int> > stackTrace;
-
+    class AMQCPP_API ActiveMQException : public cms::CMSException,
+                                         public decaf::lang::Exception {
     public:
 
         /**
@@ -53,6 +47,11 @@ namespace exceptions{
          * Copy Constructor
          */
         ActiveMQException( const ActiveMQException& ex ) throw();
+
+        /**
+         * Copy Constructor
+         */
+        ActiveMQException( const decaf::lang::Exception& ex ) throw();
 
         /**
          * Constructor - Initializes the file name and line number where
@@ -69,36 +68,6 @@ namespace exceptions{
         virtual ~ActiveMQException() throw();
 
         /**
-         * Gets the message for this exception.
-         * @return Text formatted error message
-         */
-        virtual std::string getMessage() const{
-            return message;
-        }
-
-        /**
-         * Implement method from std::exception
-         * @return the const char* of <code>getMessage()</code>.
-         */
-        virtual const char* what() const throw (){
-            return message.c_str();
-        }
-
-        /**
-         * Sets the cause for this exception.
-         * @param msg the format string for the msg.
-         * @param variable - params to format into the string
-         */
-        virtual void setMessage( const char* msg, ... );
-
-        /**
-         * Adds a file/line number to the stack trace.
-         * @param file The name of the file calling this method (use __FILE__).
-         * @param lineNumber The line number in the calling file (use __LINE__).
-         */
-        virtual void setMark( const char* file, const int lineNumber );
-
-        /**
          * Clones this exception.  This is useful for cases where you need
          * to preserve the type of the original exception as well as the message.
          * All subclasses should override.
@@ -107,43 +76,82 @@ namespace exceptions{
         virtual ActiveMQException* clone() const;
 
         /**
-         * Provides the stack trace for every point where
-         * this exception was caught, marked, and rethrown.  The first
-         * item in the returned vector is the first point where the mark
-         * was set (e.g. where the exception was created).
-         * @return the stack trace.
+         * Assignment operator.
+         * @param const reference to another ActiveMQException
          */
-        virtual std::vector< std::pair< std::string, int> > getStackTrace() const;
+        virtual ActiveMQException& operator =( const Exception& ex );
+
+        /**
+         * Gets the cause of the error.
+         *
+         * @return string errors message
+         */
+        virtual std::string getMessage() const {
+            return decaf::lang::Exception::getMessage();
+        }
+
+        /**
+         * Gets the exception that caused this one to be thrown, this allows
+         * for chaining of exceptions in the case of a method that throws only
+         * a particular exception but wishes to allow for the real causal
+         * exception to be passed only in case the caller knows about that
+         * type of exception and wishes to respond to it.
+         * @returns a const pointer reference to the causal exception, if there
+         * was no cause associated with this exception then NULL is returned.
+         */
+        virtual const std::exception* getCause() const {
+            return decaf::lang::Exception::getCause();
+        }
+
+        /**
+         * Adds a file/line number to the stack trace.
+         *
+         * @param file
+         *      The name of the file calling this method (use __FILE__).
+         * @param lineNumber
+         *      The line number in the calling file (use __LINE__).
+         */
+        virtual void setMark( const char* file, const int lineNumber ) {
+            decaf::lang::Exception::setMark( file, lineNumber );
+        }
+
+        /**
+         * Provides the stack trace for every point where
+         * this exception was caught, marked, and rethrown.
+         *
+         * @return vector containing stack trace strings
+         */
+        virtual std::vector< std::pair< std::string, int> > getStackTrace() const {
+            return decaf::lang::Exception::getStackTrace();
+        }
 
         /**
          * Prints the stack trace to std::err
          */
-        virtual void printStackTrace() const;
+        virtual void printStackTrace() const {
+            decaf::lang::Exception::printStackTrace();
+        }
 
         /**
          * Prints the stack trace to the given output stream.
+         *
          * @param stream the target output stream.
          */
-        virtual void printStackTrace( std::ostream& stream ) const;
+        virtual void printStackTrace( std::ostream& stream ) const {
+            decaf::lang::Exception::printStackTrace( stream );
+        }
 
         /**
          * Gets the stack trace as one contiguous string.
+         *
          * @return string with formatted stack trace data
          */
-        virtual std::string getStackTraceString() const;
-
-        /**
-         * Assignment operator.
-         * @param const reference to another ActiveMQException
-         */
-        virtual ActiveMQException& operator =( const ActiveMQException& ex );
-
-    protected:
-
-        virtual void buildMessage( const char* format, va_list& vargs );
+        virtual std::string getStackTraceString() const {
+            return decaf::lang::Exception::getStackTraceString();
+        }
 
    };
 
 }}
 
-#endif /*ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H*/
+#endif /*_ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTION_H_*/

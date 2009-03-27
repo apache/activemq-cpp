@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -66,10 +66,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -151,15 +151,191 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib rpcrt4.lib"
+				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ReleaseDLL|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="2"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib apr-1.lib aprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(ProjectName)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\$(ProjectName)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugDLL|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			BuildLogFile="$(IntDir)\$(ProjectName)\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
+				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\$(ProjectName)\"
+				ProgramDataBaseFileName="$(IntDir)\$(ProjectName)\vc80.pdb"
+				XMLDocumentationFileName="$(IntDir)\$(ProjectName)\"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4290;4101;4251"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="ws2_32.lib apr-1.lib aprutil-1.lib"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Decaf\vs2005-build\DebugDLL&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;"
+				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool

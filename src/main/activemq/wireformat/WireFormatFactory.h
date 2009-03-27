@@ -18,32 +18,37 @@
 #ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMATFACTORY_H_
 #define _ACTIVEMQ_WIREFORMAT_WIREFORMATFACTORY_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/wireformat/WireFormat.h>
-#include <activemq/util/Properties.h>
-#include <activemq/exceptions/IllegalStateException.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/Pointer.h>
+#include <decaf/lang/exceptions/IllegalStateException.h>
 
 namespace activemq{
 namespace wireformat{
 
+    using decaf::lang::Pointer;
+
     /**
      * The WireFormatFactory is the interface that all WireFormatFactory
-     * classes must extend.  The Factory creates a WireFormat Object based on 
-     * the properties that are set in the passed <code>Properties</code> 
-     * object.  
+     * classes must extend.  The Factory creates a WireFormat Object based on
+     * the properties that are set in the passed <code>Properties</code>
+     * object.
      */
-    class WireFormatFactory
-    {
+    class AMQCPP_API WireFormatFactory {
     public:
 
         virtual ~WireFormatFactory() {}
 
-        /**    
+        /**
          * Creates a new WireFormat Object passing it a set of
          * properties from which it can obtain any optional settings
+         *
          * @param properties - the Properties for this WireFormat
+         * @return Pointer to a new instance of a WireFormat object.
          */
-        virtual WireFormat* createWireFormat( const util::Properties& properties ) 
-            throw ( exceptions::IllegalStateException ) = 0; 
+        virtual Pointer<WireFormat> createWireFormat( const decaf::util::Properties& properties )
+            throw ( decaf::lang::exceptions::IllegalStateException ) = 0;
 
     };
 

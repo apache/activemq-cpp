@@ -15,24 +15,34 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
-#define ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
+#ifndef _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
+#define _ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_
 
+#include <activemq/util/Config.h>
 #include <activemq/transport/Transport.h>
-#include <activemq/transport/TransportExceptionListener.h>
-#include <activemq/transport/CommandListener.h>
-#include <activemq/concurrent/Runnable.h>
-#include <activemq/concurrent/Thread.h>
+#include <activemq/transport/TransportListener.h>
+#include <activemq/commands/Command.h>
+#include <activemq/commands/Response.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/transport/Command.h>
-#include <activemq/logger/LoggerDefines.h>
+#include <activemq/wireformat/WireFormat.h>
+
+#include <decaf/lang/Runnable.h>
+#include <decaf/lang/Thread.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/util/logging/LoggerDefines.h>
+#include <memory>
 
 namespace activemq{
 namespace transport{
 
+    using decaf::lang::Pointer;
+    using activemq::commands::Command;
+    using activemq::commands::Response;
+
     /**
      * Implementation of the Transport interface that performs
-     * marshalling of commands to IO streams.  This class does not
+     * marshaling of commands to IO streams.  This class does not
      * implement the request method, it only handles oneway messages.
      * A thread polls on the input stream for in-coming commands.  When
      * a command is received, the command listener is notified.  The
@@ -42,106 +52,85 @@ namespace transport{
      * destructor.  Once this object has been closed, it cannot be
      * restarted.
      */
-    class IOTransport
-    :
-        public Transport,
-        public concurrent::Runnable
-    {
+    class AMQCPP_API IOTransport : public Transport,
+                                   public decaf::lang::Runnable {
 
-        LOGCMS_DECLARE( logger )
+        LOGDECAF_DECLARE( logger )
 
     private:
 
         /**
-         * Listener to incoming commands.
+         * WireFormat instance to use to Encode / Decode.
          */
-        CommandListener* listener;
+        Pointer<wireformat::WireFormat> wireFormat;
 
         /**
-         * Reads commands from the input stream.
+         * Listener of this transport.
          */
-        CommandReader* reader;
-
-        /**
-         * Writes commands to the output stream.
-         */
-        CommandWriter* writer;
-
-        /**
-         * Listener of exceptions from this transport.
-         */
-        TransportExceptionListener* exceptionListener;
+        TransportListener* listener;
 
         /**
          * The input stream for incoming commands.
          */
-        io::InputStream* inputStream;
+        decaf::io::DataInputStream* inputStream;
 
         /**
          * The output stream for out-going commands.
          */
-        io::OutputStream* outputStream;
+        decaf::io::DataOutputStream* outputStream;
 
         /**
          * The polling thread.
          */
-        concurrent::Thread* thread;
+        Pointer<decaf::lang::Thread> thread;
 
         /**
          * Flag marking this transport as closed.
          */
-        bool closed;
+        volatile bool closed;
 
     private:
 
         /**
-         * Notify the excpetion listener
+         * Notify the exception listener
          * @param ex the exception to send
          */
-        void fire( exceptions::ActiveMQException& ex ){
-
-            if( exceptionListener != NULL ){
-
-                try{
-                    exceptionListener->onTransportException( this, ex );
-                }catch( ... ){}
-            }
-        }
+        void fire( decaf::lang::Exception& ex );
 
         /**
          * Notify the command listener.
          * @param command the command the send
          */
-        void fire( Command* command ){
-
-            try{
-                // Since the listener is responsible for freeing the memory,
-                // if there is no listener - free the command here.
-                if( listener == NULL ){
-                    delete command;
-                    return;
-                }
-
-                listener->onCommand( command );
-
-            }catch( ... ){}
-        }
+        void fire( const Pointer<Command>& command );
 
     public:
 
+        /**
+         * Default Constructor
+         */
         IOTransport();
+
+        /**
+         * Create an instance of this Transport and assign its WireFormat instance
+         * at creation time.
+         * @param wireFormat
+         *        Data encoder / decoder to use when reading and writing.
+         */
+        IOTransport( const Pointer<wireformat::WireFormat>& wireFormat );
+
         virtual ~IOTransport();
 
         /**
          * Sends a one-way command.  Does not wait for any response from the
          * broker.
          * @param command the command to be sent.
-         * @throws CommandIOException if an exception occurs during writing of
+         * @throws IOException if an exception occurs during writing of
          * the command.
          * @throws UnsupportedOperationException if this method is not implemented
          * by this transport.
          */
-        virtual void oneway( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
+        virtual void oneway( const Pointer<Command>& command )
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
          * Not supported by this class - throws an exception.
@@ -149,45 +138,40 @@ namespace transport{
          * @returns the response to the command sent.
          * @throws UnsupportedOperationException.
          */
-        virtual Response* request( Command* command ) throw( CommandIOException, exceptions::UnsupportedOperationException );
+        virtual Pointer<Response> request( const Pointer<Command>& command )
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
 
         /**
-         * Assigns the command listener for non-response commands.
-         * @param listener the listener.
+         * Not supported by this class - throws an exception.
+         * @param command the command to be sent.
+         * @param timeout the time to wait for a response.
+         * @returns the response to the command sent.
+         * @throws UnsupportedOperationException.
          */
-        virtual void setCommandListener( CommandListener* listener ){
+        virtual Pointer<Response> request( const Pointer<Command>& command, unsigned int timeout )
+            throw( decaf::io::IOException, decaf::lang::exceptions::UnsupportedOperationException );
+
+        /**
+         * Sets the WireFormat instance to use.
+         * @param WireFormat the object used to encode / decode commands.
+         */
+        virtual void setWireFormat( const Pointer<wireformat::WireFormat>& wireFormat ){
+            this->wireFormat = wireFormat;
+        }
+
+        /**
+         * Sets the observer of asynchronous events from this transport.
+         * @param listener the listener of transport events.
+         */
+        virtual void setTransportListener( TransportListener* listener ){
             this->listener = listener;
-        }
-
-        /**
-         * Sets the command reader.
-         * @param reader the object that will be used for reading command objects.
-         */
-        virtual void setCommandReader( CommandReader* reader ){
-            this->reader = reader;
-        }
-
-        /**
-         * Sets the command writer.
-         * @param writer the object that will be used for writing command objects.
-         */
-        virtual void setCommandWriter( CommandWriter* writer ){
-            this->writer = writer;
-        }
-
-        /**
-         * Sets the observer of asynchronous exceptions from this transport.
-         * @param listener the listener of transport exceptions.
-         */
-        virtual void setTransportExceptionListener( TransportExceptionListener* listener ){
-            this->exceptionListener = listener;
         }
 
         /**
          * Sets the input stream for in-coming commands.
          * @param is The input stream.
          */
-        virtual void setInputStream( io::InputStream* is ){
+        virtual void setInputStream( decaf::io::DataInputStream* is ){
             this->inputStream = is;
         }
 
@@ -195,7 +179,7 @@ namespace transport{
          * Sets the output stream for out-going commands.
          * @param os The output stream.
          */
-        virtual void setOutputStream( io::OutputStream* os ){
+        virtual void setOutputStream( decaf::io::DataOutputStream* os ){
             this->outputStream = os;
         }
 
@@ -223,8 +207,68 @@ namespace transport{
          */
         virtual void run();
 
+        /**
+         * Narrows down a Chain of Transports to a specific Transport to allow a
+         * higher level transport to skip intermediate Transports in certain
+         * circumstances.
+         *
+         * @param typeId - The type_info of the Object we are searching for.
+         *
+         * @return the requested Object. or NULL if its not in this chain.
+         */
+        virtual Transport* narrow( const std::type_info& typeId ) {
+            if( typeid( *this ) == typeId ) {
+                return this;
+            }
+
+            return NULL;
+        }
+
+        /**
+         * Is this Transport fault tolerant, meaning that it will reconnect to
+         * a broker on disconnect.
+         *
+         * @returns true if the Transport is fault tolerant.
+         */
+        virtual bool isFaultTolerant() const {
+            return false;
+        }
+
+        /**
+         * Is the Transport Connected to its Broker.
+         *
+         * @returns true if a connection has been made.
+         */
+        virtual bool isConnected() const {
+            return !this->closed;
+        }
+
+        /**
+         * Has the Transport been shutdown and no longer usable.
+         *
+         * @returns true if the Transport
+         */
+        virtual bool isClosed() const {
+            return this->closed;
+        }
+
+        /**
+         * @return the remote address for this connection
+         */
+        virtual std::string getRemoteAddress() const {
+            return "";
+        }
+
+        /**
+         * reconnect to another location
+         * @param uri
+         * @throws IOException on failure of if not supported
+         */
+        virtual void reconnect( const decaf::net::URI& uri AMQCPP_UNUSED )
+            throw( decaf::io::IOException ) {}
+
     };
 
 }}
 
-#endif /*ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_*/
+#endif /*_ACTIVEMQ_TRANSPORT_IOTRANSPORT_H_*/

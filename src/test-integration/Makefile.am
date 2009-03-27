@@ -16,33 +16,48 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-  integration/IntegrationCommon.cpp \
-  integration/TestSupport.cpp \
-  integration/TestRegistry.cpp \
-  integration/connector/openwire/OpenwireAsyncSenderTest.cpp \
-  integration/connector/openwire/OpenwireDurableTest.cpp \
-  integration/connector/openwire/OpenwireExpirationTest.cpp \
-  integration/connector/openwire/OpenwireSimpleRollbackTest.cpp \
-  integration/connector/openwire/OpenwireSimpleTest.cpp \
-  integration/connector/openwire/OpenwireSlowListenerTest.cpp \
-  integration/connector/openwire/OpenwireTransactionTest.cpp \
-  integration/connector/openwire/OpenwireTempDestinationTest.cpp \
-  integration/connector/stomp/AsyncSenderTest.cpp \
-  integration/connector/stomp/DurableTest.cpp \
-  integration/connector/stomp/ExpirationTest.cpp \
-  integration/connector/stomp/SimpleRollbackTest.cpp \
-  integration/connector/stomp/SimpleTest.cpp \
-  integration/connector/stomp/TransactionTest.cpp \
+  activemq/util/CMSListener.cpp \
+  activemq/util/CMSProvider.cpp \
+  activemq/util/IntegrationCommon.cpp \
+  activemq/test/AsyncSenderTest.cpp \
+  activemq/test/CmsTemplateTest.cpp \
+  activemq/test/DurableTest.cpp \
+  activemq/test/ExpirationTest.cpp \
+  activemq/test/SimpleRollbackTest.cpp \
+  activemq/test/SimpleTest.cpp \
+  activemq/test/TransactionTest.cpp \
+  activemq/test/SlowListenerTest.cpp \
+  activemq/test/JmsMessageGroupsTest.cpp \
+  activemq/test/openwire/OpenwireAsyncSenderTest.cpp \
+  activemq/test/openwire/OpenwireCmsTemplateTest.cpp \
+  activemq/test/openwire/OpenwireDurableTest.cpp \
+  activemq/test/openwire/OpenwireExpirationTest.cpp \
+  activemq/test/openwire/OpenwireSimpleRollbackTest.cpp \
+  activemq/test/openwire/OpenwireSimpleTest.cpp \
+  activemq/test/openwire/OpenwireTransactionTest.cpp \
+  activemq/test/openwire/OpenwireTempDestinationTest.cpp \
+  activemq/test/openwire/OpenwireSlowListenerTest.cpp \
+  activemq/test/openwire/OpenwireJmsMessageGroupsTest.cpp \
+  TestRegistry.cpp \
   main.cpp
 
+#  activemq/test/stomp/StompAsyncSenderTest.cpp \
+  activemq/test/stomp/StompCmsTemplateTest.cpp \
+  activemq/test/stomp/StompDurableTest.cpp \
+  activemq/test/stomp/StompExpirationTest.cpp \
+  activemq/test/stomp/StompSimpleRollbackTest.cpp \
+  activemq/test/stomp/StompSimpleTest.cpp \
+  activemq/test/stomp/StompTransactionTest.cpp \
+  activemq/test/stomp/StompSlowListenerTest.cpp \
+  activemq/test/stomp/StompJmsMessageGroupsTest.cpp
+  
 ## Compile this as part of make check
 check_PROGRAMS = activemq-test-integration
 
 ## 
 ## Compiler/Linker Options
 ##
-CXXFLAGS = @CXXFLAGS@ -Wno-non-virtual-dtor -Wno-unused-parameter -Wno-uninitialized
 activemq_test_integration_SOURCES = $(cc_sources)
-activemq_test_integration_CXXFLAGS = -I$(srcdir)/../main @CPPUNIT_CFLAGS@
-activemq_test_integration_LDADD= ../main/libactivemq-cpp.a @CPPUNIT_LIBS@
+activemq_test_integration_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main @CPPUNIT_CFLAGS@
+activemq_test_integration_LDADD= $(AMQ_TEST_LIBS) @CPPUNIT_LIBS@
 

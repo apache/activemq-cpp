@@ -20,18 +20,40 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
+#include <activemq/library/ActiveMQCPP.h>
+#include <decaf/lang/Runtime.h>
+#include <decaf/lang/Integer.h>
+#include <iostream>
 
-int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
-{
-    CppUnit::TextUi::TestRunner runner;
-    CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
-    runner.addTest( registry.makeTest() );
+int main( int argc, char **argv ) {
 
-    // Shows a message as each test starts
-    CppUnit::BriefTestProgressListener listener;
-    runner.eventManager().addListener( &listener );
-    
-    bool wasSuccessful = runner.run( "", false );
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
+    bool wasSuccessful = false;
+    int iterations = 1;
+
+    if( argc > 1 ) {
+        try {
+            iterations = decaf::lang::Integer::parseInt( argv[1] );
+        } catch( decaf::lang::exceptions::NumberFormatException& ex ) {
+            iterations = 1;
+        }
+    }
+
+    for( int i = 0; i < iterations; ++i ) {
+        CppUnit::TextUi::TestRunner runner;
+        CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+        runner.addTest( registry.makeTest() );
+
+        // Shows a message as each test starts
+        CppUnit::BriefTestProgressListener listener;
+        runner.eventManager().addListener( &listener );
+
+        wasSuccessful = runner.run( "", false );
+    }
+
+    activemq::library::ActiveMQCPP::shutdownLibrary();
+
     return !wasSuccessful;
 }
 

@@ -17,6 +17,7 @@
 #ifndef _CMS_SESSION_H_
 #define _CMS_SESSION_H_
 
+#include <cms/Config.h>
 #include <cms/Closeable.h>
 #include <cms/Message.h>
 #include <cms/TextMessage.h>
@@ -33,8 +34,38 @@
 namespace cms
 {
 
-    class Session : public Closeable
-    {
+    /**
+     * A Session object is a single-threaded context for producing and consuming
+     * messages.
+     *
+     * A session serves several purposes:
+     *
+     *  - It is a factory for its message producers and consumers.
+     *  - It supplies provider-optimized message factories.
+     *  - It is a factory for TemporaryTopics and TemporaryQueues.
+     *  - It provides a way to create Queue or Topic objects for those clients
+     *    that need to dynamically manipulate provider-specific destination
+     *    names.
+     *  - It supports a single series of transactions that combine work spanning
+     *    its producers and consumers into atomic units.
+     *  - It defines a serial order for the messages it consumes and the messages
+     *    it produces.
+     *  - It retains messages it consumes until they have been acknowledged.
+     *  - It serializes execution of message listeners registered with its message
+     *    consumers.
+     *
+     * A session can create and service multiple message producers and consumers.
+     *
+     * One typical use is to have a thread block on a synchronous MessageConsumer until
+     * a message arrives. The thread may then use one or more of the Session's
+     * MessageProducers.
+     *
+     * If a client desires to have one thread produce messages while others consume
+     * them, the client should use a separate session for its producing thread.
+     *
+     * @since 1.0
+     */
+    class CMS_API Session : public Closeable {
     public:
 
         enum AcknowledgeMode
@@ -53,7 +84,7 @@ namespace cms
              * acknowledges a client's receipt of a message either when
              * the session has successfully returned from a call to receive
              * or when the message listener the session has called to
-             * process the message successfully returns.  Acknowlegements
+             * process the message successfully returns.  Acknowledgments
              * may be delayed in this mode to increase performance at
              * the cost of the message being redelivered this client fails.
              */
@@ -69,7 +100,7 @@ namespace cms
              * Messages will be consumed when the transaction commits.
              */
             SESSION_TRANSACTED
-                     
+
         };
 
     public:
@@ -79,28 +110,33 @@ namespace cms
         /**
          * Closes this session as well as any active child consumers or
          * producers.
+         *
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;
-        
+
         /**
-         * Commits all messages done in this transaction and releases any 
+         * Commits all messages done in this transaction and releases any
          * locks currently held.
+         *
          * @throws CMSException
          */
         virtual void commit() throw ( CMSException ) = 0;
 
         /**
-         * Rollsback all messages done in this transaction and releases any 
+         * Rolls back all messages done in this transaction and releases any
          * locks currently held.
+         *
          * @throws CMSException
          */
         virtual void rollback() throw ( CMSException ) = 0;
 
         /**
          * Creates a MessageConsumer for the specified destination.
-         * @param the Destination that this consumer receiving messages for.
-         * @return pointer to a new MessageConsumer that is owned by the 
+         *
+         * @param destination
+         *      the Destination that this consumer receiving messages for.
+         * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
          * @throws CMSException
          */
@@ -109,44 +145,59 @@ namespace cms
                 throw ( CMSException ) = 0;
 
         /**
-         * Creates a MessageConsumer for the specified destination, using a 
+         * Creates a MessageConsumer for the specified destination, using a
          * message selector.
-         * @param the Destination that this consumer receiving messages for.
-         * @param the Message Selector to use
-         * @return pointer to a new MessageConsumer that is owned by the 
+         *
+         * @param destination
+         *      the Destination that this consumer receiving messages for.
+         * @param selector
+         *      the Message Selector to use
+         * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
          * @throws CMSException
          */
-        virtual MessageConsumer* createConsumer( 
+        virtual MessageConsumer* createConsumer(
             const Destination* destination,
             const std::string& selector )
                 throw ( CMSException ) = 0;
 
         /**
-         * Creates a MessageConsumer for the specified destination, using a 
+         * Creates a MessageConsumer for the specified destination, using a
          * message selector.
-         * @param the Destination that this consumer receiving messages for.
-         * @param the Message Selector to use
-         * @param if true, and the destination is a topic, inhibits the 
-         * delivery of messages published by its own connection. The behavior 
-         * for NoLocal is not specified if the destination is a queue. 
-         * @return pointer to a new MessageConsumer that is owned by the 
+         *
+         * @param destination
+         *      the Destination that this consumer receiving messages for.
+         * @param selector
+         *      the Message Selector to use
+         * @param noLocal
+         *      if true, and the destination is a topic, inhibits the
+         *      delivery of messages published by its own connection. The behavior
+         *      for NoLocal is not specified if the destination is a queue.
+         * @return pointer to a new MessageConsumer that is owned by the
          *         caller ( caller deletes )
          * @throws CMSException
          */
-        virtual MessageConsumer* createConsumer( 
+        virtual MessageConsumer* createConsumer(
             const Destination* destination,
             const std::string& selector,
             bool noLocal )
                 throw ( CMSException ) = 0;
 
         /**
-         * Creates a durable subscriber to the specified topic, using a 
+         * Creates a durable subscriber to the specified topic, using a
          * message selector
-         * @param the topic to subscribe to
-         * @param name used to identify the subscription
-         * @param only messages matching the selector are received
-         * @return pointer to a new durable MessageConsumer that is owned by 
+         *
+         * @param destination
+         *      the topic to subscribe to
+         * @param name
+         *      The name used to identify the subscription
+         * @param selector
+         *      the Message Selector to use
+         * @param noLocal
+         *      if true, and the destination is a topic, inhibits the
+         *      delivery of messages published by its own connection. The behavior
+         *      for NoLocal is not specified if the destination is a queue.
+         * @return pointer to a new durable MessageConsumer that is owned by
          *         the caller ( caller deletes )
          * @throws CMSException
          */
@@ -158,9 +209,11 @@ namespace cms
                 throw ( CMSException ) = 0;
 
         /**
-         * Creates a MessageProducer to send messages to the specified 
+         * Creates a MessageProducer to send messages to the specified
          * destination.
-         * @param the Destination to publish on
+         *
+         * @param destination
+         *      the Destination to send on
          * @return New MessageProducer that is owned by the caller.
          * @throws CMSException
          */
@@ -169,7 +222,9 @@ namespace cms
 
         /**
          * Creates a queue identity given a Queue name.
-         * @param the name of the new Queue
+         *
+         * @param queueName
+         *      the name of the new Queue
          * @return new Queue pointer that is owned by the caller.
          * @throws CMSException
          */
@@ -178,7 +233,9 @@ namespace cms
 
         /**
          * Creates a topic identity given a Queue name.
-         * @param the name of the new Topic
+         *
+         * @param topicName
+         *      the name of the new Topic
          * @return new Topic pointer that is owned by the caller.
          * @throws CMSException
          */
@@ -187,6 +244,7 @@ namespace cms
 
         /**
          * Creates a TemporaryQueue object.
+         *
          * @return new TemporaryQueue pointer that is owned by the caller.
          * @throws CMSException
          */
@@ -195,6 +253,7 @@ namespace cms
 
         /**
          * Creates a TemporaryTopic object.
+         *
          * @throws CMSException
          */
         virtual TemporaryTopic* createTemporaryTopic()
@@ -202,77 +261,90 @@ namespace cms
 
         /**
          * Creates a new Message
+         *
          * @throws CMSException
          */
-        virtual Message* createMessage() 
+        virtual Message* createMessage()
             throw ( CMSException ) = 0;
 
         /**
          * Creates a BytesMessage
+         *
          * @throws CMSException
          */
-        virtual BytesMessage* createBytesMessage() 
+        virtual BytesMessage* createBytesMessage()
             throw ( CMSException) = 0;
 
         /**
-         * Creates a BytesMessage and sets the paylod to the passed value
-         * @param an array of bytes to set in the message
-         * @param the size of the bytes array, or number of bytes to use
+         * Creates a BytesMessage and sets the payload to the passed value
+         *
+         * @param bytes
+         *      an array of bytes to set in the message
+         * @param bytesSize
+         *      the size of the bytes array, or number of bytes to use
          * @throws CMSException
          */
         virtual BytesMessage* createBytesMessage(
             const unsigned char* bytes,
-            std::size_t bytesSize ) 
+            std::size_t bytesSize )
                 throw ( CMSException) = 0;
 
         /**
          * Creates a new TextMessage
+         *
          * @throws CMSException
          */
-        virtual TextMessage* createTextMessage() 
+        virtual TextMessage* createTextMessage()
             throw ( CMSException ) = 0;
 
         /**
          * Creates a new TextMessage and set the text to the value given
-         * @param the initial text for the message
+         *
+         * @param text
+         *      the initial text for the message
          * @throws CMSException
          */
-        virtual TextMessage* createTextMessage( const std::string& text ) 
+        virtual TextMessage* createTextMessage( const std::string& text )
             throw ( CMSException ) = 0;
 
         /**
          * Creates a new MapMessage
+         *
          * @throws CMSException
          */
-        virtual MapMessage* createMapMessage() 
+        virtual MapMessage* createMapMessage()
             throw ( CMSException ) = 0;
 
         /**
-         * Returns the acknowledgement mode of the session.
+         * Returns the acknowledgment mode of the session.
+         *
          * @return the Sessions Acknowledge Mode
          */
         virtual AcknowledgeMode getAcknowledgeMode() const = 0;
 
         /**
          * Gets if the Sessions is a Transacted Session
+         *
          * @return transacted true - false.
          */
         virtual bool isTransacted() const = 0;
-        
+
         /**
-         * Unsubscribes a durable subscription that has been created by a 
+         * Unsubscribes a durable subscription that has been created by a
          * client.
-         * 
-         * This method deletes the state being maintained on behalf of the 
-         * subscriber by its provider.  It is erroneous for a client to delete a 
-         * durable subscription while there is an active MessageConsumer or 
-         * Subscriber for the subscription, or while a consumed message is 
-         * part of a pending transaction or has not been acknowledged in the 
+         *
+         * This method deletes the state being maintained on behalf of the
+         * subscriber by its provider.  It is erroneous for a client to delete a
+         * durable subscription while there is an active MessageConsumer or
+         * Subscriber for the subscription, or while a consumed message is
+         * part of a pending transaction or has not been acknowledged in the
          * session.
-         * @param name the name used to identify this subscription
+         *
+         * @param name
+         *      The name used to identify this subscription
          * @throws CMSException
          */
-        virtual void unsubscribe( const std::string& name ) 
+        virtual void unsubscribe( const std::string& name )
             throw ( CMSException ) = 0;
 
     };

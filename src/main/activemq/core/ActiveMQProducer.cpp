@@ -17,25 +17,27 @@
 #include "ActiveMQProducer.h"
 
 #include <activemq/core/ActiveMQSession.h>
-#include <activemq/exceptions/NullPointerException.h>
-#include <activemq/exceptions/InvalidStateException.h>
-#include <activemq/exceptions/IllegalArgumentException.h>
-#include <activemq/util/Date.h>
+#include <activemq/core/ActiveMQConnection.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <decaf/lang/exceptions/InvalidStateException.h>
+#include <decaf/lang/exceptions/IllegalArgumentException.h>
+#include <decaf/util/Date.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::connector;
 using namespace activemq::exceptions;
-using namespace activemq::util;
+using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
-                                    ActiveMQSession* session )
-{
-    if( session == NULL || producerInfo == NULL )
-    {
-        throw NullPointerException(
+ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
+                                    const cms::Destination* destination,
+                                    ActiveMQSession* session ) {
+
+    if( session == NULL || producerInfo == NULL ) {
+        throw ActiveMQException(
             __FILE__, __LINE__,
             "ActiveMQProducer::ActiveMQProducer - Init with NULL Session" );
     }
@@ -43,110 +45,102 @@ ActiveMQProducer::ActiveMQProducer( connector::ProducerInfo* producerInfo,
     // Init Producer Data
     this->session = session;
     this->producerInfo = producerInfo;
+    this->destination.reset( destination != NULL ? destination->clone() : NULL );
     this->closed = false;
 
     // Default the Delivery options
     this->defaultDeliveryMode = cms::DeliveryMode::PERSISTENT;
     this->disableTimestamps = false;
+    this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
 
-    // Listen for our resource to close
-    this->producerInfo->addListener( this );
+    this->session->syncRequest( this->producerInfo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQProducer::~ActiveMQProducer(void)
-{
-    try
-    {
+ActiveMQProducer::~ActiveMQProducer() {
+    try {
         close();
-
-        delete producerInfo;
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::close()
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( !closed ) {
+void ActiveMQProducer::close() throw ( cms::CMSException ) {
 
-            // Close the ProducerInfo
-            if( !producerInfo->isClosed() ) {
-                // We don't want a callback now
-                this->producerInfo->removeListener( this );
-                this->producerInfo->close();
-            }
+    try{
 
-            closed = true;
+        if( !this->isClosed() ) {
+
+            this->session->disposeOf( this->producerInfo->getProducerId() );
+            this->closed = true;
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( cms::Message* message )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+    throw ( cms::CMSException ) {
+
+    try {
+
+        this->checkClosed();
+
+        if( this->destination.get() == NULL ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
+                "ActiveMQProducer::send - "
+                "Producer has no Destination, must call send( dest, msg )" );
         }
 
-        send( producerInfo->getDestination(), message );
+        this->send( this->destination.get(), message );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( cms::Message* message, int deliveryMode,
                              int priority, long long timeToLive )
-                                throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
+                                throw ( cms::CMSException ) {
+    try {
+
+        this->checkClosed();
+
+        if( this->destination.get() == NULL ) {
+            throw ActiveMQException(
                 __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
+                "ActiveMQProducer::send - "
+                "Producer has no Destination, must call send( dest, msg )" );
         }
 
-        send( producerInfo->getDestination(), message, deliveryMode,
-              priority, timeToLive );
+        this->send( this->destination.get(), message, deliveryMode,
+                    priority, timeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQProducer::send( const cms::Destination* destination,
-                             cms::Message* message ) throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
-        }
+                             cms::Message* message ) throw ( cms::CMSException ) {
 
-        send( destination, message, defaultDeliveryMode,
-              defaultPriority, defaultTimeToLive );
+    try {
+
+        this->checkClosed();
+
+        this->send( destination, message, defaultDeliveryMode,
+                    defaultPriority, defaultTimeToLive );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
@@ -154,20 +148,15 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 void ActiveMQProducer::send( const cms::Destination* destination,
                              cms::Message* message, int deliveryMode,
                              int priority, long long timeToLive )
-    throw ( cms::CMSException )
-{
-    try
-    {
-        if( closed )
-        {
-            throw InvalidStateException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::send - This Producer is closed" );
-        }
+    throw ( cms::CMSException ) {
+
+    try {
+
+        this->checkClosed();
 
         if( destination == NULL ) {
 
-            throw InvalidStateException(
+            throw ActiveMQException(
                 __FILE__, __LINE__,
                 "ActiveMQProducer::send - Attempting to send on NULL destination");
         }
@@ -189,36 +178,34 @@ void ActiveMQProducer::send( const cms::Destination* destination,
 
         message->setCMSExpiration( expiration );
 
-        session->send( message, this );
+        // Delegate send to the session so that it can choose how to
+        // send the message.
+        this->session->send( message, this, this->memoryUsage.get() );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQProducer::onConnectorResourceClosed(
-    const ConnectorResource* resource ) throw ( cms::CMSException ) {
+void ActiveMQProducer::onProducerAck( const commands::ProducerAck& ack ) {
 
     try{
 
-        if( closed )
-        {
-            throw InvalidStateException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::onConnectorResourceClosed - "
-                "Producer Already Closed");
+        if( this->memoryUsage.get() != NULL ) {
+            this->memoryUsage->decreaseUsage( ack.getSize() );
         }
-
-        if( resource != producerInfo ) {
-            throw IllegalArgumentException(
-                __FILE__, __LINE__,
-                "ActiveMQProducer::onConnectorResourceClosed - "
-                "Unknown object passed to this callback");
-        }
-
-        // If our producer isn't closed already, then lets close
-        this->close();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQProducer::checkClosed() const throw( activemq::exceptions::ActiveMQException ) {
+    if( closed ) {
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "ActiveMQProducer - Producer Already Closed" );
+    }
 }

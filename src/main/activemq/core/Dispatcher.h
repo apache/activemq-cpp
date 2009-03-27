@@ -19,6 +19,7 @@
 #define ACTIVEMQ_CORE_DISPATCHER_H_
 
 #include <activemq/core/DispatchData.h>
+#include <activemq/util/Config.h>
 
 namespace activemq{
 namespace core{
@@ -27,7 +28,7 @@ namespace core{
      * Interface for an object responsible for dispatching messages to 
      * consumers.
      */
-    class Dispatcher {
+    class AMQCPP_API Dispatcher {
     public:
     
         virtual ~Dispatcher(){}

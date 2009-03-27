@@ -18,14 +18,23 @@
 #ifndef _ACTIVEMQ_WIREFORMAT_WIREFORMAT_H_
 #define _ACTIVEMQ_WIREFORMAT_WIREFORMAT_H_
 
-#include <activemq/io/DataInputStream.h>
-#include <activemq/io/DataOutputStream.h>
-#include <activemq/io/IOException.h>
+#include <activemq/wireformat/WireFormatNegotiator.h>
 
-#include <activemq/transport/Command.h>
+#include <decaf/io/DataInputStream.h>
+#include <decaf/io/DataOutputStream.h>
+#include <decaf/io/IOException.h>
+#include <decaf/lang/Pointer.h>
+
+#include <activemq/util/Config.h>
+#include <activemq/commands/Command.h>
+#include <activemq/transport/Transport.h>
+
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
 namespace activemq{
 namespace wireformat{
+
+    using decaf::lang::Pointer;
 
     /**
      * Provides a mechanism to marshal commands into and out of packets
@@ -33,41 +42,59 @@ namespace wireformat{
      *
      * @version $Revision: 1.1 $
      */
-    class WireFormat
-    {
+    class AMQCPP_API WireFormat {
     public:
 
         virtual ~WireFormat() {}
-    
+
         /**
          * Stream based marshaling
          * @param command - The Command to Marshal
          * @param out - the output stream to write the command to.
-         * @throws IOException 
+         * @throws IOException
          */
-        virtual void marshal( transport::Command* command, io::DataOutputStream* out ) 
-            throw ( io::IOException ) = 0;
+        virtual void marshal( const Pointer<commands::Command>& command,
+                              decaf::io::DataOutputStream* out )
+            throw ( decaf::io::IOException ) = 0;
 
         /**
-         * Packet based un-marshaling 
+         * Packet based un-marshaling
          * @param in - the input stream to read the command from.
          * @returns the newly marshaled Command, caller owns the pointer
-         * @throws IOException 
+         * @throws IOException
          */
-        virtual transport::Command* unmarshal( io::DataInputStream* in ) throw ( io::IOException ) = 0;
-        
+        virtual Pointer<commands::Command> unmarshal( decaf::io::DataInputStream* in )
+            throw ( decaf::io::IOException ) = 0;
+
         /**
          * Set the Version
          * @param the version of the wire format
          */
         virtual void setVersion( int version ) = 0;
-        
+
         /**
          * Get the Version
          * @return the version of the wire format
          */
         virtual int getVersion() const = 0;
-    
+
+        /**
+         * Returns true if this WireFormat has a Negotiator that needs to wrap the
+         * Transport that uses it.
+         * @returns true if the WireFormat provides a Negotiator.
+         */
+        virtual bool hasNegotiator() const = 0;
+
+        /**
+         * If the Transport Provides a Negotiator this method will create and return
+         * a news instance of the Negotiator.
+         * @returns new instance of a WireFormatNegotiator as a Pointer<Transport>.
+         * @throws UnsupportedOperationException if the WireFormat doesn't have a Negotiator.
+         */
+        virtual Pointer<transport::Transport> createNegotiator(
+            const Pointer<transport::Transport>& transport )
+                throw( decaf::lang::exceptions::UnsupportedOperationException ) = 0;
+
     };
 
 }}

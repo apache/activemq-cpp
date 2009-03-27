@@ -15,61 +15,50 @@
  * limitations under the License.
  */
 
-#ifndef ACTIVEMQ_CORE_DISPATCHDATA_H_
-#define ACTIVEMQ_CORE_DISPATCHDATA_H_
+#ifndef _ACTIVEMQ_CORE_DISPATCHDATA_H_
+#define _ACTIVEMQ_CORE_DISPATCHDATA_H_
 
 #include <stdlib.h>
+#include <memory>
+#include <activemq/util/Config.h>
+#include <activemq/commands/ConsumerId.h>
+#include <activemq/commands/Message.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq {
-    
-    namespace connector {
-        class ConsumerInfo;
-    }
-    
 namespace core {
 
     class ActiveMQMessage;
-    
+
     /**
-     * Contains information about dispatching to a particular consumer.
+     * Simple POCO that contains the information necessary to route a message
+     * to a specified consumer.
      */
-    class DispatchData {
+    class AMQCPP_API DispatchData {
     private:
-    
-        connector::ConsumerInfo* consumer;
-        ActiveMQMessage* message;
-        
+
+        decaf::lang::Pointer<commands::ConsumerId> consumerId;
+        decaf::lang::Pointer<commands::Message> message;
+
     public:
-    
-        DispatchData(){
-            consumer = NULL;
-            message = NULL;
-        }
-        
-        DispatchData( connector::ConsumerInfo* consumer, ActiveMQMessage* message ) {
-            this->consumer = consumer;
+
+        DispatchData() {}
+
+        DispatchData( const decaf::lang::Pointer<commands::ConsumerId>& consumer,
+                      const decaf::lang::Pointer<commands::Message>& message ) {
+            this->consumerId = consumer;
             this->message = message;
         }
-        
-        DispatchData( const DispatchData& d ) {
-            (*this) = d;
+
+        const decaf::lang::Pointer<commands::ConsumerId>& getConsumerId() {
+            return consumerId;
         }
-        
-        DispatchData& operator =( const DispatchData& d ) {
-            this->consumer = d.consumer;
-            this->message = d.message;
-            return *this;
-        }
-        
-        connector::ConsumerInfo* getConsumer() {
-            return consumer;
-        }
-        
-        ActiveMQMessage* getMessage() {
+
+        const decaf::lang::Pointer<commands::Message>& getMessage() {
             return message;
         }
-          
-    };    
+
+    };
 }}
 
-#endif /*ACTIVEMQ_CORE_DISPATCHDATA_H_*/
+#endif /*_ACTIVEMQ_CORE_DISPATCHDATA_H_*/

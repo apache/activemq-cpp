@@ -26,33 +26,28 @@
 
 namespace activemq{
 namespace exceptions{
-	
-	class ActiveMQExceptionTest : public CppUnit::TestFixture {
-		
-	  CPPUNIT_TEST_SUITE( ActiveMQExceptionTest );
-	  CPPUNIT_TEST( testMessage0 );
-	  CPPUNIT_TEST( testMessage3 );
-	  CPPUNIT_TEST_SUITE_END();
-	  
-	public:
-	
+
+    class ActiveMQExceptionTest : public CppUnit::TestFixture {
+
+      CPPUNIT_TEST_SUITE( ActiveMQExceptionTest );
+      CPPUNIT_TEST( testMessage0 );
+      CPPUNIT_TEST( testMessage3 );
+      CPPUNIT_TEST( testMacros );
+      CPPUNIT_TEST_SUITE_END();
+
+    public:
+
         virtual ~ActiveMQExceptionTest(){}
-        
-		virtual void setUp(){};	
-	 	virtual void tearDown(){};
-		void testMessage0(){
-		  	char* text = "This is a test";
-		  	ActiveMQException ex( __FILE__, __LINE__, text );
-		  	CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
-		}
-	  
-	  	void testMessage3(){
-	  		ActiveMQException ex( __FILE__, __LINE__, 
-                "This is a test %d %d %d", 1, 100, 1000 );
-	  		CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), "This is a test 1 100 1000" ) == 0 );
-	  	}
-	};
-	
+
+        virtual void setUp(){}
+        virtual void tearDown(){}
+
+        void testMacros();
+        void testMessage0();
+        void testMessage3();
+
+    };
+
 }}
 
 #endif /*ACTIVEMQ_EXCEPTIONS_ACTIVEMQEXCEPTIONTEST_H_*/

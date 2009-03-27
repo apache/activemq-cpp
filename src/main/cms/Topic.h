@@ -17,7 +17,8 @@
 
 #ifndef _CMS_TOPIC_
 #define _CMS_TOPIC_
- 
+
+#include <cms/Config.h>
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
@@ -26,7 +27,7 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific topic name.
      */
-    class Topic : public Destination{
+    class CMS_API Topic : public Destination{
         
     public:
     
@@ -34,6 +35,7 @@ namespace cms{
         
         /**
          * Gets the name of this topic.
+         * 
          * @return The topic name.
          */
         virtual std::string getTopicName() 

@@ -16,28 +16,40 @@
 */
 #include "ActiveMQConnectionFactory.h"
 
-#include <activemq/util/Guid.h>
-#include <activemq/util/SimpleProperties.h>
-#include <activemq/connector/ConnectorFactoryMap.h>
-#include <activemq/transport/TransportBuilder.h>
-#include <activemq/exceptions/NullPointerException.h>
+#include <decaf/net/URI.h>
+#include <decaf/util/UUID.h>
+#include <decaf/util/Properties.h>
+#include <decaf/lang/Pointer.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
+#include <activemq/exceptions/ExceptionDefines.h>
+#include <activemq/transport/TransportRegistry.h>
 #include <activemq/core/ActiveMQConnection.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/support/LibraryInit.h>
+#include <activemq/util/URISupport.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::connector;
 using namespace activemq::exceptions;
 using namespace activemq::transport;
+using namespace decaf;
+using namespace decaf::net;
+using namespace decaf::util;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConnectionFactory::ActiveMQConnectionFactory()
-{
-    brokerURL = "tcp://localhost:61616";
+cms::ConnectionFactory* cms::ConnectionFactory::createCMSConnectionFactory( const std::string& brokerURI )
+    throw ( cms::CMSException ) {
 
+    return new ActiveMQConnectionFactory( brokerURI );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ActiveMQConnectionFactory::ActiveMQConnectionFactory() {
+
+    brokerURL = "tcp://localhost:61616";
     this->username = "";
     this->password = "";
 }
@@ -46,28 +58,27 @@ ActiveMQConnectionFactory::ActiveMQConnectionFactory()
 ActiveMQConnectionFactory::ActiveMQConnectionFactory(
     const std::string& url,
     const std::string& username,
-    const std::string& password )
-{
-    brokerURL = url;
+    const std::string& password ) {
 
+    brokerURL = url;
     this->username = username;
     this->password = password;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection()
-    throw ( cms::CMSException )
-{
-    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
+    throw ( cms::CMSException ) {
+
+    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password )
-        throw ( cms::CMSException )
-{
-    return createConnection( brokerURL, username, password, Guid::createGUIDString() );
+        throw ( cms::CMSException ) {
+
+    return createConnection( brokerURL, username, password, UUID::randomUUID().toString() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,8 +86,8 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password,
     const std::string& clientId )
-        throw ( cms::CMSException )
-{
+        throw ( cms::CMSException ) {
+
     return createConnection( brokerURL, username, password, clientId );
 }
 
@@ -86,26 +97,22 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
     const std::string& username,
     const std::string& password,
     const std::string& clientId )
-       throw ( cms::CMSException )
-{
-    // Declared here so that they can be deleted in the catch block
-    SimpleProperties* properties = NULL;
-    Transport* transport = NULL;
-    Connector* connector = NULL;
-    ActiveMQConnectionData* connectionData = NULL;
-    ActiveMQConnection* connection = NULL;
-    std::string clientIdLocal = clientId;
-    TransportBuilder transportBuilder;
+       throw ( cms::CMSException ) {
 
-    try
-    {
-        properties = new SimpleProperties;
+    Pointer<Transport> transport;
+    Pointer<Properties> properties( new Properties() );
+    auto_ptr<ActiveMQConnection> connection;
+    std::string clientIdLocal = clientId;
+
+    try{
 
         // if no Client Id specified, create one
-        if( clientIdLocal == "" )
-        {
-            clientIdLocal = Guid::createGUIDString();
+        if( clientIdLocal == "" ) {
+            clientIdLocal = UUID::randomUUID().toString();
         }
+
+        // Try to convert the String URL into a valid URI
+        URI uri( url );
 
         // Store login data in the properties
         properties->setProperty(
@@ -118,8 +125,12 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
             ActiveMQConstants::toString(
                 ActiveMQConstants::PARAM_CLIENTID ), clientIdLocal );
 
+        // Parse out properties so they can be passed to the Connectors.
+        activemq::util::URISupport::parseQuery( uri.getQuery(), properties.get() );
+
         // Use the TransportBuilder to get our Transport
-        transport = transportBuilder.buildTransport( url, *properties );
+        transport =
+            TransportRegistry::getInstance().findFactory( uri.getScheme() )->create( uri );
 
         if( transport == NULL ){
             throw ActiveMQException(
@@ -128,68 +139,12 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
                 "failed creating new Transport" );
         }
 
-        // What wire format are we using, defaults to Stomp
-        std::string wireFormat =
-            properties->getProperty( "wireFormat", "openwire" );
-
-        // Now try and find a factory to create the Connector
-        ConnectorFactory* connectorfactory =
-            ConnectorFactoryMap::getInstance()->lookup( wireFormat );
-
-        if( connectorfactory == NULL )
-        {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "Connector for Wire Format not registered in Map" );
-        }
-
-        // Create the Connector.
-        connector = connectorfactory->createConnector( *properties, transport );
-
-        if( connector == NULL )
-        {
-            throw NullPointerException(
-                __FILE__, __LINE__,
-                "ActiveMQConnectionFactory::createConnection - "
-                "Failed to Create the Connector" );
-        }
-
-        // Start the Connector
-        connector->start();
-
-        // Create Holder and store the data for the Connection
-        connectionData = new ActiveMQConnectionData(
-            connector, transport, properties );
-
         // Create and Return the new connection object.
-        connection = new ActiveMQConnection( connectionData );
+        connection.reset( new ActiveMQConnection( transport, properties ) );
 
-        return connection;
+        return connection.release();
     }
-    catch( exceptions::ActiveMQException& ex )
-    {
-        ex.setMark( __FILE__, __LINE__ );
-
-        delete connection;
-        delete connector;
-        delete transport;
-        delete properties;
-
-        throw ex;
-    }
-    catch( ... )
-    {
-        exceptions::ActiveMQException ex(
-            __FILE__, __LINE__,
-            "ActiveMQConnectionFactory::create - "
-            "caught unknown exception" );
-
-        delete connection;
-        delete connector;
-        delete transport;
-        delete properties;
-
-        throw ex;
-    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }

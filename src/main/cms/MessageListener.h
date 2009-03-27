@@ -17,12 +17,18 @@
 
 #ifndef _CMS_MESSAGELISTENER_H_
 #define _CMS_MESSAGELISTENER_H_
- 
+
+#include <cms/Config.h>
+
 namespace cms{
     
     class Message;
     
-    class MessageListener{
+    /**
+     * A <code>MessageListener</code> object is used to receive asynchronously 
+     * delivered messages.
+     */
+    class CMS_API MessageListener{
     public:
     
         virtual ~MessageListener(){}
@@ -39,7 +45,8 @@ namespace cms{
          * It is considered a programming error for this method to throw an
          * exception.
          * 
-         * @param Message object const pointer recipient does not own.
+         * @param message
+         *      Message object const pointer recipient does not own.
          */
         virtual void onMessage( const Message* message ) = 0;
 

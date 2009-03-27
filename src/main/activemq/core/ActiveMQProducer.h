@@ -22,21 +22,29 @@
 #include <cms/Destination.h>
 #include <cms/DeliveryMode.h>
 
-#include <activemq/connector/ConnectorResourceListener.h>
-#include <activemq/connector/ProducerInfo.h>
+#include <activemq/util/Config.h>
+#include <activemq/util/MemoryUsage.h>
+#include <activemq/commands/ProducerInfo.h>
+#include <activemq/commands/ProducerAck.h>
+#include <activemq/exceptions/ActiveMQException.h>
+
+#include <memory>
 
 namespace activemq{
 namespace core{
 
+    using decaf::lang::Pointer;
+
     class ActiveMQSession;
 
-    class ActiveMQProducer : public cms::MessageProducer,
-                             public connector::ConnectorResourceListener
-    {
+    class AMQCPP_API ActiveMQProducer : public cms::MessageProducer {
     private:
 
         // Disable sending timestamps
         bool disableTimestamps;
+
+        // Disable adding a Message Id
+        bool disableMessageId;
 
         // The default delivery Mode of this Producer
         int defaultDeliveryMode;
@@ -47,21 +55,39 @@ namespace core{
         // The default time to live value for messages in milliseconds
         long long defaultTimeToLive;
 
+        // The default Send Timeout for this Producer.
+        long long sendTimeout;
+
         // Session that this producer sends to.
         ActiveMQSession* session;
 
-        // This Producers protocal specific info object
-        connector::ProducerInfo* producerInfo;
+        // This Producers protocol specific info object
+        Pointer<commands::ProducerInfo> producerInfo;
 
         // Boolean that indicates if the consumer has been closed
         bool closed;
 
+        // Memory Usage Class, created only if the Producer is tracking its usage.
+        std::auto_ptr<util::MemoryUsage> memoryUsage;
+
+        // The Destination assigned at creation, NULL if not assigned.
+        std::auto_ptr<cms::Destination> destination;
+
     public:
 
         /**
-         * Constructor
+         * Constructor, creates an instance of an ActiveMQProducer
+         *
+         * @param producerInfo
+         *        Pointer to a ProducerInfo command which identifies this producer.
+         * @param destination
+         *        The assigned Destination this Producer sends to, or null if not set.
+         *        The Producer does not own the Pointer passed.
+         * @param session
+         *        The Session which is the parent of this Producer.
          */
-        ActiveMQProducer( connector::ProducerInfo* producerInfo,
+        ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
+                          const cms::Destination* destination,
                           ActiveMQSession* session );
 
         virtual ~ActiveMQProducer();
@@ -125,7 +151,7 @@ namespace core{
          * @param The DeliveryMode
          */
         virtual void setDeliveryMode( int mode ) {
-            defaultDeliveryMode = mode;
+            this->defaultDeliveryMode = mode;
         }
 
         /**
@@ -133,45 +159,39 @@ namespace core{
          * @return The DeliveryMode
          */
         virtual int getDeliveryMode() const {
-            return defaultDeliveryMode;
+            return this->defaultDeliveryMode;
         }
 
         /**
-         * Sets if Message Ids are disbled for this Producer
+         * Sets if Message Ids are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageID( bool value ) {
-            if( producerInfo != NULL ){
-                producerInfo->setDisableMessageId( value );
-            }
+            this->disableMessageId = value;
         }
 
         /**
-         * Sets if Message Ids are disbled for this Producer
+         * Sets if Message Ids are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual bool getDisableMessageID() const {
-            if( this->producerInfo != NULL ) {
-                return this->producerInfo->isDisableMessageId();
-            }
-
-            return false;
+            return this->disableMessageId;
         }
 
         /**
-         * Sets if Message Time Stamps are disbled for this Producer
+         * Sets if Message Time Stamps are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual void setDisableMessageTimeStamp( bool value ) {
-            disableTimestamps = value;
+            this->disableTimestamps = value;
         }
 
         /**
-         * Sets if Message Time Stamps are disbled for this Producer
+         * Sets if Message Time Stamps are disabled for this Producer
          * @param boolean indicating enable / disable (true / false)
          */
         virtual bool getDisableMessageTimeStamp() const {
-            return disableTimestamps;
+            return this->disableTimestamps;
         }
 
         /**
@@ -179,7 +199,7 @@ namespace core{
          * @param int value for Priority level
          */
         virtual void setPriority( int priority ) {
-            defaultPriority = priority;
+            this->defaultPriority = priority;
         }
 
         /**
@@ -187,7 +207,7 @@ namespace core{
          * @return int based priority level
          */
         virtual int getPriority() const {
-            return defaultPriority;
+            return this->defaultPriority;
         }
 
         /**
@@ -195,7 +215,7 @@ namespace core{
          * @param time The new default time to live value in milliseconds.
          */
         virtual void setTimeToLive( long long time ) {
-            defaultTimeToLive = time;
+            this->defaultTimeToLive = time;
         }
 
         /**
@@ -203,29 +223,62 @@ namespace core{
          * @return The default time to live value in milliseconds.
          */
         virtual long long getTimeToLive() const {
-            return defaultTimeToLive;
+            return this->defaultTimeToLive;
+        }
+
+        /**
+         * Sets the Send Timeout that this Producers sends messages with
+         * @param time The new default send timeout value in milliseconds.
+         */
+        virtual void setSendTimeout( long long time ) {
+            this->sendTimeout = time;
+        }
+
+        /**
+         * Gets the Send Timeout that this producer sends messages with
+         * @return The default send timeout value in milliseconds.
+         */
+        virtual long long getSendTimeout() const {
+            return this->sendTimeout;
         }
 
     public:
 
         /**
-         * Retrives this object ProducerInfo pointer
-         * @return ProducerInfo pointer
+         * @returns true if this Producer has been closed.
          */
-        virtual connector::ProducerInfo* getProducerInfo(){
-            return producerInfo;
+        bool isClosed() const {
+            return this->closed;
         }
 
-    protected:   // ConnectorResourceListener
+        /**
+         * Retries this object ProducerInfo pointer
+         * @return ProducerInfo Reference
+         */
+        const commands::ProducerInfo& getProducerInfo() const {
+            this->checkClosed();
+            return *( this->producerInfo );
+        }
 
         /**
-         * When a Connector Resouce is closed it will notify any registered
-         * Listeners of its close so that they can take the appropriate
-         * action.
-         * @param resource - The ConnectorResource that was closed.
+         * Retries this object ProducerId or NULL if closed.
+         * @return ProducerId Reference
          */
-        virtual void onConnectorResourceClosed(
-            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
+        commands::ProducerId& getProducerId() const {
+            this->checkClosed();
+            return *( this->producerInfo->getProducerId() );
+        }
+
+        /**
+         * Handles the work of Processing a ProducerAck Command from the Broker.
+         * @param ack - The ProducerAck message received from the Broker.
+         */
+        virtual void onProducerAck( const commands::ProducerAck& ack );
+
+   private:
+
+       // Checks for the closed state and throws if so.
+       void checkClosed() const throw( exceptions::ActiveMQException );
 
    };
 

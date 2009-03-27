@@ -18,11 +18,17 @@
 #ifndef _CMS_EXCEPTIONLISTENER_H_
 #define _CMS_EXCEPTIONLISTENER_H_
 
+#include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
 
-    class ExceptionListener
+    /**
+     * If a CMS provider detects a serious problem, it notifies the client
+     * application through an <code>ExceptionListener</code> that is registered
+     * with the <code>Connection</code>.
+     */
+    class CMS_API ExceptionListener
     {
     public:
    
@@ -32,7 +38,9 @@ namespace cms{
          * Called when an exception occurs.  Once notified of an exception
          * the caller should no longer use the resource that generated the
          * exception.
-         * @param Exception Object that occurred.
+         * 
+         * @param ex
+         *      Exception Object that occurred.
          */
         virtual void onException( const cms::CMSException& ex ) = 0;
       

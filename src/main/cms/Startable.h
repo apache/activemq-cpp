@@ -17,7 +17,8 @@
  
 #ifndef CMS_STARTABLE_H
 #define CMS_STARTABLE_H
- 
+
+#include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
@@ -25,7 +26,7 @@ namespace cms{
     /**
      * Interface for a class that implements the start method.
      */
-    class Startable{
+    class CMS_API Startable{
         
     public:
     

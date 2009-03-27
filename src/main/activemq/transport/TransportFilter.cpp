@@ -16,38 +16,35 @@
  */
 
 #include "TransportFilter.h"
-#include <activemq/util/Config.h>
+#include <decaf/io/IOException.h>
 
 using namespace activemq;
 using namespace activemq::transport;
+using namespace decaf::lang;
+using namespace decaf::io;
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFilter::TransportFilter( Transport* next, const bool own ) {
-
-    this->next = next;
-    this->own = own;
-
-    commandlistener = NULL;
-    exceptionListener = NULL;
+TransportFilter::TransportFilter( const Pointer<Transport>& next ) :
+    next( next ), listener( NULL ) {
 
     // Observe the nested transport for events.
-    next->setCommandListener( this );
-    next->setTransportExceptionListener( this );
+    next->setTransportListener( this );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-TransportFilter::~TransportFilter() {
-
-    if( own ){
-        delete next;
-        next = NULL;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void TransportFilter::onTransportException(
-    Transport* source AMQCPP_UNUSED,
-    const exceptions::ActiveMQException& ex ) {
+void TransportFilter::onException( const decaf::lang::Exception& ex ) {
 
     fire( ex );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void TransportFilter::reconnect( const decaf::net::URI& uri )
+    throw( decaf::io::IOException ) {
+
+    try{
+        next->reconnect( uri );
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }

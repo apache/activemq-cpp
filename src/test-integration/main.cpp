@@ -20,28 +20,34 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TestResult.h>
 #include <activemq/util/Config.h>
+#include <activemq/library/ActiveMQCPP.h>
 #include <iostream>
 
-int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED)
-{
-    try
-    {
+int main( int argc AMQCPP_UNUSED, char **argv AMQCPP_UNUSED ) {
+
+    activemq::library::ActiveMQCPP::initializeLibrary();
+
+    try {
+
         CppUnit::TextUi::TestRunner runner;
         CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
         runner.addTest( registry.makeTest() );
-    
+
         // Shows a message as each test starts
         CppUnit::BriefTestProgressListener listener;
         runner.eventManager().addListener( &listener );
-        
+
         bool wasSuccessful = runner.run( "", false );
+        activemq::library::ActiveMQCPP::shutdownLibrary();
+
         return !wasSuccessful;
     }
     catch(...) {
         std::cout << "----------------------------------------" << std::endl;
         std::cout << "- AN ERROR HAS OCCURED:                -" << std::endl;
         std::cout << "- Do you have a Broker Running?        -" << std::endl;
-        std::cout << "----------------------------------------" << std::endl;        
+        std::cout << "----------------------------------------" << std::endl;
+        activemq::library::ActiveMQCPP::shutdownLibrary();
     }
 }
 

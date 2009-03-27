@@ -15,15 +15,35 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-cc_sources = main.cpp
+main_example_sources = main.cpp
 
 ##
 ## Compiler / Linker Info
 ##
 
-INCLUDES = -I$(srcdir)/../main
+## Main Example
+bin_PROGRAMS = example 
+example_SOURCES = $(main_example_sources)
+example_LDADD= $(AMQ_TEST_LIBS)
+example_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
-bin_PROGRAMS = example
-example_SOURCES = $(cc_sources)
+## Simple Async Consumer
+simple_async_consumer_sources = ./consumers/SimpleAsyncConsumer.cpp
+noinst_PROGRAMS = simple_async_consumer 
+simple_async_consumer_SOURCES = $(simple_async_consumer_sources)
+simple_async_consumer_LDADD= $(AMQ_TEST_LIBS)
+simple_async_consumer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
 
-example_LDADD= ../main/libactivemq-cpp.a
+## Simple Producer
+simple_producer_sources = ./producers/SimpleProducer.cpp
+noinst_PROGRAMS += simple_producer 
+simple_producer_SOURCES = $(simple_producer_sources)
+simple_producer_LDADD= $(AMQ_TEST_LIBS)
+simple_producer_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main
+
+## Chat Sample
+chat_sources = ./topics/chat/Chat.cpp
+noinst_PROGRAMS += chat 
+chat_SOURCES = $(chat_sources)
+chat_LDADD= $(AMQ_TEST_LIBS)
+chat_CXXFLAGS = $(AMQ_TEST_CXXFLAGS) -I$(srcdir)/../main

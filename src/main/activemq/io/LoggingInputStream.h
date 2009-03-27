@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -18,29 +18,30 @@
 #ifndef _ACTIVEMQ_IO_LOGGINGINPUTSTREAM_H_
 #define _ACTIVEMQ_IO_LOGGINGINPUTSTREAM_H_
 
-#include <activemq/io/FilterInputStream.h>
-#include <activemq/logger/LoggerDefines.h>
+#include <activemq/util/Config.h>
+#include <decaf/io/FilterInputStream.h>
+#include <decaf/util/logging/LoggerDefines.h>
+#include <decaf/lang/exceptions/NullPointerException.h>
 
 namespace activemq{
 namespace io{
-    
-    class LoggingInputStream : public FilterInputStream
-    {
+
+    class AMQCPP_API LoggingInputStream : public decaf::io::FilterInputStream {
     private:
-    
-        LOGCMS_DECLARE(logger) 
-        
+
+        LOGDECAF_DECLARE(logger)
+
     public:
-    
+
         /**
-         * Creates a DataInputStream that uses the specified underlying 
+         * Creates a DataInputStream that uses the specified underlying
          * InputStream.
          * @param inputStream the InputStream instance to wrap.
          * @param own, indicates if this class owns the wrapped string
          * defaults to false.
          */
-        LoggingInputStream( InputStream* inputStream, bool own = false );
-        
+        LoggingInputStream( decaf::io::InputStream* inputStream, bool own = false );
+
         virtual ~LoggingInputStream();
 
         /**
@@ -49,25 +50,31 @@ namespace io{
          * @return The next byte.
          * @throws IOException thrown if an error occurs.
          */
-        virtual unsigned char read() throw ( IOException );
-        
+        virtual unsigned char read() throw ( decaf::io::IOException );
+
         /**
          * Reads an array of bytes from the buffer.  Blocks until
          * the requested number of bytes are available.
          * @param buffer (out) the target buffer.
+         * @param offset the position in the buffer to start at
          * @param bufferSize the size of the output buffer.
          * @return The number of bytes read or -1 if EOF is detected
          * @throws IOException thrown if an error occurs.
+         * @throws NullPointerException if buffer is null
          */
-        virtual std::size_t read( unsigned char* buffer, std::size_t bufferSize ) 
-            throw ( IOException );
-            
+        virtual int read( unsigned char* buffer,
+                          std::size_t offset,
+                          std::size_t bufferSize )
+            throw ( decaf::io::IOException,
+                    decaf::lang::exceptions::NullPointerException );
+
     private:
-    
+
         /**
          * Logs the data in the buffer.
          */
         void log( const unsigned char* buffer, std::size_t len );
+
     };
 
 }}

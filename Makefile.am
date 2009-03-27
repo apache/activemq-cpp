@@ -20,11 +20,13 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = src/main src/examples
 if BUILD_CPPUNIT_TESTS
-  SUBDIRS += src/test src/test-integration
+  SUBDIRS += src/test src/test-integration src/test-benchmarks
 endif
 
 #Distribute these directories:
 DIST_SUBDIRS = src/main 
+
+bin_SCRIPTS = activemqcpp-config 
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = activemq-cpp.pc

@@ -17,7 +17,8 @@
 
 #ifndef _CMS_QUEUE_H_
 #define _CMS_QUEUE_H_
- 
+
+#include <cms/Config.h>
 #include <cms/Destination.h>
 #include <cms/CMSException.h>
 
@@ -26,7 +27,7 @@ namespace cms{
     /**
      * An interface encapsulating a provider-specific queue name.
      */
-    class Queue : public Destination{
+    class CMS_API Queue : public Destination{
         
     public:
     
@@ -34,6 +35,7 @@ namespace cms{
         
         /**
          * Gets the name of this queue.
+         * 
          * @return The queue name.
          */
         virtual std::string getQueueName() const 

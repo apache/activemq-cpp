@@ -20,7 +20,7 @@
 /**
  * Macro for catching and rethrowing an exception of
  * a given type.
- * @param type The type of the exception to throw 
+ * @param type The type of the exception to throw
  * (e.g. ActiveMQException ).
  */
 #define AMQ_CATCH_RETHROW( type ) \
@@ -28,7 +28,7 @@
         ex.setMark( __FILE__, __LINE__ ); \
         throw ex; \
     }
-    
+
 /**
  * Macro for catching an exception of one type and then rethrowing
  * as another type.
@@ -60,14 +60,14 @@
  */
 #define AMQ_CATCHALL_NOTHROW( ) \
     catch( ... ){ \
-        exceptions::ActiveMQException ex( __FILE__, __LINE__, \
+        activemq::exceptions::ActiveMQException ex( __FILE__, __LINE__, \
             "caught unknown exception, not rethrowing" ); \
     }
 
 /**
  * Macro for catching and rethrowing an exception of
  * a given type.
- * @param type The type of the exception to throw 
+ * @param type The type of the exception to throw
  * (e.g. ActiveMQException ).
  */
 #define AMQ_CATCH_NOTHROW( type ) \

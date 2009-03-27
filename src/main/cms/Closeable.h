@@ -18,6 +18,7 @@
 #ifndef CMS_CLOSEABLE_H
 #define CMS_CLOSEABLE_H
  
+#include <cms/Config.h>
 #include <cms/CMSException.h>
 
 namespace cms{
@@ -25,7 +26,7 @@ namespace cms{
     /**
      * Interface for a class that implements the close method.
      */
-    class Closeable{
+    class CMS_API Closeable{
         
     public:
     
@@ -34,6 +35,7 @@ namespace cms{
         /**
          * Closes this object and deallocates the appropriate resources.
          * The object is generally no longer usable after calling close.
+         * 
          * @throws CMSException
          */
         virtual void close() throw( CMSException ) = 0;

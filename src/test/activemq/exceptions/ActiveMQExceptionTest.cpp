@@ -16,6 +16,84 @@
  */
 
 #include "ActiveMQExceptionTest.h"
+#include <activemq/exceptions/ExceptionDefines.h>
+#include <decaf/lang/Exception.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
 
-CPPUNIT_TEST_SUITE_REGISTRATION( activemq::exceptions::ActiveMQExceptionTest );
+using namespace activemq;
+using namespace activemq::exceptions;
+using namespace decaf;
+using namespace decaf::lang;
+using namespace decaf::lang::exceptions;
 
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQExceptionTest::testMacros() {
+
+    try{
+
+        try{
+            try{
+                throw UnsupportedOperationException( __FILE__, __LINE__, "EXCEPTION" );
+                CPPUNIT_FAIL( "Should not get this far." );
+            }
+            AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+        }
+        AMQ_CATCH_RETHROW( ActiveMQException )
+
+    } catch( ActiveMQException& ex ) {
+
+        CPPUNIT_ASSERT( ex.getCause() != NULL );
+
+        const UnsupportedOperationException* cause =
+            dynamic_cast<const UnsupportedOperationException*>( ex.getCause() );
+
+        CPPUNIT_ASSERT( cause != NULL );
+    }
+
+    try{
+        throw ActiveMQException( __FILE__, __LINE__, "TEST" );
+    } catch( std::exception& ex ) {
+        return;
+    }
+
+    CPPUNIT_FAIL( "Should have returned after catching an std exception." );
+
+    try{
+
+        try{
+            try{
+                throw UnsupportedOperationException( __FILE__, __LINE__, "EXCEPTION" );
+                CPPUNIT_FAIL( "Should not get this far." );
+            }
+            AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+        }
+        AMQ_CATCH_RETHROW( ActiveMQException )
+
+    } catch( std::exception& ex ) {
+
+        ActiveMQException* converted = dynamic_cast<ActiveMQException*>( &ex );
+
+        CPPUNIT_ASSERT( converted != NULL );
+        CPPUNIT_ASSERT( converted->getCause() != NULL );
+
+        const UnsupportedOperationException* cause =
+            dynamic_cast<const UnsupportedOperationException*>( converted->getCause() );
+
+        CPPUNIT_ASSERT( cause != NULL );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQExceptionTest::testMessage0(){
+    char* text = "This is a test";
+      ActiveMQException ex( __FILE__, __LINE__, text );
+      CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(), text ) == 0 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQExceptionTest::testMessage3(){
+    ActiveMQException ex( __FILE__, __LINE__,
+        "This is a test %d %d %d", 1, 100, 1000 );
+    CPPUNIT_ASSERT( strcmp( ex.getMessage().c_str(),
+                    "This is a test 1 100 1000" ) == 0 );
+}

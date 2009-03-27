@@ -18,6 +18,8 @@
 #ifndef _CMS_DELIVERYMODE_H_
 #define _CMS_DELIVERYMODE_H_
 
+#include <cms/Config.h>
+
 namespace cms
 {
 
@@ -25,7 +27,7 @@ namespace cms
      * This is an Abstract class whose purpose is to provide a container
      * for the delivery mode enumeration for CMS messages.  
      */
-    class DeliveryMode
+    class CMS_API DeliveryMode
     {
     public:
     

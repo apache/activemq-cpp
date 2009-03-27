@@ -16,109 +16,165 @@
  */
 
 #include "IOTransport.h"
-#include "CommandReader.h"
-#include "CommandWriter.h"
 
-#include <activemq/concurrent/Concurrent.h>
-#include <activemq/exceptions/UnsupportedOperationException.h>
+#include <decaf/util/concurrent/Concurrent.h>
+#include <decaf/lang/exceptions/UnsupportedOperationException.h>
+#include <activemq/wireformat/WireFormat.h>
+#include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/util/Config.h>
+#include <typeinfo>
 
 using namespace activemq;
 using namespace activemq::transport;
-using namespace activemq::concurrent;
+using namespace activemq::exceptions;
+using namespace activemq::commands;
+using namespace activemq::wireformat;
+using namespace decaf;
+using namespace decaf::io;
+using namespace decaf::lang;
+using namespace decaf::util::concurrent;
 
-LOGCMS_INITIALIZE(logger, IOTransport, "activemq.transport.IOTransport" )
+////////////////////////////////////////////////////////////////////////////////
+LOGDECAF_INITIALIZE( logger, IOTransport, "activemq.transport.IOTransport" )
 
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::IOTransport(){
 
-    listener = NULL;
-    reader = NULL;
-    writer = NULL;
-    exceptionListener = NULL;
-    inputStream = NULL;
-    outputStream = NULL;
-    closed = false;
-    thread = NULL;
+    this->listener = NULL;
+    this->inputStream = NULL;
+    this->outputStream = NULL;
+    this->closed = false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+IOTransport::IOTransport( const Pointer<WireFormat>& wireFormat ) {
+
+    this->listener = NULL;
+    this->inputStream = NULL;
+    this->outputStream = NULL;
+    this->closed = false;
+    this->wireFormat = wireFormat;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 IOTransport::~IOTransport(){
-
-    close();
+    try{
+        close();
+    }
+    AMQ_CATCHALL_NOTHROW()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void IOTransport::oneway( Command* command )
-    throw(CommandIOException, exceptions::UnsupportedOperationException)
-{
-    if( closed ){
-        throw CommandIOException( __FILE__, __LINE__,
-            "IOTransport::oneway() - transport is closed!" );
-    }
+void IOTransport::fire( decaf::lang::Exception& ex ){
 
-    // Make sure the thread has been started.
-    if( thread == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - transport is not started" );
-    }
+    if( this->listener != NULL && !this->closed ){
 
-    // Make sure the command object is valid.
-    if( command == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - attempting to write NULL command" );
+        try{
+            this->listener->onException( ex );
+        }catch( ... ){}
     }
+}
 
-    // Make sure we have an output strema to write to.
-    if( outputStream == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::oneway() - invalid output stream" );
-    }
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::fire( const Pointer<Command>& command ){
 
-    synchronized( outputStream ){
-        // Write the command to the output stream.
-        writer->writeCommand( command );
+    try{
+        // Since the listener is responsible for freeing the memory,
+        // if there is no listener - free the command here.  Also if
+        // we have been closed then we don't deliver any messages that
+        // might have sneaked in while we where closing.
+        if( this->listener == NULL || this->closed == true ){
+            return;
+        }
+
+        this->listener->onCommand( command );
+
     }
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void IOTransport::oneway( const Pointer<Command>& command )
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ) {
+
+    try{
+
+        if( closed ){
+            throw IOException( __FILE__, __LINE__,
+                "IOTransport::oneway() - transport is closed!" );
+        }
+
+        // Make sure the thread has been started.
+        if( thread == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - transport is not started" );
+        }
+
+        // Make sure the command object is valid.
+        if( command == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - attempting to write NULL command" );
+        }
+
+        // Make sure we have an output stream to write to.
+        if( outputStream == NULL ){
+            throw IOException(
+                __FILE__, __LINE__,
+                "IOTransport::oneway() - invalid output stream" );
+        }
+
+        synchronized( outputStream ){
+            // Write the command to the output stream.
+            this->wireFormat->marshal( command, this->outputStream );
+            this->outputStream->flush();
+        }
+    }
+    AMQ_CATCH_RETHROW( IOException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, IOException )
+    AMQ_CATCHALL_THROW( IOException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::start() throw( cms::CMSException ){
 
-    // Can't restart a closed transport.
-    if( closed ){
-        throw CommandIOException( __FILE__, __LINE__, "IOTransport::start() - transport is already closed - cannot restart" );
+    try{
+
+        // Can't restart a closed transport.
+        if( closed ){
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "IOTransport::start() - transport is already closed - cannot restart" );
+        }
+
+        // If it's already started, do nothing.
+        if( thread != NULL ){
+            return;
+        }
+
+        // Make sure all variables that we need have been set.
+        if( inputStream == NULL || outputStream == NULL || wireFormat.get() == NULL ){
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "IOTransport::start() - "
+                "IO streams and wireFormat instances must be set before calling start" );
+        }
+
+        // Start the polling thread.
+        thread.reset( new Thread( this ) );
+        thread->start();
     }
-
-    // If it's already started, do nothing.
-    if( thread != NULL ){
-        return;
-    }
-
-    // Make sure all variables that we need have been set.
-    if( inputStream == NULL || outputStream == NULL ||
-        reader == NULL || writer == NULL ){
-        throw CommandIOException(
-            __FILE__, __LINE__,
-            "IOTransport::start() - "
-            "IO sreams and reader/writer must be set before calling start" );
-    }
-
-    // Init the Command Reader and Writer with the Streams
-    reader->setInputStream( inputStream );
-    writer->setOutputStream( outputStream );
-
-    // Start the polling thread.
-    thread = new Thread( this );
-    thread->start();
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void IOTransport::close() throw( cms::CMSException ){
 
     try{
+
         if( closed ){
             return;
         }
@@ -132,7 +188,6 @@ void IOTransport::close() throw( cms::CMSException ){
         // (which is likely).  Otherwise, the join that
         // follows will block forever.
         if( inputStream != NULL ){
-
             inputStream->close();
             inputStream = NULL;
         }
@@ -140,19 +195,21 @@ void IOTransport::close() throw( cms::CMSException ){
         // Wait for the thread to die.
         if( thread != NULL ){
             thread->join();
-            delete thread;
-            thread = NULL;
+            thread.reset( NULL );
         }
 
         // Close the output stream.
         if( outputStream != NULL ){
-
             outputStream->close();
             outputStream = NULL;
         }
+
+        // Clear the WireFormat so we can't use it anymore
+        this->wireFormat.reset( NULL );
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -163,17 +220,20 @@ void IOTransport::run(){
         while( !closed ){
 
             // Read the next command from the input stream.
-            Command* command = reader->readCommand();
+            Pointer<Command> command( wireFormat->unmarshal( this->inputStream ) );
 
             // Notify the listener.
             fire( command );
         }
-
     }
     catch( exceptions::ActiveMQException& ex ){
-
         ex.setMark( __FILE__, __LINE__ );
         fire( ex );
+    }
+    catch( decaf::lang::Exception& ex ){
+        exceptions::ActiveMQException exl( ex );
+        exl.setMark( __FILE__, __LINE__ );
+        fire( exl );
     }
     catch( ... ){
 
@@ -181,16 +241,26 @@ void IOTransport::run(){
             __FILE__, __LINE__,
             "IOTransport::run - caught unknown exception" );
 
-        LOGCMS_WARN(logger, ex.getStackTraceString() );
+        LOGDECAF_WARN(logger, ex.getStackTraceString() );
 
         fire( ex );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-Response* IOTransport::request( Command* command AMQCPP_UNUSED )
-    throw( CommandIOException, exceptions::UnsupportedOperationException ){
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED )
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
 
-    throw exceptions::UnsupportedOperationException( __FILE__, __LINE__, "IOTransport::request() - unsupported operation" );
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation" );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+Pointer<Response> IOTransport::request( const Pointer<Command>& command AMQCPP_UNUSED, unsigned int timeout AMQCPP_UNUSED )
+    throw( IOException, decaf::lang::exceptions::UnsupportedOperationException ){
+
+    throw decaf::lang::exceptions::UnsupportedOperationException(
+        __FILE__, __LINE__,
+        "IOTransport::request() - unsupported operation" );
+}

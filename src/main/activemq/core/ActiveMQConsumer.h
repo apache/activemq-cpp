@@ -22,23 +22,29 @@
 #include <cms/Message.h>
 #include <cms/CMSException.h>
 
-#include <activemq/connector/ConsumerInfo.h>
-#include <activemq/connector/ConnectorResourceListener.h>
-#include <activemq/util/Queue.h>
+#include <activemq/util/Config.h>
+#include <activemq/exceptions/ActiveMQException.h>
+#include <activemq/commands/ConsumerInfo.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/Dispatcher.h>
-#include <activemq/concurrent/Mutex.h>
+
+#include <decaf/lang/Pointer.h>
+#include <decaf/util/StlQueue.h>
+#include <decaf/util/concurrent/Mutex.h>
+#include <memory>
 
 namespace activemq{
 namespace core{
 
-    class ActiveMQSession;
+    using decaf::lang::Pointer;
 
-    class ActiveMQConsumer :
+    class ActiveMQSession;
+    class ActiveMQTransactionContext;
+
+    class AMQCPP_API ActiveMQConsumer :
         public cms::MessageConsumer,
         public ActiveMQAckHandler,
-        public Dispatcher,
-    public connector::ConnectorResourceListener
+        public Dispatcher
     {
     private:
 
@@ -48,9 +54,14 @@ namespace core{
         ActiveMQSession* session;
 
         /**
+         * The Transaction Context, null if not in a Transacted Session.
+         */
+        ActiveMQTransactionContext* transaction;
+
+        /**
          * The Consumer info for this Consumer
          */
-        connector::ConsumerInfo* consumerInfo;
+        Pointer<commands::ConsumerInfo> consumerInfo;
 
         /**
          * The Message Listener for this Consumer
@@ -60,7 +71,12 @@ namespace core{
         /**
          * Queue of unconsumed messages.
          */
-        util::Queue<DispatchData> unconsumedMessages;
+        decaf::util::StlQueue<DispatchData> unconsumedMessages;
+
+        /**
+         * Queue of consumed messages.
+         */
+        decaf::util::StlQueue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
 
         /**
          * Boolean that indicates if the consumer has been closed
@@ -72,8 +88,9 @@ namespace core{
         /**
          * Constructor
          */
-        ActiveMQConsumer( connector::ConsumerInfo* consumerInfo,
-                          ActiveMQSession* session );
+        ActiveMQConsumer( const Pointer<commands::ConsumerInfo>& consumerInfo,
+                          ActiveMQSession* session,
+                          ActiveMQTransactionContext* transaction );
 
         virtual ~ActiveMQConsumer();
 
@@ -135,11 +152,12 @@ namespace core{
             throw ( cms::CMSException );
 
         /**
-         * Method called to acknowledge the message passed
-         * @param message the Message to Acknowlegde
+         * Method called to acknowledge the message passed, called from a message
+         * when the mode is client ack.
+         * @param message the Message to Acknowledge
          * @throw CMSException
          */
-        virtual void acknowledgeMessage( const ActiveMQMessage* message )
+        virtual void acknowledgeMessage( const commands::Message* message )
             throw ( cms::CMSException );
 
     public:  // Dispatcher Methods
@@ -153,23 +171,40 @@ namespace core{
     public:  // ActiveMQConsumer Methods
 
         /**
-         * Get the Consumer information for this consumer
-         * @return Pointer to a Consumer Info Object
+         * Method called to acknowledge the message passed, ack it using
+         * the passed in ackType, see <code>Connector</code> for a list
+         * of the correct ack types.
+         * @param message the Message to Acknowledge
+         * @param ackType the Type of ack to send, (connector enum)
+         * @throw CMSException
          */
-        virtual connector::ConsumerInfo* getConsumerInfo() {
-            return consumerInfo;
-        }
-
-    protected:   // ConnectorResourceListener
+        virtual void acknowledge( const commands::Message* message, int ackType )
+            throw ( cms::CMSException );
 
         /**
-         * When a Connector Resouce is closed it will notify any registered
-         * Listeners of its close so that they can take the appropriate
-         * action.
-         * @param resource - The ConnectorResource that was closed.
+         * Get the Consumer information for this consumer
+         * @return Reference to a Consumer Info Object
          */
-        virtual void onConnectorResourceClosed(
-            const connector::ConnectorResource* resource ) throw ( cms::CMSException );
+        const commands::ConsumerInfo& getConsumerInfo() const {
+            this->checkClosed();
+            return *( this->consumerInfo );
+        }
+
+        /**
+         * Get the Consumer Id for this consumer
+         * @return Reference to a Consumer Id Object
+         */
+        const commands::ConsumerId& getConsumerId() const {
+            this->checkClosed();
+            return *( this->consumerInfo->getConsumerId() );
+        }
+
+        /**
+         * @returns if this Consumer has been closed.
+         */
+        bool isClosed() const {
+            return this->closed;
+        }
 
     protected:
 
@@ -177,43 +212,55 @@ namespace core{
          * Purges all messages currently in the queue.  This can be as a
          * result of a rollback, or of the consumer being shutdown.
          */
-        virtual void purgeMessages() throw (exceptions::ActiveMQException);
+        void purgeMessages() throw ( exceptions::ActiveMQException );
 
         /**
-         * Destroys the message if the session is transacted, otherwise
-         * does nothing.
-         * @param message the message to destroy
-         */
-        virtual void destroyMessage( ActiveMQMessage* message )
-            throw (exceptions::ActiveMQException);
-            
-        /**
          * Used by synchronous receive methods to wait for messages to come in.
-         * @param timeout - The maximum number of milliseconds to wait before 
+         * @param timeout - The maximum number of milliseconds to wait before
          * returning.
-         * If -1, it will block until a messages is received or this consumer 
+         * If -1, it will block until a messages is received or this consumer
          * is closed.
-         * If 0, will not block at all.  If > 0, will wait at a maximum the 
+         * If 0, will not block at all.  If > 0, will wait at a maximum the
          * specified number of milliseconds before returning.
-         * @return the message, if received within the allotted time.  
+         * @return the message, if received within the allotted time.
          * Otherwise NULL.
-         * @throws InvalidStateException if this consumer is closed upon 
+         * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        ActiveMQMessage* dequeue(int timeout) throw ( cms::CMSException );
-        
+        Pointer<commands::Message> dequeue( int timeout )
+            throw ( cms::CMSException );
+
         /**
          * Pre-consume processing
          * @param message - the message being consumed.
          */
-        virtual void beforeMessageIsConsumed( ActiveMQMessage* message );
-        
+        void beforeMessageIsConsumed(
+            const Pointer<commands::Message>& message );
+
         /**
          * Post-consume processing
          * @param message - the consumed message
          * @param messageExpired - flag indicating if the message has expired.
          */
-        virtual void afterMessageIsConsumed( ActiveMQMessage* message, bool messageExpired );
+        void afterMessageIsConsumed(
+            const Pointer<commands::Message>& message, bool messageExpired );
+
+    private:
+
+        /**
+         * If supported sends a message pull request to the service provider asking
+         * for the delivery of a new message.  This is used in the case where the
+         * service provider has been configured with a zero prefectch or is only
+         * capable of delivering messages on a pull basis.  No request is made if
+         * there are already messages in the unconsumed queue since there's no need
+         * for a server round-trip in that instance.
+         * @param timeout - the time that the client is willing to wait.
+         */
+        void sendPullRequest( long long timeout )
+            throw ( exceptions::ActiveMQException );
+
+        // Checks for the closed state and throws if so.
+        void checkClosed() const throw( exceptions::ActiveMQException );
 
     };
 

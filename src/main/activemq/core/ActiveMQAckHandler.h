@@ -18,28 +18,29 @@
 #define _ACTIVEMQ_CORE_ACTIVEMQACKHANDLER_H_
 
 #include <cms/CMSException.h>
+#include <activemq/util/Config.h>
+#include <activemq/commands/Message.h>
 
 namespace activemq{
 namespace core{
 
-    class ActiveMQMessage;
-
     /**
      * Interface class that is used to give CMS Messages an interface to
      * Ack themselves with.
+     *
+     * @since 2.0
      */
-    class ActiveMQAckHandler
-    {
+    class AMQCPP_API ActiveMQAckHandler {
     public:
-    
-        virtual ~ActiveMQAckHandler(void) {};
-    
+
+        virtual ~ActiveMQAckHandler() {};
+
         /**
          * Method called to acknowledge the message passed
-         * @param message Message to Acknowlegde
+         * @param message Message to Acknowledge
          * @throw CMSException
          */
-        virtual void acknowledgeMessage( const ActiveMQMessage* message )
+        virtual void acknowledgeMessage( const commands::Message* message )
             throw ( cms::CMSException ) = 0;
 
     };
