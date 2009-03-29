@@ -60,9 +60,6 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->consumerInfo = consumerInfo;
     this->listener = NULL;
     this->closed = false;
-
-    // Send our info to the Broker.
-    this->session->syncRequest( this->consumerInfo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
