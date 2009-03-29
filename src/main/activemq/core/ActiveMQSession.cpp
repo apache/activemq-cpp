@@ -273,6 +273,9 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
             this->consumers.put( consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
 
+        // Send our info to the Broker.
+        this->syncRequest( consumerInfo );
+
         return consumer.release();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -314,6 +317,9 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
         synchronized( &this->consumers ) {
             this->consumers.put( consumer->getConsumerInfo().getConsumerId(), consumer.get() );
         }
+
+        // Send our info to the Broker.
+        this->syncRequest( consumerInfo );
 
         return consumer.release();
     }
