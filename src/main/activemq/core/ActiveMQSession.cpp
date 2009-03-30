@@ -266,7 +266,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
-            new ActiveMQConsumer( consumerInfo, this, this->transaction.get() ) );
+            new ActiveMQConsumer( consumerInfo, this, this->transaction ) );
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {
@@ -311,7 +311,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         // Create the consumer instance.
         std::auto_ptr<ActiveMQConsumer> consumer(
-            new ActiveMQConsumer( consumerInfo, this, this->transaction.get() ) );
+            new ActiveMQConsumer( consumerInfo, this, this->transaction ) );
 
         // Add the consumer to the map.
         synchronized( &this->consumers ) {

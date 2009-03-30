@@ -46,7 +46,7 @@ using namespace decaf::util::concurrent;
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
                                     ActiveMQSession* session,
-                                    ActiveMQTransactionContext* transaction ) {
+                                    const Pointer<ActiveMQTransactionContext>& transaction ) {
 
     if( session == NULL || consumerInfo == NULL ) {
         throw ActiveMQException(
@@ -58,8 +58,8 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->session = session;
     this->transaction = transaction;
     this->consumerInfo = consumerInfo;
-    this->listener = NULL;
     this->closed = false;
+    this->lastDeliveredSequenceId = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,9 +312,13 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
 
         this->checkClosed();
 
-        this->listener = listener;
+        if( this->consumerInfo->getPrefetchSize() == 0 && listener != NULL ) {
+            throw ActiveMQException(
+                __FILE__, __LINE__,
+                "Cannot deliver async when Prefetch is Zero, set Prefecth to at least One.");
+        }
 
-        if( listener != NULL && session != NULL ) {
+        if( listener != NULL ) {
 
             // Now that we have a valid message listener,
             // redispatch all the messages that it missed.
@@ -324,11 +328,15 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
                 session->stop();
             }
 
+            this->listener.set( listener );
+
             session->redispatch( unconsumedMessages );
 
             if( wasStarted ) {
                 session->start();
             }
+        } else {
+            this->listener.set( NULL );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -348,6 +356,8 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message 
         // acknowledge method.
         message->setAckHandler( this );
     }
+
+    this->lastDeliveredSequenceId = message->getMessageId()->getBrokerSequenceId();
 
     // If the session is transacted then we hand off the message to it to
     // be stored for later redelivery.  We do need to check and see if we
@@ -460,13 +470,13 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
         }
 
         // If we have a listener, send the message.
-        if( listener != NULL ) {
+        if( this->listener.get() != NULL ) {
 
             // Preprocessing.
             beforeMessageIsConsumed( message );
 
             // Notify the listener
-            listener->onMessage( dynamic_cast<cms::Message*>( message.get() ) );
+            this->listener.get()->onMessage( dynamic_cast<cms::Message*>( message.get() ) );
 
             // Postprocessing
             afterMessageIsConsumed( message, false );
