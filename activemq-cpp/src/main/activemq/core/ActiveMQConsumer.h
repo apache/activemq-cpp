@@ -26,8 +26,10 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/core/ActiveMQAckHandler.h>
+#include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
 
+#include <decaf/util/concurrent/atomic/AtomicReference.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -37,9 +39,9 @@ namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
+    using decaf::util::concurrent::atomic::AtomicReference;
 
     class ActiveMQSession;
-    class ActiveMQTransactionContext;
 
     class AMQCPP_API ActiveMQConsumer :
         public cms::MessageConsumer,
@@ -56,7 +58,7 @@ namespace core{
         /**
          * The Transaction Context, null if not in a Transacted Session.
          */
-        ActiveMQTransactionContext* transaction;
+        Pointer<ActiveMQTransactionContext> transaction;
 
         /**
          * The Consumer info for this Consumer
@@ -66,7 +68,7 @@ namespace core{
         /**
          * The Message Listener for this Consumer
          */
-        cms::MessageListener* listener;
+        AtomicReference<cms::MessageListener> listener;
 
         /**
          * Queue of unconsumed messages.
@@ -77,6 +79,11 @@ namespace core{
          * Queue of consumed messages.
          */
         decaf::util::StlQueue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
+
+        /**
+         * The last delivered message's BrokerSequenceId.
+         */
+        long long lastDeliveredSequenceId;
 
         /**
          * Boolean that indicates if the consumer has been closed
@@ -90,7 +97,7 @@ namespace core{
          */
         ActiveMQConsumer( const Pointer<commands::ConsumerInfo>& consumerInfo,
                           ActiveMQSession* session,
-                          ActiveMQTransactionContext* transaction );
+                          const Pointer<ActiveMQTransactionContext>& transaction );
 
         virtual ~ActiveMQConsumer();
 
@@ -140,7 +147,7 @@ namespace core{
          * @param MessageListener interface pointer
          */
         virtual cms::MessageListener* getMessageListener() const {
-            return this->listener;
+            return this->listener.get();
         }
 
         /**

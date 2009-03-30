@@ -72,7 +72,7 @@ namespace core{
         /**
          * Transaction Management object
          */
-        std::auto_ptr<ActiveMQTransactionContext> transaction;
+        Pointer<ActiveMQTransactionContext> transaction;
 
         /**
          * Connection
