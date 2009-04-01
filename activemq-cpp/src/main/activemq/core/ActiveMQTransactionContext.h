@@ -24,12 +24,11 @@
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
-#include <activemq/commands/TransactionInfo.h>
-#include <activemq/commands/TransactionId.h>
+#include <activemq/commands/LocalTransactionId.h>
 #include <activemq/core/Synchronization.h>
+#include <activemq/util/LongSequenceGenerator.h>
 
 #include <decaf/lang/exceptions/InvalidStateException.h>
-#include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/StlSet.h>
 #include <decaf/util/Properties.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -65,16 +64,20 @@ namespace core{
         ActiveMQConnection* connection;
 
         // Transaction Info for the current Transaction
-        Pointer<commands::TransactionInfo> transactionInfo;
+        Pointer<commands::TransactionId> transactionId;
 
         // List of Registered Synchronizations
-        decaf::util::StlSet<Synchronization*> synchronizations;
+        decaf::util::StlSet< Pointer<Synchronization> > synchronizations;
 
-        // Lock object to protect the rollback Map
-        decaf::util::concurrent::Mutex mutex;
+        // Next available Transaction Id
+        util::LongSequenceGenerator transactionIds;
 
-        // Max number of redeliveries per message
-        unsigned int maxRedeliveries;
+        // Maximum number of time to redeliver a message when a Transaction is
+        // rolled back.
+        int maximumRedeliveries;
+
+        // Time to wait before starting delivery again.
+        long long redeliveryDelay;
 
     public:
 
@@ -92,57 +95,73 @@ namespace core{
          * Adds a Synchronization to this Transaction.
          * @param sync - The Synchronization instance to add.
          */
-        virtual void addSynchronization( Synchronization* sync );
+        virtual void addSynchronization( const Pointer<Synchronization>& sync );
 
         /**
          * Removes a Synchronization to this Transaction.
          * @param sync - The Synchronization instance to add.
          */
-        virtual void removeSynchronization( Synchronization* sync );
+        virtual void removeSynchronization( const Pointer<Synchronization>& sync );
+
+        /**
+         * Begins a new transaction if one is not currently in progress.
+         * @throw ActiveMQException
+         */
+        virtual void begin() throw ( exceptions::ActiveMQException );
 
         /**
          * Commit the current Transaction
-         * @throw CMSException
+         * @throw ActiveMQException
          */
         virtual void commit() throw ( exceptions::ActiveMQException );
 
         /**
          * Rollback the current Transaction
-         * @throw CMSException
+         * @throw ActiveMQException
          */
         virtual void rollback() throw ( exceptions::ActiveMQException );
-
-        /**
-         * Get the Transaction Information object for the current
-         * Transaction, returns NULL if no transaction is running
-         * @return TransactionInfo
-         */
-        virtual const commands::TransactionInfo* getTransactionInfo() const {
-            return transactionInfo.get();
-        }
 
         /**
          * Get the Transaction Id object for the current
          * Transaction, returns NULL if no transaction is running
          * @return TransactionInfo
+         * @throw InvalidStateException if a Transaction is not in progress.
          */
         virtual const decaf::lang::Pointer<commands::TransactionId>& getTransactionId() const {
-            if( this->transactionInfo.get() == NULL ) {
+            if( this->transactionId == NULL ) {
                 throw decaf::lang::exceptions::InvalidStateException(
                     __FILE__, __LINE__, "Transaction Not Started." );
             }
 
-            return transactionInfo->getTransactionId();
+            return transactionId;
+        }
+
+        /**
+         * Checks to see if there is currently a Transaction in progress returns
+         * false if not, true otherwise.
+         * @return true if a transaction is in progress.
+         */
+        virtual bool isInTransaction() const {
+            return this->transactionId != NULL;
+        }
+
+        int getMaximumRedeliveries() const {
+            return this->maximumRedeliveries;
+        }
+
+        long long getRedeliveryDelay() const {
+            return this->redeliveryDelay;
         }
 
     private:
 
-        // Remove and Delete all Synchronizations from the Set of registered
-        // Synchronizations in this Transaction.
-        void clearSynchronizations() throw( exceptions::ActiveMQException );
+        long long getNextTransactionId() {
+            return this->transactionIds.getNextSequenceId();
+        }
 
-        // Starts a new Transaction.
-        void startTransaction() throw( exceptions::ActiveMQException );
+        void beforeEnd();
+        void afterCommit();
+        void afterRollback();
 
     };
 

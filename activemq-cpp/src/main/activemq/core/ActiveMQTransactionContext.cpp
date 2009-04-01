@@ -22,6 +22,7 @@
 #include <activemq/commands/TransactionInfo.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/util/Iterator.h>
 
 using namespace std;
@@ -53,12 +54,10 @@ ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session
         this->session = session;
         this->connection = session->getConnection();
 
-        // convert from property Strings to int.
-        this->maxRedeliveries = Integer::parseInt(
+        maximumRedeliveries = Integer::parseInt(
             properties.getProperty( "transaction.maxRedeliveryCount", "5" ) );
-
-        // Start a new Transaction
-        this->startTransaction();
+        redeliveryDelay = Long::parseLong(
+            properties.getProperty( "transaction.redeliveryDelay", "0" ) );
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -67,23 +66,10 @@ ActiveMQTransactionContext::ActiveMQTransactionContext( ActiveMQSession* session
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQTransactionContext::~ActiveMQTransactionContext() {
-
-    try{
-
-        // TODO
-        // Inform the connector we are rolling back before we close so that
-        // the provider knows we didn't complete this transaction
-//        connection->getConnectionData()->getConnector()->
-//            rollback( transactionInfo, session->getSessionInfo() );
-
-    }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::addSynchronization( Synchronization* sync ) {
+void ActiveMQTransactionContext::addSynchronization( const Pointer<Synchronization>& sync ) {
 
     synchronized( &this->synchronizations ) {
         this->synchronizations.add( sync );
@@ -91,11 +77,41 @@ void ActiveMQTransactionContext::addSynchronization( Synchronization* sync ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::removeSynchronization( Synchronization* sync ) {
+void ActiveMQTransactionContext::removeSynchronization( const Pointer<Synchronization>& sync ) {
 
     synchronized( &this->synchronizations ) {
         this->synchronizations.remove( sync );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTransactionContext::begin()
+    throw ( activemq::exceptions::ActiveMQException ) {
+
+    try{
+        if( !isInTransaction() ) {
+
+            this->synchronizations.clear();
+
+            // Create the Id
+            Pointer<LocalTransactionId> id( new LocalTransactionId() );
+            id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
+            id->setValue( this->getNextTransactionId() );
+
+            // Create and Populate the Info Command.
+            Pointer<TransactionInfo> transactionInfo( new TransactionInfo() );
+            transactionInfo->setConnectionId( id->getConnectionId() );
+            transactionInfo->setTransactionId( id );
+            transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_BEGIN );
+
+            this->connection->oneway( transactionInfo );
+
+            this->transactionId = id.dynamicCast<TransactionId>();
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,51 +120,28 @@ void ActiveMQTransactionContext::commit()
 
     try{
 
-        if( this->transactionInfo.get() == NULL ||
-            this->transactionInfo->getTransactionId() == NULL ) {
+        if( this->transactionId.get() == NULL ) {
             throw InvalidStateException(
                 __FILE__, __LINE__,
                 "ActiveMQTransactionContext::commit - "
                 "Commit called before transaction was started.");
         }
 
-        // Stop any deliveries
-        this->session->stop();
+        this->beforeEnd();
 
-        // Notify each registered Synchronization that we are committing this Transaction.
-        synchronized( &this->synchronizations ) {
+        // Create and Populate the Info Command.
+        Pointer<TransactionInfo> info( new TransactionInfo() );
+        info->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
+        info->setTransactionId( this->transactionId );
+        info->setType( ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE );
 
-            std::auto_ptr< decaf::util::Iterator<Synchronization*> > iter(
-                this->synchronizations.iterator() );
-
-            while( iter->hasNext() ) {
-                iter->next()->beforeCommit();
-            }
-        }
+        // Before we send the command null the id in case of an exception.
+        this->transactionId.reset( NULL );
 
         // Commit the current Transaction
-        this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_COMMITONEPHASE );
-        this->connection->oneway( this->transactionInfo );
+        this->connection->oneway( info );
 
-        // Notify each registered Synchronization that we have committed this Transaction.
-        synchronized( &this->synchronizations ) {
-
-            std::auto_ptr<decaf::util::Iterator<Synchronization*> > iter(
-                this->synchronizations.iterator() );
-
-            while( iter->hasNext() ) {
-                iter->next()->afterCommit();
-            }
-        }
-
-        // Clear all the Synchronizations.
-        this->clearSynchronizations();
-
-        // Start a new Transaction
-        this->startTransaction();
-
-        // Stop any deliveries
-        this->session->start();
+        this->afterCommit();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -161,40 +154,28 @@ void ActiveMQTransactionContext::rollback()
 
     try{
 
-        if( this->transactionInfo.get() == NULL ||
-            this->transactionInfo->getTransactionId() == NULL ) {
+        if( this->transactionId == NULL ) {
             throw InvalidStateException(
                 __FILE__, __LINE__,
                 "ActiveMQTransactionContext::rollback - "
                 "Rollback called before transaction was started.");
         }
 
-        // Stop any Deliveries
-        this->session->stop();
+        this->beforeEnd();
 
-        // Rollback the Transaction
-        this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_ROLLBACK );
-        this->connection->oneway( this->transactionInfo );
+        // Create and Populate the Info Command.
+        Pointer<TransactionInfo> info( new TransactionInfo() );
+        info->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
+        info->setTransactionId( this->transactionId );
+        info->setType( ActiveMQConstants::TRANSACTION_STATE_ROLLBACK );
 
-        // Notify each registered Synchronization that we are committing this Transaction.
-        synchronized( &this->synchronizations ) {
+        // Before we send the command null the id in case of an exception.
+        this->transactionId.reset( NULL );
 
-            std::auto_ptr<decaf::util::Iterator<Synchronization*> > iter(
-                this->synchronizations.iterator() );
+        // Roll back the current Transaction
+        this->connection->oneway( info );
 
-            while( iter->hasNext() ) {
-                iter->next()->beforeCommit();
-            }
-        }
-
-        // Clear all the Synchronizations.
-        this->clearSynchronizations();
-
-        // Start a new Transaction
-        this->startTransaction();
-
-        // Start Deliveries
-        this->session->start();
+        this->afterRollback();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -202,50 +183,46 @@ void ActiveMQTransactionContext::rollback()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::startTransaction() throw( activemq::exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::beforeEnd() {
 
-    try{
+    // Notify each registered Synchronization that we are ending this Transaction.
+    synchronized( &this->synchronizations ) {
 
-        this->transactionInfo.reset( new TransactionInfo() );
+        std::auto_ptr<decaf::util::Iterator< Pointer<Synchronization> > > iter(
+            this->synchronizations.iterator() );
 
-        // Create the Id
-        Pointer<LocalTransactionId> id( new LocalTransactionId() );
-        id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
-        id->setValue( this->connection->getNextTransactionId() );
-
-        // Populate the Info Command.
-        this->transactionInfo->setConnectionId( id->getConnectionId() );
-        this->transactionInfo->setTransactionId( id );
-        this->transactionInfo->setType( ActiveMQConstants::TRANSACTION_STATE_BEGIN );
-
-        this->connection->oneway( this->transactionInfo );
+        while( iter->hasNext() ) {
+            iter->next()->beforeEnd();
+        }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQTransactionContext::clearSynchronizations()
-    throw( activemq::exceptions::ActiveMQException ) {
+void ActiveMQTransactionContext::afterCommit() {
 
+    // Notify each registered Synchronization that we committed this Transaction.
+    synchronized( &this->synchronizations ) {
 
-    try{
+        std::auto_ptr<decaf::util::Iterator< Pointer<Synchronization> > > iter(
+            this->synchronizations.iterator() );
 
-        // delete each of the Synchronizations and then clear the Set.
-        synchronized( &this->synchronizations ) {
-
-            std::auto_ptr<decaf::util::Iterator<Synchronization*> > iter(
-                this->synchronizations.iterator() );
-
-            while( iter->hasNext() ) {
-                delete iter->next();
-            }
-
-            this->synchronizations.clear();
+        while( iter->hasNext() ) {
+            iter->next()->afterCommit();
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQTransactionContext::afterRollback() {
+
+    // Notify each registered Synchronization that we rolled back this Transaction.
+    synchronized( &this->synchronizations ) {
+
+        std::auto_ptr<decaf::util::Iterator< Pointer<Synchronization> > > iter(
+            this->synchronizations.iterator() );
+
+        while( iter->hasNext() ) {
+            iter->next()->afterRollback();
+        }
+    }
 }

@@ -116,6 +116,12 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Stop the dispatch executor.
         stop();
 
+        // TODO = Commit it first.  ??
+        // Destroy the Transaction
+        if( this->transaction.get() != NULL && this->transaction->isInTransaction() ){
+            this->transaction->commit();
+        }
+
         // Close all Consumers
         synchronized( &this->consumers ) {
 
@@ -142,13 +148,6 @@ void ActiveMQSession::close() throw ( cms::CMSException )
                     /* Absorb */
                 }
             }
-        }
-
-        // TODO = Commit it first.  ??
-        // Destroy the Transaction
-        if( this->transaction.get() != NULL ){
-            this->transaction->commit();
-            this->transaction.release();
         }
 
         // Remove this session from the Broker.
@@ -199,8 +198,18 @@ void ActiveMQSession::rollback() throw ( cms::CMSException ) {
                 "ActiveMQSession::rollback - This Session is not Transacted" );
         }
 
-        // Rollback the Transaction
+        bool started = this->executor->isStarted();
+
+        if( started ) {
+            this->executor->stop();
+        }
+
+        // Roll back the Transaction
         this->transaction->rollback();
+
+        if( started ) {
+            this->executor->start();
+        }
     }
     AMQ_CATCH_NOTHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -337,10 +346,13 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         this->checkClosed();
 
+        Pointer<cms::Destination> clonedDestination(
+            destination != NULL ? destination->clone() : NULL );
+
         decaf::lang::Pointer<commands::ProducerId> producerId( new commands::ProducerId() );
         producerId->setConnectionId( this->sessionInfo->getSessionId()->getConnectionId() );
         producerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
-        producerId->setValue( this->connection->getNextProducerId() );
+        producerId->setValue( this->getNextProducerId() );
 
         Pointer<commands::ProducerInfo> producerInfo( new commands::ProducerInfo() );
         producerInfo->setProducerId( producerId );
@@ -348,22 +360,16 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         // Producers are allowed to have NULL destinations.  In this case, the
         // destination is specified by the messages as they are sent.
-        if( destination != NULL ) {
+        if( clonedDestination != NULL ) {
 
             // Cast the destination to an OpenWire destination, so we can
             // get all the goodies.
-            const commands::ActiveMQDestination* amqDestination =
-                dynamic_cast<const commands::ActiveMQDestination*>( destination );
-            if( amqDestination == NULL ) {
-                throw ActiveMQException( __FILE__, __LINE__,
-                    "Destination is not a valid Type: commands::ActiveMQDestination" );
-            }
+            Pointer<commands::ActiveMQDestination> amqDestination =
+                clonedDestination.dynamicCast<commands::ActiveMQDestination>();
 
             // Get any options specified in the destination and apply them to the
             // ProducerInfo object.
-            producerInfo->setDestination(
-                decaf::lang::Pointer<commands::ActiveMQDestination>(
-                    amqDestination->cloneDataStructure() ) );
+            producerInfo->setDestination( amqDestination );
             const ActiveMQProperties& options = amqDestination->getOptions();
             producerInfo->setDispatchAsync( Boolean::parseBoolean(
                 options.getProperty( "producer.dispatchAsync", "false" )) );
@@ -371,7 +377,7 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         // Create the producer instance.
         std::auto_ptr<ActiveMQProducer> producer(
-            new ActiveMQProducer( producerInfo, destination, this ) );
+            new ActiveMQProducer( producerInfo, clonedDestination, this ) );
 
         producer->setSendTimeout( this->connection->getSendTimeout() );
 
@@ -382,6 +388,8 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         // Add to the Connections list
         this->connection->addProducer( producer.get() );
+
+        this->syncRequest( producerInfo );
 
         return producer.release();
     }
@@ -600,11 +608,15 @@ void ActiveMQSession::send(
         // flag.  Not adding a message ID will cause an NPE at the broker.
         decaf::lang::Pointer<commands::MessageId> id( new commands::MessageId() );
         id->setProducerId( producer->getProducerInfo().getProducerId() );
-        id->setProducerSequenceId( this->connection->getNextProducerSequenceId() );
+        id->setProducerSequenceId( this->getNextProducerSequenceId() );
 
         amqMessage->setMessageId( id );
 
         if( this->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
+
+            // Ensure that a new transaction is started if this is the first message
+            // sent since the last commit.
+            doStartTransaction();
 
             if( this->transaction.get() == NULL ) {
                 throw ActiveMQException(
@@ -749,7 +761,7 @@ ConsumerInfo* ActiveMQSession::createConsumerInfo(
         consumerId->setConnectionId(
             this->connection->getConnectionId().getValue() );
         consumerId->setSessionId( this->sessionInfo->getSessionId()->getValue() );
-        consumerId->setValue( this->connection->getNextSessionId() );
+        consumerId->setValue( this->getNextConsumerId() );
 
         consumerInfo->setConsumerId( consumerId );
 
@@ -932,23 +944,6 @@ std::string ActiveMQSession::createTemporaryDestinationName()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-commands::TransactionId* ActiveMQSession::createLocalTransactionId()
-    throw ( activemq::exceptions::ActiveMQException ) {
-
-    try{
-        std::auto_ptr<LocalTransactionId> id( new LocalTransactionId() );
-
-        id->setConnectionId( this->connection->getConnectionInfo().getConnectionId() );
-        id->setValue( this->connection->getNextTransactionId() );
-
-        return id.release();
-    }
-    AMQ_CATCH_RETHROW( activemq::exceptions::ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, activemq::exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( activemq::exceptions::ActiveMQException )
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::oneway( Pointer<Command> command )
     throw ( activemq::exceptions::ActiveMQException ) {
 
@@ -1007,12 +1002,6 @@ void ActiveMQSession::disposeOf( Pointer<ConsumerId> id )
                 this->connection->disposeOf( id );
                 this->consumers.remove( id );
 
-                //TODO
-//              // Remove this consumer from the Transaction if we are transacted
-//              if( transaction != NULL ) {
-//                  transaction->removeFromTransaction( consumer->getConsumerId() );
-//              }
-//
                 // Clean up any resources in the executor for this consumer
                 if( this->executor.get() != NULL ) {
 
@@ -1063,4 +1052,14 @@ ActiveMQConsumer* ActiveMQSession::getConsumer( const Pointer<ConsumerId>& id ) 
         }
     }
     return NULL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::doStartTransaction() throw ( ActiveMQException ) {
+
+    if( !this->isTransacted() ) {
+        throw ActiveMQException( __FILE__, __LINE__, "Not a Transacted Session" );
+    }
+
+    this->transaction->begin();
 }
