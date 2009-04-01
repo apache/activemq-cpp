@@ -150,6 +150,9 @@ void TransactionTest::testSendSessionClose() {
         // validates that the rollbacked was not consumed
         cmsProvider->getSession()->commit();
 
+        CPPUNIT_ASSERT( inbound1.get() != NULL );
+        CPPUNIT_ASSERT( inbound2.get() != NULL );
+
         CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
         CPPUNIT_ASSERT( outbound2->getText() == inbound2->getText() );
     }
@@ -187,6 +190,8 @@ void TransactionTest::testWithTTLSet() {
                 dynamic_cast<TextMessage*>( consumer->receive( 4000 ) ) );
             CPPUNIT_ASSERT( outbound1->getText() == inbound1->getText() );
         }
+
+        cmsProvider->getSession()->commit();
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
