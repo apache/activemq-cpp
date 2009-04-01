@@ -288,6 +288,7 @@ public:
     // registered as an ExceptionListener with the connection.
     virtual void onException( const CMSException& ex AMQCPP_UNUSED) {
         printf("CMS Exception occurred.  Shutting down client.\n");
+        ex.printStackTrace();
         exit(1);
     }
 
