@@ -96,26 +96,6 @@ namespace core {
         std::string clientId;
 
         /**
-         * Next available Producer Id
-         */
-        util::LongSequenceGenerator producerIds;
-
-        /**
-         * Next available Producer Sequence Id
-         */
-        util::LongSequenceGenerator producerSequenceIds;
-
-        /**
-         * Next available Consumer Id
-         */
-        util::LongSequenceGenerator consumerIds;
-
-        /**
-         * Next available Transaction Id
-         */
-        util::LongSequenceGenerator transactionIds;
-
-        /**
          * Next available Session Id.
          */
         util::LongSequenceGenerator sessionIds;
@@ -303,38 +283,6 @@ namespace core {
          */
         void setClientId( const std::string& clientId ) {
             this->clientId = clientId;
-        }
-
-        /**
-         * Get the Next available Producer Id
-         * @return the next id in the sequence.
-         */
-        long long getNextProducerId() {
-            return this->producerIds.getNextSequenceId();
-        }
-
-        /**
-         * Get the Next available Producer Sequence Id
-         * @return the next id in the sequence.
-         */
-        long long getNextProducerSequenceId() {
-            return this->producerSequenceIds.getNextSequenceId();
-        }
-
-        /**
-         * Get the Next available Consumer Id
-         * @return the next id in the sequence.
-         */
-        long long getNextConsumerId() {
-            return this->consumerIds.getNextSequenceId();
-        }
-
-        /**
-         * Get the Next available Transaction Id
-         * @return the next id in the sequence.
-         */
-        long long getNextTransactionId() {
-            return this->transactionIds.getNextSequenceId();
         }
 
         /**

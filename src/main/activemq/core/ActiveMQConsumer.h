@@ -25,11 +25,13 @@
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/commands/MessageAck.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
 
 #include <decaf/util/concurrent/atomic/AtomicReference.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
 #include <decaf/util/concurrent/Mutex.h>
@@ -40,6 +42,7 @@ namespace core{
 
     using decaf::lang::Pointer;
     using decaf::util::concurrent::atomic::AtomicReference;
+    using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ActiveMQSession;
 
@@ -71,6 +74,11 @@ namespace core{
         AtomicReference<cms::MessageListener> listener;
 
         /**
+         * Is the consumer currently delivering acks.
+         */
+        AtomicBoolean deliveringAcks;
+
+        /**
          * Queue of unconsumed messages.
          */
         decaf::util::StlQueue<DispatchData> unconsumedMessages;
@@ -84,6 +92,31 @@ namespace core{
          * The last delivered message's BrokerSequenceId.
          */
         long long lastDeliveredSequenceId;
+
+        /**
+         * Next Ack to go out.
+         */
+        Pointer<commands::MessageAck> pendingAck;
+
+        /**
+         * How many message's have been delivered so far since the last Ack was sent.
+         */
+        int deliveredCounter;
+
+        /**
+         * How big to grow the ack window next time.
+         */
+        int additionalWindowSize;
+
+        /**
+         * Time to wait before restarting delivery of rollback messages.
+         */
+        long redeliveryDelay;
+
+        /**
+         * Has the Synchronization been added for this transaction
+         */
+        volatile bool synchronizationRegistered;
 
         /**
          * Boolean that indicates if the consumer has been closed
@@ -178,15 +211,22 @@ namespace core{
     public:  // ActiveMQConsumer Methods
 
         /**
-         * Method called to acknowledge the message passed, ack it using
-         * the passed in ackType, see <code>Connector</code> for a list
-         * of the correct ack types.
-         * @param message the Message to Acknowledge
-         * @param ackType the Type of ack to send, (connector enum)
+         * Method called to acknowledge all messages that have been received so far.
          * @throw CMSException
          */
-        virtual void acknowledge( const commands::Message* message, int ackType )
-            throw ( cms::CMSException );
+        void acknowledge() throw ( cms::CMSException );
+
+        /**
+         * Called to Commit the current set of messages in this Transaction
+         * @throw ActiveMQException
+         */
+        void commit() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Called to Roll back the current set of messages in this Transaction
+         * @throw ActiveMQException
+         */
+        void rollback() throw ( exceptions::ActiveMQException );
 
         /**
          * Get the Consumer information for this consumer
@@ -211,6 +251,22 @@ namespace core{
          */
         bool isClosed() const {
             return this->closed;
+        }
+
+        /**
+         * Has this Consumer Transaction Synchronization been added to the transaction
+         * @return true if the synchronization has been added.
+         */
+        bool issynchronizationRegistered() const {
+            return this->synchronizationRegistered;
+        }
+
+        /**
+         * Sets the Synchronization Registered state of this consumer.
+         * @param value - true if registered false otherwise.
+         */
+        void setSynchronizationRegistered( bool value ) {
+            this->synchronizationRegistered = value;
         }
 
     protected:
@@ -257,7 +313,7 @@ namespace core{
         /**
          * If supported sends a message pull request to the service provider asking
          * for the delivery of a new message.  This is used in the case where the
-         * service provider has been configured with a zero prefectch or is only
+         * service provider has been configured with a zero prefetch or is only
          * capable of delivering messages on a pull basis.  No request is made if
          * there are already messages in the unconsumed queue since there's no need
          * for a server round-trip in that instance.
@@ -268,6 +324,15 @@ namespace core{
 
         // Checks for the closed state and throws if so.
         void checkClosed() const throw( exceptions::ActiveMQException );
+
+        // Sends an ack as needed in order to keep them coming in if the current
+        // ack mode allows the consumer to receive up to the prefetch limit before
+        // an real ack is sent.
+        void ackLater( const Pointer<commands::Message>& message, int ackType )
+            throw ( exceptions::ActiveMQException );
+
+        // Create an Ack Message that acks all messages that have been delivered so far.
+        Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );
 
     };
 
