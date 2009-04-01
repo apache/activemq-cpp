@@ -19,6 +19,7 @@
 
 #include <list>
 #include <vector>
+#include <decaf/util/Iterator.h>
 #include <decaf/util/concurrent/Mutex.h>
 #include <decaf/lang/Exception.h>
 
@@ -56,10 +57,72 @@ namespace util{
      */
 
     template <typename T> class StlQueue : public concurrent::Synchronizable {
+    private:
+
+        // The real queue
+        std::list<T> queue;
+
+        // Object used for sync
+        mutable util::concurrent::Mutex mutex;
+
+    private:
+
+        class QueueIterator : public Iterator<T> {
+        private:
+
+            typename std::list<T>::iterator current;
+            typename std::list<T>::iterator previous;
+            typename std::list<T>* queue;
+
+        public:
+
+            QueueIterator( typename std::list<T>* queue ) {
+                this->current = queue->begin();
+                this->previous = queue->end();
+                this->queue = queue;
+            }
+            virtual ~QueueIterator() {}
+
+            virtual T next() throw( lang::exceptions::NoSuchElementException ){
+                if( this->current == queue->end() ) {
+                    throw lang::exceptions::NoSuchElementException(
+                        __FILE__, __LINE__,
+                        "Queue::Iterator::next - No more elements to return" );
+                }
+
+                this->previous = this->current;
+                return *( this->current++ );
+            }
+
+            virtual bool hasNext() const {
+                return ( this->current != queue->end() );
+            }
+
+            virtual void remove() throw ( lang::exceptions::IllegalStateException,
+                                          lang::exceptions::UnsupportedOperationException ){
+                if( this->previous == queue->end() ) {
+                    throw lang::exceptions::IllegalStateException(
+                        __FILE__, __LINE__,
+                        "Queue::Iterator::remove - Invalid State to call remove" );
+                }
+
+                this->queue->erase( this->previous );
+                this->previous = this->queue->end();
+            }
+        };
+
     public:
 
         StlQueue() {}
         virtual ~StlQueue() {}
+
+        /**
+         * Gets an Iterator over this Queue.
+         * @return new iterator pointer that is owned by the caller.
+         */
+        Iterator<T>* iterator() {
+            return new QueueIterator( &queue );
+        }
 
         /**
          * Empties this queue.
@@ -249,14 +312,6 @@ namespace util{
             static T safe;
             return safe;
         }
-
-    private:
-
-        // The real queue
-        std::list<T> queue;
-
-        // Object used for sync
-        mutable util::concurrent::Mutex mutex;
 
     };
 
