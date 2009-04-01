@@ -71,7 +71,7 @@ namespace core{
         std::auto_ptr<util::MemoryUsage> memoryUsage;
 
         // The Destination assigned at creation, NULL if not assigned.
-        std::auto_ptr<cms::Destination> destination;
+        Pointer<cms::Destination> destination;
 
     public:
 
@@ -87,7 +87,7 @@ namespace core{
          *        The Session which is the parent of this Producer.
          */
         ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                          const cms::Destination* destination,
+                          const Pointer<cms::Destination>& destination,
                           ActiveMQSession* session );
 
         virtual ~ActiveMQProducer();

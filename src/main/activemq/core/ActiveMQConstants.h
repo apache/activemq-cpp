@@ -53,10 +53,12 @@ namespace core{
         // Represents the Acknowledgement types that are supported for the
         // Message Ack Command.
         enum AckType {
-            ACK_TYPE_DELIVERED = 0,  // Message delivered but not consumed
-            ACK_TYPE_POISON    = 1,  // Message could not be processed due to
-                                     // poison pill but discard anyway
-            ACK_TYPE_CONSUMED  = 2   // Message consumed, discard
+            ACK_TYPE_DELIVERED   = 0,  // Message delivered but not consumed
+            ACK_TYPE_POISON      = 1,  // Message could not be processed due to
+                                       // poison pill but discard anyway
+            ACK_TYPE_CONSUMED    = 2,  // Message consumed, discard
+            ACK_TYPE_REDELIVERED = 3,  // Message has been re-delivered.
+            ACK_TYPE_INDIVIDUAL  = 4   // Acks a single message at a time.
         };
 
         /**

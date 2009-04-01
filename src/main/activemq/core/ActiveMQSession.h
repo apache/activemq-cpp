@@ -30,6 +30,7 @@
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
+#include <activemq/util/LongSequenceGenerator.h>
 
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlQueue.h>
@@ -103,6 +104,21 @@ namespace core{
          * This Sessions Acknowledgment mode.
          */
         cms::Session::AcknowledgeMode ackMode;
+
+        /**
+         * Next available Producer Id
+         */
+        util::LongSequenceGenerator producerIds;
+
+        /**
+         * Next available Producer Sequence Id
+         */
+        util::LongSequenceGenerator producerSequenceIds;
+
+        /**
+         * Next available Consumer Id
+         */
+        util::LongSequenceGenerator consumerIds;
 
     public:
 
@@ -448,7 +464,40 @@ namespace core{
         void disposeOf( decaf::lang::Pointer<commands::ProducerId> id )
             throw ( activemq::exceptions::ActiveMQException );
 
+        /**
+         * Starts if not already start a Transaction for this Session.  If the session
+         * is not a Transacted Session then an exception is thrown.  If a transaction is
+         * already in progress then this method has no effect.
+         *
+         * @throw ActiveMQException if this is not a Transacted Session.
+         */
+        void doStartTransaction() throw ( exceptions::ActiveMQException );
+
    private:
+
+       /**
+        * Get the Next available Producer Id
+        * @return the next id in the sequence.
+        */
+       long long getNextProducerId() {
+           return this->producerIds.getNextSequenceId();
+       }
+
+       /**
+        * Get the Next available Producer Sequence Id
+        * @return the next id in the sequence.
+        */
+       long long getNextProducerSequenceId() {
+           return this->producerSequenceIds.getNextSequenceId();
+       }
+
+       /**
+        * Get the Next available Consumer Id
+        * @return the next id in the sequence.
+        */
+       long long getNextConsumerId() {
+           return this->consumerIds.getNextSequenceId();
+       }
 
        // Checks for the closed state and throws if so.
        void checkClosed() const throw( exceptions::ActiveMQException );
@@ -482,12 +531,6 @@ namespace core{
        // and a rolling count.
        // @returns a unique Temporary Destination name
        std::string createTemporaryDestinationName()
-           throw ( activemq::exceptions::ActiveMQException );
-
-       // Create a Transaction Id using the local context to create
-       // the LocalTransactionId Command.
-       // @returns a new TransactionId pointer, caller owns.
-       commands::TransactionId* createLocalTransactionId()
            throw ( activemq::exceptions::ActiveMQException );
 
     };

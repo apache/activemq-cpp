@@ -20,6 +20,7 @@
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
 #include <decaf/util/Date.h>
+#include <decaf/lang/Math.h>
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/Message.h>
@@ -32,6 +33,7 @@
 #include <activemq/core/ActiveMQSession.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <cms/ExceptionListener.h>
+#include <memory>
 
 using namespace std;
 using namespace activemq;
@@ -42,6 +44,46 @@ using namespace decaf::lang;
 using namespace decaf::lang::exceptions;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
+
+////////////////////////////////////////////////////////////////////////////////
+namespace activemq{
+namespace core {
+
+    class ConsumerSynhcronization : public Synchronization {
+    private:
+
+        ActiveMQConsumer* consumer;
+
+    public:
+
+        ConsumerSynhcronization( ActiveMQConsumer* consumer ) {
+
+            if( consumer == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
+            }
+
+            this->consumer = consumer;
+        }
+
+        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
+            consumer->acknowledge();
+            consumer->setSynchronizationRegistered( false );
+        }
+
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
+            consumer->commit();
+            consumer->setSynchronizationRegistered( false );
+        }
+
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
+            consumer->rollback();
+            consumer->setSynchronizationRegistered( false );
+        }
+
+    };
+
+}}
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
@@ -60,6 +102,7 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->consumerInfo = consumerInfo;
     this->closed = false;
     this->lastDeliveredSequenceId = 0;
+    this->synchronizationRegistered = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -359,6 +402,10 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message 
 
     this->lastDeliveredSequenceId = message->getMessageId()->getBrokerSequenceId();
 
+    synchronized( &dispatchedMessages ) {
+        dispatchedMessages.enqueueFront( message );
+    }
+
     // If the session is transacted then we hand off the message to it to
     // be stored for later redelivery.  We do need to check and see if we
     // are approaching the prefetch limit and send an Delivered ack just so
@@ -371,13 +418,7 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message 
                 "In a Transacted Session but no Transaction Context set." );
         }
 
-        // Store the message in the transaction, we clone the message into the
-        // transaction so that there is a copy to commit if commit is called in
-        // the async onMessage method and also so we know that our copy can
-        // be deleted.
-// TODO
-//        transaction->addToTransaction(
-//            dynamic_cast<cms::Message*>( message )->clone(), this );
+        ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
     }
 }
 
@@ -387,8 +428,31 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<Message>& message,
 
     try{
 
-        if( session->isAutoAcknowledge() || messageExpired ) {
-            this->acknowledge( message.get(), ActiveMQConstants::ACK_TYPE_CONSUMED );
+        if( messageExpired == true ) {
+            ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        }
+
+        if( session->isAutoAcknowledge() ) {
+
+            if( this->deliveringAcks.compareAndSet( false, true ) ) {
+
+                synchronized( &dispatchedMessages ) {
+                    if( !dispatchedMessages.empty() ) {
+                        Pointer<MessageAck> ack = makeAckForAllDeliveredMessages(
+                            ActiveMQConstants::ACK_TYPE_CONSUMED );
+
+                        if( ack != NULL ) {
+                            dispatchedMessages.clear();
+                            session->oneway( ack );
+                        }
+                    }
+                }
+
+                this->deliveringAcks.set( false );
+            }
+
+        } else if( session->isClientAcknowledge() ) {
+            ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -397,15 +461,90 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<Message>& message,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledgeMessage( const commands::Message* message )
+void ActiveMQConsumer::ackLater( const Pointer<Message>& message, int ackType )
+    throw ( ActiveMQException ) {
+
+    // Don't acknowledge now, but we may need to let the broker know the
+    // consumer got the message to expand the pre-fetch window
+    if( session->isTransacted() ) {
+        session->doStartTransaction();
+        if( !synchronizationRegistered ) {
+            synchronizationRegistered = true;
+
+            Pointer<Synchronization> sync( new ConsumerSynhcronization( this ) );
+            this->transaction->addSynchronization( sync );
+        }
+    }
+
+    // The delivered message list is only needed for the recover method
+    // which is only used with client ack.
+    deliveredCounter++;
+
+    Pointer<MessageAck> oldPendingAck = pendingAck;
+    pendingAck.reset( new MessageAck() );
+    pendingAck->setConsumerId( this->consumerInfo->getConsumerId() );
+    pendingAck->setAckType( ackType );
+    pendingAck->setDestination( message->getDestination() );
+    pendingAck->setLastMessageId( message->getMessageId() );
+    pendingAck->setMessageCount( deliveredCounter );
+
+    if( oldPendingAck == NULL ) {
+        pendingAck->setFirstMessageId( pendingAck->getLastMessageId() );
+    } else {
+        pendingAck->setFirstMessageId( oldPendingAck->getFirstMessageId() );
+    }
+
+    if( session->isTransacted() ) {
+        pendingAck->setTransactionId( this->transaction->getTransactionId() );
+    }
+
+    if( ( 0.5 * this->consumerInfo->getPrefetchSize()) <= ( deliveredCounter - additionalWindowSize ) ) {
+        session->oneway( pendingAck );
+        pendingAck.reset( NULL );
+        additionalWindowSize = deliveredCounter;
+
+        // When using DUPS ok, we do a real ack.
+        if( ackType == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
+            deliveredCounter = 0;
+            additionalWindowSize = 0;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type ) {
+
+    synchronized( &dispatchedMessages ) {
+
+        if( !dispatchedMessages.empty() ) {
+
+            Pointer<Message> message = dispatchedMessages.front();
+            Pointer<MessageAck> ack( new MessageAck() );
+            ack->setAckType( type );
+            ack->setConsumerId( this->consumerInfo->getConsumerId() );
+            ack->setDestination( message->getDestination() );
+            ack->setMessageCount( dispatchedMessages.size() );
+            ack->setLastMessageId( message->getMessageId() );
+            ack->setFirstMessageId( dispatchedMessages.back()->getMessageId() );
+
+            return ack;
+        }
+    }
+
+    return Pointer<MessageAck>();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::acknowledgeMessage( const commands::Message* message AMQCPP_UNUSED )
    throw ( cms::CMSException ) {
 
     try{
 
         this->checkClosed();
 
-        // Send an ack indicating that the client has consumed the message
-        this->acknowledge( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
+        if( this->session->isClientAcknowledge() ) {
+            this->acknowledge();
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
@@ -413,45 +552,147 @@ void ActiveMQConsumer::acknowledgeMessage( const commands::Message* message )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::acknowledge( const commands::Message* message, int ackType )
-    throw ( cms::CMSException ) {
+void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
 
     try{
 
-        this->checkClosed();
+        synchronized( &dispatchedMessages ) {
 
-        if( message == NULL ) {
-            throw ActiveMQException(
-                __FILE__, __LINE__,
-                "ActiveMQConsumer::acknowledge - Message passed to Ack was NULL.");
-        }
+            // Acknowledge all messages so far.
+            Pointer<MessageAck> ack =
+                makeAckForAllDeliveredMessages( ActiveMQConstants::ACK_TYPE_CONSUMED );
 
-        Pointer<MessageAck> ack( new MessageAck() );
-        ack->setAckType( (int)ackType );
-        ack->setConsumerId( this->consumerInfo->getConsumerId() );
-        ack->setDestination( message->getDestination() );
-        ack->setFirstMessageId( message->getMessageId() );
-        ack->setLastMessageId( message->getMessageId() );
-        ack->setMessageCount( 1 );
-
-        if( this->session->getAcknowledgeMode() == cms::Session::SESSION_TRANSACTED ) {
-
-            if( this->transaction == NULL ) {
-
-                throw ActiveMQException(
-                        __FILE__, __LINE__,
-                        "ActiveMQConsumer::acknowledge - "
-                        "Transacted Session, has no Transaction Info.");
+            if( ack == NULL ) {
+                return;
             }
 
-            ack->setTransactionId( this->transaction->getTransactionId() );
-        }
+            if( session->isTransacted() ) {
+                session->doStartTransaction();
+                ack->setTransactionId( transaction->getTransactionId() );
+            }
 
-        this->session->oneway( ack );
+            session->oneway( ack );
+            pendingAck.reset( NULL );
+
+            // Adjust the counters
+            deliveredCounter -= dispatchedMessages.size();
+            additionalWindowSize =
+                Math::max( 0, additionalWindowSize - dispatchedMessages.size() );
+
+            if( !session->isTransacted() ) {
+                dispatchedMessages.clear();
+            }
+        }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::commit() throw( ActiveMQException ) {
+
+    synchronized( &dispatchedMessages ) {
+        dispatchedMessages.clear();
+    }
+    redeliveryDelay = 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
+
+    synchronized( &unconsumedMessages ) {
+
+        synchronized( &dispatchedMessages ) {
+            if( dispatchedMessages.empty() ) {
+                return;
+            }
+
+            // Only increase the redelivery delay after the first redelivery..
+            Pointer<Message> lastMsg = dispatchedMessages.front();
+            const int currentRedeliveryCount = lastMsg->getRedeliveryCounter();
+            if( currentRedeliveryCount > 0 ) {
+                redeliveryDelay = transaction->getRedeliveryDelay();
+            }
+
+            Pointer<MessageId> firstMsgId = dispatchedMessages.back()->getMessageId();
+
+            std::auto_ptr< Iterator< Pointer<Message> > > iter( dispatchedMessages.iterator() );
+
+            while( iter->hasNext() ) {
+                Pointer<Message> message = iter->next();
+                message->setRedeliveryCounter( message->getRedeliveryCounter() + 1 );
+            }
+
+            if( lastMsg->getRedeliveryCounter() > this->transaction->getMaximumRedeliveries() ) {
+
+                // We need to NACK the messages so that they get sent to the DLQ.
+                // Acknowledge the last message.
+                Pointer<MessageAck> ack( new MessageAck() );
+                ack->setAckType( ActiveMQConstants::ACK_TYPE_POISON );
+                ack->setConsumerId( this->consumerInfo->getConsumerId() );
+                ack->setDestination( lastMsg->getDestination() );
+                ack->setMessageCount( dispatchedMessages.size() );
+                ack->setLastMessageId( lastMsg->getMessageId() );
+                ack->setFirstMessageId( firstMsgId );
+
+                session->oneway( ack );
+                // Adjust the window size.
+                additionalWindowSize =
+                    Math::max( 0, additionalWindowSize - dispatchedMessages.size() );
+                redeliveryDelay = 0;
+
+            } else {
+
+                // only redelivery_ack after first delivery
+                if( currentRedeliveryCount > 0 ) {
+                    Pointer<MessageAck> ack( new MessageAck() );
+                    ack->setAckType( ActiveMQConstants::ACK_TYPE_REDELIVERED );
+                    ack->setConsumerId( this->consumerInfo->getConsumerId() );
+                    ack->setDestination( lastMsg->getDestination() );
+                    ack->setMessageCount( dispatchedMessages.size() );
+                    ack->setLastMessageId( lastMsg->getMessageId() );
+                    ack->setFirstMessageId( firstMsgId );
+
+                    session->oneway( ack );
+                }
+
+//                // stop the delivery of messages.
+//                unconsumedMessages.stop();
+
+                std::auto_ptr< Iterator< Pointer<Message> > > iter( dispatchedMessages.iterator() );
+
+                while( iter->hasNext() ) {
+                    DispatchData dispatch( this->consumerInfo->getConsumerId(), iter->next() );
+                    unconsumedMessages.enqueueFront( dispatch );
+                }
+
+//                if (redeliveryDelay > 0 && !unconsumedMessages.isClosed()) {
+//                    // Start up the delivery again a little later.
+//                    scheduler.executeAfterDelay(new Runnable() {
+//                        public void run() {
+//                            try {
+//                                if (started.get()) {
+//                                    start();
+//                                }
+//                            } catch (JMSException e) {
+//                                session.connection.onAsyncException(e);
+//                            }
+//                        }
+//                    }, redeliveryDelay);
+//                } else {
+//                    start();
+//                }
+
+            }
+            deliveredCounter -= dispatchedMessages.size();
+            dispatchedMessages.clear();
+        }
+    }
+
+    if( this->listener.get() != NULL ) {
+        session->redispatch( unconsumedMessages );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -463,7 +704,7 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
 
         // Don't dispatch expired messages, ack it and then destroy it
         if( message->isExpired() ) {
-            this->acknowledge( message.get(), ActiveMQConstants::ACK_TYPE_CONSUMED );
+            this->ackLater( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
 
             // stop now, don't queue
             return;

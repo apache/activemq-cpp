@@ -33,7 +33,7 @@ using namespace decaf::lang::exceptions;
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& producerInfo,
-                                    const cms::Destination* destination,
+                                    const Pointer<cms::Destination>& destination,
                                     ActiveMQSession* session ) {
 
     if( session == NULL || producerInfo == NULL ) {
@@ -45,7 +45,7 @@ ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& produ
     // Init Producer Data
     this->session = session;
     this->producerInfo = producerInfo;
-    this->destination.reset( destination != NULL ? destination->clone() : NULL );
+    this->destination = destination;
     this->closed = false;
 
     // Default the Delivery options
@@ -54,8 +54,6 @@ ActiveMQProducer::ActiveMQProducer( const Pointer<commands::ProducerInfo>& produ
     this->disableMessageId = false;
     this->defaultPriority = 4;
     this->defaultTimeToLive = 0;
-
-    this->session->syncRequest( this->producerInfo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
