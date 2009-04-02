@@ -762,32 +762,12 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                     session->oneway( ack );
                 }
 
-//                // stop the delivery of messages.
-//                unconsumedMessages.stop();
-
                 std::auto_ptr< Iterator< Pointer<Message> > > iter( dispatchedMessages.iterator() );
 
                 while( iter->hasNext() ) {
                     DispatchData dispatch( this->consumerInfo->getConsumerId(), iter->next() );
                     unconsumedMessages.enqueueFront( dispatch );
                 }
-
-//                if (redeliveryDelay > 0 && !unconsumedMessages.isClosed()) {
-//                    // Start up the delivery again a little later.
-//                    scheduler.executeAfterDelay(new Runnable() {
-//                        public void run() {
-//                            try {
-//                                if (started.get()) {
-//                                    start();
-//                                }
-//                            } catch (JMSException e) {
-//                                session.connection.onAsyncException(e);
-//                            }
-//                        }
-//                    }, redeliveryDelay);
-//                } else {
-//                    start();
-//                }
 
             }
             deliveredCounter -= dispatchedMessages.size();
