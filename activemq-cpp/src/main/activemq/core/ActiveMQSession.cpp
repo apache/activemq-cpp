@@ -116,10 +116,10 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Stop the dispatch executor.
         stop();
 
-        // TODO = Commit it first.  ??
-        // Destroy the Transaction
+        // Roll Back the transaction since we were closed without an explicit call
+        // to commit it.
         if( this->transaction.get() != NULL && this->transaction->isInTransaction() ){
-            this->transaction->commit();
+            this->transaction->rollback();
         }
 
         // Close all Consumers

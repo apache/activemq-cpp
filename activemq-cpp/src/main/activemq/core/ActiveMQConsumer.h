@@ -229,6 +229,12 @@ namespace core{
         void rollback() throw ( exceptions::ActiveMQException );
 
         /**
+         * Performs the actual close operation on this consumer
+         * @throw ActiveMQException
+         */
+        void doClose() throw ( exceptions::ActiveMQException );
+
+        /**
          * Get the Consumer information for this consumer
          * @return Reference to a Consumer Info Object
          */
@@ -330,6 +336,9 @@ namespace core{
         // an real ack is sent.
         void ackLater( const Pointer<commands::Message>& message, int ackType )
             throw ( exceptions::ActiveMQException );
+
+        // Delivers all pending acks before a consumer is closed
+        void deliverAcks() throw ( exceptions::ActiveMQException );
 
         // Create an Ack Message that acks all messages that have been delivered so far.
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );
