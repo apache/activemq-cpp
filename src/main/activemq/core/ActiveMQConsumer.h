@@ -111,7 +111,7 @@ namespace core{
         /**
          * Time to wait before restarting delivery of rollback messages.
          */
-        long redeliveryDelay;
+        long long redeliveryDelay;
 
         /**
          * Has the Synchronization been added for this transaction
