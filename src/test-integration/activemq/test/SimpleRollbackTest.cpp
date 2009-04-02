@@ -107,6 +107,7 @@ void SimpleRollbackTest::testRollbacks() {
         // Wait for the messages to get here
         listener.asyncWaitForMessages( 1 );
         CPPUNIT_ASSERT( listener.getNumReceived() == 1 );
+        session->commit();
 
     } catch( ... ) {
         CPPUNIT_ASSERT( false );
