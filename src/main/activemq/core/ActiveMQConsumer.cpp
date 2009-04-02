@@ -628,7 +628,7 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
             ack->setAckType( type );
             ack->setConsumerId( this->consumerInfo->getConsumerId() );
             ack->setDestination( message->getDestination() );
-            ack->setMessageCount( dispatchedMessages.size() );
+            ack->setMessageCount( (int)dispatchedMessages.size() );
             ack->setLastMessageId( message->getMessageId() );
             ack->setFirstMessageId( dispatchedMessages.back()->getMessageId() );
 
@@ -680,9 +680,9 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
             pendingAck.reset( NULL );
 
             // Adjust the counters
-            deliveredCounter -= dispatchedMessages.size();
+            deliveredCounter -= (int)dispatchedMessages.size();
             additionalWindowSize =
-                Math::max( 0, additionalWindowSize - dispatchedMessages.size() );
+                Math::max( 0, additionalWindowSize - (int)dispatchedMessages.size() );
 
             if( !session->isTransacted() ) {
                 dispatchedMessages.clear();
@@ -737,14 +737,14 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                 ack->setAckType( ActiveMQConstants::ACK_TYPE_POISON );
                 ack->setConsumerId( this->consumerInfo->getConsumerId() );
                 ack->setDestination( lastMsg->getDestination() );
-                ack->setMessageCount( dispatchedMessages.size() );
+                ack->setMessageCount( (int)dispatchedMessages.size() );
                 ack->setLastMessageId( lastMsg->getMessageId() );
                 ack->setFirstMessageId( firstMsgId );
 
                 session->oneway( ack );
                 // Adjust the window size.
                 additionalWindowSize =
-                    Math::max( 0, additionalWindowSize - dispatchedMessages.size() );
+                    Math::max( 0, additionalWindowSize - (int)dispatchedMessages.size() );
                 redeliveryDelay = 0;
 
             } else {
@@ -755,7 +755,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                     ack->setAckType( ActiveMQConstants::ACK_TYPE_REDELIVERED );
                     ack->setConsumerId( this->consumerInfo->getConsumerId() );
                     ack->setDestination( lastMsg->getDestination() );
-                    ack->setMessageCount( dispatchedMessages.size() );
+                    ack->setMessageCount( (int)dispatchedMessages.size() );
                     ack->setLastMessageId( lastMsg->getMessageId() );
                     ack->setFirstMessageId( firstMsgId );
 
@@ -770,7 +770,7 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                 }
 
             }
-            deliveredCounter -= dispatchedMessages.size();
+            deliveredCounter -= (int)dispatchedMessages.size();
             dispatchedMessages.clear();
         }
     }
@@ -795,14 +795,16 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
             return;
         }
 
+	    cms::MessageListener* cmsListener = this->listener.get();
+
         // If we have a listener, send the message.
-        if( this->listener.get() != NULL ) {
+        if( cmsListener != NULL ) {
 
             // Preprocessing.
             beforeMessageIsConsumed( message );
 
             // Notify the listener
-            this->listener.get()->onMessage( dynamic_cast<cms::Message*>( message.get() ) );
+            cmsListener->onMessage( dynamic_cast<cms::Message*>( message.get() ) );
 
             // Postprocessing
             afterMessageIsConsumed( message, false );
