@@ -49,14 +49,14 @@ using namespace decaf::util::concurrent;
 namespace activemq{
 namespace core {
 
-    class ConsumerSynhcronization : public Synchronization {
+    class TransactionSynhcronization : public Synchronization {
     private:
 
         ActiveMQConsumer* consumer;
 
     public:
 
-        ConsumerSynhcronization( ActiveMQConsumer* consumer ) {
+        TransactionSynhcronization( ActiveMQConsumer* consumer ) {
 
             if( consumer == NULL ) {
                 throw NullPointerException(
@@ -65,6 +65,8 @@ namespace core {
 
             this->consumer = consumer;
         }
+
+        virtual ~TransactionSynhcronization() {}
 
         virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
             consumer->acknowledge();
@@ -79,6 +81,38 @@ namespace core {
         virtual void afterRollback() throw( exceptions::ActiveMQException ) {
             consumer->rollback();
             consumer->setSynchronizationRegistered( false );
+        }
+
+    };
+
+    class CloseSynhcronization : public Synchronization {
+    private:
+
+        ActiveMQConsumer* consumer;
+
+    public:
+
+        CloseSynhcronization( ActiveMQConsumer* consumer ) {
+
+            if( consumer == NULL ) {
+                throw NullPointerException(
+                    __FILE__, __LINE__, "Synchronization Created with NULL Consumer.");
+            }
+
+            this->consumer = consumer;
+        }
+
+        virtual ~CloseSynhcronization() {}
+
+        virtual void beforeEnd() throw( exceptions::ActiveMQException ) {
+        }
+
+        virtual void afterCommit() throw( exceptions::ActiveMQException ) {
+            consumer->doClose();
+        }
+
+        virtual void afterRollback() throw( exceptions::ActiveMQException ) {
+            consumer->doClose();
         }
 
     };
@@ -120,8 +154,38 @@ void ActiveMQConsumer::close()
     throw ( cms::CMSException ) {
 
     try{
+        if( !closed ) {
+            if( this->transaction != NULL && this->transaction->isInTransaction() ) {
+
+                // TODO - Currently we can do this since the consumer could be
+                // deleted right after the close call so it won't stick around
+                // long enough to clean up the transaction data.  For now we
+                // just have to close badly.
+                //
+                //Pointer<Synchronization> sync( new CloseSynhcronization( this ) );
+                //this->transaction->addSynchronization( sync );
+                doClose();
+
+            } else {
+                doClose();
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
+
+    try {
 
         if( !this->isClosed() ) {
+
+            if( !session->isTransacted() ) {
+                deliverAcks();
+            }
 
             // Remove this Consumer from the Connections set of Dispatchers and then
             // remove it from the Broker.
@@ -461,6 +525,47 @@ void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<Message>& message,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::deliverAcks()
+    throw ( ActiveMQException ) {
+
+    try{
+
+        Pointer<MessageAck> ack;
+
+        if( this->deliveringAcks.compareAndSet( false, true ) ) {
+
+            if( this->session->isAutoAcknowledge() ) {
+
+                synchronized( &dispatchedMessages ) {
+                    ack = makeAckForAllDeliveredMessages( ActiveMQConstants::ACK_TYPE_CONSUMED );
+                    if( ack != NULL ) {
+                        dispatchedMessages.clear();
+                    }
+                }
+
+            } else if( pendingAck != NULL &&
+                       pendingAck->getAckType() == ActiveMQConstants::ACK_TYPE_CONSUMED ) {
+
+                ack = pendingAck;
+            }
+
+            if( ack != NULL ) {
+
+                try{
+                    this->session->oneway( ack );
+                } catch(...) {}
+
+            } else {
+                this->deliveringAcks.set( false );
+            }
+        }
+    }
+    AMQ_CATCH_RETHROW( ActiveMQException )
+    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
+    AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::ackLater( const Pointer<Message>& message, int ackType )
     throw ( ActiveMQException ) {
 
@@ -471,7 +576,7 @@ void ActiveMQConsumer::ackLater( const Pointer<Message>& message, int ackType )
         if( !synchronizationRegistered ) {
             synchronizationRegistered = true;
 
-            Pointer<Synchronization> sync( new ConsumerSynhcronization( this ) );
+            Pointer<Synchronization> sync( new TransactionSynhcronization( this ) );
             this->transaction->addSynchronization( sync );
         }
     }
