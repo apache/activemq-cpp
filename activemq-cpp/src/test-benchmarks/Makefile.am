@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+  activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.cpp \
   activemq/util/PrimitiveMapBenchmark.cpp \
   decaf/lang/BooleanBenchmark.cpp \
   decaf/util/PropertiesBenchmark.cpp \
@@ -29,6 +30,7 @@ cc_sources = \
   main.cpp
 
 hh_sources = \
+  activemq/wireformat/openwire/utils/OpenWireStringSupportBenchmark.h \
   activemq/util/PrimitiveMapBenchmark.h \
   decaf/lang/BooleanBenchmark.h \
   decaf/util/PropertiesBenchmark.h \
