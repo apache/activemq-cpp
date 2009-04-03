@@ -49,7 +49,7 @@ void OpenWireStringSupportBenchmark::setUp(){
     this->dataOut = new DataOutputStream( &bytesOut );
 
     Random randGen;
-    const int bufferSize = 32876;
+    const int bufferSize = 35686;
 
     for( int i = 0; i < bufferSize; ++i ) {
         this->buffer.push_back( (char)( randGen.nextInt( 254 ) + 1 ) );
@@ -66,20 +66,7 @@ void OpenWireStringSupportBenchmark::tearDown(){
 ////////////////////////////////////////////////////////////////////////////////
 void OpenWireStringSupportBenchmark::run() {
 
-    string testStr = "This is a test string for Openwire";
-
-//    OpenwireStringSupport::writeString( *dataOut, &testStr );
-//
-//    // Move the output back to the input.
-//    bytesIn.setByteArray( bytesOut.toByteArray(), bytesOut.size() );
-//
-//    string resultStr = OpenwireStringSupport::readString( *dataIn );
-//
-//    CPPUNIT_ASSERT( testStr == resultStr );
-
-//    this->bytesOut.reset();
     OpenwireStringSupport::writeString( *dataOut, &buffer );
     bytesIn.setByteArray( bytesOut.toByteArray(), bytesOut.size() );
     string resultStr = OpenwireStringSupport::readString( *dataIn );
-
 }
