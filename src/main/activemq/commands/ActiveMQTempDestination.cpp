@@ -50,6 +50,5 @@ void ActiveMQTempDestination::close() throw( cms::CMSException ) {
             this->connection->destroyDestination( this );
         }
     }
-    AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-    AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

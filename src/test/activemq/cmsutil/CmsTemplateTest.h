@@ -32,7 +32,7 @@ namespace activemq{
 namespace cmsutil{
 
     class DummyConnectionFactory;
-    
+
     class CmsTemplateTest : public CppUnit::TestFixture
     {
         CPPUNIT_TEST_SUITE( CmsTemplateTest );
@@ -44,16 +44,16 @@ namespace cmsutil{
         CPPUNIT_TEST( testReceive_DestinationName );
         CPPUNIT_TEST( testReceiveSelected );
         CPPUNIT_TEST( testReceiveSelected_Destination );
-        CPPUNIT_TEST( testReceiveSelected_DestinationName );        
-        CPPUNIT_TEST_SUITE_END();               
-             
+        CPPUNIT_TEST( testReceiveSelected_DestinationName );
+        CPPUNIT_TEST_SUITE_END();
+
 
         CmsTemplate* cmsTemplate;
         DummyConnectionFactory* cf;
-        
+
         class MySendListener : public MessageContext::SendListener {
         public:
-            
+
             const cms::Destination* dest;
             cms::Message* message;
             int deliveryMode;
@@ -62,7 +62,7 @@ namespace cmsutil{
             std::string selector;
             bool noLocal;
             long long timeout;
-                    
+
             MySendListener() {
                 dest = NULL;
                 message = NULL;
@@ -71,9 +71,9 @@ namespace cmsutil{
                 ttl = 0LL;
             }
             virtual ~MySendListener(){}
-            
+
             virtual void onSend(const cms::Destination* destination,
-                cms::Message* message, int deliveryMode, int priority, 
+                cms::Message* message, int deliveryMode, int priority,
                 long long timeToLive) throw (cms::CMSException){
                 this->dest = destination;
                 this->message = message;
@@ -81,10 +81,10 @@ namespace cmsutil{
                 this->priority = priority;
                 this->ttl = timeToLive;
             }
-            
-            virtual cms::Message* doReceive(const cms::Destination* dest, 
-                    const std::string& selector, 
-                    bool noLocal, 
+
+            virtual cms::Message* doReceive(const cms::Destination* dest,
+                    const std::string& selector,
+                    bool noLocal,
                     long long timeout) throw (cms::CMSException){
                 this->dest = dest;
                 this->selector = selector;
@@ -93,64 +93,64 @@ namespace cmsutil{
                 return new DummyMessage();
             }
         };
-        
+
         class FailSendListener : public MessageContext::SendListener {
         public:
-                    
+
             FailSendListener() {
             }
             virtual ~FailSendListener(){}
-            
+
             virtual void onSend(const cms::Destination* destination,
-                    cms::Message* message, int deliveryMode, int priority, 
+                    cms::Message* message, int deliveryMode, int priority,
                     long long timeToLive) throw (cms::CMSException){
-                throw exceptions::ActiveMQException(__FILE__, __LINE__, "");
+                throw cms::CMSException();
             }
-            
-            virtual cms::Message* doReceive(const cms::Destination* dest, 
-                    const std::string& selector, 
-                    bool noLocal, 
+
+            virtual cms::Message* doReceive(const cms::Destination* dest,
+                    const std::string& selector,
+                    bool noLocal,
                     long long timeout) throw (cms::CMSException){
-                throw exceptions::ActiveMQException(__FILE__, __LINE__, "");
+                throw cms::CMSException();
             }
         };
-        
+
         class MySessionCallback : public SessionCallback {
         public:
-            
+
             cms::Session* session;
             cms::Session::AcknowledgeMode ackMode;
-            
+
             MySessionCallback() {
                 session = NULL;
             }
             virtual ~MySessionCallback(){}
-            
-            virtual void doInCms(cms::Session* session) throw (cms::CMSException) {            
+
+            virtual void doInCms(cms::Session* session) throw (cms::CMSException) {
                 this->session = session;
                 this->ackMode = session->getAcknowledgeMode();
             }
         };
-        
+
         class MyProducerCallback : public ProducerCallback {
         public:
-            
+
             cms::Session* session;
             cms::MessageProducer* producer;
-            
+
             MyProducerCallback() {
                 session = NULL;
                 producer = NULL;
             }
             virtual ~MyProducerCallback(){}
-            
-            virtual void doInCms(cms::Session* session, 
+
+            virtual void doInCms(cms::Session* session,
                     cms::MessageProducer* producer) throw (cms::CMSException) {
                 this->session = session;
                 this->producer = producer;
             }
         };
-        
+
     public:
 
         CmsTemplateTest() {}
@@ -158,7 +158,7 @@ namespace cmsutil{
 
         virtual void setUp();
         virtual void tearDown();
-        
+
         void testExecuteSession();
         void testExecuteProducer();
         void testSend();

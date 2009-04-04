@@ -15,37 +15,69 @@
  * limitations under the License.
  */
 
-#ifndef CMS_CMSEXCEPTION_H
-#define CMS_CMSEXCEPTION_H
+#ifndef _CMS_CMSEXCEPTION_H_
+#define _CMS_CMSEXCEPTION_H_
 
 // Includes
 #include <string>
 #include <vector>
 #include <iostream>
 #include <exception>
+#include <memory>
 
 #include <cms/Config.h>
 
 namespace cms{
 
     /**
-     * This class represents an error that has occurred in
-     * cms.
+     * This class represents an error that has occurred in cms, providers
+     * can wrap provider specific exceptions in this class by setting the
+     * cause to an instance of a provider specific exception provided it
+     * can be cast to an std::exception.
+     *
+     * @since 1.0
      */
-    class CMS_API CMSException : public virtual std::exception {
+    class CMS_API CMSException : public std::exception {
+    private:
+
+        /**
+         * The cause of this exception.
+         */
+        std::string message;
+
+        /**
+         * The Exception that caused this one to be thrown.
+         */
+        mutable std::auto_ptr<const std::exception> cause;
+
+        /**
+         * The stack trace.
+         */
+        std::vector< std::pair< std::string, int> > stackTrace;
 
     public:
 
-        CMSException() throw() {}
+        CMSException() throw();
 
-        virtual ~CMSException() throw() {}
+        CMSException( const CMSException& ex ) throw();
+
+        CMSException( const std::string& message,
+                      const std::exception* cause ) throw();
+
+        CMSException( const std::string& message,
+                      const std::exception* cause,
+                      const std::vector< std::pair< std::string, int> >& stackTrace ) throw();
+
+        virtual ~CMSException() throw();
 
         /**
          * Gets the cause of the error.
          *
          * @return string errors message
          */
-        virtual std::string getMessage() const = 0;
+        virtual std::string getMessage() const {
+            return this->message;
+        }
 
         /**
          * Gets the exception that caused this one to be thrown, this allows
@@ -56,26 +88,9 @@ namespace cms{
          * @returns a const pointer reference to the causal exception, if there
          * was no cause associated with this exception then NULL is returned.
          */
-        virtual const std::exception* getCause() const = 0;
-
-        /**
-         * Adds a file/line number to the stack trace.
-         *
-         * @param file
-         *      The name of the file calling this method (use __FILE__).
-         * @param lineNumber
-         *      The line number in the calling file (use __LINE__).
-         */
-        virtual void setMark( const char* file, const int lineNumber ) = 0;
-
-        /**
-         * Clones this exception.  This is useful for cases where you need
-         * to preserve the type of the original exception as well as the message.
-         * All subclasses should override.
-         *
-         * @return Copy of this Exception object
-         */
-        virtual CMSException* clone() const = 0;
+        virtual const std::exception* getCause() const {
+            return this->cause.get();
+        }
 
         /**
          * Provides the stack trace for every point where
@@ -83,29 +98,38 @@ namespace cms{
          *
          * @return vector containing stack trace strings
          */
-        virtual std::vector< std::pair< std::string, int> > getStackTrace() const = 0;
+        virtual std::vector< std::pair< std::string, int> > getStackTrace() const {
+            return this->stackTrace;
+        }
+
+        /**
+         * Adds a file/line number to the stack trace.
+         * @param file The name of the file calling this method (use __FILE__).
+         * @param lineNumber The line number in the calling file (use __LINE__).
+         */
+        virtual void setMark( const char* file, const int lineNumber );
 
         /**
          * Prints the stack trace to std::err
          */
-        virtual void printStackTrace() const = 0;
+        virtual void printStackTrace() const;
 
         /**
          * Prints the stack trace to the given output stream.
          *
          * @param stream the target output stream.
          */
-        virtual void printStackTrace( std::ostream& stream ) const = 0;
+        virtual void printStackTrace( std::ostream& stream ) const;
 
         /**
          * Gets the stack trace as one contiguous string.
          *
          * @return string with formatted stack trace data
          */
-        virtual std::string getStackTraceString() const = 0;
+        virtual std::string getStackTraceString() const;
 
     };
 
 }
 
-#endif /*CMS_CMSEXCEPTION_H*/
+#endif /*_CMS_CMSEXCEPTION_H_*/

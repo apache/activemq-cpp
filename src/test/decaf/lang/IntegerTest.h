@@ -35,8 +35,8 @@ namespace lang{
 
     public:
 
-        IntegerTest(void) {}
-        virtual ~IntegerTest(void) {}
+        IntegerTest() {}
+        virtual ~IntegerTest() {}
 
         virtual void test();
         virtual void test2();

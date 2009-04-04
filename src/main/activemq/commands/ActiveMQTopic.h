@@ -118,7 +118,7 @@ namespace commands{
          * necessarily equal to the User Supplied name of the Destination
          * @return Provider specific Name
          */
-        virtual std::string toProviderString(void) const {
+        virtual std::string toProviderString() const {
             return this->getPhysicalName();
         }
 
@@ -157,15 +157,8 @@ namespace commands{
          * Gets the name of this topic.
          * @return The topic name.
          */
-        virtual std::string getTopicName(void)
-            const throw( cms::CMSException ) {
-
-            try{
-                return this->getPhysicalName();
-            }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        virtual std::string getTopicName() const throw( cms::CMSException ) {
+            return this->getPhysicalName();
         }
 
     };

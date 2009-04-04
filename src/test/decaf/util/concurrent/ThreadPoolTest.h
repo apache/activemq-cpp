@@ -92,7 +92,7 @@ namespace concurrent{
 
             virtual ~MyTask() {};
 
-            virtual void run(void) {
+            virtual void run() {
                 value += 100;
             }
         };
@@ -111,7 +111,7 @@ namespace concurrent{
 
             virtual ~MyWaitingTask() {};
 
-            virtual void run(void) {
+            virtual void run() {
                 try
                 {
                     synchronized(mutex) {

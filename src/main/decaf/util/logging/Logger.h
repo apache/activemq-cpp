@@ -77,7 +77,7 @@ namespace logging{
          * Gets the name of this Logger
          * @return logger name
          */
-        virtual const std::string& getName(void) const {
+        virtual const std::string& getName() const {
             return name;
         }
 
@@ -107,7 +107,7 @@ namespace logging{
          * has been assigned to use.
          * @returns a list of handlers that are used by this logger
          */
-        // virtual const std::list<Handler*>& getHandlers(void) const;
+        // virtual const std::list<Handler*>& getHandlers() const;
 
         /**
          * Set a filter to control output on this Logger.

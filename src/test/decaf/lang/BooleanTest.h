@@ -37,7 +37,7 @@ namespace lang{
         BooleanTest() {}
         virtual ~BooleanTest() {}
 
-        virtual void test(void);
+        virtual void test();
 
     };
 
