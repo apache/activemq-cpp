@@ -91,8 +91,7 @@ cms::MessageProducer* PooledSession::createCachedProducer(
 
         return cachedProducer;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,8 +135,7 @@ cms::MessageConsumer* PooledSession::createCachedConsumer(
 
         return cachedConsumer;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

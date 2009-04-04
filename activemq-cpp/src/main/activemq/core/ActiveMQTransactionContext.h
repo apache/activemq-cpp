@@ -20,7 +20,6 @@
 #include <memory>
 
 #include <cms/Message.h>
-#include <cms/CMSException.h>
 
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>

@@ -125,8 +125,8 @@ namespace core{
 
     public:
 
-        ActiveMQSessionTest(void) {}
-        virtual ~ActiveMQSessionTest(void) {}
+        ActiveMQSessionTest() {}
+        virtual ~ActiveMQSessionTest() {}
 
         void testAutoAcking();
         void testClientAck();

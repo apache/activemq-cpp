@@ -30,7 +30,7 @@ namespace marshal{
     class AMQCPP_API Marshalable {
     public:
 
-        virtual ~Marshalable(void) {}
+        virtual ~Marshalable() {}
 
         /**
          * Marshals the command to a stomp frame.
@@ -39,7 +39,7 @@ namespace marshal{
          * @throws MarshalException if the command is not
          * in a state that can be marshaled.
          */
-        virtual const StompFrame& marshal(void)
+        virtual const StompFrame& marshal()
             throw ( marshal::MarshalException ) = 0;
 
     };

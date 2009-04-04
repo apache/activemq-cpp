@@ -159,9 +159,7 @@ void ActiveMQSession::close() throw ( cms::CMSException )
         // Now indicate that this session is closed.
         closed = true;
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,9 +178,7 @@ void ActiveMQSession::commit() throw ( cms::CMSException ) {
         // Commit the Transaction
         this->transaction->commit();
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,9 +207,7 @@ void ActiveMQSession::rollback() throw ( cms::CMSException ) {
             this->executor->start();
         }
     }
-    AMQ_CATCH_NOTHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_NOTHROW( )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -227,9 +221,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         return this->createConsumer( destination, "", false );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,9 +236,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         return this->createConsumer( destination, selector, false );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -287,9 +277,7 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
 
         return consumer.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -332,9 +320,7 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         return consumer.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -393,9 +379,7 @@ cms::MessageProducer* ActiveMQSession::createProducer(
 
         return producer.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -413,9 +397,7 @@ cms::Queue* ActiveMQSession::createQueue( const std::string& queueName )
 
         return new commands::ActiveMQQueue( queueName );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -433,9 +415,7 @@ cms::Topic* ActiveMQSession::createTopic( const std::string& topicName )
 
         return new commands::ActiveMQTopic( topicName );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -454,9 +434,7 @@ cms::TemporaryQueue* ActiveMQSession::createTemporaryQueue()
 
         return queue.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -475,9 +453,7 @@ cms::TemporaryTopic* ActiveMQSession::createTemporaryTopic()
 
         return topic.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -489,9 +465,7 @@ cms::Message* ActiveMQSession::createMessage()
         this->checkClosed();
         return new commands::ActiveMQMessage();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -503,9 +477,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage()
         this->checkClosed();
         return new commands::ActiveMQBytesMessage();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -521,9 +493,7 @@ cms::BytesMessage* ActiveMQSession::createBytesMessage(
         msg->setBodyBytes( bytes, bytesSize );
         return msg;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -535,9 +505,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage()
         this->checkClosed();
         return new commands::ActiveMQTextMessage();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -551,9 +519,7 @@ cms::TextMessage* ActiveMQSession::createTextMessage( const std::string& text )
         msg->setText( text.c_str() );
         return msg;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -565,9 +531,7 @@ cms::MapMessage* ActiveMQSession::createMapMessage()
         this->checkClosed();
         return new commands::ActiveMQMapMessage();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -658,9 +622,7 @@ void ActiveMQSession::send(
             this->connection->syncRequest( msgCopy, this->connection->getSendTimeout() );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -690,9 +652,7 @@ void ActiveMQSession::unsubscribe( const std::string& name )
         // Send the message to the broker.
         this->connection->syncRequest( rsi );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

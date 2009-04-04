@@ -373,14 +373,14 @@ void SimpleTest::testBytesMessageSendRecv() {
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw an ActiveMQExceptio",
             message->setStringProperty( "FOO", "BAR" ),
-            exceptions::ActiveMQException );
+            cms::CMSException );
 
         BytesMessage* bytesMessage2 = dynamic_cast<cms::BytesMessage*>( message.get() );
         CPPUNIT_ASSERT( bytesMessage2 != NULL );
         CPPUNIT_ASSERT_THROW_MESSAGE(
             "Should throw an ActiveMQExceptio",
             bytesMessage2->writeBoolean( false ),
-            exceptions::ActiveMQException );
+            cms::CMSException );
 
         CPPUNIT_ASSERT( bytesMessage2->readBoolean() == true );
         CPPUNIT_ASSERT( bytesMessage2->readByte() == 127 );

@@ -29,7 +29,7 @@ using namespace std;
 
 /**
  * Macro for catching an exception then rethrowing an
- * ActiveMQException (which is a cms::CMSException).
+ * cms::CMSException.
  * @param type
  *      The type of the exception to throw
  * @param t
@@ -42,22 +42,26 @@ using namespace std;
         try { \
             t->destroy(); \
         } catch( ... ) {} \
-        throw ActiveMQException(ex); \
+        throw ActiveMQException(ex).convertToCMSException(); \
     }
 
 /**
- * A catch-all that throws an ActiveMQException.
+ * A catch-all that throws an CMSException.
  * @param t
  *      The instance of CmsTemplate
  */
 #define CMSTEMPLATE_CATCHALL(t) \
-    catch( ... ){ \
-        ActiveMQException ex( __FILE__, __LINE__, \
-            "caught unknown exception" ); \
+    catch( cms::CMSException& ex ){ \
         try { \
             t->destroy(); \
         } catch( ... ) {} \
         throw ex; \
+    } catch( ... ){ \
+        try { \
+            t->destroy(); \
+        } catch( ... ) {} \
+        throw ActiveMQException( __FILE__, __LINE__, \
+            "caught unknown exception" ).convertToCMSException(); \
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +240,18 @@ cms::Connection* CmsTemplate::getConnection()
     }
     CMSTEMPLATE_CATCH( IllegalStateException, this )
     CMSTEMPLATE_CATCH( ActiveMQException, this )
-    CMSTEMPLATE_CATCHALL( this )
+    catch( cms::CMSException& ex ){
+        try {
+            this->destroy();
+        } catch( ... ) {}
+        throw ex;
+    } catch( ... ){
+        try {
+            this->destroy();
+        } catch( ... ) {}
+        throw ActiveMQException( __FILE__, __LINE__, \
+            "caught unknown exception" ).convertToCMSException();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

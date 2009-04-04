@@ -34,8 +34,7 @@ namespace exceptions{
     /*
      * Base class for all exceptions.
      */
-    class AMQCPP_API ActiveMQException : public cms::CMSException,
-                                         public decaf::lang::Exception {
+    class AMQCPP_API ActiveMQException : public decaf::lang::Exception {
     public:
 
         /**
@@ -76,79 +75,10 @@ namespace exceptions{
         virtual ActiveMQException* clone() const;
 
         /**
-         * Assignment operator.
-         * @param const reference to another ActiveMQException
+         * Converts this exception to a new CMSException
+         * @return a CMSException with the data from this exception
          */
-        virtual ActiveMQException& operator =( const Exception& ex );
-
-        /**
-         * Gets the cause of the error.
-         *
-         * @return string errors message
-         */
-        virtual std::string getMessage() const {
-            return decaf::lang::Exception::getMessage();
-        }
-
-        /**
-         * Gets the exception that caused this one to be thrown, this allows
-         * for chaining of exceptions in the case of a method that throws only
-         * a particular exception but wishes to allow for the real causal
-         * exception to be passed only in case the caller knows about that
-         * type of exception and wishes to respond to it.
-         * @returns a const pointer reference to the causal exception, if there
-         * was no cause associated with this exception then NULL is returned.
-         */
-        virtual const std::exception* getCause() const {
-            return decaf::lang::Exception::getCause();
-        }
-
-        /**
-         * Adds a file/line number to the stack trace.
-         *
-         * @param file
-         *      The name of the file calling this method (use __FILE__).
-         * @param lineNumber
-         *      The line number in the calling file (use __LINE__).
-         */
-        virtual void setMark( const char* file, const int lineNumber ) {
-            decaf::lang::Exception::setMark( file, lineNumber );
-        }
-
-        /**
-         * Provides the stack trace for every point where
-         * this exception was caught, marked, and rethrown.
-         *
-         * @return vector containing stack trace strings
-         */
-        virtual std::vector< std::pair< std::string, int> > getStackTrace() const {
-            return decaf::lang::Exception::getStackTrace();
-        }
-
-        /**
-         * Prints the stack trace to std::err
-         */
-        virtual void printStackTrace() const {
-            decaf::lang::Exception::printStackTrace();
-        }
-
-        /**
-         * Prints the stack trace to the given output stream.
-         *
-         * @param stream the target output stream.
-         */
-        virtual void printStackTrace( std::ostream& stream ) const {
-            decaf::lang::Exception::printStackTrace( stream );
-        }
-
-        /**
-         * Gets the stack trace as one contiguous string.
-         *
-         * @return string with formatted stack trace data
-         */
-        virtual std::string getStackTraceString() const {
-            return decaf::lang::Exception::getStackTraceString();
-        }
+        virtual cms::CMSException convertToCMSException() const;
 
    };
 

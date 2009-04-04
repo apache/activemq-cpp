@@ -34,8 +34,8 @@ namespace marshal{
     class AMQCPP_API Marshaler {
     public:
 
-        Marshaler(void) {}
-        virtual ~Marshaler(void) {}
+        Marshaler() {}
+        virtual ~Marshaler() {}
 
         /**
          * Marshal a Stomp Frame to a Stomp Command, the frame is now

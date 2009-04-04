@@ -137,6 +137,9 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->closed = false;
     this->lastDeliveredSequenceId = 0;
     this->synchronizationRegistered = false;
+    this->additionalWindowSize = 0;
+    this->redeliveryDelay = 0;
+    this->deliveredCounter = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,9 +174,7 @@ void ActiveMQConsumer::close()
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,9 +234,7 @@ std::string ActiveMQConsumer::getMessageSelector() const
         // Fetch the Selector
         return this->consumerInfo->getSelector();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -300,9 +299,7 @@ decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
 
         return Pointer<Message>();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -335,9 +332,7 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
         // Return the cloned message.
         return clonedMessage;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -371,9 +366,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         // Return the cloned message.
         return clonedMessage;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -407,9 +400,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
         // Return the cloned message.
         return clonedMessage;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -651,9 +642,7 @@ void ActiveMQConsumer::acknowledgeMessage( const commands::Message* message AMQC
             this->acknowledge();
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -689,9 +678,7 @@ void ActiveMQConsumer::acknowledge() throw ( cms::CMSException ) {
             }
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -795,7 +782,7 @@ void ActiveMQConsumer::dispatch( DispatchData& data ) {
             return;
         }
 
-	    cms::MessageListener* cmsListener = this->listener.get();
+        cms::MessageListener* cmsListener = this->listener.get();
 
         // If we have a listener, send the message.
         if( cmsListener != NULL ) {

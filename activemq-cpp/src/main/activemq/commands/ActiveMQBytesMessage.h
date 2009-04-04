@@ -411,8 +411,10 @@ namespace commands{
          */
         void checkWriteOnlyBody() const throw ( cms::CMSException ){
             if( !this->isReadOnlyBody() ){
-                throw exceptions::ActiveMQException( __FILE__, __LINE__,
-                    "message is in read-only mode and cannot be written to" );
+                throw exceptions::ActiveMQException(
+                    __FILE__, __LINE__,
+                    "message is in read-only mode and "
+                    "cannot be written to" ).convertToCMSException();
             }
         }
 

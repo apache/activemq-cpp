@@ -54,7 +54,7 @@ PooledThread::~PooledThread()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledThread::run(void)
+void PooledThread::run()
 {
     ThreadPool::Task task;
 
@@ -158,7 +158,7 @@ void PooledThread::run(void)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void PooledThread::stop(void) throw ( Exception )
+void PooledThread::stop() throw ( Exception )
 {
     done = true;
 }

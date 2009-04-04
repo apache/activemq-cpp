@@ -95,10 +95,13 @@ void ActiveMQConnection::addDispatcher(
     const decaf::lang::Pointer<ConsumerId>& consumer, Dispatcher* dispatcher )
         throw ( cms::CMSException ) {
 
-    // Add the consumer to the map.
-    synchronized( &dispatchers ) {
-        dispatchers.put( consumer, dispatcher );
+    try{
+        // Add the consumer to the map.
+        synchronized( &dispatchers ) {
+            dispatchers.put( consumer, dispatcher );
+        }
     }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,10 +109,13 @@ void ActiveMQConnection::removeDispatcher(
     const decaf::lang::Pointer<ConsumerId>& consumer )
         throw ( cms::CMSException ) {
 
-    // Remove the consumer from the map.
-    synchronized( &dispatchers ) {
-        dispatchers.remove( consumer );
+    try{
+        // Remove the consumer from the map.
+        synchronized( &dispatchers ) {
+            dispatchers.remove( consumer );
+        }
     }
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -117,9 +123,7 @@ cms::Session* ActiveMQConnection::createSession() throw ( cms::CMSException ) {
     try {
         return createSession( Session::AUTO_ACKNOWLEDGE );
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -156,9 +160,7 @@ cms::Session* ActiveMQConnection::createSession(
 
         return session;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -172,9 +174,7 @@ void ActiveMQConnection::removeSession( ActiveMQSession* session )
             activeSessions.remove( session );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,9 +188,7 @@ void ActiveMQConnection::addProducer( ActiveMQProducer* producer )
             activeProducers.put( producer->getProducerInfo().getProducerId(), producer );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -204,9 +202,7 @@ void ActiveMQConnection::removeProducer( const decaf::lang::Pointer<ProducerId>&
             activeProducers.remove( producerId );
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,9 +248,7 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
         this->started = false;
         this->closed = true;
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -274,9 +268,7 @@ void ActiveMQConnection::start() throw ( cms::CMSException ) {
             sessions[ix]->start();
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -296,9 +288,7 @@ void ActiveMQConnection::stop() throw ( cms::CMSException ) {
             iter->next()->stop();
         }
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -574,9 +564,7 @@ void ActiveMQConnection::syncRequest( Pointer<Command> command, unsigned int tim
         if( exceptionResponse != NULL ) {
 
             // Create an exception to hold the error information.
-            BrokerError* brokerError =
-                exceptionResponse->getException()->cloneDataStructure();
-            BrokerException exception( __FILE__, __LINE__, brokerError );
+            BrokerException exception( __FILE__, __LINE__, exceptionResponse->getException().get() );
 
             // Throw the exception.
             throw exception;
@@ -631,7 +619,7 @@ void ActiveMQConnection::enforceConnected() const throw ( ActiveMQException ) {
 void ActiveMQConnection::fire( const ActiveMQException& ex ) {
     if( exceptionListener != NULL ) {
         try {
-            exceptionListener->onException( ex );
+            exceptionListener->onException( ex.convertToCMSException() );
         }
         catch(...){}
     }

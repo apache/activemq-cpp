@@ -198,7 +198,7 @@ void CmsTemplateTest::testReceiveException() {
         try {
             cmsTemplate.receive();
             CPPUNIT_FAIL("failed to throw expected exception");
-        } catch( ActiveMQException& ex ) {
+        } catch( CMSException& ex ) {
             // Expected.
         }
 
@@ -218,7 +218,7 @@ void CmsTemplateTest::testReceiveException() {
         CPPUNIT_ASSERT( message != NULL );
         delete message;
 
-    } catch ( ActiveMQException e ) {
+    } catch ( CMSException& e ) {
         e.printStackTrace();
         CPPUNIT_ASSERT( false );
     }
@@ -237,7 +237,7 @@ void CmsTemplateTest::testSendException() {
             TextMessageCreator msgCreator( "hello world" );
             cmsTemplate.send( &msgCreator );
             CPPUNIT_FAIL( "failed to throw expected exception" );
-        } catch( ActiveMQException& ex ) {
+        } catch( CMSException& ex ) {
             // Expected.
         }
 
@@ -248,7 +248,7 @@ void CmsTemplateTest::testSendException() {
         TextMessageCreator msgCreator( "hello world" );
         cmsTemplate.send( &msgCreator );
 
-    } catch ( ActiveMQException e ) {
+    } catch ( CMSException& e ) {
         e.printStackTrace();
         throw e;
     }

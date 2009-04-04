@@ -49,8 +49,7 @@ cms::Connection* CmsAccessor::createConnection()
         return c;
     }
     AMQ_CATCH_RETHROW( IllegalStateException )
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +73,7 @@ cms::Session* CmsAccessor::createSession( cms::Connection* con )
         return s;
     }
     AMQ_CATCH_RETHROW( IllegalStateException )
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
 
 ////////////////////////////////////////////////////////////////////////////////

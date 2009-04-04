@@ -108,7 +108,7 @@ namespace commands{
          * Retrieve the Destination Type for this Destination
          * @return The Destination Type
          */
-        virtual cms::Destination::DestinationType getDestinationType(void) const {
+        virtual cms::Destination::DestinationType getDestinationType() const {
             return cms::Destination::QUEUE;
         }
 
@@ -157,15 +157,8 @@ namespace commands{
          * Gets the name of this queue.
          * @return The queue name.
          */
-        virtual std::string getQueueName() const
-            throw( cms::CMSException ) {
-
-            try{
-                return this->getPhysicalName();
-            }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        virtual std::string getQueueName() const throw( cms::CMSException ) {
+            return this->getPhysicalName();
         }
 
     };
