@@ -25,20 +25,24 @@ namespace activemq{
 namespace connector{
 namespace openwire{
 namespace utils{
-        
+
     class OpenwireStringSupportTest : public CppUnit::TestFixture {
-        
+
         CPPUNIT_TEST_SUITE( OpenwireStringSupportTest );
         CPPUNIT_TEST( test );
         CPPUNIT_TEST_SUITE_END();
-        
+
     public:
-    
+
         OpenwireStringSupportTest() {}
         virtual ~OpenwireStringSupportTest() {}
-        
+
         void test();
-        
+
+        // Support Method
+        void testHelper( unsigned char* input, int inputLength,
+                         unsigned char* output, int outputLength, bool negative );
+
     };
 
 }}}}
