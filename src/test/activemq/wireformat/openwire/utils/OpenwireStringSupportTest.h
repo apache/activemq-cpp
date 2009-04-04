@@ -39,6 +39,9 @@ namespace utils{
 
         void test();
 
+        void testHelper( unsigned char* input, int inputLength,
+                         unsigned char* output, int outputLength, bool negative );
+
     };
 
 }}}}
