@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main\cms\CMSException.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main\cms\CMSException.h"
 				>
 			</File>
