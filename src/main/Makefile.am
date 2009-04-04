@@ -16,6 +16,7 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
+    cms/CMSException.cpp \
     decaf/lang/Float.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Integer.cpp \

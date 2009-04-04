@@ -95,7 +95,9 @@ cms::Destination* DynamicDestinationResolver::resolveDestinationName(
         throw (cms::CMSException) {
 
     if( destName == "" ) {
-        throw ActiveMQException( __FILE__, __LINE__, "destination name is invalid" );
+        throw ActiveMQException(
+            __FILE__, __LINE__,
+            "destination name is invalid" ).convertToCMSException();
     }
 
     // Get the resolver for this session.

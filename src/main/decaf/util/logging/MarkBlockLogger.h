@@ -57,7 +57,7 @@ namespace logging{
             logger.mark(blockName + " - Entered");
         }
 
-        virtual ~MarkBlockLogger(void)
+        virtual ~MarkBlockLogger()
         {
             logger->mark(blockName + " - Exited");
         }

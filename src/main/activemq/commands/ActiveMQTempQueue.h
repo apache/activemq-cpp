@@ -154,15 +154,8 @@ namespace commands{
          * Gets the name of this queue.
          * @return The queue name.
          */
-        virtual std::string getQueueName() const
-            throw( cms::CMSException ) {
-
-            try{
-                return this->getPhysicalName();
-            }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+        virtual std::string getQueueName() const throw( cms::CMSException ) {
+            return this->getPhysicalName();
         }
 
         /**
@@ -173,9 +166,7 @@ namespace commands{
             try{
                 close();
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
     };

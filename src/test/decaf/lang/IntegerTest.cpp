@@ -22,7 +22,7 @@ using namespace decaf;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
-void IntegerTest::test(void)
+void IntegerTest::test()
 {
     int x = Integer::parseInt("12");
     int y = Integer::parseInt("FF", 16);

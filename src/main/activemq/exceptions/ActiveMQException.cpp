@@ -34,8 +34,7 @@ ActiveMQException::ActiveMQException() throw() : decaf::lang::Exception() {
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
-:   cms::CMSException(),
-    decaf::lang::Exception() {
+: decaf::lang::Exception() {
 
   this->message = ex.getMessage();
   this->stackTrace = ex.getStackTrace();
@@ -44,8 +43,7 @@ ActiveMQException::ActiveMQException( const ActiveMQException& ex ) throw()
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const Exception& ex ) throw()
-:   cms::CMSException(),
-    decaf::lang::Exception() {
+: decaf::lang::Exception() {
 
   this->message = ex.getMessage();
   this->stackTrace = ex.getStackTrace();
@@ -54,9 +52,8 @@ ActiveMQException::ActiveMQException( const Exception& ex ) throw()
 
 ////////////////////////////////////////////////////////////////////////////////
 ActiveMQException::ActiveMQException( const char* file, const int lineNumber,
-                   const char* msg, ... ) throw()
-:   cms::CMSException(),
-    decaf::lang::Exception() {
+                                      const char* msg, ... ) throw()
+: decaf::lang::Exception() {
 
     va_list vargs;
     va_start( vargs, msg ) ;
@@ -76,8 +73,19 @@ ActiveMQException* ActiveMQException::clone() const{
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQException& ActiveMQException::operator =( const Exception& ex ){
-    this->setMessage( ex.getMessage().c_str() );
-    this->setStackTrace( ex.getStackTrace() );
-    return *this;
+cms::CMSException ActiveMQException::convertToCMSException() const {
+
+    std::exception* result = NULL;
+
+    if( this->getCause() != NULL ) {
+        const Exception* ptrCause = dynamic_cast<const Exception*>( this->getCause() );
+
+        if( ptrCause == NULL ) {
+            result = new Exception( __FILE__, __LINE__, cause->what() );
+        } else {
+            result = ptrCause->clone();
+        }
+    }
+
+    return cms::CMSException( this->getMessage(), result, this->getStackTrace() );
 }

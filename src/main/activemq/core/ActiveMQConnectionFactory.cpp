@@ -144,7 +144,19 @@ cms::Connection* ActiveMQConnectionFactory::createConnection(
 
         return connection.release();
     }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
+    catch( cms::CMSException& ex ){
+        ex.setMark( __FILE__, __LINE__ );
+        throw ex;
+    } catch( activemq::exceptions::ActiveMQException& ex ){
+        ex.setMark( __FILE__, __LINE__ );
+        throw ex.convertToCMSException();
+    } catch( decaf::lang::Exception& ex ){
+        ex.setMark( __FILE__, __LINE__ );
+        activemq::exceptions::ActiveMQException amqEx( ex );
+        throw amqEx.convertToCMSException();
+    } catch( std::exception& ex ) {
+        throw cms::CMSException( ex.what(), NULL );
+    } catch(...) {
+        throw cms::CMSException( "Caught Unknown Exception", NULL );
+    }
 }

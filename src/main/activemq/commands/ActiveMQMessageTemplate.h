@@ -36,7 +36,7 @@ namespace commands {
 
     public:
 
-		ActiveMQMessageTemplate() : commands::Message() {
+        ActiveMQMessageTemplate() : commands::Message() {
             this->propertiesInterceptor.reset(
                 new wireformat::openwire::utils::MessagePropertyInterceptor(
                     this, &this->getMessageProperties() ) );
@@ -54,9 +54,7 @@ namespace commands {
             try{
                 this->getAckHandler()->acknowledgeMessage( this );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -107,9 +105,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getBooleanProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -124,9 +120,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getByteProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -141,9 +135,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getDoubleProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -158,9 +150,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getFloatProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -175,9 +165,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getIntProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -192,9 +180,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getLongProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -209,9 +195,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getShortProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -226,9 +210,7 @@ namespace commands {
             try{
                 return this->propertiesInterceptor->getStringProperty( name );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -245,9 +227,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setBooleanProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -264,9 +244,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setByteProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -283,9 +261,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setDoubleProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -302,9 +278,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setFloatProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -321,9 +295,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setIntProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -340,9 +312,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setLongProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -359,9 +329,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setShortProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -378,9 +346,7 @@ namespace commands {
                 checkReadOnlyProperties();
                 this->propertiesInterceptor->setStringProperty( name, value );
             }
-            AMQ_CATCH_RETHROW( exceptions::ActiveMQException )
-            AMQ_CATCH_EXCEPTION_CONVERT( decaf::lang::Exception, exceptions::ActiveMQException )
-            AMQ_CATCHALL_THROW( exceptions::ActiveMQException )
+            AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
         }
 
         /**
@@ -419,7 +385,7 @@ namespace commands {
          * Gets the Destination for this Message, returns a
          * @return Destination object
          */
-        virtual const cms::Destination* getCMSDestination(void) const {
+        virtual const cms::Destination* getCMSDestination() const {
             return dynamic_cast<const cms::Destination*>( this->getDestination().get() );
         }
 

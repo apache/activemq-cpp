@@ -21,7 +21,7 @@ using namespace std;
 using namespace decaf;
 using namespace decaf::lang;
 
-void BooleanTest::test(void)
+void BooleanTest::test()
 {
     bool x = Boolean::parseBoolean("false");
     bool y = Boolean::parseBoolean("true");

@@ -219,8 +219,7 @@ namespace commands{
 
         /**
          * Gets the Properties for this Command
-         * @param reference to a PrimitiveMap
-         * @throws cms::CMSException
+         * @return the Properties object for this Command.
          */
         virtual const util::PrimitiveMap& getProperties() const {
             return properties;

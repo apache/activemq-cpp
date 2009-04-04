@@ -26,8 +26,8 @@ namespace logging{
     class DECAF_API LogWriter {
     public:
 
-        LogWriter(void);
-        virtual ~LogWriter(void);
+        LogWriter();
+        virtual ~LogWriter();
 
         /**
          * Writes a message to the output destination
