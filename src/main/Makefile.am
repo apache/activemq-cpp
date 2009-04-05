@@ -16,7 +16,6 @@
 # ---------------------------------------------------------------------------
 
 cc_sources = \
-    cms/CMSException.cpp \
     decaf/lang/Float.cpp \
     decaf/lang/Boolean.cpp \
     decaf/lang/Integer.cpp \
@@ -89,6 +88,7 @@ cc_sources = \
     decaf/io/BufferedOutputStream.cpp \
     decaf/io/BlockingByteArrayInputStream.cpp \
     decaf/io/DataInputStream.cpp \
+    cms/CMSException.cpp \
     activemq/transport/mock/MockTransportFactory.cpp \
     activemq/transport/mock/MockTransport.cpp \
     activemq/transport/mock/InternalCommandListener.cpp \
