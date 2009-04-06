@@ -114,8 +114,8 @@ namespace commands{
 
     protected:
 
-        Message( const Message& other AMQCPP_UNUSED ) {};
-        Message& operator= ( const Message& other AMQCPP_UNUSED ) { return *this; };
+        Message( const Message& ) : BaseCommand() {};
+        Message& operator= ( const Message& ) { return *this; };
 
     public:
 

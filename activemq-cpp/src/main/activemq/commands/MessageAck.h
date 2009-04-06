@@ -64,8 +64,8 @@ namespace commands{
 
     protected:
 
-        MessageAck( const MessageAck& other AMQCPP_UNUSED ) {};
-        MessageAck& operator= ( const MessageAck& other AMQCPP_UNUSED ) { return *this; };
+        MessageAck( const MessageAck& ) : BaseCommand() {};
+        MessageAck& operator= ( const MessageAck& ) { return *this; };
 
     public:
 

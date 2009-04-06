@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        SessionInfo( const SessionInfo& other AMQCPP_UNUSED ) {};
-        SessionInfo& operator= ( const SessionInfo& other AMQCPP_UNUSED ) { return *this; };
+        SessionInfo( const SessionInfo& ) : BaseCommand() {};
+        SessionInfo& operator= ( const SessionInfo& ) { return *this; };
 
     public:
 

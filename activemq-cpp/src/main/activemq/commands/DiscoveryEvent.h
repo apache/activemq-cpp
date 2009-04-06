@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        DiscoveryEvent( const DiscoveryEvent& other AMQCPP_UNUSED ) {};
-        DiscoveryEvent& operator= ( const DiscoveryEvent& other AMQCPP_UNUSED ) { return *this; };
+        DiscoveryEvent( const DiscoveryEvent& ) : BaseDataStructure() {};
+        DiscoveryEvent& operator= ( const DiscoveryEvent& ) { return *this; };
 
     public:
 

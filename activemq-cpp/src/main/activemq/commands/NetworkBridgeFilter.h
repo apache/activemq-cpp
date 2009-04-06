@@ -56,8 +56,8 @@ namespace commands{
 
     protected:
 
-        NetworkBridgeFilter( const NetworkBridgeFilter& other AMQCPP_UNUSED ) {};
-        NetworkBridgeFilter& operator= ( const NetworkBridgeFilter& other AMQCPP_UNUSED ) { return *this; };
+        NetworkBridgeFilter( const NetworkBridgeFilter& ) : BaseDataStructure() {};
+        NetworkBridgeFilter& operator= ( const NetworkBridgeFilter& ) { return *this; };
 
     public:
 

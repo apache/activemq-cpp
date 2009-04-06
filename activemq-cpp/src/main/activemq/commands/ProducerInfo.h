@@ -61,8 +61,8 @@ namespace commands{
 
     protected:
 
-        ProducerInfo( const ProducerInfo& other AMQCPP_UNUSED ) {};
-        ProducerInfo& operator= ( const ProducerInfo& other AMQCPP_UNUSED ) { return *this; };
+        ProducerInfo( const ProducerInfo& ) : BaseCommand() {};
+        ProducerInfo& operator= ( const ProducerInfo& ) { return *this; };
 
     public:
 
