@@ -61,8 +61,8 @@ namespace commands{
 
     protected:
 
-        MessagePull( const MessagePull& other AMQCPP_UNUSED ) {};
-        MessagePull& operator= ( const MessagePull& other AMQCPP_UNUSED ) { return *this; };
+        MessagePull( const MessagePull& ) : BaseCommand() {};
+        MessagePull& operator= ( const MessagePull& ) { return *this; };
 
     public:
 

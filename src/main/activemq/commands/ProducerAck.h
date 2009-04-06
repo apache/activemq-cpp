@@ -56,8 +56,8 @@ namespace commands{
 
     protected:
 
-        ProducerAck( const ProducerAck& other AMQCPP_UNUSED ) {};
-        ProducerAck& operator= ( const ProducerAck& other AMQCPP_UNUSED ) { return *this; };
+        ProducerAck( const ProducerAck& ) : BaseCommand() {};
+        ProducerAck& operator= ( const ProducerAck& ) { return *this; };
 
     public:
 

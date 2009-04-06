@@ -54,8 +54,8 @@ namespace commands{
 
     protected:
 
-        Response( const Response& other AMQCPP_UNUSED ) {};
-        Response& operator= ( const Response& other AMQCPP_UNUSED ) { return *this; };
+        Response( const Response& ) : BaseCommand() {};
+        Response& operator= ( const Response& ) { return *this; };
 
     public:
 

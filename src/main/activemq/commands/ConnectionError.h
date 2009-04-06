@@ -57,8 +57,8 @@ namespace commands{
 
     protected:
 
-        ConnectionError( const ConnectionError& other AMQCPP_UNUSED ) {};
-        ConnectionError& operator= ( const ConnectionError& other AMQCPP_UNUSED ) { return *this; };
+        ConnectionError( const ConnectionError& ) : BaseCommand() {};
+        ConnectionError& operator= ( const ConnectionError& ) { return *this; };
 
     public:
 
