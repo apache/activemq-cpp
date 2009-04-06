@@ -53,8 +53,8 @@ namespace commands{
 
     protected:
 
-        FlushCommand( const FlushCommand& other AMQCPP_UNUSED ) {};
-        FlushCommand& operator= ( const FlushCommand& other AMQCPP_UNUSED ) { return *this; };
+        FlushCommand( const FlushCommand& ) : BaseCommand() {};
+        FlushCommand& operator= ( const FlushCommand& ) { return *this; };
 
     public:
 

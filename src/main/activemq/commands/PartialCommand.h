@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        PartialCommand( const PartialCommand& other AMQCPP_UNUSED ) {};
-        PartialCommand& operator= ( const PartialCommand& other AMQCPP_UNUSED ) { return *this; };
+        PartialCommand( const PartialCommand& ) : BaseDataStructure() {};
+        PartialCommand& operator= ( const PartialCommand& ) { return *this; };
 
     public:
 

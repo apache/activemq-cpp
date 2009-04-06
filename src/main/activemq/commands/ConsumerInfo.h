@@ -74,8 +74,8 @@ namespace commands{
 
     protected:
 
-        ConsumerInfo( const ConsumerInfo& other AMQCPP_UNUSED ) {};
-        ConsumerInfo& operator= ( const ConsumerInfo& other AMQCPP_UNUSED ) { return *this; };
+        ConsumerInfo( const ConsumerInfo& ) : BaseCommand() {};
+        ConsumerInfo& operator= ( const ConsumerInfo& ) { return *this; };
 
     public:
 

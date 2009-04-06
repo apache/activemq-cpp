@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        ReplayCommand( const ReplayCommand& other AMQCPP_UNUSED ) {};
-        ReplayCommand& operator= ( const ReplayCommand& other AMQCPP_UNUSED ) { return *this; };
+        ReplayCommand( const ReplayCommand& ) : BaseCommand() {};
+        ReplayCommand& operator= ( const ReplayCommand& ) { return *this; };
 
     public:
 

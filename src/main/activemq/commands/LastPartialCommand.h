@@ -53,8 +53,8 @@ namespace commands{
 
     protected:
 
-        LastPartialCommand( const LastPartialCommand& other AMQCPP_UNUSED ) {};
-        LastPartialCommand& operator= ( const LastPartialCommand& other AMQCPP_UNUSED ) { return *this; };
+        LastPartialCommand( const LastPartialCommand& ) : PartialCommand() {};
+        LastPartialCommand& operator= ( const LastPartialCommand& ) { return *this; };
 
     public:
 

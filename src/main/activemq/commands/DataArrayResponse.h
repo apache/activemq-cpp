@@ -55,8 +55,8 @@ namespace commands{
 
     protected:
 
-        DataArrayResponse( const DataArrayResponse& other AMQCPP_UNUSED ) {};
-        DataArrayResponse& operator= ( const DataArrayResponse& other AMQCPP_UNUSED ) { return *this; };
+        DataArrayResponse( const DataArrayResponse& ) : Response() {};
+        DataArrayResponse& operator= ( const DataArrayResponse& ) { return *this; };
 
     public:
 

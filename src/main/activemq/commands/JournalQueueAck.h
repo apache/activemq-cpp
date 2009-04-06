@@ -57,8 +57,8 @@ namespace commands{
 
     protected:
 
-        JournalQueueAck( const JournalQueueAck& other AMQCPP_UNUSED ) {};
-        JournalQueueAck& operator= ( const JournalQueueAck& other AMQCPP_UNUSED ) { return *this; };
+        JournalQueueAck( const JournalQueueAck& ) : BaseDataStructure() {};
+        JournalQueueAck& operator= ( const JournalQueueAck& ) { return *this; };
 
     public:
 

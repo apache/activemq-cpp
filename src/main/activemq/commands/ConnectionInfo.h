@@ -63,8 +63,8 @@ namespace commands{
 
     protected:
 
-        ConnectionInfo( const ConnectionInfo& other AMQCPP_UNUSED ) {};
-        ConnectionInfo& operator= ( const ConnectionInfo& other AMQCPP_UNUSED ) { return *this; };
+        ConnectionInfo( const ConnectionInfo& ) : BaseCommand() {};
+        ConnectionInfo& operator= ( const ConnectionInfo& ) { return *this; };
 
     public:
 

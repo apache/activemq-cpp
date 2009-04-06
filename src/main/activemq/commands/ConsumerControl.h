@@ -60,8 +60,8 @@ namespace commands{
 
     protected:
 
-        ConsumerControl( const ConsumerControl& other AMQCPP_UNUSED ) {};
-        ConsumerControl& operator= ( const ConsumerControl& other AMQCPP_UNUSED ) { return *this; };
+        ConsumerControl( const ConsumerControl& ) : BaseCommand() {};
+        ConsumerControl& operator= ( const ConsumerControl& ) { return *this; };
 
     public:
 
