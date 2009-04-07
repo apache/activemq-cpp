@@ -337,6 +337,7 @@ cc_sources = \
     activemq/core/ActiveMQTransactionContext.cpp \
     activemq/core/ActiveMQSession.cpp \
     activemq/core/ActiveMQConnectionSupport.cpp \
+    activemq/core/MessageDispatchChannel.cpp \
     activemq/core/ActiveMQConnectionFactory.cpp \
     activemq/core/ActiveMQProducer.cpp \
     activemq/commands/ActiveMQQueue.cpp \
@@ -877,6 +878,7 @@ h_sources = \
     activemq/core/ActiveMQConnection.h \
     activemq/core/ActiveMQConstants.h \
     activemq/core/ActiveMQConnectionFactory.h \
+    activemq/core/MessageDispatchChannel.h \
     activemq/core/ActiveMQSession.h \
     activemq/core/Synchronization.h \
     activemq/core/ActiveMQConnectionMetaData.h \

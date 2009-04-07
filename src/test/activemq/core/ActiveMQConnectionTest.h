@@ -21,15 +21,6 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <cms/Connection.h>
-#include <cms/ExceptionListener.h>
-
-#include <activemq/transport/Transport.h>
-#include <activemq/transport/DefaultTransportListener.h>
-#include <activemq/util/Config.h>
-#include <activemq/core/ActiveMQConnection.h>
-#include <activemq/commands/Message.h>
-
 namespace activemq{
 namespace core{
 
@@ -45,54 +36,6 @@ namespace core{
 
         ActiveMQConnectionTest() {};
         virtual ~ActiveMQConnectionTest() {}
-
-        class MyCommandListener : public transport::DefaultTransportListener{
-        public:
-
-            commands::Command* cmd;
-
-        public:
-
-            MyCommandListener(){
-                cmd = NULL;
-            }
-            virtual ~MyCommandListener(){}
-
-            virtual void onCommand( commands::Command* command ){
-                cmd = command;
-            }
-        };
-
-        class MyExceptionListener : public cms::ExceptionListener{
-        public:
-
-            bool caughtOne;
-
-        public:
-
-            MyExceptionListener(){ caughtOne = false; }
-            virtual ~MyExceptionListener(){}
-
-            virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
-                caughtOne = true;
-            }
-        };
-
-        class MyDispatcher : public Dispatcher
-        {
-        public:
-
-            std::vector< decaf::lang::Pointer<commands::Message> > messages;
-
-        public:
-            virtual ~MyDispatcher(){}
-
-            virtual void dispatch( DispatchData& data )
-                throw ( exceptions::ActiveMQException )
-            {
-                messages.push_back( data.getMessage() );
-            }
-        };
 
 //        void test1WithStomp();
 //        void test2WithStomp();

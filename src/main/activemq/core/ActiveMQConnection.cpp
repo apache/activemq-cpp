@@ -67,8 +67,6 @@ ActiveMQConnection::ActiveMQConnection( const Pointer<transport::Transport>& tra
     ActiveMQConnectionSupport( transport, properties ),
     connectionMetaData( new ActiveMQConnectionMetaData() ),
     connectionInfo( new ConnectionInfo() ),
-    started( false ),
-    closed( false ),
     exceptionListener( NULL ) {
 
     // Register for messages and exceptions from the connector.
@@ -154,7 +152,7 @@ cms::Session* ActiveMQConnection::createSession(
         }
 
         // If we're already started, start the session.
-        if( started ) {
+        if( this->started.get() ) {
             session->start();
         }
 
@@ -245,8 +243,8 @@ void ActiveMQConnection::close() throw ( cms::CMSException )
 
         // Once current deliveries are done this stops the delivery
         // of any new messages.
-        this->started = false;
-        this->closed = true;
+        this->started.set( false );
+        this->closed.set( true );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -260,7 +258,7 @@ void ActiveMQConnection::start() throw ( cms::CMSException ) {
         // This starts or restarts the delivery of all incomming messages
         // messages delivered while this connection is stopped are dropped
         // and not acknowledged.
-        started = true;
+        this->started.set( true );
 
         // Start all the sessions.
         std::vector<ActiveMQSession*> sessions = activeSessions.toArray();
@@ -280,7 +278,7 @@ void ActiveMQConnection::stop() throw ( cms::CMSException ) {
 
         // Once current deliveries are done this stops the delivery of any
         // new messages.
-        started = false;
+        this->started.set( false );
 
         std::auto_ptr< Iterator<ActiveMQSession*> > iter( activeSessions.iterator() );
 
@@ -432,8 +430,7 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
 
         if( command->isMessageDispatch() ) {
 
-            MessageDispatch* dispatch =
-                dynamic_cast<MessageDispatch*>( command.get() );
+            Pointer<MessageDispatch> dispatch = command.dynamicCast<MessageDispatch>();
 
             // Check fo an empty Message, shouldn't ever happen but who knows.
             if( dispatch->getMessage() == NULL ) {
@@ -453,13 +450,10 @@ void ActiveMQConnection::onCommand( const Pointer<Command>& command ) {
                 // just closed.
                 if( dispatcher != NULL ) {
 
-                    Pointer<commands::Message> message = dispatch->getMessage();
-                    message->setReadOnlyBody( true );
-                    message->setReadOnlyProperties( true );
+                    dispatch->getMessage()->setReadOnlyBody( true );
+                    dispatch->getMessage()->setReadOnlyProperties( true );
 
-                    // Dispatch the message.
-                    DispatchData data( dispatch->getConsumerId(), message );
-                    dispatcher->dispatch( data );
+                    dispatcher->dispatch( dispatch );
                 }
             }
 
@@ -526,6 +520,18 @@ void ActiveMQConnection::onException( const decaf::lang::Exception& ex ) {
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
     AMQ_CATCHALL_THROW( ActiveMQException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConnection::transportInterrupted() {
+
+    synchronized( &activeSessions ) {
+        std::auto_ptr< Iterator<ActiveMQSession*> > iter( this->activeSessions.iterator() );
+
+        while( iter->hasNext() ) {
+            iter->next()->clearMessagesInProgress();
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

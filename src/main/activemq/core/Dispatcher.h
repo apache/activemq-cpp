@@ -18,28 +18,33 @@
 #ifndef ACTIVEMQ_CORE_DISPATCHER_H_
 #define ACTIVEMQ_CORE_DISPATCHER_H_
 
-#include <activemq/core/DispatchData.h>
+#include <activemq/commands/MessageDispatch.h>
 #include <activemq/util/Config.h>
+#include <decaf/lang/Pointer.h>
 
 namespace activemq{
 namespace core{
-    
+
+    using decaf::lang::Pointer;
+    using activemq::commands::MessageDispatch;
+
     /**
-     * Interface for an object responsible for dispatching messages to 
+     * Interface for an object responsible for dispatching messages to
      * consumers.
      */
     class AMQCPP_API Dispatcher {
     public:
-    
+
         virtual ~Dispatcher(){}
-        
+
         /**
          * Dispatches a message to a particular consumer.
          * @param message - the message to be dispatched.
          */
-        virtual void dispatch( DispatchData& message ) = 0;
+        virtual void dispatch( const Pointer<MessageDispatch>& message ) = 0;
+
     };
-    
+
 }}
 
 #endif /*ACTIVEMQ_CORE_DISPATCHER_H_*/

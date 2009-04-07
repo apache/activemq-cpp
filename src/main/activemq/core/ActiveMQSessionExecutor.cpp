@@ -18,11 +18,14 @@
 #include "ActiveMQSessionExecutor.h"
 #include "ActiveMQSession.h"
 #include "ActiveMQConsumer.h"
+
 #include <activemq/commands/ConsumerInfo.h>
+#include <activemq/threads/DedicatedTaskRunner.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::core;
+using namespace activemq::threads;
 using namespace activemq::exceptions;
 using namespace decaf::lang;
 using namespace decaf::util;
@@ -32,8 +35,6 @@ using namespace decaf::util::concurrent;
 ActiveMQSessionExecutor::ActiveMQSessionExecutor( ActiveMQSession* session ) {
 
     this->session = session;
-    this->closed = false;
-    this->started = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,9 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
     try {
 
         // Terminate the thread.
+        stop();
+
+        // Close out the Message Channel.
         close();
 
         // Empty the message queue and destroy any remaining messages.
@@ -51,119 +55,84 @@ ActiveMQSessionExecutor::~ActiveMQSessionExecutor() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::close() {
-
-    synchronized( &mutex ) {
-
-        closed = true;
-        mutex.notifyAll();
-    }
-
-    if( thread != NULL ) {
-        thread->join();
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::execute( DispatchData& data ) {
+void ActiveMQSessionExecutor::execute( const Pointer<MessageDispatch>& dispatch ) {
 
     // Add the data to the queue.
-    synchronized( &mutex ) {
-        messageQueue.push_back( data );
-        mutex.notifyAll();
-    }
+    this->messageQueue.enqueue( dispatch );
+    this->wakeup();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::executeFirst( DispatchData& data ) {
+void ActiveMQSessionExecutor::executeFirst( const Pointer<MessageDispatch>& dispatch ) {
 
-    // Add the data to the front of the queue.
-    synchronized( &mutex ) {
-        messageQueue.push_front( data );
-        mutex.notifyAll();
-    }
+    // Add the data to the queue.
+    this->messageQueue.enqueueFirst( dispatch );
+    this->wakeup();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::purgeConsumerMessages(
-    const decaf::lang::Pointer<commands::ConsumerId>& consumerId )
-{
-    synchronized( &mutex ) {
+void ActiveMQSessionExecutor::wakeup() {
 
-        list<DispatchData>::iterator iter = messageQueue.begin();
-        while( iter != messageQueue.end() ) {
-            list<DispatchData>::iterator currentIter = iter;
-            DispatchData& dispatchData = *iter++;
-            if( consumerId->equals( *( dispatchData.getConsumerId() ) ) ) {
-                messageQueue.erase( currentIter );
-            }
+    Pointer<TaskRunner> taskRunner = this->taskRunner;
+    synchronized( &messageQueue ) {
+        if( this->taskRunner == NULL ) {
+            this->taskRunner.reset( new DedicatedTaskRunner( this ) );
         }
+
+        taskRunner = this->taskRunner;
     }
+
+    taskRunner->wakeup();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::start() {
 
-    synchronized( &mutex ) {
+    if( !messageQueue.isRunning() ) {
 
-        if( closed || started ) {
-            return;
+        messageQueue.start();
+        if( hasUncomsumedMessages() ) {
+            this->wakeup();
         }
-
-        started = true;
-
-        // Don't create the thread unless we need to.
-        if( thread == NULL ) {
-            thread.reset( new Thread( this ) );
-            thread->start();
-        }
-
-        mutex.notifyAll();
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSessionExecutor::stop() {
 
-    // We lock here to make sure that we wait until the thread
-    // is done with an internal dispatch operation, otherwise
-    // we might return before that and cause the caller to be
-    // in an inconsistent state.
-    synchronized( &dispatchMutex ) {
-
-        if( closed || !started ) {
-            return;
+    if( messageQueue.isRunning() ) {
+        messageQueue.stop();
+        Pointer<TaskRunner> taskRunner = this->taskRunner;
+        if( taskRunner != NULL ) {
+            this->taskRunner.reset( NULL );
+            taskRunner->shutdown();
         }
-
-        synchronized( &mutex ) { started = false; }
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::clear() {
-
-    synchronized( &mutex ) {
-        this->messageQueue.clear();
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
+void ActiveMQSessionExecutor::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
     try {
 
-        ActiveMQConsumer* consumer = session->getConsumer( data.getConsumerId() );
+        ActiveMQConsumer* consumer = NULL;
 
-        // If the consumer is not available, just delete the message.
-        // Otherwise, dispatch the message to the consumer.
-        if( consumer != NULL ) {
-            consumer->dispatch( data );
+        synchronized( &( this->session->consumers ) ) {
+            if( this->session->consumers.containsKey( dispatch->getConsumerId() ) ) {
+                consumer = this->session->consumers.get( dispatch->getConsumerId() );
+            }
+
+            // If the consumer is not available, just ignore the message.
+            // Otherwise, dispatch the message to the consumer.
+            if( consumer != NULL ) {
+                consumer->dispatch( dispatch );
+            }
         }
 
-    } catch( ActiveMQException& ex ) {
+    } catch( decaf::lang::Exception& ex ) {
         ex.setMark(__FILE__, __LINE__ );
         ex.printStackTrace();
-    } catch( exception& ex ) {
+    } catch( std::exception& ex ) {
         ActiveMQException amqex( __FILE__, __LINE__, ex.what() );
         amqex.printStackTrace();
     } catch( ... ) {
@@ -173,72 +142,44 @@ void ActiveMQSessionExecutor::dispatch( DispatchData& data ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::run() {
+bool ActiveMQSessionExecutor::iterate() {
 
     try {
 
-        while( true ) {
+        synchronized( &( this->session->consumers ) ) {
 
-            // Dispatch all currently available messages.
-            dispatchAll();
+            std::vector<ActiveMQConsumer*> consumers = this->session->consumers.values();
+            std::vector<ActiveMQConsumer*>::iterator iter = consumers.begin();
 
-            synchronized( &mutex ) {
-
-                // If we're closing down, exit the thread.
-                if( closed ) {
-                    return;
-                }
-
-                // When stopped we hit this case and wait otherwise
-                // if there are messages we
-                if( ( messageQueue.empty() || !started ) && !closed ) {
-
-                    // Wait for more data or to be woke up.
-                    mutex.wait();
+            // Deliver any messages queued on the consumer to their listeners.
+            for( ; iter != consumers.end(); ++iter ) {
+                if( (*iter)->iterate() ) {
+                    return true;
                 }
             }
         }
 
-    } catch( ActiveMQException& ex ) {
+        // No messages left queued on the listeners.. so now dispatch messages
+        // queued on the session
+        Pointer<MessageDispatch> message = messageQueue.dequeueNoWait();
+        if( message != NULL ) {
+            dispatch( message );
+            return !messageQueue.isEmpty();
+        }
+
+        return false;
+
+    } catch( decaf::lang::Exception& ex ) {
         ex.setMark(__FILE__, __LINE__ );
         session->fire( ex );
-    } catch( exception& stdex ) {
+        return true;
+    } catch( std::exception& stdex ) {
         ActiveMQException ex( __FILE__, __LINE__, stdex.what() );
         session->fire( ex );
+        return true;
     } catch( ... ) {
         ActiveMQException ex(__FILE__, __LINE__, "caught unknown exception" );
         session->fire( ex );
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSessionExecutor::dispatchAll() {
-
-    // Dispatch all currently available messages.  This lock allows the
-    // main thread to wait while we finish with a dispatch cycle, the
-    // stop method for instance should try and lock this mutex so that
-    // it knows that we've had a chance to read the started flag and
-    // detect that we are stopped, otherwise stop might return while
-    // we are still dispatching messages.
-    synchronized( &dispatchMutex ) {
-
-        // Take out all of the dispatch data currently in the array.
-        list<DispatchData> dataList;
-        synchronized( &mutex ) {
-
-            // If stopped or closed we don't want to start dispatching.
-            if( !started || closed ) {
-                return;
-            }
-
-            dataList = messageQueue;
-            messageQueue.clear();
-        }
-
-        list<DispatchData>::iterator iter = dataList.begin();
-        while( iter != dataList.end() ) {
-            DispatchData& data = *iter++;
-            dispatch( data );
-        }
+        return true;
     }
 }

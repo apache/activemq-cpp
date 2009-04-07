@@ -30,6 +30,7 @@
 #include <activemq/transport/mock/MockTransport.h>
 #include <activemq/util/Config.h>
 #include <activemq/commands/ConsumerId.h>
+#include <memory>
 
 namespace activemq{
 namespace core{
@@ -39,7 +40,11 @@ namespace core{
         CPPUNIT_TEST_SUITE( ActiveMQSessionTest );
         CPPUNIT_TEST( testAutoAcking );
         CPPUNIT_TEST( testClientAck );
-        //CPPUNIT_TEST( testTransactional );
+        CPPUNIT_TEST( testTransactionCommitOneConsumer );
+        CPPUNIT_TEST( testTransactionCommitTwoConsumer );
+        CPPUNIT_TEST( testTransactionRollbackOneConsumer );
+        CPPUNIT_TEST( testTransactionRollbackTwoConsumer );
+        CPPUNIT_TEST( testTransactionCloseWithoutCommit );
         CPPUNIT_TEST( testExpiration );
         CPPUNIT_TEST_SUITE_END();
 
@@ -60,56 +65,7 @@ namespace core{
             }
         };
 
-        class MyCMSMessageListener : public cms::MessageListener
-        {
-        public:
-
-            std::vector<cms::Message*> messages;
-            decaf::util::concurrent::Mutex mutex;
-            bool ack;
-
-        public:
-
-            MyCMSMessageListener( bool ack = false ){
-                this->ack = ack;
-            }
-
-            virtual ~MyCMSMessageListener(){
-                clear();
-            }
-
-            virtual void setAck( bool ack ){
-                this->ack = ack;
-            }
-
-            virtual void clear() {
-                std::vector<cms::Message*>::iterator itr =
-                    messages.begin();
-
-                for( ; itr != messages.end(); ++itr )
-                {
-                    delete *itr;
-                }
-
-                messages.clear();
-            }
-
-            virtual void onMessage( const cms::Message* message )
-            {
-                synchronized( &mutex )
-                {
-                    if( ack ){
-                        message->acknowledge();
-                    }
-
-                    messages.push_back( message->clone() );
-
-                    mutex.notifyAll();
-                }
-            }
-        };
-
-        ActiveMQConnection* connection;
+        std::auto_ptr<ActiveMQConnection> connection;
         transport::mock::MockTransport* dTransport;
         MyExceptionListener exListener;
 
@@ -130,7 +86,11 @@ namespace core{
 
         void testAutoAcking();
         void testClientAck();
-        void testTransactional();
+        void testTransactionCommitOneConsumer();
+        void testTransactionCommitTwoConsumer();
+        void testTransactionRollbackOneConsumer();
+        void testTransactionRollbackTwoConsumer();
+        void testTransactionCloseWithoutCommit();
         void testExpiration();
 
     };

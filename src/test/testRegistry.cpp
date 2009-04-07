@@ -75,6 +75,8 @@ CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionFactoryTest )
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQConnectionTest );
 #include <activemq/core/ActiveMQSessionTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::ActiveMQSessionTest );
+#include <activemq/core/MessageDispatchChannelTest.h>
+CPPUNIT_TEST_SUITE_REGISTRATION( activemq::core::MessageDispatchChannelTest );
 
 #include <activemq/state/ConnectionStateTrackerTest.h>
 CPPUNIT_TEST_SUITE_REGISTRATION( activemq::state::ConnectionStateTrackerTest );

@@ -19,20 +19,18 @@
 #define ACTIVEMQ_CORE_ACTIVEMQSESSIONEXECUTOR_
 
 #include <activemq/util/Config.h>
-#include <activemq/core/Dispatcher.h>
+#include <activemq/core/MessageDispatchChannel.h>
 #include <activemq/commands/ConsumerId.h>
-#include <decaf/lang/Thread.h>
-#include <decaf/lang/Runnable.h>
+#include <activemq/commands/MessageDispatch.h>
+#include <activemq/threads/Task.h>
+#include <activemq/threads/TaskRunner.h>
 #include <decaf/lang/Pointer.h>
-#include <decaf/util/concurrent/Mutex.h>
-#include <decaf/util/StlList.h>
-#include <vector>
-#include <list>
 
 namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
+    using activemq::commands::MessageDispatch;
 
     class ActiveMQSession;
     class ActiveMQConsumer;
@@ -41,32 +39,17 @@ namespace core{
      * Delegate dispatcher for a single session.  Contains a thread
      * to provide for asynchronous dispatching.
      */
-    class AMQCPP_API ActiveMQSessionExecutor :
-        public Dispatcher,
-        public decaf::lang::Runnable
-    {
+    class AMQCPP_API ActiveMQSessionExecutor : activemq::threads::Task {
     private:
 
         /** Session that is this executors parent. */
         ActiveMQSession* session;
 
-        /** List used to hold messages waiting to be dispatched. */
-        std::list<DispatchData> messageQueue;
+        /** The Channel that holds the waiting Messages for Dispatching. */
+        MessageDispatchChannel messageQueue;
 
-        /** The Dispatcher Thread */
-        Pointer<decaf::lang::Thread> thread;
-
-        /** Mutex used to lock on access to the Message Queue */
-        decaf::util::concurrent::Mutex mutex;
-
-        /** Locks when messages are being dispatched to consumers. */
-        decaf::util::concurrent::Mutex dispatchMutex;
-
-        /** Has the Start method been called */
-        volatile bool started;
-
-        /** Has the Close method been called */
-        volatile bool closed;
+        /** The Dispatcher TaskRunner */
+        Pointer<activemq::threads::TaskRunner> taskRunner;
 
     public:
 
@@ -85,21 +68,33 @@ namespace core{
          * end of the queue.
          * @param data - the data to be dispatched.
          */
-        virtual void execute( DispatchData& data );
+        virtual void execute( const Pointer<MessageDispatch>& data );
 
         /**
          * Executes the dispatch.  Adds the given data to the
          * beginning of the queue.
          * @param data - the data to be dispatched.
          */
-        virtual void executeFirst( DispatchData& data );
+        virtual void executeFirst( const Pointer<MessageDispatch>& data );
 
         /**
-         * Removes all messages for the given consumer from the.
-         * @param consumerId - the subject consumer
+         * Removes all messages in the Dispatch Channel so that non are delivered.
          */
-        virtual void purgeConsumerMessages(
-            const decaf::lang::Pointer<commands::ConsumerId>& consumerId );
+        virtual void clearMessagesInProgress() {
+            this->messageQueue.clear();
+        }
+
+        /**
+         * @return true if there are any pending messages in the dispatch channel.
+         */
+        virtual bool hasUncomsumedMessages() const {
+            return !messageQueue.isClosed() && messageQueue.isRunning() && !messageQueue.isEmpty();
+        }
+
+        /**
+         * wakeup this executer and dispatch any pending messages.
+         */
+        virtual void wakeup();
 
         /**
          * Starts the dispatching.
@@ -115,39 +110,55 @@ namespace core{
          * Terminates the dispatching thread.  Once this is called, the executor is no longer
          * usable.
          */
-        virtual void close();
+        virtual void close() {
+            this->messageQueue.close();
+        }
 
         /**
-         * Indicates if the executor is started
+         * @return true indicates if the executor is started
          */
-        virtual bool isStarted() const {
-            return started;
+        virtual bool isRunning() const {
+            return this->messageQueue.isRunning();
+        }
+
+        /**
+         * @return true if there are no messages in the Dispatch Channel.
+         */
+        virtual bool isEmpty() {
+            return messageQueue.isEmpty();
         }
 
         /**
          * Removes all queued messages and destroys them.
          */
-        virtual void clear();
+        virtual void clear() {
+            this->messageQueue.clear();
+        }
 
         /**
-         * Dispatches a message to a particular consumer.
-         * @param consumer - The consumer to dispatch to.
-         * @param msg - The message to be dispatched.
+         * Iterates on the MessageDispatchChannel sending all pending messages
+         * to the Consumers they are destined for.
+         *
+         * @return false if there are no more messages to dispatch.
          */
-        virtual void dispatch( DispatchData& data );
+        virtual bool iterate();
 
         /**
-         * Run method - called by the Thread class in the context
-         * of the thread.
+         * @returns a vector containing all the unconsumed messages, this clears the
+         *          Message Dispatch Channel when called.
          */
-        virtual void run();
+        std::vector< Pointer<MessageDispatch> > getUnconsumedMessages() {
+            return messageQueue.removeAll();
+        }
 
     private:
 
         /**
-         * Dispatches all messages currently in the queue.
+         * Dispatches a message to a particular consumer.
+         * @param data - The message to be dispatched.
          */
-        void dispatchAll();
+        virtual void dispatch( const Pointer<MessageDispatch>& data );
+
     };
 
 }}

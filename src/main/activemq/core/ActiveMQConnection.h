@@ -34,6 +34,7 @@
 #include <decaf/util/Properties.h>
 #include <decaf/util/StlMap.h>
 #include <decaf/util/StlSet.h>
+#include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/exceptions/UnsupportedOperationException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IllegalStateException.h>
@@ -45,6 +46,7 @@ namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
+    using decaf::util::concurrent::atomic::AtomicBoolean;
 
     class ActiveMQSession;
     class ActiveMQProducer;
@@ -86,13 +88,13 @@ namespace core{
         /**
          * Indicates if this Connection is started
          */
-        bool started;
+        AtomicBoolean started;
 
         /**
          * Indicates that this connection has been closed, it is no longer
          * usable after this becomes true
          */
-        bool closed;
+        AtomicBoolean closed;
 
         /**
          * Map of message dispatchers indexed by consumer id.
@@ -191,7 +193,15 @@ namespace core{
          * @return true if the connection is closed
          */
         bool isClosed() const {
-            return this->closed;
+            return this->closed.get();
+        }
+
+        /**
+         * Check if this connection has been started.
+         * @return true if the start method has been called.
+         */
+        bool isStarted() const {
+            return this->started.get();
         }
 
         /**
@@ -315,7 +325,7 @@ namespace core{
             exceptionListener = listener;
         };
 
-    public: // commands::CommandListener
+    public: // TransportListener
 
         /**
          * Event handler for the receipt of a non-response command from the
@@ -324,14 +334,17 @@ namespace core{
          */
         virtual void onCommand( const Pointer<commands::Command>& command );
 
-    public: // TransportExceptionListener
-
         /**
          * Event handler for an exception from a command transport.
          * @param source The source of the exception
          * @param ex The exception.
          */
         virtual void onException( const decaf::lang::Exception& ex );
+
+        /**
+         * The transport has suffered an interruption from which it hopes to recover
+         */
+        virtual void transportInterrupted();
 
     public:
 
