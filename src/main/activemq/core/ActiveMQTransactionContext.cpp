@@ -89,9 +89,12 @@ void ActiveMQTransactionContext::begin()
     throw ( activemq::exceptions::ActiveMQException ) {
 
     try{
+
         if( !isInTransaction() ) {
 
-            this->synchronizations.clear();
+            synchronized( &synchronizations ) {
+                this->synchronizations.clear();
+            }
 
             // Create the Id
             Pointer<LocalTransactionId> id( new LocalTransactionId() );

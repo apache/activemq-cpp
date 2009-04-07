@@ -194,20 +194,40 @@ void ActiveMQSession::rollback() throw ( cms::CMSException ) {
                 "ActiveMQSession::rollback - This Session is not Transacted" );
         }
 
-        bool started = this->executor->isStarted();
-
-        if( started ) {
-            this->executor->stop();
-        }
-
         // Roll back the Transaction
         this->transaction->rollback();
-
-        if( started ) {
-            this->executor->start();
-        }
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::clearMessagesInProgress() {
+
+    if( this->executor.get() != NULL ) {
+        this->executor->clearMessagesInProgress();
+    }
+
+    synchronized( &this->consumers ) {
+        std::vector< ActiveMQConsumer* > consumers = this->consumers.values();
+
+        std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
+        for( ; iter != consumers.end(); ++iter ) {
+            (*iter)->clearMessagesInProgress();
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::deliverAcks() {
+
+    synchronized( &this->consumers ) {
+        std::vector< ActiveMQConsumer* > consumers = this->consumers.values();
+
+        std::vector< ActiveMQConsumer* >::iterator iter = consumers.begin();
+        for( ; iter != consumers.end(); ++iter ) {
+            (*iter)->deliverAcks();
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -275,6 +295,10 @@ cms::MessageConsumer* ActiveMQSession::createConsumer(
         // Send our info to the Broker.
         this->syncRequest( consumerInfo );
 
+        if( this->connection->isStarted() ) {
+            consumer->start();
+        }
+
         return consumer.release();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
@@ -317,6 +341,10 @@ cms::MessageConsumer* ActiveMQSession::createDurableConsumer(
 
         // Send our info to the Broker.
         this->syncRequest( consumerInfo );
+
+        if( this->connection->isStarted() ) {
+            consumer->start();
+        }
 
         return consumer.release();
     }
@@ -656,33 +684,35 @@ void ActiveMQSession::unsubscribe( const std::string& name )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::dispatch( DispatchData& message ) {
+void ActiveMQSession::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
     if( this->executor.get() != NULL ) {
-        this->executor->execute( message );
+        this->executor->execute( dispatch );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQSession::redispatch( decaf::util::StlQueue<DispatchData>& unconsumedMessages ) {
+void ActiveMQSession::redispatch( MessageDispatchChannel& unconsumedMessages ) {
 
-    decaf::util::StlQueue<DispatchData> reversedList;
+    std::vector< Pointer<MessageDispatch> > messages = unconsumedMessages.removeAll();
+    std::vector< Pointer<MessageDispatch> >::reverse_iterator iter = messages.rbegin();
 
-    // Copy the list in reverse order then clear the original list.
-    synchronized( &unconsumedMessages ) {
-        unconsumedMessages.reverse( reversedList );
-        unconsumedMessages.clear();
-    }
-
-    // Add the list to the front of the executor.
-    while( !reversedList.empty() ) {
-        DispatchData data = reversedList.pop();
-        executor->executeFirst( data );
+    for( ; iter != messages.rend(); ++iter ) {
+        executor->executeFirst( *iter );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::start() {
+
+    synchronized( &this->consumers ) {
+        std::vector< ActiveMQConsumer* > consumers = this->consumers.values();
+
+        std::vector< ActiveMQConsumer*>::iterator iter = consumers.begin();
+        for( ; iter != consumers.end(); ++iter ) {
+            (*iter)->start();
+        }
+    }
 
     if( this->executor.get() != NULL ) {
         this->executor->start();
@@ -704,7 +734,7 @@ bool ActiveMQSession::isStarted() const {
         return false;
     }
 
-    return this->executor->isStarted();
+    return this->executor->isRunning();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -950,28 +980,11 @@ void ActiveMQSession::disposeOf( Pointer<ConsumerId> id )
 
             if( this->consumers.containsKey( id ) ) {
 
-                // If the executor thread is currently running, stop it.
-                bool wasStarted = isStarted();
-                if( wasStarted ) {
-                    stop();
-                }
-
                 // Remove this Id both from the Sessions Map of Consumers and from
                 // the Connection.
                 this->connection->removeDispatcher( id );
                 this->connection->disposeOf( id );
                 this->consumers.remove( id );
-
-                // Clean up any resources in the executor for this consumer
-                if( this->executor.get() != NULL ) {
-
-                    // Purge any pending messages for this consumer.
-                    this->executor->purgeConsumerMessages( id );
-                }
-
-                if( wasStarted ) {
-                    start();
-                }
             }
         }
     }
@@ -1004,17 +1017,6 @@ void ActiveMQSession::disposeOf( Pointer<ProducerId> id )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-ActiveMQConsumer* ActiveMQSession::getConsumer( const Pointer<ConsumerId>& id ) {
-
-    synchronized( &this->consumers ) {
-        if( this->consumers.containsKey( id ) ) {
-            return this->consumers.get( id );
-        }
-    }
-    return NULL;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 void ActiveMQSession::doStartTransaction() throw ( ActiveMQException ) {
 
     if( !this->isTransacted() ) {
@@ -1022,4 +1024,12 @@ void ActiveMQSession::doStartTransaction() throw ( ActiveMQException ) {
     }
 
     this->transaction->begin();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQSession::wakeup() {
+
+    if( this->executor.get() != NULL ) {
+        this->executor->wakeup();
+    }
 }

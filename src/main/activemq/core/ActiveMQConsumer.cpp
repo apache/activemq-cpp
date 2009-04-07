@@ -19,8 +19,8 @@
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/InvalidStateException.h>
 #include <decaf/lang/exceptions/IllegalArgumentException.h>
-#include <decaf/util/Date.h>
 #include <decaf/lang/Math.h>
+#include <decaf/lang/System.h>
 #include <activemq/util/Config.h>
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/Message.h>
@@ -134,12 +134,13 @@ ActiveMQConsumer::ActiveMQConsumer( const Pointer<ConsumerInfo>& consumerInfo,
     this->session = session;
     this->transaction = transaction;
     this->consumerInfo = consumerInfo;
-    this->closed = false;
     this->lastDeliveredSequenceId = 0;
     this->synchronizationRegistered = false;
     this->additionalWindowSize = 0;
     this->redeliveryDelay = 0;
     this->deliveredCounter = 0;
+    this->clearDispatchList = false;
+    this->listener = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -153,11 +154,29 @@ ActiveMQConsumer::~ActiveMQConsumer() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::start() {
+
+    if( this->unconsumedMessages.isClosed() ) {
+        return;
+    }
+
+    this->started.set( true );
+    this->unconsumedMessages.start();
+    this->session->wakeup();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::stop() {
+    this->started.set( false );
+    this->unconsumedMessages.stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void ActiveMQConsumer::close()
     throw ( cms::CMSException ) {
 
     try{
-        if( !closed ) {
+        if( !this->isClosed() ) {
             if( this->transaction != NULL && this->transaction->isInTransaction() ) {
 
                 // TODO - Currently we can do this since the consumer could be
@@ -167,7 +186,12 @@ void ActiveMQConsumer::close()
                 //
                 //Pointer<Synchronization> sync( new CloseSynhcronization( this ) );
                 //this->transaction->addSynchronization( sync );
+
                 doClose();
+
+                throw UnsupportedOperationException(
+                    __FILE__, __LINE__,
+                    "The Consumer is still in an Active Transaction, commit it first." );
 
             } else {
                 doClose();
@@ -192,7 +216,7 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
             // remove it from the Broker.
             this->session->disposeOf( this->consumerInfo->getConsumerId() );
 
-            this->closed = true;
+            this->started.set( false );
 
             // Identifies any errors encountered during shutdown.
             bool haveException = false;
@@ -200,7 +224,7 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
 
             // Purge all the pending messages
             try{
-                purgeMessages();
+                unconsumedMessages.clear();
             } catch ( ActiveMQException& ex ){
                 if( !haveException ){
                     ex.setMark( __FILE__, __LINE__ );
@@ -209,10 +233,8 @@ void ActiveMQConsumer::doClose() throw ( ActiveMQException ) {
                 }
             }
 
-            // Wakeup any synchronous consumers.
-            synchronized( &unconsumedMessages ) {
-                unconsumedMessages.notifyAll();
-            }
+            // Stop and Wakeup all sync consumers.
+            unconsumedMessages.close();
 
             // If we encountered an error, propagate it.
             if( haveException ){
@@ -238,66 +260,47 @@ std::string ActiveMQConsumer::getMessageSelector() const
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-decaf::lang::Pointer<commands::Message> ActiveMQConsumer::dequeue( int timeout )
+decaf::lang::Pointer<MessageDispatch> ActiveMQConsumer::dequeue( int timeout )
     throw ( cms::CMSException ) {
 
     try {
 
         this->checkClosed();
 
-        synchronized( &unconsumedMessages ) {
-
-            // Calculate the deadline
-            long long deadline = 0;
-            if( timeout > 0 ) {
-                deadline = Date::getCurrentTimeMilliseconds() + timeout;
-            }
-
-            // Loop until the time is up or we get a non-expired message
-            while( true ) {
-
-                // Wait until either the deadline is met, a message arrives, or
-                // we've closed.
-                while( !closed && unconsumedMessages.empty() && timeout != 0 ) {
-
-                    if( timeout < 0 ) {
-                        unconsumedMessages.wait();
-                    } else if( timeout > 0 ) {
-                        unconsumedMessages.wait(timeout);
-                        timeout = std::max((int)(deadline - Date::getCurrentTimeMilliseconds()), 0);
-                    }
-                }
-
-                if( unconsumedMessages.empty() ) {
-                    break;
-                }
-
-                // Fetch the Message then copy it so it can be handed off
-                // to the user.
-                DispatchData data = unconsumedMessages.pop();
-
-                Pointer<Message> message = data.getMessage();
-
-                // If it's expired, process the message and then go back to waiting.
-                if( message->isExpired() ) {
-
-                    beforeMessageIsConsumed( message );
-                    afterMessageIsConsumed( message, true );
-                    if( timeout > 0 ) {
-                        timeout = std::max(
-                            (int)( deadline - Date::getCurrentTimeMilliseconds() ), 0 );
-                    }
-
-                    // Go back to waiting for a non-expired message.
-                    continue;
-                }
-
-                // Return the message.
-                return message;
-            }
+        // Calculate the deadline
+        long long deadline = 0;
+        if( timeout > 0 ) {
+            deadline = Date::getCurrentTimeMilliseconds() + timeout;
         }
 
-        return Pointer<Message>();
+        // Loop until the time is up or we get a non-expired message
+        while( true ) {
+
+            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeue( timeout );
+            if( dispatch == NULL ) {
+
+                if( timeout > 0 && !unconsumedMessages.isClosed() ) {
+                    timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
+                } else {
+                    return Pointer<MessageDispatch>();
+                }
+
+            } else if( dispatch->getMessage()->isExpired() ) {
+
+                beforeMessageIsConsumed( dispatch );
+                afterMessageIsConsumed( dispatch, true );
+                if( timeout > 0 ) {
+                    timeout = Math::max( deadline - System::currentTimeMillis(), 0LL );
+                }
+
+                continue;
+            }
+
+            // Return the message.
+            return dispatch;
+        }
+
+        return Pointer<MessageDispatch>();
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }
@@ -313,18 +316,18 @@ cms::Message* ActiveMQConsumer::receive() throw ( cms::CMSException ) {
         this->sendPullRequest( 0 );
 
         // Wait for the next message.
-        Pointer<Message> message = dequeue( -1 );
+        Pointer<MessageDispatch> message = dequeue( -1 );
         if( message == NULL ) {
             return NULL;
         }
 
-        // Message preprocessing
+        // Message pre-processing
         beforeMessageIsConsumed( message );
 
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
+            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
         afterMessageIsConsumed( message, false );
@@ -347,7 +350,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         this->sendPullRequest( millisecs );
 
         // Wait for the next message.
-        Pointer<Message> message = dequeue( millisecs );
+        Pointer<MessageDispatch> message = dequeue( millisecs );
         if( message == NULL ) {
             return NULL;
         }
@@ -358,7 +361,7 @@ cms::Message* ActiveMQConsumer::receive( int millisecs )
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
+            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
         afterMessageIsConsumed( message, false );
@@ -381,7 +384,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
         this->sendPullRequest( -1 );
 
         // Get the next available message, if there is one.
-        Pointer<Message> message = dequeue( 0 );
+        Pointer<MessageDispatch> message = dequeue( 0 );
         if( message == NULL ) {
             return NULL;
         }
@@ -392,7 +395,7 @@ cms::Message* ActiveMQConsumer::receiveNoWait()
         // Need to clone the message because the user is responsible for freeing
         // its copy of the message.
         cms::Message* clonedMessage =
-            dynamic_cast<cms::Message*>( message->cloneDataStructure() );
+            dynamic_cast<cms::Message*>( message->getMessage()->cloneDataStructure() );
 
         // Post processing (may result in the message being deleted)
         afterMessageIsConsumed( message, false );
@@ -426,7 +429,9 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
                 session->stop();
             }
 
-            this->listener.set( listener );
+            synchronized( &listenerMutex ) {
+                this->listener = listener;
+            }
 
             session->redispatch( unconsumedMessages );
 
@@ -434,7 +439,9 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
                 session->start();
             }
         } else {
-            this->listener.set( NULL );
+            synchronized( &listenerMutex ) {
+                this->listener = NULL;
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -443,7 +450,7 @@ void ActiveMQConsumer::setMessageListener( cms::MessageListener* listener ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message ) {
+void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<MessageDispatch>& dispatch ) {
 
     // If the Session is in ClientAcknowledge mode, then we set the
     // handler in the message to this object and send it out.  Otherwise
@@ -452,13 +459,14 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message 
 
         // Register ourself so that we can handle the Message's
         // acknowledge method.
-        message->setAckHandler( this );
+        dispatch->getMessage()->setAckHandler( this );
     }
 
-    this->lastDeliveredSequenceId = message->getMessageId()->getBrokerSequenceId();
+    this->lastDeliveredSequenceId =
+        dispatch->getMessage()->getMessageId()->getBrokerSequenceId();
 
     synchronized( &dispatchedMessages ) {
-        dispatchedMessages.enqueueFront( message );
+        dispatchedMessages.enqueueFront( dispatch );
     }
 
     // If the session is transacted then we hand off the message to it to
@@ -473,15 +481,19 @@ void ActiveMQConsumer::beforeMessageIsConsumed( const Pointer<Message>& message 
                 "In a Transacted Session but no Transaction Context set." );
         }
 
-        ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
+        ackLater( dispatch, ActiveMQConstants::ACK_TYPE_DELIVERED );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<Message>& message,
+void ActiveMQConsumer::afterMessageIsConsumed( const Pointer<MessageDispatch>& message,
                                                bool messageExpired AMQCPP_UNUSED ) {
 
     try{
+
+        if( unconsumedMessages.isClosed() ) {
+            return;
+        }
 
         if( messageExpired == true ) {
             ackLater( message, ActiveMQConstants::ACK_TYPE_DELIVERED );
@@ -557,7 +569,7 @@ void ActiveMQConsumer::deliverAcks()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::ackLater( const Pointer<Message>& message, int ackType )
+void ActiveMQConsumer::ackLater( const Pointer<MessageDispatch>& dispatch, int ackType )
     throw ( ActiveMQException ) {
 
     // Don't acknowledge now, but we may need to let the broker know the
@@ -578,10 +590,10 @@ void ActiveMQConsumer::ackLater( const Pointer<Message>& message, int ackType )
 
     Pointer<MessageAck> oldPendingAck = pendingAck;
     pendingAck.reset( new MessageAck() );
-    pendingAck->setConsumerId( this->consumerInfo->getConsumerId() );
+    pendingAck->setConsumerId( dispatch->getConsumerId() );
     pendingAck->setAckType( ackType );
-    pendingAck->setDestination( message->getDestination() );
-    pendingAck->setLastMessageId( message->getMessageId() );
+    pendingAck->setDestination( dispatch->getDestination() );
+    pendingAck->setLastMessageId( dispatch->getMessage()->getMessageId() );
     pendingAck->setMessageCount( deliveredCounter );
 
     if( oldPendingAck == NULL ) {
@@ -614,14 +626,14 @@ Pointer<MessageAck> ActiveMQConsumer::makeAckForAllDeliveredMessages( int type )
 
         if( !dispatchedMessages.empty() ) {
 
-            Pointer<Message> message = dispatchedMessages.front();
+            Pointer<Message> message = dispatchedMessages.front()->getMessage();
             Pointer<MessageAck> ack( new MessageAck() );
             ack->setAckType( type );
             ack->setConsumerId( this->consumerInfo->getConsumerId() );
             ack->setDestination( message->getDestination() );
             ack->setMessageCount( (int)dispatchedMessages.size() );
             ack->setLastMessageId( message->getMessageId() );
-            ack->setFirstMessageId( dispatchedMessages.back()->getMessageId() );
+            ack->setFirstMessageId( dispatchedMessages.back()->getMessage()->getMessageId() );
 
             return ack;
         }
@@ -701,18 +713,19 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
             }
 
             // Only increase the redelivery delay after the first redelivery..
-            Pointer<Message> lastMsg = dispatchedMessages.front();
+            Pointer<Message> lastMsg = dispatchedMessages.front()->getMessage();
             const int currentRedeliveryCount = lastMsg->getRedeliveryCounter();
             if( currentRedeliveryCount > 0 ) {
                 redeliveryDelay = transaction->getRedeliveryDelay();
             }
 
-            Pointer<MessageId> firstMsgId = dispatchedMessages.back()->getMessageId();
+            Pointer<MessageId> firstMsgId =
+                dispatchedMessages.back()->getMessage()->getMessageId();
 
-            std::auto_ptr< Iterator< Pointer<Message> > > iter( dispatchedMessages.iterator() );
+            std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( dispatchedMessages.iterator() );
 
             while( iter->hasNext() ) {
-                Pointer<Message> message = iter->next();
+                Pointer<Message> message = iter->next()->getMessage();
                 message->setRedeliveryCounter( message->getRedeliveryCounter() + 1 );
             }
 
@@ -749,11 +762,32 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
                     session->oneway( ack );
                 }
 
-                std::auto_ptr< Iterator< Pointer<Message> > > iter( dispatchedMessages.iterator() );
+                // stop the delivery of messages.
+                unconsumedMessages.stop();
+
+                std::auto_ptr< Iterator< Pointer<MessageDispatch> > > iter( dispatchedMessages.iterator() );
 
                 while( iter->hasNext() ) {
-                    DispatchData dispatch( this->consumerInfo->getConsumerId(), iter->next() );
-                    unconsumedMessages.enqueueFront( dispatch );
+                    unconsumedMessages.enqueueFirst( iter->next() );
+                }
+
+                if (redeliveryDelay > 0 && !unconsumedMessages.isClosed()) {
+                    // TODO
+                    // Start up the delivery again a little later.
+                    //scheduler.executeAfterDelay(new Runnable() {
+                    //    public void run() {
+                    //        try {
+                    //            if( !started.get() ) {
+                    //                start();
+                    //            }
+                    //        } catch( CMSException& e ) {
+                    //            session.connection.onAsyncException(e);
+                    //        }
+                    //    }
+                    //}, redeliveryDelay);
+                    start();
+                } else {
+                    start();
                 }
 
             }
@@ -762,61 +796,56 @@ void ActiveMQConsumer::rollback() throw( ActiveMQException ) {
         }
     }
 
-    if( this->listener.get() != NULL ) {
+    if( this->listener != NULL ) {
         session->redispatch( unconsumedMessages );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::dispatch( DispatchData& data ) {
+void ActiveMQConsumer::dispatch( const Pointer<MessageDispatch>& dispatch ) {
 
     try {
 
-        Pointer<Message> message = data.getMessage();
+        synchronized( &unconsumedMessages ) {
 
-        // Don't dispatch expired messages, ack it and then destroy it
-        if( message->isExpired() ) {
-            this->ackLater( message, ActiveMQConstants::ACK_TYPE_CONSUMED );
-
-            // stop now, don't queue
-            return;
-        }
-
-        cms::MessageListener* cmsListener = this->listener.get();
-
-        // If we have a listener, send the message.
-        if( cmsListener != NULL ) {
-
-            // Preprocessing.
-            beforeMessageIsConsumed( message );
-
-            // Notify the listener
-            cmsListener->onMessage( dynamic_cast<cms::Message*>( message.get() ) );
-
-            // Postprocessing
-            afterMessageIsConsumed( message, false );
-
-        } else {
-
-            // No listener, add it to the unconsumed messages list
-            synchronized( &unconsumedMessages ) {
-                unconsumedMessages.push( data );
-                unconsumedMessages.notifyAll();
+            if( this->clearDispatchList ) {
+                // we are reconnecting so lets flush the in progress
+                // messages
+                clearDispatchList = false;
+                unconsumedMessages.clear();
             }
-        }
-    }
-    AMQ_CATCH_RETHROW( ActiveMQException )
-    AMQ_CATCH_EXCEPTION_CONVERT( Exception, ActiveMQException )
-    AMQ_CATCHALL_THROW( ActiveMQException )
-}
 
-////////////////////////////////////////////////////////////////////////////////
-void ActiveMQConsumer::purgeMessages() throw ( ActiveMQException ) {
+            if( !unconsumedMessages.isClosed() ) {
 
-    try {
+                // Don't dispatch expired messages, ack it and then destroy it
+                if( dispatch->getMessage()->isExpired() ) {
+                    this->ackLater( dispatch, ActiveMQConstants::ACK_TYPE_CONSUMED );
 
-        synchronized( &this->unconsumedMessages ) {
-            this->unconsumedMessages.clear();
+                    // stop now, don't queue
+                    return;
+                }
+
+                synchronized( &listenerMutex ) {
+                    // If we have a listener, send the message.
+                    if( this->listener != NULL && unconsumedMessages.isRunning() ) {
+
+                        // Preprocessing.
+                        beforeMessageIsConsumed( dispatch );
+
+                        // Notify the listener
+                        this->listener->onMessage(
+                            dynamic_cast<cms::Message*>( dispatch->getMessage().get() ) );
+
+                        // Postprocessing
+                        afterMessageIsConsumed( dispatch, false );
+
+                    } else {
+
+                        // No listener, add it to the unconsumed messages list
+                        this->unconsumedMessages.enqueue( dispatch );
+                    }
+                }
+            }
         }
     }
     AMQ_CATCH_RETHROW( ActiveMQException )
@@ -833,7 +862,7 @@ void ActiveMQConsumer::sendPullRequest( long long timeout )
         this->checkClosed();
 
         // There are still local message, consume them first.
-        if( !this->unconsumedMessages.empty() ) {
+        if( !this->unconsumedMessages.isEmpty() ) {
             return;
         }
 
@@ -859,4 +888,43 @@ void ActiveMQConsumer::checkClosed() const throw( ActiveMQException ) {
             __FILE__, __LINE__,
             "ActiveMQConsumer - Consumer Already Closed" );
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool ActiveMQConsumer::iterate() {
+
+    synchronized( &listenerMutex ) {
+
+        if( this->listener != NULL ) {
+
+            Pointer<MessageDispatch> dispatch = unconsumedMessages.dequeueNoWait();
+            if( dispatch != NULL ) {
+
+                try {
+                    beforeMessageIsConsumed( dispatch );
+                    this->listener->onMessage(
+                        dynamic_cast<cms::Message*>( dispatch->getMessage().get() ) );
+                    afterMessageIsConsumed( dispatch, false );
+                } catch( ActiveMQException& ex ) {
+                    this->session->fire( ex );
+                }
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void ActiveMQConsumer::clearMessagesInProgress() {
+    // we are called from inside the transport reconnection logic
+    // which involves us clearing all the connections' consumers
+    // dispatch lists and clearing them
+    // so rather than trying to grab a mutex (which could be already
+    // owned by the message listener calling the send) we will just set
+    // a flag so that the list can be cleared as soon as the
+    // dispatch thread is ready to flush the dispatch list
+    clearDispatchList = true;
 }

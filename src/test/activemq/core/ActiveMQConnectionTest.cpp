@@ -24,10 +24,16 @@
 #include <decaf/lang/Pointer.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
 #include <activemq/core/ActiveMQConnection.h>
+#include <activemq/transport/Transport.h>
+#include <activemq/transport/DefaultTransportListener.h>
 #include <activemq/transport/mock/MockTransport.h>
 #include <activemq/transport/mock/MockTransportFactory.h>
 #include <activemq/transport/TransportRegistry.h>
 #include <activemq/util/Config.h>
+#include <activemq/commands/Message.h>
+
+#include <cms/Connection.h>
+#include <cms/ExceptionListener.h>
 
 using namespace activemq;
 using namespace activemq::core;
@@ -35,6 +41,58 @@ using namespace activemq::transport;
 using namespace decaf;
 using namespace decaf::util;
 using namespace decaf::lang;
+
+namespace activemq {
+namespace core{
+
+    class MyCommandListener : public transport::DefaultTransportListener{
+    public:
+
+        commands::Command* cmd;
+
+    public:
+
+        MyCommandListener(){
+            cmd = NULL;
+        }
+        virtual ~MyCommandListener(){}
+
+        virtual void onCommand( commands::Command* command ){
+            cmd = command;
+        }
+    };
+
+    class MyExceptionListener : public cms::ExceptionListener{
+    public:
+
+        bool caughtOne;
+
+    public:
+
+        MyExceptionListener(){ caughtOne = false; }
+        virtual ~MyExceptionListener(){}
+
+        virtual void onException(const cms::CMSException& ex AMQCPP_UNUSED){
+            caughtOne = true;
+        }
+    };
+
+    class MyDispatcher : public Dispatcher
+    {
+    public:
+
+        std::vector< decaf::lang::Pointer<commands::Message> > messages;
+
+    public:
+        virtual ~MyDispatcher(){}
+
+        virtual void dispatch( const decaf::lang::Pointer<commands::MessageDispatch>& data )
+            throw ( exceptions::ActiveMQException )
+        {
+            messages.push_back( data->getMessage() );
+        }
+    };
+}}
 
 ////////////////////////////////////////////////////////////////////////////////
 //void ActiveMQConnectionTest::test1WithStomp()

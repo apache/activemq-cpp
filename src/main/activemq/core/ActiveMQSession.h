@@ -30,6 +30,7 @@
 #include <activemq/commands/ProducerId.h>
 #include <activemq/commands/TransactionId.h>
 #include <activemq/core/Dispatcher.h>
+#include <activemq/core/MessageDispatchChannel.h>
 #include <activemq/util/LongSequenceGenerator.h>
 
 #include <decaf/util/StlMap.h>
@@ -62,6 +63,8 @@ namespace core{
         typedef decaf::util::StlMap< Pointer<commands::ProducerId>,
                                      ActiveMQProducer*,
                                      commands::ProducerId::COMPARATOR> ProducersMap;
+
+        friend class ActiveMQSessionExecutor;
 
     private:
 
@@ -130,16 +133,10 @@ namespace core{
         virtual ~ActiveMQSession();
 
         /**
-         * Looks up a consumer of this Session by a Pointer to its Id.
-         * @param id - a Pointer to a ConsumerId to match in the Map of Consumers.
-         */
-        ActiveMQConsumer* getConsumer( const decaf::lang::Pointer<commands::ConsumerId>& id );
-
-        /**
          * Redispatches the given set of unconsumed messages to the consumers.
          * @param unconsumedMessages - unconsumed messages to be redelivered.
          */
-        void redispatch( decaf::util::StlQueue<DispatchData>& unconsumedMessages );
+        void redispatch( MessageDispatchChannel& unconsumedMessages );
 
         /**
          * Stops asynchronous message delivery.
@@ -178,7 +175,7 @@ namespace core{
          * Dispatches a message to a particular consumer.
          * @param message - the message to be dispatched
          */
-        virtual void dispatch( DispatchData& message );
+        virtual void dispatch( const Pointer<MessageDispatch>& message );
 
     public:   // Implements Methods
 
@@ -472,6 +469,23 @@ namespace core{
          * @throw ActiveMQException if this is not a Transacted Session.
          */
         void doStartTransaction() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Request that this Session inform all of its consumers to deliver their pending
+         * acks.
+         */
+        void deliverAcks();
+
+        /**
+         * Request that this Session inform all of its consumers to clear all messages that
+         * are currently in progress.
+         */
+        void clearMessagesInProgress();
+
+        /**
+         * Causes the Session to wakeup its executer and ensure all messages are dispatched.
+         */
+        void wakeup();
 
    private:
 
