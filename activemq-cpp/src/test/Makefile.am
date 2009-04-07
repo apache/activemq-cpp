@@ -111,6 +111,7 @@ cc_sources = \
     activemq/core/ActiveMQSessionTest.cpp \
     activemq/core/ActiveMQConnectionFactoryTest.cpp \
     activemq/core/ActiveMQConnectionTest.cpp \
+    activemq/core/MessageDispatchChannelTest.cpp \
     activemq/commands/ActiveMQTextMessageTest.cpp \
     activemq/commands/BrokerIdTest.cpp \
     activemq/commands/BrokerInfoTest.cpp \
@@ -226,6 +227,7 @@ h_sources = \
     activemq/core/ActiveMQConnectionFactoryTest.h \
     activemq/core/ActiveMQConnectionTest.h \
     activemq/core/ActiveMQSessionTest.h \
+    activemq/core/MessageDispatchChannelTest.h \
     activemq/commands/ActiveMQTempTopicTest.h \
     activemq/commands/ActiveMQQueueTest.h \
     activemq/commands/ActiveMQBytesMessageTest.h \

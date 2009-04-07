@@ -26,11 +26,12 @@
 #include <activemq/exceptions/ActiveMQException.h>
 #include <activemq/commands/ConsumerInfo.h>
 #include <activemq/commands/MessageAck.h>
+#include <activemq/commands/MessageDispatch.h>
 #include <activemq/core/ActiveMQAckHandler.h>
 #include <activemq/core/ActiveMQTransactionContext.h>
 #include <activemq/core/Dispatcher.h>
+#include <activemq/core/MessageDispatchChannel.h>
 
-#include <decaf/util/concurrent/atomic/AtomicReference.h>
 #include <decaf/util/concurrent/atomic/AtomicBoolean.h>
 #include <decaf/lang/Pointer.h>
 #include <decaf/util/StlQueue.h>
@@ -41,15 +42,14 @@ namespace activemq{
 namespace core{
 
     using decaf::lang::Pointer;
-    using decaf::util::concurrent::atomic::AtomicReference;
     using decaf::util::concurrent::atomic::AtomicBoolean;
+    using activemq::core::MessageDispatchChannel;
 
     class ActiveMQSession;
 
-    class AMQCPP_API ActiveMQConsumer :
-        public cms::MessageConsumer,
-        public ActiveMQAckHandler,
-        public Dispatcher
+    class AMQCPP_API ActiveMQConsumer : public cms::MessageConsumer,
+                                        public ActiveMQAckHandler,
+                                        public Dispatcher
     {
     private:
 
@@ -71,7 +71,12 @@ namespace core{
         /**
          * The Message Listener for this Consumer
          */
-        AtomicReference<cms::MessageListener> listener;
+        cms::MessageListener* listener;
+
+        /**
+         * Mutex to Protect access to the listener during delivery.
+         */
+        decaf::util::concurrent::Mutex listenerMutex;
 
         /**
          * Is the consumer currently delivering acks.
@@ -79,14 +84,19 @@ namespace core{
         AtomicBoolean deliveringAcks;
 
         /**
+         * Has this Consumer been started yet.
+         */
+        AtomicBoolean started;
+
+        /**
          * Queue of unconsumed messages.
          */
-        decaf::util::StlQueue<DispatchData> unconsumedMessages;
+        MessageDispatchChannel unconsumedMessages;
 
         /**
          * Queue of consumed messages.
          */
-        decaf::util::StlQueue< decaf::lang::Pointer<commands::Message> > dispatchedMessages;
+        decaf::util::StlQueue< decaf::lang::Pointer<commands::MessageDispatch> > dispatchedMessages;
 
         /**
          * The last delivered message's BrokerSequenceId.
@@ -119,9 +129,9 @@ namespace core{
         volatile bool synchronizationRegistered;
 
         /**
-         * Boolean that indicates if the consumer has been closed
+         * Boolean indicating if in progress messages should be cleared.
          */
-        bool closed;
+        bool clearDispatchList;
 
     public:
 
@@ -135,6 +145,19 @@ namespace core{
         virtual ~ActiveMQConsumer();
 
     public:  // Interface Implementation
+
+        /**
+         * Starts the Consumer if not already started and not closed. A consumer
+         * will no deliver messages until started.
+         */
+        virtual void start();
+
+        /**
+         * Stops a Consumer, the Consumer will not deliver any messages that are
+         * dispatched to it until it is started again.  A Closed Consumer is also a
+         * stopped consumer.
+         */
+        virtual void stop();
 
         /**
          * Closes the Consumer.  This will return all allocated resources
@@ -180,7 +203,7 @@ namespace core{
          * @param MessageListener interface pointer
          */
         virtual cms::MessageListener* getMessageListener() const {
-            return this->listener.get();
+            return this->listener;
         }
 
         /**
@@ -204,9 +227,9 @@ namespace core{
 
         /**
          * Called asynchronously by the session to dispatch a message.
-         * @param message object pointer
+         * @param message dispatch object pointer
          */
-        virtual void dispatch( DispatchData& message );
+        virtual void dispatch( const Pointer<MessageDispatch>& message );
 
     public:  // ActiveMQConsumer Methods
 
@@ -256,7 +279,7 @@ namespace core{
          * @returns if this Consumer has been closed.
          */
         bool isClosed() const {
-            return this->closed;
+            return this->unconsumedMessages.isClosed();
         }
 
         /**
@@ -275,13 +298,25 @@ namespace core{
             this->synchronizationRegistered = value;
         }
 
-    protected:
+        /**
+         * Deliver any pending messages to the registered MessageListener if there
+         * is one, return true if not all dispatched, or false if no listener or all
+         * pending messages have been dispatched.
+         */
+        bool iterate();
+
 
         /**
-         * Purges all messages currently in the queue.  This can be as a
-         * result of a rollback, or of the consumer being shutdown.
+         * Forces this consumer to send all pending acks to the broker.
          */
-        void purgeMessages() throw ( exceptions::ActiveMQException );
+        void deliverAcks() throw ( exceptions::ActiveMQException );
+
+        /**
+         * Called on a Failover to clear any pending messages.
+         */
+        void clearMessagesInProgress();
+
+    protected:
 
         /**
          * Used by synchronous receive methods to wait for messages to come in.
@@ -296,7 +331,7 @@ namespace core{
          * @throws InvalidStateException if this consumer is closed upon
          * entering this method.
          */
-        Pointer<commands::Message> dequeue( int timeout )
+        Pointer<MessageDispatch> dequeue( int timeout )
             throw ( cms::CMSException );
 
         /**
@@ -304,7 +339,7 @@ namespace core{
          * @param message - the message being consumed.
          */
         void beforeMessageIsConsumed(
-            const Pointer<commands::Message>& message );
+            const Pointer<commands::MessageDispatch>& dispatch );
 
         /**
          * Post-consume processing
@@ -312,7 +347,7 @@ namespace core{
          * @param messageExpired - flag indicating if the message has expired.
          */
         void afterMessageIsConsumed(
-            const Pointer<commands::Message>& message, bool messageExpired );
+            const Pointer<commands::MessageDispatch>& dispatch, bool messageExpired );
 
     private:
 
@@ -334,11 +369,8 @@ namespace core{
         // Sends an ack as needed in order to keep them coming in if the current
         // ack mode allows the consumer to receive up to the prefetch limit before
         // an real ack is sent.
-        void ackLater( const Pointer<commands::Message>& message, int ackType )
+        void ackLater( const Pointer<commands::MessageDispatch>& message, int ackType )
             throw ( exceptions::ActiveMQException );
-
-        // Delivers all pending acks before a consumer is closed
-        void deliverAcks() throw ( exceptions::ActiveMQException );
 
         // Create an Ack Message that acks all messages that have been delivered so far.
         Pointer<commands::MessageAck> makeAckForAllDeliveredMessages( int type );
