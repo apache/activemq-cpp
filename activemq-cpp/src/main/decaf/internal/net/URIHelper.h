@@ -19,6 +19,7 @@
 #define _DECAF_INTERNAL_NET_URIHELPER_H_
 
 #include <string>
+#include <decaf/util/Config.h>
 #include <decaf/net/URISyntaxException.h>
 #include <decaf/internal/net/URIType.h>
 
@@ -29,7 +30,7 @@ namespace net {
     /**
      * Helper class used by the URI classes in encoding and decoding of URI's.
      */
-    class URIHelper {
+    class DECAF_API URIHelper {
     private:
 
         const std::string unreserved;
