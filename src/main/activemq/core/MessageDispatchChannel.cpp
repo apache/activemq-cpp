@@ -21,6 +21,7 @@ using namespace std;
 using namespace activemq;
 using namespace activemq::core;
 using namespace activemq::commands;
+using namespace activemq::exceptions;
 using namespace decaf;
 using namespace decaf::lang;
 using namespace decaf::util;
@@ -58,11 +59,13 @@ bool MessageDispatchChannel::isEmpty() const {
     synchronized( &channel ) {
         return channel.empty();
     }
+
+	return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout )
-    throw( exceptions::ActiveMQException ) {
+    throw( ActiveMQException ) {
 
     synchronized( &channel ) {
         // Wait until the channel is ready to deliver messages.
@@ -70,7 +73,7 @@ Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout )
             if( timeout == -1 ) {
                 channel.wait();
             } else {
-                channel.wait( timeout );
+                channel.wait( (unsigned long)timeout );
                 break;
             }
         }
@@ -81,6 +84,8 @@ Pointer<MessageDispatch> MessageDispatchChannel::dequeue( long long timeout )
 
         return channel.pop();
     }
+
+	return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +96,8 @@ Pointer<MessageDispatch> MessageDispatchChannel::dequeueNoWait() {
         }
         return channel.pop();
     }
+
+	return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,6 +108,8 @@ Pointer<MessageDispatch> MessageDispatchChannel::peek() const {
         }
         return channel.front();
     }
+
+	return Pointer<MessageDispatch>();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,15 +151,20 @@ void MessageDispatchChannel::clear() {
 ////////////////////////////////////////////////////////////////////////////////
 int MessageDispatchChannel::size() const {
     synchronized( &channel ) {
-        return channel.size();
+        return (int)channel.size();
     }
+
+	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< Pointer<MessageDispatch> > MessageDispatchChannel::removeAll() {
-    synchronized( &channel ) {
-        std::vector< Pointer<MessageDispatch> > result = channel.toArray();
+    std::vector< Pointer<MessageDispatch> > result;
+	
+	synchronized( &channel ) {
+        result = channel.toArray();
         channel.clear();
-        return result;
     }
+
+    return result;
 }
