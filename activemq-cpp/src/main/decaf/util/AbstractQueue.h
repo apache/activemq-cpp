@@ -45,7 +45,7 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class DECAF_API AbstractQueue : public decaf::util::Queue<E> {
+    class AbstractQueue : public decaf::util::Queue<E> {
     private:
 
         E emptyMarker;

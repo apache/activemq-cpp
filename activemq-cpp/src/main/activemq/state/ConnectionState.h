@@ -45,7 +45,7 @@ namespace state {
     using namespace decaf::util;
     using namespace activemq::commands;
 
-    class ConnectionState {
+    class AMQCPP_API ConnectionState {
     private:
 
         Pointer< ConnectionInfo > info;

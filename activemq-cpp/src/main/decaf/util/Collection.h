@@ -65,8 +65,8 @@ namespace util{
      * @since 1.0
      */
     template< typename E >
-    class DECAF_API Collection : public lang::Iterable<E>,
-        virtual public util::concurrent::Synchronizable {
+    class Collection : public lang::Iterable<E>,
+					   public util::concurrent::Synchronizable {
     public:
 
         virtual ~Collection() {}

@@ -29,7 +29,7 @@
 namespace decaf {
 namespace lang {
 
-    class DECAF_API AtomicRefCounter {
+    class AtomicRefCounter {
     private:
 
         decaf::util::concurrent::atomic::AtomicInteger* counter;
@@ -91,7 +91,7 @@ namespace lang {
      * @since 1.0
      */
     template< typename T, typename REFCOUNTER = AtomicRefCounter >
-    class DECAF_API Pointer : public REFCOUNTER {
+    class Pointer : public REFCOUNTER {
     private:
 
         T* value;

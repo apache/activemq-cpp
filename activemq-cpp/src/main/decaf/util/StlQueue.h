@@ -56,7 +56,8 @@ namespace util{
      * polling loop to ensure that you don't get stuck there.
      */
 
-    template <typename T> class StlQueue : public concurrent::Synchronizable {
+    template <typename T> 
+	class StlQueue : public concurrent::Synchronizable {
     private:
 
         // The real queue

@@ -31,7 +31,7 @@ namespace atomic {
      * An Pointer reference that may be updated atomically.
      */
     template< typename T >
-    class DECAF_API AtomicReference {
+    class AtomicReference {
 
         volatile void* value;
 
