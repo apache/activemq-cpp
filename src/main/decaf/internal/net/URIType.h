@@ -19,6 +19,7 @@
 #define _DECAF_INTERNAL_NET_URITYPE_H_
 
 #include <string>
+#include <decaf/util/Config.h>
 
 namespace decaf {
 namespace internal {
@@ -27,7 +28,7 @@ namespace net {
     /**
      * Basic type object that holds data that composes a given URI
      */
-    class URIType {
+    class DECAF_API URIType {
     private:
 
         std::string source;
