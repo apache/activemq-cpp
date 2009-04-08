@@ -32,8 +32,8 @@ namespace util{
      * a more user-friendly interface and to provide common
      * functions that do not exist in std::map.
      */
-    template <typename K, typename V, typename COMPARATOR = std::less<K> > class Map :
-        public concurrent::Synchronizable {
+    template <typename K, typename V, typename COMPARATOR = std::less<K> > 
+	class Map : public concurrent::Synchronizable {
     public:
 
         class Entry {

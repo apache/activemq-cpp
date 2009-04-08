@@ -39,7 +39,7 @@ namespace util{
      * additional methods not provided by the STL type.
      */
     template <typename E>
-    class DECAF_API StlList : public decaf::util::List<E> {
+    class StlList : public decaf::util::List<E> {
     private:
 
         std::list<E> values;

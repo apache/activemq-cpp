@@ -56,7 +56,7 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class DECAF_API AbstractSequentialList : public decaf::util::AbstractList {
+    class AbstractSequentialList : public decaf::util::AbstractList {
     public:
 
         virtual ~AbstractSequentialList() {}

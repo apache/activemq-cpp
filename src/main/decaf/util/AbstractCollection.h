@@ -55,7 +55,7 @@ namespace util {
      * @since 1.0
      */
     template< typename E >
-    class DECAF_API AbstractCollection : public decaf::util::Collection<E> {
+    class AbstractCollection : public decaf::util::Collection<E> {
     protected:
 
         mutable util::concurrent::Mutex mutex;

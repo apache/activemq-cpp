@@ -29,7 +29,7 @@ namespace lang{
      * type for generic collections API calls.
      */
     template< typename E >
-    class DECAF_API Iterable {
+    class Iterable {
     public:
 
         virtual ~Iterable() {}
