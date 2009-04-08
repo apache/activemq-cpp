@@ -43,7 +43,7 @@ namespace util {
      * @since 1.0
      */
     template<typename E >
-    class DECAF_API AbstractSet : public decaf::util::Set<E> {
+    class AbstractSet : public decaf::util::Set<E> {
     public:
 
         virtual ~AbstractSet() {}

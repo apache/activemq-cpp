@@ -35,7 +35,7 @@ namespace util{
      * returned by a call to next() or previous().
      */
     template< typename E>
-    class DECAF_API ListIterator : public decaf::util::Iterator<E> {
+    class ListIterator : public decaf::util::Iterator<E> {
     public:
 
         virtual ~ListIterator() {}

@@ -45,7 +45,7 @@ namespace util{
      * can be obtained by calling the Queue method <code>getEmptyMarker</code>.
      */
     template <typename E>
-    class DECAF_API Queue : public decaf::util::AbstractCollection<E> {
+    class Queue : public decaf::util::AbstractCollection<E> {
     public:
 
         virtual ~Queue() {}

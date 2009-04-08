@@ -36,7 +36,7 @@ namespace concurrent {
      * @since 1.0
      */
     template<typename K, typename V, typename COMPARATOR>
-    class DECAF_API ConcurrentMap : public Map<K, V, COMPARATOR>{
+    class ConcurrentMap : public Map<K, V, COMPARATOR>{
     public:
 
         virtual ~ConcurrentMap() {}
