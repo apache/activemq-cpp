@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -114,7 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalIncludeDirectories="..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;;&quot;C:\Program Files\APR\include&quot;"
+				AdditionalIncludeDirectories="..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;APR_DECLARE_STATIC;APU_DECLARE_STATIC;API_DECLARE_STATIC;$(NOINHERIT)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -181,7 +181,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
-				AdditionalIncludeDirectories="..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
+				AdditionalIncludeDirectories="..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_WINDOWS;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;$(NOINHERIT)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -261,7 +261,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
+				AdditionalIncludeDirectories="..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_WINDOWS;_USRDLL;CMS_DLL;CMS_EXPORTS;AMQCPP_DLL;AMQCPP_EXPORTS;DECAF_DLL;DECAF_EXPORTS;$(NOINHERIT)"
 				KeepComments="false"
 				MinimalRebuild="false"
@@ -1114,6 +1114,14 @@
 				</File>
 				<File
 					RelativePath="..\src\main\activemq\core\Dispatcher.h"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\MessageDispatchChannel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\main\activemq\core\MessageDispatchChannel.h"
 					>
 				</File>
 				<File
