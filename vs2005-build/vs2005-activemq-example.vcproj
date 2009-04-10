@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Program Files\APR\include&quot;;..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;"
+				AdditionalIncludeDirectories="../src/example;..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,7 +69,7 @@
 				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -129,7 +129,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
+				AdditionalIncludeDirectories="../src/example;..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -154,7 +154,7 @@
 				AdditionalDependencies="ws2_32.lib libapr-1.lib libaprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -216,7 +216,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;;&quot;C:\Program Files\Decaf\src\main&quot;"
+				AdditionalIncludeDirectories="../src/example;..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -242,7 +242,7 @@
 				AdditionalDependencies="ws2_32.lib apr-1.lib aprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\APR\bin&quot;;&quot;C:\Program Files\APR\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -304,7 +304,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\src\examples;..\src\main;&quot;C:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Include&quot;;&quot;C:\Program Files\APR\include&quot;"
+				AdditionalIncludeDirectories="../src/example;..\src\main;&quot;$(PLATFORM_SDK)\include&quot;;&quot;$(CPPUNIT_DIST)\include&quot;;&quot;$(APR_DIST)\include&quot;"
 				PreprocessorDefinitions="WIN32;WIN32_LEAN_AND_MEAN;_DEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;HAVE_WINSOCK2_H;CMS_DLL;AMQCPP_DLL;DECAF_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -332,7 +332,7 @@
 				AdditionalDependencies="ws2_32.lib apr-1.lib aprutil-1.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;D:\Program Files\Microsoft Platform SDK\Lib&quot;;&quot;C:\Program Files\Decaf\vs2005-build\DebugDLL&quot;;&quot;C:\Program Files\APR\lib&quot;;&quot;C:\Program Files\APR\bin&quot;"
+				AdditionalLibraryDirectories="&quot;$(PLATFORM_SDK)\lib&quot;;&quot;$(CPPUNIT_DIST)\lib&quot;;&quot;$(APR_DIST)\lib&quot;;&quot;$(APR_DIST)\bin&quot;"
 				ManifestFile="$(IntDir)\$(ProjectName)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				SubSystem="1"
