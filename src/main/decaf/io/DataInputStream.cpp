@@ -271,7 +271,8 @@ std::string DataInputStream::readString()
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string DataInputStream::readUTF()
-    throw ( io::IOException, io::EOFException ) {
+    throw ( io::IOException, io::EOFException, io::UTFDataFormatException ) {
+
     try {
 
         if( inputStream == NULL ) {
@@ -280,23 +281,83 @@ std::string DataInputStream::readUTF()
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        std::vector<unsigned char> buffer;
-        unsigned short length = readUnsignedShort();
-        buffer.resize(length + 1);  // Add one for a null charactor.
+        unsigned short utfLength = readUnsignedShort();
+        std::vector<unsigned char> buffer( utfLength );
+        std::string result( utfLength, char() );
 
-        std::size_t n = 0;
-        while( n < length ) {
-            int count = inputStream->read( &buffer[n], 0, (length - n) );
-            if( count == -1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readUTF - Reached EOF" );
+        this->readFully( &buffer[0], 0, utfLength );
+
+        std::size_t count = 0;
+        std::size_t index = 0;
+        unsigned char a = 0;
+
+        while( count < utfLength ) {
+            if( (unsigned char)( result[index] = (char)buffer[count++] ) < 0x80 ) {
+                index++;
+            } else if( ( ( a = result[index++] ) & 0xE0 ) == 0xC0 ) {
+                if( count >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of two byte char found at end.");
+                }
+
+                unsigned char b = buffer[count++];
+                if( ( b & 0xC0 ) != 0x80 ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                }
+
+                // 2-byte UTF8 encoding: 110X XXxx 10xx xxxx
+                // Bits set at 'X' means we have encountered a UTF8 encoded value
+                // greater than 255, which is not supported.
+                if( a & 0x1C ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 2 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                result[index++] = (char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
+
+            } else if( ( a & 0xF0 ) == 0xE0 ) {
+
+                if( count + 1 >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of three byte char found at end.");
+                } else {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 3 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                // If we were to support multibyte strings in the future this would be
+                // the remainder of this method decoding logic.
+                //
+                //int b = buffer[count++];
+                //int c = buffer[count++];
+                //if( ( ( b & 0xC0 ) != 0x80 ) || ( ( c & 0xC0 ) != 0x80 ) ) {
+                //    throw UTFDataFormatException(
+                //        __FILE__, __LINE__,
+                //        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                //}
+                //
+                //result[inde++] = (char)( ( ( a & 0x0F ) << 12 ) |
+                //                         ( ( b & 0x3F ) << 6 ) | ( c & 0x3F ) );
+
+            } else {
+                throw UTFDataFormatException(
+                    __FILE__, __LINE__, "Invalid UTF-8 encoding found, aborting.");
             }
-            n += count;
         }
 
-        return (char*)&buffer[0];
+        result.resize( index );
+
+        return result;
     }
+    DECAF_CATCH_RETHROW( UTFDataFormatException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )

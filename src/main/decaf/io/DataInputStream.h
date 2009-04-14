@@ -21,6 +21,7 @@
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/io/IOException.h>
 #include <decaf/io/EOFException.h>
+#include <decaf/io/UTFDataFormatException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
@@ -272,9 +273,10 @@ namespace io{
          * @returns string read from stream.
          * @throws IOException
          * @throws EOFException
+         * @throws UTFDataFormatException
          */
         virtual std::string readUTF()
-            throw ( io::IOException, io::EOFException );
+            throw ( io::IOException, io::EOFException, io::UTFDataFormatException );
 
         /**
          * Reads some bytes from an input stream and stores them into the

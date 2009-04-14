@@ -49,6 +49,8 @@ namespace io{
         CPPUNIT_TEST( testWriteLong );
         CPPUNIT_TEST( testWriteShort );
         CPPUNIT_TEST( testWriteUTF );
+        CPPUNIT_TEST( testWriteUTFStringLength );
+        CPPUNIT_TEST( testWriteUTFEncoding );
         CPPUNIT_TEST_SUITE_END();
 
         ByteArrayOutputStream* baos;
@@ -94,8 +96,13 @@ namespace io{
         void testWriteLong();
         void testWriteShort();
         void testWriteUTF();
+        void testWriteUTFStringLength();
+        void testWriteUTFEncoding();
 
     private:
+
+        void testHelper( unsigned char* input, int inputLength,
+                         unsigned char* expect, int expectLength );
 
         void openDataInputStream() {
             bais = new ByteArrayInputStream( baos->toByteArray(), baos->size() );

@@ -385,6 +385,7 @@ h_sources = \
     decaf/io/BufferedInputStream.h \
     decaf/io/InputStream.h \
     decaf/io/IOException.h \
+    decaf/io/UTFDataFormatException.h \
     decaf/io/InterruptedIOException.h \
     decaf/util/concurrent/BrokenBarrierException.h \
     decaf/util/concurrent/Delayed.h \

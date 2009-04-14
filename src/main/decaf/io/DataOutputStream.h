@@ -19,6 +19,9 @@
 #define _DECAF_IO_DATAOUTPUTSTREAM_H_
 
 #include <decaf/io/FilterOutputStream.h>
+#include <decaf/io/IOException.h>
+#include <decaf/io/UTFDataFormatException.h>
+#include <string>
 
 namespace decaf{
 namespace io{
@@ -190,20 +193,33 @@ namespace io{
          * characters. Each character is written to the data output stream
          * as if by the writeChar method. If no exception is thrown, the
          * counter written is incremented by the length of value.  The trailing
-         * NULL charactor is written by this method.
+         * NULL character is written by this method.
          * @param value the value to write.
          * @throws IOException
          */
         virtual void writeChars( const std::string& value ) throw ( IOException );
 
         /**
-         * Writes out the string to the underlying output stream as a
-         * unsigned short indicating its length followed by the rest of
-         * the string.
-         * @param value the value to write.
-         * @throws IOException
+         * Writes out the string to the underlying output stream as a modeified UTF-8
+         * encoded sequence of bytes.  The first two bytes written are indicate its
+         * encoded length followed by the rest of the string's characters encoded as
+         * modified UTF-8.  The length represent the encoded length of the data not the
+         * actual length of the string.
+         *
+         * @param value
+         *        the value to write.
+         *
+         * @throws IOException - on a write error
+         * @throws UTFDataFormatException - if encoded size if greater than 65535
          */
-        virtual void writeUTF( const std::string& value ) throw ( IOException );
+        virtual void writeUTF( const std::string& value )
+            throw ( IOException, UTFDataFormatException );
+
+    private:
+
+        // Determine the encoded length of a string when written as modified UTF-8
+        unsigned int countUTFLength( const std::string& value );
+
     };
 
 }}

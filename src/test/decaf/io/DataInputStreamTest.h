@@ -38,6 +38,7 @@ namespace io{
         CPPUNIT_TEST( test );
         CPPUNIT_TEST( testString );
         CPPUNIT_TEST( testUTF );
+        CPPUNIT_TEST( testUTFDecoding );
         CPPUNIT_TEST( testConstructor );
         CPPUNIT_TEST( testRead1 );
         CPPUNIT_TEST( testRead2 );
@@ -89,6 +90,7 @@ namespace io{
         void test();
         void testString();
         void testUTF();
+        void testUTFDecoding();
         void testConstructor();
         void testRead1();
         void testRead2();
@@ -110,6 +112,9 @@ namespace io{
         void test_skipBytes();
 
     private:
+
+        void testHelper( unsigned char* input, int inputLength,
+                         unsigned char* expect, int expectLength );
 
         void openDataInputStream() {
             delete bais;

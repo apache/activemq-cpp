@@ -16,6 +16,7 @@
  */
 
 #include <decaf/io/DataOutputStream.h>
+#include <decaf/io/UTFDataFormatException.h>
 #include <decaf/util/Config.h>
 #include <string.h>
 #include <stdio.h>
@@ -314,16 +315,72 @@ void DataOutputStream::writeChars( const std::string& value ) throw ( IOExceptio
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DataOutputStream::writeUTF( const std::string& value ) throw ( IOException ) {
+void DataOutputStream::writeUTF( const std::string& value )
+    throw ( IOException, UTFDataFormatException ) {
+
     try {
 
-        if( value.length() == 0 ) {
-            return;
+        unsigned int utfLength = this->countUTFLength( value );
+
+        if( utfLength > 65535 ) {
+            throw UTFDataFormatException(
+                __FILE__, __LINE__,
+                "Attempted to write a string as UTF-8 whose length is longer "
+                "than the supported 65535 bytes" );
         }
 
-        this->writeUnsignedShort( (unsigned short)value.length() );
-        this->write( (const unsigned char*)value.c_str(), 0, value.length() );
+        std::size_t length = value.length();
+        std::vector<unsigned char> utfBytes( (std::size_t)utfLength );
+        unsigned int utfIndex = 0;
+
+        for( std::size_t i = 0; i < length; i++ ) {
+
+            unsigned int charValue = (unsigned char)value.at( i );
+
+            // Written to allow for expansion to wide character strings at some
+            // point, as it stands now the value can never be > 255 since the
+            // string class returns a single byte char.
+            if( charValue > 0 && charValue <= 127 ) {
+                utfBytes[utfIndex++] = (unsigned char)charValue;
+            } else if( charValue <= 2047 ) {
+                utfBytes[utfIndex++] = (unsigned char)(0xc0 | (0x1f & (charValue >> 6)));
+                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
+            } else {
+                utfBytes[utfIndex++] = (unsigned char)(0xe0 | (0x0f & (charValue >> 12)));
+                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & (charValue >> 6)));
+                utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
+            }
+        }
+
+        this->writeUnsignedShort( (unsigned short)utfLength );
+        this->write( &utfBytes[0], 0, utfIndex );
     }
+    DECAF_CATCH_RETHROW( UTFDataFormatException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+unsigned int DataOutputStream::countUTFLength( const std::string& value ) {
+
+    unsigned int utfCount = 0;
+    std::size_t length = value.length();
+
+    for( std::size_t i = 0; i < length; ++i ) {
+
+        unsigned int charValue = (unsigned char)value.at( i );
+
+        // Written to allow for expansion to wide character strings at some
+        // point, as it stands now the value can never be > 255 since the
+        // string class returns a single byte char.
+        if( charValue > 0 && charValue <= 127 ) {
+            utfCount++;
+        } else if( charValue <= 2047 ) {
+            utfCount += 2;
+        } else {
+            utfCount += 3;
+        }
+    }
+
+    return utfCount;
 }
