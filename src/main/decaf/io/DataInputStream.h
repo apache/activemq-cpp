@@ -21,6 +21,7 @@
 #include <decaf/io/FilterInputStream.h>
 #include <decaf/io/IOException.h>
 #include <decaf/io/EOFException.h>
+#include <decaf/io/UTFDataFormatException.h>
 #include <decaf/lang/exceptions/NullPointerException.h>
 #include <decaf/lang/exceptions/IndexOutOfBoundsException.h>
 
@@ -39,9 +40,16 @@ namespace io{
      * creation of the underlying stream can occur in a Java like way. Ex:
      *
      *  DataInputStream os = new DataInputStream( new InputStream(), true )
+     *
+     *  @since 1.0
      */
-    class DECAF_API DataInputStream : public FilterInputStream
-    {
+    class DECAF_API DataInputStream : public FilterInputStream {
+    private:
+
+        // Buffer used to store bytes read from the stream while reconstructed into
+        // higher order C++ primitives.
+        unsigned char buffer[8];
+
     public:
 
         /**
@@ -266,15 +274,22 @@ namespace io{
             throw ( io::IOException, io::EOFException );
 
         /**
-         * Reads a UTF8 encoded string in ASCII format and returns it, this is
-         * only useful if you know for sure that the string that is to be read
-         * was a string that contained all ascii values, and not uncide chars.
-         * @returns string read from stream.
+         * Reads a modified UTF-8 encoded string in ASCII format and returns it,
+         * this is only useful if you know for sure that the string that is to be read
+         * was a string that contained all ASCII values (0-255), if so this method will
+         * throw a UTFFormatException.  This method reads String value written from a
+         * Java DataOutputStream and assumes that the length prefix the precedes the
+         * encoded UTF-8 bytes is an unsigned short, which implies that the String will
+         * be no longer than 65535 characters.
+         *
+         * @returns The decoded string read from stream.
+         *
          * @throws IOException
          * @throws EOFException
+         * @throws UTFDataFormatException
          */
         virtual std::string readUTF()
-            throw ( io::IOException, io::EOFException );
+            throw ( io::IOException, io::EOFException, io::UTFDataFormatException );
 
         /**
          * Reads some bytes from an input stream and stores them into the
