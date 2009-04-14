@@ -109,8 +109,11 @@ std::string WireFormatInfo::toString() const {
     stream << " Value of stackTraceEnabled = " << isStackTraceEnabled() << std::endl;
     stream << " Value of tcpNoDelayEnabled = " << isTcpNoDelayEnabled() << std::endl;
     stream << " Value of cacheEnabled = " << isCacheEnabled() << std::endl;
+    stream << " Value of cacheSize = " << getCacheSize() << std::endl;
     stream << " Value of tightEncodingEnabled = " << isTightEncodingEnabled() << std::endl;
     stream << " Value of sizePrefixDisabled = " << isSizePrefixDisabled() << std::endl;
+    stream << " Value of maxInactivityDuration = " << getMaxInactivityDuration() << std::endl;
+    stream << " Value of maxInactivityDuration = " << getMaxInactivityDurationInitalDelay() << std::endl;
 
     stream << BaseCommand::toString();
     stream << "End Class = WireFormatInfo" << std::endl;
@@ -149,6 +152,9 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
     if( isCacheEnabled() != wireFormatInfo->isCacheEnabled() ) {
         return false;
     }
+    if( getCacheSize() != wireFormatInfo->getCacheSize() ) {
+        return false;
+    }
     if( isTightEncodingEnabled() != wireFormatInfo->isTightEncodingEnabled() ) {
         return false;
     }
@@ -156,6 +162,12 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
         return false;
     }
     if( !BaseCommand::equals( value ) ) {
+        return false;
+    }
+    if( getMaxInactivityDuration() != wireFormatInfo->getMaxInactivityDuration() ) {
+        return false;
+    }
+    if( getMaxInactivityDurationInitalDelay() != wireFormatInfo->getMaxInactivityDurationInitalDelay() ) {
         return false;
     }
 
@@ -368,6 +380,26 @@ long long WireFormatInfo::getMaxInactivityDurationInitalDelay() const {
 void WireFormatInfo::setMaxInactivityDurationInitalDelay( long long maxInactivityDurationInitalDelay ) {
     try {
         properties.setLong( "MaxInactivityDurationInitalDelay", maxInactivityDurationInitalDelay );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+int WireFormatInfo::getCacheSize() const {
+    try {
+        return properties.getInt( "CacheSize" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setCacheSize( int value ) {
+    try {
+        properties.setInt( "CacheSize", value );
     }
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()

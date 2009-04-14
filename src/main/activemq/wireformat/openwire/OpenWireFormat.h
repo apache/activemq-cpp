@@ -67,8 +67,11 @@ namespace marshal {
         bool stackTraceEnabled;
         bool tcpNoDelayEnabled;
         bool cacheEnabled;
+        int cacheSize;
         bool tightEncodingEnabled;
         bool sizePrefixDisabled;
+        long long maxInactivityDuration;
+        long long maxInactivityDurationInitialDelay;
 
     public:
 
@@ -274,6 +277,22 @@ namespace marshal {
         }
 
         /**
+         * Returns the currently set Cache size.
+         * @return the current value of the broker's cache size.
+         */
+        int getCacheSize() const {
+            return cacheSize;
+        }
+
+        /**
+         * Sets the current Cache size.
+         * @param value - the value to send as the broker's cache size.
+         */
+        void setCacheSize( int value ) {
+            this->cacheSize = value;
+        }
+
+        /**
          * Checks if the tightEncodingEnabled flag is on
          * @return true if the flag is on.
          */
@@ -303,6 +322,38 @@ namespace marshal {
          */
         void setSizePrefixDisabled( bool sizePrefixDisabled ) {
             this->sizePrefixDisabled = sizePrefixDisabled;
+        }
+
+        /**
+         * Gets the MaxInactivityDuration setting.
+         * @return maximum inactivity duration value in milliseconds.
+         */
+        long long getMaxInactivityDuration() const {
+            return this->maxInactivityDuration;
+        }
+
+        /**
+         * Sets the MaxInactivityDuration setting.
+         * @param value - the Max inactivity duration value in milliseconds.
+         */
+        void setMaxInactivityDuration( long long value ) {
+            this->maxInactivityDuration = value;
+        }
+
+        /**
+         * Gets the MaxInactivityDurationInitialDelay setting.
+         * @return maximum inactivity duration initial delay value in milliseconds.
+         */
+        long long getMaxInactivityDurationInitialDelay() const {
+            return this->maxInactivityDurationInitialDelay;
+        }
+
+        /**
+         * Sets the MaxInactivityDurationInitialDelay setting.
+         * @param value - the Max inactivity Initial Delay duration value in milliseconds.
+         */
+        void setMaxInactivityDurationInitialDelay( long long value ) {
+            this->maxInactivityDurationInitialDelay = value;
         }
 
     protected:
