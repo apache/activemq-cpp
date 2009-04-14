@@ -65,11 +65,14 @@ OpenWireFormat::OpenWireFormat( const decaf::util::Properties& properties ) {
     this->id = UUID::randomUUID().toString();
     // Set defaults for initial WireFormat negotiation
     this->version = 0;
-    this->stackTraceEnabled = false;
-    this->cacheEnabled = false;
-    this->tcpNoDelayEnabled = false;
+    this->stackTraceEnabled = true;
+    this->cacheEnabled = true;
+    this->cacheSize = 1024;
+    this->tcpNoDelayEnabled = true;
     this->tightEncodingEnabled = false;
     this->sizePrefixDisabled = false;
+    this->maxInactivityDuration = 30000;
+    this->maxInactivityDurationInitialDelay = 10000;
 
     // Set to Default as lowest common denominator, then we will try
     // and move up to the preferred when the wireformat is negotiated.
@@ -535,4 +538,9 @@ void OpenWireFormat::renegotiateWireFormat( const WireFormatInfo& info )
                                  preferedWireFormatInfo->isTightEncodingEnabled();
     this->sizePrefixDisabled = info.isSizePrefixDisabled() &&
                                preferedWireFormatInfo->isSizePrefixDisabled();
+    this->cacheSize = min( info.getCacheSize(), preferedWireFormatInfo->getCacheSize() );
+    this->maxInactivityDuration = min( info.getMaxInactivityDuration(),
+                                       preferedWireFormatInfo->getMaxInactivityDuration() );
+    this->maxInactivityDurationInitialDelay = min( info.getMaxInactivityDurationInitalDelay(),
+                                                   preferedWireFormatInfo->getMaxInactivityDurationInitalDelay() );
 }
