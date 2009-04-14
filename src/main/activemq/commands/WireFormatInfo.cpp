@@ -164,7 +164,7 @@ bool WireFormatInfo::equals( const DataStructure* value ) const {
 
 ////////////////////////////////////////////////////////////////////////////////
 decaf::lang::Pointer<commands::Command> WireFormatInfo::visit( activemq::state::CommandVisitor* visitor )
-	throw( activemq::exceptions::ActiveMQException ) {
+    throw( activemq::exceptions::ActiveMQException ) {
 
     return visitor->processWireFormat( this );
 }
@@ -331,4 +331,44 @@ void WireFormatInfo::afterUnmarshal( WireFormat* wireFormat AMQCPP_UNUSED )
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( exceptions::ActiveMQException, decaf::io::IOException )
     AMQ_CATCHALL_THROW( decaf::io::IOException )
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long WireFormatInfo::getMaxInactivityDuration() const {
+    try {
+        return properties.getLong( "MaxInactivityDuration" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return 0LL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setMaxInactivityDuration( long long maxInactivityDuration ) {
+    try {
+        properties.setLong( "MaxInactivityDuration", maxInactivityDuration );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long WireFormatInfo::getMaxInactivityDurationInitalDelay() const {
+    try {
+        return properties.getLong( "MaxInactivityDurationInitalDelay" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return 0LL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setMaxInactivityDurationInitalDelay( long long maxInactivityDurationInitalDelay ) {
+    try {
+        properties.setLong( "MaxInactivityDurationInitalDelay", maxInactivityDurationInitalDelay );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
 }
