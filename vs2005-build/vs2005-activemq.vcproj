@@ -8109,6 +8109,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\src\main\decaf\io\UTFDataFormatException.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\main\decaf\io\Writer.h"
 					>
 				</File>
