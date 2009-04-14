@@ -289,3 +289,43 @@ void WireFormatInfo::setSizePrefixDisabled( bool sizePrefixDisabled ) {
     AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
     AMQ_CATCHALL_NOTHROW()
 }
+
+////////////////////////////////////////////////////////////////////////////////
+long long WireFormatInfo::getMaxInactivityDuration() const {
+    try {
+        return properties.getLong( "MaxInactivityDuration" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return 0LL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setMaxInactivityDuration( long long maxInactivityDuration ) {
+    try {
+        properties.setLong( "MaxInactivityDuration", maxInactivityDuration );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}
+
+////////////////////////////////////////////////////////////////////////////////
+long long WireFormatInfo::getMaxInactivityDurationInitalDelay() const {
+    try {
+        return properties.getLong( "MaxInactivityDurationInitalDelay" );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+
+    return 0LL;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void WireFormatInfo::setMaxInactivityDurationInitalDelay( long long maxInactivityDurationInitalDelay ) {
+    try {
+        properties.setLong( "MaxInactivityDurationInitalDelay", maxInactivityDurationInitalDelay );
+    }
+    AMQ_CATCH_NOTHROW( exceptions::ActiveMQException )
+    AMQ_CATCHALL_NOTHROW()
+}

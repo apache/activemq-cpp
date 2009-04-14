@@ -44,6 +44,7 @@ namespace openwire{
          * wireFormat.tightEncodingEnabled
          * wireFormat.sizePrefixDisabled
          * wireFormat.maxInactivityDuration
+         * wireFormat.maxInactivityDurationInitialDelay
          */
         OpenWireFormatFactory() {}
 

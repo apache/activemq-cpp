@@ -104,6 +104,30 @@ namespace commands{
         }
 
         /**
+         * Returns the currently configured Max Inactivity duration.
+         * @return the set inactivity duration value.
+         */
+        long long getMaxInactivityDuration() const;
+
+        /**
+         * Sets the Max inactivity duration value.
+         * @param maxInactivityDuration - max time a client can be inactive.
+         */
+        void setMaxInactivityDuration( long long maxInactivityDuration );
+
+        /**
+         * Returns the currently configured Max Inactivity Intial Delay duration.
+         * @return the set inactivity duration initial delay value.
+         */
+        long long getMaxInactivityDurationInitalDelay() const;
+
+        /**
+         * Sets the Max inactivity initial delay duration value.
+         * @param maxInactivityDurationInitalDelay - time before the inactivity delay is checked.
+         */
+        void setMaxInactivityDurationInitalDelay( long long maxInactivityDurationInitalDelay );
+
+        /**
          * Checks if the stackTraceEnabled flag is on
          * @return true if the flag is on.
          */

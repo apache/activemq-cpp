@@ -20,6 +20,7 @@
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 
 using namespace std;
 using namespace activemq;
@@ -62,6 +63,12 @@ WireFormat* OpenWireFormatFactory::createWireFormat(
         info->setSizePrefixDisabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.sizePrefixDisabled",
                                     "false" ) ) );
+        info->setMaxInactivityDuration( Long::parseLong(
+            properties.getProperty( "wireFormat.MaxInactivityDuration",
+                                    "30000" ) ) );
+        info->setMaxInactivityDurationInitalDelay( Long::parseLong(
+            properties.getProperty( "wireFormat.MaxInactivityDurationInitalDelay",
+                                    "10000" ) ) );
 
         // Create the Openwire Format Object
         OpenWireFormat* f = new OpenWireFormat( properties );
