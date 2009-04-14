@@ -20,6 +20,7 @@
 
 #include <decaf/lang/Boolean.h>
 #include <decaf/lang/Integer.h>
+#include <decaf/lang/Long.h>
 #include <decaf/lang/Pointer.h>
 
 using namespace std;
@@ -62,6 +63,12 @@ Pointer<WireFormat> OpenWireFormatFactory::createWireFormat(
         info->setSizePrefixDisabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.sizePrefixDisabled",
                                     "false" ) ) );
+        info->setMaxInactivityDuration( Long::parseLong(
+            properties.getProperty( "wireFormat.MaxInactivityDuration",
+                                    "30000" ) ) );
+        info->setMaxInactivityDurationInitalDelay( Long::parseLong(
+            properties.getProperty( "wireFormat.MaxInactivityDurationInitalDelay",
+                                    "10000" ) ) );
 
         // Create the Openwire Format Object
         Pointer<OpenWireFormat> wireFormat( new OpenWireFormat( properties ) );
