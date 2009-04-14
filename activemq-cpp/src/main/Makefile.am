@@ -573,6 +573,7 @@ h_sources = \
     decaf/io/BufferedOutputStream.h \
     decaf/io/ByteArrayInputStream.h \
     decaf/io/OutputStream.h \
+    decaf/io/UTFDataFormatException.h \
     decaf/io/BufferedInputStream.h \
     decaf/io/DataInputStream.h \
     decaf/io/IOException.h \

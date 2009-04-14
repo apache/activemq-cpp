@@ -23,6 +23,7 @@
 #include <decaf/io/DataOutputStream.h>
 #include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 #include <activemq/exceptions/ActiveMQException.h>
+#include <decaf/lang/Short.h>
 
 using namespace activemq;
 using namespace activemq::util;
@@ -72,7 +73,7 @@ PrimitiveMap* PrimitiveMapMarshaller::unmarshal(
             PrimitiveMap* map = new PrimitiveMap;
 
             for( int i=0; i < size; i++ ) {
-                std::string key = OpenwireStringSupport::readString( dataIn );
+                std::string key = dataIn.readUTF();
                 map->put( key, unmarshalPrimitive( dataIn ) );
             }
 
@@ -124,7 +125,7 @@ void PrimitiveMapMarshaller::marshalPrimitiveMap(
 
         for(; iter != keys.end(); ++iter ) {
 
-            OpenwireStringSupport::writeString( dataOut, &(*iter) );
+            dataOut.writeUTF( *iter );
             PrimitiveValueNode value = map.get( *iter );
             marshalPrimitive( dataOut, value );
         }
@@ -213,13 +214,13 @@ void PrimitiveMapMarshaller::marshalPrimitive( io::DataOutputStream& dataOut,
             std::string data = value.getString();
 
             // is the string big??
-            if( data.size() > 8191 ) {
+            if( data.size() > Short::MAX_VALUE / 4 ) {
                 dataOut.writeByte( PrimitiveValueNode::BIG_STRING_TYPE );
+                OpenwireStringSupport::writeString( dataOut, &data );
             } else {
                 dataOut.writeByte( PrimitiveValueNode::STRING_TYPE );
+                dataOut.writeUTF( data );
             }
-
-            OpenwireStringSupport::writeString( dataOut, &data );
 
         } else if( value.getValueType() == PrimitiveValueNode::LIST_TYPE ) {
 
@@ -254,7 +255,7 @@ void PrimitiveMapMarshaller::unmarshalPrimitiveMap(
 
         if( size > 0 ) {
             for( int i=0; i < size; i++ ) {
-                std::string key = OpenwireStringSupport::readString( dataIn );
+                std::string key = dataIn.readUTF();
                 map.put( key, unmarshalPrimitive( dataIn ) );
             }
         }
@@ -331,6 +332,8 @@ PrimitiveValueNode PrimitiveMapMarshaller::unmarshalPrimitive(
                 break;
             }
             case PrimitiveValueNode::STRING_TYPE:
+                value.setString( dataIn.readUTF() );
+                break;
             case PrimitiveValueNode::BIG_STRING_TYPE:
                 value.setString( OpenwireStringSupport::readString( dataIn ) );
                 break;

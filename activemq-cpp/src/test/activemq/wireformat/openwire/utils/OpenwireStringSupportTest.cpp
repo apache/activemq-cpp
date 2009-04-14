@@ -23,6 +23,7 @@
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataInputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <decaf/lang/Integer.h>
 
 using namespace std;
 using namespace decaf;
@@ -33,39 +34,181 @@ using namespace activemq::wireformat;
 using namespace activemq::wireformat::openwire;
 using namespace activemq::wireformat::openwire::utils;
 
-
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireStringSupportTest::testHelper( unsigned char* input, int inputLength,
-                                            unsigned char* output, int outputLength,
-                                            bool negative ) {
-    try {
+void OpenwireStringSupportTest::writeTestHelper( unsigned char* input, int inputLength,
+                                                 unsigned char* expect, int expectLength ) {
 
-        ByteArrayInputStream bytesIn;
-        ByteArrayOutputStream bytesOut;
+    ByteArrayOutputStream baos;
+    DataOutputStream writer( &baos );
 
-        DataInputStream dataIn( &bytesIn );
-        DataOutputStream dataOut( &bytesOut );
+    std::string testStr( (char*)input, inputLength );
+    OpenwireStringSupport::writeString( writer, &testStr );
 
-        bytesIn.setByteArray( input, inputLength );
+    const unsigned char* result = baos.toByteArray();
 
-        string resultStr = OpenwireStringSupport::readString( dataIn );
-        if( !negative ) {
-            CPPUNIT_ASSERT( resultStr == std::string( (char*)output, outputLength ) );
+    CPPUNIT_ASSERT( result[0] == 0x00 );
+    CPPUNIT_ASSERT( result[1] == 0x00 );
+    CPPUNIT_ASSERT( result[2] == 0x00 );
+    CPPUNIT_ASSERT( result[3] == (unsigned char)( expectLength ) );
 
-            OpenwireStringSupport::writeString( dataOut, &resultStr );
-            CPPUNIT_ASSERT( bytesOut.toString() == std::string( (char*)input, inputLength ) );
-        } else {
-            CPPUNIT_ASSERT( 0 );
-        }
-
-    } catch( Exception& e ) {
-        CPPUNIT_ASSERT( negative );
+    for( std::size_t i = 4; i < baos.size(); ++i ) {
+        CPPUNIT_ASSERT( result[i] == expect[i-4] );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OpenwireStringSupportTest::test()
-{
+void OpenwireStringSupportTest::testWriteString() {
+
+    // Test data with 1-byte UTF8 encoding.
+    {
+        unsigned char input[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+        unsigned char expect[] = {0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+
+        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                         expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test data with 2-byte UT8 encoding.
+    {
+        unsigned char input[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
+        unsigned char expect[] = {0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
+        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                         expect, sizeof(expect)/sizeof(unsigned char)  );
+    }
+
+    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
+    {
+        unsigned char input[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
+        unsigned char expect[] = {0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        writeTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                         expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
+    {
+        ByteArrayOutputStream baos;
+        ByteArrayInputStream bais;
+        DataOutputStream writer( &baos );
+        DataInputStream dataIn( &bais );
+
+        OpenwireStringSupport::writeString( writer, NULL );
+
+        bais.setByteArray( baos.toByteArray(), baos.size() );
+
+        CPPUNIT_ASSERT( dataIn.readInt() == -1 );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireStringSupportTest::readTestHelper( unsigned char* input, int inputLength,
+                                                unsigned char* expect, int expectLength ) {
+
+    ByteArrayInputStream myStream( input, inputLength );
+    DataInputStream reader( &myStream );
+
+    std::string result = reader.readUTF();
+
+    for( std::size_t i; i < result.length(); ++i ) {
+        CPPUNIT_ASSERT( (unsigned char)result[i] == expect[i] );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireStringSupportTest::testReadString() {
+
+    // Test data with 1-byte UTF8 encoding.
+    {
+        unsigned char expect[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x0E ,0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+
+        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                        expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test data with 2-byte UT8 encoding.
+    {
+        unsigned char expect[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x0A, 0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
+        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                        expect, sizeof(expect)/sizeof(unsigned char)  );
+    }
+
+    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
+    {
+        unsigned char expect[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        readTestHelper( input, sizeof(input)/sizeof(unsigned char),
+                        expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test with bad UTF-8 encoding, missing 2nd byte of two byte value
+    {
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a IOException",
+            OpenwireStringSupport::readString( reader ),
+            IOException );
+    }
+
+    // Test with bad UTF-8 encoding, encoded value greater than 255
+    {
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a IOException",
+            OpenwireStringSupport::readString( reader ),
+            IOException );
+    }
+
+    // Test data with value greater than 255 in 2-byte encoding.
+    {
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x04, 0xC8, 0xA9, 0xC3, 0xA6};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a IOException",
+            OpenwireStringSupport::readString( reader ),
+            IOException );
+    }
+
+    // Test data with value greater than 255 in 3-byte encoding.
+    {
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x05, 0xE8, 0xA8, 0xA9, 0xC3, 0xA6};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a IOException",
+            OpenwireStringSupport::readString( reader ),
+            IOException );
+    }
+
+    // Test with three byte encode that's missing a last byte.
+    {
+        unsigned char input[] = { 0x00, 0x00, 0x00, 0x02, 0xE8, 0xA8};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a IOException",
+            OpenwireStringSupport::readString( reader ),
+            IOException );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void OpenwireStringSupportTest::test() {
+
     ByteArrayInputStream bytesIn;
     ByteArrayOutputStream bytesOut;
 
@@ -82,53 +225,4 @@ void OpenwireStringSupportTest::test()
     string resultStr = OpenwireStringSupport::readString( dataIn );
 
     CPPUNIT_ASSERT( testStr == resultStr );
-
-    // Test data with 1-byte UTF8 encoding.
-    {
-        unsigned char input[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
-        unsigned char output[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
-
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    output, sizeof(output)/sizeof(unsigned char), false );
-    }
-
-    // Test data with 2-byte UT8 encoding.
-    {
-        unsigned char input[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0xA6};
-        unsigned char output[] = {0xA9, 0xE6};
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    output, sizeof(output)/sizeof(unsigned char), false );
-    }
-
-    // Test data with value greater than 255 in 2-byte encoding.
-    // Expect : IO Exception
-    {
-        unsigned char input[] = {0x00, 0x04, 0xC8, 0xA9, 0xC3, 0xA6};
-        testHelper( input, sizeof(input)/sizeof(unsigned char), NULL, 0, true );
-    }
-
-    // Test data with value greater than 255 in 3-byte encoding.
-    // Expect : IO Exception
-    {
-        unsigned char input[] = {0x00, 0x05, 0xE8, 0xA8, 0xA9, 0xC3, 0xA6};
-        testHelper( input, sizeof(input)/sizeof(unsigned char), NULL, 0, true );
-    }
-
-    // Test data with 1-byte encoding with embedded NULL's.
-    {
-        unsigned char input[] = {0x00, 0x0D, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x00, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x00};
-        unsigned char output[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x00, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x00};
-
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    output, sizeof(output)/sizeof(unsigned char), false );
-    }
-
-    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
-    {
-        unsigned char input[] = {0x00, 0x11, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x00, 0xC2, 0xA9, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x00, 0xC3, 0xA6};
-        unsigned char output[] = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x00, 0xA9, 0x57, 0x6F, 0x72, 0x6C, 0x64, 0x00, 0xE6};
-
-        testHelper( input, sizeof(input)/sizeof(unsigned char),
-                    output, sizeof(output)/sizeof(unsigned char), false );
-    }
 }

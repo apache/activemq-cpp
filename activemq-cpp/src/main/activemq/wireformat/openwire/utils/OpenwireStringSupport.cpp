@@ -34,71 +34,86 @@ std::string OpenwireStringSupport::readString( decaf::io::DataInputStream& dataI
 
     try {
 
-        short utflen = dataIn.readShort();
+        int utfLength = dataIn.readInt();
 
-        if( utflen > -1 )
-        {
-            // Let the stream get us all that data.
-            std::vector<unsigned char> value;
-            value.resize( utflen );
-            dataIn.readFully( value );
-
-            unsigned char c = 0;
-            int count = 0;
-
-            // x counts the number of 2-byte UTF8 sequences decoded
-            int x = 0;
-
-            while( count+x < utflen )
-            {
-                c = value[count+x];
-                switch( c >> 4 )
-                {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                        // 1-byte UTF8 encoding: 0xxxxxxx
-                        value[count] = c;
-                        count++;
-                        break;
-                    case 12:
-                    case 13:
-                        // 2-byte UTF8 encoding: 110X XXxx 10xx xxxx
-                        // Bits set at 'X' means we have encountered a UTF8 encoded value
-                        // greater than 255, which is not supported.
-                        if( c & 0x1C ) {
-                            throw IOException(
-                                __FILE__,
-                                __LINE__,
-                                "OpenwireStringSupport::readString - Encoding not supported" );
-                        }
-                        // Place the decoded UTF8 character back into the value array
-                        value[count] = ((c & 0x1F) << 6) | (value[count+x+1] & 0x3F);
-                        count++;
-                        x++;
-                        break;
-                    case 14:
-                    default:
-                    {
-                        // 3-byte UTF8 encoding: 1110 xxxx  10xx xxxx  10xx xxxx
-                        throw IOException(
-                            __FILE__,
-                            __LINE__,
-                            "OpenwireStringSupport::readString - Encoding not supported" );
-                    }
-                }
-            }
-
-            // Let the Compiler give us a string.
-            return std::string(reinterpret_cast<const char*>(&value[0]), count);
+        if( utfLength == -1 ) {
+            return "";
         }
 
-        return "";
+        std::vector<unsigned char> buffer( utfLength );
+        std::string result( utfLength, char() );
+
+        dataIn.readFully( &buffer[0], 0, utfLength );
+
+        int count = 0;
+        int index = 0;
+        unsigned char a = 0;
+
+        while( count < utfLength ) {
+            if( (unsigned char)( result[index] = (char)buffer[count++] ) < 0x80 ) {
+                index++;
+            } else if( ( ( a = result[index++] ) & 0xE0 ) == 0xC0 ) {
+                if( count >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of two byte char found at end.");
+                }
+
+                unsigned char b = buffer[count++];
+                if( ( b & 0xC0 ) != 0x80 ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                }
+
+                // 2-byte UTF8 encoding: 110X XXxx 10xx xxxx
+                // Bits set at 'X' means we have encountered a UTF8 encoded value
+                // greater than 255, which is not supported.
+                if( a & 0x1C ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 2 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                result[index++] = (char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
+
+            } else if( ( a & 0xF0 ) == 0xE0 ) {
+
+                if( count + 1 >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of three byte char found at end.");
+                } else {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 3 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                // If we were to support multibyte strings in the future this would be
+                // the remainder of this method decoding logic.
+                //
+                //int b = buffer[count++];
+                //int c = buffer[count++];
+                //if( ( ( b & 0xC0 ) != 0x80 ) || ( ( c & 0xC0 ) != 0x80 ) ) {
+                //    throw UTFDataFormatException(
+                //        __FILE__, __LINE__,
+                //        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                //}
+                //
+                //result[inde++] = (char)( ( ( a & 0x0F ) << 12 ) |
+                //                         ( ( b & 0x3F ) << 6 ) | ( c & 0x3F ) );
+
+            } else {
+                throw UTFDataFormatException(
+                    __FILE__, __LINE__, "Invalid UTF-8 encoding found, aborting.");
+            }
+        }
+
+        result.resize( index );
+
+        return result;
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
     AMQ_CATCH_EXCEPTION_CONVERT( Exception, decaf::io::IOException )
@@ -114,50 +129,60 @@ void OpenwireStringSupport::writeString( decaf::io::DataOutputStream& dataOut,
 
         if( str != NULL ) {
 
-            if( str->size() > 65536 ) {
+            int utfLength = 0;
+            std::size_t length = str->length();
 
-                throw IOException(
-                    __FILE__,
-                    __LINE__,
+            for( std::size_t i = 0; i < length; ++i ) {
+
+                unsigned int charValue = (unsigned char)str->at( i );
+
+                // Written to allow for expansion to wide character strings at some
+                // point, as it stands now the value can never be > 255 since the
+                // string class returns a single byte char.
+                if( charValue > 0 && charValue <= 127 ) {
+                    utfLength++;
+                } else if( charValue <= 2047 ) {
+                    utfLength += 2;
+                } else {
+                    utfLength += 3;
+                }
+            }
+
+            if( utfLength > Integer::MAX_VALUE ) {
+                throw UTFDataFormatException(
+                    __FILE__, __LINE__,
                     ( std::string( "OpenwireStringSupport::writeString - Cannot marshall " ) +
-                    "string longer than: 65536 characters, supplied string was: " +
-                    Integer::toString( (int)str->size() ) + " characters long." ).c_str() );
+                    "string utf8 encoding longer than: 2^31 bytes, supplied string utf8 encoding was: " +
+                    Integer::toString( (int)utfLength ) + " bytes long." ).c_str() );
             }
 
-            unsigned short utflen = 0;
-            int count = 0;
-            unsigned char c;
+            std::vector<unsigned char> utfBytes( (std::size_t)utfLength );
+            unsigned int utfIndex = 0;
 
-            std::string::const_iterator iter = str->begin();
+            for( std::size_t i = 0; i < length; i++ ) {
 
-            for(; iter != str->end(); ++iter ) {
-                c = *iter;
-                if( c < 0x80 ) {
-                    utflen++;
+                unsigned int charValue = (unsigned char)str->at( i );
+
+                // Written to allow for expansion to wide character strings at some
+                // point, as it stands now the value can never be > 255 since the
+                // string class returns a single byte char.
+                if( charValue > 0 && charValue <= 127 ) {
+                    utfBytes[utfIndex++] = (unsigned char)charValue;
+                } else if( charValue <= 2047 ) {
+                    utfBytes[utfIndex++] = (unsigned char)(0xc0 | (0x1f & (charValue >> 6)));
+                    utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
                 } else {
-                    utflen += 2;
+                    utfBytes[utfIndex++] = (unsigned char)(0xe0 | (0x0f & (charValue >> 12)));
+                    utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & (charValue >> 6)));
+                    utfBytes[utfIndex++] = (unsigned char)(0x80 | (0x3f & charValue));
                 }
             }
 
-            dataOut.writeUnsignedShort( utflen );
-            std::vector<unsigned char> byteArr;
-            byteArr.resize( utflen );
-
-            for( iter = str->begin(); iter != str->end(); ++iter ) {
-
-                c = *iter;
-                if( c < 0x80 ) {
-                    byteArr[count++] = (unsigned char)c;
-                } else {
-                    byteArr[count++] = (unsigned char)( 0xC0 | ( (c >> 6) & 0x1F) );
-                    byteArr[count++] = (unsigned char)( 0x80 | ( (c >> 0) & 0x3F) );
-                }
-            }
-
-            dataOut.write( byteArr );
+            dataOut.writeInt( utfLength );
+            dataOut.write( &utfBytes[0], 0, utfLength );
 
         } else {
-            dataOut.writeShort( (short)-1 );
+            dataOut.writeInt( -1 );
         }
     }
     AMQ_CATCH_RETHROW( decaf::io::IOException )
