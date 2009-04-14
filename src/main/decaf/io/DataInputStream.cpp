@@ -32,8 +32,7 @@ DataInputStream::DataInputStream( InputStream* inputStream, bool own )
 DataInputStream::~DataInputStream() {}
 
 ////////////////////////////////////////////////////////////////////////////////
-int DataInputStream::read( std::vector<unsigned char>& buffer )
-    throw ( io::IOException ) {
+int DataInputStream::read( std::vector<unsigned char>& buffer ) throw ( io::IOException ) {
 
     try {
         return this->read( &buffer[0], 0, buffer.size() );
@@ -75,13 +74,11 @@ int DataInputStream::read( unsigned char* buffer,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DataInputStream::readBoolean()
-    throw( IOException, EOFException ) {
+bool DataInputStream::readBoolean() throw( IOException, EOFException ) {
 
     try {
-        unsigned char value = 0;
-        readAllData( &value, sizeof(value) );
-        return (bool)( value != 0 );
+        readAllData( buffer, sizeof(char) );
+        return (bool)( buffer[0] != 0 );
     }
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
@@ -89,13 +86,11 @@ bool DataInputStream::readBoolean()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-char DataInputStream::readByte()
-    throw ( IOException, EOFException ) {
+char DataInputStream::readByte() throw ( IOException, EOFException ) {
 
     try {
-        unsigned char value = 0;
-        readAllData( &value, sizeof(value) );
-        return (char)( value );
+        readAllData( buffer, sizeof(unsigned char) );
+        return (char)( buffer[0] );
     }
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
@@ -103,13 +98,11 @@ char DataInputStream::readByte()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned char DataInputStream::readUnsignedByte()
-    throw ( IOException, EOFException ) {
+unsigned char DataInputStream::readUnsignedByte() throw ( IOException, EOFException ) {
 
     try {
-        unsigned char value = 0;
-        readAllData( &value, sizeof(value) );
-        return value;
+        readAllData( buffer, sizeof(unsigned char) );
+        return buffer[0];
     }
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
@@ -118,10 +111,10 @@ unsigned char DataInputStream::readUnsignedByte()
 
 ////////////////////////////////////////////////////////////////////////////////
 char DataInputStream::readChar() throw ( IOException, EOFException ) {
+
     try {
-        unsigned char value = 0;
-        readAllData( &value, sizeof(value) );
-        return (char)( value );
+        readAllData( buffer, sizeof(unsigned char) );
+        return (char)( buffer[0] );
     }
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
@@ -130,10 +123,10 @@ char DataInputStream::readChar() throw ( IOException, EOFException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
+
     try {
         short value = 0;
-        unsigned char buffer[sizeof(value)] = {0};
-        readAllData( buffer, sizeof(value) );
+        readAllData( buffer, sizeof(short) );
         value |= (buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
@@ -143,12 +136,11 @@ short DataInputStream::readShort() throw ( io::IOException, io::EOFException ) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-unsigned short DataInputStream::readUnsignedShort()
-    throw ( io::IOException, io::EOFException ) {
+unsigned short DataInputStream::readUnsignedShort() throw ( io::IOException, io::EOFException ) {
+
     try {
         unsigned short value = 0;
-        unsigned char buffer[sizeof(value)] = {0};
-        readAllData( buffer, sizeof(value) );
+        readAllData( buffer, sizeof(unsigned short) );
         value |= (buffer[0] << 8 | buffer[1] << 0);
         return value;
     }
@@ -159,10 +151,10 @@ unsigned short DataInputStream::readUnsignedShort()
 
 ////////////////////////////////////////////////////////////////////////////////
 int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
+
     try {
         unsigned int value = 0;
-        unsigned char buffer[sizeof(value)] = {0};
-        readAllData( buffer, sizeof(value) );
+        readAllData( buffer, sizeof(int) );
         value |= (buffer[0] << 24 | buffer[1] << 16 |
                   buffer[2] << 8 | buffer[3] << 0);
         return value;
@@ -174,6 +166,7 @@ int DataInputStream::readInt() throw ( io::IOException, io::EOFException ) {
 
 ////////////////////////////////////////////////////////////////////////////////
 double DataInputStream::readDouble() throw ( io::IOException, io::EOFException ) {
+
     try {
         unsigned long long lvalue = this->readLong();
         double value = 0.0;
@@ -187,6 +180,7 @@ double DataInputStream::readDouble() throw ( io::IOException, io::EOFException )
 
 ////////////////////////////////////////////////////////////////////////////////
 float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
+
     try {
         unsigned int lvalue = this->readInt();
         float value = 0.0f;
@@ -201,10 +195,10 @@ float DataInputStream::readFloat() throw ( io::IOException, io::EOFException ) {
 ////////////////////////////////////////////////////////////////////////////////
 long long DataInputStream::readLong()
     throw ( io::IOException, io::EOFException ) {
+
     try {
         unsigned long long value = 0;
-        unsigned char buffer[sizeof(value)] = {0};
-        readAllData( buffer, sizeof(value) );
+        readAllData( buffer, sizeof(long long) );
 
         // Have to do it this way because on Solaris and Cygwin we get all
         // kinds of warnings when shifting a byte up into a long long.
@@ -228,8 +222,8 @@ long long DataInputStream::readLong()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-std::string DataInputStream::readString()
-    throw ( io::IOException, io::EOFException ) {
+std::string DataInputStream::readString() throw ( io::IOException, io::EOFException ) {
+
     try {
 
         if( inputStream == NULL ) {
@@ -271,7 +265,8 @@ std::string DataInputStream::readString()
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string DataInputStream::readUTF()
-    throw ( io::IOException, io::EOFException ) {
+    throw ( io::IOException, io::EOFException, io::UTFDataFormatException ) {
+
     try {
 
         if( inputStream == NULL ) {
@@ -280,23 +275,83 @@ std::string DataInputStream::readUTF()
                 "DataInputStream::readFully - Base input stream is null" );
         }
 
-        std::vector<unsigned char> buffer;
-        unsigned short length = readUnsignedShort();
-        buffer.resize(length + 1);  // Add one for a null charactor.
+        unsigned short utfLength = readUnsignedShort();
+        std::vector<unsigned char> buffer( utfLength );
+        std::string result( utfLength, char() );
 
-        std::size_t n = 0;
-        while( n < length ) {
-            int count = inputStream->read( &buffer[n], 0, (length - n) );
-            if( count == -1 ) {
-                throw EOFException(
-                    __FILE__, __LINE__,
-                    "DataInputStream::readUTF - Reached EOF" );
+        this->readFully( &buffer[0], 0, utfLength );
+
+        std::size_t count = 0;
+        std::size_t index = 0;
+        unsigned char a = 0;
+
+        while( count < utfLength ) {
+            if( (unsigned char)( result[index] = (char)buffer[count++] ) < 0x80 ) {
+                index++;
+            } else if( ( ( a = result[index++] ) & 0xE0 ) == 0xC0 ) {
+                if( count >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of two byte char found at end.");
+                }
+
+                unsigned char b = buffer[count++];
+                if( ( b & 0xC0 ) != 0x80 ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                }
+
+                // 2-byte UTF8 encoding: 110X XXxx 10xx xxxx
+                // Bits set at 'X' means we have encountered a UTF8 encoded value
+                // greater than 255, which is not supported.
+                if( a & 0x1C ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 2 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                result[index++] = (char)( ( ( a & 0x1F ) << 6 ) | ( b & 0x3F ) );
+
+            } else if( ( a & 0xF0 ) == 0xE0 ) {
+
+                if( count + 1 >= utfLength ) {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid UTF-8 encoding found, start of three byte char found at end.");
+                } else {
+                    throw UTFDataFormatException(
+                        __FILE__, __LINE__,
+                        "Invalid 3 byte UTF-8 encoding found, "
+                        "This method only supports encoded ASCII values of (0-255)." );
+                }
+
+                // If we were to support multibyte strings in the future this would be
+                // the remainder of this method decoding logic.
+                //
+                //int b = buffer[count++];
+                //int c = buffer[count++];
+                //if( ( ( b & 0xC0 ) != 0x80 ) || ( ( c & 0xC0 ) != 0x80 ) ) {
+                //    throw UTFDataFormatException(
+                //        __FILE__, __LINE__,
+                //        "Invalid UTF-8 encoding found, byte two does not start with 0x80." );
+                //}
+                //
+                //result[inde++] = (char)( ( ( a & 0x0F ) << 12 ) |
+                //                         ( ( b & 0x3F ) << 6 ) | ( c & 0x3F ) );
+
+            } else {
+                throw UTFDataFormatException(
+                    __FILE__, __LINE__, "Invalid UTF-8 encoding found, aborting.");
             }
-            n += count;
         }
 
-        return (char*)&buffer[0];
+        result.resize( index );
+
+        return result;
     }
+    DECAF_CATCH_RETHROW( UTFDataFormatException )
     DECAF_CATCH_RETHROW( EOFException )
     DECAF_CATCH_RETHROW( IOException )
     DECAF_CATCHALL_THROW( IOException )
@@ -305,6 +360,7 @@ std::string DataInputStream::readUTF()
 ////////////////////////////////////////////////////////////////////////////////
 void DataInputStream::readFully( std::vector< unsigned char >& buffer )
     throw ( io::IOException, io::EOFException ) {
+
     try {
         if( buffer.empty() ) {
             return;
@@ -362,6 +418,7 @@ void DataInputStream::readFully( unsigned char* buffer,
 ////////////////////////////////////////////////////////////////////////////////
 std::size_t DataInputStream::skip( std::size_t num )
     throw( io::IOException, lang::exceptions::UnsupportedOperationException ) {
+
     try {
 
         if( inputStream == NULL ) {

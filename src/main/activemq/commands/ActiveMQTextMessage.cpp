@@ -18,11 +18,15 @@
 
 #include <decaf/io/ByteArrayOutputStream.h>
 #include <decaf/io/DataOutputStream.h>
+#include <activemq/wireformat/openwire/utils/OpenwireStringSupport.h>
 
 using namespace std;
 using namespace activemq;
 using namespace activemq::exceptions;
 using namespace activemq::commands;
+using namespace activemq::wireformat;
+using namespace activemq::wireformat::openwire;
+using namespace activemq::wireformat::openwire::utils;
 using namespace decaf::lang;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,10 +71,9 @@ void ActiveMQTextMessage::setText( const std::string& msg ) throw( cms::CMSExcep
         std::vector<unsigned char>& content = getContent();
         content.clear();
         decaf::io::ByteArrayOutputStream bos( content );
-        decaf::io::DataOutputStream dos( &bos );
+        decaf::io::DataOutputStream dataOut( &bos );
 
-        dos.writeInt( (int)msg.length() );
-        dos.write( (const unsigned char*)msg.c_str(), 0, msg.length() );
+        OpenwireStringSupport::writeString( dataOut, &msg );
     }
     AMQ_CATCH_ALL_THROW_CMSEXCEPTION()
 }

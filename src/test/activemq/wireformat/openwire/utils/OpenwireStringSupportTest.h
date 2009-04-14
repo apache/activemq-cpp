@@ -30,6 +30,8 @@ namespace utils{
 
         CPPUNIT_TEST_SUITE( OpenwireStringSupportTest );
         CPPUNIT_TEST( test );
+        CPPUNIT_TEST( testWriteString );
+        CPPUNIT_TEST( testReadString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -39,8 +41,16 @@ namespace utils{
 
         void test();
 
-        void testHelper( unsigned char* input, int inputLength,
-                         unsigned char* output, int outputLength, bool negative );
+        void testWriteString();
+        void testReadString();
+
+    private:
+
+        void readTestHelper( unsigned char* input, int inputLength,
+                             unsigned char* expect, int expectLength );
+
+        void writeTestHelper( unsigned char* input, int inputLength,
+                              unsigned char* expect, int expectLength );
 
     };
 

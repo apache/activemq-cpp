@@ -516,3 +516,110 @@ void DataInputStreamTest::testUTF() {
         CPPUNIT_ASSERT( true );
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStreamTest::testHelper( unsigned char* input, int inputLength,
+                                      unsigned char* expect, int expectLength ) {
+
+    ByteArrayInputStream myStream( input, inputLength );
+    DataInputStream reader( &myStream );
+
+    std::string result = reader.readUTF();
+
+    for( std::size_t i; i < result.length(); ++i ) {
+        CPPUNIT_ASSERT( (unsigned char)result[i] == expect[i] );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataInputStreamTest::testUTFDecoding() {
+
+    // Test data with 1-byte UTF8 encoding.
+    {
+        unsigned char expect[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+        unsigned char input[] = { 0x00, 0x0E ,0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test data with 2-byte UT8 encoding.
+    {
+        unsigned char expect[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
+        unsigned char input[] = { 0x00, 0x0A, 0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char)  );
+    }
+
+    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
+    {
+        unsigned char expect[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
+        unsigned char input[] = { 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test with bad UTF-8 encoding, missing 2nd byte of two byte value
+    {
+        unsigned char input[] = { 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a UTFDataFormatException",
+            reader.readUTF(),
+            UTFDataFormatException );
+    }
+
+    // Test with bad UTF-8 encoding, encoded value greater than 255
+    {
+        unsigned char input[] = { 0x00, 0x0D, 0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xC2, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a UTFDataFormatException",
+            reader.readUTF(),
+            UTFDataFormatException );
+    }
+
+    // Test data with value greater than 255 in 2-byte encoding.
+    {
+        unsigned char input[] = {0x00, 0x04, 0xC8, 0xA9, 0xC3, 0xA6};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a UTFDataFormatException",
+            reader.readUTF(),
+            UTFDataFormatException );
+    }
+
+    // Test data with value greater than 255 in 3-byte encoding.
+    {
+        unsigned char input[] = {0x00, 0x05, 0xE8, 0xA8, 0xA9, 0xC3, 0xA6};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a UTFDataFormatException",
+            reader.readUTF(),
+            UTFDataFormatException );
+    }
+
+    // Test with three byte encode that's missing a last byte.
+    {
+        unsigned char input[] = {0x00, 0x02, 0xE8, 0xA8};
+        ByteArrayInputStream myStream( input, sizeof(input)/sizeof(unsigned char) );
+        DataInputStream reader( &myStream );
+
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+            "Should throw a UTFDataFormatException",
+            reader.readUTF(),
+            UTFDataFormatException );
+    }
+
+}

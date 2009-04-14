@@ -251,6 +251,95 @@ void DataOutputStreamTest::testWriteUTF() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void DataOutputStreamTest::testWriteUTFStringLength() {
+
+    // String of length 65536 of Null Characters.
+    // Expect: UTFDataFormatException.
+    std::string testStr( 65536, char('a') );
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw a UTFDataFormatException",
+        os->writeUTF( testStr ),
+        UTFDataFormatException );
+
+    baos->reset();
+    // String of length 65535 of non Null Characters since Null encodes as UTF-8.
+    // Expect: Success.
+    testStr.resize( 65535 );
+    CPPUNIT_ASSERT_NO_THROW_MESSAGE(
+        "String of 65535 Non-Null chars should not throw.",
+        os->writeUTF( testStr ) );
+
+    baos->reset();
+    // Set one of the 65535 bytes to a value that will result in a 2 byte UTF8 encoded sequence.
+    // This will cause the string of length 65535 to have a utf length of 65536.
+    // Expect: UTFDataFormatException.
+    testStr[0] = char( 255 );
+    CPPUNIT_ASSERT_THROW_MESSAGE(
+        "Should throw an UTFDataFormatException",
+        os->writeUTF( testStr ),
+        UTFDataFormatException );
+
+    // Test that a zero length string write the zero size marker.
+    ByteArrayInputStream byteIn;
+    ByteArrayOutputStream byteOut;
+    DataInputStream dataIn( &byteIn );
+    DataOutputStream dataOut( &byteOut );
+    dataOut.writeUTF( "" );
+    CPPUNIT_ASSERT( dataOut.size() == 2 );
+    byteIn.setByteArray( byteOut.toByteArray(), byteOut.size() );
+    CPPUNIT_ASSERT( dataIn.readUnsignedShort() == 0 );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStreamTest::testHelper( unsigned char* input, int inputLength,
+                                       unsigned char* expect, int expectLength ) {
+
+    std::string testStr( (char*)input, inputLength );
+    os->writeUTF( testStr );
+
+    const unsigned char* result = baos->toByteArray();
+
+    CPPUNIT_ASSERT( result[0] == 0x00 );
+    CPPUNIT_ASSERT( result[1] == (unsigned char)( expectLength ) );
+
+    for( std::size_t i = 2; i < baos->size(); ++i ) {
+        CPPUNIT_ASSERT( result[i] == expect[i-2] );
+    }
+
+    baos->reset();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DataOutputStreamTest::testWriteUTFEncoding() {
+
+    // Test data with 1-byte UTF8 encoding.
+    {
+        unsigned char input[] = {0x00, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+        unsigned char expect[] = {0xC0, 0x80, 0x0B, 0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};
+
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+
+    // Test data with 2-byte UT8 encoding.
+    {
+        unsigned char input[] = {0x00, 0xC2, 0xA9, 0xC3, 0xA6 };
+        unsigned char expect[] = {0xC0, 0x80, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC2, 0xA6 };
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char)  );
+    }
+
+    // Test data with 1-byte and 2-byte encoding with embedded NULL's.
+    {
+        unsigned char input[] = {0x00, 0x04, 0xC2, 0xA9, 0xC3, 0x00, 0xA6 };
+        unsigned char expect[] = {0xC0, 0x80, 0x04, 0xC3, 0x82, 0xC2, 0xA9, 0xC3, 0x83, 0xC0, 0x80, 0xC2, 0xA6 };
+
+        testHelper( input, sizeof(input)/sizeof(unsigned char),
+                    expect, sizeof(expect)/sizeof(unsigned char) );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void DataOutputStreamTest::test(){
 
     unsigned char byteVal = (unsigned char)'T';
