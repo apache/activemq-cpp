@@ -164,6 +164,18 @@ namespace commands{
         void setCacheEnabled( bool cacheEnabled );
 
         /**
+         * Gets the Cache Size setting.
+         * @return currently set cache size.
+         */
+        int getCacheSize() const;
+
+        /**
+         * Sets the Cache Size setting.
+         * @param value - value to set to the cache size.
+         */
+        void setCacheSize( int value );
+
+        /**
          * Checks if the tightEncodingEnabled flag is on
          * @return true if the flag is on.
          */

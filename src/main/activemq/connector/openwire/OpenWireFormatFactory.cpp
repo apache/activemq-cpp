@@ -50,13 +50,16 @@ WireFormat* OpenWireFormatFactory::createWireFormat(
         // parse params out of the properties
         info->setStackTraceEnabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.stackTraceEnabled",
-                                    "false" ) ) );
+                                    "true" ) ) );
         info->setCacheEnabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.cacheEnabled",
                                     "false" ) ) );
+        info->setCacheSize( Integer::parseInt(
+            properties.getProperty( "wireFormat.cacheSize",
+                                    "1024" ) ) );
         info->setTcpNoDelayEnabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.tcpNoDelayEnabled",
-                                    "false" ) ) );
+                                    "true" ) ) );
         info->setTightEncodingEnabled( Boolean::parseBoolean(
             properties.getProperty( "wireFormat.tightEncodingEnabled",
                                     "false" ) ) );
